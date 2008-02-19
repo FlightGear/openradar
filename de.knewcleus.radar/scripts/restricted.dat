@@ -1,0 +1,8 @@
+# Land => Restricted on Land
+36 34 34 	37 30 30
+# Sea => Restricted on Sea
+39 39 41	39 34 36
+# Sector on Land => Restricted on Sector on Land
+39 37 37	38 33 33
+# Sector on Sea => Restricted on Sector on Sea
+42 42 42	42 37 37
