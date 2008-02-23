@@ -14,14 +14,17 @@ public class PointObject implements LabeledObject,ProtectedSymbol {
 	protected static final double labelWidth=0.05;
 	protected static final double labelHeight=0.025;
 	protected static final double labelDist=0.005;
-	protected final double x,y;
+	protected double x,y;
 	protected final double r;
+	protected final double vx,vy;
 	protected final Set<LabelCandidate> labelCandidates=new HashSet<LabelCandidate>(); 
 
-	public PointObject(double x, double y, double r) {
+	public PointObject(double x, double y, double vx, double vy, double r) {
 		this.x=x;
 		this.y=y;
 		this.r=r;
+		this.vx=vx;
+		this.vy=vy;
 		
 		assert(labelDeltaX.length==labelDeltaY.length);
 		for (int i=0;i<labelDeltaX.length;i++) {
@@ -29,8 +32,8 @@ public class PointObject implements LabeledObject,ProtectedSymbol {
 			
 			// cx=x+labelDeltaX[i]*(r+w/2)
 			// cy=y+labelDeltaY[i]*(r+h/2);
-			cx=x+labelDeltaX[i]*(r+labelDist+labelWidth/2);
-			cy=y+labelDeltaY[i]*(r+labelDist+labelHeight/2);
+			cx=labelDeltaX[i]*(r+labelDist+labelWidth/2);
+			cy=labelDeltaY[i]*(r+labelDist+labelHeight/2);
 			
 			double top,left,bottom,right;
 			left=cx-labelWidth/2;
@@ -46,6 +49,11 @@ public class PointObject implements LabeledObject,ProtectedSymbol {
 	@Override
 	public Set<LabelCandidate> getLabelCandidates() {
 		return labelCandidates;
+	}
+	
+	public void update() {
+		x+=vx;
+		y+=vy;
 	}
 	
 	public double getX() {

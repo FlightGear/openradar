@@ -3,14 +3,13 @@ package de.knewcleus.radar.autolabel.test;
 import de.knewcleus.radar.autolabel.BoundedSymbol;
 import de.knewcleus.radar.autolabel.LabelCandidate;
 import de.knewcleus.radar.autolabel.LabeledObject;
-import de.knewcleus.radar.autolabel.ProtectedSymbol;
 
 public class SimpleLabelCandidate implements BoundedSymbol, LabelCandidate {
-	protected final LabeledObject associatedObject;
+	protected final PointObject associatedObject;
 	protected final double cost;
 	protected final double top,bottom,left,right;
 
-	public SimpleLabelCandidate(LabeledObject associatedObject, double cost, double top, double bottom, double left, double right) {
+	public SimpleLabelCandidate(PointObject associatedObject, double cost, double top, double bottom, double left, double right) {
 		this.associatedObject=associatedObject;
 		this.cost=cost;
 		this.top=top;
@@ -31,22 +30,22 @@ public class SimpleLabelCandidate implements BoundedSymbol, LabelCandidate {
 	
 	@Override
 	public double getBottom() {
-		return bottom;
+		return associatedObject.getY()+bottom;
 	}
 
 	@Override
 	public double getLeft() {
-		return left;
+		return associatedObject.getX()+left;
 	}
 
 	@Override
 	public double getRight() {
-		return right;
+		return associatedObject.getX()+right;
 	}
 
 	@Override
 	public double getTop() {
-		return top;
+		return associatedObject.getY()+top;
 	}
 	
 	@Override

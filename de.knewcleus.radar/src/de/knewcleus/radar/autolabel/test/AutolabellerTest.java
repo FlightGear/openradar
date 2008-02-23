@@ -9,7 +9,9 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -19,22 +21,39 @@ import javax.swing.JPanel;
 import de.knewcleus.radar.autolabel.Autolabeller;
 import de.knewcleus.radar.autolabel.BoundedSymbol;
 import de.knewcleus.radar.autolabel.LabelCandidate;
-import de.knewcleus.radar.autolabel.LabelCostModel;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.OverlapModel;
 
 public class AutolabellerTest extends JPanel {
-	protected final Set<PointObject> labeledObjects=new HashSet<PointObject>();
 	protected final Random random=new Random();
 	protected final Autolabeller autolabeller=new Autolabeller();
 
 	public AutolabellerTest() {
-		super();
+		super(true);
 		
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				autolabeller.removeOne();
+				Set<LabeledObject> currentObjects=new HashSet<LabeledObject>(autolabeller.getCurrentLabelling().keySet());
+				int removed=0;
+				for (LabeledObject object: currentObjects) {
+					if (random.nextDouble()<0.001) {
+						removed++;
+						autolabeller.removeLabeledObject(object);
+					} else {
+						((PointObject)object).update();
+					}
+				}
+				
+				if (random.nextDouble()<0.05) {
+					createObjects((int)(random.nextDouble()*10));
+				}
+				long startTime=System.currentTimeMillis();
+				int changes=autolabeller.label(startTime+250);
+				long endTimeReduction=System.currentTimeMillis();
+				
+				System.out.println("time for "+autolabeller.getCurrentLabelling().size()+" objects, changed "+changes+" labels");
+				System.out.println("    runtime    : "+(endTimeReduction-startTime)*1.0E-3+" seconds");
 				repaint();
 			}
 		});
@@ -42,13 +61,22 @@ public class AutolabellerTest extends JPanel {
 	
 	public void createObjects(int n) {
 		for (int i=0;i<n;i++) {
-			double x,y;
+			double x,y,vx,vy;
 			x=random.nextDouble();
 			y=random.nextDouble();
-			PointObject labeledObject=new PointObject(x,y,0.005);
-			labeledObjects.add(labeledObject);
+			vx=(random.nextDouble()-0.5)*0.01;
+			vy=(random.nextDouble()-0.5)*0.01;
+			PointObject labeledObject=new PointObject(x,y,vx,vy,0.005);
 			autolabeller.addLabeledObject(labeledObject);
 		}
+	}
+	
+	private <T> boolean intersects(Collection<? extends T> c1, Collection<? extends T> c2) {
+		for (T obj: c1) {
+			if (c2.contains(obj))
+				return true;
+		}
+		return false;
 	}
 	
 	@Override
@@ -58,17 +86,13 @@ public class AutolabellerTest extends JPanel {
 		Color transparentGrey=new Color(0.5f,0.5f,0.5f,0.25f);
 		Graphics2D g2d=(Graphics2D)g;
 		
-		LabelCostModel costModel=autolabeller.getCostModel();
-		
 		OverlapModel<BoundedSymbol> overlapModel=autolabeller.getOverlapModel();
 		
-		double maximumCost=costModel.getMaximumCost();
-		double minimumCost=costModel.getMinimumCost();
+		Map<LabeledObject, LabelCandidate> currentLabelling=autolabeller.getCurrentLabelling();
+		Collection<LabelCandidate> activeLabels=currentLabelling.values();
 		
-		double negativeCost=Math.min(0.0, minimumCost);
-		double positiveCost=Math.max(0.0, maximumCost);
-		
-		for (PointObject labeledObject: labeledObjects) {
+		for (LabeledObject object: currentLabelling.keySet()) {
+			PointObject labeledObject=(PointObject)object;
 			double x,y,rx,ry;
 			
 			x=labeledObject.getX()*getWidth();
@@ -80,13 +104,14 @@ public class AutolabellerTest extends JPanel {
 			g2d.setColor(Color.BLACK);
 			g2d.draw(ellipse2D);
 			
-			if (!overlapModel.getOverlaps(labeledObject).isEmpty()) {
+			Set<BoundedSymbol> overlaps=overlapModel.getOverlaps(labeledObject);
+			if (intersects(overlaps, activeLabels)) {
 				g2d.setColor(transparentGrey);
 				g2d.fill(ellipse2D);
 			}
 		}
 		
-		for (LabelCandidate candidate: autolabeller.getCandidates()) {
+		for (LabelCandidate candidate: activeLabels) {
 			LabeledObject object=candidate.getAssociatedObject();
 			double top,bottom,left,right;
 			
@@ -105,39 +130,26 @@ public class AutolabellerTest extends JPanel {
 			Line2D line2D=new Line2D.Double(cx,cy,cxo,cyo);
 			
 			g2d.setColor(Color.BLACK);
+			
+			String conflictCount=Integer.toString(autolabeller.getOverlapModel().getOverlaps(candidate).size());
+			int width=g2d.getFontMetrics().stringWidth(conflictCount);
+			int height=g2d.getFontMetrics().getMaxAscent()+g2d.getFontMetrics().getMaxDescent();
+			
+			double tx=(left+right-width)/2.0;
+			double ty=(top+bottom-height)/2.0+g2d.getFontMetrics().getMaxAscent();
+			
+			g2d.drawString(conflictCount, (float)tx, (float)ty);
 			g2d.draw(rectangle2D);
 			g2d.draw(line2D);
 			
-			double cost=costModel.getCandidateCost(candidate);
-			
-			if (cost>0.0 && positiveCost>0.0) {
-				float relativeCost=(float)(cost/positiveCost);
-				Color transparentRed=new Color(1.0f,1.0f-relativeCost,1.0f-relativeCost,0.75f);
-				g2d.setColor(transparentRed);
-				g2d.fill(rectangle2D);
-			} else if (cost<0.0 && negativeCost<0.0) {
-				float relativeCost=(float)(cost/negativeCost);
-				Color transparentGreen=new Color(1.0f-relativeCost,1.0f,1.0f-relativeCost,0.75f);
-				g2d.setColor(transparentGreen);
+			if (autolabeller.getConflictingLabels().contains(candidate.getAssociatedObject())) {
+				g2d.setColor(new Color(1.0f,0.0f,0.0f,0.5f));
 				g2d.fill(rectangle2D);
 			}
 		}
 		
-		LabelCandidate nextCandidate=autolabeller.getNextCandidate();
-		
-		if (nextCandidate!=null) {
-			double top,bottom,left,right;
-			
-			top=nextCandidate.getTop()*getHeight();
-			bottom=nextCandidate.getBottom()*getHeight();
-			left=nextCandidate.getLeft()*getWidth();
-			right=nextCandidate.getRight()*getWidth();
-			
-			Rectangle2D rectangle2D=new Rectangle2D.Double(left,top,right-left,bottom-top);
-			
-			g2d.setColor(new Color(1.0f,1.0f,0.0f,0.5f));
-			g2d.fill(rectangle2D);
-		}
+		g2d.setColor(Color.RED);
+		g2d.drawString(Double.toString(autolabeller.getCurrentCost())+" "+Double.toString(autolabeller.getCurrentTemperature()), 0, getHeight()-g2d.getFontMetrics().getMaxDescent());
 	}
 
 	/**
@@ -147,23 +159,7 @@ public class AutolabellerTest extends JPanel {
 		AutolabellerTest autolabellerTest=new AutolabellerTest();
 		autolabellerTest.setPreferredSize(new Dimension(700,700));
 		
-		int objectCount=100;
-		
-		long startTime=System.nanoTime();
-		autolabellerTest.createObjects(objectCount);
-		long endTimeCreation=System.nanoTime();
-		autolabellerTest.autolabeller.prepare();
-		long endTimePreparation=System.nanoTime();
-		
-		autolabellerTest.autolabeller.label();
-		
-		long endTimeReduction=System.nanoTime();
-		
-		System.out.println("time for "+objectCount+" objects");
-		System.out.println("    creation   : "+(endTimeCreation-startTime)*1.0E-9+" seconds");
-		System.out.println("    preparation: "+(endTimePreparation-endTimeCreation)*1.0E-9+" seconds");
-		System.out.println("    reduction  : "+(endTimeReduction-endTimePreparation)*1.0E-9+" seconds");
-		System.out.println("    total      : "+(endTimeReduction-startTime)*1.0E-9+" seconds");
+		autolabellerTest.createObjects(5);
 		
 		JFrame frame=new JFrame("Autolabeller Test");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

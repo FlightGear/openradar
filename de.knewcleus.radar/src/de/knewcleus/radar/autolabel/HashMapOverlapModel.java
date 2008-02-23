@@ -25,13 +25,13 @@ public class HashMapOverlapModel<T> implements OverlapModel<T> {
 	
 	@Override
 	public void registerOverlap(T s1, T s2) {
-		Set<T> overlaps1,overlaps2;
-		
-		overlaps1=getOrCreateOverlaps(s1);
-		overlaps2=getOrCreateOverlaps(s2);
-		
-		overlaps1.add(s2);
-		overlaps2.add(s1);
+		registerOverlapPair(s1, s2);
+		registerOverlapPair(s2, s1);
+	}
+	
+	protected void registerOverlapPair(T subject, T object) {
+		Set<T> overlaps=getOrCreateOverlaps(subject);
+		overlaps.add(object);
 	}
 	
 	@Override

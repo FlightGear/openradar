@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 public class SymbolOverlapFinder<T extends BoundedSymbol> {
-	protected final static SweepLineEventPriorityComparator eventPriorityComparator=new SweepLineEventPriorityComparator();
+	protected final SweepLineEventPriorityComparator<T> eventPriorityComparator=new SweepLineEventPriorityComparator<T>();
 	protected final PriorityQueue<SweepLineEvent<T>> eventQueue=new PriorityQueue<SweepLineEvent<T>>(1,eventPriorityComparator);
 	protected final Set<T> intersectedSymbols=new HashSet<T>();
 
@@ -40,8 +40,6 @@ public class SymbolOverlapFinder<T extends BoundedSymbol> {
 				/* Check for overlapMap of intersected symbols */
 				// FIXME: employ a better data structure here
 				for (T s2: intersectedSymbols) {
-					if (s2.getLeft()<symbol.getLeft())
-						continue;
 					if (symbol.getLeft()>s2.getRight() || s2.getLeft()>symbol.getRight())
 						continue; // no overlap
 					

@@ -2,9 +2,9 @@ package de.knewcleus.radar.autolabel;
 
 import java.util.Comparator;
 
-class SweepLineEventPriorityComparator implements Comparator<SweepLineEvent> {
+class SweepLineEventPriorityComparator<T> implements Comparator<SweepLineEvent<T>> {
 	@Override
-	public int compare(SweepLineEvent o1, SweepLineEvent o2) {
+	public int compare(SweepLineEvent<T> o1, SweepLineEvent<T> o2) {
 		return Double.compare(o1.getPosition(),o2.getPosition());
 	}
 	
