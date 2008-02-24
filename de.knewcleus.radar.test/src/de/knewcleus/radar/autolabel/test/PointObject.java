@@ -92,9 +92,4 @@ public class PointObject implements LabeledObject,ProtectedSymbol {
 	public double getOverlapPenalty() {
 		return 1.0E4;
 	}
-	
-	@Override
-	public double getUnlabeledPenalty() {
-		return 1.0E4;
-	}
 }

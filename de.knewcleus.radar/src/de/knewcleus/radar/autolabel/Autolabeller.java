@@ -16,16 +16,19 @@ public class Autolabeller {
 	protected OverlapModel<BoundedSymbol> overlapModel;
 	protected SymbolOverlapFinder<BoundedSymbol> overlapFinder;
 	protected final Map<LabeledObject,LabelCandidate> currentLabelling=new HashMap<LabeledObject, LabelCandidate>();
+	protected final Map<LabeledObject,Long> lastChangeStep=new HashMap<LabeledObject, Long>();
 	protected final Set<LabeledObject> conflictingLabels=new HashSet<LabeledObject>();
 	protected final Random random=new Random();
 	
 	protected double currentTemperature;
 	protected double currentCost;
+	protected long currentStep=0;
 	
 	public void addLabeledObject(LabeledObject object) {
 		labeledObjects.add(object);
 		
 		currentLabelling.put(object, selectRandomFromCollection(object.getLabelCandidates()));
+		lastChangeStep.put(object, currentStep);
 	}
 	
 	public void addProtectedSymbol(ProtectedSymbol symbol) {
@@ -44,7 +47,7 @@ public class Autolabeller {
 	public int label(long deadlineMillis) {
 		int changes=0;
 		// T=-de/ln(1-p0)
-		currentTemperature=-5.0/Math.log(1.0-2.0/3.0);
+		currentTemperature=-1.0/Math.log(1.0-1.0/3.0);
 		
 		overlapModel=new LabelOverlapModel<BoundedSymbol>();
 		overlapFinder=new SymbolOverlapFinder<BoundedSymbol>(overlapModel);
@@ -93,10 +96,11 @@ public class Autolabeller {
 		currentLabelling.put(selectedObject,newCandidate);
 		
 		newCost+=calculateCandidateCost(newCandidate);
+		double changePenalty=1E4*Math.exp(-5.0*(currentStep-lastChangeStep.get(selectedObject)));
+		double costDelta=(newCost-currentCost)*changePenalty;
 
-		if (newCost>currentCost) {
-			double deltaCost=newCost-currentCost;
-			double p=1.0-Math.exp(-deltaCost/currentTemperature);
+		if (costDelta>0.0) {
+			double p=1.0-Math.exp(-costDelta/currentTemperature);
 			if (random.nextDouble()>p) {
 				/* Undo this change */
 				currentLabelling.put(selectedObject,currentCandidate);
@@ -105,7 +109,9 @@ public class Autolabeller {
 		}
 		
 		/* Accept the change */
+		lastChangeStep.put(selectedObject,currentStep);
 		currentCost=newCost;
+		currentStep++;
 
 		Set<LabeledObject> affectedOthers=new HashSet<LabeledObject>();
 		Set<BoundedSymbol> affectedOverlaps=new HashSet<BoundedSymbol>();
@@ -133,7 +139,7 @@ public class Autolabeller {
 			}
 		}
 		
-		double factor=Math.pow(0.9,1.0/labeledObjects.size());
+		double factor=Math.pow(0.5,1.0/labeledObjects.size());
 		currentTemperature*=factor;
 		
 		return true;

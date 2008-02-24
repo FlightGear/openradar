@@ -4,9 +4,10 @@ import java.awt.Font;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
+import de.knewcleus.fgfs.location.IDeviceTransformation;
 
 public class RadarPlanViewSettings {
-	protected double range=15.0f*(float)Units.NM;
+	protected double range=10.0f*(float)Units.NM;
 	protected Font font=new Font(Font.SANS_SERIF,Font.PLAIN,12);
 	protected boolean showingSector=true;
 	protected boolean showingWaypoints=true;
@@ -15,6 +16,9 @@ public class RadarPlanViewSettings {
 	protected boolean showingCoastline=true;
 	protected boolean showingRings=false;
 	protected boolean showingScaleLine=false;
+	protected int speedVectorMinutes=1;
+	protected int trackHistoryLength=3;
+	protected IDeviceTransformation deviceTransformation;
 	protected ICoordinateTransformation mapTransformation;
 	
 	public double getRange() {
@@ -87,6 +91,22 @@ public class RadarPlanViewSettings {
 
 	public void setShowingScaleLine(boolean showingScaleLine) {
 		this.showingScaleLine = showingScaleLine;
+	}
+	
+	public int getSpeedVectorMinutes() {
+		return speedVectorMinutes;
+	}
+	
+	public void setSpeedVectorMinutes(int speedVectorMinutes) {
+		this.speedVectorMinutes = speedVectorMinutes;
+	}
+	
+	public int getTrackHistoryLength() {
+		return trackHistoryLength;
+	}
+	
+	public void setTrackHistoryLength(int trackHistoryLength) {
+		this.trackHistoryLength = trackHistoryLength;
 	}
 
 	public ICoordinateTransformation getMapTransformation() {
