@@ -1,10 +1,8 @@
 package de.knewcleus.radar.ui.rpvd;
 
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -32,7 +30,8 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 	private static final long serialVersionUID = 8996959818592227638L;
 	
 	protected final Scenario scenario;
-	protected final ICoordinateTransformation transform;
+	protected final RadarPlanViewSettings settings;
+	protected final RadarDeviceTransformation radarDeviceTransformation;
 	
 	protected final Updater radarUpdater=new Updater(this,1000);
 
@@ -43,8 +42,6 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 	protected final IMapLayer waypointDisplayLayer;
 	protected final RangeMarkLayer rangeMarkLayer=new RangeMarkLayer();
 	
-	protected float range=15.0f*(float)Units.NM;
-	
 	protected final float scaleMarkerSize=10.0f;
 	protected final float scaleMarkerDistance=10.0f*(float)Units.NM;
 	protected final float centrelineLength=5.0f*(float)Units.NM;
@@ -53,53 +50,69 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 	
 	protected static int selectionRange=10;
 	
-	public RadarPlanViewPanel(final Scenario scenario, ICoordinateTransformation transform) {
+	public RadarPlanViewPanel(final Scenario scenario, RadarPlanViewSettings settings) {
 		super(true); /* Is double buffered */
 		this.scenario=scenario;
-		this.transform=transform;
+		this.settings=settings;
 		
-		setFont(new Font(Font.SANS_SERIF,Font.PLAIN,12));
-
+		radarDeviceTransformation=new RadarDeviceTransformation(settings);
+		
 		landmassLayer=new PolygonMapLayer(Palette.LANDMASS,scenario.getSector().getLandmassPolygons());
 		waterLayer=new PolygonMapLayer(Palette.WATERMASS,scenario.getSector().getWaterPolygons());
 		restrictedLayer=new PolygonMapLayer(Palette.RESTRICTED,scenario.getSector().getRestrictedPolygons());
 		sectorLayer=new PolygonMapLayer(Palette.SECTOR,scenario.getSector().getSectorPolygons());
 		waypointDisplayLayer=new WaypointDisplayLayer(scenario.getSector());
 
-		setLayout(new GridBagLayout());
-
 		setBackground(Palette.WATERMASS);
 		
 		radarUpdater.start();
 	}
 	
+	public RadarPlanViewSettings getSettings() {
+		return settings;
+	}
+	
 	protected Set<IAircraft> findAircraftInRange(int x, int y, int range) {
-		IDeviceTransformation mapTransformation=new RadarRangeTransformation(getWidth(), getHeight(), range);
 		Point2D mapPos=new Point2D.Double(x,y);
 		Point2D mapRange=new Point2D.Double(selectionRange,selectionRange);
-		Position realPos=mapTransformation.fromDevice(mapPos);
-		Position realRange=mapTransformation.fromDevice(mapRange);
+		Position realPos=radarDeviceTransformation.fromDevice(mapPos);
+		Position realRange=radarDeviceTransformation.fromDevice(mapRange);
 		return scenario.findAircraftInRange(realPos.getX()-realRange.getX(),realPos.getY()+realRange.getY(),
 				realPos.getX()+realRange.getX(),realPos.getY()-realRange.getY());
 	}
-	
 	
 	@Override
 	protected synchronized void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d=(Graphics2D)g;
 		
-		IDeviceTransformation radarTransformation=new RadarRangeTransformation(getWidth(), getHeight(), range);
-		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(transform, radarTransformation);
+		setFont(settings.getFont());
 		
-		landmassLayer.draw(g2d, mapTransformation);
-		waterLayer.draw(g2d, mapTransformation);
-		restrictedLayer.draw(g2d, mapTransformation);
-		sectorLayer.draw(g2d, mapTransformation);
-		rangeMarkLayer.draw(g2d, radarTransformation);
-		drawScaleMarkers(g2d, radarTransformation);
-		waypointDisplayLayer.draw(g2d, mapTransformation);
-		drawRunwayCentrelines(g2d,radarTransformation,transform);
+		radarDeviceTransformation.update(getWidth(), getHeight());
+		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(settings.getMapTransformation(), radarDeviceTransformation);
+		
+		if (settings.isShowingCoastline()) {
+			landmassLayer.draw(g2d, mapTransformation);
+			waterLayer.draw(g2d, mapTransformation);
+		} else {
+			Rectangle clipRect=g2d.getClipBounds();
+			g2d.setColor(Palette.LANDMASS);
+			g2d.fillRect(clipRect.x,clipRect.y,clipRect.width,clipRect.height);
+		}
+		if (settings.isShowingWaypoints()) {
+			waypointDisplayLayer.draw(g2d, mapTransformation);
+			drawRunwayCentrelines(g2d,radarDeviceTransformation,settings.getMapTransformation());
+		}
+		if (settings.isShowingSector()) {
+			sectorLayer.draw(g2d, mapTransformation);
+		}
+		if (settings.isShowingMilitary()) {
+			restrictedLayer.draw(g2d, mapTransformation);
+		}
+		if (settings.isShowingRings()) {
+			rangeMarkLayer.draw(g2d, radarDeviceTransformation);
+		}
+		drawScaleMarkers(g2d, radarDeviceTransformation);
 		
 		for (AircraftDisplay aircraftDisplay: aircraftInformationMap.values()) {
 			aircraftDisplay.drawTrail(g2d, mapTransformation);

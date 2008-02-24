@@ -15,7 +15,6 @@ import org.xml.sax.SAXException;
 import de.knewcleus.fgfs.Updater;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
-import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.LocalProjection;
 import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 import de.knewcleus.fgfs.navaids.DBParserException;
@@ -24,6 +23,7 @@ import de.knewcleus.radar.aircraft.fgmp.ATCClient;
 import de.knewcleus.radar.aircraft.fgmp.FGMPRegistry;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.rpvd.ConsoleFrame;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public class Radar {
 	public static void main(String[] args) throws DBParserException, IOException, ClassNotFoundException, MultiplayerException, ParserConfigurationException, SAXException {
@@ -35,7 +35,7 @@ public class Radar {
 		rootLogger.addHandler(handler);
 		Sector sector;
 		
-		URL sectorURL=Radar.class.getResource("/sectors/EDNY/sector.xml");
+		URL sectorURL=Radar.class.getResource("/sectors/KSFO/sector.xml");
 		sector=Sector.loadFromURL(sectorURL);
 
 		GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
@@ -50,8 +50,9 @@ public class Radar {
 		Updater scenarioUpdater=new Updater(scenario,100);
 		scenarioUpdater.start();
 		
-		ICoordinateTransformation projection=new LocalProjection(sector.getInitialCenter());
-		ConsoleFrame consoleFrame=new ConsoleFrame("Console",scenario,projection);
+		RadarPlanViewSettings radarPlanViewSettings=new RadarPlanViewSettings();
+		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
+		ConsoleFrame consoleFrame=new ConsoleFrame("Console",scenario,radarPlanViewSettings);
 		consoleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		consoleFrame.setVisible(true);
 	}
