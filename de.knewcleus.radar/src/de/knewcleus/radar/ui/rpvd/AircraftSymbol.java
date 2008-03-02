@@ -22,7 +22,6 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.aircraft.IAircraft;
-import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 
@@ -54,6 +53,7 @@ public class AircraftSymbol implements LabeledObject {
 	protected double currentLabelWidth;
 	protected double currentLabelHeight;
 	protected boolean isSelected=false;
+	protected boolean isLocked=false;
 	protected Vector3D lastVelocityVector=new Vector3D();
 	protected AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED; // FIXME: this should actually be set explicitly
 	
@@ -85,14 +85,7 @@ public class AircraftSymbol implements LabeledObject {
 			Position lastPosition=positionBuffer.getLast();
 			Vector3D newVelocityVector=aircraft.getPosition().subtract(lastPosition);
 			newVelocityVector.scale(1.0/dt);
-			
-			if (lastVelocityVector!=null) {
-				newVelocityVector.scale(0.5);
-				lastVelocityVector.scale(0.5);
-				lastVelocityVector=lastVelocityVector.add(newVelocityVector);
-			} else {
-				lastVelocityVector=newVelocityVector;
-			}
+			lastVelocityVector=newVelocityVector;
 		}
 		positionBuffer.addLast(new Position(currentPosition));
 		/* We always keep at least the last position, so the limit is historyLength+1 */
@@ -242,8 +235,9 @@ public class AircraftSymbol implements LabeledObject {
 		if (currentDevicePosition==null) {
 			return false;
 		}
-		if (label.getLeft()<=x && x<=label.getRight() && label.getTop()<=y && y<=label.getBottom())
+		if (label.containsPosition(x, y)) {
 			return true;
+		}
 		
 		double dx,dy;
 		
@@ -263,11 +257,15 @@ public class AircraftSymbol implements LabeledObject {
 	
 	@Override
 	public boolean isLocked() {
-		return isSelected;
+		return isSelected || isLocked;
+	}
+	
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
 	}
 	
 	@Override
-	public Label getLabel() {
+	public AircraftLabel getLabel() {
 		return label;
 	}
 	

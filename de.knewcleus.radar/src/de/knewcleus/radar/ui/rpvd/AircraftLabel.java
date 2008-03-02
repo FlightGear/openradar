@@ -34,6 +34,12 @@ public class AircraftLabel implements Label {
 		return hookY;
 	}
 	
+	public boolean containsPosition(double x, double y) {
+		if (getLeft()<=x && x<=getRight() && getTop()<=y && y<=getBottom())
+			return true;
+		return false;
+	}
+	
 	@Override
 	public void move(double dx, double dy) {
 		hookX+=dx;

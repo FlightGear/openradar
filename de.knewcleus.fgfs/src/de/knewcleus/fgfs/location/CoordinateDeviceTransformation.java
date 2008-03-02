@@ -26,15 +26,4 @@ public class CoordinateDeviceTransformation implements IDeviceTransformation {
 	public Point2D toDeviceRelative(Vector3D dimension) {
 		throw new UnsupportedOperationException();
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof CoordinateDeviceTransformation)) {
-			return false;
-		}
-		
-		CoordinateDeviceTransformation  transformation=(CoordinateDeviceTransformation)obj;
-		
-		return (transformation.coordinateTransformation==coordinateTransformation && transformation.deviceTransformation==deviceTransformation);
-	}
 }

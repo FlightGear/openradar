@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -55,6 +56,8 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 	
 	protected Map<IAircraft, AircraftSymbol> aircraftSymbolMap=new HashMap<IAircraft, AircraftSymbol>();
 	protected AircraftSymbol selectedSymbol=null;
+	protected long lastMouseX,lastMouseY;
+	protected boolean isDragging;
 	
 	protected static int selectionRange=10;
 	
@@ -76,13 +79,48 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 		
 		radarUpdater.start();
 		
-		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK);
+		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
 	}
 	
 	@Override
 	protected void processMouseMotionEvent(MouseEvent e) {
-		if (checkForSelectionChange())
-			repaint();
+		if (e.getID()==MouseEvent.MOUSE_MOVED) {
+			if (checkForSelectionChange())
+				repaint();
+		} else if (e.getID()==MouseEvent.MOUSE_DRAGGED) {
+			double dx,dy;
+			
+			dx=e.getX()-lastMouseX;
+			dy=e.getY()-lastMouseY;
+			
+			if (isDragging) {
+				selectedSymbol.getLabel().move(dx, dy);
+				selectedSymbol.setLocked(true);
+				repaint();
+			}
+		}
+		lastMouseX=e.getX();
+		lastMouseY=e.getY();
+		super.processMouseMotionEvent(e);
+	}
+	
+	@Override
+	protected void processComponentEvent(ComponentEvent e) {
+		if (e.getID()==ComponentEvent.COMPONENT_RESIZED) {
+			radarDeviceTransformation.update(getWidth(), getHeight());
+			prepareForDrawing();
+		}
+		super.processComponentEvent(e);
+	}
+	
+	@Override
+	protected void processMouseEvent(MouseEvent e) {
+		if (e.getID()==MouseEvent.MOUSE_PRESSED && e.getButton()==1) {
+			isDragging=(selectedSymbol!=null && selectedSymbol.getLabel().containsPosition(e.getX(), e.getY()));
+		} else if (e.getID()==MouseEvent.MOUSE_RELEASED && e.getButton()==1) {
+			isDragging=false;
+		}
+		super.processMouseEvent(e);
 	}
 	
 	private boolean checkForSelectionChange() {
@@ -125,44 +163,53 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 		return radarDeviceTransformation;
 	}
 	
-	@Override
-	protected synchronized void paintComponent(Graphics g) {
-		Graphics2D g2d=(Graphics2D)g;
-		radarDeviceTransformation.update(getWidth(), getHeight());
+	private void prepareForDrawing() {
+		Graphics2D g2d=(Graphics2D)getGraphics();
 		
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			aircraftSymbol.prepareForDrawing(g2d);
 		}
 		
+		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(settings.getMapTransformation(), radarDeviceTransformation);
+		
+		landmassLayer.prepareForDrawing(mapTransformation);
+		waterLayer.prepareForDrawing(mapTransformation);
+		waypointDisplayLayer.prepareForDrawing(mapTransformation);
+		sectorLayer.prepareForDrawing(mapTransformation);
+		restrictedLayer.prepareForDrawing(mapTransformation);
+		
 		long startTimeLabel=System.currentTimeMillis();
-		/* Labelling should not take more than 50ms per update. */
+		/* Labelling should not take more than 100ms per update. */
 		while (System.currentTimeMillis()<startTimeLabel+100) {
 			autolabeller.updateOneLabel();
 		}
+	}
+	
+	@Override
+	protected synchronized void paintComponent(Graphics g) {
+		Graphics2D g2d=(Graphics2D)g;
 		
 		super.paintComponent(g);
 		
 		setFont(settings.getFont());
 		
-		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(settings.getMapTransformation(), radarDeviceTransformation);
-		
 		if (settings.isShowingCoastline()) {
-			landmassLayer.draw(g2d, mapTransformation);
-			waterLayer.draw(g2d, mapTransformation);
+			landmassLayer.draw(g2d);
+			waterLayer.draw(g2d);
 		} else {
 			Rectangle clipRect=g2d.getClipBounds();
 			g2d.setColor(Palette.LANDMASS);
 			g2d.fillRect(clipRect.x,clipRect.y,clipRect.width,clipRect.height);
 		}
 		if (settings.isShowingWaypoints()) {
-			waypointDisplayLayer.draw(g2d, mapTransformation);
+			waypointDisplayLayer.draw(g2d);
 			drawRunwayCentrelines(g2d,radarDeviceTransformation,settings.getMapTransformation());
 		}
 		if (settings.isShowingSector()) {
-			sectorLayer.draw(g2d, mapTransformation);
+			sectorLayer.draw(g2d);
 		}
 		if (settings.isShowingMilitary()) {
-			restrictedLayer.draw(g2d, mapTransformation);
+			restrictedLayer.draw(g2d);
 		}
 		if (settings.isShowingRings()) {
 			rangeMarkLayer.draw(g2d, radarDeviceTransformation);
@@ -180,8 +227,16 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 			}
 		}
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
+			if (aircraftSymbol==selectedSymbol) {
+				continue;
+			}
 			aircraftSymbol.drawSymbol(g2d);
 			aircraftSymbol.drawLabel(g2d);
+		}
+		
+		if (selectedSymbol!=null) {
+			selectedSymbol.drawSymbol(g2d);
+			selectedSymbol.drawLabel(g2d);
 		}
 	}
 	
@@ -295,7 +350,10 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 			aircraftSymbolMap.remove(aircraft);
 		}
 		
-		checkForSelectionChange();
+		prepareForDrawing();
+
+		if (!isDragging)
+			checkForSelectionChange();
 		repaint();
 	}
 	

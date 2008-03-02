@@ -6,6 +6,7 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 
 public interface IMapLayer {
 
-	public abstract void draw(Graphics2D g2d, IDeviceTransformation transform);
-
+	public abstract void draw(Graphics2D g2d);
+	
+	public abstract void prepareForDrawing(IDeviceTransformation transform);
 }

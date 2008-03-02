@@ -18,7 +18,6 @@ import de.knewcleus.radar.sector.PolygonContour;
 public class PolygonMapLayer implements IMapLayer {
 	protected final Color color;
 	protected final List<Polygon> polygons;
-	protected IDeviceTransformation lastTransform;
 	protected List<Area> lastAreas;
 	
 	public PolygonMapLayer(Color color, List<Polygon> polygons) {
@@ -26,20 +25,19 @@ public class PolygonMapLayer implements IMapLayer {
 		this.polygons=polygons;
 	}
 	
-	public void draw(Graphics2D g2d, IDeviceTransformation transform) {
+	public void draw(Graphics2D g2d) {
 		g2d.setColor(color);
-		if (transform.equals(lastTransform)) {
-			for (Area area: lastAreas) {
-				g2d.fill(area);
-			}
-		} else {
-			lastAreas=new ArrayList<Area>();
-			for (Polygon polygon: polygons) {
-				Area polygonArea=polygonToArea(polygon, transform);
-				lastAreas.add(polygonArea);
-				g2d.fill(polygonArea);
-			}
-			lastTransform=transform;
+		for (Area area: lastAreas) {
+			g2d.fill(area);
+		}
+	}
+	
+	@Override
+	public void prepareForDrawing(IDeviceTransformation transform) {
+		lastAreas=new ArrayList<Area>();
+		for (Polygon polygon: polygons) {
+			Area polygonArea=polygonToArea(polygon, transform);
+			lastAreas.add(polygonArea);
 		}
 	}
 	
