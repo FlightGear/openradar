@@ -46,6 +46,11 @@ public class PointObject implements LabeledObject {
 	}
 	
 	@Override
+	public boolean isLocked() {
+		return false;
+	}
+	
+	@Override
 	public PotentialGradient getPotentialGradient(double dx, double dy) {
 		final double dvx,dvy; // position relative to the heading vector
 		

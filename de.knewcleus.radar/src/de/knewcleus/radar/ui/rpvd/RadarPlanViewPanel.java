@@ -1,9 +1,13 @@
 package de.knewcleus.radar.ui.rpvd;
 
+import java.awt.AWTEvent;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -50,6 +54,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 	protected final float centrelineLength=5.0f*(float)Units.NM;
 	
 	protected Map<IAircraft, AircraftSymbol> aircraftSymbolMap=new HashMap<IAircraft, AircraftSymbol>();
+	protected AircraftSymbol selectedSymbol=null;
 	
 	protected static int selectionRange=10;
 	
@@ -70,6 +75,46 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 		setBackground(Palette.WATERMASS);
 		
 		radarUpdater.start();
+		
+		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK);
+	}
+	
+	@Override
+	protected void processMouseMotionEvent(MouseEvent e) {
+		if (checkForSelectionChange())
+			repaint();
+	}
+	
+	private boolean checkForSelectionChange() {
+		if (!isShowing())
+			return false;
+		Point locOnScreen=getLocationOnScreen();
+		Point currentLocation=MouseInfo.getPointerInfo().getLocation();
+		int x,y;
+		
+		x=currentLocation.x-locOnScreen.x;
+		y=currentLocation.y-locOnScreen.y;
+		
+		if (selectedSymbol!=null && selectedSymbol.containsPosition(x, y)) {
+			return false; // The old selection has priority
+		}
+		
+		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
+			if (aircraftSymbol.containsPosition(x, y)) {
+				if (selectedSymbol!=null) {
+					selectedSymbol.setSelected(false);
+				}
+				selectedSymbol=aircraftSymbol;
+				aircraftSymbol.setSelected(true);
+				return true;
+			}
+		}
+		
+		if (selectedSymbol!=null) {
+			selectedSymbol.setSelected(false);
+		}
+		selectedSymbol=null;
+		return true;
 	}
 	
 	public RadarPlanViewSettings getSettings() {
@@ -89,10 +134,9 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 			aircraftSymbol.prepareForDrawing(g2d);
 		}
 		
-		/* Labelling should not take more than 250ms. */
-		long startTime=System.currentTimeMillis();
-		
-		while (System.currentTimeMillis()<startTime+250) {
+		long startTimeLabel=System.currentTimeMillis();
+		/* Labelling should not take more than 50ms per update. */
+		while (System.currentTimeMillis()<startTimeLabel+100) {
 			autolabeller.updateOneLabel();
 		}
 		
@@ -251,6 +295,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 			aircraftSymbolMap.remove(aircraft);
 		}
 		
+		checkForSelectionChange();
 		repaint();
 	}
 	

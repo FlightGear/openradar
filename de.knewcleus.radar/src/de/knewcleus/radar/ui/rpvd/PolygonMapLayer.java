@@ -6,6 +6,7 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import de.knewcleus.radar.sector.PolygonContour;
 public class PolygonMapLayer implements IMapLayer {
 	protected final Color color;
 	protected final List<Polygon> polygons;
+	protected IDeviceTransformation lastTransform;
+	protected List<Area> lastAreas;
 	
 	public PolygonMapLayer(Color color, List<Polygon> polygons) {
 		this.color=color;
@@ -25,9 +28,18 @@ public class PolygonMapLayer implements IMapLayer {
 	
 	public void draw(Graphics2D g2d, IDeviceTransformation transform) {
 		g2d.setColor(color);
-		for (Polygon polygon: polygons) {
-			Area polygonArea=polygonToArea(polygon, transform);
-			g2d.fill(polygonArea);
+		if (transform.equals(lastTransform)) {
+			for (Area area: lastAreas) {
+				g2d.fill(area);
+			}
+		} else {
+			lastAreas=new ArrayList<Area>();
+			for (Polygon polygon: polygons) {
+				Area polygonArea=polygonToArea(polygon, transform);
+				lastAreas.add(polygonArea);
+				g2d.fill(polygonArea);
+			}
+			lastTransform=transform;
 		}
 	}
 	

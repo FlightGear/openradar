@@ -48,6 +48,10 @@ public class Autolabeller {
 			return;
 		
 		LabeledObject labeledObject=objectsToProcess.removeFirst();
+		if (labeledObject.isLocked()) {
+			objectsToProcess.addLast(labeledObject);
+			return;
+		}
 		Label label=labeledObject.getLabel();
 		
 		/* First determine the simple charge potential gradient (Coloumb-Force) */

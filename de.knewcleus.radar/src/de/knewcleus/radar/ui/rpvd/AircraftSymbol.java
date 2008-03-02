@@ -238,6 +238,34 @@ public class AircraftSymbol implements LabeledObject {
 		return 1E4;
 	}
 	
+	public boolean containsPosition(double x, double y) {
+		if (currentDevicePosition==null) {
+			return false;
+		}
+		if (label.getLeft()<=x && x<=label.getRight() && label.getTop()<=y && y<=label.getBottom())
+			return true;
+		
+		double dx,dy;
+		
+		dx=x-currentDevicePosition.getX();
+		dy=y-currentDevicePosition.getY();
+		
+		if ((dx*dx+dy*dy)<=aircraftSymbolSize*aircraftSymbolSize) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+	
+	@Override
+	public boolean isLocked() {
+		return isSelected;
+	}
+	
 	@Override
 	public Label getLabel() {
 		return label;
