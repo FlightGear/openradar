@@ -1,7 +1,6 @@
 package de.knewcleus.radar.autolabel;
 
-import java.util.Set;
-
-public interface LabeledObject extends BoundedSymbol {
-	public Set<? extends LabelCandidate> getLabelCandidates();
+public interface LabeledObject extends ChargedSymbol {
+	public Label getLabel();
+	public PotentialGradient getPotentialGradient(double x, double y);
 }

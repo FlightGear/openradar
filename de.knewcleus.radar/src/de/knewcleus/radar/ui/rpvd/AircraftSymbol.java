@@ -1,5 +1,8 @@
 package de.knewcleus.radar.ui.rpvd;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.signum;
+
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -8,11 +11,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayDeque;
-import java.util.Collections;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
@@ -22,26 +22,34 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.aircraft.IAircraft;
-import de.knewcleus.radar.autolabel.LabelCandidate;
+import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
-import de.knewcleus.radar.autolabel.ProtectedSymbol;
+import de.knewcleus.radar.autolabel.PotentialGradient;
 
-public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
-	// priorisation of label positions: top-right, bottom-right, bottom-left, top-left, right, left
-	protected static final double[] labelDeltaX=new double[] {1.0,1.0,-1.0,-1.0,1.0,-1.0};
-	protected static final double[] labelDeltaY=new double[] {-1.0,1.0,1.0,-1.0,0.0,0.0};
+public class AircraftSymbol implements LabeledObject {
 	protected static final float aircraftSymbolSize=6.0f;
-	protected static final float leadingLineLength=10.0f;
 	protected static final int maximumTrailLength=6;
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 
+	protected static final double EPSILON=1E-10;
+	
+	protected static final double potAngleMax=.5E1;
+	protected static final double angle0=0.75*Math.PI;
+	protected static final double angleMax=0.3*Math.PI;
+
+	protected static final double potDistanceMax=1E2;
+	protected static final double minLabelDist=10;
+	protected static final double maxLabelDist=100;
+	protected static final double meanLabelDist=(minLabelDist+maxLabelDist)/2.0;
+	protected static final double labelDistRange=(maxLabelDist-minLabelDist);
+
 	protected final RadarPlanViewContext radarPlanViewContext;
 	protected final IAircraft aircraft;
-	
-	protected final Set<AircraftLabelCandidate> labelCandidates=new HashSet<AircraftLabelCandidate>();
+	protected final AircraftLabel label;
 	
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>(maximumTrailLength);
 	protected Point2D currentDevicePosition;
+	protected Point2D currentDeviceHeadPosition;
 	protected final String labelLine[]=new String[5];
 	protected double currentLabelWidth;
 	protected double currentLabelHeight;
@@ -52,13 +60,7 @@ public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
 	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, IAircraft aircraft) {
 		this.radarPlanViewContext=radarPlanViewContext;
 		this.aircraft=aircraft;
-		
-		assert(labelDeltaX.length==labelDeltaY.length);
-		
-		for (int i=0;i<labelDeltaX.length;i++) {
-			AircraftLabelCandidate labelCandidate=new AircraftLabelCandidate(this,labelDeltaX[i],labelDeltaY[i],i);
-			labelCandidates.add(labelCandidate);
-		}
+		this.label=new AircraftLabel(this);
 	}
 	
 	public IAircraft getAircraft() {
@@ -83,7 +85,14 @@ public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
 			Position lastPosition=positionBuffer.getLast();
 			Vector3D newVelocityVector=aircraft.getPosition().subtract(lastPosition);
 			newVelocityVector.scale(1.0/dt);
-			lastVelocityVector=newVelocityVector;
+			
+			if (lastVelocityVector!=null) {
+				newVelocityVector.scale(0.5);
+				lastVelocityVector.scale(0.5);
+				lastVelocityVector=lastVelocityVector.add(newVelocityVector);
+			} else {
+				lastVelocityVector=newVelocityVector;
+			}
 		}
 		positionBuffer.addLast(new Position(currentPosition));
 		/* We always keep at least the last position, so the limit is historyLength+1 */
@@ -99,10 +108,23 @@ public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
 		Position currentGeodPosition=geodToCartTransformation.backward(currentPosition);
 		Position currentMapPosition=mapTransformation.forward(currentGeodPosition);
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
-		
+
+		if (lastVelocityVector!=null) {
+			Vector3D distanceMade=new Vector3D(lastVelocityVector);
+			distanceMade.scale(radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN);
+			Position vectorHead=new Position(currentPosition);
+			vectorHead.translate(distanceMade);
+			
+			Position realHead=geodToCartTransformation.backward(vectorHead);
+			Position mapHead=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realHead);
+			currentDeviceHeadPosition=radarPlanViewContext.getDeviceTransformation().toDevice(mapHead);
+		} else {
+			currentDeviceHeadPosition=currentDevicePosition;
+		}
+
 		labelLine[0]=String.format("%03d",(int)Math.ceil(currentGeodPosition.getZ()/Units.FT/100.0));
 		labelLine[1]=aircraft.getOperator()+aircraft.getCallsign();
-		labelLine[2]=String.format("%03d",(int)Math.round(aircraft.getVelocity()/Units.KNOTS/10.0));
+		labelLine[2]=String.format("%03d",(int)Math.round(lastVelocityVector.getLength()/Units.KNOTS/10.0));
 		labelLine[3]=null;
 		labelLine[4]=null;
 
@@ -113,6 +135,8 @@ public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
 			currentLabelHeight+=fontMetrics.getMaxAscent()+fontMetrics.getMaxDescent()+fontMetrics.getLeading();
 			currentLabelWidth=Math.max(currentLabelWidth, fontMetrics.stringWidth(labelLine[i]));
 		}
+		
+		label.move(0,0);
 	}
 	
 	public void drawSymbol(Graphics2D g2d) {
@@ -123,18 +147,17 @@ public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
 		g2d.fill(symbol);
 	}
 	
-	public void drawLabel(Graphics2D g2d, LabelCandidate labelCandidate) {
-		AircraftLabelCandidate candidate=(AircraftLabelCandidate)labelCandidate;
-		double x=labelCandidate.getLeft();
-		double y=labelCandidate.getTop();
-
+	public void drawLabel(Graphics2D g2d) {
+		double x=label.getLeft();
+		double y=label.getTop();
+		
 		double devX=currentDevicePosition.getX();
 		double devY=currentDevicePosition.getY();
 		
-		double leStartX=devX+candidate.getDx()*aircraftSymbolSize/2.0;
-		double leStartY=devY+candidate.getDy()*aircraftSymbolSize/2.0;
-		double leEndX=leStartX+candidate.getDx()*leadingLineLength;
-		double leEndY=leStartY+candidate.getDy()*leadingLineLength;
+		double leStartX=devX;
+		double leStartY=devY;
+		double leEndX=leStartX+label.getHookX();
+		double leEndY=leStartY+label.getHookY();
 		g2d.setColor(Palette.WHITE);
 		Line2D leadingLine=new Line2D.Double(leStartX,leStartY,leEndX,leEndY);
 		g2d.draw(leadingLine);
@@ -156,25 +179,8 @@ public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
 	}
 	
 	public void drawHeadingVector(Graphics2D g2d) {
-		if (lastVelocityVector==null)
-			return;
-		Position lastPosition=positionBuffer.getLast();
-		Vector3D distanceMade=new Vector3D(lastVelocityVector);
-		distanceMade.scale(radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN);
-		Position vectorHead=new Position(lastPosition);
-		vectorHead.translate(distanceMade);
-		
-		Position realPos=geodToCartTransformation.backward(lastPosition);
-		Position realHead=geodToCartTransformation.backward(vectorHead);
-		
-		Position mapPos=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realPos);
-		Position mapHead=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realHead);
-		
-		Point2D devicePos=radarPlanViewContext.getDeviceTransformation().toDevice(mapPos);
-		Point2D deviceHead=radarPlanViewContext.getDeviceTransformation().toDevice(mapHead);
-		
 		g2d.setColor(aircraftTaskState.getSymbolColor());
-		Line2D headingVector=new Line2D.Double(devicePos,deviceHead);
+		Line2D headingVector=new Line2D.Double(currentDevicePosition,currentDeviceHeadPosition);
 		g2d.draw(headingVector);
 	}
 	
@@ -189,14 +195,14 @@ public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
 			return;
 		Color symbolColor=aircraftTaskState.getSymbolColor();
 		float alphaIncrease=1.0f/(dotCount+1);
-		float alpha=0.0f;
+		float alpha=1.0f;
 		
-		Iterator<Position> positionIterator=positionBuffer.iterator();
+		Iterator<Position> positionIterator=positionBuffer.descendingIterator();
 		positionIterator.next(); // skip current position
 		for (int i=0;i<dotCount;i++) {
 			assert(positionIterator.hasNext());
 			Position position=positionIterator.next();
-			alpha+=alphaIncrease;
+			alpha-=alphaIncrease;
 			realPos=geodToCartTransformation.backward(position);
 			mapPos=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realPos);
 			devicePos=radarPlanViewContext.getDeviceTransformation().toDevice(mapPos);
@@ -228,12 +234,100 @@ public class AircraftSymbol implements LabeledObject, ProtectedSymbol {
 	}
 	
 	@Override
-	public double getOverlapPenalty() {
-		return 1.0E3;
+	public double getChargeDensity() {
+		return 1E4;
 	}
 	
 	@Override
-	public Set<AircraftLabelCandidate> getLabelCandidates() {
-		return Collections.unmodifiableSet(labelCandidates);
+	public Label getLabel() {
+		return label;
+	}
+	
+	@Override
+	public PotentialGradient getPotentialGradient(double dx, double dy) {
+		final double vx,vy;
+		
+		vx=currentDeviceHeadPosition.getX()-currentDevicePosition.getX();
+		vy=currentDeviceHeadPosition.getY()-currentDevicePosition.getY();
+		
+		final double dvx,dvy; // position relative to the heading vector
+		
+		final double r=Math.sqrt(dx*dx+dy*dy);
+		final double v=Math.sqrt(vx*vx+vy*vy);
+
+		dvx=dx*vx+dy*vy;
+		dvy=dx*vy-dy*vx;
+		
+		/*
+		 * Calculate the angle contribution to the gradient.
+		 * 
+		 * The angle contribution to the weight is found as follows
+		 * 
+		 * w=wmax*((angle-a0)/amax)^2
+		 * angle=abs(atan(y/x))
+		 */
+		
+		// d/dt atan(t)=cos^2(atan(t))
+		
+		// dw/dx=wmax * d/dx ((angle-a0)/amax)^2
+		// dw/dy=wmax * d/dy ((angle-a0)/amax)^2
+		// d/dx ((angle-a0)/amax)^2 = 2*(angle-a0)/amax^2 * d/dx angle
+		// d/dy ((angle-a0)/amax)^2 = 2*(angle-a0)/amax^2 * d/dy angle
+		
+		// d/dx angle=d/dx abs(atan(y/x)) = (d/dx atan(y/x)) * d/da abs(a) | a=atan(y/x)
+		// d/dy angle=d/dy abs(atan(y/x)) = (d/dy atan(y/x)) * d/da abs(a) | a=atan(y/x)
+		
+		// d/dx atan(y/x) = (d/dx y/x) * d/dt atan(t) | t=y/x = -y/x^2 * cos^2(atan(y/x))
+		// d/dy atan(y/x) = (d/dy y/x) * d/dt atan(t) | t=y/x =  1/x   * cos^2(atan(y/x))
+		
+		// dw/dx = 2 * wmax * (angle-a0)/amax^2 * sig(atan(y/x)) * cos^2(atan(y/x) * (-y/x^2)
+		// dw/dy = 2 * wmax * (angle-a0)/amax^2 * sig(atan(y/x)) * cos^2(atan(y/x)) * 1/x
+
+		final double angleForceX,angleForceY;
+		
+		if (abs(dvx)<EPSILON) {
+			angleForceX=angleForceY=0.0;
+		} else {
+			final double angle=abs(Math.atan2(dvy,dvx));
+			
+			final double cangle=Math.cos(angle);
+			final double cangle2=cangle*cangle;
+			
+			final double angleForce;
+			
+			angleForce=2.0 * potAngleMax * (angle-angle0)/(angleMax*angleMax) * signum(angle) * cangle2;
+			
+			final double angleForceVX, angleForceVY;
+			
+			angleForceVX=-dvy * angleForce / (dvx*dvx);
+			angleForceVY=       angleForce / dvx;
+			
+			/* Transform from velocity relative frame to global frame */
+			angleForceX=(vx*angleForceVX+vy*angleForceVY)/v;
+			angleForceY=(vy*angleForceVX-vx*angleForceVY)/v;
+		}
+		
+		/*
+		 * Calculate the distance contribution.
+		 * 
+		 * w=wmax*(4*((r-rmean)/rd)^2-1)
+		 */
+		
+		// dw/dx = dr/dx * dw/dr
+		// dw/dy = dr/dy * dw/dr
+		// dw/dr = 8*wmax*(r-rmean)/rd^2
+		// dr/dx = x/r
+		// dr/dy = y/r
+		
+		final double distanceForce;
+		
+		distanceForce=-8.0*potDistanceMax*(r-meanLabelDist)/(labelDistRange*labelDistRange);
+		
+		final double distanceForceX,distanceForceY;
+		
+		distanceForceX=dx/r*distanceForce;
+		distanceForceY=dy/r*distanceForce;
+		
+		return new PotentialGradient(angleForceX+distanceForceX,angleForceY+distanceForceY);
 	}
 }

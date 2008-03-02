@@ -42,6 +42,16 @@ public class Vector3D {
 		y*=s;
 		z*=s;
 	}
+	
+	public Vector3D normalise() {
+		double len=getLength();
+		
+		if (len<1E-22) {
+			return new Vector3D();
+		}
+		
+		return new Vector3D(x/len,y/len,z/len);
+	}
 
 	public double getLength() {
 		return Math.sqrt(x*x+y*y+z*z);

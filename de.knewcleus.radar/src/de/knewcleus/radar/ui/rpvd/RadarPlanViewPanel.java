@@ -35,7 +35,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 	protected final RadarDeviceTransformation radarDeviceTransformation;
 	protected final RadarPlanViewContext radarPlanViewContext;
 	
-	protected final Autolabeller autolabeller=new Autolabeller();
+	protected final Autolabeller autolabeller=new Autolabeller(1E-2,5);
 	protected final Updater radarUpdater=new Updater(this,1000);
 
 	protected final IMapLayer landmassLayer;
@@ -90,7 +90,11 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 		}
 		
 		/* Labelling should not take more than 250ms. */
-		autolabeller.label(System.currentTimeMillis()+250);
+		long startTime=System.currentTimeMillis();
+		
+		while (System.currentTimeMillis()<startTime+250) {
+			autolabeller.updateOneLabel();
+		}
 		
 		super.paintComponent(g);
 		
@@ -133,7 +137,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 		}
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			aircraftSymbol.drawSymbol(g2d);
-			aircraftSymbol.drawLabel(g2d, autolabeller.getCurrentLabelling().get(aircraftSymbol));
+			aircraftSymbol.drawLabel(g2d);
 		}
 	}
 	
