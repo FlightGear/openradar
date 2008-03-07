@@ -106,10 +106,12 @@ public class Quaternion {
 		return fromEulerAngles(yaw, pitch, roll);
 	}
 	
-	public static Quaternion fromGeocLatLon(double lat, double lon) {
+	public static Quaternion fromLatLon(double lat, double lon) {
 		// sequence is z, y
-		final double cosz2=cos(lon/Units.RAD/2.0),sinz2=sin(lon/Units.RAD/2.0);
-		final double cosy2=cos(lat/Units.RAD/2.0),siny2=sin(lat/Units.RAD/2.0);
+		final double z2=lon/Units.RAD/2.0;
+		final double y2=-Math.PI/4.0-lat/Units.RAD/2.0;
+		final double cosz2=cos(z2),sinz2=sin(z2);
+		final double cosy2=cos(y2),siny2=sin(y2);
 		return new Quaternion(cosz2*cosy2,-sinz2*siny2,cosz2*siny2,sinz2*cosy2);
 	}
 }
