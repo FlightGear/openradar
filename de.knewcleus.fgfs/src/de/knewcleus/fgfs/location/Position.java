@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 
 public final class Position extends Vector3D {
 	public Position() {
+		super();
 	}
 	
 	public Position(double x, double y, double z) {

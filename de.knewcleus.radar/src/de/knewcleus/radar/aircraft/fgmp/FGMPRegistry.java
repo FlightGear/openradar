@@ -33,7 +33,7 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 	
 	protected void fireRadarTargetAcquired(IAircraft target) {
 		for (IRadarDataConsumer consumer: consumers) {
-			consumer.radarTargetAquired(target);
+			consumer.radarTargetAcquired(target);
 		}
 	}
 	

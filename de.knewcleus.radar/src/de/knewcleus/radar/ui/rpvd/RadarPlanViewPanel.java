@@ -330,7 +330,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 	}
 	
 	@Override
-	public synchronized void radarTargetAquired(IAircraft aircraft) {
+	public synchronized void radarTargetAcquired(IAircraft aircraft) {
 		AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraft);
 		aircraftSymbolMap.put(aircraft, aircraftSymbol);
 		autolabeller.addLabeledObject(aircraftSymbol);
