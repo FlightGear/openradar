@@ -15,12 +15,12 @@ import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
 import de.knewcleus.fgfs.multiplayer.protocol.XDRInputStream;
 import de.knewcleus.fgfs.multiplayer.protocol.XDROutputStream;
 
-public abstract class AbstractMultiplayerEndpoint extends Thread {
+public abstract class AbstractMultiplayerEndpoint<T extends Player> extends Thread {
 	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final DatagramSocket datagramSocket;
-	protected final IPlayerRegistry playerRegistry;
+	protected final IPlayerRegistry<T> playerRegistry;
 	
-	public AbstractMultiplayerEndpoint(IPlayerRegistry playerRegistry) throws MultiplayerException {
+	public AbstractMultiplayerEndpoint(IPlayerRegistry<T> playerRegistry) throws MultiplayerException {
 		try {
 			datagramSocket=new DatagramSocket();
 		} catch (SocketException e) {
@@ -29,7 +29,7 @@ public abstract class AbstractMultiplayerEndpoint extends Thread {
 		this.playerRegistry=playerRegistry;
 	}
 	
-	public AbstractMultiplayerEndpoint(IPlayerRegistry playerRegistry, int port) throws MultiplayerException {
+	public AbstractMultiplayerEndpoint(IPlayerRegistry<T> playerRegistry, int port) throws MultiplayerException {
 		try {
 			if (port==0)
 					datagramSocket=new DatagramSocket();
@@ -104,7 +104,7 @@ public abstract class AbstractMultiplayerEndpoint extends Thread {
 
 	protected void processPacket(PlayerAddress address, MultiplayerPacket mppacket) throws MultiplayerException {
 		playerRegistry.expirePlayers();
-		Player player;
+		T player;
 		if (playerRegistry.hasPlayer(address)) {
 			player=playerRegistry.getPlayer(address);
 		} else {
@@ -116,10 +116,10 @@ public abstract class AbstractMultiplayerEndpoint extends Thread {
 		processPacket(player,mppacket);
 	}
 	
-	protected void newPlayerLogon(Player player) throws MultiplayerException {
+	protected void newPlayerLogon(T player) throws MultiplayerException {
 	}
 
-	protected abstract void processPacket(Player player, MultiplayerPacket mppacket) throws MultiplayerException;
+	protected abstract void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException;
 
 	protected void handleBadPacket(DatagramPacket packet) {
 	}

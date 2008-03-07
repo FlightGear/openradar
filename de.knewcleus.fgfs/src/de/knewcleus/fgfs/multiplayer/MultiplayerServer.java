@@ -9,12 +9,12 @@ import de.knewcleus.fgfs.multiplayer.protocol.ChatMessage;
 import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
 
-public class MultiplayerServer extends AbstractMultiplayerEndpoint {
+public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndpoint<T> {
 	public static final int STANDARD_PORT=5000;
 	public double maxDistance=100.0*Units.NM;
 	protected List<MultiplayerPacket> queuedPackets=new ArrayList<MultiplayerPacket>();
 
-	public MultiplayerServer(IPlayerRegistry playerRegistry) throws MultiplayerException {
+	public MultiplayerServer(IPlayerRegistry<T> playerRegistry) throws MultiplayerException {
 		super(playerRegistry,getStandardPort());
 	}
 	
@@ -22,12 +22,12 @@ public class MultiplayerServer extends AbstractMultiplayerEndpoint {
 		return Integer.getInteger("de.knewcleus.fgfs.multiplayer.server.port",STANDARD_PORT);
 	}
 
-	public MultiplayerServer(IPlayerRegistry playerRegistry, int port) throws MultiplayerException {
+	public MultiplayerServer(IPlayerRegistry<T> playerRegistry, int port) throws MultiplayerException {
 		super(playerRegistry, port);
 	}
 
 	@Override
-	protected synchronized void processPacket(Player player, MultiplayerPacket mppacket) throws MultiplayerException {
+	protected synchronized void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException {
 		Position senderPosition;
 		if (mppacket.getMessage() instanceof PositionMessage) {
 			PositionMessage positionMessage=(PositionMessage)mppacket.getMessage();
@@ -45,7 +45,7 @@ public class MultiplayerServer extends AbstractMultiplayerEndpoint {
 		}
 		
 		/* Send back to all local clients */
-		for (Player otherPlayer: playerRegistry.getPlayers()) {
+		for (T otherPlayer: playerRegistry.getPlayers()) {
 			if (!player.isLocalPlayer())
 				continue;
 			
@@ -80,7 +80,7 @@ public class MultiplayerServer extends AbstractMultiplayerEndpoint {
 	}
 	
 	@Override
-	protected void newPlayerLogon(Player player) throws MultiplayerException {
+	protected void newPlayerLogon(T player) throws MultiplayerException {
 		super.newPlayerLogon(player);
 		
 		ChatMessage message=new ChatMessage("server: Welcome to the FlightGear Multiplayer server at "+datagramSocket.getLocalSocketAddress()+":"+datagramSocket.getLocalPort());

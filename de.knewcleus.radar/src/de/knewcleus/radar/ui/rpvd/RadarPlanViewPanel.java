@@ -13,7 +13,6 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,14 +27,17 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
-import de.knewcleus.radar.Scenario;
 import de.knewcleus.radar.aircraft.IAircraft;
+import de.knewcleus.radar.aircraft.IRadarDataConsumer;
+import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.autolabel.Autolabeller;
+import de.knewcleus.radar.sector.Sector;
 
-public class RadarPlanViewPanel extends JPanel implements IUpdateable {
+public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDataConsumer {
 	private static final long serialVersionUID = 8996959818592227638L;
 	
-	protected final Scenario scenario;
+	protected final IRadarDataProvider<? extends IAircraft> radarDataProvider;
+	protected final Sector sector;
 	protected final RadarPlanViewSettings settings;
 	protected final RadarDeviceTransformation radarDeviceTransformation;
 	protected final RadarPlanViewContext radarPlanViewContext;
@@ -61,19 +63,20 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 	
 	protected static int selectionRange=10;
 	
-	public RadarPlanViewPanel(final Scenario scenario, RadarPlanViewSettings settings) {
+	public RadarPlanViewPanel(final IRadarDataProvider<? extends IAircraft> radarDataProvider, Sector sector, RadarPlanViewSettings settings) {
 		super(true); /* Is double buffered */
-		this.scenario=scenario;
+		this.radarDataProvider=radarDataProvider;
+		this.sector=sector;
 		this.settings=settings;
 		
 		radarDeviceTransformation=new RadarDeviceTransformation(settings);
 		radarPlanViewContext=new RadarPlanViewContext(settings,radarDeviceTransformation);
 		
-		landmassLayer=new PolygonMapLayer(Palette.LANDMASS,scenario.getSector().getLandmassPolygons());
-		waterLayer=new PolygonMapLayer(Palette.WATERMASS,scenario.getSector().getWaterPolygons());
-		restrictedLayer=new PolygonMapLayer(Palette.RESTRICTED,scenario.getSector().getRestrictedPolygons());
-		sectorLayer=new PolygonMapLayer(Palette.SECTOR,scenario.getSector().getSectorPolygons());
-		waypointDisplayLayer=new WaypointDisplayLayer(scenario.getSector());
+		landmassLayer=new PolygonMapLayer(Palette.LANDMASS,sector.getLandmassPolygons());
+		waterLayer=new PolygonMapLayer(Palette.WATERMASS,sector.getWaterPolygons());
+		restrictedLayer=new PolygonMapLayer(Palette.RESTRICTED,sector.getRestrictedPolygons());
+		sectorLayer=new PolygonMapLayer(Palette.SECTOR,sector.getSectorPolygons());
+		waypointDisplayLayer=new WaypointDisplayLayer(sector);
 
 		setBackground(Palette.WATERMASS);
 		
@@ -297,7 +300,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 	}
 	
 	private void drawRunwayCentrelines(Graphics2D g2d, IDeviceTransformation deviceTransformation, ICoordinateTransformation transform) {
-		Set<Aerodrome> aerodromes=scenario.getSector().getFixDB().getFixes(Aerodrome.class);
+		Set<Aerodrome> aerodromes=sector.getFixDB().getFixes(Aerodrome.class);
 		
 		g2d.setColor(Palette.BEACON);
 		
@@ -324,30 +327,24 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable {
 		}
 	}
 	
+	@Override
+	public synchronized void radarTargetAquired(IAircraft aircraft) {
+		AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraft);
+		aircraftSymbolMap.put(aircraft, aircraftSymbol);
+		autolabeller.addLabeledObject(aircraftSymbol);
+	}
+	
+	@Override
+	public synchronized void radarTargetLost(IAircraft aircraft) {
+		AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(aircraft);
+		autolabeller.removeLabeledObject(aircraftSymbol);
+		aircraftSymbolMap.remove(aircraft);
+	}
+	
 	public synchronized void update(double dt) {
-		for (IAircraft aircraft: scenario.getAircraft()) {
-			AircraftSymbol aircraftSymbol;
-			
-			if (aircraftSymbolMap.containsKey(aircraft)) {
-				aircraftSymbol=aircraftSymbolMap.get(aircraft);
-			} else {
-				aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraft);
-				aircraftSymbolMap.put(aircraft,aircraftSymbol);
-				autolabeller.addLabeledObject(aircraftSymbol);
-			}
+		for (IAircraft aircraft: radarDataProvider) {
+			AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(aircraft);
 			aircraftSymbol.update(dt);
-		}
-		
-		Set<IAircraft> removedAircraft=new HashSet<IAircraft>();
-		
-		for (IAircraft aircraft: aircraftSymbolMap.keySet()) {
-			if (!scenario.hasAircraft(aircraft))
-				removedAircraft.add(aircraft);
-		}
-		
-		for (IAircraft aircraft: removedAircraft) {
-			autolabeller.removeLabeledObject(aircraftSymbolMap.get(aircraft));
-			aircraftSymbolMap.remove(aircraft);
 		}
 		
 		prepareForDrawing();

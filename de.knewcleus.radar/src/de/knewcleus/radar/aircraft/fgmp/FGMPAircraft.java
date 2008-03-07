@@ -13,31 +13,37 @@ public class FGMPAircraft extends Player implements IAircraft {
 		super(address, callsign);
 	}
 
+	@Override
 	public FlightType getFlightType() {
 		// TODO: properly determine flight type
 		return FlightType.GA;
 	}
 
+	@Override
 	public String getOperator() {
 		// TODO: properly determine operator
 		return "";
 	}
 
+	@Override
 	public AircraftType getType() {
 		// TODO: properly determine aircraft type
 		return null;
 	}
-
-	public double getVelocity() {
-		return getLinearVelocity().getLength();
+	
+	@Override
+	public Vector3D getVelocityVector() {
+		return linearVelocity;
 	}
-
+	
+	@Override
 	public void update(double dt) {
 		Vector3D distanceMade=new Vector3D(linearVelocity);
 		linearVelocity.scale(dt);
 		position.translate(distanceMade);
 	}
 
+	@Override
 	public void receive(Channel channel, IMessage message) {
 	}
 }

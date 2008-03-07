@@ -1,0 +1,42 @@
+TARGET ARCHITECTURE
+===================
+
+NOTE: This is not the current architecture, but a target to work towards.
+
+In general the architecture should model the architecture of actual radar and control systems.
+
+(R1) There shall be a radar which provides radar targets with primary and secondary information
+(position + transponder data).
+
+(R2) This radar data is regularly updated in intervals of about 1 second.
+
+(R3) There shall be a flightplan server providing flightplan data by flightnumber or callsign.
+
+(R4) The flightplan data consists of the typical data provided in the normal ICAO flightplan forms:
+	- Callsign/Flight Number
+	- Flightrules
+	- Type of flight
+	- Number of aircraft
+	- Aircraft type (ICAO)
+	- Wake category
+	- Navigation equipment
+	- Aerodrome of departure
+	- EOBT
+	- Speed
+	- Cruise Level
+	- Route
+	- Aerodrome of destination
+	- ETE
+	- Alternates 1 + 2
+	- Remarks (parse and separate)
+
+(R5) Coordination data shall be passed from sector to sector on coordination.
+
+(R6) Coordination data shall consist of
+	- Callsign/Flight Number
+	- Assigned SSR-Code
+	- (further data concerned in coordination as specified in EEC report 292)
+
+(R7) Coordination is a multi-step process, in which multiple refinements of coordination data may occur until the transferring controller has released the aircraft and the next controller as assumed control over it.
+
+(R8) The communication model shall support both structured messages (e.g. for AI aircraft) as well as simple text and voice messages.

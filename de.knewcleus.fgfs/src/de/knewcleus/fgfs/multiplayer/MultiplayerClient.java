@@ -11,14 +11,14 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
 
-public abstract class MultiplayerClient extends AbstractMultiplayerEndpoint implements IUpdateable {
+public abstract class MultiplayerClient<T extends Player> extends AbstractMultiplayerEndpoint<T> implements IUpdateable {
 	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final InetAddress serverAddress;
 	protected final int serverPort;
 	protected final Queue<String> chatQueue=new ArrayDeque<String>();
 	protected String lastChatMessage="";
 	
-	public MultiplayerClient(IPlayerRegistry playerRegistry) throws MultiplayerException {
+	public MultiplayerClient(IPlayerRegistry<T> playerRegistry) throws MultiplayerException {
 		super(playerRegistry, getStandardPort());
 		String serverName=System.getProperty("de.knewcleus.fgfs.multiplayer.server.host", "localhost");
 		try {
@@ -34,7 +34,7 @@ public abstract class MultiplayerClient extends AbstractMultiplayerEndpoint impl
 	}
 
 	@Override
-	protected void processPacket(Player player, MultiplayerPacket mppacket) throws MultiplayerException {
+	protected void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException {
 		if (mppacket.getMessage() instanceof PositionMessage) {
 			PositionMessage positionMessage=(PositionMessage)mppacket.getMessage();
 			player.updatePosition(System.currentTimeMillis(),positionMessage);

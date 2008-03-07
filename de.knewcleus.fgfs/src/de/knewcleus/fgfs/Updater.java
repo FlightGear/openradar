@@ -15,6 +15,7 @@ public class Updater extends Thread {
 	public Updater(IUpdateable updateable, long intervalMillis) {
 		this.updateable=updateable;
 		this.intervalMillis=intervalMillis;
+		setDaemon(true);
 	}
 	
 	public void run() {
