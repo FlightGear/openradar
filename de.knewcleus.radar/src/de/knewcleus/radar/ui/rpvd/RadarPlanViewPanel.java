@@ -42,7 +42,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 	protected final RadarDeviceTransformation radarDeviceTransformation;
 	protected final RadarPlanViewContext radarPlanViewContext;
 	
-	protected final Autolabeller autolabeller=new Autolabeller(1E-2,5);
+	protected final Autolabeller autolabeller=new Autolabeller(1E-1,3E-1);
 	protected final Updater radarUpdater=new Updater(this,1000);
 
 	protected final IMapLayer landmassLayer;
@@ -119,7 +119,6 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 	protected void processComponentEvent(ComponentEvent e) {
 		if (e.getID()==ComponentEvent.COMPONENT_RESIZED) {
 			radarDeviceTransformation.update(getWidth(), getHeight());
-			prepareForDrawing();
 		}
 		super.processComponentEvent(e);
 	}
@@ -174,53 +173,43 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 		return radarDeviceTransformation;
 	}
 	
-	private void prepareForDrawing() {
-		Graphics2D g2d=(Graphics2D)getGraphics();
-		
-		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-			aircraftSymbol.prepareForDrawing(g2d);
-		}
-		
-		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(settings.getMapTransformation(), radarDeviceTransformation);
-		
-		landmassLayer.prepareForDrawing(mapTransformation);
-		waterLayer.prepareForDrawing(mapTransformation);
-		waypointDisplayLayer.prepareForDrawing(mapTransformation);
-		sectorLayer.prepareForDrawing(mapTransformation);
-		restrictedLayer.prepareForDrawing(mapTransformation);
-		
-		long startTimeLabel=System.currentTimeMillis();
-		/* Labelling should not take more than 100ms per update. */
-		while (System.currentTimeMillis()<startTimeLabel+100) {
-			autolabeller.updateOneLabel();
-		}
-	}
-	
 	@Override
 	protected synchronized void paintComponent(Graphics g) {
 		Graphics2D g2d=(Graphics2D)g;
 		
 		super.paintComponent(g);
 		
+		long startTime=System.currentTimeMillis();
 		setFont(settings.getFont());
 		
+		/* Layout should not take more than 100ms per update. */
+		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
+			aircraftSymbol.layout(g2d);
+		}
+		
+		while (System.currentTimeMillis()<startTime+100) {
+			autolabeller.updateOneLabel();
+		}
+		
+		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(settings.getMapTransformation(), radarDeviceTransformation);
+		
 		if (settings.isShowingCoastline()) {
-			landmassLayer.draw(g2d);
-			waterLayer.draw(g2d);
+			landmassLayer.draw(g2d,mapTransformation);
+			waterLayer.draw(g2d,mapTransformation);
 		} else {
 			Rectangle clipRect=g2d.getClipBounds();
 			g2d.setColor(Palette.LANDMASS);
 			g2d.fillRect(clipRect.x,clipRect.y,clipRect.width,clipRect.height);
 		}
 		if (settings.isShowingWaypoints()) {
-			waypointDisplayLayer.draw(g2d);
+			waypointDisplayLayer.draw(g2d,mapTransformation);
 			drawRunwayCentrelines(g2d,radarDeviceTransformation,settings.getMapTransformation());
 		}
 		if (settings.isShowingSector()) {
-			sectorLayer.draw(g2d);
+			sectorLayer.draw(g2d,mapTransformation);
 		}
 		if (settings.isShowingMilitary()) {
-			restrictedLayer.draw(g2d);
+			restrictedLayer.draw(g2d,mapTransformation);
 		}
 		if (settings.isShowingRings()) {
 			rangeMarkLayer.draw(g2d, radarDeviceTransformation);
@@ -351,12 +340,9 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 	}
 	
 	public synchronized void update(double dt) {
-		for (IAircraft aircraft: radarDataProvider) {
-			AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(aircraft);
+		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			aircraftSymbol.update(dt);
 		}
-		
-		prepareForDrawing();
 
 		if (!isDragging)
 			checkForSelectionChange();

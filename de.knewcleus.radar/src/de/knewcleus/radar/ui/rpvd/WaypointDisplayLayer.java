@@ -23,7 +23,6 @@ public class WaypointDisplayLayer implements IMapLayer {
 	protected float tagDistance=5.0f;
 	protected float tagDirX=1.0f;
 	protected float tagDirY=-1.0f;
-	protected IDeviceTransformation deviceTransformation;
 
 	protected Stroke fixStroke=new BasicStroke(0.0f);
 	
@@ -34,11 +33,7 @@ public class WaypointDisplayLayer implements IMapLayer {
 	}
 	
 	@Override
-	public void prepareForDrawing(IDeviceTransformation transform) {
-		this.deviceTransformation=transform;
-	}
-	
-	public void draw(Graphics2D g2d) {
+	public void draw(Graphics2D g2d, IDeviceTransformation deviceTransformation) {
 		Collection<NamedFix> fixes=scenario.getFixDB().getFixes();
 		
 		g2d.setFont(Palette.BEACON_FONT);

@@ -5,8 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,34 +12,31 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.radar.sector.Polygon;
 import de.knewcleus.radar.sector.PolygonContour;
+import de.knewcleus.radar.utils.TransformedShape;
 
 public class PolygonMapLayer implements IMapLayer {
 	protected final Color color;
 	protected final List<Polygon> polygons;
-	protected List<Area> lastAreas;
+	protected Area combinedArea;
 	
 	public PolygonMapLayer(Color color, List<Polygon> polygons) {
 		this.color=color;
 		this.polygons=polygons;
-	}
-	
-	public void draw(Graphics2D g2d) {
-		g2d.setColor(color);
-		for (Area area: lastAreas) {
-			g2d.fill(area);
+		combinedArea=new Area();
+		for (Polygon polygon: polygons) {
+			Area polygonArea=polygonToArea(polygon);
+			combinedArea.add(polygonArea);
 		}
 	}
 	
 	@Override
-	public void prepareForDrawing(IDeviceTransformation transform) {
-		lastAreas=new ArrayList<Area>();
-		for (Polygon polygon: polygons) {
-			Area polygonArea=polygonToArea(polygon, transform);
-			lastAreas.add(polygonArea);
-		}
+	public void draw(Graphics2D g2d, IDeviceTransformation transform) {
+		g2d.setColor(color);
+		Shape transformedArea=new TransformedShape(combinedArea,transform);
+		g2d.fill(transformedArea);
 	}
 	
-	protected Area polygonToArea(Polygon polygon, IDeviceTransformation transform) {
+	protected Area polygonToArea(Polygon polygon) {
 		Iterator<PolygonContour> contourIterator=polygon.iterator();
 		
 		if (!contourIterator.hasNext())
@@ -49,14 +44,14 @@ public class PolygonMapLayer implements IMapLayer {
 		
 		PolygonContour contour=contourIterator.next();
 		
-		Shape mainShape=contourToShape(contour, transform);
+		Shape mainShape=contourToShape(contour);
 		
 		Area area=new Area(mainShape);
 		
 		while (contourIterator.hasNext()) {
 			contour=contourIterator.next();
 			
-			Shape holeShape=contourToShape(contour, transform);
+			Shape holeShape=contourToShape(contour);
 			Area hole=new Area(holeShape);
 			area.subtract(hole);
 		}
@@ -64,7 +59,7 @@ public class PolygonMapLayer implements IMapLayer {
 		return area;
 	}
 	
-	protected Shape contourToShape(PolygonContour contour, IDeviceTransformation transform) {
+	protected Shape contourToShape(PolygonContour contour) {
 		Path2D path=new Path2D.Double();
 		
 		Iterator<Position> posIterator=contour.iterator();
@@ -72,13 +67,13 @@ public class PolygonMapLayer implements IMapLayer {
 		if (!posIterator.hasNext())
 			return path;
 		
-		Point2D pos=transform.toDevice(posIterator.next());
+		Position position=posIterator.next();
 		
-		path.moveTo(pos.getX(), pos.getY());
+		path.moveTo(position.getX(), position.getY());
 		
 		while (posIterator.hasNext()) {
-			pos=transform.toDevice(posIterator.next());
-			path.lineTo(pos.getX(), pos.getY());
+			position=posIterator.next();
+			path.lineTo(position.getX(), position.getY());
 		}
 		
 		path.closePath();

@@ -90,7 +90,7 @@ public class AircraftSymbol implements LabeledObject {
 		}
 	}
 	
-	public void prepareForDrawing(Graphics2D g2d) {
+	public void layout(Graphics2D g2d) {
 		Position currentPosition=positionBuffer.getLast();
 		ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
