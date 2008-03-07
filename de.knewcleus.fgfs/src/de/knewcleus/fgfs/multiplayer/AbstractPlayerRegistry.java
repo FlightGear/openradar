@@ -1,6 +1,7 @@
 package de.knewcleus.fgfs.multiplayer;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -59,7 +60,7 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 	}
 	
 	public Collection<T> getPlayers() {
-		return players;
+		return Collections.unmodifiableCollection(players);
 	}
 
 }
