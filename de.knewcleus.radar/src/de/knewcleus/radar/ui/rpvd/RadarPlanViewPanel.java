@@ -83,6 +83,8 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 		radarUpdater.start();
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
+		
+		radarDataProvider.registerRadarDataConsumer(this);
 	}
 	
 	@Override
