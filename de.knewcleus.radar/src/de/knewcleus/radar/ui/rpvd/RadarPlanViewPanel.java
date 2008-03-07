@@ -80,11 +80,17 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 
 		setBackground(Palette.WATERMASS);
 		
+		radarDataProvider.registerRadarDataConsumer(this);
+		for (IAircraft aircraft: radarDataProvider) {
+			AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraft);
+			aircraftSymbolMap.put(aircraft, aircraftSymbol);
+			autolabeller.addLabeledObject(aircraftSymbol);
+			aircraftSymbol.update(0);
+		}
+		
 		radarUpdater.start();
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
-		
-		radarDataProvider.registerRadarDataConsumer(this);
 	}
 	
 	@Override
@@ -334,6 +340,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 		AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraft);
 		aircraftSymbolMap.put(aircraft, aircraftSymbol);
 		autolabeller.addLabeledObject(aircraftSymbol);
+		aircraftSymbol.update(0);
 	}
 	
 	@Override
