@@ -83,8 +83,7 @@ public class AircraftSymbol implements LabeledObject {
 		Position currentPosition=aircraft.getPosition();
 		if (positionBuffer.size()>0) {
 			Position lastPosition=positionBuffer.getLast();
-			Vector3D newVelocityVector=aircraft.getPosition().subtract(lastPosition);
-			newVelocityVector.scale(1.0/dt);
+			Vector3D newVelocityVector=aircraft.getPosition().subtract(lastPosition).scale(1.0/dt);
 			lastVelocityVector=newVelocityVector;
 		}
 		positionBuffer.addLast(new Position(currentPosition));
@@ -103,10 +102,9 @@ public class AircraftSymbol implements LabeledObject {
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
 
 		if (lastVelocityVector!=null) {
-			Vector3D distanceMade=new Vector3D(lastVelocityVector);
-			distanceMade.scale(radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN);
-			Position vectorHead=new Position(currentPosition);
-			vectorHead.translate(distanceMade);
+			double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
+			Vector3D distanceMade=lastVelocityVector.scale(dt);
+			Position vectorHead=currentPosition.add(distanceMade);
 			
 			Position realHead=geodToCartTransformation.backward(vectorHead);
 			Position mapHead=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realHead);

@@ -1,9 +1,9 @@
 package de.knewcleus.fgfs.location;
 
 public class Vector3D {
-	protected double x;
-	protected double y;
-	protected double z;
+	protected final double x;
+	protected final double y;
+	protected final double z;
 	
 	public Vector3D() {
 		x=y=z=0.0;
@@ -37,10 +37,8 @@ public class Vector3D {
 		return new Vector3D(x-b.x,y-b.y,z-b.z);
 	}
 
-	public void scale(double s) {
-		x*=s;
-		y*=s;
-		z*=s;
+	public Vector3D scale(double s) {
+		return new Vector3D(x*s,y*s,z*s);
 	}
 	
 	public Vector3D normalise() {
@@ -66,24 +64,11 @@ public class Vector3D {
 		return x;
 	}
 
-	public void setX(double x) {
-		this.x = x;
-	}
-
 	public double getY() {
 		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
 	}
 
 	public double getZ() {
 		return z;
 	}
-
-	public void setZ(double z) {
-		this.z = z;
-	}
-
 }

@@ -38,9 +38,7 @@ public class FGMPAircraft extends Player implements IAircraft {
 	
 	@Override
 	public void update(double dt) {
-		Vector3D distanceMade=new Vector3D(linearVelocity);
-		linearVelocity.scale(dt);
-		position.translate(distanceMade);
+		position=position.add(linearVelocity.scale(dt));
 	}
 
 	@Override

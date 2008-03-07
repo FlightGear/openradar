@@ -10,20 +10,13 @@ public final class Position extends Vector3D {
 		super(x,y,z);
 	}
 	
-	public Position(Position original) {
+	public Position(Vector3D original) {
 		super(original);
 	}
 	
-	public void translate(double dx, double dy, double dz) {
-		x+=dx;
-		y+=dy;
-		z+=dz;
-	}
-	
-	public void translate(Vector3D delta) {
-		x+=delta.x;
-		y+=delta.y;
-		z+=delta.z;
+	@Override
+	public Position add(Vector3D b) {
+		return new Position(super.add(b));
 	}
 	
 	public Point2D toPoint2D() {

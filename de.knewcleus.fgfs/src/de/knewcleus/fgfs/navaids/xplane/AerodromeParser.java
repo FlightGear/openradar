@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.DBParserException;
 import de.knewcleus.fgfs.navaids.NamedFixDB;
@@ -15,7 +16,7 @@ public class AerodromeParser extends AbstractXPlaneParser {
 	protected String lastID,lastName;
 	protected double lastElevation;
 	protected double runwayArea;
-	protected Position runwayMoment;
+	protected Vector3D runwayMoment;
 	protected List<Runway> runways=new ArrayList<Runway>();
 
 	public AerodromeParser(NamedFixDB namedFixDB, double north, double west, double south, double east) {
@@ -38,11 +39,12 @@ public class AerodromeParser extends AbstractXPlaneParser {
 	
 	protected void processAerodrome(String code, String tokens[]) {
 		if (runwayMoment!=null) {
-			runwayMoment.scale(1.0/runwayArea);
+			runwayMoment=runwayMoment.scale(1.0/runwayArea);
 			
 			if (isInRange(runwayMoment.getX(), runwayMoment.getY())) {
-				runwayMoment.translate(0,0,lastElevation);
-				Aerodrome aerodrome=new Aerodrome(lastID,lastName,runwayMoment);
+				runwayMoment=runwayMoment.add(new Vector3D(0,0,lastElevation));
+				Position arp=new Position(runwayMoment);
+				Aerodrome aerodrome=new Aerodrome(lastID,lastName,arp);
 				for (Runway runway: runways)
 					aerodrome.addRunway(runway);
 				namedFixDB.addFix(aerodrome);
@@ -74,7 +76,7 @@ public class AerodromeParser extends AbstractXPlaneParser {
 		Position center=new Position(lon,lat,0.0);
 		double trueHeading=Double.parseDouble(tokens[3])*Units.DEG;
 		
-		runwayMoment.translate(lon*area, lat*area, 0);
+		runwayMoment=runwayMoment.add(new Vector3D(lon*area, lat*area, 0));
 		runwayArea+=area;
 		
 		Runway runway=new Runway(center,designation,trueHeading,length);
@@ -84,11 +86,12 @@ public class AerodromeParser extends AbstractXPlaneParser {
 	@Override
 	protected void endStream() throws DBParserException {
 		if (runwayMoment!=null) {
-			runwayMoment.scale(1.0/runwayArea);
+			runwayMoment=runwayMoment.scale(1.0/runwayArea);
 			
 			if (isInRange(runwayMoment.getX(), runwayMoment.getY())) {
-				runwayMoment.translate(0,0,lastElevation);
-				namedFixDB.addFix(new Aerodrome(lastID,lastName,runwayMoment));
+				runwayMoment=runwayMoment.add(new Vector3D(0,0,lastElevation));
+				Position arp=new Position(runwayMoment);
+				namedFixDB.addFix(new Aerodrome(lastID,lastName,arp));
 			}
 		}
 		super.endStream();
