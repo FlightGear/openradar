@@ -35,8 +35,24 @@ public class Quaternion {
 	public Vector3D getAxis() {
 		final double angle=acos(w);
 		final double sina=sin(angle);
-		// FIXME: what about angle==0?
+		// FIXME: what about sina==0?
 		return new Vector3D(x/sina,y/sina,z/sina);
+	}
+	
+	public Vector3D getAngleAxis() {
+		final double angle=acos(w);
+		final double sina=sin(angle);
+		final double norm=magnitude();
+		// FIXME: what about sina==0?
+		return new Vector3D(2.0*angle*x/(sina*norm),2.0*angle*y/(sina*norm),2.0*angle*z/(sina*norm));
+	}
+	
+	public static Quaternion fromAngleAxis(Vector3D angleAxis) {
+		final double angle=angleAxis.getLength()/2.0;
+		final Vector3D axis=angleAxis.normalise();
+		final double sina=sin(angle),cosa=cos(angle);
+		
+		return new Quaternion(cosa,axis.getX()*sina,axis.getY()*sina,axis.getZ()*sina);
 	}
 	
 	public Quaternion inverse() {

@@ -33,12 +33,12 @@ public class FGMPAircraft extends Player implements IAircraft {
 	
 	@Override
 	public Vector3D getVelocityVector() {
-		return linearVelocity;
+		return orientation.transform(linearVelocity);
 	}
 	
 	@Override
 	public void update(double dt) {
-		position=position.add(linearVelocity.scale(dt));
+		position=position.add(getVelocityVector().scale(dt));
 	}
 
 	@Override
