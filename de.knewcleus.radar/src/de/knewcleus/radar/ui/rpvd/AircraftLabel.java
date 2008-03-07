@@ -21,7 +21,7 @@ public class AircraftLabel implements Label {
 	
 	@Override
 	public double getChargeDensity() {
-		return 1E4;
+		return 1;
 	}
 	
 	@Override

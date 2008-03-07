@@ -219,7 +219,7 @@ public class AircraftSymbol implements LabeledObject {
 	
 	@Override
 	public double getChargeDensity() {
-		return 1E4;
+		return 1;
 	}
 	
 	public boolean containsPosition(double x, double y) {
