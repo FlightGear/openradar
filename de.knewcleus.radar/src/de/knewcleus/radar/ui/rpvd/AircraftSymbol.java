@@ -81,11 +81,8 @@ public class AircraftSymbol implements LabeledObject {
 	
 	public void update(double dt) {
 		Position currentPosition=aircraft.getPosition();
-		if (positionBuffer.size()>0) {
-			Position lastPosition=positionBuffer.getLast();
-			Vector3D newVelocityVector=aircraft.getPosition().subtract(lastPosition).scale(1.0/dt);
-			lastVelocityVector=newVelocityVector;
-		}
+		lastVelocityVector=aircraft.getVelocityVector();
+		
 		positionBuffer.addLast(new Position(currentPosition));
 		/* We always keep at least the last position, so the limit is historyLength+1 */
 		if (positionBuffer.size()>maximumTrailLength) {
@@ -101,18 +98,14 @@ public class AircraftSymbol implements LabeledObject {
 		Position currentMapPosition=mapTransformation.forward(currentGeodPosition);
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
 
-		if (lastVelocityVector!=null) {
-			double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
-			Vector3D distanceMade=lastVelocityVector.scale(dt);
-			Position vectorHead=currentPosition.add(distanceMade);
-			
-			Position realHead=geodToCartTransformation.backward(vectorHead);
-			Position mapHead=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realHead);
-			currentDeviceHeadPosition=radarPlanViewContext.getDeviceTransformation().toDevice(mapHead);
-		} else {
-			currentDeviceHeadPosition=currentDevicePosition;
-		}
-
+		double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
+		Vector3D distanceMade=lastVelocityVector.scale(dt);
+		Position vectorHead=currentPosition.add(distanceMade);
+		
+		Position realHead=geodToCartTransformation.backward(vectorHead);
+		Position mapHead=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realHead);
+		currentDeviceHeadPosition=radarPlanViewContext.getDeviceTransformation().toDevice(mapHead);
+		
 		labelLine[0]=String.format("%03d",(int)Math.ceil(currentGeodPosition.getZ()/Units.FT/100.0));
 		labelLine[1]=aircraft.getOperator()+aircraft.getCallsign();
 		labelLine[2]=String.format("%03d",(int)Math.round(lastVelocityVector.getLength()/Units.KNOTS/10.0));
