@@ -92,6 +92,7 @@ public class Sector implements INavaidDatabase {
 			String ref=geodataElem.getAttribute("ref");
 			URL location=new URL(url,ref);
 			
+			long startTime=System.currentTimeMillis();
 			if (type.equals("xplane_fixes")) {
 				FixParser fixParser=new FixParser(sector.getFixDB(),north,west,south,east);
 				InputStream geoStream=location.openStream();
@@ -131,6 +132,9 @@ public class Sector implements INavaidDatabase {
 			} else {
 				logger.info("Unknown geotype "+type);
 			}
+			long endTime=System.currentTimeMillis();
+			
+			logger.info("Loading "+type+" at "+ref+" took "+(endTime-startTime)+" ms");
 		}
 		
 		return sector;
