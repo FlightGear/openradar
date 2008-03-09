@@ -1,6 +1,5 @@
 package de.knewcleus.radar.ui;
 
-import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
@@ -37,7 +36,6 @@ public class RadarWorkstation {
 			
 			desktop=new RadarDesktop(graphicsDevice.getDefaultConfiguration(),this);
 			desktop.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			desktop.setPreferredSize(new Dimension(400,400));
 			desktops.add(desktop);
 		}
 		
@@ -62,5 +60,9 @@ public class RadarWorkstation {
 	
 	public RadarPlanViewSettings getRadarPlanViewSettings() {
 		return radarPlanViewSettings;
+	}
+	
+	public RadarPlanViewDisplay getRadarPlanViewDisplay() {
+		return radarPlanViewDisplay;
 	}
 }
