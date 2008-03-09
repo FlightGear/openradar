@@ -7,6 +7,8 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
+
 public class RadarDesktop extends JFrame {
 	private static final long serialVersionUID = 8819041738184510314L;
 	
@@ -36,5 +38,23 @@ public class RadarDesktop extends JFrame {
 	
 	public JDesktopPane getDesktopPane() {
 		return desktopPane;
+	}
+	
+	public void acquireRadarPlanViewDisplay() {
+		RadarPlanViewDisplay radarPlanViewDisplay=workstation.getRadarPlanViewDisplay();
+
+		RadarDesktop oldDesktop=workstation.getRadarPlanViewDesktop();
+		if (oldDesktop!=this) {
+			if (oldDesktop!=null) {
+				radarPlanViewDisplay.setVisible(false);
+				oldDesktop.remove(radarPlanViewDisplay);
+				oldDesktop.generalToolbox.setRPVDPresent(false);
+			}
+			add(radarPlanViewDisplay);
+			radarPlanViewDisplay.setVisible(true);
+		}
+		
+		generalToolbox.setRPVDPresent(true);
+		workstation.setRadarPlanViewDesktop(this);
 	}
 }

@@ -23,6 +23,7 @@ public class RadarWorkstation {
 	
 	/* The set of desktops */
 	protected final List<RadarDesktop> desktops=new ArrayList<RadarDesktop>();
+	protected RadarDesktop radarPlanViewDesktop;
 
 	public RadarWorkstation(Sector sector, IRadarDataProvider<? extends IAircraft> radarDataProvider) {
 		this.sector=sector;
@@ -39,9 +40,10 @@ public class RadarWorkstation {
 			desktops.add(desktop);
 		}
 		
+		RadarDesktop primaryDesktop=desktops.get(0);
+		
 		/* Place the plan view panel on the first desktop */
-		radarPlanViewDisplay.setVisible(true);
-		desktops.get(0).add(radarPlanViewDisplay);
+		primaryDesktop.acquireRadarPlanViewDisplay();
 	}
 	
 	public void setVisible(boolean visible) {
@@ -64,5 +66,13 @@ public class RadarWorkstation {
 	
 	public RadarPlanViewDisplay getRadarPlanViewDisplay() {
 		return radarPlanViewDisplay;
+	}
+	
+	public RadarDesktop getRadarPlanViewDesktop() {
+		return radarPlanViewDesktop;
+	}
+	
+	public void setRadarPlanViewDesktop(RadarDesktop radarPlanViewDesktop) {
+		this.radarPlanViewDesktop = radarPlanViewDesktop;
 	}
 }
