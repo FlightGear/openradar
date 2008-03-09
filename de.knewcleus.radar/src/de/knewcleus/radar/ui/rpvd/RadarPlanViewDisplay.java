@@ -19,9 +19,10 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 		this.workstation=workstation;
 		
 		radarPlanViewPanel=new RadarPlanViewPanel(workstation);
-		radarToolbox=new RadarToolbox(this);
 		
 		setContentPane(radarPlanViewPanel);
+
+		radarToolbox=new RadarToolbox(this);
 		
 		setPreferredSize(new Dimension(400,400));
 		
