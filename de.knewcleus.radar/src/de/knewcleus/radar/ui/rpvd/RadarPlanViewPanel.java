@@ -25,18 +25,17 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
-import de.knewcleus.radar.aircraft.AircraftState;
-import de.knewcleus.radar.aircraft.AircraftStateManager;
-import de.knewcleus.radar.aircraft.IAircraftStateConsumer;
 import de.knewcleus.radar.autolabel.Autolabeller;
 import de.knewcleus.radar.sector.Sector;
+import de.knewcleus.radar.ui.AircraftState;
+import de.knewcleus.radar.ui.AircraftStateManager;
+import de.knewcleus.radar.ui.IAircraftStateConsumer;
+import de.knewcleus.radar.ui.RadarWorkstation;
 
 public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer {
 	private static final long serialVersionUID = 8996959818592227638L;
 	
-	protected final AircraftStateManager aircraftStateManager;
-	protected final Sector sector;
-	protected final RadarPlanViewSettings settings;
+	protected final RadarWorkstation workstation;
 	protected final RadarDeviceTransformation radarDeviceTransformation;
 	protected final RadarPlanViewContext radarPlanViewContext;
 	
@@ -59,15 +58,14 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	
 	protected static int selectionRange=10;
 	
-	public RadarPlanViewPanel(AircraftStateManager aircraftStateManager, Sector sector, RadarPlanViewSettings settings) {
+	public RadarPlanViewPanel(RadarWorkstation workstation) {
 		super(true); /* Is double buffered */
-		this.aircraftStateManager=aircraftStateManager;
-		this.sector=sector;
-		this.settings=settings;
+		this.workstation=workstation;
 		
-		radarDeviceTransformation=new RadarDeviceTransformation(settings);
-		radarPlanViewContext=new RadarPlanViewContext(settings,radarDeviceTransformation);
+		radarDeviceTransformation=new RadarDeviceTransformation(getSettings());
+		radarPlanViewContext=new RadarPlanViewContext(getSettings(),radarDeviceTransformation);
 		
+		final Sector sector=workstation.getSector();
 		landmassLayer=new PolygonMapLayer(Palette.LANDMASS,sector.getLandmassPolygons());
 		waterLayer=new PolygonMapLayer(Palette.WATERMASS,sector.getWaterPolygons());
 		restrictedLayer=new PolygonMapLayer(Palette.RESTRICTED,sector.getRestrictedPolygons());
@@ -78,8 +76,8 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		
 		/* Copy existing aircraft states */
 		// FIXME: possible race condition
-		aircraftStateManager.registerAircraftStateConsumer(this);
-		for (AircraftState aircraftState: aircraftStateManager.getAircraftStates()) {
+		getAircraftStateManager().registerAircraftStateConsumer(this);
+		for (AircraftState aircraftState: getAircraftStateManager().getAircraftStates()) {
 			aircraftStateAcquired(aircraftState);
 		}
 		
@@ -129,7 +127,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	}
 	
 	private AircraftSymbol getSelectedSymbol() {
-		AircraftState selectedAircraft=aircraftStateManager.getSelectedAircraft();
+		AircraftState selectedAircraft=getAircraftStateManager().getSelectedAircraft();
 		
 		if (selectedAircraft==null) {
 			return null;
@@ -155,18 +153,26 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			if (aircraftSymbol.containsPosition(x, y)) {
-				aircraftStateManager.select(aircraftSymbol.getAircraftState());
+				getAircraftStateManager().select(aircraftSymbol.getAircraftState());
 				return true;
 			}
 		}
 		
 		/* No symbol hit, so we deselect the currently selected aircraft, if any */
-		aircraftStateManager.deselect();
+		getAircraftStateManager().deselect();
 		return true;
 	}
 	
 	public RadarPlanViewSettings getSettings() {
-		return settings;
+		return workstation.getRadarPlanViewSettings();
+	}
+	
+	public AircraftStateManager getAircraftStateManager() {
+		return workstation.getAircraftStateManager();
+	}
+	
+	public Sector getSector() {
+		return workstation.getSector();
 	}
 	
 	public RadarDeviceTransformation getRadarDeviceTransformation() {
@@ -181,7 +187,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		
 		long startTime=System.currentTimeMillis();
 		long maxUpdateTimeMillis=100;
-		setFont(settings.getFont());
+		setFont(getSettings().getFont());
 		
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			aircraftSymbol.layout(g2d);
@@ -191,9 +197,9 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 			autolabeller.updateOneLabel();
 		}
 		
-		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(settings.getMapTransformation(), radarDeviceTransformation);
+		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(getSettings().getMapTransformation(), radarDeviceTransformation);
 		
-		if (settings.isShowingCoastline()) {
+		if (getSettings().isShowingCoastline()) {
 			landmassLayer.draw(g2d,mapTransformation);
 			waterLayer.draw(g2d,mapTransformation);
 		} else {
@@ -201,27 +207,27 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 			g2d.setColor(Palette.LANDMASS);
 			g2d.fillRect(clipRect.x,clipRect.y,clipRect.width,clipRect.height);
 		}
-		if (settings.isShowingWaypoints()) {
+		if (getSettings().isShowingWaypoints()) {
 			waypointDisplayLayer.draw(g2d,mapTransformation);
-			drawRunwayCentrelines(g2d,radarDeviceTransformation,settings.getMapTransformation());
+			drawRunwayCentrelines(g2d,radarDeviceTransformation,getSettings().getMapTransformation());
 		}
-		if (settings.isShowingSector()) {
+		if (getSettings().isShowingSector()) {
 			sectorLayer.draw(g2d,mapTransformation);
 		}
-		if (settings.isShowingMilitary()) {
+		if (getSettings().isShowingMilitary()) {
 			restrictedLayer.draw(g2d,mapTransformation);
 		}
-		if (settings.isShowingRings()) {
+		if (getSettings().isShowingRings()) {
 			rangeMarkLayer.draw(g2d, radarDeviceTransformation);
 		}
 		drawScaleMarkers(g2d, radarDeviceTransformation);
 		
-		if (settings.getSpeedVectorMinutes()>0) {
+		if (getSettings().getSpeedVectorMinutes()>0) {
 			for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 				aircraftSymbol.drawHeadingVector(g2d);
 			}
 		}
-		if (settings.getTrackHistoryLength()>0) {
+		if (getSettings().getTrackHistoryLength()>0) {
 			for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 				aircraftSymbol.drawTrail(g2d);
 			}
@@ -299,7 +305,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	}
 	
 	private void drawRunwayCentrelines(Graphics2D g2d, IDeviceTransformation deviceTransformation, ICoordinateTransformation transform) {
-		Set<Aerodrome> aerodromes=sector.getFixDB().getFixes(Aerodrome.class);
+		Set<Aerodrome> aerodromes=workstation.getSector().getFixDB().getFixes(Aerodrome.class);
 		
 		g2d.setColor(Palette.BEACON);
 		

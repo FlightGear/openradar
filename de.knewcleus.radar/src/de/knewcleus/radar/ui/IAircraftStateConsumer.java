@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft;
+package de.knewcleus.radar.ui;
 
 public interface IAircraftStateConsumer {
 	public abstract void aircraftStateAcquired(AircraftState aircraftState);

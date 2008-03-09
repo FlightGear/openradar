@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft;
+package de.knewcleus.radar.ui;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import de.knewcleus.radar.aircraft.IAircraft;
+import de.knewcleus.radar.aircraft.IRadarDataConsumer;
+import de.knewcleus.radar.aircraft.IRadarDataProvider;
 
 public class AircraftStateManager implements IRadarDataConsumer<IAircraft> {
 	protected final IRadarDataProvider<? extends IAircraft> radarDataProvider;
