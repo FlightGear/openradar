@@ -10,7 +10,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
 
@@ -21,13 +20,12 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
-import de.knewcleus.radar.aircraft.IAircraft;
+import de.knewcleus.radar.aircraft.AircraftState;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 
 public class AircraftSymbol implements LabeledObject {
 	protected static final float aircraftSymbolSize=6.0f;
-	protected static final int maximumTrailLength=6;
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 
 	protected static final double EPSILON=1E-10;
@@ -43,28 +41,24 @@ public class AircraftSymbol implements LabeledObject {
 	protected static final double labelDistRange=(maxLabelDist-minLabelDist);
 
 	protected final RadarPlanViewContext radarPlanViewContext;
-	protected final IAircraft aircraft;
+	protected final AircraftState aircraftState;
 	protected final AircraftLabel label;
 	
-	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>(maximumTrailLength);
 	protected Point2D currentDevicePosition;
 	protected Point2D currentDeviceHeadPosition;
 	protected final String labelLine[]=new String[5];
 	protected double currentLabelWidth;
 	protected double currentLabelHeight;
-	protected boolean isSelected=false;
-	protected boolean isLocked=false;
-	protected Vector3D lastVelocityVector=new Vector3D();
-	protected AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED; // FIXME: this should actually be set explicitly
+	protected boolean isLabelLocked=false;
 	
-	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, IAircraft aircraft) {
+	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, AircraftState aircraftState) {
 		this.radarPlanViewContext=radarPlanViewContext;
-		this.aircraft=aircraft;
+		this.aircraftState=aircraftState;
 		this.label=new AircraftLabel(this);
 	}
 	
-	public IAircraft getAircraft() {
-		return aircraft;
+	public AircraftState getAircraftState() {
+		return aircraftState;
 	}
 	
 	public Point2D getCurrentDevicePosition() {
@@ -79,35 +73,30 @@ public class AircraftSymbol implements LabeledObject {
 		return currentLabelHeight;
 	}
 	
-	public void update(double dt) {
-		Position currentPosition=aircraft.getPosition();
-		lastVelocityVector=aircraft.getVelocityVector();
-		
-		positionBuffer.addLast(new Position(currentPosition));
-		/* We always keep at least the last position, so the limit is historyLength+1 */
-		if (positionBuffer.size()>maximumTrailLength) {
-			positionBuffer.removeFirst();
-		}
-	}
-	
 	public void layout(Graphics2D g2d) {
-		Position currentPosition=positionBuffer.getLast();
-		ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
-		IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
-		Position currentGeodPosition=geodToCartTransformation.backward(currentPosition);
-		Position currentMapPosition=mapTransformation.forward(currentGeodPosition);
+		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
+		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
+
+		final Deque<Position> positionBuffer=aircraftState.getPositionBuffer();
+		final Vector3D lastVelocityVector=aircraftState.getLastVelocityVector();
+		
+		/* Calculate current device position of aircraft symbol */
+		final Position currentPosition=positionBuffer.getLast();
+		final Position currentGeodPosition=geodToCartTransformation.backward(currentPosition);
+		final Position currentMapPosition=mapTransformation.forward(currentGeodPosition);
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
 
-		double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
-		Vector3D distanceMade=lastVelocityVector.scale(dt);
-		Position vectorHead=currentPosition.add(distanceMade);
+		/* Calculate current device position of leading line head position */
+		final double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
+		final Vector3D distanceMade=lastVelocityVector.scale(dt);
+		final Position currentLeadingLineHeadPosition=currentPosition.add(distanceMade);
+		final Position currentLeadingLineHeadGeodPosition=geodToCartTransformation.backward(currentLeadingLineHeadPosition);
+		final Position currentLeadingLineHeadMapPosition=mapTransformation.forward(currentLeadingLineHeadGeodPosition);
+		currentDeviceHeadPosition=deviceTransformation.toDevice(currentLeadingLineHeadMapPosition);
 		
-		Position realHead=geodToCartTransformation.backward(vectorHead);
-		Position mapHead=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realHead);
-		currentDeviceHeadPosition=radarPlanViewContext.getDeviceTransformation().toDevice(mapHead);
-		
+		/* Layout label */
 		labelLine[0]=String.format("%03d",(int)Math.ceil(currentGeodPosition.getZ()/Units.FT/100.0));
-		labelLine[1]=aircraft.getOperator()+aircraft.getCallsign();
+		labelLine[1]=aircraftState.getAircraft().getOperator()+aircraftState.getAircraft().getCallsign();
 		labelLine[2]=String.format("%03d",(int)Math.round(lastVelocityVector.getLength()/Units.KNOTS/10.0));
 		labelLine[3]=null;
 		labelLine[4]=null;
@@ -124,7 +113,7 @@ public class AircraftSymbol implements LabeledObject {
 	}
 	
 	public void drawSymbol(Graphics2D g2d) {
-		g2d.setColor(aircraftTaskState.getSymbolColor());
+		g2d.setColor(aircraftState.getTaskState().getSymbolColor());
 		Ellipse2D symbol=new Ellipse2D.Double(
 				currentDevicePosition.getX()-aircraftSymbolSize/2.0,currentDevicePosition.getY()-aircraftSymbolSize/2.0,
 				aircraftSymbolSize,aircraftSymbolSize);
@@ -146,7 +135,8 @@ public class AircraftSymbol implements LabeledObject {
 		Line2D leadingLine=new Line2D.Double(leStartX,leStartY,leEndX,leEndY);
 		g2d.draw(leadingLine);
 		
-		if (isSelected) {
+		AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
+		if (aircraftState.isSelected()) {
 			g2d.setColor(aircraftTaskState.getSelectedBackgroundColor());
 			Rectangle2D labelBackground=new Rectangle2D.Double(x,y,currentLabelWidth,currentLabelHeight);
 			g2d.fill(labelBackground);
@@ -163,7 +153,7 @@ public class AircraftSymbol implements LabeledObject {
 	}
 	
 	public void drawHeadingVector(Graphics2D g2d) {
-		g2d.setColor(aircraftTaskState.getSymbolColor());
+		g2d.setColor(aircraftState.getTaskState().getSymbolColor());
 		Line2D headingVector=new Line2D.Double(currentDevicePosition,currentDeviceHeadPosition);
 		g2d.draw(headingVector);
 	}
@@ -173,11 +163,12 @@ public class AircraftSymbol implements LabeledObject {
 		Position mapPos;
 		Point2D devicePos;
 
+		final Deque<Position> positionBuffer=aircraftState.getPositionBuffer();
 		/* Draw the trail with previous positions */
 		int dotCount=Math.min(positionBuffer.size()-1,radarPlanViewContext.getRadarPlanViewSettings().getTrackHistoryLength());
 		if (dotCount<1)
 			return;
-		Color symbolColor=aircraftTaskState.getSymbolColor();
+		Color symbolColor=aircraftState.getTaskState().getSymbolColor();
 		float alphaIncrease=1.0f/(dotCount+1);
 		float alpha=1.0f;
 		
@@ -242,17 +233,13 @@ public class AircraftSymbol implements LabeledObject {
 		return false;
 	}
 	
-	public void setSelected(boolean isSelected) {
-		this.isSelected = isSelected;
-	}
-	
 	@Override
 	public boolean isLocked() {
-		return isSelected || isLocked;
+		return aircraftState.isSelected() || isLabelLocked;
 	}
 	
 	public void setLocked(boolean isLocked) {
-		this.isLocked = isLocked;
+		this.isLabelLocked = isLocked;
 	}
 	
 	@Override

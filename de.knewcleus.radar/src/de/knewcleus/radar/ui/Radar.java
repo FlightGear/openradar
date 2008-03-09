@@ -18,6 +18,7 @@ import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.LocalProjection;
 import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 import de.knewcleus.fgfs.navaids.DBParserException;
+import de.knewcleus.radar.aircraft.AircraftStateManager;
 import de.knewcleus.radar.aircraft.fgmp.ATCClient;
 import de.knewcleus.radar.aircraft.fgmp.FGMPAircraft;
 import de.knewcleus.radar.aircraft.fgmp.FGMPRegistry;
@@ -46,9 +47,11 @@ public class Radar {
 		multiplayerClient.start();
 		multiplayerUpdater.start();
 		
+		AircraftStateManager aircraftStateManager=new AircraftStateManager(registry);
+		
 		RadarPlanViewSettings radarPlanViewSettings=new RadarPlanViewSettings();
 		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
-		ConsoleFrame consoleFrame=new ConsoleFrame("Console", registry, sector, radarPlanViewSettings);
+		ConsoleFrame consoleFrame=new ConsoleFrame("Console", aircraftStateManager, sector, radarPlanViewSettings);
 		consoleFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		consoleFrame.setVisible(true);
 	}

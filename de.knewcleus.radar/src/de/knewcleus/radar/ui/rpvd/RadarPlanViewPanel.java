@@ -18,32 +18,29 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.Updater;
 import de.knewcleus.fgfs.location.CoordinateDeviceTransformation;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
-import de.knewcleus.radar.aircraft.IAircraft;
-import de.knewcleus.radar.aircraft.IRadarDataConsumer;
-import de.knewcleus.radar.aircraft.IRadarDataProvider;
+import de.knewcleus.radar.aircraft.AircraftState;
+import de.knewcleus.radar.aircraft.AircraftStateManager;
+import de.knewcleus.radar.aircraft.IAircraftStateConsumer;
 import de.knewcleus.radar.autolabel.Autolabeller;
 import de.knewcleus.radar.sector.Sector;
 
-public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDataConsumer {
+public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer {
 	private static final long serialVersionUID = 8996959818592227638L;
 	
-	protected final IRadarDataProvider<? extends IAircraft> radarDataProvider;
+	protected final AircraftStateManager aircraftStateManager;
 	protected final Sector sector;
 	protected final RadarPlanViewSettings settings;
 	protected final RadarDeviceTransformation radarDeviceTransformation;
 	protected final RadarPlanViewContext radarPlanViewContext;
 	
 	protected final Autolabeller autolabeller=new Autolabeller(1E-1,3E-1);
-	protected final Updater radarUpdater=new Updater(this,1000);
 
 	protected final IMapLayer landmassLayer;
 	protected final IMapLayer waterLayer;
@@ -56,16 +53,15 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 	protected final float scaleMarkerDistance=10.0f*(float)Units.NM;
 	protected final float centrelineLength=5.0f*(float)Units.NM;
 	
-	protected Map<IAircraft, AircraftSymbol> aircraftSymbolMap=new HashMap<IAircraft, AircraftSymbol>();
-	protected AircraftSymbol selectedSymbol=null;
+	protected Map<AircraftState, AircraftSymbol> aircraftSymbolMap=new HashMap<AircraftState, AircraftSymbol>();
 	protected long lastMouseX,lastMouseY;
 	protected boolean isDragging;
 	
 	protected static int selectionRange=10;
 	
-	public RadarPlanViewPanel(final IRadarDataProvider<? extends IAircraft> radarDataProvider, Sector sector, RadarPlanViewSettings settings) {
+	public RadarPlanViewPanel(AircraftStateManager aircraftStateManager, Sector sector, RadarPlanViewSettings settings) {
 		super(true); /* Is double buffered */
-		this.radarDataProvider=radarDataProvider;
+		this.aircraftStateManager=aircraftStateManager;
 		this.sector=sector;
 		this.settings=settings;
 		
@@ -80,15 +76,12 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 
 		setBackground(Palette.WATERMASS);
 		
-		radarDataProvider.registerRadarDataConsumer(this);
-		for (IAircraft aircraft: radarDataProvider) {
-			AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraft);
-			aircraftSymbolMap.put(aircraft, aircraftSymbol);
-			autolabeller.addLabeledObject(aircraftSymbol);
-			aircraftSymbol.update(0);
+		/* Copy existing aircraft states */
+		// FIXME: possible race condition
+		aircraftStateManager.registerAircraftStateConsumer(this);
+		for (AircraftState aircraftState: aircraftStateManager.getAircraftStates()) {
+			aircraftStateAcquired(aircraftState);
 		}
-		
-		radarUpdater.start();
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
 	}
@@ -105,6 +98,7 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 			dy=e.getY()-lastMouseY;
 			
 			if (isDragging) {
+				AircraftSymbol selectedSymbol=getSelectedSymbol();
 				selectedSymbol.getLabel().move(dx, dy);
 				selectedSymbol.setLocked(true);
 				repaint();
@@ -126,11 +120,21 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 	@Override
 	protected void processMouseEvent(MouseEvent e) {
 		if (e.getID()==MouseEvent.MOUSE_PRESSED && e.getButton()==1) {
+			final AircraftSymbol selectedSymbol=getSelectedSymbol();
 			isDragging=(selectedSymbol!=null && selectedSymbol.getLabel().containsPosition(e.getX(), e.getY()));
 		} else if (e.getID()==MouseEvent.MOUSE_RELEASED && e.getButton()==1) {
 			isDragging=false;
 		}
 		super.processMouseEvent(e);
+	}
+	
+	private AircraftSymbol getSelectedSymbol() {
+		AircraftState selectedAircraft=aircraftStateManager.getSelectedAircraft();
+		
+		if (selectedAircraft==null) {
+			return null;
+		}
+		return aircraftSymbolMap.get(selectedAircraft);
 	}
 	
 	private boolean checkForSelectionChange() {
@@ -143,25 +147,21 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 		x=currentLocation.x-locOnScreen.x;
 		y=currentLocation.y-locOnScreen.y;
 		
+		AircraftSymbol selectedSymbol=getSelectedSymbol();
+		
 		if (selectedSymbol!=null && selectedSymbol.containsPosition(x, y)) {
 			return false; // The old selection has priority
 		}
 		
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			if (aircraftSymbol.containsPosition(x, y)) {
-				if (selectedSymbol!=null) {
-					selectedSymbol.setSelected(false);
-				}
-				selectedSymbol=aircraftSymbol;
-				aircraftSymbol.setSelected(true);
+				aircraftStateManager.select(aircraftSymbol.getAircraftState());
 				return true;
 			}
 		}
 		
-		if (selectedSymbol!=null) {
-			selectedSymbol.setSelected(false);
-		}
-		selectedSymbol=null;
+		/* No symbol hit, so we deselect the currently selected aircraft, if any */
+		aircraftStateManager.deselect();
 		return true;
 	}
 	
@@ -180,14 +180,14 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 		super.paintComponent(g);
 		
 		long startTime=System.currentTimeMillis();
+		long maxUpdateTimeMillis=100;
 		setFont(settings.getFont());
 		
-		/* Layout should not take more than 100ms per update. */
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			aircraftSymbol.layout(g2d);
 		}
 		
-		while (System.currentTimeMillis()<startTime+100) {
+		while (System.currentTimeMillis()<startTime+maxUpdateTimeMillis) {
 			autolabeller.updateOneLabel();
 		}
 		
@@ -226,6 +226,8 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 				aircraftSymbol.drawTrail(g2d);
 			}
 		}
+		AircraftSymbol selectedSymbol=getSelectedSymbol();
+	
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			if (aircraftSymbol==selectedSymbol) {
 				continue;
@@ -325,25 +327,21 @@ public class RadarPlanViewPanel extends JPanel implements IUpdateable, IRadarDat
 	}
 	
 	@Override
-	public synchronized void radarTargetAcquired(IAircraft aircraft) {
-		AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraft);
-		aircraftSymbolMap.put(aircraft, aircraftSymbol);
+	public synchronized void aircraftStateAcquired(AircraftState aircraftState) {
+		AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraftState);
+		aircraftSymbolMap.put(aircraftState, aircraftSymbol);
 		autolabeller.addLabeledObject(aircraftSymbol);
-		aircraftSymbol.update(0);
 	}
 	
 	@Override
-	public synchronized void radarTargetLost(IAircraft aircraft) {
-		AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(aircraft);
+	public synchronized void aircraftStateLost(AircraftState aircraftState) {
+		AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(aircraftState);
 		autolabeller.removeLabeledObject(aircraftSymbol);
-		aircraftSymbolMap.remove(aircraft);
+		aircraftSymbolMap.remove(aircraftState);
 	}
 	
-	public synchronized void update(double dt) {
-		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-			aircraftSymbol.update(dt);
-		}
-
+	@Override
+	public void aircraftStateUpdate() {
 		if (!isDragging)
 			checkForSelectionChange();
 		repaint();
