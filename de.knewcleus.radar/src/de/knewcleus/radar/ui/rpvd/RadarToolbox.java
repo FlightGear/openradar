@@ -17,12 +17,11 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 
 	protected final RadarPlanViewDisplay radarPlanViewDisplay;
 	protected final JPanel buttonPanel=new JPanel();
-	protected final JPanel zoomPanel=new JPanel();
+	protected final JPanel zoomPanel;
 	protected final JPanel heightFilterPanel=new JPanel();
 	protected final JPanel speedAndTrackPanel;
 	
 	protected final JToggleButton mapMenuButton=new JToggleButton("MAP MENU");
-	protected final JToggleButton labelMenuButton=new JToggleButton("LABEL MENU");
 	protected final JToggleButton overlapMenuButton=new JToggleButton("OVERLAP");
 	protected final JToggleButton modeMenuButton=new JToggleButton("MODES");
 	
@@ -32,6 +31,7 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 		super("RADAR TOOLBOX",false,false,false,true);
 		this.radarPlanViewDisplay=radarPlanViewDisplay;
 		
+		zoomPanel=new ZoomPanel(this);
 		speedAndTrackPanel=new SpeedAndTrackPanel(this);
 		
 		mapMenuFrame=new MapMenuFrame(this);
@@ -40,7 +40,6 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 		
 		buttonPanel.setLayout(new GridLayout());
 		buttonPanel.add(mapMenuButton);
-		buttonPanel.add(labelMenuButton);
 		buttonPanel.add(overlapMenuButton);
 		buttonPanel.add(modeMenuButton);
 		

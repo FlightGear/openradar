@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 
 public class RadarPlanViewSettings {
@@ -21,7 +20,7 @@ public class RadarPlanViewSettings {
 	public final static String SPEED_VECTOR_MINUTES_PROPERTY="speedVectorMinutes";
 	public final static String TRACK_HISTORY_LENGTH_PROPERTY="trackHistoryLength";
 	
-	protected double range=10.0f*(float)Units.NM;
+	protected int range=10;
 	protected Font font=new Font(Font.SANS_SERIF,Font.PLAIN,12);
 	protected boolean showingSector=true;
 	protected boolean showingWaypoints=true;
@@ -34,7 +33,7 @@ public class RadarPlanViewSettings {
 	protected int trackHistoryLength=3;
 	protected ICoordinateTransformation mapTransformation;
 
-	public double getRange() {
+	public int getRange() {
 		return range;
 	}
 
@@ -78,8 +77,8 @@ public class RadarPlanViewSettings {
 		return trackHistoryLength;
 	}
 
-	public void setRange(double newValue) {
-		double oldValue=this.range;
+	public void setRange(int newValue) {
+		int oldValue=this.range;
 		this.range = newValue;
 		propertyChangeSupport.firePropertyChange(RANGE_PROPERTY, oldValue, newValue);
 	}
