@@ -12,11 +12,13 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JPanel;
+import javax.swing.JDesktopPane;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.CoordinateDeviceTransformation;
@@ -32,7 +34,7 @@ import de.knewcleus.radar.ui.AircraftStateManager;
 import de.knewcleus.radar.ui.IAircraftStateConsumer;
 import de.knewcleus.radar.ui.RadarWorkstation;
 
-public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer {
+public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateConsumer {
 	private static final long serialVersionUID = 8996959818592227638L;
 	
 	protected final RadarWorkstation workstation;
@@ -59,8 +61,17 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	protected static int selectionRange=10;
 	
 	public RadarPlanViewPanel(RadarWorkstation workstation) {
-		super(true); /* Is double buffered */
+		super();
+		setDoubleBuffered(true); /* Is double buffered */
 		this.workstation=workstation;
+		
+		PropertyChangeListener settingsChangeListener=new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				repaint();
+			}
+		};
+		workstation.getRadarPlanViewSettings().addPropertyChangeListener(settingsChangeListener);
 		
 		radarDeviceTransformation=new RadarDeviceTransformation(getSettings());
 		radarPlanViewContext=new RadarPlanViewContext(getSettings(),radarDeviceTransformation);
