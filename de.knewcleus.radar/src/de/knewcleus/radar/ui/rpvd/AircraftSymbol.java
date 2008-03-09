@@ -32,11 +32,11 @@ public class AircraftSymbol implements LabeledObject {
 
 	protected static final double EPSILON=1E-10;
 	
-	protected static final double potAngleMax=.5E1;
+	protected static final double potAngleMax=5E2;
 	protected static final double angle0=0.75*Math.PI;
 	protected static final double angleMax=0.3*Math.PI;
 
-	protected static final double potDistanceMax=1E2;
+	protected static final double potDistanceMax=5E2;
 	protected static final double minLabelDist=10;
 	protected static final double maxLabelDist=100;
 	protected static final double meanLabelDist=(minLabelDist+maxLabelDist)/2.0;
