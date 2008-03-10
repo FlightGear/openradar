@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui;
 
 import java.awt.Color;
 import java.awt.Font;

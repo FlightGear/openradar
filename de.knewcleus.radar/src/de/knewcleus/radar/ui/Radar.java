@@ -7,6 +7,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
@@ -21,10 +24,19 @@ import de.knewcleus.radar.aircraft.fgmp.ATCClient;
 import de.knewcleus.radar.aircraft.fgmp.FGMPAircraft;
 import de.knewcleus.radar.aircraft.fgmp.FGMPRegistry;
 import de.knewcleus.radar.sector.Sector;
+import de.knewcleus.radar.ui.plaf.refghmi.REFGHMILookAndFeel;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public class Radar {
 	public static void main(String[] args) throws DBParserException, IOException, ClassNotFoundException, MultiplayerException, ParserConfigurationException, SAXException {
+		LookAndFeel refghmiLookAndFeel=new REFGHMILookAndFeel();
+		try {
+			UIManager.setLookAndFeel(refghmiLookAndFeel);
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Logger rootLogger=Logger.getLogger("de.knewcleus");
 		rootLogger.setUseParentHandlers(false);
 		rootLogger.setLevel(Level.SEVERE);

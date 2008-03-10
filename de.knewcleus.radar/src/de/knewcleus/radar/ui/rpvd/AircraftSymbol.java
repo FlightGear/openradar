@@ -23,6 +23,7 @@ import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 import de.knewcleus.radar.ui.AircraftState;
+import de.knewcleus.radar.ui.Palette;
 
 public class AircraftSymbol implements LabeledObject {
 	protected static final float aircraftSymbolSize=6.0f;

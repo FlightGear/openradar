@@ -12,6 +12,7 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.MapTransformationHelper;
 import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.radar.ui.Palette;
 
 public class RangeMarkLayer {
 	protected double rangeMarks=10.0*Units.NM;

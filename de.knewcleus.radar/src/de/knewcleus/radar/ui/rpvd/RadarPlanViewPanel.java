@@ -32,6 +32,7 @@ import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.AircraftState;
 import de.knewcleus.radar.ui.AircraftStateManager;
 import de.knewcleus.radar.ui.IAircraftStateConsumer;
+import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
 
 public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateConsumer {

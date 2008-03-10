@@ -16,6 +16,7 @@ import java.util.Set;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.navaids.INavaidDatabase;
 import de.knewcleus.fgfs.navaids.NamedFix;
+import de.knewcleus.radar.ui.Palette;
 
 public class WaypointDisplayLayer implements IMapLayer {
 	protected final INavaidDatabase scenario;
