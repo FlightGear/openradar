@@ -1,26 +1,24 @@
 package de.knewcleus.radar.ui.labels;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
-import de.knewcleus.radar.ui.rpvd.AircraftSymbol;
-import de.knewcleus.radar.ui.rpvd.RadarPlanViewPanel;
-import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
+import de.knewcleus.radar.ui.aircraft.AircraftState;
 
 public abstract class AbstractTextLabelElement extends AbstractLabelElement implements ILabelElement {
-	public AbstractTextLabelElement(AircraftSymbol aircraftSymbol) {
-		super(aircraftSymbol);
+	public AbstractTextLabelElement(ILabelDisplay labelDisplay, AircraftState aircraftState) {
+		super(labelDisplay, aircraftState);
 	}
-	
+
 	protected abstract String getText();
 
 	@Override
 	public void layout() {
 		String text=getText();
-		final RadarPlanViewSettings radarPlanViewSettings=aircraftSymbol.getRadarPlanViewContext().getRadarPlanViewSettings();
-		final RadarPlanViewPanel radarPlanViewPanel=aircraftSymbol.getRadarPlanViewContext().getRadarPlanViewPanel();
-		FontMetrics fm=radarPlanViewPanel.getFontMetrics(radarPlanViewSettings.getFont());
+		final Component displayComponent=labelDisplay.getDisplayComponent();
+		FontMetrics fm=displayComponent.getFontMetrics(displayComponent.getFont());
 		
 		ascent=fm.getMaxAscent();
 		

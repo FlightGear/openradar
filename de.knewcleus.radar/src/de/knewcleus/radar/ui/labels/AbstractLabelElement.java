@@ -5,21 +5,27 @@ import java.awt.Rectangle;
 
 import javax.swing.JPopupMenu;
 
-import de.knewcleus.radar.ui.rpvd.AircraftSymbol;
+import de.knewcleus.radar.ui.aircraft.AircraftState;
 
 public abstract class AbstractLabelElement implements ILabelElement {
-	protected final AircraftSymbol aircraftSymbol;
+	protected final ILabelDisplay labelDisplay;
+	protected final AircraftState aircraftState;
 	
 	protected int ascent;
 	protected Dimension minimumSize;
 	protected Rectangle bounds;
 
-	public AbstractLabelElement(AircraftSymbol aircraftSymbol) {
-		this.aircraftSymbol=aircraftSymbol;
+	public AbstractLabelElement(ILabelDisplay labelDisplay, AircraftState aircraftState) {
+		this.labelDisplay=labelDisplay;
+		this.aircraftState=aircraftState;
 	}
-
-	public AircraftSymbol getAircraftSymbol() {
-		return aircraftSymbol;
+	
+	public ILabelDisplay getLabelDisplay() {
+		return labelDisplay;
+	}
+	
+	public AircraftState getAircraftState() {
+		return aircraftState;
 	}
 	
 	@Override
@@ -43,8 +49,9 @@ public abstract class AbstractLabelElement implements ILabelElement {
 	}
 	
 	public void showPopupMenu(JPopupMenu popupMenu, int x, int y) {
-		Rectangle labelBounds=getAircraftSymbol().getLabel().getBounds();
-		popupMenu.show(aircraftSymbol.getRadarPlanViewContext().getRadarPlanViewPanel(), x+labelBounds.x, y+labelBounds.y);
+		Rectangle labelBounds=getLabelDisplay().getDisplayBounds();
+		// FIXME: We should become independent of the RPVD, as we will also display labels in other windows....
+		popupMenu.show(getLabelDisplay().getDisplayComponent(), x+labelBounds.x, y+labelBounds.y);
 	}
 
 }

@@ -18,11 +18,12 @@ import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.ui.aircraft.AircraftState;
 import de.knewcleus.radar.ui.aircraft.AircraftTaskState;
 import de.knewcleus.radar.ui.labels.CallsignLabelElement;
+import de.knewcleus.radar.ui.labels.ILabelDisplay;
 import de.knewcleus.radar.ui.labels.StaticTextLabelElement;
 import de.knewcleus.radar.ui.labels.ILabelElement;
 import de.knewcleus.radar.ui.labels.MultilineLabel;
 
-public class AircraftLabel implements Label {
+public class AircraftLabel implements Label, ILabelDisplay {
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 	
 	protected final AircraftSymbol associatedSymbol;
@@ -40,13 +41,22 @@ public class AircraftLabel implements Label {
 		hookX=1.0;
 		hookY=1.0;
 		
-		callsignElement=new CallsignLabelElement(associatedSymbol);
-		speedElement=new StaticTextLabelElement(associatedSymbol);
-		levelElement=new StaticTextLabelElement(associatedSymbol);
+		callsignElement=new CallsignLabelElement(this,associatedSymbol.getAircraftState());
+		speedElement=new StaticTextLabelElement(this,associatedSymbol.getAircraftState());
+		levelElement=new StaticTextLabelElement(this,associatedSymbol.getAircraftState());
 		
 		labelLines.add(callsignElement);
 		labelLines.add(speedElement);
 		labelLines.add(levelElement);
+	}
+	
+	public Rectangle getDisplayBounds() {
+		return getBounds2D().getBounds();
+	}
+	
+	@Override
+	public RadarPlanViewPanel getDisplayComponent() {
+		return associatedSymbol.getRadarPlanViewContext().getRadarPlanViewPanel();
 	}
 	
 	public void processMouseEvent(MouseEvent e) {
@@ -105,10 +115,6 @@ public class AircraftLabel implements Label {
 		Rectangle2D newBounds=new Rectangle2D.Double(x-size.width/2.0,y-size.height/2.0,size.width,size.height);
 		
 		return newBounds;
-	}
-	
-	public Rectangle getBounds() {
-		return getBounds2D().getBounds();
 	}
 	
 	public Dimension getSize() {

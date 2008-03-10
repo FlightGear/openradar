@@ -138,7 +138,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		final AircraftSymbol selectedSymbol=getSelectedSymbol();
 		final boolean selectedLabelHit;
 		
-		selectedLabelHit=(selectedSymbol!=null && selectedSymbol.getLabel().getBounds().contains(e.getPoint()));
+		selectedLabelHit=(selectedSymbol!=null && selectedSymbol.getLabel().getDisplayBounds().contains(e.getPoint()));
 		
 		if (e.getID()==MouseEvent.MOUSE_PRESSED && e.getButton()==1) {
 			isSelectedLabelArmed=selectedLabelHit;
@@ -147,7 +147,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		}
 		
 		if (selectedLabelHit) {
-			Rectangle labelBounds=selectedSymbol.getLabel().getBounds();
+			Rectangle labelBounds=selectedSymbol.getLabel().getDisplayBounds();
 			int w=labelBounds.width,h=labelBounds.height;
 			int cx,cy;
 			
