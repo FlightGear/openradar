@@ -27,10 +27,14 @@ public class WaypointDisplayLayer implements IMapLayer {
 
 	protected Stroke fixStroke=new BasicStroke(0.0f);
 	
-	protected Set<NamedFix> fixesWithDesignator=new HashSet<NamedFix>();
+	protected final Set<NamedFix> fixesWithDesignator=new HashSet<NamedFix>();
 
 	public WaypointDisplayLayer(INavaidDatabase scenario) {
 		this.scenario=scenario;
+	}
+	
+	public Set<NamedFix> getFixesWithDesignator() {
+		return fixesWithDesignator;
 	}
 	
 	@Override
@@ -51,7 +55,7 @@ public class WaypointDisplayLayer implements IMapLayer {
 			fixMarker.closePath();
 			g2d.draw(fixMarker);
 			
-			if (true || fixesWithDesignator.contains(fix)) {
+			if (fixesWithDesignator.contains(fix)) {
 				TagLayout tagLayout=new TagLayout(g2d.getFont(),g2d.getFontRenderContext(),tagDirX,tagDirY,tagDistance+fixSize);
 				tagLayout.addLine(fix.getID());
 				

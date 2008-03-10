@@ -48,7 +48,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	protected final IMapLayer waterLayer;
 	protected final IMapLayer restrictedLayer;
 	protected final IMapLayer sectorLayer;
-	protected final IMapLayer waypointDisplayLayer;
+	protected final WaypointDisplayLayer waypointDisplayLayer;
 	protected final RangeMarkLayer rangeMarkLayer=new RangeMarkLayer();
 	
 	protected final float scaleMarkerSize=10.0f;
@@ -83,6 +83,9 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		restrictedLayer=new PolygonMapLayer(Palette.RESTRICTED,sector.getRestrictedPolygons());
 		sectorLayer=new PolygonMapLayer(Palette.SECTOR,sector.getSectorPolygons());
 		waypointDisplayLayer=new WaypointDisplayLayer(sector);
+		
+		Set<Aerodrome> aerodromes=sector.getFixDB().getFixes(Aerodrome.class);
+		waypointDisplayLayer.getFixesWithDesignator().addAll(aerodromes);
 
 		setBackground(Palette.WATERMASS);
 		
