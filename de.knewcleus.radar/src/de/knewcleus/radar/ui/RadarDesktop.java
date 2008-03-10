@@ -2,6 +2,7 @@ package de.knewcleus.radar.ui;
 
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
+import java.awt.Rectangle;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -17,6 +18,8 @@ public class RadarDesktop extends JFrame {
 	protected final JDesktopPane desktopPane=new JDesktopPane();
 	
 	protected final GeneralToolbox generalToolbox=new GeneralToolbox(this);
+	
+	protected Rectangle lastRPVDBounds;
 
 	public RadarDesktop(GraphicsConfiguration gc, RadarWorkstation workstation) {
 		super(gc);
@@ -46,9 +49,13 @@ public class RadarDesktop extends JFrame {
 		RadarDesktop oldDesktop=workstation.getRadarPlanViewDesktop();
 		if (oldDesktop!=this) {
 			if (oldDesktop!=null) {
+				oldDesktop.lastRPVDBounds=radarPlanViewDisplay.getBounds();
 				radarPlanViewDisplay.setVisible(false);
 				oldDesktop.remove(radarPlanViewDisplay);
 				oldDesktop.generalToolbox.setRPVDPresent(false);
+			}
+			if (lastRPVDBounds!=null) {
+				radarPlanViewDisplay.setBounds(lastRPVDBounds);
 			}
 			add(radarPlanViewDisplay);
 			radarPlanViewDisplay.setVisible(true);
