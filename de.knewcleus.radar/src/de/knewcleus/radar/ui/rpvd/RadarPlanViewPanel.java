@@ -75,7 +75,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		workstation.getRadarPlanViewSettings().addPropertyChangeListener(settingsChangeListener);
 		
 		radarDeviceTransformation=new RadarDeviceTransformation(getSettings());
-		radarPlanViewContext=new RadarPlanViewContext(getSettings(),radarDeviceTransformation);
+		radarPlanViewContext=new RadarPlanViewContext(this, getSettings(),radarDeviceTransformation);
 		
 		final Sector sector=workstation.getSector();
 		landmassLayer=new PolygonMapLayer(Palette.LANDMASS,sector.getLandmassPolygons());
@@ -197,12 +197,13 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		
 		super.paintComponent(g);
 		
+		setFont(getSettings().getFont());
+
 		long startTime=System.currentTimeMillis();
 		long maxUpdateTimeMillis=100;
-		setFont(getSettings().getFont());
 		
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-			aircraftSymbol.layout(g2d);
+			aircraftSymbol.layout();
 		}
 		
 		while (System.currentTimeMillis()<startTime+maxUpdateTimeMillis) {
@@ -362,6 +363,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	public void aircraftStateUpdate() {
 		if (!isDragging)
 			checkForSelectionChange();
+		
 		repaint();
 	}
 	

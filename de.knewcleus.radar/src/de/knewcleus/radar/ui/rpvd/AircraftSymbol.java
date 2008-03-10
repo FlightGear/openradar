@@ -4,12 +4,10 @@ import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.Deque;
 import java.util.Iterator;
 
@@ -48,8 +46,6 @@ public class AircraftSymbol implements LabeledObject {
 	protected Point2D currentDevicePosition;
 	protected Point2D currentDeviceHeadPosition;
 	protected final String labelLine[]=new String[5];
-	protected double currentLabelWidth;
-	protected double currentLabelHeight;
 	protected boolean isLabelLocked=false;
 	
 	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, AircraftState aircraftState) {
@@ -62,19 +58,15 @@ public class AircraftSymbol implements LabeledObject {
 		return aircraftState;
 	}
 	
+	public RadarPlanViewContext getRadarPlanViewContext() {
+		return radarPlanViewContext;
+	}
+	
 	public Point2D getCurrentDevicePosition() {
 		return currentDevicePosition;
 	}
 	
-	public double getCurrentLabelWidth() {
-		return currentLabelWidth;
-	}
-	
-	public double getCurrentLabelHeight() {
-		return currentLabelHeight;
-	}
-	
-	public void layout(Graphics2D g2d) {
+	public void layout() {
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
 
@@ -95,20 +87,8 @@ public class AircraftSymbol implements LabeledObject {
 		final Position currentLeadingLineHeadMapPosition=mapTransformation.forward(currentLeadingLineHeadGeodPosition);
 		currentDeviceHeadPosition=deviceTransformation.toDevice(currentLeadingLineHeadMapPosition);
 		
-		/* Layout label */
-		labelLine[0]=String.format("%03d",(int)Math.ceil(currentGeodPosition.getZ()/Units.FT/100.0));
-		labelLine[1]=aircraftState.getAircraft().getOperator()+aircraftState.getAircraft().getCallsign();
-		labelLine[2]=String.format("%03d",(int)Math.round(lastVelocityVector.getLength()/Units.KNOTS/10.0));
-		labelLine[3]=null;
-		labelLine[4]=null;
-
-		FontMetrics fontMetrics=g2d.getFontMetrics();
-		currentLabelWidth=0.0;
-		currentLabelHeight=0.0;
-		for (int i=0;i<labelLine.length && labelLine[i]!=null;i++) {
-			currentLabelHeight+=fontMetrics.getMaxAscent()+fontMetrics.getMaxDescent()+fontMetrics.getLeading();
-			currentLabelWidth=Math.max(currentLabelWidth, fontMetrics.stringWidth(labelLine[i]));
-		}
+		label.updateLabelContents();
+		label.layout();
 		
 		label.move(0,0);
 	}
@@ -122,9 +102,6 @@ public class AircraftSymbol implements LabeledObject {
 	}
 	
 	public void drawLabel(Graphics2D g2d) {
-		double x=label.getLeft();
-		double y=label.getTop();
-		
 		double devX=currentDevicePosition.getX();
 		double devY=currentDevicePosition.getY();
 		
@@ -136,21 +113,7 @@ public class AircraftSymbol implements LabeledObject {
 		Line2D leadingLine=new Line2D.Double(leStartX,leStartY,leEndX,leEndY);
 		g2d.draw(leadingLine);
 		
-		AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
-		if (aircraftState.isSelected()) {
-			g2d.setColor(aircraftTaskState.getSelectedBackgroundColor());
-			Rectangle2D labelBackground=new Rectangle2D.Double(x,y,currentLabelWidth,currentLabelHeight);
-			g2d.fill(labelBackground);
-			g2d.setColor(aircraftTaskState.getSelectedTextColor());
-		} else {
-			g2d.setColor(aircraftTaskState.getNormalTextColor());
-		}
-		FontMetrics fontMetrics=g2d.getFontMetrics();
-		for (int i=0;i<labelLine.length && labelLine[i]!=null;i++) {
-			y+=fontMetrics.getMaxAscent();
-			g2d.drawString(labelLine[i], (float)x, (float)y);
-			y+=fontMetrics.getLeading()+fontMetrics.getMaxDescent();
-		}
+		label.paint(g2d);
 	}
 	
 	public void drawHeadingVector(Graphics2D g2d) {

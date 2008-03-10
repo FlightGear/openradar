@@ -3,12 +3,18 @@ package de.knewcleus.radar.ui.rpvd;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 
 public class RadarPlanViewContext {
+	protected final RadarPlanViewPanel radarPlanViewPanel;
 	protected final RadarPlanViewSettings radarPlanViewSettings;
 	protected final IDeviceTransformation deviceTransformation;
 	
-	public RadarPlanViewContext(RadarPlanViewSettings radarPlanViewSettings, IDeviceTransformation deviceTransformation) {
+	public RadarPlanViewContext(RadarPlanViewPanel radarPlanViewPanel, RadarPlanViewSettings radarPlanViewSettings, IDeviceTransformation deviceTransformation) {
+		this.radarPlanViewPanel=radarPlanViewPanel;
 		this.radarPlanViewSettings=radarPlanViewSettings;
 		this.deviceTransformation=deviceTransformation;
+	}
+	
+	public RadarPlanViewPanel getRadarPlanViewPanel() {
+		return radarPlanViewPanel;
 	}
 	
 	public RadarPlanViewSettings getRadarPlanViewSettings() {

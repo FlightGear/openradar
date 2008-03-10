@@ -1,19 +1,98 @@
 package de.knewcleus.radar.ui.rpvd;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.knewcleus.fgfs.Units;
+import de.knewcleus.fgfs.location.Ellipsoid;
+import de.knewcleus.fgfs.location.GeodToCartTransformation;
+import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.radar.aircraft.IAircraft;
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
+import de.knewcleus.radar.ui.AircraftState;
 
 public class AircraftLabel implements Label {
+	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
+	
 	protected final AircraftSymbol associatedSymbol;
 	protected double hookX,hookY;
 	protected double centerX,centerY;
+	protected final List<ILabelElement> labelLines=new ArrayList<ILabelElement>();
+	protected final MultilineLabel labelLayout=new MultilineLabel(labelLines);
+	
+	protected final BasicTextLabelElement callsignElement;
+	protected final BasicTextLabelElement speedElement;
+	protected final BasicTextLabelElement levelElement;
 	
 	public AircraftLabel(AircraftSymbol associatedSymbol) {
 		this.associatedSymbol=associatedSymbol;
 		hookX=1.0;
 		hookY=1.0;
+		
+		callsignElement=new BasicTextLabelElement(associatedSymbol);
+		speedElement=new BasicTextLabelElement(associatedSymbol);
+		levelElement=new BasicTextLabelElement(associatedSymbol);
+		
+		labelLines.add(callsignElement);
+		labelLines.add(speedElement);
+		labelLines.add(levelElement);
 	}
-
+	
+	public void updateLabelContents() {
+		final AircraftState aircraftState=associatedSymbol.getAircraftState();
+		final IAircraft aircraft=aircraftState.getAircraft();
+		final Position currentPosition=aircraftState.getPositionBuffer().getLast();
+		final Position currentGeodPosition=geodToCartTransformation.backward(currentPosition);
+		
+		callsignElement.setText(aircraft.getCallsign());
+		speedElement.setText(String.format("%03d",(int)Math.round(aircraftState.getLastVelocityVector().getLength()/Units.KNOTS/10.0)));
+		levelElement.setText(String.format("%03d",(int)Math.ceil(currentGeodPosition.getZ()/Units.FT/100.0)));
+	}
+	
+	public void layout() {
+		labelLayout.layout();
+		
+		Dimension size=labelLayout.getMinimumSize();
+		
+		Rectangle2D newBounds=new Rectangle2D.Double(-size.width/2.0,-size.height/2.0,size.width,size.height);
+		labelLayout.setBounds(newBounds.getBounds());
+	}
+	
+	public void paint(Graphics2D g2d) {
+		Point2D symbolDevicePosition=associatedSymbol.getCurrentDevicePosition();
+		double x,y;
+		
+		x=symbolDevicePosition.getX()+centerX;
+		y=symbolDevicePosition.getY()+centerY;
+		
+		int w,h;
+		w=getSize().width;
+		h=getSize().height;
+		
+		g2d.translate(x,y);
+		
+		final AircraftState aircraftState=associatedSymbol.getAircraftState();
+		final AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
+		if (aircraftState.isSelected()) {
+			g2d.setColor(aircraftTaskState.getSelectedBackgroundColor());
+			g2d.fillRect(-w/2,-h/2,w,h);
+			g2d.setColor(aircraftTaskState.getSelectedTextColor());
+		} else {
+			g2d.setColor(aircraftTaskState.getNormalTextColor());
+		}
+		labelLayout.paint(g2d);
+		g2d.translate(-x,-y);
+	}
+	
+	public Dimension getSize() {
+		return labelLayout.getMinimumSize();
+	}
+	
 	@Override
 	public LabeledObject getAssociatedObject() {
 		return associatedSymbol;
@@ -59,14 +138,15 @@ public class AircraftLabel implements Label {
 			hookY=dirY*AircraftSymbol.maxLabelDist;
 		}
 		
-		centerX=hookX+dirX*associatedSymbol.getCurrentLabelWidth()/2.0;
-		centerY=hookY+dirY*associatedSymbol.getCurrentLabelHeight()/2.0;
+		Dimension size=getSize();
+		centerX=hookX+dirX*size.width/2.0;
+		centerY=hookY+dirY*size.height/2.0;
 	}
 
 	@Override
 	public double getTop() {
 		double y=associatedSymbol.getCurrentDevicePosition().getY();
-		double h=associatedSymbol.getCurrentLabelHeight();
+		double h=getSize().height;
 		
 		return y+centerY-h/2.0;
 	}
@@ -74,7 +154,7 @@ public class AircraftLabel implements Label {
 	@Override
 	public double getBottom() {
 		double y=associatedSymbol.getCurrentDevicePosition().getY();
-		double h=associatedSymbol.getCurrentLabelHeight();
+		double h=getSize().height;
 		
 		return y+centerY+h/2.0;
 	}
@@ -82,7 +162,7 @@ public class AircraftLabel implements Label {
 	@Override
 	public double getLeft() {
 		double x=associatedSymbol.getCurrentDevicePosition().getX();
-		double w=associatedSymbol.getCurrentLabelWidth();
+		double w=getSize().width;
 		
 		return x+centerX-w/2.0;
 	}
@@ -90,7 +170,7 @@ public class AircraftLabel implements Label {
 	@Override
 	public double getRight() {
 		double x=associatedSymbol.getCurrentDevicePosition().getX();
-		double w=associatedSymbol.getCurrentLabelWidth();
+		double w=getSize().width;
 		
 		return x+centerX+w/2.0;
 	}
