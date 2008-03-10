@@ -29,11 +29,11 @@ import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
 import de.knewcleus.radar.autolabel.Autolabeller;
 import de.knewcleus.radar.sector.Sector;
-import de.knewcleus.radar.ui.AircraftState;
-import de.knewcleus.radar.ui.AircraftStateManager;
-import de.knewcleus.radar.ui.IAircraftStateConsumer;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
+import de.knewcleus.radar.ui.aircraft.AircraftState;
+import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
+import de.knewcleus.radar.ui.aircraft.IAircraftStateConsumer;
 
 public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateConsumer {
 	private static final long serialVersionUID = 8996959818592227638L;

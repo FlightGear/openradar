@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import de.knewcleus.radar.aircraft.IAircraft;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.sector.Sector;
+import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 

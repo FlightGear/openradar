@@ -14,7 +14,11 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.radar.aircraft.IAircraft;
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
-import de.knewcleus.radar.ui.AircraftState;
+import de.knewcleus.radar.ui.aircraft.AircraftState;
+import de.knewcleus.radar.ui.aircraft.AircraftTaskState;
+import de.knewcleus.radar.ui.labels.BasicTextLabelElement;
+import de.knewcleus.radar.ui.labels.ILabelElement;
+import de.knewcleus.radar.ui.labels.MultilineLabel;
 
 public class AircraftLabel implements Label {
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);

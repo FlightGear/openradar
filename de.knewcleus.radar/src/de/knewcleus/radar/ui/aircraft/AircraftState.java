@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui;
+package de.knewcleus.radar.ui.aircraft;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -6,7 +6,6 @@ import java.util.Deque;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.aircraft.IAircraft;
-import de.knewcleus.radar.ui.rpvd.AircraftTaskState;
 
 public class AircraftState {
 	protected final AircraftStateManager aircraftStateManager;

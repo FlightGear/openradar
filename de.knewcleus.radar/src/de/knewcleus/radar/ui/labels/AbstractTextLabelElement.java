@@ -1,9 +1,13 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui.labels;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+
+import de.knewcleus.radar.ui.rpvd.AircraftSymbol;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewPanel;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public abstract class AbstractTextLabelElement implements ILabelElement {
 	protected final AircraftSymbol aircraftSymbol;

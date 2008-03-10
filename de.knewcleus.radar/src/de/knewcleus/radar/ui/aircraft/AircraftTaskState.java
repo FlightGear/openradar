@@ -1,8 +1,9 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui.aircraft;
 
 import java.awt.Color;
 
 import de.knewcleus.radar.ui.Palette;
+
 
 public enum AircraftTaskState {
 	OTHER(Palette.BEACON,Palette.BEACON,Palette.BLACK,Palette.CRD_BACKGROUND),

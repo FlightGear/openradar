@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui;
+package de.knewcleus.radar.ui.aircraft;
 
 import java.util.Collection;
 import java.util.Collections;

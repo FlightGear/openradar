@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui.labels;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
