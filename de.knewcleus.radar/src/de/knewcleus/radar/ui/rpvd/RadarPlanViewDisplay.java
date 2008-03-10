@@ -3,6 +3,7 @@ package de.knewcleus.radar.ui.rpvd;
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
 import de.knewcleus.radar.ui.RadarWorkstation;
@@ -19,6 +20,7 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 		this.workstation=workstation;
 		
 		radarPlanViewPanel=new RadarPlanViewPanel(workstation);
+		radarPlanViewPanel.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
 		
 		setContentPane(radarPlanViewPanel);
 
