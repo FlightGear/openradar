@@ -13,7 +13,7 @@ public class AircraftState {
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
 	protected boolean isSelected=false;
 	protected Vector3D lastVelocityVector=new Vector3D();
-	protected AircraftTaskState taskState=AircraftTaskState.NOT_CONCERNED; // FIXME: this should actually be set explicitly
+	protected AircraftTaskState taskState=AircraftTaskState.ASSUMED; // FIXME: this should actually be set explicitly
 	
 	public AircraftState(AircraftStateManager aircraftStateManager, IAircraft aircraft) {
 		this.aircraftStateManager=aircraftStateManager;
@@ -26,6 +26,10 @@ public class AircraftState {
 	
 	public Deque<Position> getPositionBuffer() {
 		return positionBuffer;
+	}
+	
+	public boolean canSelect() {
+		return taskState!=AircraftTaskState.OTHER;
 	}
 	
 	public boolean isSelected() {

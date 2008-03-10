@@ -66,6 +66,10 @@ public class AircraftSymbol implements LabeledObject {
 		return currentDevicePosition;
 	}
 	
+	public boolean canSelect() {
+		return aircraftState.canSelect();
+	}
+
 	public void layout() {
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();

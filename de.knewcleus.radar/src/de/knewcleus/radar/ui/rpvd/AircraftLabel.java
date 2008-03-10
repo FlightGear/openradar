@@ -9,45 +9,60 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.location.Ellipsoid;
-import de.knewcleus.fgfs.location.GeodToCartTransformation;
-import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
+import de.knewcleus.radar.ui.aircraft.ActualLevelLabelElement;
 import de.knewcleus.radar.ui.aircraft.AircraftState;
 import de.knewcleus.radar.ui.aircraft.AircraftTaskState;
-import de.knewcleus.radar.ui.labels.CallsignLabelElement;
+import de.knewcleus.radar.ui.aircraft.CallsignLabelElement;
+import de.knewcleus.radar.ui.aircraft.GroundSpeedLabelElement;
 import de.knewcleus.radar.ui.labels.ILabelDisplay;
-import de.knewcleus.radar.ui.labels.StaticTextLabelElement;
 import de.knewcleus.radar.ui.labels.ILabelElement;
+import de.knewcleus.radar.ui.labels.LabelLine;
 import de.knewcleus.radar.ui.labels.MultilineLabel;
+import de.knewcleus.radar.ui.labels.StaticTextLabelElement;
 
 public class AircraftLabel implements Label, ILabelDisplay {
-	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
-	
 	protected final AircraftSymbol associatedSymbol;
 	protected double hookX,hookY;
 	protected double centerX,centerY;
 	protected final List<ILabelElement> labelLines=new ArrayList<ILabelElement>();
 	protected final MultilineLabel labelLayout=new MultilineLabel(labelLines);
 	
-	protected final CallsignLabelElement callsignElement;
-	protected final StaticTextLabelElement speedElement;
-	protected final StaticTextLabelElement levelElement;
+	protected final LabelLine labelLine[]=new LabelLine[5];
+	protected final ILabelElement callsignElement;
+	protected final ILabelElement nextSectorElement;
+	protected final ILabelElement actualLevelElement;
+	protected final ILabelElement exitPointElement;
+	protected final ILabelElement groundSpeedElement;
+	protected final ILabelElement clearedLevelElement;
+	protected final ILabelElement exitLevelElement;
+	protected final ILabelElement assignedHeadingElement;
+	protected final ILabelElement assignedSpeedElement;
+	protected final ILabelElement assignedClimbRateElement;
 	
 	public AircraftLabel(AircraftSymbol associatedSymbol) {
 		this.associatedSymbol=associatedSymbol;
 		hookX=1.0;
 		hookY=1.0;
 		
-		callsignElement=new CallsignLabelElement(this,associatedSymbol.getAircraftState());
-		speedElement=new StaticTextLabelElement(this,associatedSymbol.getAircraftState());
-		levelElement=new StaticTextLabelElement(this,associatedSymbol.getAircraftState());
+		for (int i=0;i<labelLine.length;i++) {
+			labelLine[i]=new LabelLine(new ArrayList<ILabelElement>());
+		}
 		
-		labelLines.add(callsignElement);
-		labelLines.add(speedElement);
-		labelLines.add(levelElement);
+		final AircraftState aircraftState=associatedSymbol.getAircraftState();
+		callsignElement=new CallsignLabelElement(this,aircraftState);
+		nextSectorElement=new StaticTextLabelElement(this,aircraftState);
+		actualLevelElement=new ActualLevelLabelElement(this,aircraftState);
+		exitPointElement=new StaticTextLabelElement(this,aircraftState);
+		groundSpeedElement=new GroundSpeedLabelElement(this,aircraftState);
+		clearedLevelElement=new StaticTextLabelElement(this,aircraftState);
+		exitLevelElement=new StaticTextLabelElement(this,aircraftState);
+		assignedHeadingElement=new StaticTextLabelElement(this,aircraftState);
+		assignedSpeedElement=new StaticTextLabelElement(this,aircraftState);
+		assignedClimbRateElement=new StaticTextLabelElement(this,aircraftState);
+		
+		updateLabelContents();
 	}
 	
 	public Rectangle getDisplayBounds() {
@@ -65,11 +80,86 @@ public class AircraftLabel implements Label, ILabelDisplay {
 	
 	public void updateLabelContents() {
 		final AircraftState aircraftState=associatedSymbol.getAircraftState();
-		final Position currentPosition=aircraftState.getPositionBuffer().getLast();
-		final Position currentGeodPosition=geodToCartTransformation.backward(currentPosition);
+		labelLines.clear();
+		switch (aircraftState.getTaskState()) {
+		case OTHER:
+			prepareOtherLabel();
+			break;
+		case NOT_CONCERNED:
+			prepareNotConcernedLabel();
+			break;
+		case ASSUMED:
+		case CONCERNED:
+			prepareStandardLabel();
+			break;
+		}
+	}
+	
+	private void prepareOtherLabel() {
+		labelLine[0].getElements().clear();
 		
-		speedElement.setText(String.format("%03d",(int)Math.round(aircraftState.getLastVelocityVector().getLength()/Units.KNOTS/10.0)));
-		levelElement.setText(String.format("%03d",(int)Math.ceil(currentGeodPosition.getZ()/Units.FT/100.0)));
+		labelLine[0].getElements().add(callsignElement);
+		labelLine[0].getElements().add(nextSectorElement);
+		
+		labelLines.clear();
+		labelLines.add(labelLine[0]);
+		labelLines.add(actualLevelElement);
+	}
+	
+	private void prepareNotConcernedLabel() {
+		labelLine[0].getElements().clear();
+		labelLine[1].getElements().clear();
+		labelLine[2].getElements().clear();
+		labelLine[3].getElements().clear();
+		
+		labelLine[0].getElements().add(callsignElement);
+		labelLine[0].getElements().add(nextSectorElement);
+		
+		labelLine[1].getElements().add(actualLevelElement);
+		labelLine[1].getElements().add(exitPointElement);
+		labelLine[1].getElements().add(groundSpeedElement);
+		
+		labelLine[2].getElements().add(clearedLevelElement);
+		labelLine[2].getElements().add(exitLevelElement);
+		
+		labelLine[3].getElements().add(assignedHeadingElement);
+		labelLine[3].getElements().add(assignedSpeedElement);
+		labelLine[3].getElements().add(assignedClimbRateElement);
+		
+		// TODO: fifth line contains optional information...
+		
+		labelLines.clear();
+		labelLines.add(labelLine[0]);
+		labelLines.add(labelLine[1]);
+		labelLines.add(labelLine[2]);
+		labelLines.add(labelLine[3]);
+	}
+	
+	private void prepareStandardLabel() {
+		labelLine[0].getElements().clear();
+		labelLine[1].getElements().clear();
+		labelLine[2].getElements().clear();
+		labelLine[3].getElements().clear();
+		
+		labelLine[0].getElements().add(callsignElement);
+		labelLine[0].getElements().add(nextSectorElement);
+		
+		labelLine[1].getElements().add(actualLevelElement);
+		labelLine[1].getElements().add(exitPointElement);
+		labelLine[1].getElements().add(groundSpeedElement);
+		
+		labelLine[2].getElements().add(clearedLevelElement);
+		labelLine[2].getElements().add(exitLevelElement);
+		
+		labelLine[3].getElements().add(assignedHeadingElement);
+		labelLine[3].getElements().add(assignedSpeedElement);
+		labelLine[3].getElements().add(assignedClimbRateElement);
+		
+		labelLines.clear();
+		labelLines.add(labelLine[0]);
+		labelLines.add(labelLine[1]);
+		labelLines.add(labelLine[2]);
+		labelLines.add(labelLine[3]);
 	}
 	
 	public void layout() {

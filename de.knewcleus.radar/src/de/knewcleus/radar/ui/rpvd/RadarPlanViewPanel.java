@@ -184,12 +184,12 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		
 		AircraftSymbol selectedSymbol=getSelectedSymbol();
 		
-		if (selectedSymbol!=null && selectedSymbol.containsPosition(x, y)) {
+		if (selectedSymbol!=null && selectedSymbol.canSelect() && selectedSymbol.containsPosition(x, y)) {
 			return false; // The old selection has priority
 		}
 		
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-			if (aircraftSymbol.containsPosition(x, y)) {
+			if (aircraftSymbol.canSelect() && aircraftSymbol.containsPosition(x, y)) {
 				getAircraftStateManager().select(aircraftSymbol.getAircraftState());
 				return true;
 			}

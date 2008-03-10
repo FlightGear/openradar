@@ -95,10 +95,19 @@ public class MultilineLabel implements IActiveLabelElement {
 			Rectangle elementBounds=element.getBounds();
 			if (elementBounds.contains(event.getPoint())) {
 				if (element instanceof IActiveLabelElement) {
-					((IActiveLabelElement)element).processMouseEvent(event);
+					IActiveLabelElement activeLabelElement=(IActiveLabelElement)element;
+					if (activeLabelElement.isEnabled()) {
+						((IActiveLabelElement)element).processMouseEvent(event);
+						event.consume();
+					}
 				}
 				break;
 			}
 		}
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }

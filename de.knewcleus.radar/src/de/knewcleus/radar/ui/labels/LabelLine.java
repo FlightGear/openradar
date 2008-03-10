@@ -70,13 +70,17 @@ public class LabelLine implements IActiveLabelElement {
 		return minimumSize;
 	}
 	
+	public List<ILabelElement> getElements() {
+		return elements;
+	}
+	
 	@Override
 	public void setBounds(Rectangle newBounds) {
 		this.bounds=newBounds;
 		int x=newBounds.x, y=newBounds.y;
-		int w=newBounds.width, h=newBounds.height;
+		int w=newBounds.width;
 		
-		int baselineY=y+h-ascent;
+		int baselineY=y+ascent;
 		
 		int xStart=x; /* For justified or left-aligned lines */
 		int widthExcess=w-elementsSize.width;
@@ -122,10 +126,19 @@ public class LabelLine implements IActiveLabelElement {
 			Rectangle elementBounds=element.getBounds();
 			if (elementBounds.contains(event.getPoint())) {
 				if (element instanceof IActiveLabelElement) {
-					((IActiveLabelElement)element).processMouseEvent(event);
+					IActiveLabelElement activeLabelElement=(IActiveLabelElement)element;
+					if (activeLabelElement.isEnabled()) {
+						((IActiveLabelElement)element).processMouseEvent(event);
+						event.consume();
+					}
 				}
 				break;
 			}
 		}
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }
