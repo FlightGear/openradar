@@ -3,6 +3,8 @@ package de.knewcleus.radar.ui.labels;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import javax.swing.JPopupMenu;
+
 import de.knewcleus.radar.ui.rpvd.AircraftSymbol;
 
 public abstract class AbstractLabelElement implements ILabelElement {
@@ -38,6 +40,11 @@ public abstract class AbstractLabelElement implements ILabelElement {
 	@Override
 	public void setBounds(Rectangle rectangle) {
 		bounds=rectangle;
+	}
+	
+	public void showPopupMenu(JPopupMenu popupMenu, int x, int y) {
+		Rectangle labelBounds=getAircraftSymbol().getLabel().getBounds();
+		popupMenu.show(aircraftSymbol.getRadarPlanViewContext().getRadarPlanViewPanel(), x+labelBounds.x, y+labelBounds.y);
 	}
 
 }

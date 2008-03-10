@@ -122,9 +122,7 @@ public class LabelLine implements IActiveLabelElement {
 			Rectangle elementBounds=element.getBounds();
 			if (elementBounds.contains(event.getPoint())) {
 				if (element instanceof IActiveLabelElement) {
-					event.translatePoint(-elementBounds.x, -elementBounds.y);
 					((IActiveLabelElement)element).processMouseEvent(event);
-					event.translatePoint(elementBounds.x, elementBounds.y);
 				}
 				break;
 			}
