@@ -22,6 +22,11 @@ public interface ILabelElement {
 	public int getAscent();
 	
 	/**
+	 * Get the assigned bounds of this label element.
+	 */
+	public Rectangle getBounds();
+	
+	/**
 	 * Set the bounds of this label element.
 	 */
 	public void setBounds(Rectangle rectangle);

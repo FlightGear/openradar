@@ -3,13 +3,15 @@ package de.knewcleus.radar.ui.labels;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class MultilineLabel implements ILabelElement {
+public class MultilineLabel implements IActiveLabelElement {
 	protected final List<? extends ILabelElement> lines;
 	protected final int gap;
 	protected Dimension elementsSize;
 	protected Dimension minimumSize;
+	protected Rectangle bounds;
 	
 	public MultilineLabel(List<? extends ILabelElement> lines) {
 		this(lines,2);
@@ -52,13 +54,14 @@ public class MultilineLabel implements ILabelElement {
 	}
 
 	@Override
-	public void setBounds(Rectangle rectangle) {
+	public void setBounds(Rectangle newBounds) {
+		this.bounds=newBounds;
 		int x,y,w,h;
 		
-		x=rectangle.x;
-		y=rectangle.y;
-		w=rectangle.width;
-		h=rectangle.height;
+		x=newBounds.x;
+		y=newBounds.y;
+		w=newBounds.width;
+		h=newBounds.height;
 		
 		int excessHeight=h-elementsSize.height;
 		int elementGap=gap;
@@ -73,11 +76,31 @@ public class MultilineLabel implements ILabelElement {
 			y+=elementDimension.height+elementGap;
 		}
 	}
+	
+	@Override
+	public Rectangle getBounds() {
+		return bounds;
+	}
 
 	@Override
 	public void paint(Graphics2D g2d) {
 		for (ILabelElement element: lines) {
 			element.paint(g2d);
+		}
+	}
+	
+	@Override
+	public void processMouseEvent(MouseEvent event) {
+		for (ILabelElement element: lines) {
+			Rectangle elementBounds=element.getBounds();
+			if (elementBounds.contains(event.getPoint())) {
+				if (element instanceof IActiveLabelElement) {
+					event.translatePoint(-elementBounds.x, -elementBounds.y);
+					((IActiveLabelElement)element).processMouseEvent(event);
+					event.translatePoint(elementBounds.x, elementBounds.y);
+				}
+				break;
+			}
 		}
 	}
 }

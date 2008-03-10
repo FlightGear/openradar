@@ -2,6 +2,8 @@ package de.knewcleus.radar.ui.rpvd;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -11,12 +13,12 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.radar.aircraft.IAircraft;
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.ui.aircraft.AircraftState;
 import de.knewcleus.radar.ui.aircraft.AircraftTaskState;
-import de.knewcleus.radar.ui.labels.BasicTextLabelElement;
+import de.knewcleus.radar.ui.labels.CallsignLabelElement;
+import de.knewcleus.radar.ui.labels.StaticTextLabelElement;
 import de.knewcleus.radar.ui.labels.ILabelElement;
 import de.knewcleus.radar.ui.labels.MultilineLabel;
 
@@ -29,31 +31,33 @@ public class AircraftLabel implements Label {
 	protected final List<ILabelElement> labelLines=new ArrayList<ILabelElement>();
 	protected final MultilineLabel labelLayout=new MultilineLabel(labelLines);
 	
-	protected final BasicTextLabelElement callsignElement;
-	protected final BasicTextLabelElement speedElement;
-	protected final BasicTextLabelElement levelElement;
+	protected final CallsignLabelElement callsignElement;
+	protected final StaticTextLabelElement speedElement;
+	protected final StaticTextLabelElement levelElement;
 	
 	public AircraftLabel(AircraftSymbol associatedSymbol) {
 		this.associatedSymbol=associatedSymbol;
 		hookX=1.0;
 		hookY=1.0;
 		
-		callsignElement=new BasicTextLabelElement(associatedSymbol);
-		speedElement=new BasicTextLabelElement(associatedSymbol);
-		levelElement=new BasicTextLabelElement(associatedSymbol);
+		callsignElement=new CallsignLabelElement(associatedSymbol);
+		speedElement=new StaticTextLabelElement(associatedSymbol);
+		levelElement=new StaticTextLabelElement(associatedSymbol);
 		
 		labelLines.add(callsignElement);
 		labelLines.add(speedElement);
 		labelLines.add(levelElement);
 	}
 	
+	public void processMouseEvent(MouseEvent e) {
+		labelLayout.processMouseEvent(e);
+	}
+	
 	public void updateLabelContents() {
 		final AircraftState aircraftState=associatedSymbol.getAircraftState();
-		final IAircraft aircraft=aircraftState.getAircraft();
 		final Position currentPosition=aircraftState.getPositionBuffer().getLast();
 		final Position currentGeodPosition=geodToCartTransformation.backward(currentPosition);
 		
-		callsignElement.setText(aircraft.getCallsign());
 		speedElement.setText(String.format("%03d",(int)Math.round(aircraftState.getLastVelocityVector().getLength()/Units.KNOTS/10.0)));
 		levelElement.setText(String.format("%03d",(int)Math.ceil(currentGeodPosition.getZ()/Units.FT/100.0)));
 	}
@@ -91,6 +95,20 @@ public class AircraftLabel implements Label {
 		}
 		labelLayout.paint(g2d);
 		g2d.translate(-x,-y);
+	}
+	
+	public Rectangle2D getBounds2D() {
+		final Point2D symbolDevicePosition=associatedSymbol.getCurrentDevicePosition();
+		Dimension size=getSize();
+		double x=symbolDevicePosition.getX()+centerX;
+		double y=symbolDevicePosition.getY()+centerY;
+		Rectangle2D newBounds=new Rectangle2D.Double(x-size.width/2.0,y-size.height/2.0,size.width,size.height);
+		
+		return newBounds;
+	}
+	
+	public Rectangle getBounds() {
+		return getBounds2D().getBounds();
 	}
 	
 	public Dimension getSize() {

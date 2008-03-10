@@ -57,7 +57,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	
 	protected Map<AircraftState, AircraftSymbol> aircraftSymbolMap=new HashMap<AircraftState, AircraftSymbol>();
 	protected long lastMouseX,lastMouseY;
-	protected boolean isDragging;
+	protected boolean isSelectedLabelArmed;
 	
 	protected static int selectionRange=10;
 	
@@ -98,25 +98,31 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	
 	@Override
 	protected void processMouseMotionEvent(MouseEvent e) {
+		int buttonMask = MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON2_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK;
 		if (e.getID()==MouseEvent.MOUSE_MOVED) {
 			if (checkForSelectionChange())
 				repaint();
-		} else if (e.getID()==MouseEvent.MOUSE_DRAGGED) {
+			e.consume();
+		} else if (e.getID()==MouseEvent.MOUSE_DRAGGED && (e.getModifiersEx()&buttonMask)==MouseEvent.BUTTON1_DOWN_MASK) {
 			double dx,dy;
 			
 			dx=e.getX()-lastMouseX;
 			dy=e.getY()-lastMouseY;
 			
-			if (isDragging) {
+			if (isSelectedLabelArmed) {
 				AircraftSymbol selectedSymbol=getSelectedSymbol();
 				selectedSymbol.getLabel().move(dx, dy);
 				selectedSymbol.setLocked(true);
 				repaint();
 			}
+			e.consume();
 		}
 		lastMouseX=e.getX();
 		lastMouseY=e.getY();
-		super.processMouseMotionEvent(e);
+		
+		if (!e.isConsumed()) {
+			super.processMouseMotionEvent(e);
+		}
 	}
 	
 	@Override
@@ -129,13 +135,32 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	
 	@Override
 	protected void processMouseEvent(MouseEvent e) {
+		final AircraftSymbol selectedSymbol=getSelectedSymbol();
+		final boolean selectedLabelHit;
+		
+		selectedLabelHit=(selectedSymbol!=null && selectedSymbol.getLabel().getBounds().contains(e.getPoint()));
+		
 		if (e.getID()==MouseEvent.MOUSE_PRESSED && e.getButton()==1) {
-			final AircraftSymbol selectedSymbol=getSelectedSymbol();
-			isDragging=(selectedSymbol!=null && selectedSymbol.getLabel().containsPosition(e.getX(), e.getY()));
+			isSelectedLabelArmed=selectedLabelHit;
 		} else if (e.getID()==MouseEvent.MOUSE_RELEASED && e.getButton()==1) {
-			isDragging=false;
+			isSelectedLabelArmed=false;
 		}
-		super.processMouseEvent(e);
+		
+		if (selectedLabelHit) {
+			Rectangle labelBounds=selectedSymbol.getLabel().getBounds();
+			int w=labelBounds.width,h=labelBounds.height;
+			int cx,cy;
+			
+			cx=labelBounds.x+w/2;
+			cy=labelBounds.y+h/2;
+			
+			e.translatePoint(-cx,-cy);
+			selectedSymbol.getLabel().processMouseEvent(e);
+			e.translatePoint(cx,cy);
+		}
+		
+		if (!e.isConsumed())
+			super.processMouseEvent(e);
 	}
 	
 	private AircraftSymbol getSelectedSymbol() {
@@ -361,7 +386,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	
 	@Override
 	public void aircraftStateUpdate() {
-		if (!isDragging)
+		if (!isSelectedLabelArmed)
 			checkForSelectionChange();
 		
 		repaint();

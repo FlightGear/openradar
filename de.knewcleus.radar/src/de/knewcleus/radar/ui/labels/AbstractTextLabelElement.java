@@ -3,33 +3,17 @@ package de.knewcleus.radar.ui.labels;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 import de.knewcleus.radar.ui.rpvd.AircraftSymbol;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewPanel;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
-public abstract class AbstractTextLabelElement implements ILabelElement {
-	protected final AircraftSymbol aircraftSymbol;
-	protected int ascent;
-	protected Dimension minimumSize;
-	protected Rectangle bounds;
-	
+public abstract class AbstractTextLabelElement extends AbstractLabelElement implements ILabelElement {
 	public AbstractTextLabelElement(AircraftSymbol aircraftSymbol) {
-		this.aircraftSymbol=aircraftSymbol;
+		super(aircraftSymbol);
 	}
 	
 	protected abstract String getText();
-
-	@Override
-	public int getAscent() {
-		return ascent;
-	}
-
-	@Override
-	public Dimension getMinimumSize() {
-		return minimumSize;
-	}
 
 	@Override
 	public void layout() {
@@ -52,10 +36,4 @@ public abstract class AbstractTextLabelElement implements ILabelElement {
 		
 		g2d.drawString(text, bounds.x, bounds.y+ascent);
 	}
-
-	@Override
-	public void setBounds(Rectangle rectangle) {
-		bounds=rectangle;
-	}
-
 }

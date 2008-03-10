@@ -2,10 +2,10 @@ package de.knewcleus.radar.ui.labels;
 
 import de.knewcleus.radar.ui.rpvd.AircraftSymbol;
 
-public class BasicTextLabelElement extends AbstractTextLabelElement {
+public class StaticTextLabelElement extends AbstractTextLabelElement {
 	protected String text="";
 
-	public BasicTextLabelElement(AircraftSymbol aircraftSymbol) {
+	public StaticTextLabelElement(AircraftSymbol aircraftSymbol) {
 		super(aircraftSymbol);
 	}
 

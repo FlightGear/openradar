@@ -3,9 +3,10 @@ package de.knewcleus.radar.ui.labels;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
-public class LabelLine implements ILabelElement {
+public class LabelLine implements IActiveLabelElement {
 	public enum Justification {
 		LEADING,
 		CENTER,
@@ -18,6 +19,7 @@ public class LabelLine implements ILabelElement {
 	protected final int gap;
 	protected Dimension elementsSize;
 	protected Dimension minimumSize=null;
+	protected Rectangle bounds;
 	protected int ascent=0;
 	
 	public LabelLine(List<ILabelElement> elements) {
@@ -69,9 +71,10 @@ public class LabelLine implements ILabelElement {
 	}
 	
 	@Override
-	public void setBounds(Rectangle rectangle) {
-		int x=rectangle.x, y=rectangle.y;
-		int w=rectangle.width, h=rectangle.height;
+	public void setBounds(Rectangle newBounds) {
+		this.bounds=newBounds;
+		int x=newBounds.x, y=newBounds.y;
+		int w=newBounds.width, h=newBounds.height;
 		
 		int baselineY=y+h-ascent;
 		
@@ -102,9 +105,29 @@ public class LabelLine implements ILabelElement {
 	}
 	
 	@Override
+	public Rectangle getBounds() {
+		return bounds;
+	}
+	
+	@Override
 	public void paint(Graphics2D g2d) {
 		for (ILabelElement element: elements) {
 			element.paint(g2d);
+		}
+	}
+	
+	@Override
+	public void processMouseEvent(MouseEvent event) {
+		for (ILabelElement element: elements) {
+			Rectangle elementBounds=element.getBounds();
+			if (elementBounds.contains(event.getPoint())) {
+				if (element instanceof IActiveLabelElement) {
+					event.translatePoint(-elementBounds.x, -elementBounds.y);
+					((IActiveLabelElement)element).processMouseEvent(event);
+					event.translatePoint(elementBounds.x, elementBounds.y);
+				}
+				break;
+			}
 		}
 	}
 }
