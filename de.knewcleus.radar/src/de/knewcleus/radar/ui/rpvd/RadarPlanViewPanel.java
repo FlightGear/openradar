@@ -233,7 +233,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			aircraftSymbol.layout();
 		}
-		
+
 		while (System.currentTimeMillis()<startTime+maxUpdateTimeMillis) {
 			autolabeller.updateOneLabel();
 		}

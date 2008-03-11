@@ -3,19 +3,17 @@ package de.knewcleus.radar.ui.aircraft;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import de.knewcleus.fgfs.location.Ellipsoid;
-import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.aircraft.IAircraft;
 
 public class AircraftState {
-	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 	protected final AircraftStateManager aircraftStateManager;
 	protected final IAircraft aircraft;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
+	protected double level=0.0;
+	protected double groundSpeed=0.0;
+	protected double trueCourse=0.0;
 	protected boolean isSelected=false;
-	protected Vector3D lastVelocityVector=new Vector3D();
 	protected AircraftTaskState taskState=AircraftTaskState.ASSUMED; // FIXME: this should actually be set explicitly
 	
 	public AircraftState(AircraftStateManager aircraftStateManager, IAircraft aircraft) {
@@ -31,6 +29,22 @@ public class AircraftState {
 		return positionBuffer;
 	}
 	
+	public Position getPosition() {
+		return positionBuffer.getLast();
+	}
+	
+	public double getLevel() {
+		return level;
+	}
+	
+	public double getGroundSpeed() {
+		return groundSpeed;
+	}
+	
+	public double getTrueCourse() {
+		return trueCourse;
+	}
+	
 	public boolean canSelect() {
 		return taskState!=AircraftTaskState.OTHER;
 	}
@@ -43,20 +57,17 @@ public class AircraftState {
 		this.isSelected = isSelected;
 	}
 	
-	public Vector3D getLastVelocityVector() {
-		return lastVelocityVector;
-	}
-	
 	public AircraftTaskState getTaskState() {
 		return taskState;
 	}
 	
 	public void update() {
 		Position currentGeodPosition=aircraft.getPosition();
-		Position currentGeocPosition=geodToCartTransformation.forward(currentGeodPosition);
-		lastVelocityVector=aircraft.getVelocityVector();
+		groundSpeed=aircraft.getGroundSpeed();
+		trueCourse=aircraft.getTrueCourse();
+		level=currentGeodPosition.getZ();
 		
-		positionBuffer.addLast(new Position(currentGeocPosition));
+		positionBuffer.addLast(new Position(currentGeodPosition));
 		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */
 		if (positionBuffer.size()>aircraftStateManager.getMaximumPositionBufferLength()) {
 			positionBuffer.removeFirst();

@@ -17,6 +17,7 @@ import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.fgfs.location.Quaternion;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
@@ -74,19 +75,22 @@ public class AircraftSymbol implements LabeledObject {
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
 
-		final Deque<Position> positionBuffer=aircraftState.getPositionBuffer();
-		final Vector3D lastVelocityVector=aircraftState.getLastVelocityVector();
-		
 		/* Calculate current device position of aircraft symbol */
-		final Position currentPosition=positionBuffer.getLast();
-		final Position currentGeodPosition=geodToCartTransformation.backward(currentPosition);
+		final Position currentGeodPosition=aircraftState.getPosition();
 		final Position currentMapPosition=mapTransformation.forward(currentGeodPosition);
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
 
 		/* Calculate current device position of leading line head position */
+		final Position currentGeocPosition=geodToCartTransformation.forward(currentGeodPosition);
+		final double trueCourseRad=aircraftState.getTrueCourse()/Units.RAD;
+		final Vector3D courseVectorHF=new Vector3D(Math.cos(trueCourseRad),Math.sin(trueCourseRad),0.0);
+		final Quaternion hf2gcf=Quaternion.fromLatLon(currentGeodPosition.getY(), currentGeodPosition.getX());
+		final Vector3D courseVectorGCF=hf2gcf.transform(courseVectorHF);
+		
 		final double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
-		final Vector3D distanceMade=lastVelocityVector.scale(dt);
-		final Position currentLeadingLineHeadPosition=currentPosition.add(distanceMade);
+		final double distanceMade=aircraftState.getGroundSpeed()*dt;
+		final Vector3D headingVector=courseVectorGCF.scale(distanceMade);
+		final Position currentLeadingLineHeadPosition=currentGeocPosition.add(headingVector);
 		final Position currentLeadingLineHeadGeodPosition=geodToCartTransformation.backward(currentLeadingLineHeadPosition);
 		final Position currentLeadingLineHeadMapPosition=mapTransformation.forward(currentLeadingLineHeadGeodPosition);
 		currentDeviceHeadPosition=deviceTransformation.toDevice(currentLeadingLineHeadMapPosition);
@@ -127,7 +131,6 @@ public class AircraftSymbol implements LabeledObject {
 	}
 	
 	public void drawTrail(Graphics2D g2d) {
-		Position realPos;
 		Position mapPos;
 		Point2D devicePos;
 
@@ -146,8 +149,7 @@ public class AircraftSymbol implements LabeledObject {
 			assert(positionIterator.hasNext());
 			Position position=positionIterator.next();
 			alpha-=alphaIncrease;
-			realPos=geodToCartTransformation.backward(position);
-			mapPos=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(realPos);
+			mapPos=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation().forward(position);
 			devicePos=radarPlanViewContext.getDeviceTransformation().toDevice(mapPos);
 			g2d.setColor(new Color(symbolColor.getRed(),symbolColor.getGreen(),symbolColor.getBlue(),(int)(symbolColor.getAlpha()*alpha)));
 			Ellipse2D symbol=new Ellipse2D.Double(devicePos.getX()-aircraftSymbolSize/2.0,devicePos.getY()-aircraftSymbolSize/2.0,
@@ -222,7 +224,7 @@ public class AircraftSymbol implements LabeledObject {
 		vx=currentDeviceHeadPosition.getX()-currentDevicePosition.getX();
 		vy=currentDeviceHeadPosition.getY()-currentDevicePosition.getY();
 		
-		final double dvx,dvy; // position relative to the heading vector
+		final double dvx,dvy; // position relative to the trueCourse vector
 		
 		final double r=Math.sqrt(dx*dx+dy*dy);
 		final double v=Math.sqrt(vx*vx+vy*vy);

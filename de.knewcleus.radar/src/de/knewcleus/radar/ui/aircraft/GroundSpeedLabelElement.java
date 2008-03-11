@@ -12,7 +12,7 @@ public class GroundSpeedLabelElement extends AbstractTextLabelElement {
 
 	@Override
 	protected String getText() {
-		return String.format("%03d",(int)Math.round(getAircraftState().getLastVelocityVector().getLength()/Units.KNOTS/10.0));
+		return String.format("%03d",(int)Math.round(getAircraftState().getGroundSpeed()/Units.KNOTS/10.0));
 	}
 
 }

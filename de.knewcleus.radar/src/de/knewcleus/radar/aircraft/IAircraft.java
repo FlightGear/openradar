@@ -2,7 +2,6 @@ package de.knewcleus.radar.aircraft;
 
 import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.radio.IEndpoint;
 
 public interface IAircraft extends IUpdateable, IEndpoint {
@@ -15,10 +14,16 @@ public interface IAircraft extends IUpdateable, IEndpoint {
 	 */
 	public abstract Position getPosition();
 	
+	
 	/**
-	 * Determine the velocity vector of the radar target in geocentric cartesian coordinates.
+	 * Determine the ground speed of the radar target.
 	 */
-	public abstract Vector3D getVelocityVector();
+	public abstract double getGroundSpeed();
+	
+	/**
+	 * Determine the true course of the radar target.
+	 */
+	public abstract double getTrueCourse();
 	
 	public abstract FlightType getFlightType();
 
