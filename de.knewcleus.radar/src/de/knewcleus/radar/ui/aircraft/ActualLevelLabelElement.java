@@ -11,7 +11,7 @@ public class ActualLevelLabelElement extends AbstractTextLabelElement {
 
 	@Override
 	protected String getText() {
-		return String.format("%03d",(int)Math.floor(aircraftState.getLevel()/Units.FT/100.0));
+		return String.format("%03d",(int)Math.floor(aircraftState.getPressureAltitude()/Units.FT/100.0));
 	}
 
 }

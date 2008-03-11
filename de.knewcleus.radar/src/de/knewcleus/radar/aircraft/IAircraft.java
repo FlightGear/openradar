@@ -10,10 +10,14 @@ public interface IAircraft extends IUpdateable, IEndpoint {
 	}
 	
 	/**
-	 * Determine the position of the radar target in geodetic longitude/latitude/altitude.
+	 * Determine the position of the radar target in geodetic longitude/latitude.
 	 */
 	public abstract Position getPosition();
 	
+	/**
+	 * Determine pressure altitude.
+	 */
+	public abstract double getPressureAltitude();
 	
 	/**
 	 * Determine the ground speed of the radar target.

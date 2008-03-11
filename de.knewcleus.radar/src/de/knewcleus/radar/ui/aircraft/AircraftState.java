@@ -10,7 +10,7 @@ public class AircraftState {
 	protected final AircraftStateManager aircraftStateManager;
 	protected final IAircraft aircraft;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
-	protected double level=0.0;
+	protected double pressureAltitude=0.0;
 	protected double groundSpeed=0.0;
 	protected double trueCourse=0.0;
 	protected boolean isSelected=false;
@@ -33,8 +33,8 @@ public class AircraftState {
 		return positionBuffer.getLast();
 	}
 	
-	public double getLevel() {
-		return level;
+	public double getPressureAltitude() {
+		return pressureAltitude;
 	}
 	
 	public double getGroundSpeed() {
@@ -63,14 +63,14 @@ public class AircraftState {
 	
 	public void update() {
 		Position currentGeodPosition=aircraft.getPosition();
-		groundSpeed=aircraft.getGroundSpeed();
-		trueCourse=aircraft.getTrueCourse();
-		level=currentGeodPosition.getZ();
-		
 		positionBuffer.addLast(new Position(currentGeodPosition));
 		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */
 		if (positionBuffer.size()>aircraftStateManager.getMaximumPositionBufferLength()) {
 			positionBuffer.removeFirst();
 		}
+		
+		groundSpeed=aircraft.getGroundSpeed();
+		trueCourse=aircraft.getTrueCourse();
+		pressureAltitude=aircraft.getPressureAltitude();
 	}
 }

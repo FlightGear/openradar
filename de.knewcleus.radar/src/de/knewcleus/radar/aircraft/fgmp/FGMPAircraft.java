@@ -49,6 +49,12 @@ public class FGMPAircraft extends Player implements IAircraft {
 	}
 	
 	@Override
+	public double getPressureAltitude() {
+		// FIXME: This is the actual altitude, not the pressure altitude
+		return geodeticPosition.getZ();
+	}
+	
+	@Override
 	public double getGroundSpeed() {
 		return groundSpeed;
 	}
