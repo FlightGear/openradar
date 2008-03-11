@@ -11,7 +11,7 @@ public interface IAircraft extends IUpdateable, IEndpoint {
 	}
 	
 	/**
-	 * Determine the position of the radar target in geocentric cartesian coordinates
+	 * Determine the position of the radar target in geodetic longitude/latitude/altitude.
 	 */
 	public abstract Position getPosition();
 	

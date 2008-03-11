@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.multiplayer.protocol.ChatMessage;
 import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
@@ -35,7 +36,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 			
 			senderPosition=positionMessage.getPosition();
 		} else {
-			senderPosition=player.getPosition();
+			senderPosition=player.getCartesianPosition();
 		}
 		
 		if (!(mppacket.getMessage() instanceof ChatMessage)) {
@@ -57,10 +58,8 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 				continue;
 			
 			/* Don't send to players out of range */
-			Position otherPos=otherPlayer.getPosition();
-			Position delta=new Position(otherPos.getX()-senderPosition.getX(),
-										otherPos.getY()-senderPosition.getY(),
-										otherPos.getZ()-senderPosition.getZ());
+			Position otherPos=otherPlayer.getCartesianPosition();
+			Vector3D delta=otherPos.subtract(senderPosition);
 			if (delta.getLength()>maxDistance)
 				continue;
 			

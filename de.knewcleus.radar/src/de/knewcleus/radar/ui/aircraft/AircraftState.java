@@ -3,11 +3,14 @@ package de.knewcleus.radar.ui.aircraft;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import de.knewcleus.fgfs.location.Ellipsoid;
+import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.aircraft.IAircraft;
 
 public class AircraftState {
+	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 	protected final AircraftStateManager aircraftStateManager;
 	protected final IAircraft aircraft;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
@@ -49,11 +52,12 @@ public class AircraftState {
 	}
 	
 	public void update() {
-		Position currentPosition=aircraft.getPosition();
+		Position currentGeodPosition=aircraft.getPosition();
+		Position currentGeocPosition=geodToCartTransformation.forward(currentGeodPosition);
 		lastVelocityVector=aircraft.getVelocityVector();
 		
-		positionBuffer.addLast(new Position(currentPosition));
-		/* We always keep at least the last position, so the limit is historyLength+1 */
+		positionBuffer.addLast(new Position(currentGeocPosition));
+		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */
 		if (positionBuffer.size()>aircraftStateManager.getMaximumPositionBufferLength()) {
 			positionBuffer.removeFirst();
 		}
