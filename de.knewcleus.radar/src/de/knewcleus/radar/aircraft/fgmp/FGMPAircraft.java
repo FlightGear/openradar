@@ -9,12 +9,9 @@ import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.multiplayer.Player;
 import de.knewcleus.fgfs.multiplayer.PlayerAddress;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
-import de.knewcleus.radar.aircraft.AircraftType;
-import de.knewcleus.radar.aircraft.IAircraft;
-import de.knewcleus.radar.radio.Channel;
-import de.knewcleus.radar.radio.IMessage;
+import de.knewcleus.radar.aircraft.IRadarTarget;
 
-public class FGMPAircraft extends Player implements IAircraft {
+public class FGMPAircraft extends Player implements IRadarTarget {
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 	
 	protected Position geodeticPosition=new Position();
@@ -24,28 +21,15 @@ public class FGMPAircraft extends Player implements IAircraft {
 	public FGMPAircraft(PlayerAddress address, String callsign) {
 		super(address, callsign);
 	}
-
-	@Override
-	public FlightType getFlightType() {
-		// TODO: properly determine flight type
-		return FlightType.GA;
-	}
-
-	@Override
-	public String getOperator() {
-		// TODO: properly determine operator
-		return "";
-	}
-
-	@Override
-	public AircraftType getType() {
-		// TODO: properly determine aircraft type
-		return null;
-	}
 	
 	@Override
 	public Position getPosition() {
 		return geodeticPosition;
+	}
+	
+	@Override
+	public boolean hasPressureAltitude() {
+		return true;
 	}
 	
 	@Override
@@ -65,7 +49,14 @@ public class FGMPAircraft extends Player implements IAircraft {
 	}
 	
 	@Override
-	public void update(double dt) {
+	public String getSSRCode() {
+		// FIXME: assign a temporary SSR code
+		return getCallsign();
+	}
+	
+	@Override
+	public boolean hasSSRCode() {
+		return true;
 	}
 	
 	@Override
@@ -87,9 +78,5 @@ public class FGMPAircraft extends Player implements IAircraft {
 		} else if (trueCourse>360*Units.DEG) {
 			trueCourse-=360*Units.DEG;
 		}
-	}
-
-	@Override
-	public void receive(Channel channel, IMessage message) {
 	}
 }

@@ -16,7 +16,7 @@ public class CallsignLabelElement extends AbstractTextLabelElement implements IA
 
 	@Override
 	protected String getText() {
-		return getAircraftState().getAircraft().getCallsign();
+		return getAircraftState().getCallsign();
 	}
 
 	@Override
@@ -26,8 +26,8 @@ public class CallsignLabelElement extends AbstractTextLabelElement implements IA
 			if (event.getButton()==MouseEvent.BUTTON1) {
 				final AircraftState aircraftState=getAircraftState();
 				
-				// FIXME: prepare the menu according to the aircraft task state
-				JPopupMenu popupMenu=new JPopupMenu(aircraftState.getAircraft().getCallsign());
+				// FIXME: prepare the menu according to the associatedTarget task state
+				JPopupMenu popupMenu=new JPopupMenu(aircraftState.getCallsign());
 				popupMenu.add("ASSUME");
 				popupMenu.add("TRANSFER");
 				popupMenu.add("HANDOVER");
@@ -45,10 +45,5 @@ public class CallsignLabelElement extends AbstractTextLabelElement implements IA
 	@Override
 	public boolean isEnabled() {
 		return true;
-	}
-	
-	@Override
-	public String toString() {
-		return "Callsign label "+getAircraftState().getAircraft().getCallsign();
 	}
 }

@@ -75,7 +75,7 @@ public class AircraftSymbol implements LabeledObject {
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
 
-		/* Calculate current device position of aircraft symbol */
+		/* Calculate current device position of associatedTarget symbol */
 		final Position currentGeodPosition=aircraftState.getPosition();
 		final Position currentMapPosition=mapTransformation.forward(currentGeodPosition);
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);

@@ -4,11 +4,11 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.radar.aircraft.IAircraft;
+import de.knewcleus.radar.aircraft.IRadarTarget;
 
 public class AircraftState {
 	protected final AircraftStateManager aircraftStateManager;
-	protected final IAircraft aircraft;
+	protected final IRadarTarget associatedTarget;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
 	protected double pressureAltitude=0.0;
 	protected double groundSpeed=0.0;
@@ -16,13 +16,18 @@ public class AircraftState {
 	protected boolean isSelected=false;
 	protected AircraftTaskState taskState=AircraftTaskState.ASSUMED; // FIXME: this should actually be set explicitly
 	
-	public AircraftState(AircraftStateManager aircraftStateManager, IAircraft aircraft) {
+	public AircraftState(AircraftStateManager aircraftStateManager, IRadarTarget aircraft) {
 		this.aircraftStateManager=aircraftStateManager;
-		this.aircraft=aircraft;
+		this.associatedTarget=aircraft;
 	}
 	
-	public IAircraft getAircraft() {
-		return aircraft;
+	public IRadarTarget getAircraft() {
+		return associatedTarget;
+	}
+	
+	public String getCallsign() {
+		// FIXME: Use the SSR correlation database as soon as we have one
+		return (associatedTarget.hasSSRCode()?associatedTarget.getSSRCode():"****");
 	}
 	
 	public Deque<Position> getPositionBuffer() {
@@ -62,15 +67,15 @@ public class AircraftState {
 	}
 	
 	public void update() {
-		Position currentGeodPosition=aircraft.getPosition();
+		Position currentGeodPosition=associatedTarget.getPosition();
 		positionBuffer.addLast(new Position(currentGeodPosition));
 		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */
 		if (positionBuffer.size()>aircraftStateManager.getMaximumPositionBufferLength()) {
 			positionBuffer.removeFirst();
 		}
 		
-		groundSpeed=aircraft.getGroundSpeed();
-		trueCourse=aircraft.getTrueCourse();
-		pressureAltitude=aircraft.getPressureAltitude();
+		groundSpeed=associatedTarget.getGroundSpeed();
+		trueCourse=associatedTarget.getTrueCourse();
+		pressureAltitude=associatedTarget.getPressureAltitude();
 	}
 }

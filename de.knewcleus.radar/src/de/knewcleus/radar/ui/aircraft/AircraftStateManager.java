@@ -7,24 +7,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import de.knewcleus.radar.aircraft.IAircraft;
 import de.knewcleus.radar.aircraft.IRadarDataConsumer;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
+import de.knewcleus.radar.aircraft.IRadarTarget;
 
-public class AircraftStateManager implements IRadarDataConsumer<IAircraft> {
-	protected final IRadarDataProvider<? extends IAircraft> radarDataProvider;
-	protected final Map<IAircraft, AircraftState> aircraftStateMap=new HashMap<IAircraft, AircraftState>();
+public class AircraftStateManager implements IRadarDataConsumer<IRadarTarget> {
+	protected final IRadarDataProvider<? extends IRadarTarget> radarDataProvider;
+	protected final Map<IRadarTarget, AircraftState> aircraftStateMap=new HashMap<IRadarTarget, AircraftState>();
 	protected final Set<IAircraftStateConsumer> aircraftStateConsumers=new HashSet<IAircraftStateConsumer>();
 	protected AircraftState selectedAircraft=null;
 	protected final int maximumPositionBufferLength;
 	
-	public AircraftStateManager(IRadarDataProvider<? extends IAircraft> radarDataProvider) {
+	public AircraftStateManager(IRadarDataProvider<? extends IRadarTarget> radarDataProvider) {
 		this.radarDataProvider=radarDataProvider;
 		
 		/* Copy all existing targets */
 		// FIXME: possible race condition
 		radarDataProvider.registerRadarDataConsumer(this);
-		for (IAircraft aircraft: radarDataProvider) {
+		for (IRadarTarget aircraft: radarDataProvider) {
 			radarTargetAcquired(aircraft);
 		}
 		/* We record position data up to 15 minutes backwards */
@@ -82,7 +82,7 @@ public class AircraftStateManager implements IRadarDataConsumer<IAircraft> {
 	}
 	
 	@Override
-	public void radarTargetAcquired(IAircraft aircraft) {
+	public void radarTargetAcquired(IRadarTarget aircraft) {
 		AircraftState aircraftState=new AircraftState(this, aircraft);
 		aircraftStateMap.put(aircraft,aircraftState);
 		aircraftState.update();
@@ -98,7 +98,7 @@ public class AircraftStateManager implements IRadarDataConsumer<IAircraft> {
 	}
 	
 	@Override
-	public void radarTargetLost(IAircraft aircraft) {
+	public void radarTargetLost(IRadarTarget aircraft) {
 		AircraftState aircraftState=aircraftStateMap.get(aircraft);
 		aircraftStateMap.remove(aircraft);
 		fireAircraftStateLost(aircraftState);

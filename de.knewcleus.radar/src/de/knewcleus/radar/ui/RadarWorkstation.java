@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import de.knewcleus.radar.aircraft.IAircraft;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
+import de.knewcleus.radar.aircraft.IRadarTarget;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
@@ -26,7 +26,7 @@ public class RadarWorkstation {
 	protected final List<RadarDesktop> desktops=new ArrayList<RadarDesktop>();
 	protected RadarDesktop radarPlanViewDesktop;
 
-	public RadarWorkstation(Sector sector, IRadarDataProvider<? extends IAircraft> radarDataProvider) {
+	public RadarWorkstation(Sector sector, IRadarDataProvider<? extends IRadarTarget> radarDataProvider) {
 		this.sector=sector;
 		aircraftStateManager=new AircraftStateManager(radarDataProvider);
 		radarPlanViewDisplay=new RadarPlanViewDisplay(this);

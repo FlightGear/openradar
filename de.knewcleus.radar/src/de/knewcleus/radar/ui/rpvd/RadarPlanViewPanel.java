@@ -89,7 +89,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 
 		setBackground(Palette.WATERMASS);
 		
-		/* Copy existing aircraft states */
+		/* Copy existing associatedTarget states */
 		// FIXME: possible race condition
 		getAircraftStateManager().registerAircraftStateConsumer(this);
 		for (AircraftState aircraftState: getAircraftStateManager().getAircraftStates()) {
@@ -198,7 +198,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 			}
 		}
 		
-		/* No symbol hit, so we deselect the currently selected aircraft, if any */
+		/* No symbol hit, so we deselect the currently selected associatedTarget, if any */
 		getAircraftStateManager().deselect();
 		return true;
 	}

@@ -25,7 +25,7 @@ public class AircraftTypeInventory {
 		InputStream inputStream=this.getClass().getResourceAsStream("aircrafttypes.properties");
 		if (inputStream==null)
 			return;
-		logger.config("Loading aircraft types");
+		logger.config("Loading associatedTarget types");
 		Properties properties=new Properties();
 		try {
 			properties.load(inputStream);
@@ -38,15 +38,15 @@ public class AircraftTypeInventory {
 	public void loadFromProperties(Properties properties) {
 		String[] typeNames=properties.getProperty("typeNames","").split("\\s*,\\s*");
 		for (String aircraftName: typeNames) {
-			logger.config("Loading configuration for aircraft type '"+aircraftName+"'");
-			String className=properties.getProperty("aircraft."+aircraftName,AircraftType.class.getName());
+			logger.config("Loading configuration for associatedTarget type '"+aircraftName+"'");
+			String className=properties.getProperty("associatedTarget."+aircraftName,AircraftType.class.getName());
 			try {
 				Class<?> clazz=ClassLoader.getSystemClassLoader().loadClass(className);
 				Constructor<?> constructor=clazz.getDeclaredConstructor(String.class, Properties.class);
-				AircraftType aircraftType=(AircraftType)constructor.newInstance("aircraft."+aircraftName, properties);
+				AircraftType aircraftType=(AircraftType)constructor.newInstance("associatedTarget."+aircraftName, properties);
 				registerAircraftType(aircraftType);
 			} catch (Exception e) {
-				logger.severe("Unable to load aircraft type 'aircraft."+aircraftName+"':"+e.getMessage());
+				logger.severe("Unable to load associatedTarget type 'associatedTarget."+aircraftName+"':"+e.getMessage());
 			}
 		}
 	}
@@ -55,7 +55,7 @@ public class AircraftTypeInventory {
 		aircraftTypes.add(aircraftType);
 		
 		String icao=aircraftType.getDesignationICAO();
-		logger.info("Registering aircraft type with ICAO designation "+icao);
+		logger.info("Registering associatedTarget type with ICAO designation "+icao);
 		if (!icao.equals("ZZZZ") && !icao.equals("ULAC")) {
 			icaoIndex.put(aircraftType.getDesignationICAO(), aircraftType);
 		}
