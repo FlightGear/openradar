@@ -245,8 +245,13 @@ public class AircraftLabel implements Label, ILabelDisplay {
 		final double len=Math.sqrt(hookX*hookX+hookY*hookY);
 		final double dirX,dirY;
 		
-		dirX=hookX/len;
-		dirY=hookY/len;
+		if (len>1E-3) {
+			dirX=hookX/len;
+			dirY=hookY/len;
+		} else {
+			dirX=1.0;
+			dirY=0.0;
+		}
 		
 		if (len<AircraftSymbol.minLabelDist) {
 			hookX=dirX*AircraftSymbol.minLabelDist;
