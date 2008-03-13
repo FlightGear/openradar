@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import de.knewcleus.radar.aircraft.IRadarDataConsumer;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.aircraft.RadarTargetInformation;
 
 public class AircraftStateManager implements IRadarDataConsumer {
+	protected final static Logger logger=Logger.getLogger(AircraftStateManager.class.getName());
 	protected final IRadarDataProvider radarDataProvider;
 	protected final Map<Object, AircraftState> aircraftStateMap=new HashMap<Object, AircraftState>();
 	protected final Set<IAircraftStateConsumer> aircraftStateConsumers=new HashSet<IAircraftStateConsumer>();
@@ -33,11 +35,15 @@ public class AircraftStateManager implements IRadarDataConsumer {
 	}
 	
 	public synchronized void select(AircraftState aircraftState) {
-		if (selectedAircraft!=null)
+		if (selectedAircraft!=null) {
+			logger.fine("Deselecting aircraft "+selectedAircraft);
 			selectedAircraft.setSelected(false);
+		}
 		selectedAircraft=aircraftState;
-		if (selectedAircraft!=null)
+		if (selectedAircraft!=null) {
+			logger.fine("Selecting aircraft "+selectedAircraft);
 			selectedAircraft.setSelected(true);
+		}
 	}
 	
 	public void deselect() {
@@ -64,15 +70,10 @@ public class AircraftStateManager implements IRadarDataConsumer {
 		aircraftStateConsumers.remove(consumer);
 	}
 	
-	protected synchronized void fireAircraftStateAcquired(AircraftState aircraftState) {
+	protected synchronized void fireAircraftStateUpdated(Set<AircraftState> updatedStates) {
+		logger.fine("Aircraft states updated:"+updatedStates);
 		for (IAircraftStateConsumer consumer: aircraftStateConsumers) {
-			consumer.aircraftStateAcquired(aircraftState);
-		}
-	}
-	
-	protected synchronized void fireAircraftStateUpdated() {
-		for (IAircraftStateConsumer consumer: aircraftStateConsumers) {
-			consumer.aircraftStateUpdate();
+			consumer.aircraftStateUpdate(updatedStates);
 		}
 	}
 	
@@ -84,6 +85,7 @@ public class AircraftStateManager implements IRadarDataConsumer {
 	
 	@Override
 	public synchronized void radarDataUpdated(Set<RadarTargetInformation> targets) {
+		Set<AircraftState> updatedStates=new HashSet<AircraftState>();
 		for (RadarTargetInformation target: targets) {
 			Object trackIdentifier=target.getTrackIdentifier();
 			AircraftState aircraftState;
@@ -91,14 +93,13 @@ public class AircraftStateManager implements IRadarDataConsumer {
 			if (!aircraftStateMap.containsKey(trackIdentifier)) {
 				aircraftState=new AircraftState(this);
 				aircraftStateMap.put(trackIdentifier,aircraftState);
-				aircraftState.update(target);
-				fireAircraftStateAcquired(aircraftState);
 			} else {
 				aircraftState=aircraftStateMap.get(trackIdentifier);
-				aircraftState.update(target);
 			}
+			aircraftState.update(target);
+			updatedStates.add(aircraftState);
 		}
-		fireAircraftStateUpdated();
+		fireAircraftStateUpdated(updatedStates);
 	}
 	
 	@Override

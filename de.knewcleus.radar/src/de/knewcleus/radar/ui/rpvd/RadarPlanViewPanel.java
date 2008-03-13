@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.swing.JDesktopPane;
 
@@ -36,6 +37,7 @@ import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
 import de.knewcleus.radar.ui.aircraft.IAircraftStateConsumer;
 
 public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateConsumer {
+	protected final static Logger logger=Logger.getLogger("de.knewcleus.radar.ui.rpvd");
 	private static final long serialVersionUID = 8996959818592227638L;
 	
 	protected final RadarWorkstation workstation;
@@ -373,21 +375,25 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	}
 	
 	@Override
-	public synchronized void aircraftStateAcquired(AircraftState aircraftState) {
-		AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraftState);
-		aircraftSymbolMap.put(aircraftState, aircraftSymbol);
-		autolabeller.addLabeledObject(aircraftSymbol);
-	}
-	
-	@Override
 	public synchronized void aircraftStateLost(AircraftState aircraftState) {
 		AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(aircraftState);
 		autolabeller.removeLabeledObject(aircraftSymbol);
 		aircraftSymbolMap.remove(aircraftState);
+		logger.fine("Aircraft state lost:"+aircraftState);
 	}
 	
 	@Override
-	public void aircraftStateUpdate() {
+	public void aircraftStateUpdate(Set<AircraftState> updatedStates) {
+		logger.fine("Aircraft state update");
+		
+		for (AircraftState aircraftState: updatedStates) {
+			if (aircraftSymbolMap.containsKey(aircraftState))
+				continue;
+			AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraftState);
+			aircraftSymbolMap.put(aircraftState, aircraftSymbol);
+			autolabeller.addLabeledObject(aircraftSymbol);
+			logger.fine("Aircraft state acquired:"+aircraftState);
+		}
 		if (!isSelectedLabelArmed)
 			checkForSelectionChange();
 		
