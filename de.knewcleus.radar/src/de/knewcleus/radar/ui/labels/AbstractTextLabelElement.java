@@ -17,6 +17,13 @@ public abstract class AbstractTextLabelElement extends AbstractLabelElement impl
 	@Override
 	public void layout() {
 		String text=getText();
+		
+		if (text==null || text.length()==0) {
+			/* Special case were we have no text at all */
+			minimumSize=new Dimension(0,0);
+			return;
+		}
+		
 		final Component displayComponent=labelDisplay.getDisplayComponent();
 		FontMetrics fm=displayComponent.getFontMetrics(displayComponent.getFont());
 		
