@@ -21,15 +21,15 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 		super();
 	}
 
-	public boolean hasPlayer(PlayerAddress address) {
+	public synchronized boolean hasPlayer(PlayerAddress address) {
 		return playersByAddress.containsKey(address);
 	}
 
-	public T getPlayer(PlayerAddress address) {
+	public synchronized T getPlayer(PlayerAddress address) {
 		return playersByAddress.get(address);
 	}
 
-	public void registerPlayer(T player) {
+	public synchronized void registerPlayer(T player) {
 		/* First unregister any old player at that address */
 		if (hasPlayer(player.getAddress()))
 			unregisterPlayer(getPlayer(player.getAddress()));
@@ -37,7 +37,7 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 		playersByAddress.put(player.getAddress(),player);
 	}
 
-	public void expirePlayers() {
+	public synchronized void expirePlayers() {
 		Set<T> expiredPlayers=new HashSet<T>();
 		for (T player: players) {
 			if (playerExpired(player))
@@ -50,7 +50,7 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 		}
 	}
 
-	public void unregisterPlayer(T expiredPlayer) {
+	public synchronized void unregisterPlayer(T expiredPlayer) {
 		players.remove(expiredPlayer);
 		playersByAddress.remove(expiredPlayer.getAddress());
 	}
@@ -62,5 +62,4 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 	public Collection<T> getPlayers() {
 		return Collections.unmodifiableCollection(players);
 	}
-
 }

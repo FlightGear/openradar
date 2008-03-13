@@ -1,7 +1,8 @@
 package de.knewcleus.radar.aircraft;
 
-public interface IRadarDataConsumer<T extends IRadarTarget> {
-	public void radarTargetAcquired(T aircraft);
-	public void radarDataUpdated();
-	public void radarTargetLost(T aircraft);
+import java.util.Set;
+
+public interface IRadarDataConsumer {
+	public void radarDataUpdated(Set<RadarTargetInformation> radarTargets);
+	public void radarTargetLost(Object trackIdentifier);
 }

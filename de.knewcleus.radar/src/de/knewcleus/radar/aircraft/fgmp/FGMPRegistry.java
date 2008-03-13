@@ -1,7 +1,6 @@
 package de.knewcleus.radar.aircraft.fgmp;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import de.knewcleus.fgfs.IUpdateable;
@@ -10,9 +9,11 @@ import de.knewcleus.fgfs.multiplayer.AbstractPlayerRegistry;
 import de.knewcleus.fgfs.multiplayer.PlayerAddress;
 import de.knewcleus.radar.aircraft.IRadarDataConsumer;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
+import de.knewcleus.radar.aircraft.RadarTargetInformation;
+import de.knewcleus.radar.aircraft.SSRMode;
 
-public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implements IRadarDataProvider<FGMPAircraft>, IUpdateable {
-	protected final Set<IRadarDataConsumer<? super FGMPAircraft>> consumers=new HashSet<IRadarDataConsumer<? super FGMPAircraft>>();
+public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implements IRadarDataProvider, IUpdateable {
+	protected final Set<IRadarDataConsumer> consumers=new HashSet<IRadarDataConsumer>();
 	protected final Updater radarUpdater=new Updater(this,1000*getSecondsBetweenUpdates());
 	
 	public FGMPRegistry() {
@@ -31,52 +32,42 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 	}
 	
 	@Override
-	public void registerPlayer(FGMPAircraft player) {
-		super.registerPlayer(player);
-		fireRadarTargetAcquired(player);
-	}
-	
-	@Override
-	public void unregisterPlayer(FGMPAircraft expiredPlayer) {
+	public synchronized void unregisterPlayer(FGMPAircraft expiredPlayer) {
 		super.unregisterPlayer(expiredPlayer);
 		fireRadarTargetLost(expiredPlayer);
 	}
 	
-	protected void fireRadarDataUpdated() {
-		for (IRadarDataConsumer<? super FGMPAircraft> consumer: consumers) {
-			consumer.radarDataUpdated();
-		}
-	}
-	
-	protected void fireRadarTargetAcquired(FGMPAircraft target) {
-		for (IRadarDataConsumer<? super FGMPAircraft> consumer: consumers) {
-			consumer.radarTargetAcquired(target);
+	protected void fireRadarDataUpdated(Set<RadarTargetInformation> targets) {
+		for (IRadarDataConsumer consumer: consumers) {
+			consumer.radarDataUpdated(targets);
 		}
 	}
 	
 	protected void fireRadarTargetLost(FGMPAircraft target) {
-		for (IRadarDataConsumer<? super FGMPAircraft> consumer: consumers) {
+		for (IRadarDataConsumer consumer: consumers) {
 			consumer.radarTargetLost(target);
 		}
 	}
 	
 	@Override
-	public void registerRadarDataConsumer(IRadarDataConsumer<? super FGMPAircraft> consumer) {
+	public synchronized void registerRadarDataConsumer(IRadarDataConsumer consumer) {
 		consumers.add(consumer);
 	}
 	
 	@Override
-	public void unregisterRadarDataConsumer(IRadarDataConsumer<? super FGMPAircraft> consumer) {
+	public synchronized void unregisterRadarDataConsumer(IRadarDataConsumer consumer) {
 		consumers.remove(consumer);
 	}
 	
 	@Override
-	public void update(double dt) {
-		fireRadarDataUpdated();
-	}
-	
-	@Override
-	public Iterator<FGMPAircraft> iterator() {
-		return getPlayers().iterator();
+	public synchronized void update(double dt) {
+		Set<RadarTargetInformation> targets=new HashSet<RadarTargetInformation>();
+		for (FGMPAircraft aircraft: getPlayers()) {
+			targets.add(new RadarTargetInformation(aircraft,
+								aircraft.getLongitude(),aircraft.getLatitude(),
+								aircraft.getGroundSpeed(),aircraft.getTrueCourse(),
+								SSRMode.MODEC,aircraft.getSSRCode(),aircraft.getPressureAltitude()));
+		}
+		fireRadarDataUpdated(targets);
 	}
 }

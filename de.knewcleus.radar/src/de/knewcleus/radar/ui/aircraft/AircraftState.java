@@ -4,30 +4,27 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.radar.aircraft.IRadarTarget;
+import de.knewcleus.radar.aircraft.RadarTargetInformation;
+import de.knewcleus.radar.aircraft.SSRMode;
 
 public class AircraftState {
 	protected final AircraftStateManager aircraftStateManager;
-	protected final IRadarTarget associatedTarget;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
-	protected double pressureAltitude=0.0;
 	protected double groundSpeed=0.0;
 	protected double trueCourse=0.0;
+	protected SSRMode ssrMode;
+	protected String ssrCode;
+	protected double pressureAltitude=0.0;
 	protected boolean isSelected=false;
 	protected AircraftTaskState taskState=AircraftTaskState.ASSUMED; // FIXME: this should actually be set explicitly
 	
-	public AircraftState(AircraftStateManager aircraftStateManager, IRadarTarget aircraft) {
+	public AircraftState(AircraftStateManager aircraftStateManager) {
 		this.aircraftStateManager=aircraftStateManager;
-		this.associatedTarget=aircraft;
-	}
-	
-	public IRadarTarget getAircraft() {
-		return associatedTarget;
 	}
 	
 	public String getCallsign() {
 		// FIXME: Use the SSR correlation database as soon as we have one
-		return (associatedTarget.hasSSRCode()?associatedTarget.getSSRCode():"****");
+		return (ssrMode.hasSSRCode()?ssrCode:"****");
 	}
 	
 	public Deque<Position> getPositionBuffer() {
@@ -38,16 +35,24 @@ public class AircraftState {
 		return positionBuffer.getLast();
 	}
 	
-	public double getPressureAltitude() {
-		return pressureAltitude;
-	}
-	
 	public double getGroundSpeed() {
 		return groundSpeed;
 	}
 	
 	public double getTrueCourse() {
 		return trueCourse;
+	}
+	
+	public SSRMode getSSRMode() {
+		return ssrMode;
+	}
+	
+	public String getSSRCode() {
+		return ssrCode;
+	}
+	
+	public double getPressureAltitude() {
+		return pressureAltitude;
 	}
 	
 	public boolean canSelect() {
@@ -66,16 +71,18 @@ public class AircraftState {
 		return taskState;
 	}
 	
-	public void update() {
-		Position currentGeodPosition=associatedTarget.getPosition();
+	public void update(RadarTargetInformation targetInformation) {
+		Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
 		positionBuffer.addLast(new Position(currentGeodPosition));
 		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */
 		if (positionBuffer.size()>aircraftStateManager.getMaximumPositionBufferLength()) {
 			positionBuffer.removeFirst();
 		}
 		
-		groundSpeed=associatedTarget.getGroundSpeed();
-		trueCourse=associatedTarget.getTrueCourse();
-		pressureAltitude=associatedTarget.getPressureAltitude();
+		groundSpeed=targetInformation.getGroundSpeed();
+		trueCourse=targetInformation.getTrueCourse();
+		ssrMode=targetInformation.getSSRMode();
+		ssrCode=targetInformation.getSSRCode();
+		pressureAltitude=targetInformation.getPressureAltitude();
 	}
 }

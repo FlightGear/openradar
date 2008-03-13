@@ -6,8 +6,8 @@ package de.knewcleus.radar.aircraft;
  *
  * @param <T> The type of the radar targets
  */
-public interface IRadarDataProvider<T extends IRadarTarget> extends Iterable<T> {
+public interface IRadarDataProvider {
 	public abstract int getSecondsBetweenUpdates();
-	public abstract void registerRadarDataConsumer(IRadarDataConsumer<? super T> consumer);
-	public abstract void unregisterRadarDataConsumer(IRadarDataConsumer<? super T> consumer);
+	public abstract void registerRadarDataConsumer(IRadarDataConsumer consumer);
+	public abstract void unregisterRadarDataConsumer(IRadarDataConsumer consumer);
 }

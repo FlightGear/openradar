@@ -88,13 +88,12 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		waypointDisplayLayer.getFixesWithDesignator().addAll(aerodromes);
 
 		setBackground(Palette.WATERMASS);
-		
-		/* Copy existing associatedTarget states */
-		// FIXME: possible race condition
+
+		/*
+		 * We just register as a state consumer here. With the next update cycle we will collect all the
+		 * aircraft states.
+		 */
 		getAircraftStateManager().registerAircraftStateConsumer(this);
-		for (AircraftState aircraftState: getAircraftStateManager().getAircraftStates()) {
-			aircraftStateAcquired(aircraftState);
-		}
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
 	}

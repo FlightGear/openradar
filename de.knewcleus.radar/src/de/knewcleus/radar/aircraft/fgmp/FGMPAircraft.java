@@ -9,9 +9,9 @@ import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.multiplayer.Player;
 import de.knewcleus.fgfs.multiplayer.PlayerAddress;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
-import de.knewcleus.radar.aircraft.IRadarTarget;
+import de.knewcleus.radar.aircraft.SSRMode;
 
-public class FGMPAircraft extends Player implements IRadarTarget {
+public class FGMPAircraft extends Player {
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 	
 	protected Position geodeticPosition=new Position();
@@ -21,42 +21,35 @@ public class FGMPAircraft extends Player implements IRadarTarget {
 	public FGMPAircraft(PlayerAddress address, String callsign) {
 		super(address, callsign);
 	}
-	
-	@Override
-	public Position getPosition() {
-		return geodeticPosition;
+
+	public double getLongitude() {
+		return geodeticPosition.getX();
 	}
 	
-	@Override
-	public boolean hasPressureAltitude() {
-		return true;
+	public double getLatitude() {
+		return geodeticPosition.getY();
 	}
 	
-	@Override
-	public double getPressureAltitude() {
-		// FIXME: This is the actual altitude, not the pressure altitude
-		return geodeticPosition.getZ();
-	}
-	
-	@Override
 	public double getGroundSpeed() {
 		return groundSpeed;
 	}
 	
-	@Override
 	public double getTrueCourse() {
 		return trueCourse;
 	}
 	
-	@Override
+	public SSRMode getSSRMode() {
+		return SSRMode.MODEC;
+	}
+	
 	public String getSSRCode() {
 		// FIXME: assign a temporary SSR code
 		return getCallsign();
 	}
 	
-	@Override
-	public boolean hasSSRCode() {
-		return true;
+	public double getPressureAltitude() {
+		// FIXME: This is the actual altitude, not the pressure altitude
+		return geodeticPosition.getZ();
 	}
 	
 	@Override

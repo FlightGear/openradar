@@ -9,29 +9,30 @@ import java.util.Set;
 
 import de.knewcleus.radar.aircraft.IRadarDataConsumer;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
-import de.knewcleus.radar.aircraft.IRadarTarget;
+import de.knewcleus.radar.aircraft.RadarTargetInformation;
 
-public class AircraftStateManager implements IRadarDataConsumer<IRadarTarget> {
-	protected final IRadarDataProvider<? extends IRadarTarget> radarDataProvider;
-	protected final Map<IRadarTarget, AircraftState> aircraftStateMap=new HashMap<IRadarTarget, AircraftState>();
+public class AircraftStateManager implements IRadarDataConsumer {
+	protected final IRadarDataProvider radarDataProvider;
+	protected final Map<Object, AircraftState> aircraftStateMap=new HashMap<Object, AircraftState>();
 	protected final Set<IAircraftStateConsumer> aircraftStateConsumers=new HashSet<IAircraftStateConsumer>();
 	protected AircraftState selectedAircraft=null;
 	protected final int maximumPositionBufferLength;
 	
-	public AircraftStateManager(IRadarDataProvider<? extends IRadarTarget> radarDataProvider) {
+	public AircraftStateManager(IRadarDataProvider radarDataProvider) {
 		this.radarDataProvider=radarDataProvider;
-		
-		/* Copy all existing targets */
-		// FIXME: possible race condition
+
+		/*
+		 * Note that we only register here. A radar data provider does not provide information
+		 * about the current set of acquired targets. Instead a set of radar target information updates
+		 * is sent every update cycle. With that information we also get the list of known targets.
+		 */
 		radarDataProvider.registerRadarDataConsumer(this);
-		for (IRadarTarget aircraft: radarDataProvider) {
-			radarTargetAcquired(aircraft);
-		}
+		
 		/* We record position data up to 15 minutes backwards */
 		maximumPositionBufferLength=15*60/radarDataProvider.getSecondsBetweenUpdates();
 	}
 	
-	public void select(AircraftState aircraftState) {
+	public synchronized void select(AircraftState aircraftState) {
 		if (selectedAircraft!=null)
 			selectedAircraft.setSelected(false);
 		selectedAircraft=aircraftState;
@@ -55,52 +56,56 @@ public class AircraftStateManager implements IRadarDataConsumer<IRadarTarget> {
 		return radarDataProvider.getSecondsBetweenUpdates();
 	}
 	
-	public void registerAircraftStateConsumer(IAircraftStateConsumer consumer) {
+	public synchronized void registerAircraftStateConsumer(IAircraftStateConsumer consumer) {
 		aircraftStateConsumers.add(consumer);
 	}
 	
-	public void unregisterAircraftStateConsumer(IAircraftStateConsumer consumer) {
+	public synchronized void unregisterAircraftStateConsumer(IAircraftStateConsumer consumer) {
 		aircraftStateConsumers.remove(consumer);
 	}
 	
-	protected void fireAircraftStateAcquired(AircraftState aircraftState) {
+	protected synchronized void fireAircraftStateAcquired(AircraftState aircraftState) {
 		for (IAircraftStateConsumer consumer: aircraftStateConsumers) {
 			consumer.aircraftStateAcquired(aircraftState);
 		}
 	}
 	
-	protected void fireAircraftStateUpdated() {
+	protected synchronized void fireAircraftStateUpdated() {
 		for (IAircraftStateConsumer consumer: aircraftStateConsumers) {
 			consumer.aircraftStateUpdate();
 		}
 	}
 	
-	protected void fireAircraftStateLost(AircraftState aircraftState) {
+	protected synchronized void fireAircraftStateLost(AircraftState aircraftState) {
 		for (IAircraftStateConsumer consumer: aircraftStateConsumers) {
 			consumer.aircraftStateLost(aircraftState);
 		}
 	}
 	
 	@Override
-	public void radarTargetAcquired(IRadarTarget aircraft) {
-		AircraftState aircraftState=new AircraftState(this, aircraft);
-		aircraftStateMap.put(aircraft,aircraftState);
-		aircraftState.update();
-		fireAircraftStateAcquired(aircraftState);
-	}
-	
-	@Override
-	public void radarDataUpdated() {
-		for (AircraftState aircraftState: aircraftStateMap.values()) {
-			aircraftState.update();
+	public synchronized void radarDataUpdated(Set<RadarTargetInformation> targets) {
+		for (RadarTargetInformation target: targets) {
+			Object trackIdentifier=target.getTrackIdentifier();
+			AircraftState aircraftState;
+			
+			if (!aircraftStateMap.containsKey(trackIdentifier)) {
+				aircraftState=new AircraftState(this);
+				aircraftStateMap.put(trackIdentifier,aircraftState);
+				aircraftState.update(target);
+				fireAircraftStateAcquired(aircraftState);
+			} else {
+				aircraftState=aircraftStateMap.get(trackIdentifier);
+				aircraftState.update(target);
+			}
 		}
 		fireAircraftStateUpdated();
 	}
 	
 	@Override
-	public void radarTargetLost(IRadarTarget aircraft) {
-		AircraftState aircraftState=aircraftStateMap.get(aircraft);
-		aircraftStateMap.remove(aircraft);
+	public synchronized void radarTargetLost(Object trackIdentifier) {
+		AircraftState aircraftState=aircraftStateMap.get(trackIdentifier);
+		assert(aircraftState!=null);
+		aircraftStateMap.remove(trackIdentifier);
 		fireAircraftStateLost(aircraftState);
 	}
 	
