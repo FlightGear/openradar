@@ -20,6 +20,8 @@ import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.LocalProjection;
 import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 import de.knewcleus.fgfs.navaids.DBParserException;
+import de.knewcleus.radar.aircraft.IRadarDataProvider;
+import de.knewcleus.radar.aircraft.fgatc.FGATCEndpoint;
 import de.knewcleus.radar.aircraft.fgmp.ATCClient;
 import de.knewcleus.radar.aircraft.fgmp.FGMPAircraft;
 import de.knewcleus.radar.aircraft.fgmp.FGMPRegistry;
@@ -39,25 +41,35 @@ public class Radar {
 		
 		Logger rootLogger=Logger.getLogger("de.knewcleus");
 		rootLogger.setUseParentHandlers(false);
-		rootLogger.setLevel(Level.SEVERE);
+		rootLogger.setLevel(Level.FINE);
 		Handler handler=new ConsoleHandler();
-		handler.setLevel(Level.SEVERE);
+		handler.setLevel(Level.FINE);
 		rootLogger.addHandler(handler);
 		
 		/* Load sector data */
 		URL sectorURL=Radar.class.getResource("/sectors/KSFO/sector.xml");
 		Sector sector=Sector.loadFromURL(sectorURL);
 
+		IRadarDataProvider radarDataProvider;
 		/* Prepare radar data provider */
-		GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
-		FGMPRegistry registry=new FGMPRegistry();
-		ATCClient<FGMPAircraft> multiplayerClient=new ATCClient<FGMPAircraft>(registry,"obsKSFO",geodToCartTransformation.backward(sector.getInitialCenter()));
-		Updater multiplayerUpdater=new Updater(multiplayerClient,500);
-		multiplayerClient.start();
-		multiplayerUpdater.start();
+		if (Boolean.getBoolean("de.knewcleus.radar.useMPProtocol")) {
+			/* Use multiplayer data */
+			GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
+			FGMPRegistry registry=new FGMPRegistry();
+			ATCClient<FGMPAircraft> multiplayerClient=new ATCClient<FGMPAircraft>(registry,"obsKSFO",geodToCartTransformation.backward(sector.getInitialCenter()));
+			Updater multiplayerUpdater=new Updater(multiplayerClient,500);
+			multiplayerClient.start();
+			multiplayerUpdater.start();
+			radarDataProvider=registry;
+		} else {
+			FGATCEndpoint atcEndpoint=new FGATCEndpoint(16662);
+			Thread atcEndpointThread=new Thread(atcEndpoint);
+			atcEndpointThread.start();
+			radarDataProvider=atcEndpoint;
+		}
 		
 		/* Setup the user interface */
-		RadarWorkstation radarWorkstation=new RadarWorkstation(sector,registry);
+		RadarWorkstation radarWorkstation=new RadarWorkstation(sector,radarDataProvider);
 		RadarPlanViewSettings radarPlanViewSettings=radarWorkstation.getRadarPlanViewSettings();
 		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
 		radarWorkstation.setVisible(true);
