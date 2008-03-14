@@ -17,7 +17,6 @@ import org.xml.sax.SAXException;
 import de.knewcleus.fgfs.Updater;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
-import de.knewcleus.fgfs.location.LocalProjection;
 import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 import de.knewcleus.fgfs.navaids.DBParserException;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
@@ -27,7 +26,6 @@ import de.knewcleus.radar.aircraft.fgmp.FGMPAircraft;
 import de.knewcleus.radar.aircraft.fgmp.FGMPRegistry;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.plaf.refghmi.REFGHMILookAndFeel;
-import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public class Radar {
 	public static void main(String[] args) throws DBParserException, IOException, ClassNotFoundException, MultiplayerException, ParserConfigurationException, SAXException {
@@ -71,8 +69,6 @@ public class Radar {
 		
 		/* Setup the user interface */
 		RadarWorkstation radarWorkstation=new RadarWorkstation(sector,radarDataProvider);
-		RadarPlanViewSettings radarPlanViewSettings=radarWorkstation.getRadarPlanViewSettings();
-		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
 		radarWorkstation.setVisible(true);
 	}
 }

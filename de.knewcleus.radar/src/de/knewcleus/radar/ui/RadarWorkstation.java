@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import de.knewcleus.fgfs.location.LocalProjection;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
@@ -28,8 +29,10 @@ public class RadarWorkstation {
 	public RadarWorkstation(Sector sector, IRadarDataProvider radarDataProvider) {
 		this.sector=sector;
 		aircraftStateManager=new AircraftStateManager(radarDataProvider);
+		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
 		radarPlanViewDisplay=new RadarPlanViewDisplay(this);
-		
+
+
 		/* Create a desktop on every device */
 		GraphicsEnvironment graphicsEnvironment=GraphicsEnvironment.getLocalGraphicsEnvironment();
 		for (GraphicsDevice graphicsDevice: graphicsEnvironment.getScreenDevices()) {

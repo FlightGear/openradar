@@ -2,6 +2,7 @@ package de.knewcleus.radar.ui.rpvd;
 
 import java.awt.AWTEvent;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
@@ -44,6 +45,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	protected final RadarDeviceTransformation radarDeviceTransformation;
 	protected final RadarPlanViewContext radarPlanViewContext;
 	
+	protected final Font font=new Font(Font.SANS_SERIF,Font.PLAIN,12);
 	protected final Autolabeller autolabeller=new Autolabeller(1E-1,3E-1);
 
 	protected final IMapLayer landmassLayer;
@@ -90,6 +92,7 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		waypointDisplayLayer.getFixesWithDesignator().addAll(aerodromes);
 
 		setBackground(Palette.WATERMASS);
+		setFont(font);
 
 		/*
 		 * We just register as a state consumer here. With the next update cycle we will collect all the
@@ -226,8 +229,6 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 		
 		super.paintComponent(g);
 		
-		setFont(getSettings().getFont());
-
 		long startTime=System.currentTimeMillis();
 		long maxUpdateTimeMillis=100;
 		
@@ -383,16 +384,20 @@ public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateCo
 	}
 	
 	@Override
-	public void aircraftStateUpdate(Set<AircraftState> updatedStates) {
+	public synchronized void aircraftStateUpdate(Set<AircraftState> updatedStates) {
 		logger.fine("Aircraft state update");
 		
 		for (AircraftState aircraftState: updatedStates) {
-			if (aircraftSymbolMap.containsKey(aircraftState))
-				continue;
-			AircraftSymbol aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraftState);
-			aircraftSymbolMap.put(aircraftState, aircraftSymbol);
-			autolabeller.addLabeledObject(aircraftSymbol);
-			logger.fine("Aircraft state acquired:"+aircraftState);
+			AircraftSymbol aircraftSymbol;
+			if (aircraftSymbolMap.containsKey(aircraftState)) {
+				aircraftSymbol=aircraftSymbolMap.get(aircraftState);
+			} else {
+				aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraftState);
+				aircraftSymbolMap.put(aircraftState, aircraftSymbol);
+				autolabeller.addLabeledObject(aircraftSymbol);
+				logger.fine("Aircraft state acquired:"+aircraftState);
+			}
+			aircraftSymbol.layout();
 		}
 		if (!isSelectedLabelArmed)
 			checkForSelectionChange();

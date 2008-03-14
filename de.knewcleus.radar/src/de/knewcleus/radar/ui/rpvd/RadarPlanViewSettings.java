@@ -1,6 +1,5 @@
 package de.knewcleus.radar.ui.rpvd;
 
-import java.awt.Font;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -21,7 +20,6 @@ public class RadarPlanViewSettings {
 	public final static String TRACK_HISTORY_LENGTH_PROPERTY="trackHistoryLength";
 	
 	protected int range=10;
-	protected Font font=new Font(Font.SANS_SERIF,Font.PLAIN,12);
 	protected boolean showingSector=true;
 	protected boolean showingWaypoints=true;
 	protected boolean showingAirways=true;
@@ -35,10 +33,6 @@ public class RadarPlanViewSettings {
 
 	public int getRange() {
 		return range;
-	}
-
-	public Font getFont() {
-		return font;
 	}
 
 	public boolean isShowingSector() {
@@ -81,10 +75,6 @@ public class RadarPlanViewSettings {
 		int oldValue=this.range;
 		this.range = newValue;
 		propertyChangeSupport.firePropertyChange(RANGE_PROPERTY, oldValue, newValue);
-	}
-
-	public void setFont(Font font) {
-		this.font = font;
 	}
 
 	public void setShowingSector(boolean newValue) {
