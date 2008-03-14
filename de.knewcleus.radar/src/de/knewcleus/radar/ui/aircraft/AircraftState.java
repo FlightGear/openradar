@@ -2,12 +2,14 @@ package de.knewcleus.radar.ui.aircraft;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.radar.aircraft.RadarTargetInformation;
 import de.knewcleus.radar.aircraft.SSRMode;
 
 public class AircraftState {
+	protected final static Logger logger=Logger.getLogger(AircraftState.class.getName());
 	protected final AircraftStateManager aircraftStateManager;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
 	protected double groundSpeed=0.0;
@@ -72,6 +74,7 @@ public class AircraftState {
 	}
 	
 	public void update(RadarTargetInformation targetInformation) {
+		logger.fine("Updating aircraft state "+this+" from "+targetInformation);
 		Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
 		positionBuffer.addLast(new Position(currentGeodPosition));
 		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */

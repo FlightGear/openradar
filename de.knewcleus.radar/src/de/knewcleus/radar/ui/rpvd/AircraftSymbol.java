@@ -10,6 +10,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
@@ -25,6 +26,7 @@ import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.aircraft.AircraftState;
 
 public class AircraftSymbol implements LabeledObject {
+	protected final static Logger logger=Logger.getLogger("de.knewcleus.rada.ui.rpvd");
 	protected static final float aircraftSymbolSize=6.0f;
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 
@@ -72,6 +74,7 @@ public class AircraftSymbol implements LabeledObject {
 	}
 
 	public void layout() {
+		logger.fine("Laying out symbol for aircraft state "+aircraftState);
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
 
