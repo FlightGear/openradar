@@ -14,12 +14,11 @@ import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
-import de.knewcleus.fgfs.location.GeodToCartTransformation;
+import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.fgfs.location.Quaternion;
-import de.knewcleus.fgfs.location.Vector3D;
+import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 import de.knewcleus.radar.ui.Palette;
@@ -28,7 +27,7 @@ import de.knewcleus.radar.ui.aircraft.AircraftState;
 public class AircraftSymbol implements LabeledObject {
 	protected final static Logger logger=Logger.getLogger("de.knewcleus.rada.ui.rpvd");
 	protected static final float aircraftSymbolSize=6.0f;
-	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
+	private static final GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
 
 	protected static final double EPSILON=1E-10;
 	
@@ -84,18 +83,12 @@ public class AircraftSymbol implements LabeledObject {
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
 
 		/* Calculate current device position of leading line head position */
-		final Position currentGeocPosition=geodToCartTransformation.forward(currentGeodPosition);
-		final double trueCourseRad=aircraftState.getTrueCourse()/Units.RAD;
-		final Vector3D courseVectorHF=new Vector3D(Math.cos(trueCourseRad),Math.sin(trueCourseRad),0.0);
-		final Quaternion hf2gcf=Quaternion.fromLatLon(currentGeodPosition.getY(), currentGeodPosition.getX());
-		final Vector3D courseVectorGCF=hf2gcf.transform(courseVectorHF);
-		
-		final double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
-		final double distanceMade=aircraftState.getGroundSpeed()*dt;
-		final Vector3D headingVector=courseVectorGCF.scale(distanceMade);
-		final Position currentLeadingLineHeadPosition=currentGeocPosition.add(headingVector);
-		final Position currentLeadingLineHeadGeodPosition=geodToCartTransformation.backward(currentLeadingLineHeadPosition);
-		final Position currentLeadingLineHeadMapPosition=mapTransformation.forward(currentLeadingLineHeadGeodPosition);
+		double trueCourse=aircraftState.getTrueCourse();
+		double gs=aircraftState.getGroundSpeed();
+		double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
+		double ds=gs*dt;
+		GeodesicInformation geodesicInformation=geodesicUtils.forward(currentGeodPosition.getX(), currentGeodPosition.getY(), trueCourse, ds);
+		Position currentLeadingLineHeadMapPosition=mapTransformation.forward(geodesicInformation.getEndPos()); 
 		currentDeviceHeadPosition=deviceTransformation.toDevice(currentLeadingLineHeadMapPosition);
 		
 		label.updateLabelContents();
