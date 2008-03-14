@@ -13,6 +13,9 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.fgfs.location.Ellipsoid;
+import de.knewcleus.fgfs.location.GeodesicUtils;
+import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.radar.aircraft.IRadarDataConsumer;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.aircraft.RadarTargetInformation;
@@ -20,6 +23,7 @@ import de.knewcleus.radar.aircraft.SSRMode;
 
 public class FGATCEndpoint implements Runnable, IRadarDataProvider {
 	protected final static Logger logger=Logger.getLogger("de.knewcleus.radar.aircraft.fgatc");
+	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
 	protected final DatagramSocket datagramSocket;
 	protected final static int receiveBufferLength=1024;
 	protected final Set<IRadarDataConsumer> consumers=new HashSet<IRadarDataConsumer>();
@@ -28,6 +32,7 @@ public class FGATCEndpoint implements Runnable, IRadarDataProvider {
 	protected long nextRadarUpdate;
 
 	protected class ClientStatus {
+		public double positionTime;
 		public long expiryTime;
 		public double longitude;
 		public double latitude;
@@ -96,7 +101,9 @@ public class FGATCEndpoint implements Runnable, IRadarDataProvider {
 				value=element.substring(eqIndex+1).trim();
 			}
 			
-			if (name.equals("LON")) {
+			if (name.equals("TIME")) {
+				clientStatus.positionTime=Double.parseDouble(value)*Units.SEC;
+			} else if (name.equals("LON")) {
 				clientStatus.longitude=Double.parseDouble(value)*Units.DEG;
 			} else if (name.equals("LAT")) {
 				clientStatus.latitude=Double.parseDouble(value)*Units.DEG;
@@ -162,7 +169,18 @@ public class FGATCEndpoint implements Runnable, IRadarDataProvider {
 	}
 	
 	protected synchronized void updateClientStatus(Object id, ClientStatus clientStatus) {
-		// TODO: determine groundspeed and true course for existing targets
+		if (clients.containsKey(id)) {
+			ClientStatus lastStatus=clients.get(id);
+			GeodesicInformation geodesicInformation=geodesicUtils.inverse(lastStatus.longitude, lastStatus.latitude, clientStatus.longitude, clientStatus.latitude);
+			final double dt=clientStatus.positionTime-lastStatus.positionTime;
+			final double ds=geodesicInformation.length;
+			
+			clientStatus.groundSpeed=ds/dt;
+			clientStatus.trueCourse=geodesicInformation.endAzimuth+180.0*Units.DEG;
+			if (clientStatus.trueCourse > 360.0*Units.DEG) {
+				clientStatus.trueCourse-=360.0*Units.DEG;
+			}
+		}
 		clients.put(id, clientStatus);
 	}
 	
