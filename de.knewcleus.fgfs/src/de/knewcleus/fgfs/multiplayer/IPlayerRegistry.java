@@ -9,12 +9,11 @@ public interface IPlayerRegistry<T extends Player> {
 	public abstract T getPlayer(PlayerAddress address);
 
 	public abstract void registerPlayer(T player);
+	
+	public abstract void unregisterPlayer(T expiredPlayer);
 
 	public abstract T createNewPlayer(PlayerAddress address,
 			String callsign);
 
-	public abstract void expirePlayers();
-	
 	public abstract Collection<T> getPlayers();
-
 }

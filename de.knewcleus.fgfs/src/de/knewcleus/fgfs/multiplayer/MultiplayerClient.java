@@ -1,7 +1,7 @@
 package de.knewcleus.fgfs.multiplayer;
 
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.logging.Logger;
@@ -18,14 +18,10 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
 	protected final Queue<String> chatQueue=new ArrayDeque<String>();
 	protected String lastChatMessage="";
 	
-	public MultiplayerClient(IPlayerRegistry<T> playerRegistry) throws MultiplayerException {
+	public MultiplayerClient(IPlayerRegistry<T> playerRegistry) throws IOException {
 		super(playerRegistry, getStandardPort());
 		String serverName=System.getProperty("de.knewcleus.fgfs.multiplayer.server.host", "localhost");
-		try {
-			serverAddress=InetAddress.getByName(serverName);
-		} catch (UnknownHostException e) {
-			throw new MultiplayerException(e);
-		}
+		serverAddress=InetAddress.getByName(serverName);
 		serverPort=Integer.getInteger("de.knewcleus.fgfs.multiplayer.server.port", MultiplayerServer.STANDARD_PORT);
 	}
 	

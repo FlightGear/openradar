@@ -1,17 +1,17 @@
 package de.knewcleus.radar.aircraft.fgmp;
 
+import java.io.IOException;
+
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.IPlayerRegistry;
 import de.knewcleus.fgfs.multiplayer.MultiplayerClient;
-import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 import de.knewcleus.fgfs.multiplayer.Player;
 
 public class ATCClient<T extends Player> extends MultiplayerClient<T> {
 	protected final String callsign;
 	protected final Position position;
 
-	public ATCClient(IPlayerRegistry<T> playerRegistry, String callsign, Position position)
-			throws MultiplayerException {
+	public ATCClient(IPlayerRegistry<T> playerRegistry, String callsign, Position position) throws IOException {
 		super(playerRegistry);
 		this.callsign=callsign;
 		this.position=position;

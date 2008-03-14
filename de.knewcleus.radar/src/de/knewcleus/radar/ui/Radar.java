@@ -57,13 +57,14 @@ public class Radar {
 			GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 			FGMPRegistry registry=new FGMPRegistry();
 			ATCClient<FGMPAircraft> multiplayerClient=new ATCClient<FGMPAircraft>(registry,"obsKSFO",geodToCartTransformation.backward(sector.getInitialCenter()));
+			Thread multiplayerClientThread=new Thread(multiplayerClient,"FlightGear Multiplayer Protocol Handler");
 			Updater multiplayerUpdater=new Updater(multiplayerClient,500);
-			multiplayerClient.start();
+			multiplayerClientThread.start();
 			multiplayerUpdater.start();
 			radarDataProvider=registry;
 		} else {
 			FGATCEndpoint atcEndpoint=new FGATCEndpoint(16662);
-			Thread atcEndpointThread=new Thread(atcEndpoint);
+			Thread atcEndpointThread=new Thread(atcEndpoint,"FGATC Protocol Handler");
 			atcEndpointThread.start();
 			radarDataProvider=atcEndpoint;
 		}

@@ -8,7 +8,7 @@ import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
 public class Player {
 	protected final PlayerAddress address;
 	protected final String callsign;
-	protected long lastMessageTime;
+	protected long expiryTime;
 	protected long lastPositionTime;
 	protected boolean isLocalPlayer=true;
 	protected Position cartesianPosition=new Position();
@@ -29,12 +29,12 @@ public class Player {
 		return callsign;
 	}
 	
-	public void setLastMessageTime(long lastMessageTime) {
-		this.lastMessageTime = lastMessageTime;
+	public void setExpiryTime(long lastMessageTime) {
+		this.expiryTime = lastMessageTime;
 	}
 	
-	public long getLastMessageTime() {
-		return lastMessageTime;
+	public long getExpiryTime() {
+		return expiryTime;
 	}
 	
 	public Position getCartesianPosition() {

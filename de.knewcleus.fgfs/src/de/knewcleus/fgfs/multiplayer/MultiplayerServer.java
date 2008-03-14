@@ -1,5 +1,6 @@
 package de.knewcleus.fgfs.multiplayer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 	public double maxDistance=100.0*Units.NM;
 	protected List<MultiplayerPacket> queuedPackets=new ArrayList<MultiplayerPacket>();
 
-	public MultiplayerServer(IPlayerRegistry<T> playerRegistry) throws MultiplayerException {
+	public MultiplayerServer(IPlayerRegistry<T> playerRegistry) throws IOException {
 		super(playerRegistry,getStandardPort());
 	}
 	
@@ -23,7 +24,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 		return Integer.getInteger("de.knewcleus.fgfs.multiplayer.server.port",STANDARD_PORT);
 	}
 
-	public MultiplayerServer(IPlayerRegistry<T> playerRegistry, int port) throws MultiplayerException {
+	public MultiplayerServer(IPlayerRegistry<T> playerRegistry, int port) throws IOException {
 		super(playerRegistry, port);
 	}
 

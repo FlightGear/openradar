@@ -37,26 +37,9 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 		playersByAddress.put(player.getAddress(),player);
 	}
 
-	public synchronized void expirePlayers() {
-		Set<T> expiredPlayers=new HashSet<T>();
-		for (T player: players) {
-			if (playerExpired(player))
-				expiredPlayers.add(player);
-		}
-		
-		for (T expiredPlayer: expiredPlayers) {
-			logger.info("Player "+expiredPlayer.getCallsign()+"@"+expiredPlayer.getAddress()+" expired");
-			unregisterPlayer(expiredPlayer);
-		}
-	}
-
 	public synchronized void unregisterPlayer(T expiredPlayer) {
 		players.remove(expiredPlayer);
 		playersByAddress.remove(expiredPlayer.getAddress());
-	}
-
-	public boolean playerExpired(T player) {
-		return (player.getLastMessageTime()<System.currentTimeMillis()-playerExpirationTime);
 	}
 	
 	public Collection<T> getPlayers() {
