@@ -23,11 +23,11 @@ public class FGMPAircraft extends Player {
 	}
 
 	public double getLongitude() {
-		return geodeticPosition.getX();
+		return geodeticPosition.getX()*Units.DEG;
 	}
 	
 	public double getLatitude() {
-		return geodeticPosition.getY();
+		return geodeticPosition.getY()*Units.DEG;
 	}
 	
 	public double getGroundSpeed() {
@@ -49,7 +49,7 @@ public class FGMPAircraft extends Player {
 	
 	public double getPressureAltitude() {
 		// FIXME: This is the actual altitude, not the pressure altitude
-		return geodeticPosition.getZ();
+		return geodeticPosition.getZ()*Units.M;
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class FGMPAircraft extends Player {
 		super.updatePosition(t, packet);
 		geodeticPosition=geodToCartTransformation.backward(getCartesianPosition());
 		
-		groundSpeed=getLinearVelocity().getLength();
+		groundSpeed=getLinearVelocity().getLength()*Units.MPS;
 		
 		final Quaternion hf2gcf=Quaternion.fromLatLon(geodeticPosition.getY(), geodeticPosition.getX());
 		final Quaternion gcf2hf=hf2gcf.inverse();
