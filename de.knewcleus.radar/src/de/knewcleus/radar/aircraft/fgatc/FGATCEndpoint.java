@@ -90,6 +90,10 @@ public class FGATCEndpoint implements Runnable, IRadarDataProvider {
 		
 		for (String element: dataLine.split("\\s+")) {
 			int eqIndex=element.indexOf('=');
+			if (eqIndex==-1) {
+				logger.severe("Invalid input packet "+dataLine);
+				continue;
+			}
 			String name=element.substring(0, eqIndex).trim();
 			String value=element.substring(eqIndex+1).trim();
 			
