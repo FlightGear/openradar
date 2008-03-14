@@ -87,7 +87,7 @@ public class AircraftSymbol implements LabeledObject {
 		double gs=aircraftState.getGroundSpeed();
 		double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
 		double ds=gs*dt;
-		GeodesicInformation geodesicInformation=geodesicUtils.forward(currentGeodPosition.getX(), currentGeodPosition.getY(), trueCourse, ds);
+		GeodesicInformation geodesicInformation=geodesicUtils.direct(currentGeodPosition.getX(), currentGeodPosition.getY(), trueCourse, ds);
 		Position currentLeadingLineHeadMapPosition=mapTransformation.forward(geodesicInformation.getEndPos()); 
 		currentDeviceHeadPosition=deviceTransformation.toDevice(currentLeadingLineHeadMapPosition);
 		

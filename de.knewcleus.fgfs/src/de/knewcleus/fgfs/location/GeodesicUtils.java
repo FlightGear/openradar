@@ -86,7 +86,7 @@ public class GeodesicUtils {
 		this.ellipsoid=ellipsoid;
 	}
 
-	public GeodesicInformation forward(double startLon, double startLat, double startAzimuth, double length) {
+	public GeodesicInformation direct(double startLon, double startLat, double startAzimuth, double length) {
 		if (abs(length) < 0.01) {
 			/* Distance lower than 1cm, that's much more detailed than we want it */
 			double az2=startAzimuth+180.0*Units.DEG;
@@ -115,22 +115,22 @@ public class GeodesicUtils {
 			final double cosu1 = 1.0/sqrt(1.0 + tanu1*tanu1);
 			final double sinu1 = tanu1*cosu1;
 			final double sinalpha = cosu1*sinalpha1;
-			final double cos2alphasq = 1.0-sinalpha*sinalpha;
-			final double usq = cos2alphasq*e2/(1.0-e2);
+			final double cos2alpha = 1.0-sinalpha*sinalpha;
+			final double usq = cos2alpha*e2/(1.0-e2);
 
 			final double ta = 1.0+usq*(4096.0+usq*(-768+usq*(320.0-175.0*usq)))/16384.0;
 			final double tb = usq*(256.0+usq*(-128.0+usq*(74.0-47.0*usq)))/1024.0;
 
 			final double firstsigma = length/(b*ta);
 			double sigma = firstsigma;
-			double csigmam, sinsigma, cossigma, oldsigma;
+			double cossigmam2, sinsigma, cossigma, oldsigma;
 
 			do {
-				csigmam = cos(2.0*sigma1+sigma);
+				cossigmam2 = cos(2.0*sigma1+sigma);
 				sinsigma = sin(sigma);
 				cossigma = cos(sigma);
 				oldsigma = sigma;
-				sigma = firstsigma + tb*sinsigma*(csigmam+tb*(cossigma*(-1.0+2.0*csigmam*csigmam) -  tb*csigmam*(-3.0+4.0*sinsigma*sinsigma)*(-3.0+4.0*csigmam*csigmam)/6.0)/4.0);
+				sigma = firstsigma + tb*sinsigma*(cossigmam2+tb*(cossigma*(-1.0+2.0*cossigmam2*cossigmam2) -  tb*cossigmam2*(-3.0+4.0*sinsigma*sinsigma)*(-3.0+4.0*cossigmam2*cossigmam2)/6.0)/4.0);
 			} while ( abs(sigma-oldsigma) > epsilon );
 			
 			final double temp = sinu1*sinsigma-cosu1*cossigma*cosalpha1;
@@ -144,8 +144,8 @@ public class GeodesicUtils {
 			final double numerdlambda = sinsigma*sinalpha1;
 			final double denomdlambda = cosu1*cossigma-sinu1*sinsigma*cosalpha1;
 			final double dlambda = atan2(numerdlambda, denomdlambda);
-			final double tc = f*cos2alphasq*(4.0+f*(4.0-3.0*cos2alphasq))/16.0;
-			final double dl = dlambda - (1.0-tc)*f*sinalpha*(sigma+tc*sinsigma*(csigmam+tc*cossigma*(-1.0+2.0*csigmam*csigmam)));
+			final double tc = f*cos2alpha*(4.0+f*(4.0-3.0*cos2alpha))/16.0;
+			final double dl = dlambda - (1.0-tc)*f*sinalpha*(sigma+tc*sinsigma*(cossigmam2+tc*cossigma*(-1.0+2.0*cossigmam2*cossigmam2)));
 			final double lambda2 = lamda1+dl;
 			
 			/* Calculate endpoint azimuth */
@@ -170,7 +170,75 @@ public class GeodesicUtils {
 			/* Polar origin */
 			final double ds = ellipsoid.getA()*ellipsoid.getM0() - length;
 			final double az = ( startLat < 0 ? 180.0 * Units.DEG : 0.0);
-			return forward(startLon,0,az,ds);
+			return direct(startLon,0,az,ds);
 		}
+	}
+	
+	public GeodesicInformation inverse(double startLon, double startLat, double endLon, double endLat) {
+		final double phi1=startLat/Units.RAD;
+		final double phi2=endLat/Units.RAD;
+		final double lambda1 = startLon/Units.RAD;
+		final double lambda2 = endLon/Units.RAD;
+		final double dl = lambda2 - lambda1;
+		
+		final double epsilon=1.0E-10;
+		final double f=ellipsoid.getF();
+		final double b=ellipsoid.getB();
+		final double e2=ellipsoid.getEsquared();
+		
+		final double sinphi1=sin(phi1);
+		final double cosphi1=cos(phi1);
+		final double tanu1 = (1-f)*sinphi1/cosphi1;
+		final double cosu1 = 1.0/sqrt(1.0 + tanu1*tanu1);
+		final double sinu1 = tanu1*cosu1;
+		final double sinphi2=sin(phi2);
+		final double cosphi2=cos(phi2);
+		final double tanu2 = (1-f)*sinphi2/cosphi2;
+		final double cosu2 = 1.0/sqrt(1.0 + tanu2*tanu2);
+		final double sinu2 = tanu2*cosu2;
+		
+		final double firstlambda = dl;
+		double lambda = firstlambda;
+		double oldlambda,sigma;
+		double sinlambda,coslambda,cos2alpha,cossigmam2,sinsigma,cossigma;
+		
+		do {
+			sinlambda=sin(lambda);
+			coslambda=cos(lambda);
+			final double temp1 = cosu2*sinlambda;
+			final double temp2 = cosu2*sinu2-sinu1*cosu2*coslambda;
+			final double sin2sigma = temp1*temp1+temp2*temp2;
+			sinsigma = sqrt(sin2sigma);
+			cossigma = sinu1*sinu2+cosu1*cosu2*coslambda;
+			sigma = atan2(sinsigma,cossigma);
+			final double sinalpha = cosu1*cosu2*sinlambda/sinsigma;
+			cos2alpha = 1.0-sinalpha*sinalpha;
+			cossigmam2 = cossigma - 2*sinu1*sinu2/cos2alpha;
+			final double tc = f*cos2alpha*(4.0+f*(4.0-3.0*cos2alpha))/16.0;
+			oldlambda=lambda;
+			lambda=dl+(1-tc)*f*sinalpha*(sigma+tc*sinsigma*(cossigmam2+tc*cossigma*(-1.0+2.0*cossigmam2*cossigmam2)));
+		} while (abs(lambda-oldlambda) > epsilon);
+		
+		final double usq = cos2alpha*e2/(1.0-e2);
+		final double ta = 1.0+usq*(4096.0+usq*(-768+usq*(320.0-175.0*usq)))/16384.0;
+		final double tb = usq*(256.0+usq*(-128.0+usq*(74.0-47.0*usq)))/1024.0;
+		
+		final double dsigma = tb*sinsigma*(cossigmam2+tb*(cossigma*(-1.0+2.0*cossigmam2*cossigmam2) -  tb*cossigmam2*(-3.0+4.0*sinsigma*sinsigma)*(-3.0+4.0*cossigmam2*cossigmam2)/6.0)/4.0);
+		
+		final double length = b*ta*(sigma-dsigma);
+		
+		final double az1=atan2(cosu2*sinlambda,cosu1*sinu2-sinu1*cosu2*coslambda);
+		final double az2=atan2(-cosu1*sinlambda,sinu1*cosu2-cosu1*sinu2*coslambda);
+		
+		double startAzimuth=az1*Units.RAD;
+		double endAzimuth=az2*Units.RAD;
+		if (startAzimuth<=0) {
+			startAzimuth+=360.0*Units.DEG;
+		}
+		if (endAzimuth<=0) {
+			endAzimuth+=360.0*Units.DEG;
+		}
+		
+		return new GeodesicInformation(startLon,startLat,startAzimuth,endLon,endLat,endAzimuth,length);
 	}
 }
