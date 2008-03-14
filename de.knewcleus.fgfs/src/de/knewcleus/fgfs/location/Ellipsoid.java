@@ -15,7 +15,7 @@ public class Ellipsoid {
 		this.b=b;
 		
 		f=1.0-b/a;
-		esquared=1.0-b*b/(a*a);
+		esquared=f*(2.0-f);
 		
 		M0=Math.PI/2*(1-esquared*(1/4+esquared*(3/64 + esquared*5/256)));
 	}
