@@ -101,7 +101,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		sendPacket(address.getAddress(), address.getPort(), mppacket);
 	}
 
-	protected synchronized void processPacket(PlayerAddress address, MultiplayerPacket mppacket) throws MultiplayerException {
+	protected void processPacket(PlayerAddress address, MultiplayerPacket mppacket) throws MultiplayerException {
 		T player;
 		synchronized (playerRegistry) {
 			if (playerRegistry.hasPlayer(address)) {
@@ -116,7 +116,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		processPacket(player,mppacket);
 	}
 	
-	protected synchronized void expirePlayers() {
+	protected void expirePlayers() {
 		synchronized (playerRegistry) {
 			Set<T> expiredPlayers=new HashSet<T>();
 			long currentTime=System.currentTimeMillis();

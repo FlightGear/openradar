@@ -29,7 +29,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 	}
 
 	@Override
-	protected synchronized void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException {
+	protected void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException {
 		Position senderPosition;
 		if (mppacket.getMessage() instanceof PositionMessage) {
 			PositionMessage positionMessage=(PositionMessage)mppacket.getMessage();
@@ -47,36 +47,41 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 		}
 		
 		/* Send back to all local clients */
-		for (T otherPlayer: playerRegistry.getPlayers()) {
-			if (!player.isLocalPlayer())
-				continue;
-			
-			for (MultiplayerPacket queuedPacket: queuedPackets)
-				sendPacket(otherPlayer.getAddress(), queuedPacket);
-			
-			/* Don't send to sender itself */
-			if (player==otherPlayer)
-				continue;
-			
-			/* Don't send to players out of range */
-			Position otherPos=otherPlayer.getCartesianPosition();
-			Vector3D delta=otherPos.subtract(senderPosition);
-			if (delta.getLength()>maxDistance)
-				continue;
-			
-			sendPacket(otherPlayer.getAddress(), mppacket);
+		synchronized (queuedPackets) {
+			synchronized (playerRegistry) {
+				for (T otherPlayer: playerRegistry.getPlayers()) {
+					if (!player.isLocalPlayer())
+						continue;
+					
+					for (MultiplayerPacket queuedPacket: queuedPackets)
+						sendPacket(otherPlayer.getAddress(), queuedPacket);
+					
+					/* Don't send to sender itself */
+					if (player==otherPlayer)
+						continue;
+					
+					/* Don't send to players out of range */
+					Position otherPos=otherPlayer.getCartesianPosition();
+					Vector3D delta=otherPos.subtract(senderPosition);
+					if (delta.getLength()>maxDistance)
+						continue;
+					
+					sendPacket(otherPlayer.getAddress(), mppacket);
+				}
+			}
+			queuedPackets.clear();
 		}
-		
-		queuedPackets.clear();
 		
 		// TODO: send to relays
 	}
 	
-	public synchronized void broadcastChatMessage(String text) {
+	public void broadcastChatMessage(String text) {
 		ChatMessage message=new ChatMessage("server:"+text);
 		MultiplayerPacket packet=new MultiplayerPacket("*server*",message);
 		
-		queuedPackets.add(packet);
+		synchronized (queuedPackets) {
+			queuedPackets.add(packet);
+		}
 	}
 	
 	@Override
