@@ -45,6 +45,42 @@ public class GeodesicUtils {
 			this.endAzimuth=endAzimuth;
 			this.length=length;
 		}
+		
+		public Position getStartPos() {
+			return new Position(startLon,startLat,0);
+		}
+		
+		public Position getEndPos() {
+			return new Position(endLon,endLat,0);
+		}
+		
+		public double getStartLon() {
+			return startLon;
+		}
+
+		public double getStartLat() {
+			return startLat;
+		}
+
+		public double getEndLon() {
+			return endLon;
+		}
+
+		public double getEndLat() {
+			return endLat;
+		}
+
+		public double getStartAzimuth() {
+			return startAzimuth;
+		}
+		
+		public double getEndAzimuth() {
+			return endAzimuth;
+		}
+		
+		public double getLength() {
+			return length;
+		}
 	}
 	
 	public GeodesicUtils(Ellipsoid ellipsoid) {
