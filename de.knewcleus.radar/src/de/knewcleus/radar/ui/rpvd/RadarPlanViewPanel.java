@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.swing.JDesktopPane;
+import javax.swing.JPanel;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.CoordinateDeviceTransformation;
@@ -37,7 +37,7 @@ import de.knewcleus.radar.ui.aircraft.AircraftState;
 import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
 import de.knewcleus.radar.ui.aircraft.IAircraftStateConsumer;
 
-public class RadarPlanViewPanel extends JDesktopPane implements IAircraftStateConsumer {
+public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer {
 	protected final static Logger logger=Logger.getLogger("de.knewcleus.radar.ui.rpvd");
 	private static final long serialVersionUID = 8996959818592227638L;
 	

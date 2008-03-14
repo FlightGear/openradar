@@ -1,10 +1,14 @@
 package de.knewcleus.radar.ui.rpvd;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.LayoutManager;
 import java.beans.PropertyVetoException;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JLayeredPane;
 
 import de.knewcleus.radar.ui.RadarWorkstation;
 
@@ -12,24 +16,36 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 	private static final long serialVersionUID = 5923481231980915972L;
 	
 	protected final RadarWorkstation workstation;
+	
+	protected final JLayeredPane layeredPane=new JLayeredPane();
+	protected final JDesktopPane desktopPane=new JDesktopPane();
 	protected final RadarPlanViewPanel radarPlanViewPanel;
 	protected final RadarToolbox radarToolbox;
 
+	protected final Integer RPVD_LAYER=0;
+	protected final Integer DESKTOP_LAYER=1;
+	
 	public RadarPlanViewDisplay(RadarWorkstation workstation) {
 		super("RPVD",true,false,true,false);
 		this.workstation=workstation;
 		
 		radarPlanViewPanel=new RadarPlanViewPanel(workstation);
-		radarPlanViewPanel.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
-		
-		setContentPane(radarPlanViewPanel);
 
+		layeredPane.setLayout(new OverlayLayout());
+		
+		layeredPane.add(radarPlanViewPanel,RPVD_LAYER);
+		layeredPane.add(desktopPane,DESKTOP_LAYER);
+		setContentPane(layeredPane);
+		
 		radarToolbox=new RadarToolbox(this);
 		
 		setPreferredSize(new Dimension(400,400));
 		
+		desktopPane.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+		desktopPane.setOpaque(false);
 		radarToolbox.setVisible(true);
-		add(radarToolbox);
+		desktopPane.add(radarToolbox);
+		
 		try {
 			radarToolbox.setIcon(true);
 		} catch (PropertyVetoException e) {
@@ -43,4 +59,47 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 	public RadarWorkstation getWorkstation() {
 		return workstation;
 	}
+	
+	class OverlayLayout implements LayoutManager {
+		@Override
+		public void addLayoutComponent(String name, Component comp) {
+		}
+		
+		@Override
+		public void removeLayoutComponent(Component comp) {
+		}
+		
+		@Override
+		public void layoutContainer(Container parent) {
+			Dimension size=parent.getSize();
+			
+			for (Component c: parent.getComponents()) {
+				c.setBounds(0, 0, size.width, size.height);
+			}
+		}
+		
+		@Override
+		public Dimension minimumLayoutSize(Container parent) {
+			int maxWidth=0,maxHeight=0;
+			
+			for (Component c: parent.getComponents()) {
+				Dimension minSize=c.getMinimumSize();
+				maxWidth=Math.max(maxWidth, minSize.width);
+				maxHeight=Math.max(maxHeight, minSize.height);
+			}
+			return new Dimension(maxWidth,maxHeight);
+		}
+		
+		@Override
+		public Dimension preferredLayoutSize(Container parent) {
+			int maxWidth=0,maxHeight=0;
+			
+			for (Component c: parent.getComponents()) {
+				Dimension minSize=c.getPreferredSize();
+				maxWidth=Math.max(maxWidth, minSize.width);
+				maxHeight=Math.max(maxHeight, minSize.height);
+			}
+			return new Dimension(maxWidth,maxHeight);
+		}
+	};
 }
