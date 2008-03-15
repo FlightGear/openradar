@@ -60,12 +60,14 @@ public class Radar {
 			ATCClient<FGMPAircraft> multiplayerClient=new ATCClient<FGMPAircraft>(registry,"obsKSFO",geodToCartTransformation.backward(sector.getInitialCenter()));
 			Thread multiplayerClientThread=new Thread(multiplayerClient,"FlightGear Multiplayer Protocol Handler");
 			Updater multiplayerUpdater=new Updater(multiplayerClient,500);
+			multiplayerClientThread.setDaemon(true);
 			multiplayerClientThread.start();
 			multiplayerUpdater.start();
 			radarDataProvider=registry;
 		} else {
 			FGATCEndpoint atcEndpoint=new FGATCEndpoint(16662);
 			Thread atcEndpointThread=new Thread(atcEndpoint,"FGATC Protocol Handler");
+			atcEndpointThread.setDaemon(true);
 			atcEndpointThread.start();
 			radarDataProvider=atcEndpoint;
 		}
