@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.CoordinateDeviceTransformation;
@@ -399,10 +400,16 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 			}
 			aircraftSymbol.layout();
 		}
-		if (!isSelectedLabelArmed)
-			checkForSelectionChange();
-		
-		repaint();
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				if (!isSelectedLabelArmed)
+					checkForSelectionChange();
+				
+				repaint();
+			}
+		});
 	}
 	
 	@Override
