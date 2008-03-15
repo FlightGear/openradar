@@ -122,17 +122,17 @@ public class GeodesicUtils {
 			final double tb = usq*(256.0+usq*(-128.0+usq*(74.0-47.0*usq)))/1024.0;
 
 			final double firstsigma = length/(b*ta);
-			double dsigma=0;
+			double oldsigma;
 			double cossigmam2, sinsigma, cossigma;
-			double sigma;
+			double sigma=firstsigma;
 
 			do {
-				sigma=firstsigma+dsigma;
 				cossigmam2 = cos(2.0*sigma1+sigma);
 				sinsigma = sin(sigma);
 				cossigma = cos(sigma);
-				dsigma = tb*sinsigma*(cossigmam2+tb*(cossigma*(-1.0+2.0*cossigmam2*cossigmam2) -  tb*cossigmam2*(-3.0+4.0*sinsigma*sinsigma)*(-3.0+4.0*cossigmam2*cossigmam2)/6.0)/4.0);
-			} while ( abs(dsigma) > epsilon );
+				oldsigma=sigma;
+				sigma = firstsigma+tb*sinsigma*(cossigmam2+tb*(cossigma*(-1.0+2.0*cossigmam2*cossigmam2) -  tb*cossigmam2*(-3.0+4.0*sinsigma*sinsigma)*(-3.0+4.0*cossigmam2*cossigmam2)/6.0)/4.0);
+			} while ( abs(sigma-oldsigma) > epsilon );
 			
 			final double temp = sinu1*sinsigma-cosu1*cossigma*cosalpha1;
 			
