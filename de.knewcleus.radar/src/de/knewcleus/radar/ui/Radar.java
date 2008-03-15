@@ -44,8 +44,8 @@ public class Radar {
 		handler.setLevel(Level.FINE);
 		rootLogger.addHandler(handler);
 		
-		Logger.getLogger("de.knewcleus.radar.ui.rpvd").setLevel(Level.SEVERE);
-		Logger.getLogger("de.knewcleus.fgfs.multiplayer").setLevel(Level.SEVERE);
+		Logger.getLogger("de.knewcleus.fgfs").setLevel(Level.SEVERE);
+		Logger.getLogger("de.knewcleus.radar").setLevel(Level.SEVERE);
 		
 		/* Load sector data */
 		URL sectorURL=Radar.class.getResource("/sectors/KSFO/sector.xml");
