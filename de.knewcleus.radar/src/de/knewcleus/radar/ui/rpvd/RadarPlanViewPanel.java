@@ -38,7 +38,7 @@ import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
 import de.knewcleus.radar.ui.aircraft.IAircraftStateConsumer;
 
 public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer {
-	protected final static Logger logger=Logger.getLogger("de.knewcleus.radar.ui.rpvd");
+	protected final static Logger logger=Logger.getLogger(RadarPlanViewPanel.class.getName());
 	private static final long serialVersionUID = 8996959818592227638L;
 	
 	protected final RadarWorkstation workstation;
