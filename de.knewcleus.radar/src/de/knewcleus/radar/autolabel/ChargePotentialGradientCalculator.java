@@ -10,6 +10,8 @@ public class ChargePotentialGradientCalculator {
 	protected double gradientX=0.0;
 	protected double gradientY=0.0;
 	
+	protected final double epsilon=1E-4;
+	
 	public ChargePotentialGradientCalculator(ChargedSymbol chargedSymbol) {
 		this.chargedSymbol=chargedSymbol;
 		this.centerX=(chargedSymbol.getLeft()+chargedSymbol.getRight())/2.0;
@@ -28,6 +30,8 @@ public class ChargePotentialGradientCalculator {
 		final double r2=dx*dx+dy*dy;
 		final double r=Math.sqrt(r2);
 		
+		if (r<epsilon)
+			return;
 		final double magnitude=q/r2;
 		gradientX+=-magnitude*dx/r;
 		gradientY+=-magnitude*dy/r;
@@ -36,6 +40,9 @@ public class ChargePotentialGradientCalculator {
 	private void addLineCharge(double q, double px, double py, double p0x, double p0y, double nx, double ny) {
 		final double dx=px-p0x,dy=py-p0y;
 		final double r=Math.abs(dx*nx+dy*ny);
+		
+		if (r<epsilon)
+			return;
 		
 		final double magnitude=q/(r*r);
 		gradientX+=magnitude*nx;

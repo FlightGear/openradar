@@ -25,7 +25,7 @@ import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.aircraft.AircraftState;
 
 public class AircraftSymbol implements LabeledObject {
-	protected final static Logger logger=Logger.getLogger("de.knewcleus.rada.ui.rpvd");
+	protected final static Logger logger=Logger.getLogger(AircraftSymbol.class.getName());
 	protected static final float aircraftSymbolSize=6.0f;
 	private static final GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
 
@@ -219,6 +219,7 @@ public class AircraftSymbol implements LabeledObject {
 		
 		vx=currentDeviceHeadPosition.getX()-currentDevicePosition.getX();
 		vy=currentDeviceHeadPosition.getY()-currentDevicePosition.getY();
+		logger.fine("Getting potential gradient for "+aircraftState+" currentDeviceHeadPosition="+currentDeviceHeadPosition+" currentDevicePosition="+currentDevicePosition);
 		
 		final double dvx,dvy; // position relative to the trueCourse vector
 		
@@ -255,7 +256,7 @@ public class AircraftSymbol implements LabeledObject {
 
 		final double angleForceX,angleForceY;
 		
-		if (abs(dvx)<EPSILON) {
+		if (abs(dvx)<EPSILON || v<EPSILON) {
 			angleForceX=angleForceY=0.0;
 		} else {
 			final double angle=abs(Math.atan2(dvy,dvx));
@@ -295,8 +296,14 @@ public class AircraftSymbol implements LabeledObject {
 		
 		final double distanceForceX,distanceForceY;
 		
-		distanceForceX=dx/r*distanceForce;
-		distanceForceY=dy/r*distanceForce;
+		if (r<EPSILON) {
+			distanceForceX=distanceForce;
+			distanceForceY=0;
+		} else {
+			distanceForceX=dx/r*distanceForce;
+			distanceForceY=dy/r*distanceForce;
+		}
+		
 		
 		return new PotentialGradient(angleForceX+distanceForceX,angleForceY+distanceForceY);
 	}
