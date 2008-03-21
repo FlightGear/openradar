@@ -84,10 +84,10 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 		
 		if (toggleButton.isSelected()) {
 			frame.setVisible(true);
-			radarPlanViewDisplay.add(frame);
+			radarPlanViewDisplay.getSubDesktopPane().add(frame);
 		} else {
 			frame.setVisible(false);
-			radarPlanViewDisplay.remove(frame);
+			radarPlanViewDisplay.getSubDesktopPane().remove(frame);
 		}
 	}
 	

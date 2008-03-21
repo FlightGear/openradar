@@ -18,7 +18,7 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 	protected final RadarWorkstation workstation;
 	
 	protected final JLayeredPane layeredPane=new JLayeredPane();
-	protected final JDesktopPane desktopPane=new JDesktopPane();
+	protected final JDesktopPane subDesktopPane=new JDesktopPane();
 	protected final RadarPlanViewPanel radarPlanViewPanel;
 	protected final RadarToolbox radarToolbox;
 
@@ -34,17 +34,17 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 		layeredPane.setLayout(new OverlayLayout());
 		
 		layeredPane.add(radarPlanViewPanel,RPVD_LAYER);
-		layeredPane.add(desktopPane,DESKTOP_LAYER);
+		layeredPane.add(subDesktopPane,DESKTOP_LAYER);
 		setContentPane(layeredPane);
 		
 		radarToolbox=new RadarToolbox(this);
 		
 		setPreferredSize(new Dimension(400,400));
 		
-		desktopPane.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
-		desktopPane.setOpaque(false);
+		subDesktopPane.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+		subDesktopPane.setOpaque(false);
 		radarToolbox.setVisible(true);
-		desktopPane.add(radarToolbox);
+		subDesktopPane.add(radarToolbox);
 		
 		try {
 			radarToolbox.setIcon(true);
@@ -54,6 +54,10 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 		}
 		
 		pack();
+	}
+	
+	public JDesktopPane getSubDesktopPane() {
+		return subDesktopPane;
 	}
 	
 	public RadarWorkstation getWorkstation() {
