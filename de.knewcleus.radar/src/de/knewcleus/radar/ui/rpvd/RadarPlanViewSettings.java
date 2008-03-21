@@ -18,6 +18,9 @@ public class RadarPlanViewSettings {
 	public final static String IS_SHOWING_SCALELINE_PROPERTY="showingScaleline";
 	public final static String SPEED_VECTOR_MINUTES_PROPERTY="speedVectorMinutes";
 	public final static String TRACK_HISTORY_LENGTH_PROPERTY="trackHistoryLength";
+	public final static String IS_AUTOMATIC_LABELING_ENABLED_PROPERTY="automaticLabelingEnabled";
+	public final static String STANDARD_LABEL_POSITION_PROPERTY="standardLabelPosition";
+	public final static String STANDARD_LABEL_DISTANCE_PROPERTY="standardLabelDistance";
 	
 	protected int range=10;
 	protected boolean showingSector=true;
@@ -30,6 +33,9 @@ public class RadarPlanViewSettings {
 	protected int speedVectorMinutes=1;
 	protected int trackHistoryLength=3;
 	protected ICoordinateTransformation mapTransformation;
+	protected boolean automaticLabelingEnabled=true;
+	protected StandardLabelPosition standardLabelPosition=StandardLabelPosition.TOPRIGHT;
+	protected StandardLabelDistance standardLabelDistance=StandardLabelDistance.MEDIUM;
 
 	public int getRange() {
 		return range;
@@ -69,6 +75,18 @@ public class RadarPlanViewSettings {
 
 	public int getTrackHistoryLength() {
 		return trackHistoryLength;
+	}
+	
+	public boolean isAutomaticLabelingEnabled() {
+		return automaticLabelingEnabled;
+	}
+	
+	public StandardLabelPosition getStandardLabelPosition() {
+		return standardLabelPosition;
+	}
+	
+	public StandardLabelDistance getStandardLabelDistance() {
+		return standardLabelDistance;
 	}
 
 	public void setRange(int newValue) {
@@ -130,7 +148,25 @@ public class RadarPlanViewSettings {
 		this.trackHistoryLength = trackHistoryLength;
 		propertyChangeSupport.firePropertyChange(TRACK_HISTORY_LENGTH_PROPERTY, oldValue, trackHistoryLength);
 	}
-
+	
+	public void setAutomaticLabelingEnabled(boolean automaticLabelsEnabled) {
+		boolean oldValue=this.automaticLabelingEnabled;
+		this.automaticLabelingEnabled = automaticLabelsEnabled;
+		propertyChangeSupport.firePropertyChange(IS_AUTOMATIC_LABELING_ENABLED_PROPERTY, oldValue, automaticLabelsEnabled);
+	}
+	
+	public void setStandardLabelPosition(StandardLabelPosition standardLabelPosition) {
+		StandardLabelPosition oldValue=this.standardLabelPosition;
+		this.standardLabelPosition = standardLabelPosition;
+		propertyChangeSupport.firePropertyChange(STANDARD_LABEL_POSITION_PROPERTY, oldValue, standardLabelPosition);
+	}
+	
+	public void setStandardLabelDistance(StandardLabelDistance standardLabelDistance) {
+		StandardLabelDistance oldValue=this.standardLabelDistance;
+		this.standardLabelDistance = standardLabelDistance;
+		propertyChangeSupport.firePropertyChange(STANDARD_LABEL_DISTANCE_PROPERTY, oldValue, standardLabelDistance);
+	}
+	
 	public ICoordinateTransformation getMapTransformation() {
 		return mapTransformation;
 	}

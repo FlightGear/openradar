@@ -26,6 +26,7 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 	protected final JToggleButton modeMenuButton=new JToggleButton("MODES");
 	
 	protected final MapMenuFrame mapMenuFrame;
+	protected final OverlapMenuFrame overlapMenuFrame;
 	
 	public RadarToolbox(RadarPlanViewDisplay radarPlanViewDisplay) {
 		super("RADAR TOOLBOX",false,false,false,true);
@@ -35,6 +36,7 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 		speedAndTrackPanel=new SpeedAndTrackPanel(this);
 		
 		mapMenuFrame=new MapMenuFrame(this);
+		overlapMenuFrame=new OverlapMenuFrame(this);
 
 		setLayout(new GridBagLayout());
 		
@@ -44,7 +46,9 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 		buttonPanel.add(modeMenuButton);
 		
 		mapMenuButton.addActionListener(this);
+		overlapMenuButton.addActionListener(this);
 		mapMenuFrame.addInternalFrameListener(this);
+		overlapMenuFrame.addInternalFrameListener(this);
 		
 		GridBagConstraints gridBagConstraints=new GridBagConstraints();
 		
@@ -78,6 +82,8 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 		JToggleButton toggleButton=(JToggleButton)e.getSource();
 		if (e.getSource()==mapMenuButton) {
 			frame=mapMenuFrame;
+		} else if (e.getSource()==overlapMenuButton) {
+			frame=overlapMenuFrame;
 		} else {
 			return;
 		}
@@ -94,6 +100,8 @@ public class RadarToolbox extends JInternalFrame implements ActionListener, Inte
 	private void setFrameState(Object source, boolean state) {
 		if (source==mapMenuFrame) {
 			mapMenuButton.setSelected(state);
+		} else if (source==overlapMenuFrame) {
+			overlapMenuButton.setSelected(state);
 		}
 	}
 	

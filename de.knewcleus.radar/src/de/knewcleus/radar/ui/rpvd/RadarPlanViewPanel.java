@@ -38,7 +38,7 @@ import de.knewcleus.radar.ui.aircraft.AircraftState;
 import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
 import de.knewcleus.radar.ui.aircraft.IAircraftStateConsumer;
 
-public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer {
+public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer, PropertyChangeListener {
 	protected final static Logger logger=Logger.getLogger(RadarPlanViewPanel.class.getName());
 	private static final long serialVersionUID = 8996959818592227638L;
 	
@@ -70,14 +70,8 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		super();
 		setDoubleBuffered(true); /* Is double buffered */
 		this.workstation=workstation;
-		
-		PropertyChangeListener settingsChangeListener=new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				repaint();
-			}
-		};
-		workstation.getRadarPlanViewSettings().addPropertyChangeListener(settingsChangeListener);
+
+		workstation.getRadarPlanViewSettings().addPropertyChangeListener(this);
 		
 		radarDeviceTransformation=new RadarDeviceTransformation(getSettings());
 		radarPlanViewContext=new RadarPlanViewContext(this, getSettings(),radarDeviceTransformation);
@@ -102,6 +96,76 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		getAircraftStateManager().registerAircraftStateConsumer(this);
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getOldValue().equals(evt.getNewValue())) {
+			return;
+		}
+		
+		if (evt.getSource()==getSettings()) {
+			String propertyName=evt.getPropertyName();
+			final RadarPlanViewSettings settings=getSettings();
+			
+			if (!propertyName.equals(RadarPlanViewSettings.IS_AUTOMATIC_LABELING_ENABLED_PROPERTY) &&
+					!propertyName.equals(RadarPlanViewSettings.STANDARD_LABEL_POSITION_PROPERTY) &&
+					!propertyName.equals(RadarPlanViewSettings.STANDARD_LABEL_DISTANCE_PROPERTY))
+			{
+				return;
+			}
+			
+			if (propertyName.equals(RadarPlanViewSettings.IS_AUTOMATIC_LABELING_ENABLED_PROPERTY)) {
+				/* Reset all labels into unlocked state */
+				for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
+					aircraftSymbol.setLocked(false);
+				}
+			}
+			if (!settings.isAutomaticLabelingEnabled()) {
+				/* auto labelling disabled, reset all labels */
+				resetAllLabels();
+			}
+			repaint();
+		}
+	}
+	
+	private void resetAllLabels() {
+		final RadarPlanViewSettings settings=getSettings();
+		final StandardLabelPosition labelPosition=settings.getStandardLabelPosition();
+		final double distance=getStandardLabelDistance();
+		
+		double dx,dy;
+		
+		dx=labelPosition.getDx();
+		dy=labelPosition.getDy();
+		
+		final double length=Math.sqrt(dx*dx+dy*dy);
+		dx*=distance/length;
+		dy*=distance/length;
+		
+		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
+			aircraftSymbol.getLabel().setHookPosition(dx,dy);
+		}
+	}
+	
+	private double getStandardLabelDistance() {
+		final RadarPlanViewSettings settings=getSettings();
+		final double distance;
+		
+		switch (settings.getStandardLabelDistance()) {
+		case SMALL:
+			distance=AircraftSymbol.minLabelDist;
+			break;
+		default:
+		case MEDIUM:
+			distance=AircraftSymbol.meanLabelDist;
+			break;
+		case LONG:
+			distance=AircraftSymbol.maxLabelDist;
+			break;
+		}
+		
+		return distance;
 	}
 	
 	@Override
@@ -231,14 +295,17 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		super.paintComponent(g);
 		
 		long startTime=System.currentTimeMillis();
-		long maxUpdateTimeMillis=100;
 		
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			aircraftSymbol.layout();
 		}
-
-		while (System.currentTimeMillis()<startTime+maxUpdateTimeMillis) {
-			autolabeller.updateOneLabel();
+		
+		if (getSettings().isAutomaticLabelingEnabled()) {
+			long maxUpdateTimeMillis=100;
+	
+			while (System.currentTimeMillis()<startTime+maxUpdateTimeMillis) {
+				autolabeller.updateOneLabel();
+			}
 		}
 		
 		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(getSettings().getMapTransformation(), radarDeviceTransformation);
@@ -387,6 +454,9 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	@Override
 	public synchronized void aircraftStateUpdate(Set<AircraftState> updatedStates) {
 		logger.fine("Aircraft state update");
+		final RadarPlanViewSettings settings=getSettings();
+		final StandardLabelPosition labelPosition=settings.getStandardLabelPosition();
+		final double distance=getStandardLabelDistance();
 		
 		for (AircraftState aircraftState: updatedStates) {
 			AircraftSymbol aircraftSymbol;
@@ -395,6 +465,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 			} else {
 				aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraftState);
 				aircraftSymbolMap.put(aircraftState, aircraftSymbol);
+				aircraftSymbol.getLabel().setHookPosition(distance*labelPosition.getDx(), distance*labelPosition.getDy());
 				autolabeller.addLabeledObject(aircraftSymbol);
 				logger.fine("Aircraft state acquired:"+aircraftState);
 			}

@@ -25,6 +25,7 @@ import de.knewcleus.radar.ui.labels.StaticTextLabelElement;
 public class AircraftLabel implements Label, ILabelDisplay {
 	protected final AircraftSymbol associatedSymbol;
 	protected double hookX,hookY;
+	protected double dirX,dirY;;
 	protected double centerX,centerY;
 	protected final List<ILabelElement> labelLines=new ArrayList<ILabelElement>();
 	protected final MultilineLabel labelLayout=new MultilineLabel(labelLines);
@@ -45,6 +46,8 @@ public class AircraftLabel implements Label, ILabelDisplay {
 		this.associatedSymbol=associatedSymbol;
 		hookX=1.0;
 		hookY=1.0;
+		dirX=1.0;
+		dirY=1.0;
 		
 		for (int i=0;i<labelLine.length;i++) {
 			labelLine[i]=new LabelLine(new ArrayList<ILabelElement>());
@@ -172,11 +175,11 @@ public class AircraftLabel implements Label, ILabelDisplay {
 	}
 	
 	public void paint(Graphics2D g2d) {
-		Point2D symbolDevicePosition=associatedSymbol.getCurrentDevicePosition();
 		double x,y;
 		
-		x=symbolDevicePosition.getX()+centerX;
-		y=symbolDevicePosition.getY()+centerY;
+		Rectangle2D bounds=getBounds2D();
+		x=bounds.getCenterX();
+		y=bounds.getCenterY();
 		
 		int w,h;
 		w=getSize().width;
@@ -200,8 +203,8 @@ public class AircraftLabel implements Label, ILabelDisplay {
 	public Rectangle2D getBounds2D() {
 		final Point2D symbolDevicePosition=associatedSymbol.getCurrentDevicePosition();
 		Dimension size=getSize();
-		double x=symbolDevicePosition.getX()+centerX;
-		double y=symbolDevicePosition.getY()+centerY;
+		double x=symbolDevicePosition.getX()+hookX+dirX*size.getWidth()/2.0;
+		double y=symbolDevicePosition.getY()+hookY+dirY*size.getHeight()/2.0;
 		Rectangle2D newBounds=new Rectangle2D.Double(x-size.width/2.0,y-size.height/2.0,size.width,size.height);
 		
 		return newBounds;
@@ -237,13 +240,11 @@ public class AircraftLabel implements Label, ILabelDisplay {
 		return false;
 	}
 	
-	@Override
-	public void move(double dx, double dy) {
-		hookX+=dx;
-		hookY+=dy;
+	public void setHookPosition(double dx, double dy) {
+		hookX=dx;
+		hookY=dy;
 		
 		final double len=Math.sqrt(hookX*hookX+hookY*hookY);
-		final double dirX,dirY;
 		
 		if (len>1E-3) {
 			dirX=hookX/len;
@@ -260,46 +261,35 @@ public class AircraftLabel implements Label, ILabelDisplay {
 			hookX=dirX*AircraftSymbol.maxLabelDist;
 			hookY=dirY*AircraftSymbol.maxLabelDist;
 		}
-		
-		Dimension size=getSize();
-		centerX=hookX+dirX*size.width/2.0;
-		centerY=hookY+dirY*size.height/2.0;
+	}
+	
+	@Override
+	public void move(double dx, double dy) {
+		setHookPosition(hookX+dx, hookY+dy);
 	}
 
 	@Override
 	public double getTop() {
-		double y=associatedSymbol.getCurrentDevicePosition().getY();
-		double h=getSize().height;
-		
-		return y+centerY-h/2.0;
+		return getBounds2D().getMinY();
 	}
 
 	@Override
 	public double getBottom() {
-		double y=associatedSymbol.getCurrentDevicePosition().getY();
-		double h=getSize().height;
-		
-		return y+centerY+h/2.0;
+		return getBounds2D().getMaxY();
 	}
 
 	@Override
 	public double getLeft() {
-		double x=associatedSymbol.getCurrentDevicePosition().getX();
-		double w=getSize().width;
-		
-		return x+centerX-w/2.0;
+		return getBounds2D().getMinX();
 	}
 
 	@Override
 	public double getRight() {
-		double x=associatedSymbol.getCurrentDevicePosition().getX();
-		double w=getSize().width;
-		
-		return x+centerX+w/2.0;
+		return getBounds2D().getMaxX();
 	}
 	
 	@Override
 	public String toString() {
-		return "cx="+centerX+" cy="+centerY+" hookX="+hookX+" hookY="+hookY;
+		return "hookX="+hookX+" hookY="+hookY;
 	}
 }
