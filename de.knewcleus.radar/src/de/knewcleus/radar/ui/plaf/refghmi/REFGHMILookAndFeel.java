@@ -61,7 +61,9 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 		super.initClassDefaults(table);
 		String basePackage="de.knewcleus.radar.ui.plaf.refghmi.";
 		Object[] defaults={
-				"SliderUI", basePackage+"REFGHMISliderUI"
+				      "SliderUI", basePackage+"REFGHMISliderUI",
+				      "ButtonUI", basePackage+"REFGHMIButtonUI",
+				"ToggleButtonUI", basePackage+"REFGHMIToggleButtonUI"
 		};
 		table.putDefaults(defaults);
 	}
@@ -73,12 +75,10 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 		Border sliderBorder=new REFGHMIBorders.SliderBorder();
 		Object[] defaults={
 			"Button.border", buttonBorder,
-			"Button.select", Palette.WFAWN_DEPRESSED,
 			"Slider.border", sliderBorder,
 			"ToggleButton.border", buttonBorder,
 			"ToggleButton.foreground", Palette.BLACK,
-			"ToggleButton.background", Palette.WINDOW_BLUE,
-			"ToggleButton.select", Palette.WBLUE_DEPRESSED
+			"ToggleButton.background", Palette.WINDOW_BLUE
 		};
 		table.putDefaults(defaults);
 	}

@@ -43,13 +43,27 @@ public class Palette {
 	public final static Color VAW_RISK=new Color(0.565f, 0.523f, 0.297f, 0.550f);
 	
 	public final static Color WINDOW_BLUE=new Color(0.44f,0.55f, 0.66f);
-	public final static Color WBLUE_HIGHLIGHT=new Color(0.64f,0.75f,0.86f);
-	public final static Color WBLUE_DEPRESSED=new Color(0.24f,0.35f,0.54f);
 	public final static Color WINDOW_FAWN=new Color(0.68f,0.57f,0.41f);
-	public final static Color WFAWN_HIGHLIGHT=new Color(0.88f,0.77f,0.61f);
-	public final static Color WFAWN_DEPRESSED=new Color(0.48f,0.37f,0.21f);
 	public final static Color WFAWN_RESTRICTION=new Color(0.65f,0.21f,0.20f);
 	public final static Color SHADOW=new Color(0.20f,0.20f,0.20f);
 	public final static Color GREEN=new Color(0.46f,0.88f,0.31f);
 	public final static Color TRANSPARENT=new Color(0.0f,0.0f,0.0f,0.0f);
+	
+	public static Color getHightlightColor(Color c) {
+		final int r,g,b;
+		
+		r=Math.min(255,c.getRed()+51);
+		g=Math.min(255,c.getGreen()+51);
+		b=Math.min(255,c.getBlue()+51);
+		return new Color(r,g,b);
+	}
+	
+	public static Color getDepressedColor(Color c) {
+		final int r,g,b;
+		
+		r=Math.max(0,c.getRed()-51);
+		g=Math.max(0,c.getGreen()-51);
+		b=Math.max(0,c.getBlue()-51);
+		return new Color(r,g,b);
+	}
 }

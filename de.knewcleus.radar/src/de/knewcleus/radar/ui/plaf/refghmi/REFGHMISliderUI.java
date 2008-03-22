@@ -29,11 +29,11 @@ public class REFGHMISliderUI extends MotifSliderUI {
 		w=thumbRect.width;
 		h=thumbRect.height;
 
-		g.setColor(Palette.WINDOW_FAWN);
+		g.setColor(slider.getBackground());
 
 		g.fillRect(x,y,w,h);
 
-		g.setColor(Palette.WFAWN_HIGHLIGHT);
+		g.setColor(Palette.getHightlightColor(slider.getBackground()));
 		g.drawLine(x, y, x+w-1, y);
 		g.drawLine(x, y, x, y+h-1);
 
