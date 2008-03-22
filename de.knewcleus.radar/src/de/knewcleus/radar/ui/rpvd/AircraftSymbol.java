@@ -19,10 +19,12 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
+import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.aircraft.Target;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 import de.knewcleus.radar.ui.Palette;
+import de.knewcleus.radar.ui.aircraft.Aircraft;
 
 public class AircraftSymbol implements LabeledObject {
 	protected final static Logger logger=Logger.getLogger(AircraftSymbol.class.getName());
@@ -42,7 +44,7 @@ public class AircraftSymbol implements LabeledObject {
 	protected static final double labelDistRange=(maxLabelDist-minLabelDist);
 
 	protected final RadarPlanViewContext radarPlanViewContext;
-	protected final Target aircraftState;
+	protected final Aircraft aircraft;
 	protected final AircraftLabel label;
 	
 	protected Point2D currentDevicePosition;
@@ -50,14 +52,14 @@ public class AircraftSymbol implements LabeledObject {
 	protected final String labelLine[]=new String[5];
 	protected boolean isLabelLocked=false;
 	
-	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, Target aircraftState) {
+	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, Aircraft aircraft) {
 		this.radarPlanViewContext=radarPlanViewContext;
-		this.aircraftState=aircraftState;
+		this.aircraft=aircraft;
 		this.label=new AircraftLabel(this);
 	}
 	
-	public Target getAircraftState() {
-		return aircraftState;
+	public Aircraft getAircraft() {
+		return aircraft;
 	}
 	
 	public RadarPlanViewContext getRadarPlanViewContext() {
@@ -69,22 +71,23 @@ public class AircraftSymbol implements LabeledObject {
 	}
 	
 	public boolean canSelect() {
-		return aircraftState.canSelect();
+		return aircraft.canSelect();
 	}
 
 	public void layout() {
-		logger.fine("Laying out symbol for aircraft state "+aircraftState);
+		logger.fine("Laying out symbol for aircraft "+aircraft);
+		final Target target=aircraft.getTarget();
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
 
 		/* Calculate current device position of associatedTarget symbol */
-		final Position currentGeodPosition=aircraftState.getPosition();
+		final Position currentGeodPosition=target.getPosition();
 		final Position currentMapPosition=mapTransformation.forward(currentGeodPosition);
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
 
 		/* Calculate current device position of leading line head position */
-		double trueCourse=aircraftState.getTrueCourse();
-		double gs=aircraftState.getGroundSpeed();
+		double trueCourse=target.getTrueCourse();
+		double gs=target.getGroundSpeed();
 		double dt=radarPlanViewContext.getRadarPlanViewSettings().getSpeedVectorMinutes()*Units.MIN;
 		double ds=gs*dt;
 		GeodesicInformation geodesicInformation=geodesicUtils.direct(currentGeodPosition.getX(), currentGeodPosition.getY(), trueCourse, ds);
@@ -98,11 +101,25 @@ public class AircraftSymbol implements LabeledObject {
 	}
 	
 	public void drawSymbol(Graphics2D g2d) {
-		g2d.setColor(aircraftState.getTaskState().getSymbolColor());
+		g2d.setColor(getSymbolColor());
 		Ellipse2D symbol=new Ellipse2D.Double(
 				currentDevicePosition.getX()-aircraftSymbolSize/2.0,currentDevicePosition.getY()-aircraftSymbolSize/2.0,
 				aircraftSymbolSize,aircraftSymbolSize);
 		g2d.fill(symbol);
+	}
+	
+	protected Color getSymbolColor() {
+		// TODO: implement properly
+		AircraftTaskState taskState=AircraftTaskState.ASSUMED;
+		
+		switch (taskState) {
+		case ADVANCED_INFORMATION:
+		case CONCERNED:
+		case ASSUMED:
+			return Palette.BLACK;
+		default:
+			return Palette.BEACON;
+		}
 	}
 	
 	public void drawLabel(Graphics2D g2d) {
@@ -121,7 +138,7 @@ public class AircraftSymbol implements LabeledObject {
 	}
 	
 	public void drawHeadingVector(Graphics2D g2d) {
-		g2d.setColor(aircraftState.getTaskState().getSymbolColor());
+		g2d.setColor(getSymbolColor());
 		Line2D headingVector=new Line2D.Double(currentDevicePosition,currentDeviceHeadPosition);
 		g2d.draw(headingVector);
 	}
@@ -130,12 +147,13 @@ public class AircraftSymbol implements LabeledObject {
 		Position mapPos;
 		Point2D devicePos;
 
-		final Deque<Position> positionBuffer=aircraftState.getPositionBuffer();
+		final Target target=aircraft.getTarget();
+		final Deque<Position> positionBuffer=target.getPositionBuffer();
 		/* Draw the trail with previous positions */
 		int dotCount=Math.min(positionBuffer.size()-1,radarPlanViewContext.getRadarPlanViewSettings().getTrackHistoryLength());
 		if (dotCount<1)
 			return;
-		Color symbolColor=aircraftState.getTaskState().getSymbolColor();
+		Color symbolColor=getSymbolColor();
 		float alphaIncrease=1.0f/(dotCount+1);
 		float alpha=1.0f;
 		
@@ -201,7 +219,7 @@ public class AircraftSymbol implements LabeledObject {
 	
 	@Override
 	public boolean isLocked() {
-		return aircraftState.isSelected() || isLabelLocked;
+		return aircraft.isSelected() || isLabelLocked;
 	}
 	
 	public void setLocked(boolean isLocked) {
@@ -219,7 +237,7 @@ public class AircraftSymbol implements LabeledObject {
 		
 		vx=currentDeviceHeadPosition.getX()-currentDevicePosition.getX();
 		vy=currentDeviceHeadPosition.getY()-currentDevicePosition.getY();
-		logger.fine("Getting potential gradient for "+aircraftState+" currentDeviceHeadPosition="+currentDeviceHeadPosition+" currentDevicePosition="+currentDevicePosition);
+		logger.fine("Getting potential gradient for "+aircraft+" currentDeviceHeadPosition="+currentDeviceHeadPosition+" currentDevicePosition="+currentDevicePosition);
 		
 		final double dvx,dvy; // position relative to the trueCourse vector
 		

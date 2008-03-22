@@ -5,27 +5,27 @@ import java.awt.Rectangle;
 
 import javax.swing.JPopupMenu;
 
-import de.knewcleus.radar.aircraft.Target;
+import de.knewcleus.radar.ui.aircraft.Aircraft;
 
 public abstract class AbstractLabelElement implements ILabelElement {
 	protected final ILabelDisplay labelDisplay;
-	protected final Target aircraftState;
+	protected final Aircraft aircraft;
 	
 	protected int ascent;
 	protected Dimension minimumSize;
 	protected Rectangle bounds;
 
-	public AbstractLabelElement(ILabelDisplay labelDisplay, Target aircraftState) {
+	public AbstractLabelElement(ILabelDisplay labelDisplay, Aircraft aircraft) {
 		this.labelDisplay=labelDisplay;
-		this.aircraftState=aircraftState;
+		this.aircraft=aircraft;
 	}
 	
 	public ILabelDisplay getLabelDisplay() {
 		return labelDisplay;
 	}
 	
-	public Target getAircraftState() {
-		return aircraftState;
+	public Aircraft getAircraft() {
+		return aircraft;
 	}
 	
 	@Override

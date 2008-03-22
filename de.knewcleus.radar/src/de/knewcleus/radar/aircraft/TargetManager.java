@@ -8,14 +8,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import de.knewcleus.radar.ui.aircraft.IAircraftStateConsumer;
 
 public class TargetManager implements IRadarDataConsumer {
-	protected final static Logger logger=Logger.getLogger(TargetManager.class.getName());
+	private final static Logger logger=Logger.getLogger(TargetManager.class.getName());
 	protected final IRadarDataProvider radarDataProvider;
-	protected final Map<Object, Target> aircraftStateMap=new HashMap<Object, Target>();
-	protected final Set<IAircraftStateConsumer> aircraftStateConsumers=new HashSet<IAircraftStateConsumer>();
-	protected Target selectedTarget=null;
+	protected final Map<Object, Target> targetMap=new HashMap<Object, Target>();
+	protected final Set<ITargetUpdateListener> targetListeners=new HashSet<ITargetUpdateListener>();
 	protected final int maximumPositionBufferLength;
 	
 	public TargetManager(IRadarDataProvider radarDataProvider) {
@@ -32,26 +30,6 @@ public class TargetManager implements IRadarDataConsumer {
 		maximumPositionBufferLength=15*60/radarDataProvider.getSecondsBetweenUpdates();
 	}
 	
-	public synchronized void select(Target aircraftState) {
-		if (selectedTarget!=null) {
-			logger.fine("Deselecting aircraft "+selectedTarget);
-			selectedTarget.setSelected(false);
-		}
-		selectedTarget=aircraftState;
-		if (selectedTarget!=null) {
-			logger.fine("Selecting aircraft "+selectedTarget);
-			selectedTarget.setSelected(true);
-		}
-	}
-	
-	public void deselect() {
-		select(null);
-	}
-	
-	public Target getSelectedTarget() {
-		return selectedTarget;
-	}
-	
 	public int getMaximumPositionBufferLength() {
 		return maximumPositionBufferLength;
 	}
@@ -60,24 +38,24 @@ public class TargetManager implements IRadarDataConsumer {
 		return radarDataProvider.getSecondsBetweenUpdates();
 	}
 	
-	public synchronized void registerAircraftStateConsumer(IAircraftStateConsumer consumer) {
-		aircraftStateConsumers.add(consumer);
+	public synchronized void registerTargetListener(ITargetUpdateListener consumer) {
+		targetListeners.add(consumer);
 	}
 	
-	public synchronized void unregisterAircraftStateConsumer(IAircraftStateConsumer consumer) {
-		aircraftStateConsumers.remove(consumer);
+	public synchronized void unregisterTargetListener(ITargetUpdateListener consumer) {
+		targetListeners.remove(consumer);
 	}
 	
-	protected synchronized void fireAircraftStateUpdated(Set<Target> updatedStates) {
-		logger.fine("Aircraft states updated:"+updatedStates);
-		for (IAircraftStateConsumer consumer: aircraftStateConsumers) {
-			consumer.aircraftStateUpdate(updatedStates);
+	protected synchronized void fireTargetsUpdated(Set<Target> updatedTargets) {
+		logger.fine("Targets updated:"+updatedTargets);
+		for (ITargetUpdateListener consumer: targetListeners) {
+			consumer.targetsUpdated(updatedTargets);
 		}
 	}
 	
-	protected synchronized void fireAircraftStateLost(Target aircraftState) {
-		for (IAircraftStateConsumer consumer: aircraftStateConsumers) {
-			consumer.aircraftStateLost(aircraftState);
+	protected synchronized void fireTargetLost(Target target) {
+		for (ITargetUpdateListener consumer: targetListeners) {
+			consumer.targetLost(target);
 		}
 	}
 	
@@ -88,27 +66,27 @@ public class TargetManager implements IRadarDataConsumer {
 			Object trackIdentifier=target.getTrackIdentifier();
 			Target aircraftState;
 			
-			if (!aircraftStateMap.containsKey(trackIdentifier)) {
+			if (!targetMap.containsKey(trackIdentifier)) {
 				aircraftState=new Target(this);
-				aircraftStateMap.put(trackIdentifier,aircraftState);
+				targetMap.put(trackIdentifier,aircraftState);
 			} else {
-				aircraftState=aircraftStateMap.get(trackIdentifier);
+				aircraftState=targetMap.get(trackIdentifier);
 			}
 			aircraftState.update(target);
 			updatedStates.add(aircraftState);
 		}
-		fireAircraftStateUpdated(updatedStates);
+		fireTargetsUpdated(updatedStates);
 	}
 	
 	@Override
 	public synchronized void radarTargetLost(Object trackIdentifier) {
-		Target aircraftState=aircraftStateMap.get(trackIdentifier);
+		Target aircraftState=targetMap.get(trackIdentifier);
 		assert(aircraftState!=null);
-		aircraftStateMap.remove(trackIdentifier);
-		fireAircraftStateLost(aircraftState);
+		targetMap.remove(trackIdentifier);
+		fireTargetLost(aircraftState);
 	}
 	
 	public Collection<Target> getAircraftStates() {
-		return Collections.unmodifiableCollection(aircraftStateMap.values());
+		return Collections.unmodifiableCollection(targetMap.values());
 	}
 }

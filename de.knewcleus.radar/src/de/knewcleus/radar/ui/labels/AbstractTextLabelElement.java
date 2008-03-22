@@ -5,11 +5,11 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
-import de.knewcleus.radar.aircraft.Target;
+import de.knewcleus.radar.ui.aircraft.Aircraft;
 
 public abstract class AbstractTextLabelElement extends AbstractLabelElement implements ILabelElement {
-	public AbstractTextLabelElement(ILabelDisplay labelDisplay, Target aircraftState) {
-		super(labelDisplay, aircraftState);
+	public AbstractTextLabelElement(ILabelDisplay labelDisplay, Aircraft aircraft) {
+		super(labelDisplay, aircraft);
 	}
 
 	protected abstract String getText();

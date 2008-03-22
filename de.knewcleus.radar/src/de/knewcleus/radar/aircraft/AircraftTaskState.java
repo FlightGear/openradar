@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui.aircraft;
+package de.knewcleus.radar.aircraft;
 
 import java.awt.Color;
 

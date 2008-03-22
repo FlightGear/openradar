@@ -30,15 +30,14 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
-import de.knewcleus.radar.aircraft.TargetManager;
-import de.knewcleus.radar.aircraft.Target;
 import de.knewcleus.radar.autolabel.Autolabeller;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
-import de.knewcleus.radar.ui.aircraft.IAircraftStateConsumer;
+import de.knewcleus.radar.ui.aircraft.Aircraft;
+import de.knewcleus.radar.ui.aircraft.IAircraftUpdateListener;
 
-public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer, PropertyChangeListener {
+public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListener, PropertyChangeListener {
 	protected final static Logger logger=Logger.getLogger(RadarPlanViewPanel.class.getName());
 	private static final long serialVersionUID = 8996959818592227638L;
 	
@@ -60,7 +59,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	protected final float scaleMarkerDistance=10.0f*(float)Units.NM;
 	protected final float centrelineLength=5.0f*(float)Units.NM;
 	
-	protected Map<Target, AircraftSymbol> aircraftSymbolMap=new HashMap<Target, AircraftSymbol>();
+	protected Map<Aircraft, AircraftSymbol> aircraftSymbolMap=new HashMap<Aircraft, AircraftSymbol>();
 	protected long lastMouseX,lastMouseY;
 	protected boolean isSelectedLabelArmed;
 	
@@ -93,7 +92,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		 * We just register as a state consumer here. With the next update cycle we will collect all the
 		 * aircraft states.
 		 */
-		getAircraftStateManager().registerAircraftStateConsumer(this);
+		workstation.getAircraftManager().registerAircraftUpdateListener(this);
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
 	}
@@ -236,7 +235,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	}
 	
 	private AircraftSymbol getSelectedSymbol() {
-		Target selectedAircraft=getAircraftStateManager().getSelectedTarget();
+		Aircraft selectedAircraft=workstation.getAircraftManager().getSelectedAircraft();
 		
 		if (selectedAircraft==null) {
 			return null;
@@ -262,23 +261,19 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		
 		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
 			if (aircraftSymbol.canSelect() && aircraftSymbol.containsPosition(x, y)) {
-				getAircraftStateManager().select(aircraftSymbol.getAircraftState());
+				workstation.getAircraftManager().select(aircraftSymbol.getAircraft());
 				return true;
 			}
 		}
 		
 		/* No symbol hit, so we deselect the currently selected associatedTarget, if any */
 		boolean hadSelection=(selectedSymbol!=null);
-		getAircraftStateManager().deselect();
+		workstation.getAircraftManager().deselect();
 		return hadSelection;
 	}
 	
 	public RadarPlanViewSettings getSettings() {
 		return workstation.getRadarPlanViewSettings();
-	}
-	
-	public TargetManager getAircraftStateManager() {
-		return workstation.getAircraftStateManager();
 	}
 	
 	public Sector getSector() {
@@ -445,21 +440,21 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	}
 	
 	@Override
-	public synchronized void aircraftStateLost(Target aircraftState) {
-		AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(aircraftState);
+	public synchronized void aircraftLost(Aircraft lostAircraft) {
+		AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(lostAircraft);
 		autolabeller.removeLabeledObject(aircraftSymbol);
-		aircraftSymbolMap.remove(aircraftState);
-		logger.fine("Aircraft state lost:"+aircraftState);
+		aircraftSymbolMap.remove(lostAircraft);
+		logger.fine("Aircraft lost:"+lostAircraft);
 	}
 	
 	@Override
-	public synchronized void aircraftStateUpdate(Set<Target> updatedStates) {
+	public synchronized void aircraftUpdated(Set<Aircraft> updatedAircraft) {
 		logger.fine("Aircraft state update");
 		final RadarPlanViewSettings settings=getSettings();
 		final StandardLabelPosition labelPosition=settings.getStandardLabelPosition();
 		final double distance=getStandardLabelDistance();
 		
-		for (Target aircraftState: updatedStates) {
+		for (Aircraft aircraftState: updatedAircraft) {
 			AircraftSymbol aircraftSymbol;
 			if (aircraftSymbolMap.containsKey(aircraftState)) {
 				aircraftSymbol=aircraftSymbolMap.get(aircraftState);

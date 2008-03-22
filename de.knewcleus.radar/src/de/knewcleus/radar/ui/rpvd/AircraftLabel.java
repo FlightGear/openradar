@@ -9,11 +9,11 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.knewcleus.radar.aircraft.Target;
+import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.ui.aircraft.ActualLevelLabelElement;
-import de.knewcleus.radar.ui.aircraft.AircraftTaskState;
+import de.knewcleus.radar.ui.aircraft.Aircraft;
 import de.knewcleus.radar.ui.aircraft.CallsignLabelElement;
 import de.knewcleus.radar.ui.aircraft.GroundSpeedLabelElement;
 import de.knewcleus.radar.ui.labels.ILabelDisplay;
@@ -53,7 +53,7 @@ public class AircraftLabel implements Label, ILabelDisplay {
 			labelLine[i]=new LabelLine(new ArrayList<ILabelElement>());
 		}
 		
-		final Target aircraftState=associatedSymbol.getAircraftState();
+		final Aircraft aircraftState=associatedSymbol.getAircraft();
 		callsignElement=new CallsignLabelElement(this,aircraftState);
 		nextSectorElement=new StaticTextLabelElement(this,aircraftState);
 		actualLevelElement=new ActualLevelLabelElement(this,aircraftState);
@@ -82,9 +82,10 @@ public class AircraftLabel implements Label, ILabelDisplay {
 	}
 	
 	public void updateLabelContents() {
-		final Target aircraftState=associatedSymbol.getAircraftState();
+		// TODO: implement properly
+		final AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED;
 		labelLines.clear();
-		switch (aircraftState.getTaskState()) {
+		switch (aircraftTaskState) {
 		case OTHER:
 			prepareOtherLabel();
 			break;
@@ -187,9 +188,10 @@ public class AircraftLabel implements Label, ILabelDisplay {
 		
 		g2d.translate(x,y);
 		
-		final Target aircraftState=associatedSymbol.getAircraftState();
-		final AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
-		if (aircraftState.isSelected()) {
+		final Aircraft aircraft=associatedSymbol.getAircraft();
+		// TODO: implement properly
+		final AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED;
+		if (aircraft.isSelected()) {
 			g2d.setColor(aircraftTaskState.getSelectedBackgroundColor());
 			g2d.fillRect(-w/2,-h/2,w,h);
 			g2d.setColor(aircraftTaskState.getSelectedTextColor());

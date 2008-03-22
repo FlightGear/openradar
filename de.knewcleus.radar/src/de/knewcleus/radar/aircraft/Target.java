@@ -5,7 +5,6 @@ import java.util.Deque;
 import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.radar.ui.aircraft.AircraftTaskState;
 
 public class Target {
 	protected final static Logger logger=Logger.getLogger(Target.class.getName());
@@ -17,7 +16,6 @@ public class Target {
 	protected String ssrCode;
 	protected double pressureAltitude=0.0;
 	protected boolean isSelected=false;
-	protected AircraftTaskState taskState=AircraftTaskState.ASSUMED; // FIXME: this should actually be set explicitly
 	
 	public Target(TargetManager aircraftStateManager) {
 		this.aircraftStateManager=aircraftStateManager;
@@ -54,22 +52,6 @@ public class Target {
 	
 	public double getPressureAltitude() {
 		return pressureAltitude;
-	}
-	
-	public boolean canSelect() {
-		return taskState!=AircraftTaskState.OTHER;
-	}
-	
-	public boolean isSelected() {
-		return isSelected;
-	}
-	
-	public void setSelected(boolean isSelected) {
-		this.isSelected = isSelected;
-	}
-	
-	public AircraftTaskState getTaskState() {
-		return taskState;
 	}
 	
 	public void update(RadarTargetInformation targetInformation) {
