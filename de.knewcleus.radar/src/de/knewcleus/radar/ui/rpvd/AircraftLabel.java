@@ -9,6 +9,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.knewcleus.radar.aircraft.AircraftState;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
@@ -53,17 +54,17 @@ public class AircraftLabel implements Label, ILabelDisplay {
 			labelLine[i]=new LabelLine(new ArrayList<ILabelElement>());
 		}
 		
-		final Aircraft aircraftState=associatedSymbol.getAircraft();
-		callsignElement=new CallsignLabelElement(this,aircraftState);
-		nextSectorElement=new StaticTextLabelElement(this,aircraftState);
-		actualLevelElement=new ActualLevelLabelElement(this,aircraftState);
-		exitPointElement=new StaticTextLabelElement(this,aircraftState);
-		groundSpeedElement=new GroundSpeedLabelElement(this,aircraftState);
-		clearedLevelElement=new StaticTextLabelElement(this,aircraftState);
-		exitLevelElement=new StaticTextLabelElement(this,aircraftState);
-		assignedHeadingElement=new StaticTextLabelElement(this,aircraftState);
-		assignedSpeedElement=new StaticTextLabelElement(this,aircraftState);
-		assignedClimbRateElement=new StaticTextLabelElement(this,aircraftState);
+		final Aircraft aircraft=associatedSymbol.getAircraft();
+		callsignElement=new CallsignLabelElement(this,aircraft);
+		nextSectorElement=new StaticTextLabelElement(this,aircraft);
+		actualLevelElement=new ActualLevelLabelElement(this,aircraft);
+		exitPointElement=new StaticTextLabelElement(this,aircraft);
+		groundSpeedElement=new GroundSpeedLabelElement(this,aircraft);
+		clearedLevelElement=new StaticTextLabelElement(this,aircraft);
+		exitLevelElement=new StaticTextLabelElement(this,aircraft);
+		assignedHeadingElement=new StaticTextLabelElement(this,aircraft);
+		assignedSpeedElement=new StaticTextLabelElement(this,aircraft);
+		assignedClimbRateElement=new StaticTextLabelElement(this,aircraft);
 		
 		updateLabelContents();
 	}
@@ -82,21 +83,37 @@ public class AircraftLabel implements Label, ILabelDisplay {
 	}
 	
 	public void updateLabelContents() {
-		// TODO: implement properly
-		final AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED;
-		labelLines.clear();
-		switch (aircraftTaskState) {
-		case OTHER:
-			prepareOtherLabel();
-			break;
-		case NOT_CONCERNED:
-			prepareNotConcernedLabel();
-			break;
-		case ASSUMED:
-		case CONCERNED:
-			prepareStandardLabel();
-			break;
+		final AircraftState aircraftState=associatedSymbol.getAircraft().getAircraftState();
+		
+		if (aircraftState==null) {
+			prepareNoncorrelatedLabel();
+		} else {
+			final AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
+			labelLines.clear();
+			switch (aircraftTaskState) {
+			case OTHER:
+				prepareOtherLabel();
+				break;
+			case NOT_CONCERNED:
+				prepareNotConcernedLabel();
+				break;
+			case ASSUMED:
+			case CONCERNED:
+				prepareStandardLabel();
+				break;
+			}
 		}
+	}
+	
+	private void prepareNoncorrelatedLabel() {
+		labelLine[1].getElements().clear();
+		
+		labelLine[1].getElements().add(actualLevelElement);
+		labelLine[1].getElements().add(groundSpeedElement);
+		
+		labelLines.clear();
+		labelLines.add(callsignElement);
+		labelLines.add(labelLine[1]);
 	}
 	
 	private void prepareOtherLabel() {

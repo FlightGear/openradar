@@ -1,5 +1,7 @@
 package de.knewcleus.radar.ui.aircraft;
 
+import de.knewcleus.radar.aircraft.AircraftState;
+import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.aircraft.SSRMode;
 import de.knewcleus.radar.aircraft.Target;
 
@@ -37,7 +39,21 @@ public class Aircraft {
 		return squawk;
 	}
 	
+	public AircraftState getAircraftState() {
+		if (!target.getSSRMode().hasSSRCode())
+			return null;
+		String squawk=target.getSSRCode();
+		String callsign=aircraftManager.getRadarWorkstation().getCorrelationDatabase().correlateToCallsign(squawk);
+		
+		if (callsign==null)
+			return null;
+		
+		return aircraftManager.getRadarWorkstation().getAircraftStateManager().getAircraftStateForCallsign(callsign);
+	}
+	
 	public boolean isCorrelated() {
+		if (!target.getSSRMode().hasSSRCode())
+			return false;
 		String squawk=target.getSSRCode();
 		String callsign=aircraftManager.getRadarWorkstation().getCorrelationDatabase().correlateToCallsign(squawk);
 		
@@ -53,7 +69,9 @@ public class Aircraft {
 	}
 	
 	public boolean canSelect() {
-		// TODO: implement properly
-		return true;
+		AircraftState aircraftState=getAircraftState();
+		if (aircraftState==null)
+			return false;
+		return aircraftState.getTaskState()!=AircraftTaskState.OTHER;
 	}
 }

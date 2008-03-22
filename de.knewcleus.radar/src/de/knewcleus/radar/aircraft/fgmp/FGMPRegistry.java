@@ -14,7 +14,6 @@ import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.aircraft.ISquawkAllocator;
 import de.knewcleus.radar.aircraft.OutOfSquawksException;
 import de.knewcleus.radar.aircraft.RadarTargetInformation;
-import de.knewcleus.radar.aircraft.SSRMode;
 
 public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implements IRadarDataProvider, IUpdateable {
 	protected final Set<IRadarDataConsumer> consumers=new HashSet<IRadarDataConsumer>();
@@ -84,7 +83,7 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 			targets.add(new RadarTargetInformation(aircraft,
 								aircraft.getLongitude(),aircraft.getLatitude(),
 								aircraft.getGroundSpeed(),aircraft.getTrueCourse(),
-								SSRMode.MODEC,aircraft.getSSRCode(),aircraft.getPressureAltitude()));
+								aircraft.getSSRMode(),aircraft.getSSRCode(),aircraft.getPressureAltitude()));
 		}
 		fireRadarDataUpdated(targets);
 	}
