@@ -1,12 +1,14 @@
 package de.knewcleus.radar.ui.plaf.refghmi;
 
 import javax.swing.UIDefaults;
-import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.border.Border;
+import javax.swing.plaf.ColorUIResource;
+
+import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 
 import de.knewcleus.radar.ui.Palette;
 
-
-public class REFGHMILookAndFeel extends MetalLookAndFeel {
+public class REFGHMILookAndFeel extends MotifLookAndFeel {
 	private static final long serialVersionUID = 5013355281933396612L;
 
 	@Override
@@ -35,14 +37,46 @@ public class REFGHMILookAndFeel extends MetalLookAndFeel {
 	}
 	
 	@Override
+	protected void initSystemColorDefaults(UIDefaults table) {
+		super.initSystemColorDefaults(table);
+		
+		/* Override some defaults */
+		Object[] defaults=new Object[] {
+                "activeCaption", new ColorUIResource(Palette.WINDOW_BLUE),
+    	    "activeCaptionText", new ColorUIResource(Palette.BLACK),
+		  "activeCaptionBorder", new ColorUIResource(Palette.WINDOW_BLUE),
+              "inactiveCaption", new ColorUIResource(Palette.WINDOW_BLUE),
+          "inactiveCaptionText", new ColorUIResource(Palette.BLACK),
+        "inactiveCaptionBorder", new ColorUIResource(Palette.WINDOW_BLUE),
+                       "window", new ColorUIResource(Palette.WINDOW_BLUE),
+                      "control", new ColorUIResource(Palette.WINDOW_BLUE)
+		};
+		
+		table.putDefaults(defaults);
+	}
+	
+	@Override
+	protected void initClassDefaults(UIDefaults table) {
+		super.initClassDefaults(table);
+		String basePackage="de.knewcleus.radar.ui.plaf.refghmi.";
+		Object[] defaults={
+				"SliderUI", basePackage+"REFGHMISliderUI"
+		};
+		table.putDefaults(defaults);
+	}
+	
+	@Override
 	protected void initComponentDefaults(UIDefaults table) {
 		super.initComponentDefaults(table);
-		ButtonBorder buttonBorder=new ButtonBorder();
+		Border buttonBorder=new REFGHMIBorders.ButtonBorder();
+		Border sliderBorder=new REFGHMIBorders.SliderBorder();
 		Object[] defaults={
 			"Button.border", buttonBorder,
 			"Button.foreground", Palette.BLACK,
 			"Button.background", Palette.WINDOW_FAWN,
 			"Button.select", Palette.WFAWN_DEPRESSED,
+			"Slider.border", sliderBorder,
+			"Slider.background", Palette.WINDOW_FAWN,
 			"ToggleButton.border", buttonBorder,
 			"ToggleButton.foreground", Palette.BLACK,
 			"ToggleButton.background", Palette.WINDOW_BLUE,
