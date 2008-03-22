@@ -49,7 +49,8 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
           "inactiveCaptionText", new ColorUIResource(Palette.BLACK),
         "inactiveCaptionBorder", new ColorUIResource(Palette.WINDOW_BLUE),
                        "window", new ColorUIResource(Palette.WINDOW_BLUE),
-                      "control", new ColorUIResource(Palette.WINDOW_BLUE)
+                      "control", new ColorUIResource(Palette.WINDOW_BLUE),
+                  "controlText", new ColorUIResource(Palette.BLACK)
 		};
 		
 		table.putDefaults(defaults);
@@ -72,11 +73,8 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 		Border sliderBorder=new REFGHMIBorders.SliderBorder();
 		Object[] defaults={
 			"Button.border", buttonBorder,
-			"Button.foreground", Palette.BLACK,
-			"Button.background", Palette.WINDOW_FAWN,
 			"Button.select", Palette.WFAWN_DEPRESSED,
 			"Slider.border", sliderBorder,
-			"Slider.background", Palette.WINDOW_FAWN,
 			"ToggleButton.border", buttonBorder,
 			"ToggleButton.foreground", Palette.BLACK,
 			"ToggleButton.background", Palette.WINDOW_BLUE,

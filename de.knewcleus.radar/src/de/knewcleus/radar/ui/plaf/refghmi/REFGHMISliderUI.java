@@ -1,8 +1,6 @@
 package de.knewcleus.radar.ui.plaf.refghmi;
 
 import java.awt.Graphics;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 
 import javax.swing.JComponent;
 import javax.swing.JSlider;
@@ -42,22 +40,5 @@ public class REFGHMISliderUI extends MotifSliderUI {
 		g.setColor(Palette.SHADOW);
 		g.drawLine(x+w-1, y, x+w-1, y+h-1);
 		g.drawLine(x, y+h-1, x+w-1, y+h-1);
-	}
-
-	protected class Handler implements ComponentListener {
-		@Override
-		public void componentHidden(ComponentEvent e) {}
-
-		@Override
-		public void componentMoved(ComponentEvent e) {}
-
-		@Override
-		public void componentResized(ComponentEvent e) {
-			calculateGeometry();
-			slider.repaint();
-		}
-
-		@Override
-		public void componentShown(ComponentEvent e) {}
 	}
 }
