@@ -8,12 +8,11 @@ public interface IPlayerRegistry<T extends Player> {
 
 	public abstract T getPlayer(PlayerAddress address);
 
-	public abstract void registerPlayer(T player);
+	public abstract void registerPlayer(T player) throws MultiplayerException;
 	
 	public abstract void unregisterPlayer(T expiredPlayer);
 
-	public abstract T createNewPlayer(PlayerAddress address,
-			String callsign);
+	public abstract T createNewPlayer(PlayerAddress address, String callsign) throws MultiplayerException;
 
 	public abstract Collection<T> getPlayers();
 }

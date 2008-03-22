@@ -15,11 +15,13 @@ public class FGMPAircraft extends Player {
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 	
 	protected Position geodeticPosition=new Position();
+	protected String simulatedSquawk;
 	protected double groundSpeed=0f;
 	protected double trueCourse=0f;
 	
-	public FGMPAircraft(PlayerAddress address, String callsign) {
+	public FGMPAircraft(PlayerAddress address, String callsign, String simulatedSquawk) {
 		super(address, callsign);
+		this.simulatedSquawk=simulatedSquawk;
 	}
 
 	public double getLongitude() {
@@ -43,8 +45,7 @@ public class FGMPAircraft extends Player {
 	}
 	
 	public String getSSRCode() {
-		// FIXME: assign a temporary SSR code
-		return getCallsign();
+		return simulatedSquawk;
 	}
 	
 	public double getPressureAltitude() {

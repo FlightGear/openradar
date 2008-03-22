@@ -19,7 +19,11 @@ import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 import de.knewcleus.fgfs.navaids.DBParserException;
+import de.knewcleus.radar.aircraft.BuddySquawkAllocator;
+import de.knewcleus.radar.aircraft.CorrelationDatabase;
+import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
+import de.knewcleus.radar.aircraft.ISquawkAllocator;
 import de.knewcleus.radar.aircraft.fgatc.FGATCEndpoint;
 import de.knewcleus.radar.aircraft.fgmp.ATCClient;
 import de.knewcleus.radar.aircraft.fgmp.FGMPAircraft;
@@ -51,12 +55,14 @@ public class Radar {
 		URL sectorURL=Radar.class.getResource("/sectors/KSFO/sector.xml");
 		Sector sector=Sector.loadFromURL(sectorURL);
 
-		IRadarDataProvider radarDataProvider;
 		/* Prepare radar data provider */
+		IRadarDataProvider radarDataProvider;
+		ISquawkAllocator squawkAllocator=new BuddySquawkAllocator();
+		ICorrelationDatabase correlationDatabase=new CorrelationDatabase();
 		if (Boolean.getBoolean("de.knewcleus.radar.useMPProtocol")) {
 			/* Use multiplayer data */
 			GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
-			FGMPRegistry registry=new FGMPRegistry();
+			FGMPRegistry registry=new FGMPRegistry(squawkAllocator,correlationDatabase);
 			ATCClient<FGMPAircraft> multiplayerClient=new ATCClient<FGMPAircraft>(registry,"obsKSFO",geodToCartTransformation.backward(sector.getInitialCenter()));
 			Thread multiplayerClientThread=new Thread(multiplayerClient,"FlightGear Multiplayer Protocol Handler");
 			Updater multiplayerUpdater=new Updater(multiplayerClient,500);

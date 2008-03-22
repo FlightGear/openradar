@@ -6,23 +6,38 @@ import java.util.Set;
 import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.Updater;
 import de.knewcleus.fgfs.multiplayer.AbstractPlayerRegistry;
+import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 import de.knewcleus.fgfs.multiplayer.PlayerAddress;
+import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 import de.knewcleus.radar.aircraft.IRadarDataConsumer;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
+import de.knewcleus.radar.aircraft.ISquawkAllocator;
+import de.knewcleus.radar.aircraft.OutOfSquawksException;
 import de.knewcleus.radar.aircraft.RadarTargetInformation;
 import de.knewcleus.radar.aircraft.SSRMode;
 
 public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implements IRadarDataProvider, IUpdateable {
 	protected final Set<IRadarDataConsumer> consumers=new HashSet<IRadarDataConsumer>();
 	protected final Updater radarUpdater=new Updater(this,1000*getSecondsBetweenUpdates());
+	protected final ISquawkAllocator squawkAllocator;
+	protected final ICorrelationDatabase correlationDatabase;
 	
-	public FGMPRegistry() {
+	public FGMPRegistry(ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) {
+		this.squawkAllocator=squawkAllocator;
+		this.correlationDatabase=correlationDatabase;
 		radarUpdater.start();
 	}
 	
 	@Override
-	public FGMPAircraft createNewPlayer(PlayerAddress address, String callsign) {
-		FGMPAircraft aircraft=new FGMPAircraft(address,callsign);
+	public FGMPAircraft createNewPlayer(PlayerAddress address, String callsign) throws MultiplayerException {
+		String squawk;
+		try {
+			squawk = squawkAllocator.allocateSquawk();
+		} catch (OutOfSquawksException e) {
+			throw new MultiplayerException(e);
+		}
+		correlationDatabase.registerSquawk(squawk, callsign);
+		FGMPAircraft aircraft=new FGMPAircraft(address,callsign,squawk);
 		return aircraft;
 	}
 	
@@ -33,6 +48,9 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 	
 	@Override
 	public synchronized void unregisterPlayer(FGMPAircraft expiredPlayer) {
+		String squawk=expiredPlayer.getSSRCode();
+		correlationDatabase.unregisterSquawk(squawk);
+		squawkAllocator.returnSquawk(squawk);
 		super.unregisterPlayer(expiredPlayer);
 		fireRadarTargetLost(expiredPlayer);
 	}

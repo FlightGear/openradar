@@ -12,7 +12,7 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 	protected final static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final int playerExpirationTime = 15000;
 
-	public abstract T createNewPlayer(PlayerAddress address, String callsign);
+	public abstract T createNewPlayer(PlayerAddress address, String callsign) throws MultiplayerException;
 
 	protected final Set<T> players = new HashSet<T>();
 	protected final Map<PlayerAddress, T> playersByAddress = new HashMap<PlayerAddress, T>();
