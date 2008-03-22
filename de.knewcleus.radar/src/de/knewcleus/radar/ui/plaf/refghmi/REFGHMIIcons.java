@@ -13,12 +13,18 @@ import de.knewcleus.radar.ui.Palette;
 
 public class REFGHMIIcons {
 	public static class CheckBoxIcon implements Icon {
-		private	Color controlColor = UIManager.getColor("control");
+		private	Color controlColor = UIManager.getColor(getPropertyPrefix()+"control");
 		private Color highlightColor = Palette.getHightlightColor(controlColor);
 		private Color depressedColor = Palette.getDepressedColor(controlColor);
 		private Color shadowColor = Palette.SHADOW;
 		
-		protected final int csize=13;
+		protected static final int csize=13;
+		
+		protected static final String propertyPrefix="CheckBox"+".";
+		
+		public String getPropertyPrefix() {
+			return propertyPrefix;
+		}
 
 		@Override
 		public int getIconHeight() {
@@ -35,7 +41,7 @@ public class REFGHMIIcons {
 			AbstractButton b=(AbstractButton)c;
 			ButtonModel model=b.getModel();
 
-			boolean depressed=model.isPressed() || model.isSelected();
+			boolean depressed=(model.isArmed() && model.isPressed()) || model.isSelected();
 
 			int w=getIconWidth();
 			int h=getIconHeight();
@@ -43,13 +49,15 @@ public class REFGHMIIcons {
 			g.setColor(depressed?depressedColor:controlColor);
 			g.fillRect(x,y,w,h);
 			
-			g.setColor(depressed?shadowColor:highlightColor);
-			g.drawLine(x, y, x+w-1, y);
-			g.drawLine(x, y, x, y+h-1);
-			
-			g.setColor(depressed?highlightColor:shadowColor);
-			g.drawLine(x+w-1, y, x+w-1, y+h-1);
-			g.drawLine(x, y+h-1, x+w-1, y+h-1);
+			REFGHMIUtils.drawEtch(g, highlightColor, shadowColor, x, y, w, h, depressed);
+		}
+	}
+	
+	public static class RadioButtonIcon extends CheckBoxIcon {
+		protected final static String propertPrefix="RadioButton"+".";
+		@Override
+		public String getPropertyPrefix() {
+			return propertPrefix;
 		}
 	}
 }

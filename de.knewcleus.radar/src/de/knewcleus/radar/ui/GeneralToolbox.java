@@ -1,6 +1,7 @@
 package de.knewcleus.radar.ui;
 
-import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -17,7 +18,7 @@ public class GeneralToolbox extends JInternalFrame {
 
 	protected final RadarDesktop desktop;
 	
-	protected final FlowLayout toolBoxLayout=new FlowLayout();
+	protected final GridBagLayout toolBoxLayout=new GridBagLayout();
 	protected final SquaredHorizontalLayout parkingRankLayout=new SquaredHorizontalLayout();
 	protected final JPanel parkingRank=new JPanel(parkingRankLayout);
 	protected final JToggleButton toggleRPVD=new JToggleButton("PVD");
@@ -25,7 +26,7 @@ public class GeneralToolbox extends JInternalFrame {
 	protected final JToggleButton toggleCRD=new JToggleButton("CRD");
 	protected final JToggleButton togglePREF=new JToggleButton("PREF");
 	protected final JToggleButton toggleFLEX=new JToggleButton("FLEX");
-	protected final JButton clock=new JButton("15:52:59");
+	protected final JButton clock=new JButton();
 	
 	protected final ActionListener clockUpdateListener;
 	protected final Timer clockUpdateTimer;
@@ -61,9 +62,12 @@ public class GeneralToolbox extends JInternalFrame {
 				pack();
 			}
 		});
+		clock.setBackground(Palette.WINDOW_FAWN);
 		
-		add(parkingRank);
-		add(clock);
+		GridBagConstraints gridBagConstraints=new GridBagConstraints();
+		gridBagConstraints.fill=GridBagConstraints.VERTICAL;
+		add(parkingRank,gridBagConstraints);
+		add(clock,gridBagConstraints);
 		
 		pack();
 		
@@ -78,6 +82,7 @@ public class GeneralToolbox extends JInternalFrame {
 				String timeString=String.format("%02d:%02d:%02d",hour,minute,second);
 				clock.setText(timeString);
 				invalidate();
+				pack();
 			}
 		};
 		

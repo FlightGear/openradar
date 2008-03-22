@@ -28,21 +28,15 @@ public class REFGHMIBorders {
 		
 		@Override
 		public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
-			boolean drawPressed=false;
+			boolean depressed=false;
 			if (c instanceof AbstractButton) {
 				AbstractButton b=(AbstractButton)c;
 				ButtonModel model=b.getModel();
-				drawPressed=(model.isArmed() && model.isPressed()) || b.isSelected();
+				depressed=(model.isArmed() && model.isPressed()) || model.isSelected();
 			}
 			
 			Color highlight=Palette.getHightlightColor(c.getBackground());
-			g.setColor((drawPressed?Palette.SHADOW:highlight));
-			g.drawLine(0, 0, w-1, 0);
-			g.drawLine(0, 0, 0, h-1);
-			
-			g.setColor((drawPressed?highlight:Palette.SHADOW));
-			g.drawLine(w-1, h-1, 0, h-1);
-			g.drawLine(w-1, h-1, w-1, 0);
+			REFGHMIUtils.drawEtch(g, highlight, Palette.SHADOW, x, y, w, h, depressed);
 		}
 	}
 	
@@ -61,13 +55,7 @@ public class REFGHMIBorders {
 		
 		@Override
 		public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
-			g.setColor(Palette.SHADOW);
-			g.drawLine(0, 0, w-1, 0);
-			g.drawLine(0, 0, 0, h-1);
-			
-			g.setColor(Palette.getHightlightColor(c.getBackground()));
-			g.drawLine(w-1, h-1, 0, h-1);
-			g.drawLine(w-1, h-1, w-1, 0);
+			REFGHMIUtils.drawEtch(g, Palette.getHightlightColor(c.getBackground()), Palette.SHADOW, x, y, w, h, true);
 		}
 	}
 }

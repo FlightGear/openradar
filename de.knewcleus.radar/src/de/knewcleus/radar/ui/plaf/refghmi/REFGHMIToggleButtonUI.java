@@ -7,6 +7,7 @@ import java.awt.Insets;
 
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
+import javax.swing.LookAndFeel;
 import javax.swing.plaf.ComponentUI;
 
 import com.sun.java.swing.plaf.motif.MotifToggleButtonUI;
@@ -18,6 +19,12 @@ public class REFGHMIToggleButtonUI extends MotifToggleButtonUI {
 	
     public static ComponentUI createUI(JComponent c){
     	return refghmiToggleButtonUI;
+    }
+    
+    @Override
+    public void installDefaults(AbstractButton b) {
+    	super.installDefaults(b);
+        LookAndFeel.installProperty(b, "opaque", Boolean.TRUE);
     }
     
     @Override

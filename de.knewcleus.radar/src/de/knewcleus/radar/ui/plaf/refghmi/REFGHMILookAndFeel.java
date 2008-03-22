@@ -83,11 +83,15 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 		Object[] defaults={
 			"Button.border", buttonBorder,
 			"Slider.border", sliderBorder,
+			"Slider.background", Palette.WINDOW_BLUE,
+			"Slider.control", Palette.WINDOW_FAWN,
 			"ToggleButton.border", buttonBorder,
 			"ToggleButton.foreground", Palette.BLACK,
 			"ToggleButton.background", Palette.WINDOW_BLUE,
 			"CheckBox.icon", checkBoxIcon,
-			"RadioButton.icon", checkBoxIcon
+			"CheckBox.control", Palette.WINDOW_FAWN,
+			"RadioButton.icon", checkBoxIcon,
+			"RadioButton.control", Palette.WINDOW_FAWN
 		};
 		table.putDefaults(defaults);
 	}
