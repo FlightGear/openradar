@@ -19,10 +19,10 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
+import de.knewcleus.radar.aircraft.Target;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 import de.knewcleus.radar.ui.Palette;
-import de.knewcleus.radar.ui.aircraft.AircraftState;
 
 public class AircraftSymbol implements LabeledObject {
 	protected final static Logger logger=Logger.getLogger(AircraftSymbol.class.getName());
@@ -42,7 +42,7 @@ public class AircraftSymbol implements LabeledObject {
 	protected static final double labelDistRange=(maxLabelDist-minLabelDist);
 
 	protected final RadarPlanViewContext radarPlanViewContext;
-	protected final AircraftState aircraftState;
+	protected final Target aircraftState;
 	protected final AircraftLabel label;
 	
 	protected Point2D currentDevicePosition;
@@ -50,13 +50,13 @@ public class AircraftSymbol implements LabeledObject {
 	protected final String labelLine[]=new String[5];
 	protected boolean isLabelLocked=false;
 	
-	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, AircraftState aircraftState) {
+	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, Target aircraftState) {
 		this.radarPlanViewContext=radarPlanViewContext;
 		this.aircraftState=aircraftState;
 		this.label=new AircraftLabel(this);
 	}
 	
-	public AircraftState getAircraftState() {
+	public Target getAircraftState() {
 		return aircraftState;
 	}
 	

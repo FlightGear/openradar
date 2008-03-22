@@ -1,12 +1,13 @@
 package de.knewcleus.radar.ui.aircraft;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.radar.aircraft.Target;
 import de.knewcleus.radar.ui.labels.AbstractTextLabelElement;
 import de.knewcleus.radar.ui.labels.ILabelDisplay;
 
 public class GroundSpeedLabelElement extends AbstractTextLabelElement {
 
-	public GroundSpeedLabelElement(ILabelDisplay labelDisplay, AircraftState aircraftState) {
+	public GroundSpeedLabelElement(ILabelDisplay labelDisplay, Target aircraftState) {
 		super(labelDisplay, aircraftState);
 	}
 

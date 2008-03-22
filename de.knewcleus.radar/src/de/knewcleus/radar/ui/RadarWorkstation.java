@@ -9,15 +9,15 @@ import java.util.prefs.Preferences;
 import javax.swing.JFrame;
 
 import de.knewcleus.fgfs.location.LocalProjection;
+import de.knewcleus.radar.aircraft.TargetManager;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.sector.Sector;
-import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public class RadarWorkstation {
 	protected final Sector sector;
-	protected final AircraftStateManager aircraftStateManager;
+	protected final TargetManager aircraftStateManager;
 	protected final RadarPlanViewSettings radarPlanViewSettings=new RadarPlanViewSettings();
 	
 	/* Globally provided windows */
@@ -29,7 +29,7 @@ public class RadarWorkstation {
 
 	public RadarWorkstation(Sector sector, IRadarDataProvider radarDataProvider) {
 		this.sector=sector;
-		aircraftStateManager=new AircraftStateManager(radarDataProvider);
+		aircraftStateManager=new TargetManager(radarDataProvider);
 		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
 		radarPlanViewDisplay=new RadarPlanViewDisplay(this);
 
@@ -68,7 +68,7 @@ public class RadarWorkstation {
 		return sector;
 	}
 	
-	public AircraftStateManager getAircraftStateManager() {
+	public TargetManager getAircraftStateManager() {
 		return aircraftStateManager;
 	}
 	

@@ -30,12 +30,12 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
+import de.knewcleus.radar.aircraft.TargetManager;
+import de.knewcleus.radar.aircraft.Target;
 import de.knewcleus.radar.autolabel.Autolabeller;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
-import de.knewcleus.radar.ui.aircraft.AircraftState;
-import de.knewcleus.radar.ui.aircraft.AircraftStateManager;
 import de.knewcleus.radar.ui.aircraft.IAircraftStateConsumer;
 
 public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer, PropertyChangeListener {
@@ -60,7 +60,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	protected final float scaleMarkerDistance=10.0f*(float)Units.NM;
 	protected final float centrelineLength=5.0f*(float)Units.NM;
 	
-	protected Map<AircraftState, AircraftSymbol> aircraftSymbolMap=new HashMap<AircraftState, AircraftSymbol>();
+	protected Map<Target, AircraftSymbol> aircraftSymbolMap=new HashMap<Target, AircraftSymbol>();
 	protected long lastMouseX,lastMouseY;
 	protected boolean isSelectedLabelArmed;
 	
@@ -236,7 +236,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	}
 	
 	private AircraftSymbol getSelectedSymbol() {
-		AircraftState selectedAircraft=getAircraftStateManager().getSelectedAircraft();
+		Target selectedAircraft=getAircraftStateManager().getSelectedTarget();
 		
 		if (selectedAircraft==null) {
 			return null;
@@ -277,7 +277,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		return workstation.getRadarPlanViewSettings();
 	}
 	
-	public AircraftStateManager getAircraftStateManager() {
+	public TargetManager getAircraftStateManager() {
 		return workstation.getAircraftStateManager();
 	}
 	
@@ -445,7 +445,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	}
 	
 	@Override
-	public synchronized void aircraftStateLost(AircraftState aircraftState) {
+	public synchronized void aircraftStateLost(Target aircraftState) {
 		AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(aircraftState);
 		autolabeller.removeLabeledObject(aircraftSymbol);
 		aircraftSymbolMap.remove(aircraftState);
@@ -453,13 +453,13 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 	}
 	
 	@Override
-	public synchronized void aircraftStateUpdate(Set<AircraftState> updatedStates) {
+	public synchronized void aircraftStateUpdate(Set<Target> updatedStates) {
 		logger.fine("Aircraft state update");
 		final RadarPlanViewSettings settings=getSettings();
 		final StandardLabelPosition labelPosition=settings.getStandardLabelPosition();
 		final double distance=getStandardLabelDistance();
 		
-		for (AircraftState aircraftState: updatedStates) {
+		for (Target aircraftState: updatedStates) {
 			AircraftSymbol aircraftSymbol;
 			if (aircraftSymbolMap.containsKey(aircraftState)) {
 				aircraftSymbol=aircraftSymbolMap.get(aircraftState);

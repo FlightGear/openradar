@@ -9,10 +9,10 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.knewcleus.radar.aircraft.Target;
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.ui.aircraft.ActualLevelLabelElement;
-import de.knewcleus.radar.ui.aircraft.AircraftState;
 import de.knewcleus.radar.ui.aircraft.AircraftTaskState;
 import de.knewcleus.radar.ui.aircraft.CallsignLabelElement;
 import de.knewcleus.radar.ui.aircraft.GroundSpeedLabelElement;
@@ -53,7 +53,7 @@ public class AircraftLabel implements Label, ILabelDisplay {
 			labelLine[i]=new LabelLine(new ArrayList<ILabelElement>());
 		}
 		
-		final AircraftState aircraftState=associatedSymbol.getAircraftState();
+		final Target aircraftState=associatedSymbol.getAircraftState();
 		callsignElement=new CallsignLabelElement(this,aircraftState);
 		nextSectorElement=new StaticTextLabelElement(this,aircraftState);
 		actualLevelElement=new ActualLevelLabelElement(this,aircraftState);
@@ -82,7 +82,7 @@ public class AircraftLabel implements Label, ILabelDisplay {
 	}
 	
 	public void updateLabelContents() {
-		final AircraftState aircraftState=associatedSymbol.getAircraftState();
+		final Target aircraftState=associatedSymbol.getAircraftState();
 		labelLines.clear();
 		switch (aircraftState.getTaskState()) {
 		case OTHER:
@@ -187,7 +187,7 @@ public class AircraftLabel implements Label, ILabelDisplay {
 		
 		g2d.translate(x,y);
 		
-		final AircraftState aircraftState=associatedSymbol.getAircraftState();
+		final Target aircraftState=associatedSymbol.getAircraftState();
 		final AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
 		if (aircraftState.isSelected()) {
 			g2d.setColor(aircraftTaskState.getSelectedBackgroundColor());

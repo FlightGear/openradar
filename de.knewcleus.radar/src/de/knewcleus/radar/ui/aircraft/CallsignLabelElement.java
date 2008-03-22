@@ -4,13 +4,14 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 
+import de.knewcleus.radar.aircraft.Target;
 import de.knewcleus.radar.ui.labels.AbstractTextLabelElement;
 import de.knewcleus.radar.ui.labels.IActiveLabelElement;
 import de.knewcleus.radar.ui.labels.ILabelDisplay;
 
 public class CallsignLabelElement extends AbstractTextLabelElement implements IActiveLabelElement {
 
-	public CallsignLabelElement(ILabelDisplay labelDisplay, AircraftState aircraftState) {
+	public CallsignLabelElement(ILabelDisplay labelDisplay, Target aircraftState) {
 		super(labelDisplay, aircraftState);
 	}
 
@@ -24,7 +25,7 @@ public class CallsignLabelElement extends AbstractTextLabelElement implements IA
 		switch (event.getID()) {
 		case MouseEvent.MOUSE_CLICKED:
 			if (event.getButton()==MouseEvent.BUTTON1) {
-				final AircraftState aircraftState=getAircraftState();
+				final Target aircraftState=getAircraftState();
 				
 				// FIXME: prepare the menu according to the associatedTarget task state
 				JPopupMenu popupMenu=new JPopupMenu(aircraftState.getCallsign());

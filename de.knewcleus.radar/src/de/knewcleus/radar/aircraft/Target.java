@@ -1,16 +1,15 @@
-package de.knewcleus.radar.ui.aircraft;
+package de.knewcleus.radar.aircraft;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.radar.aircraft.RadarTargetInformation;
-import de.knewcleus.radar.aircraft.SSRMode;
+import de.knewcleus.radar.ui.aircraft.AircraftTaskState;
 
-public class AircraftState {
-	protected final static Logger logger=Logger.getLogger(AircraftState.class.getName());
-	protected final AircraftStateManager aircraftStateManager;
+public class Target {
+	protected final static Logger logger=Logger.getLogger(Target.class.getName());
+	protected final TargetManager aircraftStateManager;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
 	protected double groundSpeed=0.0;
 	protected double trueCourse=0.0;
@@ -20,7 +19,7 @@ public class AircraftState {
 	protected boolean isSelected=false;
 	protected AircraftTaskState taskState=AircraftTaskState.ASSUMED; // FIXME: this should actually be set explicitly
 	
-	public AircraftState(AircraftStateManager aircraftStateManager) {
+	public Target(TargetManager aircraftStateManager) {
 		this.aircraftStateManager=aircraftStateManager;
 	}
 	
