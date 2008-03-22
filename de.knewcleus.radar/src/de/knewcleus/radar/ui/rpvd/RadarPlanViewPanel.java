@@ -268,8 +268,9 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftStateConsumer
 		}
 		
 		/* No symbol hit, so we deselect the currently selected associatedTarget, if any */
+		boolean hadSelection=(selectedSymbol!=null);
 		getAircraftStateManager().deselect();
-		return true;
+		return hadSelection;
 	}
 	
 	public RadarPlanViewSettings getSettings() {
