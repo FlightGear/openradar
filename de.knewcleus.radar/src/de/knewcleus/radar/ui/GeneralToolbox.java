@@ -9,11 +9,14 @@ import java.util.TimeZone;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.Timer;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 
-public class GeneralToolbox extends JInternalFrame {
+public class GeneralToolbox extends JInternalFrame implements InternalFrameListener, ActionListener {
 	private static final long serialVersionUID = 997249369785932627L;
 
 	protected final RadarDesktop desktop;
@@ -28,7 +31,8 @@ public class GeneralToolbox extends JInternalFrame {
 	protected final JToggleButton toggleFLEX=new JToggleButton("FLEX");
 	protected final JButton clock=new JButton();
 	
-	protected final ActionListener clockUpdateListener;
+	protected final PreferencesFrame preferencesFrame;
+
 	protected final Timer clockUpdateTimer;
 	
 	protected final TimeZone timeZone=TimeZone.getTimeZone("GMT");
@@ -45,24 +49,20 @@ public class GeneralToolbox extends JInternalFrame {
 		parkingRank.add(toggleRPVD);
 		//parkingRank.add(toggleVAW);
 		//parkingRank.add(toggleCRD);
-		//parkingRank.add(togglePREF);
+		parkingRank.add(togglePREF);
 		//parkingRank.add(toggleFLEX);
 		
-		toggleRPVD.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				desktop.acquireRadarPlanViewDisplay();
-			}
-		});
+		toggleRPVD.addActionListener(this);
+		togglePREF.addActionListener(this);
 		
-		clock.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				parkingRank.setVisible(!parkingRank.isVisible());
-				pack();
-			}
-		});
+		clock.addActionListener(this);
 		clock.setBackground(Palette.WINDOW_FAWN);
+		
+		preferencesFrame=new PreferencesFrame(desktop);
+		preferencesFrame.setVisible(true);
+		desktop.add(preferencesFrame, JLayeredPane.PALETTE_LAYER);
+		preferencesFrame.setVisible(false);
+		preferencesFrame.addInternalFrameListener(this);
 		
 		GridBagConstraints gridBagConstraints=new GridBagConstraints();
 		gridBagConstraints.fill=GridBagConstraints.VERTICAL;
@@ -71,27 +71,79 @@ public class GeneralToolbox extends JInternalFrame {
 		
 		pack();
 		
-		clockUpdateListener=new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				calendar.setTimeInMillis(System.currentTimeMillis());
-				int hour,minute,second;
-				hour=calendar.get(Calendar.HOUR_OF_DAY);
-				minute=calendar.get(Calendar.MINUTE);
-				second=calendar.get(Calendar.SECOND);
-				String timeString=String.format("%02d:%02d:%02d",hour,minute,second);
-				clock.setText(timeString);
-				invalidate();
-				pack();
-			}
-		};
-		
-		clockUpdateTimer=new Timer(1000,clockUpdateListener);
+		clockUpdateTimer=new Timer(1000,this);
 		clockUpdateTimer.setInitialDelay(0); // start at once
 		clockUpdateTimer.start();
 	}
 	
+	public PreferencesFrame getPreferencesFrame() {
+		return preferencesFrame;
+	}
+	
 	public void setRPVDPresent(boolean b) {
 		toggleRPVD.setSelected(b);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource()==toggleRPVD) {
+			desktop.acquireRadarPlanViewDisplay();
+		} else if (e.getSource()==togglePREF) {
+			preferencesFrame.setVisible(togglePREF.isSelected());
+		} else if (e.getSource()==clock) {
+			parkingRank.setVisible(!parkingRank.isVisible());
+			pack();
+		} else if (e.getSource()==clockUpdateTimer) {
+			calendar.setTimeInMillis(System.currentTimeMillis());
+			int hour,minute,second;
+			hour=calendar.get(Calendar.HOUR_OF_DAY);
+			minute=calendar.get(Calendar.MINUTE);
+			second=calendar.get(Calendar.SECOND);
+			String timeString=String.format("%02d:%02d:%02d",hour,minute,second);
+			clock.setText(timeString);
+			invalidate();
+			pack();
+		}
+	}
+	
+	private void setFrameState(Object source, boolean state) {
+		if (source==preferencesFrame) {
+			togglePREF.setSelected(state);
+		}
+	}
+	
+	@Override
+	public void internalFrameOpened(InternalFrameEvent e) {
+		setFrameState(e.getSource(),((JInternalFrame)e.getSource()).isVisible());
+	}
+	
+	@Override
+	public void internalFrameClosed(InternalFrameEvent e) {
+		setFrameState(e.getSource(),((JInternalFrame)e.getSource()).isVisible());
+	}
+	
+	@Override
+	public void internalFrameActivated(InternalFrameEvent e) {
+		// NO-OP
+	}
+	
+	@Override
+	public void internalFrameClosing(InternalFrameEvent e) {
+		// NO-OP
+	}
+	
+	@Override
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+		// NO-OP
+	}
+	
+	@Override
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+		// NO-OP
+	}
+	
+	@Override
+	public void internalFrameIconified(InternalFrameEvent e) {
+		// NO-OP
 	}
 }

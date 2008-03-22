@@ -4,6 +4,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 
@@ -53,6 +54,14 @@ public class RadarWorkstation {
 		for (RadarDesktop desktop: desktops) {
 			desktop.setVisible(visible);
 		}
+	}
+	
+	public void loadPreferences(Preferences prefs) {
+		// TODO
+	}
+	
+	public void savePreferences(Preferences prefs) {
+		// TODO
 	}
 	
 	public Sector getSector() {

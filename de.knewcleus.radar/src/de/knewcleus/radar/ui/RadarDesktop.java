@@ -17,7 +17,7 @@ public class RadarDesktop extends JFrame {
 	
 	protected final JDesktopPane desktopPane=new JDesktopPane();
 	
-	protected final GeneralToolbox generalToolbox=new GeneralToolbox(this);
+	protected final GeneralToolbox generalToolbox;
 	
 	protected Rectangle lastRPVDBounds;
 	
@@ -29,6 +29,8 @@ public class RadarDesktop extends JFrame {
 		desktopPane.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
 		desktopPane.setPreferredSize(new Dimension(400,400));
 		desktopPane.setOpaque(false);
+		
+		generalToolbox=new GeneralToolbox(this);
 		
 		generalToolbox.setVisible(true);
 		add(generalToolbox, JLayeredPane.PALETTE_LAYER);
@@ -42,6 +44,10 @@ public class RadarDesktop extends JFrame {
 	
 	public JDesktopPane getDesktopPane() {
 		return desktopPane;
+	}
+	
+	public GeneralToolbox getGeneralToolbox() {
+		return generalToolbox;
 	}
 	
 	public void acquireRadarPlanViewDisplay() {
