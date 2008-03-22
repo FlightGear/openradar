@@ -58,7 +58,6 @@ public class BuddySquawkAllocator implements ISquawkAllocator {
 				blockLength>>=1;
 				blockLevel--;
 			}
-			System.out.println("Returning ["+rangeStart+";"+(rangeStart+blockLength)+")");
 			returnSquawkBlock(rangeStart, blockLevel);
 			rangeStart+=blockLength;
 			rangeLength-=blockLength;

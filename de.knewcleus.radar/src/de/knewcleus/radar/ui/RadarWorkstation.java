@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 
 import de.knewcleus.fgfs.location.LocalProjection;
 import de.knewcleus.radar.aircraft.AircraftStateManager;
+import de.knewcleus.radar.aircraft.ICorrelationDatabase;
+import de.knewcleus.radar.aircraft.ISquawkAllocator;
 import de.knewcleus.radar.aircraft.TargetManager;
 import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.sector.Sector;
@@ -19,6 +21,8 @@ import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public class RadarWorkstation {
 	protected final Sector sector;
+	protected final ISquawkAllocator squawkAllocator;
+	protected final ICorrelationDatabase correlationDatabase;
 	protected final TargetManager targetManager;
 	protected final AircraftManager aircraftManager;
 	protected final AircraftStateManager aircraftStateManager;
@@ -31,10 +35,12 @@ public class RadarWorkstation {
 	protected final List<RadarDesktop> desktops=new ArrayList<RadarDesktop>();
 	protected RadarDesktop radarPlanViewDesktop;
 
-	public RadarWorkstation(Sector sector, IRadarDataProvider radarDataProvider) {
+	public RadarWorkstation(Sector sector, IRadarDataProvider radarDataProvider, ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) {
 		this.sector=sector;
+		this.squawkAllocator=squawkAllocator;
+		this.correlationDatabase=correlationDatabase;
 		targetManager=new TargetManager(radarDataProvider);
-		aircraftManager=new AircraftManager();
+		aircraftManager=new AircraftManager(this);
 		targetManager.registerTargetListener(aircraftManager);
 		aircraftStateManager=new AircraftStateManager();
 		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
@@ -73,6 +79,14 @@ public class RadarWorkstation {
 	
 	public Sector getSector() {
 		return sector;
+	}
+	
+	public ICorrelationDatabase getCorrelationDatabase() {
+		return correlationDatabase;
+	}
+	
+	public ISquawkAllocator getSquawkAllocator() {
+		return squawkAllocator;
 	}
 	
 	public TargetManager getTargetManager() {

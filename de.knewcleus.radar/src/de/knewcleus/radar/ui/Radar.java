@@ -79,7 +79,7 @@ public class Radar {
 		}
 		
 		/* Setup the user interface */
-		RadarWorkstation radarWorkstation=new RadarWorkstation(sector,radarDataProvider);
+		RadarWorkstation radarWorkstation=new RadarWorkstation(sector,radarDataProvider,squawkAllocator,correlationDatabase);
 		radarWorkstation.setVisible(true);
 	}
 }

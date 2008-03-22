@@ -8,12 +8,22 @@ import java.util.logging.Logger;
 
 import de.knewcleus.radar.aircraft.ITargetUpdateListener;
 import de.knewcleus.radar.aircraft.Target;
+import de.knewcleus.radar.ui.RadarWorkstation;
 
 public class AircraftManager implements ITargetUpdateListener {
 	private final static Logger logger=Logger.getLogger(AircraftManager.class.getName());
+	protected final RadarWorkstation radarWorkstation;
 	protected final Map<Target, Aircraft> aircraftMap=new HashMap<Target, Aircraft>();
 	protected final Set<IAircraftUpdateListener> aircraftUpdateListeners=new HashSet<IAircraftUpdateListener>();
 	protected Aircraft selectedAircraft=null;
+	
+	public AircraftManager(RadarWorkstation radarWorkstation) {
+		this.radarWorkstation=radarWorkstation;
+	}
+	
+	public RadarWorkstation getRadarWorkstation() {
+		return radarWorkstation;
+	}
 	
 	public void registerAircraftUpdateListener(IAircraftUpdateListener listener) {
 		aircraftUpdateListeners.add(listener);
@@ -29,7 +39,7 @@ public class AircraftManager implements ITargetUpdateListener {
 		for (Target target: targets) {
 			Aircraft aircraft=aircraftMap.get(target);
 			if (aircraft==null) {
-				aircraft=new Aircraft(target);
+				aircraft=new Aircraft(this,target);
 				aircraftMap.put(target,aircraft);
 			}
 			updatedAircraft.add(aircraft);

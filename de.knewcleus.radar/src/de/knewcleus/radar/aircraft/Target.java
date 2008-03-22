@@ -21,11 +21,6 @@ public class Target {
 		this.aircraftStateManager=aircraftStateManager;
 	}
 	
-	public String getCallsign() {
-		// FIXME: Use the SSR correlation database as soon as we have one
-		return (ssrMode.hasSSRCode()?ssrCode:"****");
-	}
-	
 	public Deque<Position> getPositionBuffer() {
 		return positionBuffer;
 	}
