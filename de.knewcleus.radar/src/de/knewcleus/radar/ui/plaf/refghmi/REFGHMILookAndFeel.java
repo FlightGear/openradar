@@ -63,7 +63,9 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 		Object[] defaults={
 				      "SliderUI", basePackage+"REFGHMISliderUI",
 				      "ButtonUI", basePackage+"REFGHMIButtonUI",
-				"ToggleButtonUI", basePackage+"REFGHMIToggleButtonUI"
+				"ToggleButtonUI", basePackage+"REFGHMIToggleButtonUI",
+				 "RadioButtonUI", basePackage+"REFGHMIRadioButtonUI",
+				    "CheckBoxUI", basePackage+"REFGHMICheckBoxUI"
 		};
 		table.putDefaults(defaults);
 	}
@@ -73,12 +75,19 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 		super.initComponentDefaults(table);
 		Border buttonBorder=new REFGHMIBorders.ButtonBorder();
 		Border sliderBorder=new REFGHMIBorders.SliderBorder();
+        Object checkBoxIcon = new UIDefaults.LazyValue() {
+            public Object createValue(UIDefaults table) {
+                return new REFGHMIIcons.CheckBoxIcon();
+            }
+        };
 		Object[] defaults={
 			"Button.border", buttonBorder,
 			"Slider.border", sliderBorder,
 			"ToggleButton.border", buttonBorder,
 			"ToggleButton.foreground", Palette.BLACK,
-			"ToggleButton.background", Palette.WINDOW_BLUE
+			"ToggleButton.background", Palette.WINDOW_BLUE,
+			"CheckBox.icon", checkBoxIcon,
+			"RadioButton.icon", checkBoxIcon
 		};
 		table.putDefaults(defaults);
 	}
