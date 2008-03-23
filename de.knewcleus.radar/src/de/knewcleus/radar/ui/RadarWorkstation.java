@@ -14,7 +14,7 @@ import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 import de.knewcleus.radar.aircraft.ISquawkAllocator;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.targets.ITargetProvider;
-import de.knewcleus.radar.targets.TargetManager;
+import de.knewcleus.radar.targets.TrackManager;
 import de.knewcleus.radar.ui.aircraft.AircraftManager;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
@@ -23,7 +23,7 @@ public class RadarWorkstation {
 	protected final Sector sector;
 	protected final ISquawkAllocator squawkAllocator;
 	protected final ICorrelationDatabase correlationDatabase;
-	protected final TargetManager targetManager;
+	protected final TrackManager targetManager;
 	protected final AircraftManager aircraftManager;
 	protected final AircraftStateManager aircraftStateManager;
 	protected final RadarPlanViewSettings radarPlanViewSettings=new RadarPlanViewSettings();
@@ -39,9 +39,9 @@ public class RadarWorkstation {
 		this.sector=sector;
 		this.squawkAllocator=squawkAllocator;
 		this.correlationDatabase=correlationDatabase;
-		targetManager=new TargetManager(radarDataProvider);
+		targetManager=new TrackManager(radarDataProvider);
 		aircraftManager=new AircraftManager(this);
-		targetManager.registerTargetListener(aircraftManager);
+		targetManager.registerTrackUpdateListener(aircraftManager);
 		aircraftStateManager=new AircraftStateManager();
 		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
 		radarPlanViewDisplay=new RadarPlanViewDisplay(this);
@@ -89,7 +89,7 @@ public class RadarWorkstation {
 		return squawkAllocator;
 	}
 	
-	public TargetManager getTargetManager() {
+	public TrackManager getTargetManager() {
 		return targetManager;
 	}
 	

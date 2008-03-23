@@ -6,14 +6,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import de.knewcleus.radar.targets.ITargetUpdateListener;
-import de.knewcleus.radar.targets.Target;
+import de.knewcleus.radar.targets.ITrackUpdateListener;
+import de.knewcleus.radar.targets.Track;
 import de.knewcleus.radar.ui.RadarWorkstation;
 
-public class AircraftManager implements ITargetUpdateListener {
+public class AircraftManager implements ITrackUpdateListener {
 	private final static Logger logger=Logger.getLogger(AircraftManager.class.getName());
 	protected final RadarWorkstation radarWorkstation;
-	protected final Map<Target, Aircraft> aircraftMap=new HashMap<Target, Aircraft>();
+	protected final Map<Track, Aircraft> aircraftMap=new HashMap<Track, Aircraft>();
 	protected final Set<IAircraftUpdateListener> aircraftUpdateListeners=new HashSet<IAircraftUpdateListener>();
 	protected Aircraft selectedAircraft=null;
 	
@@ -34,9 +34,9 @@ public class AircraftManager implements ITargetUpdateListener {
 	}
 	
 	@Override
-	public synchronized void targetsUpdated(Set<Target> targets) {
+	public synchronized void tracksUpdated(Set<Track> targets) {
 		Set<Aircraft> updatedAircraft=new HashSet<Aircraft>();
-		for (Target target: targets) {
+		for (Track target: targets) {
 			Aircraft aircraft=aircraftMap.get(target);
 			if (aircraft==null) {
 				aircraft=new Aircraft(this,target);
@@ -48,7 +48,7 @@ public class AircraftManager implements ITargetUpdateListener {
 	}
 	
 	@Override
-	public synchronized void targetLost(Target target) {
+	public synchronized void trackLost(Track target) {
 		Aircraft aircraft=aircraftMap.get(target);
 		if (aircraft==null)
 			return; // ignore, we do not know that target

@@ -6,6 +6,6 @@ package de.knewcleus.radar.targets;
  */
 public interface ITargetProvider {
 	public abstract int getSecondsBetweenUpdates();
-	public abstract void registerTrackDataConsumer(ITrackDataConsumer consumer);
-	public abstract void unregisterTrackDataConsumer(ITrackDataConsumer consumer);
+	public abstract void registerTargetDataConsumer(ITargetDataConsumer consumer);
+	public abstract void unregisterTargetDataConsumer(ITargetDataConsumer consumer);
 }

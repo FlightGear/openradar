@@ -22,7 +22,7 @@ import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
-import de.knewcleus.radar.targets.Target;
+import de.knewcleus.radar.targets.Track;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.aircraft.Aircraft;
 
@@ -76,7 +76,7 @@ public class AircraftSymbol implements LabeledObject {
 
 	public void layout() {
 		logger.fine("Laying out symbol for aircraft "+aircraft);
-		final Target target=aircraft.getTarget();
+		final Track target=aircraft.getTarget();
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
 
@@ -147,7 +147,7 @@ public class AircraftSymbol implements LabeledObject {
 		Position mapPos;
 		Point2D devicePos;
 
-		final Target target=aircraft.getTarget();
+		final Track target=aircraft.getTarget();
 		final Deque<Position> positionBuffer=target.getPositionBuffer();
 		/* Draw the trail with previous positions */
 		int dotCount=Math.min(positionBuffer.size()-1,radarPlanViewContext.getRadarPlanViewSettings().getTrackHistoryLength());

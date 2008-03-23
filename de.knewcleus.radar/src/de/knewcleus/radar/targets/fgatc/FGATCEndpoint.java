@@ -16,7 +16,7 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
-import de.knewcleus.radar.targets.ITrackDataConsumer;
+import de.knewcleus.radar.targets.ITargetDataConsumer;
 import de.knewcleus.radar.targets.ITargetProvider;
 import de.knewcleus.radar.targets.TargetInformation;
 import de.knewcleus.radar.targets.SSRMode;
@@ -26,7 +26,7 @@ public class FGATCEndpoint implements Runnable, ITargetProvider {
 	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
 	protected final DatagramSocket datagramSocket;
 	protected final static int receiveBufferLength=1024;
-	protected final Set<ITrackDataConsumer> consumers=new HashSet<ITrackDataConsumer>();
+	protected final Set<ITargetDataConsumer> consumers=new HashSet<ITargetDataConsumer>();
 	protected final Map<Object, ClientStatus> clients=new HashMap<Object, ClientStatus>();
 	protected final int timeoutMillis=5000;
 	protected long nextRadarUpdate;
@@ -69,7 +69,7 @@ public class FGATCEndpoint implements Runnable, ITargetProvider {
 			}
 			expireClients();
 			if (System.currentTimeMillis()>=nextRadarUpdate) {
-				sendRadarUpdate();
+				sendTargetUpdate();
 				nextRadarUpdate+=1000*getSecondsBetweenUpdates();
 			}
 		}
@@ -139,12 +139,12 @@ public class FGATCEndpoint implements Runnable, ITargetProvider {
 				Object target=entry.getKey();
 				logger.fine("Client "+target+" expired");
 				entryIterator.remove();
-				fireRadarTargetLost(target);
+				fireTargetLost(target);
 			}
 		}
 	}
 	
-	protected synchronized void sendRadarUpdate() {
+	protected synchronized void sendTargetUpdate() {
 		Set<TargetInformation> targets=new HashSet<TargetInformation>();
 		
 		for (Map.Entry<Object, ClientStatus> entry: clients.entrySet()) {
@@ -169,7 +169,7 @@ public class FGATCEndpoint implements Runnable, ITargetProvider {
 			targets.add(targetInformation);
 		}
 		logger.info("Radar update:"+targets);
-		fireRadarDataUpdated(targets);
+		fireTargetDataUpdated(targets);
 	}
 	
 	protected synchronized void updateClientStatus(Object id, ClientStatus clientStatus) {
@@ -194,24 +194,24 @@ public class FGATCEndpoint implements Runnable, ITargetProvider {
 	}
 	
 	@Override
-	public synchronized void registerTrackDataConsumer(ITrackDataConsumer consumer) {
+	public synchronized void registerTargetDataConsumer(ITargetDataConsumer consumer) {
 		consumers.add(consumer);
 	}
 	
 	@Override
-	public synchronized void unregisterTrackDataConsumer(ITrackDataConsumer consumer) {
+	public synchronized void unregisterTargetDataConsumer(ITargetDataConsumer consumer) {
 		consumers.remove(consumer);
 	}
 	
-	protected void fireRadarDataUpdated(Set<TargetInformation> targets) {
-		for (ITrackDataConsumer consumer: consumers) {
-			consumer.radarDataUpdated(targets);
+	protected void fireTargetDataUpdated(Set<TargetInformation> targets) {
+		for (ITargetDataConsumer consumer: consumers) {
+			consumer.targetDataUpdated(targets);
 		}
 	}
 	
-	protected void fireRadarTargetLost(Object target) {
-		for (ITrackDataConsumer consumer: consumers) {
-			consumer.radarTargetLost(target);
+	protected void fireTargetLost(Object target) {
+		for (ITargetDataConsumer consumer: consumers) {
+			consumer.targetLost(target);
 		}
 	}
 }

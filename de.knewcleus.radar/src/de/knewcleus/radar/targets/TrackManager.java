@@ -8,14 +8,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class TargetManager implements ITrackDataConsumer {
-	private final static Logger logger=Logger.getLogger(TargetManager.class.getName());
+public class TrackManager implements ITargetDataConsumer {
+	private final static Logger logger=Logger.getLogger(TrackManager.class.getName());
 	protected final ITargetProvider radarDataProvider;
-	protected final Map<Object, Target> targetMap=new HashMap<Object, Target>();
-	protected final Set<ITargetUpdateListener> targetListeners=new HashSet<ITargetUpdateListener>();
+	protected final Map<Object, Track> targetMap=new HashMap<Object, Track>();
+	protected final Set<ITrackUpdateListener> trackListeners=new HashSet<ITrackUpdateListener>();
 	protected final int maximumPositionBufferLength;
 	
-	public TargetManager(ITargetProvider radarDataProvider) {
+	public TrackManager(ITargetProvider radarDataProvider) {
 		this.radarDataProvider=radarDataProvider;
 
 		/*
@@ -23,7 +23,7 @@ public class TargetManager implements ITrackDataConsumer {
 		 * about the current set of acquired targets. Instead a set of radar target information updates
 		 * is sent every update cycle. With that information we also get the list of known targets.
 		 */
-		radarDataProvider.registerTrackDataConsumer(this);
+		radarDataProvider.registerTargetDataConsumer(this);
 		
 		/* We record position data up to 15 minutes backwards */
 		maximumPositionBufferLength=15*60/radarDataProvider.getSecondsBetweenUpdates();
@@ -37,36 +37,36 @@ public class TargetManager implements ITrackDataConsumer {
 		return radarDataProvider.getSecondsBetweenUpdates();
 	}
 	
-	public synchronized void registerTargetListener(ITargetUpdateListener consumer) {
-		targetListeners.add(consumer);
+	public synchronized void registerTrackUpdateListener(ITrackUpdateListener consumer) {
+		trackListeners.add(consumer);
 	}
 	
-	public synchronized void unregisterTargetListener(ITargetUpdateListener consumer) {
-		targetListeners.remove(consumer);
+	public synchronized void unregisterTrackUpdateListener(ITrackUpdateListener consumer) {
+		trackListeners.remove(consumer);
 	}
 	
-	protected synchronized void fireTargetsUpdated(Set<Target> updatedTargets) {
-		logger.fine("Targets updated:"+updatedTargets);
-		for (ITargetUpdateListener consumer: targetListeners) {
-			consumer.targetsUpdated(updatedTargets);
+	protected synchronized void fireTracksUpdated(Set<Track> updatedTracks) {
+		logger.fine("Tracks updated:"+updatedTracks);
+		for (ITrackUpdateListener listener: trackListeners) {
+			listener.tracksUpdated(updatedTracks);
 		}
 	}
 	
-	protected synchronized void fireTargetLost(Target target) {
-		for (ITargetUpdateListener consumer: targetListeners) {
-			consumer.targetLost(target);
+	protected synchronized void fireTrackLost(Track track) {
+		for (ITrackUpdateListener listener: trackListeners) {
+			listener.trackLost(track);
 		}
 	}
 	
 	@Override
-	public synchronized void radarDataUpdated(Set<TargetInformation> targets) {
-		Set<Target> updatedStates=new HashSet<Target>();
+	public synchronized void targetDataUpdated(Set<TargetInformation> targets) {
+		Set<Track> updatedStates=new HashSet<Track>();
 		for (TargetInformation target: targets) {
 			Object trackIdentifier=target.getTrackIdentifier();
-			Target aircraftState;
+			Track aircraftState;
 			
 			if (!targetMap.containsKey(trackIdentifier)) {
-				aircraftState=new Target(this);
+				aircraftState=new Track(this);
 				targetMap.put(trackIdentifier,aircraftState);
 			} else {
 				aircraftState=targetMap.get(trackIdentifier);
@@ -74,18 +74,18 @@ public class TargetManager implements ITrackDataConsumer {
 			aircraftState.update(target);
 			updatedStates.add(aircraftState);
 		}
-		fireTargetsUpdated(updatedStates);
+		fireTracksUpdated(updatedStates);
 	}
 	
 	@Override
-	public synchronized void radarTargetLost(Object trackIdentifier) {
-		Target aircraftState=targetMap.get(trackIdentifier);
+	public synchronized void targetLost(Object trackIdentifier) {
+		Track aircraftState=targetMap.get(trackIdentifier);
 		assert(aircraftState!=null);
 		targetMap.remove(trackIdentifier);
-		fireTargetLost(aircraftState);
+		fireTrackLost(aircraftState);
 	}
 	
-	public Collection<Target> getAircraftStates() {
+	public Collection<Track> getAircraftStates() {
 		return Collections.unmodifiableCollection(targetMap.values());
 	}
 }

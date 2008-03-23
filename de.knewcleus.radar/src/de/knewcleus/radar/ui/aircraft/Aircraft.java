@@ -3,14 +3,14 @@ package de.knewcleus.radar.ui.aircraft;
 import de.knewcleus.radar.aircraft.AircraftState;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.targets.SSRMode;
-import de.knewcleus.radar.targets.Target;
+import de.knewcleus.radar.targets.Track;
 
 public class Aircraft {
 	protected final AircraftManager aircraftManager;
-	protected final Target target;
+	protected final Track target;
 	protected boolean isSelected=false;
 	
-	public Aircraft(AircraftManager aircraftManager, Target target) {
+	public Aircraft(AircraftManager aircraftManager, Track target) {
 		this.aircraftManager=aircraftManager;
 		this.target=target;
 	}
@@ -19,7 +19,7 @@ public class Aircraft {
 		return aircraftManager;
 	}
 	
-	public Target getTarget() {
+	public Track getTarget() {
 		return target;
 	}
 	

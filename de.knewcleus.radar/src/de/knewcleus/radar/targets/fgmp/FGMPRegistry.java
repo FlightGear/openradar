@@ -11,12 +11,12 @@ import de.knewcleus.fgfs.multiplayer.PlayerAddress;
 import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 import de.knewcleus.radar.aircraft.ISquawkAllocator;
 import de.knewcleus.radar.aircraft.OutOfSquawksException;
-import de.knewcleus.radar.targets.ITrackDataConsumer;
+import de.knewcleus.radar.targets.ITargetDataConsumer;
 import de.knewcleus.radar.targets.ITargetProvider;
 import de.knewcleus.radar.targets.TargetInformation;
 
 public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implements ITargetProvider, IUpdateable {
-	protected final Set<ITrackDataConsumer> consumers=new HashSet<ITrackDataConsumer>();
+	protected final Set<ITargetDataConsumer> consumers=new HashSet<ITargetDataConsumer>();
 	protected final Updater radarUpdater=new Updater(this,1000*getSecondsBetweenUpdates());
 	protected final ISquawkAllocator squawkAllocator;
 	protected final ICorrelationDatabase correlationDatabase;
@@ -55,24 +55,24 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 	}
 	
 	protected void fireRadarDataUpdated(Set<TargetInformation> targets) {
-		for (ITrackDataConsumer consumer: consumers) {
-			consumer.radarDataUpdated(targets);
+		for (ITargetDataConsumer consumer: consumers) {
+			consumer.targetDataUpdated(targets);
 		}
 	}
 	
 	protected void fireRadarTargetLost(FGMPAircraft target) {
-		for (ITrackDataConsumer consumer: consumers) {
-			consumer.radarTargetLost(target);
+		for (ITargetDataConsumer consumer: consumers) {
+			consumer.targetLost(target);
 		}
 	}
 	
 	@Override
-	public synchronized void registerTrackDataConsumer(ITrackDataConsumer consumer) {
+	public synchronized void registerTargetDataConsumer(ITargetDataConsumer consumer) {
 		consumers.add(consumer);
 	}
 	
 	@Override
-	public synchronized void unregisterTrackDataConsumer(ITrackDataConsumer consumer) {
+	public synchronized void unregisterTargetDataConsumer(ITargetDataConsumer consumer) {
 		consumers.remove(consumer);
 	}
 	

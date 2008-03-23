@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.location.Position;
 
-public class Target {
-	protected final static Logger logger=Logger.getLogger(Target.class.getName());
-	protected final TargetManager aircraftStateManager;
+public class Track {
+	protected final static Logger logger=Logger.getLogger(Track.class.getName());
+	protected final TrackManager aircraftStateManager;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
 	protected double groundSpeed=0.0;
 	protected double trueCourse=0.0;
@@ -17,7 +17,7 @@ public class Target {
 	protected double pressureAltitude=0.0;
 	protected boolean isSelected=false;
 	
-	public Target(TargetManager aircraftStateManager) {
+	public Track(TrackManager aircraftStateManager) {
 		this.aircraftStateManager=aircraftStateManager;
 	}
 	
