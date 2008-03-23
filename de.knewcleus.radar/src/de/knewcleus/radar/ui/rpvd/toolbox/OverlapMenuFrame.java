@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui.rpvd.toolbox;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -17,6 +17,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 
 import de.knewcleus.radar.ui.RadarWorkstation;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
+import de.knewcleus.radar.ui.rpvd.StandardLabelDistance;
+import de.knewcleus.radar.ui.rpvd.StandardLabelPosition;
 
 public class OverlapMenuFrame extends JInternalFrame implements PropertyChangeListener, ActionListener {
 	private static final long serialVersionUID = 2239922786869601242L;

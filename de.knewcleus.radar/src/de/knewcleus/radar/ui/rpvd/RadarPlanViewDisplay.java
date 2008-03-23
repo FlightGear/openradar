@@ -11,6 +11,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLayeredPane;
 
 import de.knewcleus.radar.ui.RadarWorkstation;
+import de.knewcleus.radar.ui.rpvd.toolbox.RadarToolbox;
 
 public class RadarPlanViewDisplay extends JInternalFrame {
 	private static final long serialVersionUID = 5923481231980915972L;

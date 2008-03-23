@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui.rpvd.toolbox;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,6 +12,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import de.knewcleus.radar.ui.RadarWorkstation;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public class ZoomPanel extends JPanel implements ChangeListener, PropertyChangeListener {
 	private static final long serialVersionUID = 3344886170820128917L;

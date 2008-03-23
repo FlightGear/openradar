@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui.rpvd.toolbox;
 
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import de.knewcleus.radar.ui.RadarWorkstation;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public class SpeedAndTrackPanel extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 2264072614359267276L;

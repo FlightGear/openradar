@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui.rpvd.toolbox;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
+
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
 
 public class RadarToolbox extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private static final long serialVersionUID = -3296094812456539553L;

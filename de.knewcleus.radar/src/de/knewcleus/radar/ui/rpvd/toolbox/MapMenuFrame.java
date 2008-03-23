@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui.rpvd;
+package de.knewcleus.radar.ui.rpvd.toolbox;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -10,6 +10,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JInternalFrame;
 
 import de.knewcleus.radar.ui.RadarWorkstation;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
+import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public class MapMenuFrame extends JInternalFrame implements PropertyChangeListener,ActionListener {
 	private static final long serialVersionUID = 6741748501762906857L;
