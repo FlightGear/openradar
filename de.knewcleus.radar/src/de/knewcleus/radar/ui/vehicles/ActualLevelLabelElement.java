@@ -14,7 +14,7 @@ public class ActualLevelLabelElement extends AbstractTextLabelElement {
 
 	@Override
 	protected String getText() {
-		final Track target=aircraft.getTarget();
+		final Track target=aircraft.getTrack();
 		final SSRMode ssrMode=target.getSSRMode();
 		
 		if (!ssrMode.hasAltitudeEncoding())

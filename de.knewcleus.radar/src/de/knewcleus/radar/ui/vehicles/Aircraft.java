@@ -6,58 +6,46 @@ import de.knewcleus.radar.targets.SSRMode;
 import de.knewcleus.radar.targets.Track;
 
 public class Aircraft implements IVehicle {
-	protected final VehicleManager aircraftManager;
-	protected final Track target;
+	protected final VehicleManager vehicleManager;
+	protected final Track track;
 	protected boolean isSelected=false;
 	
-	public Aircraft(VehicleManager aircraftManager, Track target) {
-		this.aircraftManager=aircraftManager;
-		this.target=target;
+	public Aircraft(VehicleManager aircraftManager, Track track) {
+		this.vehicleManager=aircraftManager;
+		this.track=track;
 	}
 	
 	public VehicleManager getAircraftManager() {
-		return aircraftManager;
+		return vehicleManager;
 	}
 	
-	public Track getTarget() {
-		return target;
+	public Track getTrack() {
+		return track;
 	}
 	
 	public String getCallsign() {
-		SSRMode ssrMode=target.getSSRMode();
+		SSRMode ssrMode=track.getSSRMode();
 		
 		if (!ssrMode.hasSSRCode()) {
-			return "****";
+			return null;
 		}
 		
-		String squawk=target.getSSRCode();
+		String squawk=track.getSSRCode();
+		String callsign=vehicleManager.getRadarWorkstation().getCorrelationDatabase().correlateToCallsign(squawk);
 		
-		String callsign=aircraftManager.getRadarWorkstation().getCorrelationDatabase().correlateToCallsign(squawk);
-		if (callsign!=null)
-			return callsign;
-		
-		return squawk;
+		return callsign;
 	}
 	
 	public AircraftState getAircraftState() {
-		if (!target.getSSRMode().hasSSRCode())
-			return null;
-		String squawk=target.getSSRCode();
-		String callsign=aircraftManager.getRadarWorkstation().getCorrelationDatabase().correlateToCallsign(squawk);
-		
+		String callsign=getCallsign();
 		if (callsign==null)
 			return null;
 		
-		return aircraftManager.getRadarWorkstation().getAircraftStateManager().getAircraftStateForCallsign(callsign);
+		return vehicleManager.getRadarWorkstation().getAircraftStateManager().getAircraftStateForCallsign(callsign);
 	}
 	
 	public boolean isCorrelated() {
-		if (!target.getSSRMode().hasSSRCode())
-			return false;
-		String squawk=target.getSSRCode();
-		String callsign=aircraftManager.getRadarWorkstation().getCorrelationDatabase().correlateToCallsign(squawk);
-		
-		return callsign!=null;
+		return getCallsign()!=null;
 	}
 	
 	public boolean isSelected() {

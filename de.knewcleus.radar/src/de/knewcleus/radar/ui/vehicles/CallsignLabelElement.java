@@ -1,9 +1,12 @@
 package de.knewcleus.radar.ui.vehicles;
 
 import java.awt.event.MouseEvent;
+import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.JPopupMenu;
 
+import de.knewcleus.radar.aircraft.AircraftState;
 import de.knewcleus.radar.ui.labels.AbstractTextLabelElement;
 
 public class CallsignLabelElement extends AbstractTextLabelElement {
@@ -17,19 +20,28 @@ public class CallsignLabelElement extends AbstractTextLabelElement {
 	protected String getText() {
 		return aircraft.getCallsign();
 	}
+	
+	protected String getDisplayedCallsign() {
+		if (!aircraft.getTrack().getSSRMode().hasSSRCode()) {
+			return "****";
+		}
+		String callsign=aircraft.getCallsign();
+		if (callsign!=null)
+			return callsign;
+		return "A"+aircraft.getTrack().getSSRCode();
+	}
 
 	@Override
 	public void processMouseEvent(MouseEvent event) {
 		switch (event.getID()) {
 		case MouseEvent.MOUSE_CLICKED:
 			if (event.getButton()==MouseEvent.BUTTON1) {
-				// FIXME: prepare the menu according to the associatedTarget task state
+				final AircraftState aircraftState=aircraft.getAircraftState();
+				List<Action> availableActions=aircraftState.getAvailableActions();
 				JPopupMenu popupMenu=new JPopupMenu(aircraft.getCallsign());
-				popupMenu.add("ASSUME");
-				popupMenu.add("TRANSFER");
-				popupMenu.add("HANDOVER");
-				popupMenu.add("RELEASE");
-				popupMenu.add("FORCE ACT");
+				for (Action action: availableActions) {
+					popupMenu.add(action);
+				}
 
 				popupMenu.show(getDisplayComponent(), event.getX(), event.getY());
 				event.consume();
@@ -40,6 +52,6 @@ public class CallsignLabelElement extends AbstractTextLabelElement {
 	
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return aircraft.isCorrelated();
 	}
 }

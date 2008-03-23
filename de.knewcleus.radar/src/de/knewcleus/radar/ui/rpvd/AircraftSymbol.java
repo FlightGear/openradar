@@ -76,7 +76,7 @@ public class AircraftSymbol implements IVehicleSymbol {
 
 	public void updatePosition() {
 		logger.fine("Updating symbol position for aircraft "+aircraft);
-		final Track target=aircraft.getTarget();
+		final Track target=aircraft.getTrack();
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
 
@@ -144,7 +144,7 @@ public class AircraftSymbol implements IVehicleSymbol {
 		Position mapPos;
 		Point2D devicePos;
 
-		final Track target=aircraft.getTarget();
+		final Track target=aircraft.getTrack();
 		final Deque<Position> positionBuffer=target.getPositionBuffer();
 		/* Draw the trail with previous positions */
 		int dotCount=Math.min(positionBuffer.size()-1,radarPlanViewContext.getRadarPlanViewSettings().getTrackHistoryLength());
