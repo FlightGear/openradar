@@ -253,12 +253,6 @@ public class AircraftLabel implements Label, ILabelDisplay {
 		return hookY;
 	}
 	
-	public boolean containsPosition(double x, double y) {
-		if (getLeft()<=x && x<=getRight() && getTop()<=y && y<=getBottom())
-			return true;
-		return false;
-	}
-	
 	public void setHookPosition(double dx, double dy) {
 		hookX=dx;
 		hookY=dy;
@@ -285,26 +279,6 @@ public class AircraftLabel implements Label, ILabelDisplay {
 	@Override
 	public void move(double dx, double dy) {
 		setHookPosition(hookX+dx, hookY+dy);
-	}
-
-	@Override
-	public double getTop() {
-		return getBounds2D().getMinY();
-	}
-
-	@Override
-	public double getBottom() {
-		return getBounds2D().getMaxY();
-	}
-
-	@Override
-	public double getLeft() {
-		return getBounds2D().getMinX();
-	}
-
-	@Override
-	public double getRight() {
-		return getBounds2D().getMaxX();
 	}
 	
 	@Override

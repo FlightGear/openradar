@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -171,25 +172,12 @@ public class AircraftSymbol implements LabeledObject {
 			g2d.fill(symbol);
 		}
 	}
-
-	@Override
-	public double getTop() {
-		return currentDevicePosition.getY()-aircraftSymbolSize/2.0;
-	}
 	
 	@Override
-	public double getBottom() {
-		return currentDevicePosition.getY()+aircraftSymbolSize/2.0;
-	}
-	
-	@Override
-	public double getLeft() {
-		return currentDevicePosition.getX()-aircraftSymbolSize/2.0;
-	}
-	
-	@Override
-	public double getRight() {
-		return currentDevicePosition.getX()+aircraftSymbolSize/2.0;
+	public Rectangle2D getBounds2D() {
+		final double w=aircraftSymbolSize;
+		final double h=aircraftSymbolSize;
+		return new Rectangle2D.Double(currentDevicePosition.getX()-w/2,currentDevicePosition.getY()-h/2,w,h);
 	}
 	
 	@Override
@@ -201,7 +189,8 @@ public class AircraftSymbol implements LabeledObject {
 		if (currentDevicePosition==null) {
 			return false;
 		}
-		if (label.containsPosition(x, y)) {
+		final Rectangle2D labelBounds=label.getBounds2D();
+		if (labelBounds.contains(x, y)) {
 			return true;
 		}
 		

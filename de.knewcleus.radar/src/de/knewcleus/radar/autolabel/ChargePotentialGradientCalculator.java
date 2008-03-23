@@ -1,10 +1,10 @@
 package de.knewcleus.radar.autolabel;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
 public class ChargePotentialGradientCalculator {
 	protected final ChargedSymbol chargedSymbol;
-	protected final double centerX,centerY;
 	protected final double symbolCharge;
 	
 	protected double gradientX=0.0;
@@ -14,19 +14,18 @@ public class ChargePotentialGradientCalculator {
 	
 	public ChargePotentialGradientCalculator(ChargedSymbol chargedSymbol) {
 		this.chargedSymbol=chargedSymbol;
-		this.centerX=(chargedSymbol.getLeft()+chargedSymbol.getRight())/2.0;
-		this.centerY=(chargedSymbol.getTop()+chargedSymbol.getBottom())/2.0;
+		final Rectangle2D bounds=chargedSymbol.getBounds2D();
+		final double w,h;
 		
-		double w,h;
-		
-		w=chargedSymbol.getRight()-chargedSymbol.getLeft();
-		h=chargedSymbol.getBottom()-chargedSymbol.getTop();
+		w=bounds.getWidth();
+		h=bounds.getHeight();
 		
 		symbolCharge=chargedSymbol.getChargeDensity()*w*h;
 	}
 	
 	private void addCharge(double q, double cx, double cy) {
-		final double dx=cx-centerX,dy=cy-centerY;
+		final Rectangle2D bounds=chargedSymbol.getBounds2D();
+		final double dx=cx-bounds.getCenterX(),dy=cy-bounds.getCenterY();
 		final double r2=dx*dx+dy*dy;
 		final double r=Math.sqrt(r2);
 		
@@ -50,39 +49,35 @@ public class ChargePotentialGradientCalculator {
 	}
 	
 	public void addCharge(ChargedSymbol charge) {
-		final double cx=(charge.getLeft()+charge.getRight())/2.0;
-		final double cy=(charge.getTop()+charge.getBottom())/2.0;
-		final double w=charge.getRight()-charge.getLeft();
-		final double h=charge.getBottom()-charge.getTop();
+		final Rectangle2D symbolBounds=chargedSymbol.getBounds2D();
+		final Rectangle2D chargeBounds=charge.getBounds2D();
+		final double cx=chargeBounds.getCenterX();
+		final double cy=chargeBounds.getCenterY();
+		final double w=chargeBounds.getWidth();
+		final double h=chargeBounds.getHeight();
 		final double q=charge.getChargeDensity()*w*h;
 
 		addCharge(q,cx,cy);
 		
-		/*
-		 * overlap in y-direction:
-		 * 
-		 * max(l1,l2)<=min(u1,u2)
-		 * l1<=u2 && l2<=u1
-		 */
-		if (charge.getTop()<=chargedSymbol.getBottom() && chargedSymbol.getTop()<=charge.getBottom()) {
+		if (chargeBounds.getMinY()<=symbolBounds.getMaxY() && symbolBounds.getMinY()<=chargeBounds.getMaxY()) {
 			/* Overlap in y-direction */
-			if (chargedSymbol.getLeft()>charge.getRight()) {
+			if (symbolBounds.getMinY()>chargeBounds.getMaxX()) {
 				/* Add deflection by right edge */
-				addLineCharge(q, chargedSymbol.getLeft(), 0, charge.getRight(), 0, 1.0, 0.0);
-			} else if (chargedSymbol.getRight()<charge.getLeft()) {
+				addLineCharge(q, symbolBounds.getMinY(), 0, chargeBounds.getMaxX(), 0, 1.0, 0.0);
+			} else if (symbolBounds.getMaxX()<chargeBounds.getMinY()) {
 				/* Add deflection by left edge */
-				addLineCharge(q, chargedSymbol.getRight(),0, charge.getLeft(), 0, -1.0, 0.0);
+				addLineCharge(q, symbolBounds.getMaxX(),0, chargeBounds.getMinY(), 0, -1.0, 0.0);
 			}
 		}
 		
-		if (charge.getLeft()<=chargedSymbol.getRight() && chargedSymbol.getLeft()<=charge.getRight()) {
+		if (chargeBounds.getMinY()<=symbolBounds.getMaxX() && symbolBounds.getMinY()<=chargeBounds.getMaxX()) {
 			/* Overlap in x-direction */
-			if (chargedSymbol.getBottom()<charge.getTop()) {
+			if (symbolBounds.getMaxY()<chargeBounds.getMinY()) {
 				/* Add deflection by top edge */
-				addLineCharge(q, 0, chargedSymbol.getBottom(), 0, charge.getTop(), 0, -1);
-			} else if (chargedSymbol.getTop()>charge.getBottom()) {
+				addLineCharge(q, 0, symbolBounds.getMaxY(), 0, chargeBounds.getMinY(), 0, -1);
+			} else if (symbolBounds.getMinY()>chargeBounds.getMaxY()) {
 				/* Add deflection by bottom edge */
-				addLineCharge(q, 0, chargedSymbol.getTop(), 0, charge.getBottom(), 0, 1);
+				addLineCharge(q, 0, symbolBounds.getMinY(), 0, chargeBounds.getMaxY(), 0, 1);
 			}
 		}
 	}

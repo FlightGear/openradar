@@ -1,9 +1,8 @@
 package de.knewcleus.radar.autolabel;
 
+import java.awt.geom.Rectangle2D;
+
 public interface ChargedSymbol {
-	public double getTop();
-	public double getBottom();
-	public double getLeft();
-	public double getRight();
+	public Rectangle2D getBounds2D();
 	public double getChargeDensity();
 }
