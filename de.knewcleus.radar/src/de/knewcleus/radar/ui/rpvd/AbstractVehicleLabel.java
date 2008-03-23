@@ -1,13 +1,12 @@
 package de.knewcleus.radar.ui.rpvd;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
+import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.labels.LabelElementContainer;
-import de.knewcleus.radar.ui.vehicles.IVehicle;
 
 public abstract class AbstractVehicleLabel extends LabelElementContainer implements Label, IVehicleLabel {
 	protected double hookX, hookY;
@@ -45,18 +44,22 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 		
 		setPosition(labelx, labely);
 	}
-
-	public void paint(Graphics2D g2d) {
-		final IVehicle aircraft=getVehicleSymbol().getVehicle();
-		if (aircraft.isSelected()) {
-			final Rectangle2D bounds=getBounds2D();
-			g2d.setColor(getSelectedBackgroundColor());
-			g2d.fill(bounds);
-			g2d.setColor(getSelectedTextColor());
-		} else {
-			g2d.setColor(getNormalTextColor());
-		}
-		super.paint(g2d);
+	
+	@Override
+	public boolean isOpaque() {
+		return getVehicleSymbol().getVehicle().isSelected();
+	}
+	
+	@Override
+	public Color getForegroundColor() {
+		return (getVehicleSymbol().getVehicle().isSelected()?
+				getSelectedTextColor():getNormalTextColor());
+	}
+	
+	@Override
+	public Color getBackgroundColor() {
+		return (getVehicleSymbol().getVehicle().isSelected()?
+				getSelectedBackgroundColor():Palette.TRANSPARENT);
 	}
 
 	@Override
