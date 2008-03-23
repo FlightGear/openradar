@@ -4,41 +4,42 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.geom.Dimension2D;
+import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.radar.ui.aircraft.Aircraft;
-
-public abstract class AbstractTextLabelElement extends AbstractLabelElement implements ILabelElement {
-	public AbstractTextLabelElement(ILabelDisplay labelDisplay, Aircraft aircraft) {
-		super(labelDisplay, aircraft);
-	}
-
+public abstract class AbstractTextLabelElement extends LabelElement {
 	protected abstract String getText();
-
+	
 	@Override
-	public void layout() {
+	public double getAscent() {
+		final Component displayComponent=getDisplayComponent();
+		final FontMetrics fm=displayComponent.getFontMetrics(displayComponent.getFont());
+		return fm.getMaxAscent();
+	}
+	
+	@Override
+	public Dimension2D getMinimumSize() {
 		String text=getText();
 		
 		if (text==null || text.length()==0) {
 			/* Special case were we have no text at all */
-			minimumSize=new Dimension(0,0);
-			return;
+			return new Dimension(0,0);
 		}
 		
-		final Component displayComponent=labelDisplay.getDisplayComponent();
+		final Component displayComponent=getDisplayComponent();
 		FontMetrics fm=displayComponent.getFontMetrics(displayComponent.getFont());
 		
-		ascent=fm.getMaxAscent();
-		
-		int height=ascent+fm.getMaxDescent();
+		int height=fm.getMaxAscent()+fm.getMaxDescent();
 		int width=fm.stringWidth(text);
 		
-		minimumSize=new Dimension(width,height);
+		return new Dimension(width,height);
 	}
 
 	@Override
 	public void paint(Graphics2D g2d) {
+		final Rectangle2D bounds=getBounds();
 		String text=getText();
 		
-		g2d.drawString(text, bounds.x, bounds.y+ascent);
+		g2d.drawString(text, (float)bounds.getMinX(), (float)(bounds.getMinY()+getAscent()));
 	}
 }

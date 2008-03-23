@@ -1,17 +1,16 @@
-package de.knewcleus.radar.ui.aircraft;
+package de.knewcleus.radar.ui.vehicles;
 
 import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 
 import de.knewcleus.radar.ui.labels.AbstractTextLabelElement;
-import de.knewcleus.radar.ui.labels.IActiveLabelElement;
-import de.knewcleus.radar.ui.labels.ILabelDisplay;
 
-public class CallsignLabelElement extends AbstractTextLabelElement implements IActiveLabelElement {
-
-	public CallsignLabelElement(ILabelDisplay labelDisplay, Aircraft aircraft) {
-		super(labelDisplay, aircraft);
+public class CallsignLabelElement extends AbstractTextLabelElement {
+	protected final Aircraft aircraft;
+	
+	public CallsignLabelElement(Aircraft aircraft) {
+		this.aircraft=aircraft;
 	}
 
 	@Override
@@ -32,9 +31,8 @@ public class CallsignLabelElement extends AbstractTextLabelElement implements IA
 				popupMenu.add("RELEASE");
 				popupMenu.add("FORCE ACT");
 
-				showPopupMenu(popupMenu, event.getX(), event.getY());
+				popupMenu.show(getDisplayComponent(), event.getX(), event.getY());
 				event.consume();
-				
 			}
 			break;
 		}

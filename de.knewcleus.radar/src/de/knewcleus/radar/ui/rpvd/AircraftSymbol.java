@@ -21,13 +21,12 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
-import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 import de.knewcleus.radar.targets.Track;
 import de.knewcleus.radar.ui.Palette;
-import de.knewcleus.radar.ui.aircraft.Aircraft;
+import de.knewcleus.radar.ui.vehicles.Aircraft;
 
-public class AircraftSymbol implements LabeledObject {
+public class AircraftSymbol implements IVehicleSymbol {
 	protected final static Logger logger=Logger.getLogger(AircraftSymbol.class.getName());
 	protected static final float aircraftSymbolSize=6.0f;
 	private static final GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
@@ -59,7 +58,8 @@ public class AircraftSymbol implements LabeledObject {
 		this.label=new AircraftLabel(this);
 	}
 	
-	public Aircraft getAircraft() {
+	@Override
+	public Aircraft getVehicle() {
 		return aircraft;
 	}
 	
@@ -75,8 +75,8 @@ public class AircraftSymbol implements LabeledObject {
 		return aircraft.canSelect();
 	}
 
-	public void layout() {
-		logger.fine("Laying out symbol for aircraft "+aircraft);
+	public void updatePosition() {
+		logger.fine("Updating symbol position for aircraft "+aircraft);
 		final Track target=aircraft.getTarget();
 		final ICoordinateTransformation mapTransformation=radarPlanViewContext.getRadarPlanViewSettings().getMapTransformation();
 		final IDeviceTransformation deviceTransformation=radarPlanViewContext.getDeviceTransformation();
@@ -95,13 +95,10 @@ public class AircraftSymbol implements LabeledObject {
 		Position currentLeadingLineHeadMapPosition=mapTransformation.forward(geodesicInformation.getEndPos()); 
 		currentDeviceHeadPosition=deviceTransformation.toDevice(currentLeadingLineHeadMapPosition);
 		
-		label.updateLabelContents();
-		label.layout();
-		
-		label.move(0,0);
+		label.updatePosition();
 	}
 	
-	public void drawSymbol(Graphics2D g2d) {
+	public void paintSymbol(Graphics2D g2d) {
 		g2d.setColor(getSymbolColor());
 		Ellipse2D symbol=new Ellipse2D.Double(
 				currentDevicePosition.getX()-aircraftSymbolSize/2.0,currentDevicePosition.getY()-aircraftSymbolSize/2.0,
@@ -123,7 +120,7 @@ public class AircraftSymbol implements LabeledObject {
 		}
 	}
 	
-	public void drawLabel(Graphics2D g2d) {
+	public void paintLabel(Graphics2D g2d) {
 		double devX=currentDevicePosition.getX();
 		double devY=currentDevicePosition.getY();
 		
@@ -138,13 +135,13 @@ public class AircraftSymbol implements LabeledObject {
 		label.paint(g2d);
 	}
 	
-	public void drawHeadingVector(Graphics2D g2d) {
+	public void paintHeadingVector(Graphics2D g2d) {
 		g2d.setColor(getSymbolColor());
 		Line2D headingVector=new Line2D.Double(currentDevicePosition,currentDeviceHeadPosition);
 		g2d.draw(headingVector);
 	}
 	
-	public void drawTrail(Graphics2D g2d) {
+	public void paintTrail(Graphics2D g2d) {
 		Position mapPos;
 		Point2D devicePos;
 
@@ -174,36 +171,29 @@ public class AircraftSymbol implements LabeledObject {
 	}
 	
 	@Override
-	public Rectangle2D getBounds2D() {
+	public Rectangle2D getSymbolBounds() {
 		final double w=aircraftSymbolSize;
 		final double h=aircraftSymbolSize;
 		return new Rectangle2D.Double(currentDevicePosition.getX()-w/2,currentDevicePosition.getY()-h/2,w,h);
 	}
 	
 	@Override
-	public double getChargeDensity() {
-		return 1;
+	public Rectangle2D getBounds2D() {
+		return getSymbolBounds();
 	}
 	
-	public boolean containsPosition(double x, double y) {
-		if (currentDevicePosition==null) {
-			return false;
-		}
-		final Rectangle2D labelBounds=label.getBounds2D();
-		if (labelBounds.contains(x, y)) {
+	@Override
+	public boolean containsPoint(double x, double y) {
+		final Rectangle2D symbolBounds=getSymbolBounds();
+		if (symbolBounds.contains(x,y))
 			return true;
-		}
-		
-		double dx,dy;
-		
-		dx=x-currentDevicePosition.getX();
-		dy=y-currentDevicePosition.getY();
-		
-		if ((dx*dx+dy*dy)<=aircraftSymbolSize*aircraftSymbolSize) {
-			return true;
-		}
-		
-		return false;
+		final Rectangle2D labelBounds=getLabel().getBounds2D();
+		return labelBounds.contains(x,y);
+	}
+	
+	@Override
+	public double getChargeDensity() {
+		return 1;
 	}
 	
 	@Override

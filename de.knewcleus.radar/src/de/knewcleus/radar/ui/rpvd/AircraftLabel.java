@@ -1,47 +1,41 @@
 package de.knewcleus.radar.ui.rpvd;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.knewcleus.radar.aircraft.AircraftState;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
-import de.knewcleus.radar.autolabel.Label;
-import de.knewcleus.radar.autolabel.LabeledObject;
-import de.knewcleus.radar.ui.aircraft.ActualLevelLabelElement;
-import de.knewcleus.radar.ui.aircraft.Aircraft;
-import de.knewcleus.radar.ui.aircraft.CallsignLabelElement;
-import de.knewcleus.radar.ui.aircraft.GroundSpeedLabelElement;
-import de.knewcleus.radar.ui.labels.ILabelDisplay;
-import de.knewcleus.radar.ui.labels.ILabelElement;
-import de.knewcleus.radar.ui.labels.LabelLine;
-import de.knewcleus.radar.ui.labels.MultilineLabel;
+import de.knewcleus.radar.ui.labels.Justification;
+import de.knewcleus.radar.ui.labels.LabelElement;
+import de.knewcleus.radar.ui.labels.LabelElementContainer;
+import de.knewcleus.radar.ui.labels.LabelLineLayoutManager;
+import de.knewcleus.radar.ui.labels.MultiLineLabelLayoutManager;
 import de.knewcleus.radar.ui.labels.StaticTextLabelElement;
+import de.knewcleus.radar.ui.vehicles.ActualLevelLabelElement;
+import de.knewcleus.radar.ui.vehicles.Aircraft;
+import de.knewcleus.radar.ui.vehicles.CallsignLabelElement;
+import de.knewcleus.radar.ui.vehicles.GroundSpeedLabelElement;
 
-public class AircraftLabel implements Label, ILabelDisplay {
+public class AircraftLabel implements IVehicleLabel {
 	protected final AircraftSymbol associatedSymbol;
+	protected Rectangle2D bounds2d;
 	protected double hookX,hookY;
 	protected double dirX,dirY;;
-	protected double centerX,centerY;
-	protected final List<ILabelElement> labelLines=new ArrayList<ILabelElement>();
-	protected final MultilineLabel labelLayout=new MultilineLabel(labelLines);
+	protected final LabelElementContainer label=new LabelElementContainer();
+	protected final LabelElementContainer labelLines[]=new LabelElementContainer[5];
 	
-	protected final LabelLine labelLine[]=new LabelLine[5];
-	protected final ILabelElement callsignElement;
-	protected final ILabelElement nextSectorElement;
-	protected final ILabelElement actualLevelElement;
-	protected final ILabelElement exitPointElement;
-	protected final ILabelElement groundSpeedElement;
-	protected final ILabelElement clearedLevelElement;
-	protected final ILabelElement exitLevelElement;
-	protected final ILabelElement assignedHeadingElement;
-	protected final ILabelElement assignedSpeedElement;
-	protected final ILabelElement assignedClimbRateElement;
+	protected final LabelElement callsignElement;
+	protected final LabelElement nextSectorElement;
+	protected final LabelElement actualLevelElement;
+	protected final LabelElement exitPointElement;
+	protected final LabelElement groundSpeedElement;
+	protected final LabelElement clearedLevelElement;
+	protected final LabelElement exitLevelElement;
+	protected final LabelElement assignedHeadingElement;
+	protected final LabelElement assignedSpeedElement;
+	protected final LabelElement assignedClimbRateElement;
 	
 	public AircraftLabel(AircraftSymbol associatedSymbol) {
 		this.associatedSymbol=associatedSymbol;
@@ -50,46 +44,69 @@ public class AircraftLabel implements Label, ILabelDisplay {
 		dirX=1.0;
 		dirY=1.0;
 		
-		for (int i=0;i<labelLine.length;i++) {
-			labelLine[i]=new LabelLine(new ArrayList<ILabelElement>());
-		}
+		final Aircraft aircraft=associatedSymbol.getVehicle();
+		callsignElement=new CallsignLabelElement(aircraft);
+		nextSectorElement=new StaticTextLabelElement();
+		actualLevelElement=new ActualLevelLabelElement(aircraft);
+		exitPointElement=new StaticTextLabelElement();
+		groundSpeedElement=new GroundSpeedLabelElement(aircraft);
+		clearedLevelElement=new StaticTextLabelElement();
+		exitLevelElement=new StaticTextLabelElement();
+		assignedHeadingElement=new StaticTextLabelElement();
+		assignedSpeedElement=new StaticTextLabelElement();
+		assignedClimbRateElement=new StaticTextLabelElement();
 		
-		final Aircraft aircraft=associatedSymbol.getAircraft();
-		callsignElement=new CallsignLabelElement(this,aircraft);
-		nextSectorElement=new StaticTextLabelElement(this,aircraft);
-		actualLevelElement=new ActualLevelLabelElement(this,aircraft);
-		exitPointElement=new StaticTextLabelElement(this,aircraft);
-		groundSpeedElement=new GroundSpeedLabelElement(this,aircraft);
-		clearedLevelElement=new StaticTextLabelElement(this,aircraft);
-		exitLevelElement=new StaticTextLabelElement(this,aircraft);
-		assignedHeadingElement=new StaticTextLabelElement(this,aircraft);
-		assignedSpeedElement=new StaticTextLabelElement(this,aircraft);
-		assignedClimbRateElement=new StaticTextLabelElement(this,aircraft);
+		label.setDisplayComponent(associatedSymbol.getRadarPlanViewContext().getRadarPlanViewPanel());
+		label.setLayoutManager(new MultiLineLabelLayoutManager(Justification.JUSTIFY));
+		for (int i=0;i<labelLines.length;i++) {
+			labelLines[i]=new LabelElementContainer();
+			labelLines[i].setLayoutManager(new LabelLineLayoutManager(Justification.LEADING));
+		}
 		
 		updateLabelContents();
 	}
 	
-	public Rectangle getDisplayBounds() {
+	@Override
+	public void updatePosition() {
+		final Rectangle2D vehicleSymbolBounds=getVehicleSymbol().getSymbolBounds();
+		final Rectangle2D labelBounds=label.getBounds();
+		final double symcx,symcy,symw,symh;
+		final double labelx,labely,labelw,labelh;
+		
+		symcx=vehicleSymbolBounds.getCenterX();
+		symcy=vehicleSymbolBounds.getCenterY();
+		symw=vehicleSymbolBounds.getWidth();
+		symh=vehicleSymbolBounds.getHeight();
+		
+		labelw=labelBounds.getWidth();
+		labelh=labelBounds.getHeight();
+		
+		labelx=symcx+dirX*(symw+labelw)/2-labelw/2+hookX;
+		labely=symcy+dirY*(symh+labelh)/2-labelh/2+hookY;
+		
+		bounds2d=new Rectangle2D.Double(labelx,labely,labelw,labelh);
+		label.setPosition(labelx, labely);
+	}
+	
+	public Rectangle getBounds() {
 		return getBounds2D().getBounds();
 	}
 	
-	@Override
-	public RadarPlanViewPanel getDisplayComponent() {
-		return associatedSymbol.getRadarPlanViewContext().getRadarPlanViewPanel();
+	public Rectangle2D getBounds2D() {
+		return bounds2d;
 	}
 	
 	public void processMouseEvent(MouseEvent e) {
-		labelLayout.processMouseEvent(e);
+		label.processMouseEvent(e);
 	}
 	
 	public void updateLabelContents() {
-		final AircraftState aircraftState=associatedSymbol.getAircraft().getAircraftState();
+		final AircraftState aircraftState=associatedSymbol.getVehicle().getAircraftState();
 		
 		if (aircraftState==null) {
 			prepareNoncorrelatedLabel();
 		} else {
 			final AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
-			labelLines.clear();
 			switch (aircraftTaskState) {
 			case OTHER:
 				prepareOtherLabel();
@@ -103,138 +120,109 @@ public class AircraftLabel implements Label, ILabelDisplay {
 				break;
 			}
 		}
+		label.pack();
 	}
 	
 	private void prepareNoncorrelatedLabel() {
-		labelLine[1].getElements().clear();
-		
-		labelLine[1].getElements().add(actualLevelElement);
-		labelLine[1].getElements().add(groundSpeedElement);
-		
-		labelLines.clear();
-		labelLines.add(callsignElement);
-		labelLines.add(labelLine[1]);
+		label.removeAll();
+
+		label.add(callsignElement);
+
+		labelLines[1].removeAll();
+		labelLines[1].add(actualLevelElement);
+		labelLines[1].add(groundSpeedElement);
+		label.add(labelLines[1]);
 	}
 	
 	private void prepareOtherLabel() {
-		labelLine[0].getElements().clear();
+		label.removeAll();
 		
-		labelLine[0].getElements().add(callsignElement);
-		labelLine[0].getElements().add(nextSectorElement);
+		labelLines[0].removeAll();
+		labelLines[0].add(callsignElement);
+		labelLines[0].add(nextSectorElement);
 		
-		labelLines.clear();
-		labelLines.add(labelLine[0]);
-		labelLines.add(actualLevelElement);
+		label.add(labelLines[0]);
+		label.add(actualLevelElement);
 	}
 	
 	private void prepareNotConcernedLabel() {
-		labelLine[0].getElements().clear();
-		labelLine[1].getElements().clear();
-		labelLine[2].getElements().clear();
-		labelLine[3].getElements().clear();
+		label.removeAll();
 		
-		labelLine[0].getElements().add(callsignElement);
-		labelLine[0].getElements().add(nextSectorElement);
+		labelLines[0].removeAll();
+		labelLines[0].add(callsignElement);
+		labelLines[0].add(nextSectorElement);
+		label.add(labelLines[0]);
 		
-		labelLine[1].getElements().add(actualLevelElement);
-		labelLine[1].getElements().add(exitPointElement);
-		labelLine[1].getElements().add(groundSpeedElement);
+		labelLines[1].removeAll();
+		labelLines[1].add(actualLevelElement);
+		labelLines[1].add(exitPointElement);
+		labelLines[1].add(groundSpeedElement);
+		label.add(labelLines[1]);
 		
-		labelLine[2].getElements().add(clearedLevelElement);
-		labelLine[2].getElements().add(exitLevelElement);
+		labelLines[2].removeAll();
+		labelLines[2].add(clearedLevelElement);
+		labelLines[2].add(exitLevelElement);
+		label.add(labelLines[2]);
 		
-		labelLine[3].getElements().add(assignedHeadingElement);
-		labelLine[3].getElements().add(assignedSpeedElement);
-		labelLine[3].getElements().add(assignedClimbRateElement);
+		labelLines[3].removeAll();
+		labelLines[3].add(assignedHeadingElement);
+		labelLines[3].add(assignedSpeedElement);
+		labelLines[3].add(assignedClimbRateElement);
+		label.add(labelLines[3]);
 		
 		// TODO: fifth line contains optional information...
-		
-		labelLines.clear();
-		labelLines.add(labelLine[0]);
-		labelLines.add(labelLine[1]);
-		labelLines.add(labelLine[2]);
-		labelLines.add(labelLine[3]);
 	}
 	
 	private void prepareStandardLabel() {
-		labelLine[0].getElements().clear();
-		labelLine[1].getElements().clear();
-		labelLine[2].getElements().clear();
-		labelLine[3].getElements().clear();
+		labelLines[0].removeAll();
+		labelLines[1].removeAll();
+		labelLines[2].removeAll();
+		labelLines[3].removeAll();
 		
-		labelLine[0].getElements().add(callsignElement);
-		labelLine[0].getElements().add(nextSectorElement);
+		labelLines[0].add(callsignElement);
+		labelLines[0].add(nextSectorElement);
 		
-		labelLine[1].getElements().add(actualLevelElement);
-		labelLine[1].getElements().add(exitPointElement);
-		labelLine[1].getElements().add(groundSpeedElement);
+		labelLines[1].add(actualLevelElement);
+		labelLines[1].add(exitPointElement);
+		labelLines[1].add(groundSpeedElement);
 		
-		labelLine[2].getElements().add(clearedLevelElement);
-		labelLine[2].getElements().add(exitLevelElement);
+		labelLines[2].add(clearedLevelElement);
+		labelLines[2].add(exitLevelElement);
 		
-		labelLine[3].getElements().add(assignedHeadingElement);
-		labelLine[3].getElements().add(assignedSpeedElement);
-		labelLine[3].getElements().add(assignedClimbRateElement);
+		labelLines[3].add(assignedHeadingElement);
+		labelLines[3].add(assignedSpeedElement);
+		labelLines[3].add(assignedClimbRateElement);
 		
-		labelLines.clear();
-		labelLines.add(labelLine[0]);
-		labelLines.add(labelLine[1]);
-		labelLines.add(labelLine[2]);
-		labelLines.add(labelLine[3]);
-	}
-	
-	public void layout() {
-		labelLayout.layout();
-		
-		Dimension size=labelLayout.getMinimumSize();
-		
-		Rectangle2D newBounds=new Rectangle2D.Double(-size.width/2.0,-size.height/2.0,size.width,size.height);
-		labelLayout.setBounds(newBounds.getBounds());
+		label.removeAll();
+		label.add(labelLines[0]);
+		label.add(labelLines[1]);
+		label.add(labelLines[2]);
+		label.add(labelLines[3]);
 	}
 	
 	public void paint(Graphics2D g2d) {
-		double x,y;
+		final Rectangle2D bounds=getBounds2D();
 		
-		Rectangle2D bounds=getBounds2D();
-		x=bounds.getCenterX();
-		y=bounds.getCenterY();
-		
-		int w,h;
-		w=getSize().width;
-		h=getSize().height;
-		
-		g2d.translate(x,y);
-		
-		final Aircraft aircraft=associatedSymbol.getAircraft();
+		final Aircraft aircraft=associatedSymbol.getVehicle();
 		// TODO: implement properly
 		final AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED;
 		if (aircraft.isSelected()) {
 			g2d.setColor(aircraftTaskState.getSelectedBackgroundColor());
-			g2d.fillRect(-w/2,-h/2,w,h);
+			g2d.fill(bounds);
 			g2d.setColor(aircraftTaskState.getSelectedTextColor());
 		} else {
 			g2d.setColor(aircraftTaskState.getNormalTextColor());
 		}
-		labelLayout.paint(g2d);
-		g2d.translate(-x,-y);
-	}
-	
-	public Rectangle2D getBounds2D() {
-		final Point2D symbolDevicePosition=associatedSymbol.getCurrentDevicePosition();
-		Dimension size=getSize();
-		double x=symbolDevicePosition.getX()+hookX+dirX*size.getWidth()/2.0;
-		double y=symbolDevicePosition.getY()+hookY+dirY*size.getHeight()/2.0;
-		Rectangle2D newBounds=new Rectangle2D.Double(x-size.width/2.0,y-size.height/2.0,size.width,size.height);
-		
-		return newBounds;
-	}
-	
-	public Dimension getSize() {
-		return labelLayout.getMinimumSize();
+		label.paint(g2d);
 	}
 	
 	@Override
-	public LabeledObject getAssociatedObject() {
+	public AircraftSymbol getVehicleSymbol() {
+		return associatedSymbol;
+	}
+	
+	@Override
+	public AircraftSymbol getAssociatedObject() {
 		return associatedSymbol;
 	}
 	
@@ -253,7 +241,7 @@ public class AircraftLabel implements Label, ILabelDisplay {
 		return hookY;
 	}
 	
-	public void setHookPosition(double dx, double dy) {
+	public void setInitialHookPosition(double dx, double dy) {
 		hookX=dx;
 		hookY=dy;
 		
@@ -274,6 +262,11 @@ public class AircraftLabel implements Label, ILabelDisplay {
 			hookX=dirX*AircraftSymbol.maxLabelDist;
 			hookY=dirY*AircraftSymbol.maxLabelDist;
 		}
+	}
+	
+	public void setHookPosition(double dx, double dy) {
+		setInitialHookPosition(dx, dy);
+		updatePosition();
 	}
 	
 	@Override

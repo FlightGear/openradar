@@ -1,21 +1,21 @@
-package de.knewcleus.radar.ui.aircraft;
+package de.knewcleus.radar.ui.vehicles;
 
 import de.knewcleus.radar.aircraft.AircraftState;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.targets.SSRMode;
 import de.knewcleus.radar.targets.Track;
 
-public class Aircraft {
-	protected final AircraftManager aircraftManager;
+public class Aircraft implements IVehicle {
+	protected final VehicleManager aircraftManager;
 	protected final Track target;
 	protected boolean isSelected=false;
 	
-	public Aircraft(AircraftManager aircraftManager, Track target) {
+	public Aircraft(VehicleManager aircraftManager, Track target) {
 		this.aircraftManager=aircraftManager;
 		this.target=target;
 	}
 	
-	public AircraftManager getAircraftManager() {
+	public VehicleManager getAircraftManager() {
 		return aircraftManager;
 	}
 	

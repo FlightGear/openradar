@@ -34,10 +34,11 @@ import de.knewcleus.radar.autolabel.Autolabeller;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
-import de.knewcleus.radar.ui.aircraft.Aircraft;
-import de.knewcleus.radar.ui.aircraft.IAircraftUpdateListener;
+import de.knewcleus.radar.ui.vehicles.Aircraft;
+import de.knewcleus.radar.ui.vehicles.IVehicle;
+import de.knewcleus.radar.ui.vehicles.IVehicleUpdateListener;
 
-public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListener, PropertyChangeListener {
+public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener, PropertyChangeListener {
 	protected final static Logger logger=Logger.getLogger(RadarPlanViewPanel.class.getName());
 	private static final long serialVersionUID = 8996959818592227638L;
 	
@@ -59,7 +60,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 	protected final float scaleMarkerDistance=10.0f*(float)Units.NM;
 	protected final float centrelineLength=5.0f*(float)Units.NM;
 	
-	protected Map<Aircraft, AircraftSymbol> aircraftSymbolMap=new HashMap<Aircraft, AircraftSymbol>();
+	protected Map<IVehicle, IVehicleSymbol> vehicleSymbolMap=new HashMap<IVehicle, IVehicleSymbol>();
 	protected long lastMouseX,lastMouseY;
 	protected boolean isSelectedLabelArmed;
 	
@@ -90,9 +91,9 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 
 		/*
 		 * We just register as a state consumer here. With the next update cycle we will collect all the
-		 * aircraft states.
+		 * vehicle states.
 		 */
-		workstation.getAircraftManager().registerAircraftUpdateListener(this);
+		workstation.getVehicleManager().registerVehicleUpdateListener(this);
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
 	}
@@ -116,8 +117,8 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 			
 			if (propertyName.equals(RadarPlanViewSettings.IS_AUTOMATIC_LABELING_ENABLED_PROPERTY)) {
 				/* Reset all labels into unlocked state */
-				for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-					aircraftSymbol.setLocked(false);
+				for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
+					vehicleSymbol.setLocked(false);
 				}
 			}
 			if (!settings.isAutomaticLabelingEnabled()) {
@@ -142,8 +143,8 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 		dx*=distance/length;
 		dy*=distance/length;
 		
-		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-			aircraftSymbol.getLabel().setHookPosition(dx,dy);
+		for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
+			vehicleSymbol.getLabel().setHookPosition(dx,dy);
 		}
 	}
 	
@@ -181,7 +182,7 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 			dy=e.getY()-lastMouseY;
 			
 			if (isSelectedLabelArmed) {
-				AircraftSymbol selectedSymbol=getSelectedSymbol();
+				IVehicleSymbol selectedSymbol=getSelectedSymbol();
 				selectedSymbol.getLabel().move(dx, dy);
 				selectedSymbol.setLocked(true);
 				repaint();
@@ -200,16 +201,19 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 	protected void processComponentEvent(ComponentEvent e) {
 		if (e.getID()==ComponentEvent.COMPONENT_RESIZED) {
 			radarDeviceTransformation.update(getWidth(), getHeight());
+			for (IVehicleSymbol symbol: vehicleSymbolMap.values()) {
+				symbol.updatePosition();
+			}
 		}
 		super.processComponentEvent(e);
 	}
 	
 	@Override
 	protected void processMouseEvent(MouseEvent e) {
-		final AircraftSymbol selectedSymbol=getSelectedSymbol();
+		final IVehicleSymbol selectedSymbol=getSelectedSymbol();
 		final boolean selectedLabelHit;
 		
-		selectedLabelHit=(selectedSymbol!=null && selectedSymbol.getLabel().getDisplayBounds().contains(e.getPoint()));
+		selectedLabelHit=(selectedSymbol!=null && selectedSymbol.getLabel().getBounds2D().contains(e.getPoint()));
 		
 		if (e.getID()==MouseEvent.MOUSE_PRESSED && e.getButton()==1) {
 			isSelectedLabelArmed=selectedLabelHit;
@@ -218,29 +222,20 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 		}
 		
 		if (selectedLabelHit) {
-			Rectangle labelBounds=selectedSymbol.getLabel().getDisplayBounds();
-			int w=labelBounds.width,h=labelBounds.height;
-			int cx,cy;
-			
-			cx=labelBounds.x+w/2;
-			cy=labelBounds.y+h/2;
-			
-			e.translatePoint(-cx,-cy);
 			selectedSymbol.getLabel().processMouseEvent(e);
-			e.translatePoint(cx,cy);
 		}
 		
 		if (!e.isConsumed())
 			super.processMouseEvent(e);
 	}
 	
-	private AircraftSymbol getSelectedSymbol() {
-		Aircraft selectedAircraft=workstation.getAircraftManager().getSelectedAircraft();
+	private IVehicleSymbol getSelectedSymbol() {
+		IVehicle selectedVehicle=workstation.getVehicleManager().getSelectedVehicle();
 		
-		if (selectedAircraft==null) {
+		if (selectedVehicle==null) {
 			return null;
 		}
-		return aircraftSymbolMap.get(selectedAircraft);
+		return vehicleSymbolMap.get(selectedVehicle);
 	}
 	
 	private boolean checkForSelectionChange() {
@@ -253,22 +248,22 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 		x=currentLocation.x-locOnScreen.x;
 		y=currentLocation.y-locOnScreen.y;
 		
-		AircraftSymbol selectedSymbol=getSelectedSymbol();
+		final IVehicleSymbol selectedSymbol=getSelectedSymbol();
 		
-		if (selectedSymbol!=null && selectedSymbol.canSelect() && selectedSymbol.containsPosition(x, y)) {
+		if (selectedSymbol!=null && selectedSymbol.canSelect() && selectedSymbol.containsPoint(x, y)) {
 			return false; // The old selection has priority
 		}
 		
-		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-			if (aircraftSymbol.canSelect() && aircraftSymbol.containsPosition(x, y)) {
-				workstation.getAircraftManager().select(aircraftSymbol.getAircraft());
+		for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
+			if (vehicleSymbol.canSelect() && vehicleSymbol.containsPoint(x, y)) {
+				workstation.getVehicleManager().select(vehicleSymbol.getVehicle());
 				return true;
 			}
 		}
 		
 		/* No symbol hit, so we deselect the currently selected associatedTarget, if any */
 		boolean hadSelection=(selectedSymbol!=null);
-		workstation.getAircraftManager().deselect();
+		workstation.getVehicleManager().deselect();
 		return hadSelection;
 	}
 	
@@ -291,10 +286,6 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 		super.paintComponent(g);
 		
 		long startTime=System.currentTimeMillis();
-		
-		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-			aircraftSymbol.layout();
-		}
 		
 		if (getSettings().isAutomaticLabelingEnabled()) {
 			long maxUpdateTimeMillis=100;
@@ -330,28 +321,28 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 		drawScaleMarkers(g2d, radarDeviceTransformation);
 		
 		if (getSettings().getSpeedVectorMinutes()>0) {
-			for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-				aircraftSymbol.drawHeadingVector(g2d);
+			for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
+				vehicleSymbol.paintHeadingVector(g2d);
 			}
 		}
 		if (getSettings().getTrackHistoryLength()>0) {
-			for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-				aircraftSymbol.drawTrail(g2d);
+			for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
+				vehicleSymbol.paintTrail(g2d);
 			}
 		}
-		AircraftSymbol selectedSymbol=getSelectedSymbol();
+		IVehicleSymbol selectedSymbol=getSelectedSymbol();
 	
-		for (AircraftSymbol aircraftSymbol: aircraftSymbolMap.values()) {
-			if (aircraftSymbol==selectedSymbol) {
+		for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
+			if (vehicleSymbol==selectedSymbol) {
 				continue;
 			}
-			aircraftSymbol.drawSymbol(g2d);
-			aircraftSymbol.drawLabel(g2d);
+			vehicleSymbol.paintSymbol(g2d);
+			vehicleSymbol.paintLabel(g2d);
 		}
 		
 		if (selectedSymbol!=null) {
-			selectedSymbol.drawSymbol(g2d);
-			selectedSymbol.drawLabel(g2d);
+			selectedSymbol.paintSymbol(g2d);
+			selectedSymbol.paintLabel(g2d);
 		}
 	}
 	
@@ -440,32 +431,33 @@ public class RadarPlanViewPanel extends JPanel implements IAircraftUpdateListene
 	}
 	
 	@Override
-	public synchronized void aircraftLost(Aircraft lostAircraft) {
-		AircraftSymbol aircraftSymbol=aircraftSymbolMap.get(lostAircraft);
-		autolabeller.removeLabeledObject(aircraftSymbol);
-		aircraftSymbolMap.remove(lostAircraft);
-		logger.fine("Aircraft lost:"+lostAircraft);
+	public synchronized void vehicleLost(IVehicle lostVehicle) {
+		IVehicleSymbol vehicleSymbol=vehicleSymbolMap.get(lostVehicle);
+		autolabeller.removeLabeledObject(vehicleSymbol);
+		vehicleSymbolMap.remove(lostVehicle);
+		logger.fine("Vehicle lost:"+lostVehicle);
 	}
 	
 	@Override
-	public synchronized void aircraftUpdated(Set<Aircraft> updatedAircraft) {
-		logger.fine("Aircraft state update");
+	public synchronized void vehicleUpdated(Set<IVehicle> updatedVehicles) {
+		logger.fine("Vehicle state update");
 		final RadarPlanViewSettings settings=getSettings();
 		final StandardLabelPosition labelPosition=settings.getStandardLabelPosition();
 		final double distance=getStandardLabelDistance();
 		
-		for (Aircraft aircraftState: updatedAircraft) {
-			AircraftSymbol aircraftSymbol;
-			if (aircraftSymbolMap.containsKey(aircraftState)) {
-				aircraftSymbol=aircraftSymbolMap.get(aircraftState);
+		for (IVehicle vehicle: updatedVehicles) {
+			IVehicleSymbol vehicleSymbol;
+			if (vehicleSymbolMap.containsKey(vehicle)) {
+				vehicleSymbol=vehicleSymbolMap.get(vehicle);
 			} else {
-				aircraftSymbol=new AircraftSymbol(radarPlanViewContext,aircraftState);
-				aircraftSymbolMap.put(aircraftState, aircraftSymbol);
-				aircraftSymbol.getLabel().setHookPosition(distance*labelPosition.getDx(), distance*labelPosition.getDy());
-				autolabeller.addLabeledObject(aircraftSymbol);
-				logger.fine("Aircraft state acquired:"+aircraftState);
+				vehicleSymbol=new AircraftSymbol(radarPlanViewContext,(Aircraft)vehicle);
+				vehicleSymbol.getLabel().setInitialHookPosition(distance*labelPosition.getDx(), distance*labelPosition.getDy());
+				autolabeller.addLabeledObject(vehicleSymbol);
+				vehicleSymbolMap.put(vehicle, vehicleSymbol);
+				logger.fine("Vehicle state acquired:"+vehicle);
 			}
-			aircraftSymbol.layout();
+			vehicleSymbol.getLabel().updateLabelContents();
+			vehicleSymbol.updatePosition();
 		}
 
 		SwingUtilities.invokeLater(new Runnable() {

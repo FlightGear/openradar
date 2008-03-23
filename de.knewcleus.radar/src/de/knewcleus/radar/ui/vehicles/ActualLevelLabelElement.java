@@ -1,14 +1,15 @@
-package de.knewcleus.radar.ui.aircraft;
+package de.knewcleus.radar.ui.vehicles;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.radar.targets.SSRMode;
 import de.knewcleus.radar.targets.Track;
 import de.knewcleus.radar.ui.labels.AbstractTextLabelElement;
-import de.knewcleus.radar.ui.labels.ILabelDisplay;
 
 public class ActualLevelLabelElement extends AbstractTextLabelElement {
-	public ActualLevelLabelElement(ILabelDisplay labelDisplay, Aircraft aircraftState) {
-		super(labelDisplay, aircraftState);
+	protected final Aircraft aircraft;
+	
+	public ActualLevelLabelElement(Aircraft aircraft) {
+		this.aircraft=aircraft;
 	}
 
 	@Override
