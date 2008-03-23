@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft;
+package de.knewcleus.radar.targets;
 
 public enum SSRMode {
 	NONE("None",false,false),

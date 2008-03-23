@@ -20,9 +20,9 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
-import de.knewcleus.radar.aircraft.Target;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
+import de.knewcleus.radar.targets.Target;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.aircraft.Aircraft;
 

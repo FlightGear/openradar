@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft.fgmp;
+package de.knewcleus.radar.targets.fgmp;
 
 import java.io.IOException;
 

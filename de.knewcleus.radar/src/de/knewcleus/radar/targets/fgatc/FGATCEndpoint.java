@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft.fgatc;
+package de.knewcleus.radar.targets.fgatc;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -16,17 +16,17 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
-import de.knewcleus.radar.aircraft.IRadarDataConsumer;
-import de.knewcleus.radar.aircraft.IRadarDataProvider;
-import de.knewcleus.radar.aircraft.RadarTargetInformation;
-import de.knewcleus.radar.aircraft.SSRMode;
+import de.knewcleus.radar.targets.ITrackDataConsumer;
+import de.knewcleus.radar.targets.ITargetProvider;
+import de.knewcleus.radar.targets.TargetInformation;
+import de.knewcleus.radar.targets.SSRMode;
 
-public class FGATCEndpoint implements Runnable, IRadarDataProvider {
+public class FGATCEndpoint implements Runnable, ITargetProvider {
 	protected final static Logger logger=Logger.getLogger("de.knewcleus.radar.aircraft.fgatc");
 	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
 	protected final DatagramSocket datagramSocket;
 	protected final static int receiveBufferLength=1024;
-	protected final Set<IRadarDataConsumer> consumers=new HashSet<IRadarDataConsumer>();
+	protected final Set<ITrackDataConsumer> consumers=new HashSet<ITrackDataConsumer>();
 	protected final Map<Object, ClientStatus> clients=new HashMap<Object, ClientStatus>();
 	protected final int timeoutMillis=5000;
 	protected long nextRadarUpdate;
@@ -145,7 +145,7 @@ public class FGATCEndpoint implements Runnable, IRadarDataProvider {
 	}
 	
 	protected synchronized void sendRadarUpdate() {
-		Set<RadarTargetInformation> targets=new HashSet<RadarTargetInformation>();
+		Set<TargetInformation> targets=new HashSet<TargetInformation>();
 		
 		for (Map.Entry<Object, ClientStatus> entry: clients.entrySet()) {
 			Object trackID=entry.getKey();
@@ -160,7 +160,7 @@ public class FGATCEndpoint implements Runnable, IRadarDataProvider {
 				ssrMode=SSRMode.MODEA;
 			}
 			
-			RadarTargetInformation targetInformation=new RadarTargetInformation(
+			TargetInformation targetInformation=new TargetInformation(
 					trackID,
 					clientStatus.longitude,clientStatus.latitude,
 					clientStatus.groundSpeed,clientStatus.trueCourse,
@@ -194,23 +194,23 @@ public class FGATCEndpoint implements Runnable, IRadarDataProvider {
 	}
 	
 	@Override
-	public synchronized void registerRadarDataConsumer(IRadarDataConsumer consumer) {
+	public synchronized void registerTrackDataConsumer(ITrackDataConsumer consumer) {
 		consumers.add(consumer);
 	}
 	
 	@Override
-	public synchronized void unregisterRadarDataConsumer(IRadarDataConsumer consumer) {
+	public synchronized void unregisterTrackDataConsumer(ITrackDataConsumer consumer) {
 		consumers.remove(consumer);
 	}
 	
-	protected void fireRadarDataUpdated(Set<RadarTargetInformation> targets) {
-		for (IRadarDataConsumer consumer: consumers) {
+	protected void fireRadarDataUpdated(Set<TargetInformation> targets) {
+		for (ITrackDataConsumer consumer: consumers) {
 			consumer.radarDataUpdated(targets);
 		}
 	}
 	
 	protected void fireRadarTargetLost(Object target) {
-		for (IRadarDataConsumer consumer: consumers) {
+		for (ITrackDataConsumer consumer: consumers) {
 			consumer.radarTargetLost(target);
 		}
 	}

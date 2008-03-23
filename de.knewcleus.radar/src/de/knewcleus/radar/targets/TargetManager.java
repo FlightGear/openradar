@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft;
+package de.knewcleus.radar.targets;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -8,15 +8,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-
-public class TargetManager implements IRadarDataConsumer {
+public class TargetManager implements ITrackDataConsumer {
 	private final static Logger logger=Logger.getLogger(TargetManager.class.getName());
-	protected final IRadarDataProvider radarDataProvider;
+	protected final ITargetProvider radarDataProvider;
 	protected final Map<Object, Target> targetMap=new HashMap<Object, Target>();
 	protected final Set<ITargetUpdateListener> targetListeners=new HashSet<ITargetUpdateListener>();
 	protected final int maximumPositionBufferLength;
 	
-	public TargetManager(IRadarDataProvider radarDataProvider) {
+	public TargetManager(ITargetProvider radarDataProvider) {
 		this.radarDataProvider=radarDataProvider;
 
 		/*
@@ -24,7 +23,7 @@ public class TargetManager implements IRadarDataConsumer {
 		 * about the current set of acquired targets. Instead a set of radar target information updates
 		 * is sent every update cycle. With that information we also get the list of known targets.
 		 */
-		radarDataProvider.registerRadarDataConsumer(this);
+		radarDataProvider.registerTrackDataConsumer(this);
 		
 		/* We record position data up to 15 minutes backwards */
 		maximumPositionBufferLength=15*60/radarDataProvider.getSecondsBetweenUpdates();
@@ -60,9 +59,9 @@ public class TargetManager implements IRadarDataConsumer {
 	}
 	
 	@Override
-	public synchronized void radarDataUpdated(Set<RadarTargetInformation> targets) {
+	public synchronized void radarDataUpdated(Set<TargetInformation> targets) {
 		Set<Target> updatedStates=new HashSet<Target>();
-		for (RadarTargetInformation target: targets) {
+		for (TargetInformation target: targets) {
 			Object trackIdentifier=target.getTrackIdentifier();
 			Target aircraftState;
 			

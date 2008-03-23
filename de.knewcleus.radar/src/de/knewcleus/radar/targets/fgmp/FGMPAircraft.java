@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft.fgmp;
+package de.knewcleus.radar.targets.fgmp;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
@@ -9,7 +9,7 @@ import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.multiplayer.Player;
 import de.knewcleus.fgfs.multiplayer.PlayerAddress;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
-import de.knewcleus.radar.aircraft.SSRMode;
+import de.knewcleus.radar.targets.SSRMode;
 
 public class FGMPAircraft extends Player {
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);

@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft.fgatc;
+package de.knewcleus.radar.targets.fgatc;
 
 import java.net.InetAddress;
 

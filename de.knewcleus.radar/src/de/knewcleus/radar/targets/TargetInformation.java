@@ -1,6 +1,6 @@
-package de.knewcleus.radar.aircraft;
+package de.knewcleus.radar.targets;
 
-public class RadarTargetInformation {
+public class TargetInformation {
 	protected final Object trackIdentifier;
 	protected final double longitude;
 	protected final double latitude;
@@ -11,7 +11,7 @@ public class RadarTargetInformation {
 	protected final String ssrCode;
 	protected final double pressureAltitude;
 	
-	public RadarTargetInformation(Object trackIdentifier,
+	public TargetInformation(Object trackIdentifier,
 			double longitude, double latitude,
 			double groundSpeed, double trueCourse,
 			SSRMode ssrMode,

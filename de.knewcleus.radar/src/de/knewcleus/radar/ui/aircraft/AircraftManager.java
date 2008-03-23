@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import de.knewcleus.radar.aircraft.ITargetUpdateListener;
-import de.knewcleus.radar.aircraft.Target;
+import de.knewcleus.radar.targets.ITargetUpdateListener;
+import de.knewcleus.radar.targets.Target;
 import de.knewcleus.radar.ui.RadarWorkstation;
 
 public class AircraftManager implements ITargetUpdateListener {

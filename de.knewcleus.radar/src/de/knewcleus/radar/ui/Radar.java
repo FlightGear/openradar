@@ -22,13 +22,13 @@ import de.knewcleus.fgfs.navaids.DBParserException;
 import de.knewcleus.radar.aircraft.BuddySquawkAllocator;
 import de.knewcleus.radar.aircraft.CorrelationDatabase;
 import de.knewcleus.radar.aircraft.ICorrelationDatabase;
-import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.aircraft.ISquawkAllocator;
-import de.knewcleus.radar.aircraft.fgatc.FGATCEndpoint;
-import de.knewcleus.radar.aircraft.fgmp.ATCClient;
-import de.knewcleus.radar.aircraft.fgmp.FGMPAircraft;
-import de.knewcleus.radar.aircraft.fgmp.FGMPRegistry;
 import de.knewcleus.radar.sector.Sector;
+import de.knewcleus.radar.targets.ITargetProvider;
+import de.knewcleus.radar.targets.fgatc.FGATCEndpoint;
+import de.knewcleus.radar.targets.fgmp.ATCClient;
+import de.knewcleus.radar.targets.fgmp.FGMPAircraft;
+import de.knewcleus.radar.targets.fgmp.FGMPRegistry;
 import de.knewcleus.radar.ui.plaf.refghmi.REFGHMILookAndFeel;
 
 public class Radar {
@@ -56,7 +56,7 @@ public class Radar {
 		Sector sector=Sector.loadFromURL(sectorURL);
 
 		/* Prepare radar data provider */
-		IRadarDataProvider radarDataProvider;
+		ITargetProvider radarDataProvider;
 		ISquawkAllocator squawkAllocator=new BuddySquawkAllocator();
 		ICorrelationDatabase correlationDatabase=new CorrelationDatabase();
 		if (Boolean.getBoolean("de.knewcleus.radar.useMPProtocol")) {

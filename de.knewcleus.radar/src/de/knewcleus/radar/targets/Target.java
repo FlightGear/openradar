@@ -1,4 +1,4 @@
-package de.knewcleus.radar.aircraft;
+package de.knewcleus.radar.targets;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -49,7 +49,7 @@ public class Target {
 		return pressureAltitude;
 	}
 	
-	public void update(RadarTargetInformation targetInformation) {
+	public void update(TargetInformation targetInformation) {
 		logger.fine("Updating aircraft state "+this+" from "+targetInformation);
 		Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
 		positionBuffer.addLast(new Position(currentGeodPosition));

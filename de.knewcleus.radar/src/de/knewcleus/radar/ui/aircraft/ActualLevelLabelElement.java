@@ -1,8 +1,8 @@
 package de.knewcleus.radar.ui.aircraft;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.radar.aircraft.SSRMode;
-import de.knewcleus.radar.aircraft.Target;
+import de.knewcleus.radar.targets.SSRMode;
+import de.knewcleus.radar.targets.Target;
 import de.knewcleus.radar.ui.labels.AbstractTextLabelElement;
 import de.knewcleus.radar.ui.labels.ILabelDisplay;
 

@@ -12,9 +12,9 @@ import de.knewcleus.fgfs.location.LocalProjection;
 import de.knewcleus.radar.aircraft.AircraftStateManager;
 import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 import de.knewcleus.radar.aircraft.ISquawkAllocator;
-import de.knewcleus.radar.aircraft.TargetManager;
-import de.knewcleus.radar.aircraft.IRadarDataProvider;
 import de.knewcleus.radar.sector.Sector;
+import de.knewcleus.radar.targets.ITargetProvider;
+import de.knewcleus.radar.targets.TargetManager;
 import de.knewcleus.radar.ui.aircraft.AircraftManager;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
@@ -35,7 +35,7 @@ public class RadarWorkstation {
 	protected final List<RadarDesktop> desktops=new ArrayList<RadarDesktop>();
 	protected RadarDesktop radarPlanViewDesktop;
 
-	public RadarWorkstation(Sector sector, IRadarDataProvider radarDataProvider, ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) {
+	public RadarWorkstation(Sector sector, ITargetProvider radarDataProvider, ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) {
 		this.sector=sector;
 		this.squawkAllocator=squawkAllocator;
 		this.correlationDatabase=correlationDatabase;

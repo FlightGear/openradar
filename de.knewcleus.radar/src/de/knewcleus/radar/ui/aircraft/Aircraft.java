@@ -2,8 +2,8 @@ package de.knewcleus.radar.ui.aircraft;
 
 import de.knewcleus.radar.aircraft.AircraftState;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
-import de.knewcleus.radar.aircraft.SSRMode;
-import de.knewcleus.radar.aircraft.Target;
+import de.knewcleus.radar.targets.SSRMode;
+import de.knewcleus.radar.targets.Target;
 
 public class Aircraft {
 	protected final AircraftManager aircraftManager;
