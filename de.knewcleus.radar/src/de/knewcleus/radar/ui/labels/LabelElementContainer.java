@@ -97,6 +97,21 @@ public class LabelElementContainer extends LabelElement {
 		layoutManager.layout(this);
 	}
 	
+	@Override
+	public void setPosition(double x, double y) {
+		final double dx,dy;
+		final Rectangle2D bounds=getBounds2D();
+		
+		dx=x-bounds.getMinX();
+		dy=y-bounds.getMinY();
+		
+		for (LabelElement child: children) {
+			final Rectangle2D childBounds=child.getBounds2D();
+			child.setPosition(childBounds.getMinX()+dx, childBounds.getMinY()+dy);
+		}
+		super.setPosition(x, y);
+	}
+	
 	public void pack() {
 		Dimension2D minSize=getMinimumSize();
 		Rectangle2D oldBounds=getBounds2D();
