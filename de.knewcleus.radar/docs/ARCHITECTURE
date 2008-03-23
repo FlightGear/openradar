@@ -64,3 +64,11 @@ Interaction patterns
 
 (Req-UI-50) Clicking on the callsign of a vehicle invokes the callsign menu, providing access to the available actions modifying the planning
 planning state of the vehicle.
+
+Radar Plan View Display
+-----------------------
+
+(Req-RPVD-10) A vehicle symbol in the RPVD shall be the physical representation of a radar track.
+
+(Req-RPVD-20) If a radar track is correlated with a vehicle state, a vehicle symbol in the RPVD shall also physically represent the
+vehicle state.
