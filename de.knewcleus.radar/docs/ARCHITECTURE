@@ -1,18 +1,21 @@
 TARGET ARCHITECTURE
 ===================
 
-NOTE: This is not the current architecture, but a target to work towards.
+General Requirements
+--------------------
+
+NOTE: This is a collection of requirements not yet associated to other sections.
 
 In general the architecture should model the architecture of actual radar and control systems.
 
-(Req-10) There shall be a radar which provides radar targets with primary and secondary information
+(Req-Gen-10) There shall be a radar which provides radar targets with primary and secondary information
 (position + transponder data).
 
-(Req-20) The radar display is updated whenever radar data updates are received.
+(Req-Gen-20) The radar display is updated whenever radar data updates are received.
 
-(Req-30) There shall be a flightplan server providing flightplan data by flightnumber or callsign.
+(Req-Gen-30) There shall be a flightplan server providing flightplan data by flightnumber or callsign.
 
-(Req-40) The flightplan data consists of the typical data provided in the normal ICAO flightplan forms:
+(Req-Gen-40) The flightplan data consists of the typical data provided in the normal ICAO flightplan forms:
 	- Callsign/Flight Number
 	- Flightrules, Type of flight
 	- Number of aircraft, Aircraft type (ICAO), Wake category
@@ -22,8 +25,42 @@ In general the architecture should model the architecture of actual radar and co
 	- Aerodrome of destination, ELDT, Alternates
 	- Remarks
 
-(Req-50) Coordination data shall be passed from sector to sector on coordination.
+(Req-Gen-50) Coordination data shall be passed from sector to sector on coordination.
 
-(Req-60) Coordination is a multi-step process, in which multiple refinements of coordination data may occur until the transferring controller has released the aircraft and the next controller as assumed control over it.
+(Req-Gen-60) Coordination is a multi-step process, in which multiple refinements of coordination data may occur until the transferring controller has released the aircraft and the next controller as assumed control over it.
 
-(Req-70) The communication model shall support both structured messages (e.g. for AI aircraft) as well as simple text and voice messages.
+(Req-Gen-70) The communication model shall support both structured messages (e.g. for AI aircraft) as well as simple text and voice messages.
+
+Interface
+---------
+
+(Req-UI-10) The implementation shall separated display element from logical element.
+
+For example for an aircraft, the display element is the object representing the aircraft on the radar display, while the logical element
+is the representation of the current state of the aircraft in the system. Multiple display elements may represent the same logical element.
+Each display element is updated whenever at least one part of the logical element changes which is displayed in the display element.
+
+The display element also represents the locus of interaction with the logical element, i.e. it accepts input actions by the user and
+forwards them accordingly to the logical element.
+
+(Req-UI-20) Logical and physical interaction shall be distinguished.
+
+The logical interaction with an object represents the direct interaction visible by the logical element, while the physical interaction
+represents the concrete elements of display by the system and the actions carried out by the user with the primary input devices to
+instruct the logical interactions.
+
+For example, in case of the change of cleared flight level, the logical interaction is the abstract change of flight level to a new value,
+while the physical interaction consists in the movement of the pointer over the cleared flight level field in the aircraft label, clicking
+with button B1, the display of the flight level window by the system, the movement of the pointer over the new value for the cleared flight
+level field and the selection of the intended level by clicking B1.
+
+(Req-UI-30) To achieve consistency of the interaction between user and system, the physical interaction corresponding to a given logical interaction
+shall be the same or similar throughout the whole user interface.
+
+(Req-UI-40) Patterns of interaction shall be analysed and implemented.
+
+Interaction patterns
+--------------------
+
+(Req-UI-50) Clicking on the callsign of a vehicle invokes the callsign menu, providing access to the available actions modifying the planning
+planning state of the vehicle.
