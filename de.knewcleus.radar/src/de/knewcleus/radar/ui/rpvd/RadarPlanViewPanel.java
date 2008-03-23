@@ -238,7 +238,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		return vehicleSymbolMap.get(selectedVehicle);
 	}
 	
-	private boolean checkForSelectionChange() {
+	private synchronized boolean checkForSelectionChange() {
 		if (!isShowing())
 			return false;
 		Point locOnScreen=getLocationOnScreen();

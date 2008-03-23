@@ -71,7 +71,7 @@ public class VehicleManager implements ITrackUpdateListener {
 		}
 	}
 	
-	public synchronized void select(IVehicle vehicle) {
+	public void select(IVehicle vehicle) {
 		if (selectedVehicle!=null) {
 			logger.fine("Deselecting aircraft "+selectedVehicle);
 			selectedVehicle.setSelected(false);

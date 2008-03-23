@@ -20,6 +20,7 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
+import de.knewcleus.radar.aircraft.AircraftState;
 import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 import de.knewcleus.radar.targets.Track;
@@ -106,14 +107,20 @@ public class AircraftSymbol implements IVehicleSymbol {
 	}
 	
 	protected Color getSymbolColor() {
-		// TODO: implement properly
-		AircraftTaskState taskState=AircraftTaskState.ASSUMED;
+		final AircraftState aircraftState=getVehicle().getAircraftState();
+		if (aircraftState==null) {
+			/* Not correlated */
+			return Palette.BEACON;
+		}
+		AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
 		
-		switch (taskState) {
-		case ADVANCED_INFORMATION:
-		case CONCERNED:
+		switch (aircraftTaskState) {
+		case PENDING_IN:
+		case PENDING:
 		case ASSUMED:
 			return Palette.BLACK;
+		case NOT_CONCERNED:
+		case ASSUMED_OUT:
 		default:
 			return Palette.BEACON;
 		}

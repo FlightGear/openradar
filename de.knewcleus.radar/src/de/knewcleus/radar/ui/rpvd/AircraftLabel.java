@@ -4,7 +4,7 @@ package de.knewcleus.radar.ui.rpvd;
 import java.awt.Color;
 
 import de.knewcleus.radar.aircraft.AircraftState;
-import de.knewcleus.radar.aircraft.AircraftTaskState;
+import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.labels.Justification;
 import de.knewcleus.radar.ui.labels.LabelElement;
 import de.knewcleus.radar.ui.labels.LabelElementContainer;
@@ -66,20 +66,10 @@ public class AircraftLabel extends AbstractVehicleLabel {
 		
 		if (aircraftState==null) {
 			prepareNoncorrelatedLabel();
-		} else {
-			final AircraftTaskState aircraftTaskState=aircraftState.getTaskState();
-			switch (aircraftTaskState) {
-			case OTHER:
-				prepareOtherLabel();
-				break;
-			case NOT_CONCERNED:
-				prepareNotConcernedLabel();
-				break;
-			case ASSUMED:
-			case CONCERNED:
-				prepareStandardLabel();
-				break;
-			}
+		} else if (associatedSymbol.getVehicle().isSelected()) {
+			prepareStandardLabel();
+		} else { 
+			prepareMinimumLabel();
 		}
 		pack();
 	}
@@ -93,7 +83,7 @@ public class AircraftLabel extends AbstractVehicleLabel {
 		labelLines[1].add(groundSpeedElement);
 	}
 	
-	private void prepareOtherLabel() {
+	private void prepareMinimumLabel() {
 		clearAllLines();
 		labelLines[0].add(callsignElement);
 		labelLines[0].add(nextSectorElement);
@@ -101,7 +91,7 @@ public class AircraftLabel extends AbstractVehicleLabel {
 		labelLines[1].add(actualLevelElement);
 	}
 	
-	private void prepareNotConcernedLabel() {
+	private void prepareStandardLabel() {
 		clearAllLines();
 		labelLines[0].add(callsignElement);
 		labelLines[0].add(nextSectorElement);
@@ -118,24 +108,6 @@ public class AircraftLabel extends AbstractVehicleLabel {
 		labelLines[3].add(assignedClimbRateElement);
 		
 		// TODO: fifth line contains optional information...
-	}
-	
-	private void prepareStandardLabel() {
-		clearAllLines();
-		
-		labelLines[0].add(callsignElement);
-		labelLines[0].add(nextSectorElement);
-		
-		labelLines[1].add(actualLevelElement);
-		labelLines[1].add(exitPointElement);
-		labelLines[1].add(groundSpeedElement);
-		
-		labelLines[2].add(clearedLevelElement);
-		labelLines[2].add(exitLevelElement);
-		
-		labelLines[3].add(assignedHeadingElement);
-		labelLines[3].add(assignedSpeedElement);
-		labelLines[3].add(assignedClimbRateElement);
 	}
 	
 	@Override
@@ -155,22 +127,32 @@ public class AircraftLabel extends AbstractVehicleLabel {
 
 	@Override
 	public Color getNormalTextColor() {
-		// TODO implement properly
-		final AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED;
-		return aircraftTaskState.getNormalTextColor();
+		final AircraftState aircraftState=associatedSymbol.getVehicle().getAircraftState();
+		if (aircraftState==null) {
+			/* Not correlated */
+			return Palette.BEACON;
+		}
+		
+		switch (aircraftState.getTaskState()) {
+		case NOT_CONCERNED:
+		case ASSUMED_OUT:
+			return Palette.BEACON;
+		case PENDING:
+		case PENDING_IN:
+		case ASSUMED:
+			return Palette.WHITE;
+		}
+		
+		return Palette.BEACON;
 	}
 
 	@Override
 	public Color getSelectedBackgroundColor() {
-		// TODO implement properly
-		final AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED;
-		return aircraftTaskState.getSelectedBackgroundColor();
+		return getNormalTextColor();
 	}
 
 	@Override
 	public Color getSelectedTextColor() {
-		// TODO implement properly
-		final AircraftTaskState aircraftTaskState=AircraftTaskState.ASSUMED;
-		return aircraftTaskState.getSelectedTextColor();
+		return Palette.BLACK;
 	}
 }

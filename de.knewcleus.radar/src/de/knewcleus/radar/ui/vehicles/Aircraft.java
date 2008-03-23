@@ -1,7 +1,6 @@
 package de.knewcleus.radar.ui.vehicles;
 
 import de.knewcleus.radar.aircraft.AircraftState;
-import de.knewcleus.radar.aircraft.AircraftTaskState;
 import de.knewcleus.radar.targets.SSRMode;
 import de.knewcleus.radar.targets.Track;
 
@@ -57,9 +56,6 @@ public class Aircraft implements IVehicle {
 	}
 	
 	public boolean canSelect() {
-		AircraftState aircraftState=getAircraftState();
-		if (aircraftState==null)
-			return false;
-		return aircraftState.getTaskState()!=AircraftTaskState.OTHER;
+		return true;
 	}
 }
