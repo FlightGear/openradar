@@ -52,7 +52,11 @@ public class Autolabeller {
 			objectsToProcess.addLast(labeledObject);
 			return;
 		}
-		Label label=labeledObject.getLabel();
+		final Label label=labeledObject.getLabel();
+		if (label==null) {
+			/* At some times labelled objects do not display their labels */
+			return;
+		}
 		
 		/* First determine the simple charge potential gradient (Coloumb-Force) */
 		ChargePotentialGradientCalculator gradientCalculator=new ChargePotentialGradientCalculator(label);
@@ -61,7 +65,10 @@ public class Autolabeller {
 			if (object==labeledObject)
 				continue; // skip the object itself
 			gradientCalculator.addCharge(object);
-			gradientCalculator.addCharge(object.getLabel());
+			final Label objectLabel=object.getLabel();
+			if (objectLabel!=null) {
+				gradientCalculator.addCharge(object.getLabel());
+			}
 		}
 		
 		for (ChargedSymbol charge: chargedSymbols) {

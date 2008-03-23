@@ -68,7 +68,7 @@ public class LabelLineLayoutManager implements ILabelLayoutManager {
 
 	@Override
 	public void layout(LabelElementContainer element) {
-		Rectangle2D targetBounds=element.getBounds();
+		Rectangle2D targetBounds=element.getBounds2D();
 		
 		double usedGap=gap;
 		double x=targetBounds.getMinX();
@@ -94,7 +94,7 @@ public class LabelLineLayoutManager implements ILabelLayoutManager {
 		for (LabelElement child: element.getChildren()) {
 			double ascent=child.getAscent();
 			final Dimension2D childDimension=child.getMinimumSize();
-			child.setBounds(new Rectangle2D.Double(x,yBaseline-ascent,childDimension.getWidth(),childDimension.getHeight()));
+			child.setBounds2D(new Rectangle2D.Double(x,yBaseline-ascent,childDimension.getWidth(),childDimension.getHeight()));
 			x+=childDimension.getWidth()+usedGap;
 		}
 	}

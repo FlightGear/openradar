@@ -11,7 +11,7 @@ public class LabelElement {
 	protected LabelElementContainer parent=null;
 	protected Dimension2D minimumSize=null;
 	protected boolean enabled=true;
-	protected Rectangle2D bounds=new Rectangle(0,0,1,1);
+	protected Rectangle2D bounds2d=new Rectangle(0,0,1,1);
 	
 	public LabelElementContainer getParent() {
 		return parent;
@@ -43,21 +43,21 @@ public class LabelElement {
 		this.enabled = enabled;
 	}
 	
-	public Rectangle2D getBounds() {
-		return bounds;
+	public Rectangle2D getBounds2D() {
+		return bounds2d;
 	}
 	
-	public void setBounds(Rectangle2D bounds) {
-		this.bounds = bounds;
+	public void setBounds2D(Rectangle2D bounds) {
+		this.bounds2d = bounds;
 	}
 	
 	public void setPosition(double x, double y) {
 		final double w, h;
 		
-		w=bounds.getWidth();
-		h=bounds.getHeight();
+		w=bounds2d.getWidth();
+		h=bounds2d.getHeight();
 		
-		bounds=new Rectangle2D.Double(x,y,w,h);
+		bounds2d=new Rectangle2D.Double(x,y,w,h);
 	}
 	
 	public void paint(Graphics2D g2d) {

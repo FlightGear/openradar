@@ -51,7 +51,7 @@ public class MultiLineLabelLayoutManager implements ILabelLayoutManager {
 
 	@Override
 	public void layout(LabelElementContainer element) {
-		Rectangle2D targetBounds=element.getBounds();
+		Rectangle2D targetBounds=element.getBounds2D();
 		
 		double usedGap=gap;
 		double x=targetBounds.getMinX();
@@ -79,7 +79,7 @@ public class MultiLineLabelLayoutManager implements ILabelLayoutManager {
 				childWidth=targetBounds.getWidth();
 				break;
 			}
-			child.setBounds(new Rectangle2D.Double(childX,y,childWidth,childDimension.getHeight()));
+			child.setBounds2D(new Rectangle2D.Double(childX,y,childWidth,childDimension.getHeight()));
 			y+=childDimension.getHeight()+usedGap;
 		}
 	}

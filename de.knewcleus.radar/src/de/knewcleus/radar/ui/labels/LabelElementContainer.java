@@ -84,7 +84,7 @@ public class LabelElementContainer extends LabelElement {
 	public void paintChildren(Graphics2D g2d) {
 		Rectangle clipBounds=g2d.getClipBounds();
 		for (LabelElement child: children) {
-			Rectangle childBounds=child.getBounds().getBounds();
+			Rectangle childBounds=child.getBounds2D().getBounds();
 			if (childBounds.intersects(clipBounds)) {
 				child.paint(g2d);
 			}
@@ -92,15 +92,15 @@ public class LabelElementContainer extends LabelElement {
 	}
 	
 	@Override
-	public void setBounds(Rectangle2D bounds) {
-		super.setBounds(bounds);
+	public void setBounds2D(Rectangle2D bounds) {
+		super.setBounds2D(bounds);
 		layoutManager.layout(this);
 	}
 	
 	public void pack() {
 		Dimension2D minSize=getMinimumSize();
-		Rectangle2D oldBounds=getBounds();
-		setBounds(new Rectangle2D.Double(oldBounds.getMinX(),oldBounds.getMinY(),minSize.getWidth(),minSize.getHeight()));
+		Rectangle2D oldBounds=getBounds2D();
+		setBounds2D(new Rectangle2D.Double(oldBounds.getMinX(),oldBounds.getMinY(),minSize.getWidth(),minSize.getHeight()));
 	}
 	
 	protected void addImpl(int index, LabelElement element) {
@@ -116,7 +116,7 @@ public class LabelElementContainer extends LabelElement {
 	@Override
 	public void processMouseEvent(MouseEvent event) {
 		for (LabelElement element: children) {
-			final Rectangle2D bounds2d=element.getBounds();
+			final Rectangle2D bounds2d=element.getBounds2D();
 			if (!bounds2d.contains(event.getX(), event.getY()))
 				continue;
 			if (!element.isEnabled()) {

@@ -49,7 +49,6 @@ public class AircraftSymbol implements IVehicleSymbol {
 	
 	protected Point2D currentDevicePosition;
 	protected Point2D currentDeviceHeadPosition;
-	protected final String labelLine[]=new String[5];
 	protected boolean isLabelLocked=false;
 	
 	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, Aircraft aircraft) {

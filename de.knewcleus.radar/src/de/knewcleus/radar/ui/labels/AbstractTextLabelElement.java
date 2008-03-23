@@ -37,7 +37,7 @@ public abstract class AbstractTextLabelElement extends LabelElement {
 
 	@Override
 	public void paint(Graphics2D g2d) {
-		final Rectangle2D bounds=getBounds();
+		final Rectangle2D bounds=getBounds2D();
 		String text=getText();
 		
 		g2d.drawString(text, (float)bounds.getMinX(), (float)(bounds.getMinY()+getAscent()));
