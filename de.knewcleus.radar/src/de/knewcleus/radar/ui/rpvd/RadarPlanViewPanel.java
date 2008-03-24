@@ -230,7 +230,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	}
 	
 	private IVehicleSymbol getSelectedSymbol() {
-		IVehicle selectedVehicle=workstation.getVehicleManager().getSelectedVehicle();
+		IVehicle selectedVehicle=workstation.getVehicleSelectionManager().getSelectedVehicle();
 		
 		if (selectedVehicle==null) {
 			return null;
@@ -256,14 +256,14 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		
 		for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
 			if (vehicleSymbol.canSelect() && vehicleSymbol.containsPoint(x, y)) {
-				workstation.getVehicleManager().select(vehicleSymbol.getVehicle());
+				workstation.getVehicleSelectionManager().select(vehicleSymbol.getVehicle());
 				return true;
 			}
 		}
 		
 		/* No symbol hit, so we deselect the currently selected associatedTarget, if any */
 		boolean hadSelection=(selectedSymbol!=null);
-		workstation.getVehicleManager().deselect();
+		workstation.getVehicleSelectionManager().deselect();
 		return hadSelection;
 	}
 	

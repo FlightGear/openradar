@@ -8,17 +8,16 @@ import de.knewcleus.fgfs.location.Position;
 
 public class Track {
 	protected final static Logger logger=Logger.getLogger(Track.class.getName());
-	protected final TrackManager aircraftStateManager;
+	protected final TrackManager trackManager;
 	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
 	protected double groundSpeed=0.0;
 	protected double trueCourse=0.0;
 	protected SSRMode ssrMode;
 	protected String ssrCode;
 	protected double pressureAltitude=0.0;
-	protected boolean isSelected=false;
 	
-	public Track(TrackManager aircraftStateManager) {
-		this.aircraftStateManager=aircraftStateManager;
+	public Track(TrackManager trackManager) {
+		this.trackManager=trackManager;
 	}
 	
 	public Deque<Position> getPositionBuffer() {
@@ -54,7 +53,7 @@ public class Track {
 		Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
 		positionBuffer.addLast(new Position(currentGeodPosition));
 		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */
-		if (positionBuffer.size()>aircraftStateManager.getMaximumPositionBufferLength()) {
+		if (positionBuffer.size()>trackManager.getMaximumPositionBufferLength()) {
 			positionBuffer.removeFirst();
 		}
 		
