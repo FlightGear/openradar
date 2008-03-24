@@ -36,9 +36,10 @@ import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
 import de.knewcleus.radar.ui.vehicles.Aircraft;
 import de.knewcleus.radar.ui.vehicles.IVehicle;
+import de.knewcleus.radar.ui.vehicles.IVehicleSelectionListener;
 import de.knewcleus.radar.ui.vehicles.IVehicleUpdateListener;
 
-public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener, PropertyChangeListener {
+public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener, IVehicleSelectionListener, PropertyChangeListener {
 	protected final static Logger logger=Logger.getLogger(RadarPlanViewPanel.class.getName());
 	private static final long serialVersionUID = 8996959818592227638L;
 	
@@ -94,6 +95,8 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		 * vehicle states.
 		 */
 		workstation.getVehicleManager().registerVehicleUpdateListener(this);
+		
+		workstation.getVehicleSelectionManager().registerVehicleSelectionListener(this);
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
 	}
@@ -172,8 +175,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	protected void processMouseMotionEvent(MouseEvent e) {
 		int buttonMask = MouseEvent.BUTTON1_DOWN_MASK | MouseEvent.BUTTON2_DOWN_MASK | MouseEvent.BUTTON3_DOWN_MASK;
 		if (e.getID()==MouseEvent.MOUSE_MOVED) {
-			if (checkForSelectionChange())
-				repaint();
+			checkForSelectionChange();
 			e.consume();
 		} else if (e.getID()==MouseEvent.MOUSE_DRAGGED && (e.getModifiersEx()&buttonMask)==MouseEvent.BUTTON1_DOWN_MASK) {
 			double dx,dy;
@@ -238,9 +240,9 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		return vehicleSymbolMap.get(selectedVehicle);
 	}
 	
-	private synchronized boolean checkForSelectionChange() {
+	private synchronized void checkForSelectionChange() {
 		if (!isShowing())
-			return false;
+			return;
 		Point locOnScreen=getLocationOnScreen();
 		Point currentLocation=MouseInfo.getPointerInfo().getLocation();
 		int x,y;
@@ -251,20 +253,19 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		final IVehicleSymbol selectedSymbol=getSelectedSymbol();
 		
 		if (selectedSymbol!=null && selectedSymbol.canSelect() && selectedSymbol.containsPoint(x, y)) {
-			return false; // The old selection has priority
+			return; // The old selection has priority
 		}
 		
 		for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
 			if (vehicleSymbol.canSelect() && vehicleSymbol.containsPoint(x, y)) {
 				workstation.getVehicleSelectionManager().select(vehicleSymbol.getVehicle());
-				return true;
+				return;
 			}
 		}
 		
 		/* No symbol hit, so we deselect the currently selected associatedTarget, if any */
-		boolean hadSelection=(selectedSymbol!=null);
 		workstation.getVehicleSelectionManager().deselect();
-		return hadSelection;
+		return;
 	}
 	
 	public RadarPlanViewSettings getSettings() {
@@ -479,5 +480,28 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	@Override
 	public boolean isOpaque() {
 		return true;
+	}
+
+	@Override
+	public void vehicleSelectionChanged(IVehicle oldSelection, IVehicle newSelection) {
+		if (oldSelection!=null) {
+			final IVehicleSymbol symbol=vehicleSymbolMap.get(oldSelection);
+			if (symbol!=null) {
+				final IVehicleLabel label=symbol.getLabel();
+				if (label!=null) {
+					label.updateLabelContents();
+				}
+			}
+		}
+		if (newSelection!=null) {
+			final IVehicleSymbol symbol=vehicleSymbolMap.get(newSelection);
+			if (symbol!=null) {
+				final IVehicleLabel label=symbol.getLabel();
+				if (label!=null) {
+					label.updateLabelContents();
+				}
+			}
+		}
+		repaint();
 	}
 }
