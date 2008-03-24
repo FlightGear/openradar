@@ -15,6 +15,7 @@ public class VehicleManager implements ITrackUpdateListener {
 	protected final RadarWorkstation radarWorkstation;
 	protected final Map<Track, IVehicle> vehicleMap=new HashMap<Track, IVehicle>();
 	protected final Set<IVehicleUpdateListener> vehicleUpdateListeners=new HashSet<IVehicleUpdateListener>();
+	protected final Set<IVehicleSelectionListener> vehicleSelectionListeners=new HashSet<IVehicleSelectionListener>();
 	protected IVehicle selectedVehicle=null;
 	
 	public VehicleManager(RadarWorkstation radarWorkstation) {
@@ -31,6 +32,14 @@ public class VehicleManager implements ITrackUpdateListener {
 	
 	public void unregisterVehicleUpdateListener(IVehicleUpdateListener listener) {
 		vehicleUpdateListeners.remove(listener);
+	}
+	
+	public void registerVehicleSelectionListener(IVehicleSelectionListener listener) {
+		vehicleSelectionListeners.add(listener);
+	}
+	
+	public void unregisterVehicleSelectionListener(IVehicleSelectionListener listener) {
+		vehicleSelectionListeners.remove(listener);
 	}
 	
 	@Override
@@ -59,6 +68,30 @@ public class VehicleManager implements ITrackUpdateListener {
 		fireVehicleLost(aircraft);
 	}
 	
+	public void select(IVehicle vehicle) {
+		if (vehicle==selectedVehicle)
+			return;
+		IVehicle oldSelection=selectedVehicle;
+		if (selectedVehicle!=null) {
+			logger.fine("Deselecting aircraft "+selectedVehicle);
+			selectedVehicle.setSelected(false);
+		}
+		selectedVehicle=vehicle;
+		if (selectedVehicle!=null) {
+			logger.fine("Selecting aircraft "+selectedVehicle);
+			selectedVehicle.setSelected(true);
+		}
+		fireVehicleSelectionChanged(oldSelection, selectedVehicle);
+	}
+	
+	public void deselect() {
+		select(null);
+	}
+	
+	public IVehicle getSelectedVehicle() {
+		return selectedVehicle;
+	}
+	
 	private void fireVehicleUpdated(Set<IVehicle> updatedAircraft) {
 		for (IVehicleUpdateListener listener: vehicleUpdateListeners) {
 			listener.vehicleUpdated(updatedAircraft);
@@ -71,23 +104,9 @@ public class VehicleManager implements ITrackUpdateListener {
 		}
 	}
 	
-	public void select(IVehicle vehicle) {
-		if (selectedVehicle!=null) {
-			logger.fine("Deselecting aircraft "+selectedVehicle);
-			selectedVehicle.setSelected(false);
+	private void fireVehicleSelectionChanged(IVehicle oldSelection, IVehicle newSelection) {
+		for (IVehicleSelectionListener listener: vehicleSelectionListeners) {
+			listener.vehicleSelectionChanged(oldSelection, newSelection);
 		}
-		selectedVehicle=vehicle;
-		if (selectedVehicle!=null) {
-			logger.fine("Selecting aircraft "+selectedVehicle);
-			selectedVehicle.setSelected(true);
-		}
-	}
-	
-	public void deselect() {
-		select(null);
-	}
-	
-	public IVehicle getSelectedVehicle() {
-		return selectedVehicle;
 	}
 }
