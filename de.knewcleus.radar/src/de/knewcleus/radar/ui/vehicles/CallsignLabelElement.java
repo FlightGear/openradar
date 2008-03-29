@@ -37,6 +37,7 @@ public class CallsignLabelElement extends AbstractTextLabelElement {
 		case MouseEvent.MOUSE_CLICKED:
 			if (event.getButton()==MouseEvent.BUTTON1) {
 				final AircraftState aircraftState=aircraft.getAircraftState();
+				assert(aircraftState!=null);
 				List<Action> availableActions=aircraftState.getAvailableActions();
 				JPopupMenu popupMenu=new JPopupMenu(aircraft.getCallsign());
 				for (Action action: availableActions) {

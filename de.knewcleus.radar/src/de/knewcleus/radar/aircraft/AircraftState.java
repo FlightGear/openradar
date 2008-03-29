@@ -8,9 +8,12 @@ import javax.swing.Action;
 public class AircraftState {
 	protected final String callsign;
 	protected AircraftTaskState taskState=AircraftTaskState.PENDING_IN;
+	protected Integer clearedFlightLevel=null;
+
 	protected final AssumeAction assumeAction=new AssumeAction(this);
 	protected final TransferAction transferAction=new TransferAction(this);
 	protected final SkipAction skipAction=new SkipAction(this);
+	
 	
 	public AircraftState(String callsign) {
 		this.callsign=callsign;
@@ -18,6 +21,10 @@ public class AircraftState {
 	
 	public AircraftTaskState getTaskState() {
 		return taskState;
+	}
+	
+	public Integer getClearedFlightLevel() {
+		return clearedFlightLevel;
 	}
 	
 	public List<Action> getAvailableActions() {

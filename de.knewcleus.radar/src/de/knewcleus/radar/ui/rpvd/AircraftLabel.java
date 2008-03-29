@@ -14,6 +14,7 @@ import de.knewcleus.radar.ui.labels.StaticTextLabelElement;
 import de.knewcleus.radar.ui.vehicles.ActualLevelLabelElement;
 import de.knewcleus.radar.ui.vehicles.Aircraft;
 import de.knewcleus.radar.ui.vehicles.CallsignLabelElement;
+import de.knewcleus.radar.ui.vehicles.ClearedLevelLabelElement;
 import de.knewcleus.radar.ui.vehicles.GroundSpeedLabelElement;
 
 public class AircraftLabel extends AbstractVehicleLabel {
@@ -43,7 +44,7 @@ public class AircraftLabel extends AbstractVehicleLabel {
 		actualLevelElement=new ActualLevelLabelElement(aircraft);
 		exitPointElement=new StaticTextLabelElement();
 		groundSpeedElement=new GroundSpeedLabelElement(aircraft);
-		clearedLevelElement=new StaticTextLabelElement();
+		clearedLevelElement=new ClearedLevelLabelElement(aircraft);
 		exitLevelElement=new StaticTextLabelElement();
 		assignedHeadingElement=new StaticTextLabelElement();
 		assignedSpeedElement=new StaticTextLabelElement();
