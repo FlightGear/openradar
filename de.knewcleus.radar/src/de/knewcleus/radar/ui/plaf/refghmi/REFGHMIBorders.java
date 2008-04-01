@@ -58,4 +58,23 @@ public class REFGHMIBorders {
 			REFGHMIUtils.drawEtch(g, Palette.getHightlightColor(c.getBackground()), Palette.SHADOW, x, y, w, h, true);
 		}
 	}
+	
+	public static class EtchedBorder implements Border {
+		protected final Insets borderInsets=new Insets(1,1,1,1);
+		
+		@Override
+		public Insets getBorderInsets(Component c) {
+			return borderInsets;
+		}
+		
+		@Override
+		public boolean isBorderOpaque() {
+			return true;
+		}
+		
+		@Override
+		public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
+			REFGHMIUtils.drawEtch(g, Palette.getHightlightColor(c.getBackground()), Palette.SHADOW, x, y, w, h, false);
+		}
+	}
 }

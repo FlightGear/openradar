@@ -20,6 +20,8 @@ import javax.swing.JComponent;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 
+import de.knewcleus.radar.ui.Palette;
+
 public class PopupComponent extends JComponent {
 	private static final long serialVersionUID = -4642648532599545660L;
 	protected static final PopupComponentBorder border=new PopupComponentBorder();
@@ -30,6 +32,7 @@ public class PopupComponent extends JComponent {
 	public PopupComponent(String title) {
 		this.title=title;
 		setBorder(border);
+		setFont(Palette.BEACON_FONT);
 	}
 	
 	public String getTitle() {
@@ -101,6 +104,7 @@ public class PopupComponent extends JComponent {
 		final Point invokerOnScreen=invoker.getLocationOnScreen();
 		x+=invokerOnScreen.x;
 		y+=invokerOnScreen.y;
+		setSize(getPreferredSize());
 		popup=popupFactory.getPopup(invoker, this, x, y);
 		handler.install(invoker);
 		popup.show();
