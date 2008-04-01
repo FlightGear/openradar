@@ -1,5 +1,7 @@
 package de.knewcleus.radar.autolabel.test;
 
+import java.awt.geom.Rectangle2D;
+
 import de.knewcleus.radar.autolabel.Label;
 
 public class SimpleLabel implements Label {
@@ -59,24 +61,11 @@ public class SimpleLabel implements Label {
 	public double getChargeDensity() {
 		return 1E2;
 	}
-
+	
 	@Override
-	public double getLeft() {
-		return associatedObject.getX()+centerX-width/2.0;
-	}
-
-	@Override
-	public double getRight() {
-		return associatedObject.getX()+centerX+width/2.0;
-	}
-
-	@Override
-	public double getTop() {
-		return associatedObject.getY()+centerY-height/2.0;
-	}
-
-	@Override
-	public double getBottom() {
-		return associatedObject.getY()+centerY+height/2.0;
+	public Rectangle2D getBounds2D() {
+		return new Rectangle2D.Double(associatedObject.getX()-centerX-width/2,
+									  associatedObject.getY()-centerY-height/2,
+									  width, height);
 	}
 }

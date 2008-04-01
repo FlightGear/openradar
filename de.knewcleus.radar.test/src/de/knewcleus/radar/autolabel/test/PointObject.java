@@ -2,6 +2,9 @@ package de.knewcleus.radar.autolabel.test;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
+
+import java.awt.geom.Rectangle2D;
+
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.autolabel.PotentialGradient;
@@ -157,24 +160,9 @@ public class PointObject implements LabeledObject {
 	public double getVy() {
 		return vy;
 	}
-
+	
 	@Override
-	public double getBottom() {
-		return y+r;
-	}
-
-	@Override
-	public double getLeft() {
-		return x-r;
-	}
-
-	@Override
-	public double getRight() {
-		return x+r;
-	}
-
-	@Override
-	public double getTop() {
-		return y-r;
+	public Rectangle2D getBounds2D() {
+		return new Rectangle2D.Double(x-r,y-r,2*r,2*r);
 	}
 }

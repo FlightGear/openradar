@@ -10,7 +10,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -24,6 +23,7 @@ import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
 
 public class AutolabellerTest extends JPanel implements IUpdateable {
+	private static final long serialVersionUID = 1541306043056168679L;
 	protected final Random random=new Random();
 	protected final Autolabeller autolabeller=new Autolabeller(1E-5,1E-3);
 
@@ -116,16 +116,19 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 			g2d.draw(pointMarker);
 			
 			Label label=object.getLabel();
-			double top,bottom,left,right;
+			final double top,bottom,left,right;
 			
-			top=label.getTop()*getHeight();
-			bottom=label.getBottom()*getHeight();
-			left=label.getLeft()*getWidth();
-			right=label.getRight()*getWidth();
+			final Rectangle2D labelBounds=label.getBounds2D();
 			
-			double cxo,cyo;
-			cxo=(object.getLeft()+object.getRight())*getWidth()/2.0;
-			cyo=(object.getTop()+object.getBottom())*getHeight()/2.0;
+			top=labelBounds.getMinY()*getHeight();
+			bottom=labelBounds.getMaxY()*getHeight();
+			left=labelBounds.getMinX()*getWidth();
+			right=labelBounds.getMaxX()*getWidth();
+			
+			final Rectangle2D objectBounds=object.getBounds2D();
+			final double cxo,cyo;
+			cxo=objectBounds.getCenterX();
+			cyo=objectBounds.getCenterY();
 			
 			double cx=(left+right)/2.0,cy=(top+bottom)/2.0;
 			
