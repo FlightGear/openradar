@@ -48,6 +48,10 @@ public class Track {
 		return pressureAltitude;
 	}
 	
+	public int getFlightLevel() {
+		return (int)Math.round(pressureAltitude/100.0);
+	}
+	
 	public void update(TargetInformation targetInformation) {
 		logger.fine("Updating aircraft state "+this+" from "+targetInformation);
 		Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
