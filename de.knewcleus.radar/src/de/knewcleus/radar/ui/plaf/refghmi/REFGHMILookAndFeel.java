@@ -65,7 +65,8 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 				      "ButtonUI", basePackage+"REFGHMIButtonUI",
 				"ToggleButtonUI", basePackage+"REFGHMIToggleButtonUI",
 				 "RadioButtonUI", basePackage+"REFGHMIRadioButtonUI",
-				    "CheckBoxUI", basePackage+"REFGHMICheckBoxUI"
+				    "CheckBoxUI", basePackage+"REFGHMICheckBoxUI",
+		  "ScrollableListMenuUI", basePackage+"REFGHMIScrollableListMenuiUI"
 		};
 		table.putDefaults(defaults);
 	}

@@ -1,19 +1,10 @@
 package de.knewcleus.radar.ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-
 import javax.swing.JComponent;
 import javax.swing.ListModel;
-import javax.swing.border.Border;
+import javax.swing.UIManager;
 
-import de.knewcleus.radar.ui.plaf.refghmi.REFGHMIBorders;
+import de.knewcleus.radar.ui.plaf.ScrollableListMenuUI;
 
 /**
  * A ScrollableListMenu presents a menu of items, one of which can be selected by the user, thereby closing the menu.
@@ -26,55 +17,19 @@ import de.knewcleus.radar.ui.plaf.refghmi.REFGHMIBorders;
 public class ScrollableListMenu extends JComponent {
 	private static final long serialVersionUID = -1480809186587554356L;
 	protected ListModel listModel;
-	protected Color arrowColor=Color.WHITE;
-	protected int firstVisibleItem;
+	protected static final String uiClassID="ScrollableListMenuUI";
 	
-	protected Rectangle contentRectangle;
-	protected Dimension elementSize;
-	protected Rectangle elementsRectangle;
-	protected int visibleElementCount;
-	protected Rectangle topArrowRectangle;
-	protected Rectangle bottomArrowRectangle;
-	
-	protected final static Border border=new REFGHMIBorders.EtchedBorder();
-	protected final static Border elementBorder=new REFGHMIBorders.EtchedBorder();
-	protected final static Insets arrowInsets=new Insets(2,2,2,2);
-	protected final static Insets elementInsets=new Insets(2,2,2,2);
-	protected final static int minimumArrowHeight=20;
-	protected final static int minimumArrowWidth=40;
-
 	public ScrollableListMenu(ListModel listMenuModel) {
 		this.listModel=listMenuModel;
+		updateUI();
 	}
-
+	
+	public ScrollableListMenuUI getUI() {
+		return (ScrollableListMenuUI)ui;
+	}
+	
 	public void ensureIndexIsVisible(int index) {
-		calculateGeometry();
-		if (index<0 || listModel.getSize()<=index) {
-			/* Ignore invalid index */
-			return;
-		}
-		if (listModel.getSize()<visibleElementCount) {
-			firstVisibleItem=0;
-			return;
-		}
-		if (firstVisibleItem<=index && index<firstVisibleItem+visibleElementCount) {
-			/* The item already is visible */
-			return;
-		}
-		
-		/* Scroll the visible items as short as possible */
-		if (index<firstVisibleItem) {
-			/* We need to scroll up */
-			firstVisibleItem=index;
-		}
-		if (index>=firstVisibleItem+visibleElementCount) {
-			firstVisibleItem=index-visibleElementCount+1;
-		}
-		
-		assert(0<=firstVisibleItem && (listModel.getSize()<visibleElementCount || firstVisibleItem+visibleElementCount-1<listModel.getSize()));
-		assert(firstVisibleItem<=index && index<firstVisibleItem+visibleElementCount);
-		
-		repaint();
+		getUI().ensureIndexIsVisible(index);
 	}
 
 	public ListModel getListModel() {
@@ -85,206 +40,17 @@ public class ScrollableListMenu extends JComponent {
 		this.listModel = listMenuModel;
 	}
 	
-	protected void calculateGeometry() {
-		// TODO: cache these values
-		calculateContentRectangle();
-		calculateElementSize();
-		calculateElementsRectangle();
-		
-		/* This is the count of fully visible entries */
-		visibleElementCount=elementsRectangle.height/elementSize.height;
-		
-		calculateArrowRectangles();
-	}
-	
-	protected void calculateContentRectangle() {
-		final Insets insets=getInsets();
-		final Dimension size=getSize();
-		final int cw,ch;
-		
-		cw=size.width-(insets.left+insets.right);
-		ch=size.height-(insets.top+insets.bottom);
-		
-		contentRectangle=new Rectangle(insets.left,insets.top,cw,ch);
-	}
-	
-	protected void calculateElementSize() {
-		final int elementHeight=getMinimumElementHeight();
-		
-		elementSize=new Dimension(contentRectangle.width, elementHeight);
-	}
-	
-	protected void calculateElementsRectangle() {
-		/* The arrows are one element high */
-		final int elementsHeight=contentRectangle.height-2*elementSize.height;
-		
-		elementsRectangle=new Rectangle(contentRectangle.x, contentRectangle.y+elementSize.height, contentRectangle.width, elementsHeight);
-	}
-	
-	protected void calculateArrowRectangles() {
-		topArrowRectangle=new Rectangle(contentRectangle.x, contentRectangle.y, elementSize.width, elementSize.height);
-		bottomArrowRectangle=new Rectangle(contentRectangle.x, contentRectangle.y+contentRectangle.height-elementSize.height,
-										   elementSize.width, elementSize.height);
-	}
-	
-	protected int getMaximumTextWidth() {
-		// TODO: cache this value
-		final Font font=getFont();
-		final FontMetrics fontMetrics=getFontMetrics(font);
-		
-		int maximumTextWidth=0;
-		for (int i=0;i<listModel.getSize();i++) {
-			Object element=listModel.getElementAt(i);
-			String text=element.toString();
-			maximumTextWidth=Math.max(maximumTextWidth, fontMetrics.stringWidth(text));
-		}
-		
-		return maximumTextWidth;
-	}
-	
-	protected int getMaximumTextHeight() {
-		final Font font=getFont();
-		final FontMetrics fontMetrics=getFontMetrics(font);
-		
-		return fontMetrics.getMaxAscent()+fontMetrics.getMaxDescent();
-	}
-	
-	
-	protected int getMinimumElementHeight() {
-		final Insets elementBorderInsets=elementBorder.getBorderInsets(this);
-		
-		final int textHeight=getMaximumTextHeight();
-		final int elementHeight=Math.max(minimumArrowHeight+(arrowInsets.top+arrowInsets.bottom),
-										 textHeight+(elementInsets.top+elementInsets.bottom));
-		
-		return elementHeight+(elementBorderInsets.top+elementBorderInsets.bottom);
-	}
-
-	protected int getMinimumElementWidth() {
-		final Insets elementBorderInsets=elementBorder.getBorderInsets(this);
-		
-		final int textWidth=getMaximumTextWidth();
-		final int elementWidth=Math.max(minimumArrowWidth+(arrowInsets.left+arrowInsets.right),
-										textWidth+(elementInsets.left+elementInsets.right));
-		
-		return elementWidth+(elementBorderInsets.left+elementBorderInsets.right);
+	protected void setUI(ScrollableListMenuUI newUI) {
+		super.setUI(newUI);
 	}
 	
 	@Override
-	public Dimension getMinimumSize() {
-		Insets insets=getInsets();
-		/* We want to show at least one entry and the arrows */
-		final int minimumHeight=insets.top+3*getMinimumElementHeight()+insets.bottom;
-		final int minimumWidth=insets.left+getMinimumElementWidth()+insets.right;
-		
-		return new Dimension(minimumWidth, minimumHeight);
+	public void updateUI() {
+		setUI((ScrollableListMenuUI)UIManager.getUI(this));
 	}
 	
 	@Override
-	public Dimension getPreferredSize() {
-		Insets insets=getInsets();
-		
-		final int preferredVisibleElementCount=Math.min(listModel.getSize(), 9);
-		final int preferredHeight=insets.top+(2+preferredVisibleElementCount)*getMinimumElementHeight()+insets.bottom;
-		final int preferredWidth=insets.left+getMinimumElementWidth()+insets.right;
-		
-		return new Dimension(preferredWidth, preferredHeight);
-	}
-	
-	@Override
-	protected void paintComponent(Graphics g) {
-		calculateGeometry();
-		final Rectangle clipBounds=g.getClipBounds();
-		
-		/* Paint the background */
-		g.setColor(getBackground());
-		g.fillRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
-		
-		if (clipBounds.intersects(topArrowRectangle)){
-			paintTopArrow(g);
-		}
-		if (clipBounds.intersects(elementsRectangle)){
-			paintElements(g);
-		}
-		if (clipBounds.intersects(bottomArrowRectangle)){
-			paintBottomArrow(g);
-		}
-	}
-	
-	protected void paintArrow(Graphics g, int xc, int y, int width, int height) {
-		g.setColor(arrowColor);
-		
-		Polygon arrow=new Polygon();
-		arrow.addPoint(xc,y);
-		arrow.addPoint(xc-width/2,y+height);
-		arrow.addPoint(xc+width/2,y+height);
-		
-		g.fillPolygon(arrow);
-		
-	}
-	
-	protected void paintTopArrow(Graphics g) {
-		elementBorder.paintBorder(this, g, topArrowRectangle.x, topArrowRectangle.y, topArrowRectangle.width, topArrowRectangle.height);
-		final Insets elementInsets=elementBorder.getBorderInsets(this);
-		final int arrowHeight=topArrowRectangle.height-
-				(elementInsets.top+elementInsets.bottom)-
-				(arrowInsets.top+arrowInsets.bottom);
-		final int arrowWidth=topArrowRectangle.width-
-				(elementInsets.left+elementInsets.right)-
-				(arrowInsets.top+arrowInsets.bottom);
-		
-		final int xc=topArrowRectangle.x+topArrowRectangle.width/2+arrowInsets.left;
-		final int y=topArrowRectangle.y+arrowInsets.top;
-		
-		paintArrow(g, xc, y, arrowWidth, arrowHeight);
-	}
-	
-	protected void paintElements(Graphics g) {
-		final Rectangle clipBounds=g.getClipBounds();
-		g.setClip(elementsRectangle);
-		int y=elementsRectangle.y;
-		final int bottom=elementsRectangle.y+elementsRectangle.height;
-		int index=firstVisibleItem;
-		final Font font=getFont();
-		final FontMetrics fontMetrics=getFontMetrics(font);
-		final int ascent=fontMetrics.getMaxAscent();
-		final Insets elementBorderInsets=elementBorder.getBorderInsets(this);
-		final int textFieldWidth=elementsRectangle.width-
-				(elementBorderInsets.left+elementBorderInsets.right)-
-				(elementInsets.left+elementInsets.right);
-		
-	
-		while (y<bottom && index<listModel.getSize()) {
-			final Rectangle elementBounds=new Rectangle(elementsRectangle.x,y,elementSize.width, elementSize.height);
-			if (!clipBounds.intersects(elementBounds))
-				continue;
-			final Object element=listModel.getElementAt(index);
-			final String text=element.toString();
-			final int textWidth=fontMetrics.stringWidth(text);
-			final int x=elementBounds.x+elementBorderInsets.left+elementInsets.left+(textFieldWidth-textWidth)/2;
-			
-			g.setColor(getForeground());
-			g.drawString(text, x, y+elementBorderInsets.top+elementInsets.top+ascent);
-			elementBorder.paintBorder(this, g, elementsRectangle.x, elementBounds.y, elementBounds.width, elementBounds.height);
-			y+=elementSize.height;
-			index++;
-		}
-		g.setClip(clipBounds);
-	}
-	
-	protected void paintBottomArrow(Graphics g) {
-		elementBorder.paintBorder(this, g, bottomArrowRectangle.x, bottomArrowRectangle.y, bottomArrowRectangle.width, bottomArrowRectangle.height);
-		final Insets elementInsets=elementBorder.getBorderInsets(this);
-		final int arrowHeight=bottomArrowRectangle.height-
-				(elementInsets.top+elementInsets.bottom)-
-				(arrowInsets.top+arrowInsets.bottom);
-		final int arrowWidth=bottomArrowRectangle.width-
-				(elementInsets.left+elementInsets.right)-
-				(arrowInsets.top+arrowInsets.bottom);
-		
-		final int xc=bottomArrowRectangle.x+bottomArrowRectangle.width/2+arrowInsets.left;
-		final int y=bottomArrowRectangle.y+arrowHeight+arrowInsets.top;
-		
-		paintArrow(g, xc, y, arrowWidth, -arrowHeight);
+	public String getUIClassID() {
+		return uiClassID;
 	}
 }
