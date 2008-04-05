@@ -66,7 +66,8 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 				"ToggleButtonUI", basePackage+"REFGHMIToggleButtonUI",
 				 "RadioButtonUI", basePackage+"REFGHMIRadioButtonUI",
 				    "CheckBoxUI", basePackage+"REFGHMICheckBoxUI",
-		  "ScrollableListMenuUI", basePackage+"REFGHMIScrollableListMenuiUI"
+				    "ListMenuUI", basePackage+"REFGHMIListMenuiUI",
+		  "VerticalScrollPaneUI", basePackage+"REFGHMIVerticalScrollPaneUI"
 		};
 		table.putDefaults(defaults);
 	}
@@ -93,9 +94,9 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 			"CheckBox.control", Palette.WINDOW_FAWN,
 			"RadioButton.icon", checkBoxIcon,
 			"RadioButton.control", Palette.WINDOW_FAWN,
-			"ScrollableListMenu.border", buttonBorder,
-			"ScrollableListMenu.foreground", Palette.BLACK,
-			"ScrollableListMenu.background", Palette.WINDOW_BLUE
+			"ListMenu.border", null,
+			"ListMenu.foreground", Palette.BLACK,
+			"ListMenu.background", Palette.WINDOW_BLUE
 		};
 		table.putDefaults(defaults);
 	}
