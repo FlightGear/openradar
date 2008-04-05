@@ -82,6 +82,13 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
                 return new REFGHMIIcons.CheckBoxIcon();
             }
         };
+        
+        Object cellRenderer=new UIDefaults.LazyValue() {
+            public Object createValue(UIDefaults table) {
+                return new REFGHMIButtonCellListRenderer();
+            }
+        };
+        
 		Object[] defaults={
 			"Button.border", buttonBorder,
 			"Slider.border", sliderBorder,
@@ -96,7 +103,8 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 			"RadioButton.control", Palette.WINDOW_FAWN,
 			"ListMenu.border", null,
 			"ListMenu.foreground", Palette.BLACK,
-			"ListMenu.background", Palette.WINDOW_BLUE
+			"ListMenu.background", Palette.WINDOW_BLUE,
+			"List.cellRenderer", cellRenderer 
 		};
 		table.putDefaults(defaults);
 	}

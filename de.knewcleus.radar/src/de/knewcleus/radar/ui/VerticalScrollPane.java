@@ -45,7 +45,7 @@ public class VerticalScrollPane extends JComponent {
 		
 		if (view instanceof Scrollable) {
 			Scrollable scrollable=(Scrollable)view;
-			return scrollable.getScrollableUnitIncrement(viewport.getVisibleRect(), SwingConstants.VERTICAL, direction);
+			return scrollable.getScrollableUnitIncrement(viewport.getViewRect(), SwingConstants.VERTICAL, direction);
 		}
 		
 		return 1;

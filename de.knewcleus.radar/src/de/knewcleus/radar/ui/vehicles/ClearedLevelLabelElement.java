@@ -3,9 +3,9 @@ package de.knewcleus.radar.ui.vehicles;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BoxLayout;
+import javax.swing.JList;
 
 import de.knewcleus.radar.aircraft.AircraftState;
-import de.knewcleus.radar.ui.ListMenu;
 import de.knewcleus.radar.ui.labels.AbstractTextLabelElement;
 
 public class ClearedLevelLabelElement extends AbstractTextLabelElement {
@@ -35,7 +35,7 @@ public class ClearedLevelLabelElement extends AbstractTextLabelElement {
 				final AircraftState aircraftState=aircraft.getAircraftState();
 				assert(aircraftState!=null);
 				FlightLevelListModel levelListModel=new FlightLevelListModel(40,600,10);
-				ListMenu listMenu=new ListMenu(levelListModel);
+				JList listMenu=new JList(levelListModel);
 				final int currentSelectedLevel;
 				if (aircraftState.getClearedFlightLevel()!=null) {
 					currentSelectedLevel=aircraftState.getClearedFlightLevel();

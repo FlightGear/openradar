@@ -1,6 +1,10 @@
 package de.knewcleus.radar.ui.plaf.refghmi;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -8,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JComponent;
 import javax.swing.JViewport;
@@ -43,7 +46,7 @@ public class REFGHMIVerticalScrollPaneUI extends VerticalScrollPaneUI {
 	public void installUI(JComponent c) {
 		scrollPane=(VerticalScrollPane)c;
 		
-		scrollPane.setLayout(new BoxLayout(scrollPane, BoxLayout.Y_AXIS));
+		scrollPane.setLayout(handler);
 		scrollPane.add(decreaseButton);
 		scrollPane.add(scrollPane.getViewport());
 		scrollPane.add(increaseButton);
@@ -95,7 +98,7 @@ public class REFGHMIVerticalScrollPaneUI extends VerticalScrollPaneUI {
 		viewport.setViewPosition(viewPosition);
 	}
 	
-	protected class Handler implements ActionListener, ChangeListener, MouseWheelListener {
+	protected class Handler implements ActionListener, ChangeListener, LayoutManager, MouseWheelListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource()==decreaseButton) {
@@ -125,6 +128,54 @@ public class REFGHMIVerticalScrollPaneUI extends VerticalScrollPaneUI {
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			scroll(e.getWheelRotation());
+		}
+		
+		@Override
+		public void addLayoutComponent(String name, Component comp) {}
+		
+		@Override
+		public void removeLayoutComponent(Component comp) {}
+		
+		@Override
+		public Dimension minimumLayoutSize(Container parent) {
+			final Dimension decreaseButtonSize=decreaseButton.getPreferredSize();
+			final Dimension viewportSize=scrollPane.getViewport().getMinimumSize();
+			final Dimension increaseButtonSize=increaseButton.getPreferredSize();
+			
+			final int height=decreaseButtonSize.height+viewportSize.height+increaseButtonSize.height;
+			final int width=Math.max(Math.max(decreaseButtonSize.width, increaseButtonSize.width), viewportSize.width);
+			
+			final Insets insets=parent.getInsets();
+			
+			return new Dimension(insets.left+width+insets.right, insets.top+height+insets.bottom);
+		}
+		
+		@Override
+		public Dimension preferredLayoutSize(Container parent) {
+			final Dimension decreaseButtonSize=decreaseButton.getPreferredSize();
+			final Dimension viewportSize=scrollPane.getViewport().getPreferredSize();
+			final Dimension increaseButtonSize=increaseButton.getPreferredSize();
+			
+			final int height=decreaseButtonSize.height+viewportSize.height+increaseButtonSize.height;
+			final int width=Math.max(Math.max(decreaseButtonSize.width, increaseButtonSize.width), viewportSize.width);
+			
+			final Insets insets=parent.getInsets();
+			
+			return new Dimension(insets.left+width+insets.right, insets.top+height+insets.bottom);
+		}
+		
+		@Override
+		public void layoutContainer(Container parent) {
+			final Dimension size=parent.getSize();
+			final Dimension decreaseButtonSize=decreaseButton.getPreferredSize();
+			final Dimension increaseButtonSize=increaseButton.getPreferredSize();
+			final Insets insets=parent.getInsets();
+			
+			final int viewportHeight=size.height-decreaseButtonSize.height-increaseButtonSize.height-(insets.top+insets.bottom);
+			
+			decreaseButton.setBounds(insets.left, insets.top, size.width, decreaseButtonSize.height);
+			scrollPane.getViewport().setBounds(insets.left, insets.top+decreaseButtonSize.height, size.width, viewportHeight);
+			increaseButton.setBounds(insets.left, size.height-insets.bottom-increaseButtonSize.height, size.width, increaseButtonSize.height);
 		}
 	}
 }

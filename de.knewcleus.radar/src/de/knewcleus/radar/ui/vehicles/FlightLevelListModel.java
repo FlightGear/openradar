@@ -1,10 +1,6 @@
 package de.knewcleus.radar.ui.vehicles;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
-import javax.swing.Action;
 import javax.swing.ListModel;
 
 public class FlightLevelListModel extends AbstractListModel implements ListModel {
@@ -24,21 +20,9 @@ public class FlightLevelListModel extends AbstractListModel implements ListModel
 
 	@Override
 	public Object getElementAt(int index) {
-		final String levelText=String.format("FL%03d", lowestLevel+index*levelStep);
-		return new AbstractAction(levelText) {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public String toString() {
-				return (String)getValue(Action.NAME);
-			}
-		};
+		final String levelText=String.format("FL%03d", getLevelForIndex(index));
+		
+		return levelText;
 	}
 
 	@Override
@@ -56,6 +40,10 @@ public class FlightLevelListModel extends AbstractListModel implements ListModel
 	
 	public int getLevelStep() {
 		return levelStep;
+	}
+	
+	public int getLevelForIndex(int index) {
+		return lowestLevel+index*levelStep;
 	}
 	
 	public int getIndexForLevel(int level) {
