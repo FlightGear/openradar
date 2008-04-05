@@ -92,7 +92,10 @@ public class REFGHMILookAndFeel extends MotifLookAndFeel {
 			"CheckBox.icon", checkBoxIcon,
 			"CheckBox.control", Palette.WINDOW_FAWN,
 			"RadioButton.icon", checkBoxIcon,
-			"RadioButton.control", Palette.WINDOW_FAWN
+			"RadioButton.control", Palette.WINDOW_FAWN,
+			"ScrollableListMenu.border", buttonBorder,
+			"ScrollableListMenu.foreground", Palette.BLACK,
+			"ScrollableListMenu.background", Palette.WINDOW_BLUE
 		};
 		table.putDefaults(defaults);
 	}
