@@ -45,7 +45,7 @@ public class PointObject implements LabeledObject {
 	}
 
 	@Override
-	public double getChargeDensity() {
+	public double getPriority() {
 		return 1E5;
 	}
 	

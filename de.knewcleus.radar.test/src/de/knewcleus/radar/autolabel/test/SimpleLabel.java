@@ -52,7 +52,7 @@ public class SimpleLabel implements Label {
 	}
 
 	@Override
-	public double getChargeDensity() {
+	public double getPriority() {
 		return 1E2;
 	}
 	

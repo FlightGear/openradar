@@ -113,7 +113,7 @@ public class AircraftLabel extends AbstractVehicleLabel {
 	}
 	
 	@Override
-	public double getChargeDensity() {
+	public double getPriority() {
 		return 1;
 	}
 

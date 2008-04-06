@@ -5,9 +5,9 @@ import de.knewcleus.radar.targets.SSRMode;
 import de.knewcleus.radar.targets.Track;
 
 public class Aircraft implements IVehicle {
-	protected final VehicleManager vehicleManager;
-	protected final Track track;
-	protected boolean isSelected=false;
+	public final VehicleManager vehicleManager;
+	public final Track track;
+	public boolean isSelected = false;
 	
 	public Aircraft(VehicleManager aircraftManager, Track track) {
 		this.vehicleManager=aircraftManager;

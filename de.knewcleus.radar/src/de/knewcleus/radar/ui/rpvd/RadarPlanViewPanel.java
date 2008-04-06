@@ -31,7 +31,7 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
-import de.knewcleus.radar.autolabel.Autolabeller;
+import de.knewcleus.radar.autolabel.ChargePotentialAutolabeller;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
@@ -49,7 +49,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	protected final RadarPlanViewContext radarPlanViewContext;
 	
 	protected final Font font=new Font(Font.SANS_SERIF,Font.PLAIN,12);
-	protected final Autolabeller autolabeller=new Autolabeller(1E-1,3E-1);
+	protected final ChargePotentialAutolabeller autolabeller=new ChargePotentialAutolabeller(1E-1,3E-1);
 
 	protected final IMapLayer landmassLayer;
 	protected final IMapLayer waterLayer;
@@ -231,10 +231,12 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		
 		if (e.getID()==MouseEvent.MOUSE_PRESSED && e.getButton()==1) {
 			isSelectedLabelArmed=selectedLabelHit;
-			final IVehicleLabel label=selectedSymbol.getLabel();
-			final Rectangle2D labelBounds=label.getBounds2D();
-			dragHookX=labelBounds.getCenterX()-e.getX();
-			dragHookY=labelBounds.getCenterY()-e.getY();
+			if (selectedLabelHit) {
+				final IVehicleLabel label=selectedSymbol.getLabel();
+				final Rectangle2D labelBounds=label.getBounds2D();
+				dragHookX=labelBounds.getCenterX()-e.getX();
+				dragHookY=labelBounds.getCenterY()-e.getY();
+			}
 		} else if (e.getID()==MouseEvent.MOUSE_RELEASED && e.getButton()==1) {
 			isSelectedLabelArmed=false;
 		}

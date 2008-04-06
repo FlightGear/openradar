@@ -4,7 +4,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
 public class ChargePotentialGradientCalculator {
-	protected final ChargedSymbol chargedSymbol;
+	protected final DisplayObject chargedSymbol;
 	protected final double symbolCharge;
 	
 	protected double gradientX=0.0;
@@ -12,7 +12,7 @@ public class ChargePotentialGradientCalculator {
 	
 	protected final double epsilon=1E-4;
 	
-	public ChargePotentialGradientCalculator(ChargedSymbol chargedSymbol) {
+	public ChargePotentialGradientCalculator(DisplayObject chargedSymbol) {
 		this.chargedSymbol=chargedSymbol;
 		final Rectangle2D bounds=chargedSymbol.getBounds2D();
 		final double w,h;
@@ -20,7 +20,7 @@ public class ChargePotentialGradientCalculator {
 		w=bounds.getWidth();
 		h=bounds.getHeight();
 		
-		symbolCharge=chargedSymbol.getChargeDensity()*w*h;
+		symbolCharge=chargedSymbol.getPriority()*w*h;
 	}
 	
 	private void addCharge(double q, double cx, double cy) {
@@ -48,14 +48,14 @@ public class ChargePotentialGradientCalculator {
 		gradientY+=magnitude*ny;
 	}
 	
-	public void addCharge(ChargedSymbol charge) {
+	public void addCharge(DisplayObject charge) {
 		final Rectangle2D symbolBounds=chargedSymbol.getBounds2D();
 		final Rectangle2D chargeBounds=charge.getBounds2D();
 		final double cx=chargeBounds.getCenterX();
 		final double cy=chargeBounds.getCenterY();
 		final double w=chargeBounds.getWidth();
 		final double h=chargeBounds.getHeight();
-		final double q=charge.getChargeDensity()*w*h;
+		final double q=charge.getPriority()*w*h;
 
 		addCharge(q,cx,cy);
 		
@@ -82,8 +82,8 @@ public class ChargePotentialGradientCalculator {
 		}
 	}
 	
-	public void addCharges(Collection<? extends ChargedSymbol> charges) {
-		for (ChargedSymbol charge: charges)
+	public void addCharges(Collection<? extends DisplayObject> charges) {
+		for (DisplayObject charge: charges)
 			addCharge(charge);
 	}
 	
