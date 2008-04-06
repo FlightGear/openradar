@@ -32,6 +32,7 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
 import de.knewcleus.radar.autolabel.ChargePotentialAutolabeller;
+import de.knewcleus.radar.autolabel.ILabelPotentialGradientCalculator;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
@@ -49,7 +50,8 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	protected final RadarPlanViewContext radarPlanViewContext;
 	
 	protected final Font font=new Font(Font.SANS_SERIF,Font.PLAIN,12);
-	protected final ChargePotentialAutolabeller autolabeller=new ChargePotentialAutolabeller(1E-1,3E-1);
+	protected final ILabelPotentialGradientCalculator labelPotentialGradientCalculator=new VehicleLabelPotentialGradientCalculator();
+	protected final ChargePotentialAutolabeller autolabeller;
 
 	protected final IMapLayer landmassLayer;
 	protected final IMapLayer waterLayer;
@@ -72,7 +74,9 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		super();
 		setDoubleBuffered(true); /* Is double buffered */
 		this.workstation=workstation;
-
+		
+		autolabeller=new ChargePotentialAutolabeller(labelPotentialGradientCalculator, 1E-1,3E-1);
+		
 		workstation.getRadarPlanViewSettings().addPropertyChangeListener(this);
 		
 		radarDeviceTransformation=new RadarDeviceTransformation(getSettings());

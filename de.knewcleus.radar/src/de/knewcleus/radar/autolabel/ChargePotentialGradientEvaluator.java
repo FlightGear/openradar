@@ -3,7 +3,7 @@ package de.knewcleus.radar.autolabel;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
-public class ChargePotentialGradientCalculator {
+public class ChargePotentialGradientEvaluator {
 	protected final DisplayObject chargedSymbol;
 	protected final double symbolCharge;
 	
@@ -12,7 +12,7 @@ public class ChargePotentialGradientCalculator {
 	
 	protected final double epsilon=1E-4;
 	
-	public ChargePotentialGradientCalculator(DisplayObject chargedSymbol) {
+	public ChargePotentialGradientEvaluator(DisplayObject chargedSymbol) {
 		this.chargedSymbol=chargedSymbol;
 		final Rectangle2D bounds=chargedSymbol.getBounds2D();
 		final double w,h;

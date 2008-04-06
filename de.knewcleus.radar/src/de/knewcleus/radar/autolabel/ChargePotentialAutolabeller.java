@@ -4,8 +4,11 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 public class ChargePotentialAutolabeller extends Autolabeller {
-	public ChargePotentialAutolabeller(double minimumDisplacement, double maximumDisplacement) {
+	protected final ILabelPotentialGradientCalculator labelPotentialGradientCalculator;
+	
+	public ChargePotentialAutolabeller(ILabelPotentialGradientCalculator labelPotentialGradientCalculator, double minimumDisplacement, double maximumDisplacement) {
 		super(minimumDisplacement, maximumDisplacement);
+		this.labelPotentialGradientCalculator=labelPotentialGradientCalculator;
 	}
 	
 	@Override
@@ -17,7 +20,7 @@ public class ChargePotentialAutolabeller extends Autolabeller {
 		}
 		
 		/* First determine the simple charge potential gradient (Coloumb-Force) */
-		ChargePotentialGradientCalculator gradientCalculator=new ChargePotentialGradientCalculator(label);
+		ChargePotentialGradientEvaluator gradientCalculator=new ChargePotentialGradientEvaluator(label);
 		
 		for (LabeledObject object: labeledObjects) {
 			if (object==labeledObject)
@@ -36,7 +39,7 @@ public class ChargePotentialAutolabeller extends Autolabeller {
 		/* Then determine the potential gradient from the labelled object itself */
 		final Rectangle2D labelBounds=label.getBounds2D();
 		final Point2D center=new Point2D.Double(labelBounds.getCenterX(), labelBounds.getCenterY());
-		PotentialGradient labelGradient=labeledObject.getPotentialGradient(center);
+		PotentialGradient labelGradient=labelPotentialGradientCalculator.getPotentialGradient(label, center);
 		
 		PotentialGradient totalGradient=labelGradient.add(gradientCalculator.getGradient());
 		

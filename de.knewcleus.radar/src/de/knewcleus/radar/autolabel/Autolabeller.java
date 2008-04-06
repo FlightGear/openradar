@@ -10,8 +10,6 @@ public abstract class Autolabeller {
 
 	protected final Set<LabeledObject> labeledObjects = new HashSet<LabeledObject>();
 
-	protected abstract void updateLabel(LabeledObject labeledObject);
-
 	protected final Set<DisplayObject> displayObjects = new HashSet<DisplayObject>();
 	protected final Deque<LabeledObject> objectsToProcess = new ArrayDeque<LabeledObject>();
 	protected final double minimumDisplacement;
@@ -60,4 +58,5 @@ public abstract class Autolabeller {
 		objectsToProcess.addLast(labeledObject);
 	}
 
+	protected abstract void updateLabel(LabeledObject labeledObject);
 }

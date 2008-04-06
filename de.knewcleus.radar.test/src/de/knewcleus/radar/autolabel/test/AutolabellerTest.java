@@ -19,13 +19,15 @@ import javax.swing.JPanel;
 import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.Updater;
 import de.knewcleus.radar.autolabel.ChargePotentialAutolabeller;
+import de.knewcleus.radar.autolabel.ILabelPotentialGradientCalculator;
 import de.knewcleus.radar.autolabel.Label;
 import de.knewcleus.radar.autolabel.LabeledObject;
 
 public class AutolabellerTest extends JPanel implements IUpdateable {
 	private static final long serialVersionUID = 1541306043056168679L;
 	protected final Random random=new Random();
-	protected final ChargePotentialAutolabeller autolabeller=new ChargePotentialAutolabeller(1E-5,1E-3);
+	protected final ILabelPotentialGradientCalculator labelPotentialGradientCalculator=new LabelPotentialGradientCalculator();
+	protected final ChargePotentialAutolabeller autolabeller=new ChargePotentialAutolabeller(labelPotentialGradientCalculator, 1E-5,1E-3);
 
 	public AutolabellerTest() {
 		super(true);
