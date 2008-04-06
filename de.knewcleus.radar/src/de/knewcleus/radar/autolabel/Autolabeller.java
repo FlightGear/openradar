@@ -1,5 +1,7 @@
 package de.knewcleus.radar.autolabel;
 
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
@@ -76,7 +78,9 @@ public class Autolabeller {
 		}
 		
 		/* Then determine the potential gradient from the labelled object itself */
-		PotentialGradient labelGradient=labeledObject.getPotentialGradient(label.getHookX(), label.getHookY());
+		final Rectangle2D labelBounds=label.getBounds2D();
+		final Point2D center=new Point2D.Double(labelBounds.getCenterX(), labelBounds.getCenterY());
+		PotentialGradient labelGradient=labeledObject.getPotentialGradient(center);
 		
 		PotentialGradient totalGradient=labelGradient.add(gradientCalculator.getGradient());
 		
@@ -87,7 +91,7 @@ public class Autolabeller {
 			totalGradient=totalGradient.normalise().scale(maxDisplacement);
 		}
 		
-		label.move(totalGradient.getDx(), totalGradient.getDy());
+		label.setCentroidPosition(labelBounds.getCenterX()+totalGradient.getDx(),labelBounds.getCenterY()+totalGradient.getDy());
 		
 		objectsToProcess.addLast(labeledObject);
 	}

@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	protected final float centrelineLength=5.0f*(float)Units.NM;
 	
 	protected Map<IVehicle, IVehicleSymbol> vehicleSymbolMap=new HashMap<IVehicle, IVehicleSymbol>();
-	protected long lastMouseX,lastMouseY;
+	protected double dragHookX, dragHookY;
 	protected boolean isSelectedLabelArmed;
 	
 	protected static int selectionRange=10;
@@ -134,20 +135,21 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	
 	private void resetAllLabels() {
 		final RadarPlanViewSettings settings=getSettings();
-		final StandardLabelPosition labelPosition=settings.getStandardLabelPosition();
+		final StandardLabelPosition standardLabelPosition=settings.getStandardLabelPosition();
 		final double distance=getStandardLabelDistance();
 		
 		double dx,dy;
 		
-		dx=labelPosition.getDx();
-		dy=labelPosition.getDy();
+		dx=standardLabelPosition.getDx();
+		dy=standardLabelPosition.getDy();
 		
 		final double length=Math.sqrt(dx*dx+dy*dy);
 		dx*=distance/length;
 		dy*=distance/length;
 		
 		for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
-			vehicleSymbol.getLabel().setHookPosition(dx,dy);
+			final Rectangle2D symbolBounds=vehicleSymbol.getBounds2D();
+			vehicleSymbol.getLabel().setCentroidPosition(symbolBounds.getCenterX()+dx, symbolBounds.getCenterY()+dy);
 		}
 	}
 	
@@ -157,14 +159,14 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		
 		switch (settings.getStandardLabelDistance()) {
 		case SMALL:
-			distance=AircraftSymbol.minLabelDist;
+			distance=AbstractVehicleLabel.minLabelDist;
 			break;
 		default:
 		case MEDIUM:
-			distance=AircraftSymbol.meanLabelDist;
+			distance=AbstractVehicleLabel.meanLabelDist;
 			break;
 		case LONG:
-			distance=AircraftSymbol.maxLabelDist;
+			distance=AbstractVehicleLabel.maxLabelDist;
 			break;
 		}
 		
@@ -178,21 +180,31 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 			checkForSelectionChange();
 			e.consume();
 		} else if (e.getID()==MouseEvent.MOUSE_DRAGGED && (e.getModifiersEx()&buttonMask)==MouseEvent.BUTTON1_DOWN_MASK) {
-			double dx,dy;
-			
-			dx=e.getX()-lastMouseX;
-			dy=e.getY()-lastMouseY;
-			
 			if (isSelectedLabelArmed) {
-				IVehicleSymbol selectedSymbol=getSelectedSymbol();
-				selectedSymbol.getLabel().move(dx, dy);
+				final IVehicleSymbol selectedSymbol=getSelectedSymbol();
+				final IVehicleLabel label=selectedSymbol.getLabel();
+				final Rectangle2D oldLabelBounds=label.getBounds2D();
+				final Rectangle2D oldSymbolBounds=selectedSymbol.getBounds2D();
+				final Rectangle2D oldBounds=new Rectangle2D.Double();
+				/* Make sure that the leading line is also redrawn */
+				Rectangle2D.union(oldLabelBounds, oldSymbolBounds, oldBounds);
+				
+				final double newx=e.getX()+dragHookX;
+				final double newy=e.getY()+dragHookY;
+				label.setCentroidPosition(newx, newy);
 				selectedSymbol.setLocked(true);
-				repaint();
+				
+				final Rectangle2D newLabelBounds=label.getBounds2D();
+				final Rectangle2D newSymbolBounds=selectedSymbol.getBounds2D();
+				final Rectangle2D newBounds=new Rectangle2D.Double();
+				/* Make sure that the leading line is also redrawn */
+				Rectangle2D.union(newLabelBounds, newSymbolBounds, newBounds);
+				
+				repaint(oldBounds.getBounds());
+				repaint(newBounds.getBounds());
 			}
 			e.consume();
 		}
-		lastMouseX=e.getX();
-		lastMouseY=e.getY();
 		
 		if (!e.isConsumed()) {
 			super.processMouseMotionEvent(e);
@@ -219,12 +231,17 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		
 		if (e.getID()==MouseEvent.MOUSE_PRESSED && e.getButton()==1) {
 			isSelectedLabelArmed=selectedLabelHit;
+			final IVehicleLabel label=selectedSymbol.getLabel();
+			final Rectangle2D labelBounds=label.getBounds2D();
+			dragHookX=labelBounds.getCenterX()-e.getX();
+			dragHookY=labelBounds.getCenterY()-e.getY();
 		} else if (e.getID()==MouseEvent.MOUSE_RELEASED && e.getButton()==1) {
 			isSelectedLabelArmed=false;
 		}
 		
 		if (selectedLabelHit) {
-			selectedSymbol.getLabel().processMouseEvent(e);
+			final IVehicleLabel label=selectedSymbol.getLabel();
+			label.processMouseEvent(e);
 		}
 		
 		if (!e.isConsumed())
@@ -448,17 +465,22 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		
 		for (IVehicle vehicle: updatedVehicles) {
 			IVehicleSymbol vehicleSymbol;
-			if (vehicleSymbolMap.containsKey(vehicle)) {
+			final boolean isNew=!vehicleSymbolMap.containsKey(vehicle);
+			if (!isNew) {
 				vehicleSymbol=vehicleSymbolMap.get(vehicle);
 			} else {
 				vehicleSymbol=new AircraftSymbol(radarPlanViewContext,(Aircraft)vehicle);
-				vehicleSymbol.getLabel().setInitialHookPosition(distance*labelPosition.getDx(), distance*labelPosition.getDy());
 				autolabeller.addLabeledObject(vehicleSymbol);
 				vehicleSymbolMap.put(vehicle, vehicleSymbol);
 				logger.fine("Vehicle state acquired:"+vehicle);
 			}
 			vehicleSymbol.getLabel().updateLabelContents();
 			vehicleSymbol.updatePosition();
+			if (isNew) {
+				final Rectangle2D symbolBounds=vehicleSymbol.getBounds2D();
+				vehicleSymbol.getLabel().setCentroidPosition(symbolBounds.getCenterX()+distance*labelPosition.getDx(),
+						 									 symbolBounds.getCenterY()+distance*labelPosition.getDy());
+			}
 		}
 
 		SwingUtilities.invokeLater(new Runnable() {

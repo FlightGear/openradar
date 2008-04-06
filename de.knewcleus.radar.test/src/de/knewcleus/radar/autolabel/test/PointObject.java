@@ -3,6 +3,7 @@ package de.knewcleus.radar.autolabel.test;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.radar.autolabel.Label;
@@ -54,8 +55,13 @@ public class PointObject implements LabeledObject {
 	}
 	
 	@Override
-	public PotentialGradient getPotentialGradient(double dx, double dy) {
+	public PotentialGradient getPotentialGradient(Point2D p) {
+		final Rectangle2D bounds=getBounds2D();
+		final double dx, dy;
 		final double dvx,dvy; // position relative to the heading vector
+		
+		dx=p.getX()-bounds.getCenterX();
+		dy=p.getY()-bounds.getCenterY();
 		
 		final double r=Math.sqrt(dx*dx+dy*dy);
 		final double v=Math.sqrt(vx*vx+vy*vy);

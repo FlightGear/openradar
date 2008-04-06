@@ -39,10 +39,6 @@ public class AircraftSymbol implements IVehicleSymbol {
 	protected static final double angleMax=0.3*Math.PI;
 
 	protected static final double potDistanceMax=5E2;
-	protected static final double minLabelDist=10;
-	protected static final double maxLabelDist=100;
-	protected static final double meanLabelDist=(minLabelDist+maxLabelDist)/2.0;
-	protected static final double labelDistRange=(maxLabelDist-minLabelDist);
 
 	protected final RadarPlanViewContext radarPlanViewContext;
 	protected final Aircraft aircraft;
@@ -85,7 +81,7 @@ public class AircraftSymbol implements IVehicleSymbol {
 		final Position currentGeodPosition=target.getPosition();
 		final Position currentMapPosition=mapTransformation.forward(currentGeodPosition);
 		currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
-
+		
 		/* Calculate current device position of leading line head position */
 		double trueCourse=target.getTrueCourse();
 		double gs=target.getGroundSpeed();
@@ -94,8 +90,6 @@ public class AircraftSymbol implements IVehicleSymbol {
 		GeodesicInformation geodesicInformation=geodesicUtils.direct(currentGeodPosition.getX(), currentGeodPosition.getY(), trueCourse, ds);
 		Position currentLeadingLineHeadMapPosition=mapTransformation.forward(geodesicInformation.getEndPos()); 
 		currentDeviceHeadPosition=deviceTransformation.toDevice(currentLeadingLineHeadMapPosition);
-		
-		label.updatePosition();
 	}
 	
 	public void paintSymbol(Graphics2D g2d) {
@@ -127,15 +121,9 @@ public class AircraftSymbol implements IVehicleSymbol {
 	}
 	
 	public void paintLabel(Graphics2D g2d) {
-		double devX=currentDevicePosition.getX();
-		double devY=currentDevicePosition.getY();
-		
-		double leStartX=devX;
-		double leStartY=devY;
-		double leEndX=leStartX+label.getHookX();
-		double leEndY=leStartY+label.getHookY();
+		final Point2D hookPosition=label.getHookPosition();
 		g2d.setColor(Palette.WHITE);
-		Line2D leadingLine=new Line2D.Double(leStartX,leStartY,leEndX,leEndY);
+		Line2D leadingLine=new Line2D.Double(currentDevicePosition, hookPosition);
 		g2d.draw(leadingLine);
 		
 		label.paint(g2d);
@@ -217,8 +205,12 @@ public class AircraftSymbol implements IVehicleSymbol {
 	}
 	
 	@Override
-	public PotentialGradient getPotentialGradient(double dx, double dy) {
+	public PotentialGradient getPotentialGradient(Point2D p) {
+		final double dx,dy;
 		final double vx,vy;
+		
+		dx=p.getX()-currentDevicePosition.getX();
+		dy=p.getX()-currentDevicePosition.getY();
 		
 		vx=currentDeviceHeadPosition.getX()-currentDevicePosition.getX();
 		vy=currentDeviceHeadPosition.getY()-currentDevicePosition.getY();
@@ -295,7 +287,7 @@ public class AircraftSymbol implements IVehicleSymbol {
 		
 		final double distanceForce;
 		
-		distanceForce=-8.0*potDistanceMax*(r-meanLabelDist)/(labelDistRange*labelDistRange);
+		distanceForce=-8.0*potDistanceMax*(r-AbstractVehicleLabel.meanLabelDist)/(AbstractVehicleLabel.labelDistRange*AbstractVehicleLabel.labelDistRange);
 		
 		final double distanceForceX,distanceForceY;
 		

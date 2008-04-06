@@ -127,8 +127,8 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 			
 			final Rectangle2D objectBounds=object.getBounds2D();
 			final double cxo,cyo;
-			cxo=objectBounds.getCenterX();
-			cyo=objectBounds.getCenterY();
+			cxo=objectBounds.getCenterX()*getWidth();
+			cyo=objectBounds.getCenterY()*getHeight();
 			
 			double cx=(left+right)/2.0,cy=(top+bottom)/2.0;
 			

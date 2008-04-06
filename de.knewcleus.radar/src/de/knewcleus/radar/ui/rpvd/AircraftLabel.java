@@ -33,10 +33,6 @@ public class AircraftLabel extends AbstractVehicleLabel {
 	public AircraftLabel(AircraftSymbol associatedSymbol) {
 		super(5);
 		this.associatedSymbol=associatedSymbol;
-		hookX=1.0;
-		hookY=1.0;
-		dirX=1.0;
-		dirY=1.0;
 		
 		final Aircraft aircraft=associatedSymbol.getVehicle();
 		callsignElement=new CallsignLabelElement(aircraft);
@@ -119,11 +115,6 @@ public class AircraftLabel extends AbstractVehicleLabel {
 	@Override
 	public double getChargeDensity() {
 		return 1;
-	}
-	
-	@Override
-	public String toString() {
-		return "hookX="+hookX+" hookY="+hookY;
 	}
 
 	@Override

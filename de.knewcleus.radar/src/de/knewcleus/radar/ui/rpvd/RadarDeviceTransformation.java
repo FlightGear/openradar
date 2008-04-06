@@ -10,7 +10,7 @@ import de.knewcleus.fgfs.location.Vector3D;
 
 public class RadarDeviceTransformation implements IDeviceTransformation {
 	protected final RadarPlanViewSettings radarPlanViewSettings;
-	private double centerx, centery, scale;
+	private double centerx, centery, scale=1;
 	
 	public RadarDeviceTransformation(RadarPlanViewSettings radarPlanViewSettings) {
 		this.radarPlanViewSettings=radarPlanViewSettings;
