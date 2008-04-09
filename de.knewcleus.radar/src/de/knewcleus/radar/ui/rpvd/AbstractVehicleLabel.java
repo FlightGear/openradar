@@ -10,13 +10,15 @@ import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.labels.LabelElementContainer;
 
 public abstract class AbstractVehicleLabel extends LabelElementContainer implements Label, IVehicleLabel { 
+	protected final IVehicleSymbol vehicleSymbol;
 	protected final LabelElementContainer labelLines[];
 	protected static final double minLabelDist=10;
 	protected static final double maxLabelDist=100;
 	protected static final double meanLabelDist=(minLabelDist+maxLabelDist)/2.0;
 	protected static final double labelDistRange=(maxLabelDist-minLabelDist);
 
-	public AbstractVehicleLabel(int maxLabelLines) {
+	public AbstractVehicleLabel(IVehicleSymbol vehicleSymbol, int maxLabelLines) {
+		this.vehicleSymbol=vehicleSymbol;
 		labelLines=new LabelElementContainer[maxLabelLines];
 	}
 	
@@ -29,6 +31,11 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	@Override
 	public boolean isOpaque() {
 		return getVehicleSymbol().getVehicle().isSelected();
+	}
+	
+	@Override
+	public boolean isAutolabelled() {
+		return !getVehicleSymbol().isLocked();
 	}
 	
 	@Override
@@ -86,7 +93,9 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	public abstract Color getSelectedTextColor();
 	public abstract Color getSelectedBackgroundColor();
 
-	public abstract IVehicleSymbol getVehicleSymbol();
+	public IVehicleSymbol getVehicleSymbol() {
+		return vehicleSymbol;
+	}
 
 	public abstract void updateLabelContents();
 }

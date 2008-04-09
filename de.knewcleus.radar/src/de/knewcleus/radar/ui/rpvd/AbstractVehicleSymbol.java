@@ -20,7 +20,6 @@ import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.vehicles.IVehicle;
 
 public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
-
 	protected static final Logger logger = Logger.getLogger(AbstractVehicleSymbol.class.getName());
 
 	private static final GeodesicUtils geodesicUtils = new GeodesicUtils(Ellipsoid.WGS84);
@@ -95,7 +94,6 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 		g2d.draw(headingVector);
 	}
 
-	@Override
 	public boolean isLocked() {
 		return aircraft.isSelected() || isLocked;
 	}

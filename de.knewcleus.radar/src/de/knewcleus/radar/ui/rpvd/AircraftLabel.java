@@ -18,7 +18,6 @@ import de.knewcleus.radar.ui.vehicles.ClearedLevelLabelElement;
 import de.knewcleus.radar.ui.vehicles.GroundSpeedLabelElement;
 
 public class AircraftLabel extends AbstractVehicleLabel {
-	protected final AircraftSymbol associatedSymbol;
 	protected final LabelElement callsignElement;
 	protected final LabelElement nextSectorElement;
 	protected final LabelElement actualLevelElement;
@@ -31,8 +30,7 @@ public class AircraftLabel extends AbstractVehicleLabel {
 	protected final LabelElement assignedClimbRateElement;
 	
 	public AircraftLabel(AircraftSymbol associatedSymbol) {
-		super(5);
-		this.associatedSymbol=associatedSymbol;
+		super(associatedSymbol, 5);
 		
 		final Aircraft aircraft=associatedSymbol.getVehicle();
 		callsignElement=new CallsignLabelElement(aircraft);
@@ -59,11 +57,11 @@ public class AircraftLabel extends AbstractVehicleLabel {
 	
 	@Override
 	public void updateLabelContents() {
-		final AircraftState aircraftState=associatedSymbol.getVehicle().getAircraftState();
+		final AircraftState aircraftState=getVehicleSymbol().getVehicle().getAircraftState();
 		
 		if (aircraftState==null) {
 			prepareNoncorrelatedLabel();
-		} else if (associatedSymbol.getVehicle().isSelected()) {
+		} else if (vehicleSymbol.getVehicle().isSelected()) {
 			prepareStandardLabel();
 		} else { 
 			prepareMinimumLabel();
@@ -109,7 +107,7 @@ public class AircraftLabel extends AbstractVehicleLabel {
 	
 	@Override
 	public AircraftSymbol getVehicleSymbol() {
-		return associatedSymbol;
+		return (AircraftSymbol) super.getVehicleSymbol();
 	}
 	
 	@Override
@@ -119,7 +117,7 @@ public class AircraftLabel extends AbstractVehicleLabel {
 
 	@Override
 	public Color getNormalTextColor() {
-		final AircraftState aircraftState=associatedSymbol.getVehicle().getAircraftState();
+		final AircraftState aircraftState=getVehicleSymbol().getVehicle().getAircraftState();
 		if (aircraftState==null) {
 			/* Not correlated */
 			return Palette.BEACON;

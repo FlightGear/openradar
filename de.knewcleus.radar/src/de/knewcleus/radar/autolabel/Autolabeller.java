@@ -50,13 +50,14 @@ public abstract class Autolabeller {
 		if (objectsToProcess.isEmpty())
 			return;
 		
-		LabeledObject labeledObject=objectsToProcess.removeFirst();
-		if (!labeledObject.isLocked()) {
-			updateLabel(labeledObject);
+		final LabeledObject labeledObject=objectsToProcess.removeFirst();
+		final Label label=labeledObject.getLabel();
+		if (label!=null && label.isAutolabelled()) {
+			updateLabel(label);
 		}
 		
 		objectsToProcess.addLast(labeledObject);
 	}
 
-	protected abstract void updateLabel(LabeledObject labeledObject);
+	protected abstract void updateLabel(Label label);
 }

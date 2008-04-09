@@ -12,8 +12,8 @@ public class ChargePotentialAutolabeller extends Autolabeller {
 	}
 	
 	@Override
-	protected void updateLabel(LabeledObject labeledObject) {
-		final Label label=labeledObject.getLabel();
+	protected void updateLabel(Label label) {
+		final LabeledObject labeledObject=label.getAssociatedObject();
 		if (label==null) {
 			/* At some times labelled objects do not display their labels */
 			return;
