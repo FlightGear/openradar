@@ -16,6 +16,8 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	protected static final double maxLabelDist=100;
 	protected static final double meanLabelDist=(minLabelDist+maxLabelDist)/2.0;
 	protected static final double labelDistRange=(maxLabelDist-minLabelDist);
+	protected boolean inside=false;
+	protected boolean pressed=false;
 
 	public AbstractVehicleLabel(IVehicleSymbol vehicleSymbol, int maxLabelLines) {
 		this.vehicleSymbol=vehicleSymbol;
@@ -53,6 +55,16 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	@Override
 	public LabeledObject getAssociatedObject() {
 		return getVehicleSymbol();
+	}
+	
+	@Override
+	public void updatePosition() {
+		// NO-OP
+	}
+	
+	@Override
+	public boolean containsPoint(double x, double y) {
+		return getBounds2D().contains(x, y);
 	}
 	
 	@Override
@@ -95,6 +107,40 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 
 	public IVehicleSymbol getVehicleSymbol() {
 		return vehicleSymbol;
+	}
+
+	@Override
+	public boolean isActive() {
+		return inside;
+	}
+
+	@Override
+	public boolean isInside() {
+		return inside;
+	}
+
+	@Override
+	public boolean isPressed() {
+		return pressed;
+	}
+
+	@Override
+	public void setInside(boolean inside) {
+		if (inside==this.inside)
+			return;
+		this.inside=inside;
+	}
+
+	@Override
+	public void setPressed(boolean pressed) {
+		if (pressed==this.pressed)
+			return;
+		if (!inside) {
+			/* When we're outside, the press is for somebody else... */
+			this.pressed=false;
+		} else {
+			this.pressed=pressed;
+		}
 	}
 
 	public abstract void updateLabelContents();

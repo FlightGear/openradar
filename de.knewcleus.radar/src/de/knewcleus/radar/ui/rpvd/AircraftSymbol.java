@@ -14,6 +14,8 @@ import de.knewcleus.radar.ui.vehicles.Aircraft;
 
 public class AircraftSymbol extends AbstractVehicleSymbol implements IVehicleSymbol {
 	protected static final float aircraftSymbolSize=6.0f;
+	protected boolean inside=false;
+	protected boolean pressed=false;
 	
 	public AircraftSymbol(RadarPlanViewContext radarPlanViewContext, Aircraft aircraft) {
 		super(radarPlanViewContext, aircraft);

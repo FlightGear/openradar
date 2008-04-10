@@ -29,6 +29,8 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 	protected Point2D currentDevicePosition;
 	protected Point2D currentDeviceHeadPosition;
 	protected boolean isLocked = false;
+	protected boolean inside=false;
+	protected boolean pressed=false;
 
 	public AbstractVehicleSymbol(RadarPlanViewContext radarPlanViewContext, IVehicle aircraft) {
 		this.radarPlanViewContext=radarPlanViewContext;
@@ -141,5 +143,36 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 			g2d.setColor(new Color(symbolColor.getRed(),symbolColor.getGreen(),symbolColor.getBlue(),(int)(symbolColor.getAlpha()*alpha)));
 			paintPositionSymbol(g2d, devicePos);
 		}
+	}
+
+	@Override
+	public boolean isActive() {
+		return inside || pressed;
+	}
+
+	@Override
+	public boolean isInside() {
+		return inside;
+	}
+
+	@Override
+	public boolean isPressed() {
+		return pressed;
+	}
+
+	@Override
+	public void setInside(boolean inside) {
+		if (inside==this.inside)
+			return;
+		this.inside=inside;
+	}
+
+	@Override
+	public void setPressed(boolean pressed) {
+		if (pressed==this.pressed)
+			return;
+		if (!inside)
+			pressed=false;
+		this.pressed=pressed;
 	}
 }

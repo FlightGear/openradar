@@ -6,8 +6,7 @@ import java.awt.geom.Rectangle2D;
 import de.knewcleus.radar.autolabel.LabeledObject;
 import de.knewcleus.radar.ui.vehicles.IVehicle;
 
-public interface IVehicleSymbol extends LabeledObject {
-	public abstract void updatePosition();
+public interface IVehicleSymbol extends LabeledObject, IDisplaySymbol {
 	
 	public abstract IVehicle getVehicle();
 	public abstract IVehicleLabel getLabel();
@@ -18,9 +17,6 @@ public interface IVehicleSymbol extends LabeledObject {
 	public abstract void paintLabel(Graphics2D g2d);
 
 	public abstract Rectangle2D getSymbolBounds();
-	public abstract Rectangle2D getBounds2D();
-	public abstract boolean containsPoint(double x, double y);
-
 	public abstract boolean canSelect();
 
 	public abstract boolean isLocked();

@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
 
 import de.knewcleus.radar.autolabel.Label;
 
-public interface IVehicleLabel extends Label {
+public interface IVehicleLabel extends Label, IDisplaySymbol {
 	public abstract void updateLabelContents();
 	public abstract IVehicleSymbol getVehicleSymbol();
 	public abstract void processMouseEvent(MouseEvent e);
