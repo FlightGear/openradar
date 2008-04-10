@@ -26,7 +26,7 @@ import de.knewcleus.radar.autolabel.LabeledObject;
 public class AutolabellerTest extends JPanel implements IUpdateable {
 	private static final long serialVersionUID = 1541306043056168679L;
 	protected final Random random=new Random();
-	protected final ILabelPotentialGradientCalculator labelPotentialGradientCalculator=new LabelPotentialGradientCalculator();
+	protected final ILabelPotentialGradientCalculator labelPotentialGradientCalculator=new SimpleLabelPotentialGradientCalculator();
 	protected final ChargePotentialAutolabeller autolabeller=new ChargePotentialAutolabeller(labelPotentialGradientCalculator, 1E-5,1E-3);
 
 	public AutolabellerTest() {

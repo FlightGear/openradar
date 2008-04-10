@@ -60,4 +60,9 @@ public class SimpleLabel implements Label {
 	public Rectangle2D getBounds2D() {
 		return new Rectangle2D.Double(position.getX(), position.getY(), width, height);
 	}
+
+	@Override
+	public boolean isAutolabelled() {
+		return true;
+	}
 }

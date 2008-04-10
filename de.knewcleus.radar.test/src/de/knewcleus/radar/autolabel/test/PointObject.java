@@ -16,6 +16,7 @@ public class PointObject implements LabeledObject {
 	protected static final double maxLabelDist=0.1;
 	protected static final double minLabelDist=0.04;
 	protected static final double meanLabelDist=(minLabelDist+maxLabelDist)/2.0;
+	protected static final double labelDistRange=maxLabelDist-minLabelDist;
 
 	public PointObject(double x, double y, double vx, double vy, double r) {
 		this.x=x;
@@ -34,11 +35,6 @@ public class PointObject implements LabeledObject {
 	@Override
 	public double getPriority() {
 		return 1E5;
-	}
-	
-	@Override
-	public boolean isLocked() {
-		return false;
 	}
 	
 	public void update() {
