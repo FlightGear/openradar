@@ -3,9 +3,9 @@ package de.knewcleus.radar.autolabel.test;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.radar.autolabel.Label;
+import de.knewcleus.radar.autolabel.ILabel;
 
-public class SimpleLabel implements Label {
+public class SimpleLabel implements ILabel {
 	protected final PointObject associatedObject;
 	protected Point2D position;
 	protected final double width, height;
@@ -21,7 +21,7 @@ public class SimpleLabel implements Label {
 	}
 
 	@Override
-	public PointObject getAssociatedObject() {
+	public PointObject getLabeledObject() {
 		return associatedObject;
 	}
 	

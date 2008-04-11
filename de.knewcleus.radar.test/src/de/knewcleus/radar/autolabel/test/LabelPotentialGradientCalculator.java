@@ -7,7 +7,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.radar.autolabel.ILabelPotentialGradientCalculator;
-import de.knewcleus.radar.autolabel.Label;
+import de.knewcleus.radar.autolabel.ILabel;
 import de.knewcleus.radar.autolabel.PotentialGradient;
 
 public class LabelPotentialGradientCalculator implements ILabelPotentialGradientCalculator {
@@ -21,9 +21,9 @@ public class LabelPotentialGradientCalculator implements ILabelPotentialGradient
 	protected static final double labelDistRange=(PointObject.maxLabelDist-PointObject.minLabelDist);
 
 	@Override
-	public PotentialGradient getPotentialGradient(Label label, Point2D p) {
+	public PotentialGradient getPotentialGradient(ILabel label, Point2D p) {
 		final SimpleLabel simpleLabel=(SimpleLabel)label;
-		final PointObject pointObject=simpleLabel.getAssociatedObject();
+		final PointObject pointObject=simpleLabel.getLabeledObject();
 		final Rectangle2D bounds=pointObject.getBounds2D();
 		final double dx, dy;
 		final double dvx,dvy; // position relative to the heading vector

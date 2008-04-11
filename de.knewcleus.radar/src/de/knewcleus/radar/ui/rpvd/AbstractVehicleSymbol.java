@@ -2,6 +2,7 @@ package de.knewcleus.radar.ui.rpvd;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Deque;
@@ -16,6 +17,7 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.radar.targets.Track;
+import de.knewcleus.radar.ui.DefaultActivationModel;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.vehicles.IVehicle;
 
@@ -25,6 +27,7 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 	private static final GeodesicUtils geodesicUtils = new GeodesicUtils(Ellipsoid.WGS84);
 	protected final RadarPlanViewContext radarPlanViewContext;
 	protected final IVehicle aircraft;
+	protected final DefaultActivationModel activationModel=new DefaultActivationModel();
 	protected IVehicleLabel label=null;
 	protected Point2D currentDevicePosition;
 	protected Point2D currentDeviceHeadPosition;
@@ -35,6 +38,21 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 	public AbstractVehicleSymbol(RadarPlanViewContext radarPlanViewContext, IVehicle aircraft) {
 		this.radarPlanViewContext=radarPlanViewContext;
 		this.aircraft=aircraft;
+	}
+	
+	@Override
+	public DefaultActivationModel getActivationModel() {
+		return activationModel;
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+		return getBounds2D().getBounds();
+	}
+	
+	@Override
+	public IVehicle getRepresentedObject() {
+		return getVehicle();
 	}
 
 	public abstract double getPriority();
@@ -54,10 +72,6 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 
 	public Point2D getCurrentDevicePosition() {
 		return currentDevicePosition;
-	}
-
-	public boolean canSelect() {
-		return getVehicle().canSelect();
 	}
 
 	public void updatePosition() {
@@ -143,36 +157,5 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 			g2d.setColor(new Color(symbolColor.getRed(),symbolColor.getGreen(),symbolColor.getBlue(),(int)(symbolColor.getAlpha()*alpha)));
 			paintPositionSymbol(g2d, devicePos);
 		}
-	}
-
-	@Override
-	public boolean isActive() {
-		return inside || pressed;
-	}
-
-	@Override
-	public boolean isInside() {
-		return inside;
-	}
-
-	@Override
-	public boolean isPressed() {
-		return pressed;
-	}
-
-	@Override
-	public void setInside(boolean inside) {
-		if (inside==this.inside)
-			return;
-		this.inside=inside;
-	}
-
-	@Override
-	public void setPressed(boolean pressed) {
-		if (pressed==this.pressed)
-			return;
-		if (!inside)
-			pressed=false;
-		this.pressed=pressed;
 	}
 }

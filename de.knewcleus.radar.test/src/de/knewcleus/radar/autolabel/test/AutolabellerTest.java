@@ -20,8 +20,8 @@ import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.Updater;
 import de.knewcleus.radar.autolabel.ChargePotentialAutolabeller;
 import de.knewcleus.radar.autolabel.ILabelPotentialGradientCalculator;
-import de.knewcleus.radar.autolabel.Label;
-import de.knewcleus.radar.autolabel.LabeledObject;
+import de.knewcleus.radar.autolabel.ILabel;
+import de.knewcleus.radar.autolabel.ILabeledObject;
 
 public class AutolabellerTest extends JPanel implements IUpdateable {
 	private static final long serialVersionUID = 1541306043056168679L;
@@ -54,8 +54,8 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 	
 	@Override
 	public void update(double dt) {
-		Set<LabeledObject> objectsToRemove=new  HashSet<LabeledObject>();
-		for (LabeledObject labeledObject: autolabeller.getLabeledObjects()) {
+		Set<ILabeledObject> objectsToRemove=new  HashSet<ILabeledObject>();
+		for (ILabeledObject labeledObject: autolabeller.getLabeledObjects()) {
 			if (labeledObject instanceof PointObject) {
 				PointObject pointObject=(PointObject)labeledObject;
 				pointObject.update();
@@ -66,7 +66,7 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 			}
 		}
 	
-		for (LabeledObject labeledObject: objectsToRemove) {
+		for (ILabeledObject labeledObject: objectsToRemove) {
 			autolabeller.removeLabeledObject(labeledObject);
 		}
 		long startTime=System.currentTimeMillis();
@@ -102,7 +102,7 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 		
 		Graphics2D g2d=(Graphics2D)g;
 		
-		for (LabeledObject object: autolabeller.getLabeledObjects()) {
+		for (ILabeledObject object: autolabeller.getLabeledObjects()) {
 			if (!(object instanceof PointObject))
 				continue;
 			PointObject labeledObject=(PointObject)object;
@@ -117,7 +117,7 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 			g2d.setColor(Color.BLACK);
 			g2d.draw(pointMarker);
 			
-			Label label=object.getLabel();
+			ILabel label=object.getLabel();
 			final double top,bottom,left,right;
 			
 			final Rectangle2D labelBounds=label.getBounds2D();

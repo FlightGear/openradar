@@ -1,17 +1,21 @@
 package de.knewcleus.radar.ui.rpvd;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.radar.autolabel.Label;
-import de.knewcleus.radar.autolabel.LabeledObject;
+import de.knewcleus.radar.autolabel.ILabel;
+import de.knewcleus.radar.autolabel.ILabeledObject;
 import de.knewcleus.radar.ui.Palette;
+import de.knewcleus.radar.ui.DefaultActivationModel;
 import de.knewcleus.radar.ui.labels.LabelElementContainer;
+import de.knewcleus.radar.ui.vehicles.IVehicle;
 
-public abstract class AbstractVehicleLabel extends LabelElementContainer implements Label, IVehicleLabel { 
+public abstract class AbstractVehicleLabel extends LabelElementContainer implements ILabel, IVehicleLabel { 
 	protected final IVehicleSymbol vehicleSymbol;
 	protected final LabelElementContainer labelLines[];
+	protected final DefaultActivationModel activationModel=new VehicleLabelActivationModel();
 	protected static final double minLabelDist=10;
 	protected static final double maxLabelDist=100;
 	protected static final double meanLabelDist=(minLabelDist+maxLabelDist)/2.0;
@@ -53,8 +57,28 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	}
 
 	@Override
-	public LabeledObject getAssociatedObject() {
+	public ILabeledObject getLabeledObject() {
 		return getVehicleSymbol();
+	}
+	
+	@Override
+	public IVehicle getRepresentedObject() {
+		return vehicleSymbol.getVehicle();
+	}
+	
+	@Override
+	public DefaultActivationModel getActivationModel() {
+		return activationModel;
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+		return getBounds2D().getBounds();
+	}
+	
+	@Override
+	public boolean contains(int x, int y) {
+		return getBounds().contains(x, y);
 	}
 	
 	@Override
@@ -77,7 +101,7 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	
 	@Override
 	public void setCentroidPosition(double x, double y) {
-		final Rectangle2D symbolBounds=getAssociatedObject().getBounds2D();
+		final Rectangle2D symbolBounds=getLabeledObject().getBounds2D();
 		
 		double dx=x-symbolBounds.getCenterX();
 		double dy=y-symbolBounds.getCenterY();
@@ -107,40 +131,6 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 
 	public IVehicleSymbol getVehicleSymbol() {
 		return vehicleSymbol;
-	}
-
-	@Override
-	public boolean isActive() {
-		return inside;
-	}
-
-	@Override
-	public boolean isInside() {
-		return inside;
-	}
-
-	@Override
-	public boolean isPressed() {
-		return pressed;
-	}
-
-	@Override
-	public void setInside(boolean inside) {
-		if (inside==this.inside)
-			return;
-		this.inside=inside;
-	}
-
-	@Override
-	public void setPressed(boolean pressed) {
-		if (pressed==this.pressed)
-			return;
-		if (!inside) {
-			/* When we're outside, the press is for somebody else... */
-			this.pressed=false;
-		} else {
-			this.pressed=pressed;
-		}
 	}
 
 	public abstract void updateLabelContents();

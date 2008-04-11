@@ -8,10 +8,10 @@ import java.util.Set;
 
 public abstract class Autolabeller {
 
-	protected final Set<LabeledObject> labeledObjects = new HashSet<LabeledObject>();
+	protected final Set<ILabeledObject> labeledObjects = new HashSet<ILabeledObject>();
 
 	protected final Set<DisplayObject> displayObjects = new HashSet<DisplayObject>();
-	protected final Deque<LabeledObject> objectsToProcess = new ArrayDeque<LabeledObject>();
+	protected final Deque<ILabeledObject> objectsToProcess = new ArrayDeque<ILabeledObject>();
 	protected final double minimumDisplacement;
 	protected final double maximumDisplacement;
 	
@@ -20,17 +20,17 @@ public abstract class Autolabeller {
 		this.maximumDisplacement=maximumDisplacement;
 	}
 
-	public synchronized void addLabeledObject(LabeledObject object) {
+	public synchronized void addLabeledObject(ILabeledObject object) {
 		labeledObjects.add(object);
 		objectsToProcess.addLast(object);
 	}
 
-	public synchronized void removeLabeledObject(LabeledObject object) {
+	public synchronized void removeLabeledObject(ILabeledObject object) {
 		labeledObjects.remove(object);
 		objectsToProcess.remove(object);
 	}
 
-	public Set<LabeledObject> getLabeledObjects() {
+	public Set<ILabeledObject> getLabeledObjects() {
 		return Collections.unmodifiableSet(labeledObjects);
 	}
 
@@ -50,8 +50,8 @@ public abstract class Autolabeller {
 		if (objectsToProcess.isEmpty())
 			return;
 		
-		final LabeledObject labeledObject=objectsToProcess.removeFirst();
-		final Label label=labeledObject.getLabel();
+		final ILabeledObject labeledObject=objectsToProcess.removeFirst();
+		final ILabel label=labeledObject.getLabel();
 		if (label!=null && label.isAutolabelled()) {
 			updateLabel(label);
 		}
@@ -59,5 +59,5 @@ public abstract class Autolabeller {
 		objectsToProcess.addLast(labeledObject);
 	}
 
-	protected abstract void updateLabel(Label label);
+	protected abstract void updateLabel(ILabel label);
 }

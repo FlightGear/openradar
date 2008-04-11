@@ -12,8 +12,8 @@ public class ChargePotentialAutolabeller extends Autolabeller {
 	}
 	
 	@Override
-	protected void updateLabel(Label label) {
-		final LabeledObject labeledObject=label.getAssociatedObject();
+	protected void updateLabel(ILabel label) {
+		final ILabeledObject labeledObject=label.getLabeledObject();
 		if (label==null) {
 			/* At some times labelled objects do not display their labels */
 			return;
@@ -22,11 +22,11 @@ public class ChargePotentialAutolabeller extends Autolabeller {
 		/* First determine the simple charge potential gradient (Coloumb-Force) */
 		ChargePotentialGradientEvaluator gradientCalculator=new ChargePotentialGradientEvaluator(label);
 		
-		for (LabeledObject object: labeledObjects) {
+		for (ILabeledObject object: labeledObjects) {
 			if (object==labeledObject)
 				continue; // skip the object itself
 			gradientCalculator.addCharge(object);
-			final Label objectLabel=object.getLabel();
+			final ILabel objectLabel=object.getLabel();
 			if (objectLabel!=null) {
 				gradientCalculator.addCharge(object.getLabel());
 			}

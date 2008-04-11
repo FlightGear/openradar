@@ -111,6 +111,11 @@ public class AircraftLabel extends AbstractVehicleLabel {
 	}
 	
 	@Override
+	public Aircraft getRepresentedObject() {
+		return getVehicleSymbol().getVehicle();
+	}
+	
+	@Override
 	public double getPriority() {
 		return 1;
 	}

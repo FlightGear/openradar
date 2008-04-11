@@ -55,7 +55,7 @@ public class Aircraft implements IVehicle {
 		this.isSelected = isSelected;
 	}
 	
-	public boolean canSelect() {
+	public boolean isEnabled() {
 		return true;
 	}
 }

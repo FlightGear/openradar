@@ -2,14 +2,14 @@ package de.knewcleus.radar.autolabel.test;
 
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.radar.autolabel.Label;
-import de.knewcleus.radar.autolabel.LabeledObject;
+import de.knewcleus.radar.autolabel.ILabel;
+import de.knewcleus.radar.autolabel.ILabeledObject;
 
-public class PointObject implements LabeledObject {
+public class PointObject implements ILabeledObject {
 	protected double x,y;
 	protected final double r;
 	protected final double vx,vy;
-	protected final Label label;
+	protected final ILabel label;
 	
 	protected static final double labelWidth=0.05;
 	protected static final double labelHeight=0.025;
@@ -28,7 +28,7 @@ public class PointObject implements LabeledObject {
 	}
 
 	@Override
-	public Label getLabel() {
+	public ILabel getLabel() {
 		return label;
 	}
 
