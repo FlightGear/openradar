@@ -15,6 +15,8 @@ public interface IInteractiveSymbol {
 	
 	public abstract DefaultActivationModel getActivationModel();
 	
+	public abstract boolean isSelected();
+	
 	public abstract Rectangle getBounds();
 	public abstract boolean contains(int x, int y);
 }

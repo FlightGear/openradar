@@ -42,12 +42,17 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	
 	@Override
 	public boolean isAutolabelled() {
-		return autolabelled;
+		return autolabelled && !isSelected();
 	}
 	
 	@Override
 	public void setAutolabelled(boolean autolabelled) {
 		this.autolabelled=autolabelled;
+	}
+	
+	@Override
+	public boolean isSelected() {
+		return getRepresentedObject().isSelected();
 	}
 	
 	@Override

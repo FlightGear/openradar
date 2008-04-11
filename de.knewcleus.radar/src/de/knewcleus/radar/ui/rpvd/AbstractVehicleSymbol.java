@@ -55,10 +55,6 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 		return getVehicle();
 	}
 
-	public abstract double getPriority();
-
-	public abstract boolean containsPoint(double x, double y);
-
 	protected abstract Color getSymbolColor();
 
 	@Override
@@ -109,13 +105,10 @@ public abstract class AbstractVehicleSymbol implements IVehicleSymbol {
 		Line2D headingVector=new Line2D.Double(currentDevicePosition,currentDeviceHeadPosition);
 		g2d.draw(headingVector);
 	}
-
-	public boolean isLocked() {
-		return aircraft.isSelected() || isLocked;
-	}
-
-	public void setLocked(boolean isLocked) {
-		this.isLocked = isLocked;
+	
+	@Override
+	public boolean isSelected() {
+		return getRepresentedObject().isSelected();
 	}
 
 	@Override

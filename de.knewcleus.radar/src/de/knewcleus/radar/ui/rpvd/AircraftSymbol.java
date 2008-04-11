@@ -70,16 +70,7 @@ public class AircraftSymbol extends AbstractVehicleSymbol implements IVehicleSym
 	
 	@Override
 	public boolean contains(int x, int y) {
-		return containsPoint(x, y);
-	}
-	
-	@Override
-	public boolean containsPoint(double x, double y) {
-		final Rectangle2D symbolBounds=getSymbolBounds();
-		if (symbolBounds.contains(x,y))
-			return true;
-		final Rectangle2D labelBounds=getLabel().getBounds2D();
-		return labelBounds.contains(x,y);
+		return getSymbolBounds().contains(x, y);
 	}
 	
 	@Override

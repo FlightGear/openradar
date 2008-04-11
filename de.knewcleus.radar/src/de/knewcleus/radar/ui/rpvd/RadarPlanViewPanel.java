@@ -17,6 +17,7 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -35,6 +36,7 @@ import de.knewcleus.radar.autolabel.ChargePotentialAutolabeller;
 import de.knewcleus.radar.autolabel.ILabelPotentialGradientCalculator;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.DefaultActivationModel;
+import de.knewcleus.radar.ui.IInteractiveSymbol;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
 import de.knewcleus.radar.ui.vehicles.Aircraft;
@@ -70,7 +72,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	
 	protected static int selectionRange=10;
 	
-	protected IVehicleSymbol activeVehicleSymbol=null;
+	protected IInteractiveSymbol activeInteractiveSymbol=null;
 	
 	public RadarPlanViewPanel(RadarWorkstation workstation) {
 		super();
@@ -182,14 +184,10 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		return distance;
 	}
 	
-	protected boolean updateSymbolInsideStatus(IVehicleSymbol symbol, int x, int y) {
-		DefaultActivationModel symbolActivationModel=symbol.getActivationModel();
-		symbolActivationModel.setMouseover(symbol.contains(x, y));
-		final IVehicleLabel label=symbol.getLabel();
-		if (label!=null) {
-			label.getActivationModel().setMouseover(label.contains(x, y));
-		}
-		return symbolActivationModel.isActive() || (label!=null && label.getActivationModel().isActive());
+	protected boolean updateSymbolMouseoverStatus(IInteractiveSymbol symbol, int x, int y) {
+		DefaultActivationModel activationModel=symbol.getActivationModel();
+		activationModel.setMouseover(symbol.contains(x, y));
+		return activationModel.isActive();
 	}
 	
 	private synchronized void checkActivationChange() {
@@ -206,14 +204,25 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	}
 	
 	protected void checkActivationChange(int x, int y) {
-		if (activeVehicleSymbol!=null && updateSymbolInsideStatus(activeVehicleSymbol, x, y)) {
+		if (activeInteractiveSymbol!=null && updateSymbolMouseoverStatus(activeInteractiveSymbol, x, y)) {
 			/* The active symbol is still active, so nothing changes */
 			return;
 		}
 		/* We don't have an active symbol or it is not active anymore, so let's check the rest */
 		for (IVehicleSymbol symbol: vehicleSymbolMap.values()) {
-			if (updateSymbolInsideStatus(symbol, x, y)) {
+			if (updateSymbolMouseoverStatus(symbol, x, y)) {
 				/* This is the newly active symbol */
+				activeInteractiveSymbol=symbol;
+				workstation.getVehicleSelectionManager().select(symbol.getVehicle());
+				return;
+			}
+			final IVehicleLabel label=symbol.getLabel();
+			if (label==null) {
+				continue;
+			}
+			if (updateSymbolMouseoverStatus(label, x, y)) {
+				/* This is the newly active symbol */
+				activeInteractiveSymbol=label;
 				workstation.getVehicleSelectionManager().select(symbol.getVehicle());
 				return;
 			}
@@ -234,16 +243,19 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		case MouseEvent.MOUSE_DRAGGED:
 			if ((e.getModifiersEx()&buttonMask)==MouseEvent.BUTTON1_DOWN_MASK) {
 				e.consume();
-				if (activeVehicleSymbol==null)
+				if (activeInteractiveSymbol==null)
 					break;
-				final IVehicleLabel label=activeVehicleSymbol.getLabel();
+				if (!(activeInteractiveSymbol instanceof IVehicleLabel))
+					return;
+				final IVehicleLabel label=(IVehicleLabel)activeInteractiveSymbol;
+				final IVehicleSymbol vehicleSymbol=label.getVehicleSymbol();
 				if (label==null)
 					break;
 				final DefaultActivationModel activationModel=label.getActivationModel();
 				if (!activationModel.isPressed())
 					break;
 				final Rectangle2D oldLabelBounds=label.getBounds2D();
-				final Rectangle2D oldSymbolBounds=activeVehicleSymbol.getBounds2D();
+				final Rectangle2D oldSymbolBounds=vehicleSymbol.getBounds2D();
 				final Rectangle2D oldBounds=new Rectangle2D.Double();
 				/* Make sure that the leading line is also redrawn */
 				Rectangle2D.union(oldLabelBounds, oldSymbolBounds, oldBounds);
@@ -254,7 +266,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 				label.setAutolabelled(false);
 				
 				final Rectangle2D newLabelBounds=label.getBounds2D();
-				final Rectangle2D newSymbolBounds=activeVehicleSymbol.getBounds2D();
+				final Rectangle2D newSymbolBounds=vehicleSymbol.getBounds2D();
 				final Rectangle2D newBounds=new Rectangle2D.Double();
 				/* Make sure that the leading line is also redrawn */
 				Rectangle2D.union(newLabelBounds, newSymbolBounds, newBounds);
@@ -271,26 +283,21 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	
 	@Override
 	protected void processMouseEvent(MouseEvent e) {
-		final IVehicleLabel activeVehicleLabel=(activeVehicleSymbol!=null?activeVehicleSymbol.getLabel():null);
 		switch (e.getID()) {
 		case MouseEvent.MOUSE_PRESSED:
 		case MouseEvent.MOUSE_RELEASED:
 			if (e.getButton()==MouseEvent.BUTTON1) {
-				e.consume();
-				if (activeVehicleSymbol==null && activeVehicleLabel==null)
+				if (activeInteractiveSymbol==null)
 					break;
 				final boolean isPressed=(e.getModifiersEx()&MouseEvent.BUTTON1_DOWN_MASK)!=0;
-				activeVehicleSymbol.getActivationModel().setPressed(isPressed);
-				if (activeVehicleLabel!=null) {
-					activeVehicleLabel.getActivationModel().setPressed(isPressed);
-				}
+				activeInteractiveSymbol.getActivationModel().setPressed(isPressed);
 			}
 			break;
 		}
 		
 		/* Forward events to active label */
-		if (activeVehicleLabel!=null && activeVehicleLabel.getActivationModel().isMouseover()) {
-			activeVehicleLabel.processMouseEvent(e);
+		if (activeInteractiveSymbol!=null && (activeInteractiveSymbol instanceof IVehicleLabel) && activeInteractiveSymbol.getActivationModel().isMouseover()) {
+			((IVehicleLabel)activeInteractiveSymbol).processMouseEvent(e);
 		}
 		
 		if (!e.isConsumed())
@@ -371,18 +378,21 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 				vehicleSymbol.paintTrail(g2d);
 			}
 		}
-	
+		
+		Set<IVehicleSymbol> selectedSymbols=new HashSet<IVehicleSymbol>(); 
+		
 		for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
-			if (vehicleSymbol==activeVehicleSymbol) {
+			if (vehicleSymbol.isSelected()) {
+				selectedSymbols.add(vehicleSymbol);
 				continue;
 			}
 			vehicleSymbol.paintSymbol(g2d);
 			vehicleSymbol.paintLabel(g2d);
 		}
 		
-		if (activeVehicleSymbol!=null) {
-			activeVehicleSymbol.paintSymbol(g2d);
-			activeVehicleSymbol.paintLabel(g2d);
+		for (IVehicleSymbol vehicleSymbol: selectedSymbols) {
+			vehicleSymbol.paintSymbol(g2d);
+			vehicleSymbol.paintLabel(g2d);
 		}
 	}
 	
@@ -544,9 +554,6 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 					label.updateLabelContents();
 				}
 			}
-			activeVehicleSymbol=symbol;
-		} else {
-			activeVehicleSymbol=null;
 		}
 		repaint();
 	}
