@@ -16,12 +16,13 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	protected final IVehicleSymbol vehicleSymbol;
 	protected final LabelElementContainer labelLines[];
 	protected final DefaultActivationModel activationModel=new VehicleLabelActivationModel();
+	
+	protected boolean autolabelled=true;
+	
 	protected static final double minLabelDist=10;
 	protected static final double maxLabelDist=100;
 	protected static final double meanLabelDist=(minLabelDist+maxLabelDist)/2.0;
 	protected static final double labelDistRange=(maxLabelDist-minLabelDist);
-	protected boolean inside=false;
-	protected boolean pressed=false;
 
 	public AbstractVehicleLabel(IVehicleSymbol vehicleSymbol, int maxLabelLines) {
 		this.vehicleSymbol=vehicleSymbol;
@@ -41,7 +42,12 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	
 	@Override
 	public boolean isAutolabelled() {
-		return !getVehicleSymbol().isLocked();
+		return autolabelled;
+	}
+	
+	@Override
+	public void setAutolabelled(boolean autolabelled) {
+		this.autolabelled=autolabelled;
 	}
 	
 	@Override
@@ -79,16 +85,6 @@ public abstract class AbstractVehicleLabel extends LabelElementContainer impleme
 	@Override
 	public boolean contains(int x, int y) {
 		return getBounds().contains(x, y);
-	}
-	
-	@Override
-	public void updatePosition() {
-		// NO-OP
-	}
-	
-	@Override
-	public boolean containsPoint(double x, double y) {
-		return getBounds2D().contains(x, y);
 	}
 	
 	@Override

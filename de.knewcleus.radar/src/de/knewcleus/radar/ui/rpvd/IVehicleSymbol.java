@@ -7,7 +7,7 @@ import de.knewcleus.radar.autolabel.ILabeledObject;
 import de.knewcleus.radar.ui.IInteractiveSymbol;
 import de.knewcleus.radar.ui.vehicles.IVehicle;
 
-public interface IVehicleSymbol extends ILabeledObject, IDisplaySymbol, IInteractiveSymbol {
+public interface IVehicleSymbol extends ILabeledObject, IInteractiveSymbol {
 	
 	public abstract IVehicle getVehicle();
 	public abstract IVehicleLabel getLabel();
@@ -18,8 +18,7 @@ public interface IVehicleSymbol extends ILabeledObject, IDisplaySymbol, IInterac
 	public abstract void paintLabel(Graphics2D g2d);
 
 	public abstract Rectangle2D getSymbolBounds();
-
-	public abstract boolean isLocked();
-	public abstract void setLocked(boolean isLocked);
+	
+	public abstract void updatePosition();
 
 }

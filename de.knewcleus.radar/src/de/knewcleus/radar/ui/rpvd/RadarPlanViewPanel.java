@@ -126,9 +126,12 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 			}
 			
 			if (propertyName.equals(RadarPlanViewSettings.IS_AUTOMATIC_LABELING_ENABLED_PROPERTY)) {
-				/* Reset all labels into unlocked state */
+				/* Make all labels autolabelled */
 				for (IVehicleSymbol vehicleSymbol: vehicleSymbolMap.values()) {
-					vehicleSymbol.setLocked(false);
+					final IVehicleLabel label=vehicleSymbol.getLabel();
+					if (label==null)
+						continue;
+					label.setAutolabelled(true);
 				}
 			}
 			if (!settings.isAutomaticLabelingEnabled()) {
@@ -184,7 +187,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		symbolActivationModel.setMouseover(symbol.contains(x, y));
 		final IVehicleLabel label=symbol.getLabel();
 		if (label!=null) {
-			label.getActivationModel().setMouseover(label.containsPoint(x, y));
+			label.getActivationModel().setMouseover(label.contains(x, y));
 		}
 		return symbolActivationModel.isActive() || (label!=null && label.getActivationModel().isActive());
 	}
@@ -248,7 +251,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 				final double newx=e.getX()+dragHookX;
 				final double newy=e.getY()+dragHookY;
 				label.setCentroidPosition(newx, newy);
-				activeVehicleSymbol.setLocked(true);
+				label.setAutolabelled(false);
 				
 				final Rectangle2D newLabelBounds=label.getBounds2D();
 				final Rectangle2D newSymbolBounds=activeVehicleSymbol.getBounds2D();
