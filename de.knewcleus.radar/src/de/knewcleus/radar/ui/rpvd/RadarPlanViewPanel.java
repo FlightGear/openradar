@@ -37,14 +37,15 @@ import de.knewcleus.radar.autolabel.ILabelPotentialGradientCalculator;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.DefaultActivationModel;
 import de.knewcleus.radar.ui.IInteractiveSymbol;
+import de.knewcleus.radar.ui.IWorkableObject;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
 import de.knewcleus.radar.ui.vehicles.Aircraft;
 import de.knewcleus.radar.ui.vehicles.IVehicle;
-import de.knewcleus.radar.ui.vehicles.IVehicleSelectionListener;
+import de.knewcleus.radar.ui.vehicles.ISelectionListener;
 import de.knewcleus.radar.ui.vehicles.IVehicleUpdateListener;
 
-public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener, IVehicleSelectionListener, PropertyChangeListener {
+public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener, ISelectionListener, PropertyChangeListener {
 	protected final static Logger logger=Logger.getLogger(RadarPlanViewPanel.class.getName());
 	private static final long serialVersionUID = 8996959818592227638L;
 	
@@ -105,7 +106,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		 */
 		workstation.getVehicleManager().registerVehicleUpdateListener(this);
 		
-		workstation.getVehicleSelectionManager().registerVehicleSelectionListener(this);
+		workstation.getVehicleSelectionManager().registerSelectionListener(this);
 		
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
 	}
@@ -210,25 +211,23 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 		}
 		/* We don't have an active symbol or it is not active anymore, so let's check the rest */
 		for (IVehicleSymbol symbol: vehicleSymbolMap.values()) {
+			final IVehicleLabel label=symbol.getLabel();
+			if (label!=null && updateSymbolMouseoverStatus(label, x, y)) {
+				/* This is the newly active symbol */
+				activeInteractiveSymbol=label;
+				workstation.getVehicleSelectionManager().select(symbol.getVehicle());
+				return;
+			}
 			if (updateSymbolMouseoverStatus(symbol, x, y)) {
 				/* This is the newly active symbol */
 				activeInteractiveSymbol=symbol;
 				workstation.getVehicleSelectionManager().select(symbol.getVehicle());
 				return;
 			}
-			final IVehicleLabel label=symbol.getLabel();
-			if (label==null) {
-				continue;
-			}
-			if (updateSymbolMouseoverStatus(label, x, y)) {
-				/* This is the newly active symbol */
-				activeInteractiveSymbol=label;
-				workstation.getVehicleSelectionManager().select(symbol.getVehicle());
-				return;
-			}
 		}
 		
 		/* No active symbol found */
+		activeInteractiveSymbol=null;
 		workstation.getVehicleSelectionManager().deselect();
 	}
 	
@@ -536,7 +535,7 @@ public class RadarPlanViewPanel extends JPanel implements IVehicleUpdateListener
 	}
 
 	@Override
-	public void vehicleSelectionChanged(IVehicle oldSelection, IVehicle newSelection) {
+	public void selectionChanged(IWorkableObject oldSelection, IWorkableObject newSelection) {
 		if (oldSelection!=null) {
 			final IVehicleSymbol symbol=vehicleSymbolMap.get(oldSelection);
 			if (symbol!=null) {
