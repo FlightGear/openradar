@@ -17,15 +17,12 @@ import de.knewcleus.radar.targets.ITargetProvider;
 import de.knewcleus.radar.targets.TrackManager;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
-import de.knewcleus.radar.ui.vehicles.VehicleManager;
 
 public class RadarWorkstation {
 	protected final Sector sector;
 	protected final ISquawkAllocator squawkAllocator;
 	protected final ICorrelationDatabase correlationDatabase;
 	protected final TrackManager targetManager;
-	protected final VehicleManager vehicleManager;
-	protected final SelectionManager vehicleSelectionManager;
 	protected final AircraftStateManager aircraftStateManager;
 	protected final RadarPlanViewSettings radarPlanViewSettings=new RadarPlanViewSettings();
 	
@@ -41,9 +38,6 @@ public class RadarWorkstation {
 		this.squawkAllocator=squawkAllocator;
 		this.correlationDatabase=correlationDatabase;
 		targetManager=new TrackManager(radarDataProvider);
-		vehicleManager=new VehicleManager(this);
-		vehicleSelectionManager=new SelectionManager(vehicleManager);
-		targetManager.registerTrackUpdateListener(vehicleManager);
 		aircraftStateManager=new AircraftStateManager();
 		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
 		radarPlanViewDisplay=new RadarPlanViewDisplay(this);
@@ -93,14 +87,6 @@ public class RadarWorkstation {
 	
 	public TrackManager getTargetManager() {
 		return targetManager;
-	}
-	
-	public VehicleManager getVehicleManager() {
-		return vehicleManager;
-	}
-	
-	public SelectionManager getVehicleSelectionManager() {
-		return vehicleSelectionManager;
 	}
 	
 	public AircraftStateManager getAircraftStateManager() {
