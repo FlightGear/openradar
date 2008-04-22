@@ -10,6 +10,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLayeredPane;
 
+import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.radar.ui.RadarWorkstation;
 import de.knewcleus.radar.ui.rpvd.toolbox.RadarToolbox;
 
@@ -20,21 +21,21 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 	
 	protected final JLayeredPane layeredPane=new JLayeredPane();
 	protected final JDesktopPane subDesktopPane=new JDesktopPane();
-	protected final RadarPlanViewPanel radarPlanViewPanel;
+	protected final RadarPlanViewPanel radarMapPanel;
 	protected final RadarToolbox radarToolbox;
 
 	protected final Integer RPVD_LAYER=0;
 	protected final Integer DESKTOP_LAYER=1;
 	
-	public RadarPlanViewDisplay(RadarWorkstation workstation) {
+	public RadarPlanViewDisplay(RadarWorkstation workstation, ICoordinateTransformation mapTransformation) {
 		super("RPVD",true,false,true,false);
 		this.workstation=workstation;
 		
-		radarPlanViewPanel=new RadarPlanViewPanel(workstation);
+		radarMapPanel=new RadarPlanViewPanel(workstation, mapTransformation);
 
 		layeredPane.setLayout(new OverlayLayout());
 		
-		layeredPane.add(radarPlanViewPanel,RPVD_LAYER);
+		layeredPane.add(radarMapPanel,RPVD_LAYER);
 		layeredPane.add(subDesktopPane,DESKTOP_LAYER);
 		setContentPane(layeredPane);
 		
@@ -63,6 +64,10 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 	
 	public RadarWorkstation getWorkstation() {
 		return workstation;
+	}
+	
+	public RadarPlanViewPanel getRadarMapPanel() {
+		return radarMapPanel;
 	}
 	
 	class OverlayLayout implements LayoutManager {

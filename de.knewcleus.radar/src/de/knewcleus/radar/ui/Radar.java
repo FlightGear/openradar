@@ -24,12 +24,12 @@ import de.knewcleus.radar.aircraft.CorrelationDatabase;
 import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 import de.knewcleus.radar.aircraft.ISquawkAllocator;
 import de.knewcleus.radar.sector.Sector;
-import de.knewcleus.radar.targets.ITargetProvider;
-import de.knewcleus.radar.targets.fgatc.FGATCEndpoint;
-import de.knewcleus.radar.targets.fgmp.ATCClient;
-import de.knewcleus.radar.targets.fgmp.FGMPAircraft;
-import de.knewcleus.radar.targets.fgmp.FGMPRegistry;
 import de.knewcleus.radar.ui.plaf.refghmi.REFGHMILookAndFeel;
+import de.knewcleus.radar.vessels.IPositionDataProvider;
+import de.knewcleus.radar.vessels.fgatc.FGATCEndpoint;
+import de.knewcleus.radar.vessels.fgmp.ATCClient;
+import de.knewcleus.radar.vessels.fgmp.FGMPAircraft;
+import de.knewcleus.radar.vessels.fgmp.FGMPRegistry;
 
 public class Radar {
 	public static void main(String[] args) throws DBParserException, IOException, ClassNotFoundException, MultiplayerException, ParserConfigurationException, SAXException {
@@ -56,7 +56,7 @@ public class Radar {
 		Sector sector=Sector.loadFromURL(sectorURL);
 
 		/* Prepare radar data provider */
-		ITargetProvider radarDataProvider;
+		IPositionDataProvider radarDataProvider;
 		ISquawkAllocator squawkAllocator=new BuddySquawkAllocator();
 		ICorrelationDatabase correlationDatabase=new CorrelationDatabase();
 		if (Boolean.getBoolean("de.knewcleus.radar.useMPProtocol")) {

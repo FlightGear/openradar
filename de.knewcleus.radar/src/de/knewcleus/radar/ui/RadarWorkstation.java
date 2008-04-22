@@ -13,10 +13,10 @@ import de.knewcleus.radar.aircraft.AircraftStateManager;
 import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 import de.knewcleus.radar.aircraft.ISquawkAllocator;
 import de.knewcleus.radar.sector.Sector;
-import de.knewcleus.radar.targets.ITargetProvider;
-import de.knewcleus.radar.targets.TrackManager;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
+import de.knewcleus.radar.vessels.IPositionDataProvider;
+import de.knewcleus.radar.vessels.TrackManager;
 
 public class RadarWorkstation {
 	protected final Sector sector;
@@ -33,14 +33,13 @@ public class RadarWorkstation {
 	protected final List<RadarDesktop> desktops=new ArrayList<RadarDesktop>();
 	protected RadarDesktop radarPlanViewDesktop;
 
-	public RadarWorkstation(Sector sector, ITargetProvider radarDataProvider, ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) {
+	public RadarWorkstation(Sector sector, IPositionDataProvider radarDataProvider, ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) {
 		this.sector=sector;
 		this.squawkAllocator=squawkAllocator;
 		this.correlationDatabase=correlationDatabase;
 		targetManager=new TrackManager(radarDataProvider);
 		aircraftStateManager=new AircraftStateManager();
-		radarPlanViewSettings.setMapTransformation(new LocalProjection(sector.getInitialCenter()));
-		radarPlanViewDisplay=new RadarPlanViewDisplay(this);
+		radarPlanViewDisplay=new RadarPlanViewDisplay(this, new LocalProjection(sector.getInitialCenter()));
 
 
 		/* Create a desktop on every device */

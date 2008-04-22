@@ -3,8 +3,6 @@ package de.knewcleus.radar.ui.rpvd;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import de.knewcleus.fgfs.location.ICoordinateTransformation;
-
 public class RadarPlanViewSettings {
 	protected final PropertyChangeSupport propertyChangeSupport=new PropertyChangeSupport(this);
 	
@@ -32,7 +30,6 @@ public class RadarPlanViewSettings {
 	protected boolean showingScaleLine=false;
 	protected int speedVectorMinutes=1;
 	protected int trackHistoryLength=3;
-	protected ICoordinateTransformation mapTransformation;
 	protected boolean automaticLabelingEnabled=true;
 	protected StandardLabelPosition standardLabelPosition=StandardLabelPosition.TOPRIGHT;
 	protected StandardLabelDistance standardLabelDistance=StandardLabelDistance.MEDIUM;
@@ -165,14 +162,6 @@ public class RadarPlanViewSettings {
 		StandardLabelDistance oldValue=this.standardLabelDistance;
 		this.standardLabelDistance = standardLabelDistance;
 		propertyChangeSupport.firePropertyChange(STANDARD_LABEL_DISTANCE_PROPERTY, oldValue, standardLabelDistance);
-	}
-	
-	public ICoordinateTransformation getMapTransformation() {
-		return mapTransformation;
-	}
-	
-	public void setMapTransformation(ICoordinateTransformation mapTransformation) {
-		this.mapTransformation = mapTransformation;
 	}
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

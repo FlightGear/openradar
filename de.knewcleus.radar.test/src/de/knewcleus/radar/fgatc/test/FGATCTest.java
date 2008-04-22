@@ -2,7 +2,7 @@ package de.knewcleus.radar.fgatc.test;
 
 import java.io.IOException;
 
-import de.knewcleus.radar.targets.fgatc.FGATCEndpoint;
+import de.knewcleus.radar.vessels.fgatc.FGATCEndpoint;
 
 public class FGATCTest {
 	public static void main(String[] args) throws IOException {
