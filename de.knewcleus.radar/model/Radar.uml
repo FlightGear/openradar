@@ -154,6 +154,31 @@
         <ownedAttribute xmi:id="_1M-EsAi3Ed27QtBxg_nn2Q" name="squawk"/>
         <ownedAttribute xmi:id="_25po8Ai3Ed27QtBxg_nn2Q" name="callsign"/>
         <ownedAttribute xmi:id="_C4Rk0gi9Ed27QtBxg_nn2Q" name="plannedRoute"/>
+        <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_VHfD0BCrEd2jVMrdUSmufA" name="Clearance_Workstate">
+          <region xmi:id="_XHho8hCrEd2jVMrdUSmufA" name="Region1">
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_XkKhoBCrEd2jVMrdUSmufA" name="Pseudostate1"/>
+            <subvertex xmi:type="uml:State" xmi:id="_YCjGwBCrEd2jVMrdUSmufA" name="Not concerned"/>
+            <subvertex xmi:type="uml:State" xmi:id="_ZkD80BCrEd2jVMrdUSmufA" name="Pending In"/>
+            <subvertex xmi:type="uml:State" xmi:id="_adeREBCrEd2jVMrdUSmufA" name="Assumed">
+              <region xmi:id="_adeRERCrEd2jVMrdUSmufA" name="Region1">
+                <subvertex xmi:type="uml:Pseudostate" xmi:id="_sY574BCrEd2jVMrdUSmufA" name="Pseudostate1"/>
+                <subvertex xmi:type="uml:State" xmi:id="_thtXABCrEd2jVMrdUSmufA" name="Not Cleared"/>
+                <subvertex xmi:type="uml:State" xmi:id="_u32DgBCrEd2jVMrdUSmufA" name="Clearance"/>
+                <subvertex xmi:type="uml:State" xmi:id="_wSCJkBCrEd2jVMrdUSmufA" name="Startup"/>
+                <transition xmi:id="_20fJ8xCrEd2jVMrdUSmufA" name="Transition1" target="_thtXABCrEd2jVMrdUSmufA" source="_sY574BCrEd2jVMrdUSmufA"/>
+                <transition xmi:id="_2-IOIBCrEd2jVMrdUSmufA" name="CLEARANCE" target="_u32DgBCrEd2jVMrdUSmufA" source="_thtXABCrEd2jVMrdUSmufA"/>
+                <transition xmi:id="_3HKOUxCrEd2jVMrdUSmufA" name="STARTUP" target="_wSCJkBCrEd2jVMrdUSmufA" source="_u32DgBCrEd2jVMrdUSmufA"/>
+                <transition xmi:id="_3R3pgxCrEd2jVMrdUSmufA" name="TRANSFER" target="_hZ20YBCrEd2jVMrdUSmufA" source="_wSCJkBCrEd2jVMrdUSmufA"/>
+                <transition xmi:id="_7EYR0xCrEd2jVMrdUSmufA" name="STARTUP" target="_wSCJkBCrEd2jVMrdUSmufA" source="_wSCJkBCrEd2jVMrdUSmufA"/>
+              </region>
+            </subvertex>
+            <subvertex xmi:type="uml:State" xmi:id="_hZ20YBCrEd2jVMrdUSmufA" name="Assumed Out"/>
+            <transition xmi:id="_jsTYIBCrEd2jVMrdUSmufA" name="Transition1" target="_YCjGwBCrEd2jVMrdUSmufA" source="_XkKhoBCrEd2jVMrdUSmufA"/>
+            <transition xmi:id="_j5VukxCrEd2jVMrdUSmufA" name="EOBT-5min" target="_ZkD80BCrEd2jVMrdUSmufA" source="_YCjGwBCrEd2jVMrdUSmufA"/>
+            <transition xmi:id="_l2KAkxCrEd2jVMrdUSmufA" name="ASSUME" target="_adeREBCrEd2jVMrdUSmufA" source="_ZkD80BCrEd2jVMrdUSmufA"/>
+            <transition xmi:id="_JfnMUxCsEd2jVMrdUSmufA" name="Assumed by GND" target="_YCjGwBCrEd2jVMrdUSmufA" source="_hZ20YBCrEd2jVMrdUSmufA"/>
+          </region>
+        </ownedBehavior>
         <ownedOperation xmi:id="_tmEn8gi7Ed27QtBxg_nn2Q" name="paintTrackSymbol" isAbstract="true"/>
         <ownedOperation xmi:id="_ujaZ8gi7Ed27QtBxg_nn2Q" name="populateRadarLabel" isAbstract="true"/>
       </packagedElement>
