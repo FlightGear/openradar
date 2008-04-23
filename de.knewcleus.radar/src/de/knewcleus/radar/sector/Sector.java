@@ -17,6 +17,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.fgfs.geodata.DataFormatException;
+import de.knewcleus.fgfs.geodata.Geometry;
+import de.knewcleus.fgfs.geodata.PolyReader;
+import de.knewcleus.fgfs.geodata.Polygon;
+import de.knewcleus.fgfs.geodata.ShapefileReader;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.AirwayDB;
 import de.knewcleus.fgfs.navaids.DBParserException;
@@ -88,49 +93,30 @@ public class Sector implements INavaidDatabase {
 		
 		for (int i=0;i<geodataNodes.getLength();i++) {
 			Element geodataElem=(Element)geodataNodes.item(i);
-			String type=geodataElem.getAttribute("type");
-			String ref=geodataElem.getAttribute("ref");
+			final String theme=geodataElem.getAttribute("theme");
+			final String type=geodataElem.getAttribute("type");
+			final String ref=geodataElem.getAttribute("ref");
 			URL location=new URL(url,ref);
 			
 			long startTime=System.currentTimeMillis();
-			if (type.equals("xplane_fixes")) {
-				FixParser fixParser=new FixParser(sector.getFixDB(),north,west,south,east);
-				InputStream geoStream=location.openStream();
-				fixParser.readCompressed(geoStream);
-			} else if (type.equals("xplane_apts")) {
-				AerodromeParser aerodromeParser=new AerodromeParser(sector.getFixDB(),north,west,south,east);
-				InputStream geoStream=location.openStream();
-				aerodromeParser.readCompressed(geoStream);
-			} else if (type.equals("xplane_nav")) {
-				NavParser navParser=new NavParser(sector.getFixDB(),north,west,south,east);
-				InputStream geoStream=location.openStream();
-				navParser.readCompressed(geoStream);
-			} else if (type.equals("xplane_awy")) {
-				AirwayParser airwayParser=new AirwayParser(sector.getAirwayDB(),north,west,south,east);
-				InputStream geoStream=location.openStream();
-				airwayParser.readCompressed(geoStream);
-			} else if (type.equals("poly_landmass")) {
-				PolyReader polyReader=new PolyReader();
-				InputStream geoStream=location.openStream();
-				polyReader.readPolygons(geoStream, sector.getLandmassPolygons());
-			} else if (type.equals("poly_water")) {
-				PolyReader polyReader=new PolyReader();
-				InputStream geoStream=location.openStream();
-				polyReader.readPolygons(geoStream, sector.getWaterPolygons());
-			} else if (type.equals("poly_restricted")) {
-				PolyReader polyReader=new PolyReader();
-				InputStream geoStream=location.openStream();
-				polyReader.readPolygons(geoStream, sector.getRestrictedPolygons());
-			} else if (type.equals("poly_sector")) {
-				PolyReader polyReader=new PolyReader();
-				InputStream geoStream=location.openStream();
-				polyReader.readPolygons(geoStream, sector.getSectorPolygons());
-			} else if (type.equals("point_fixes")) {
-				PointReader pointReader=new PointFixReader();
-				InputStream geoStream=location.openStream();
-				pointReader.readPoints(sector.getFixDB(), geoStream);
+			if (theme.equals("fixes")) {
+				sector.readFixes(location,type, north, west, south, east);
+			} else if (theme.equals("apts")) {
+				sector.readAirports(location, type, north, west, south, east);
+			} else if (theme.equals("nav")) {
+				sector.readNavaids(location, type, north, west, south, east);
+			} else if (theme.equals("awy")) {
+				sector.readAirways(location, type, north, west, south, east);
+			} else if (theme.equals("landmass")) {
+				sector.readPolygons(location, type, north, west, south, east, sector.getLandmassPolygons());
+			} else if (theme.equals("water")) {
+				sector.readPolygons(location, type, north, west, south, east, sector.getWaterPolygons());
+			} else if (theme.equals("restricted")) {
+				sector.readPolygons(location, type, north, west, south, east, sector.getRestrictedPolygons());
+			} else if (theme.equals("sector")) {
+				sector.readPolygons(location, type, north, west, south, east, sector.getSectorPolygons());
 			} else {
-				logger.info("Unknown geotype "+type);
+				logger.info("Unknown theme "+theme);
 			}
 			long endTime=System.currentTimeMillis();
 			
@@ -138,6 +124,77 @@ public class Sector implements INavaidDatabase {
 		}
 		
 		return sector;
+	}
+	
+	protected void readFixes(URL location, String type, double north, double west, double south, double east) throws IOException, DBParserException {
+		if (type.equals("xplane")) {
+			FixParser fixParser=new FixParser(getFixDB(),north,west,south,east);
+			InputStream geoStream=location.openStream();
+			fixParser.readCompressed(geoStream);
+		} else if (type.equals("point")) {
+			PointReader pointReader=new PointFixReader();
+			InputStream geoStream=location.openStream();
+			pointReader.readPoints(getFixDB(), geoStream);
+		} else {
+			logger.info("Unknown type "+type+" for theme 'fixes'");
+		}
+	}
+	
+	protected void readAirports(URL location, String type, double north, double west, double south, double east) throws IOException, DBParserException {
+		if (type.equals("xplane")) {
+			AerodromeParser aerodromeParser=new AerodromeParser(getFixDB(),north,west,south,east);
+			InputStream geoStream=location.openStream();
+			aerodromeParser.readCompressed(geoStream);
+		} else {
+			logger.info("Unknown type "+type+" for theme 'apts'");
+		}
+	}
+	
+	protected void readNavaids(URL location, String type, double north, double west, double south, double east) throws IOException, DBParserException {
+		if (type.equals("xplane")) {
+			NavParser navParser=new NavParser(getFixDB(),north,west,south,east);
+			InputStream geoStream=location.openStream();
+			navParser.readCompressed(geoStream);
+		} else {
+			logger.info("Unknown type "+type+" for theme 'nav'");
+		}
+	}
+	
+	protected void readAirways(URL location, String type, double north, double west, double south, double east) throws IOException, DBParserException {
+		if (type.equals("xplane")) {
+			AirwayParser airwayParser=new AirwayParser(getAirwayDB(),north,west,south,east);
+			InputStream geoStream=location.openStream();
+			airwayParser.readCompressed(geoStream);
+		} else {
+			logger.info("Unknown type "+type+" for theme 'awy'");
+		}
+	}
+	
+	protected void readPolygons(URL location, String type, double north, double west, double south, double east, List<Polygon> polygons) throws DBParserException, IOException {
+		if (type.equals("poly")) {
+			PolyReader polyReader=new PolyReader();
+			InputStream geoStream=location.openStream();
+			polyReader.readPolygons(geoStream, polygons);
+		} else if (type.equals("shape")) {
+			try {
+				ShapefileReader shapefileReader=new ShapefileReader(location);
+				Geometry geometry;
+				while (true) {
+					try {
+						geometry=shapefileReader.readRecord();
+						if (geometry instanceof Polygon) {
+							polygons.add((Polygon)geometry);
+						}
+					} catch (IOException e) {
+						break;
+					}
+				}
+			} catch (DataFormatException e) {
+				throw new DBParserException(e);
+			}
+		} else {
+			logger.info("Unknown type "+type+" for polygon theme");
+		}
 	}
 	
 	public Position getInitialCenter() {

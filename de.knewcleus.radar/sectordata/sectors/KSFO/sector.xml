@@ -1,10 +1,10 @@
 <sector>
 	<initialcenter lon="-122.37489" lat="37.61896" elev="0.0"/>
 	<maprange x="3.0" y="3.0" />
-	<geodata type="xplane_apts" ref="../apt.dat.gz" />
-	<geodata type="xplane_fixes" ref="../fix.dat.gz" />
-	<geodata type="xplane_nav" ref="../nav.dat.gz" />
-	<geodata type="xplane_awy" ref="../awy.dat.gz" />
-	<geodata type="poly_landmass" ref="landmass.poly" />
-	<geodata type="poly_water" ref="lake.poly" />
+	<geodata theme="apts" type="xplane" ref="../apt.dat.gz" />
+	<geodata theme="fixes" type="xplane" ref="../fix.dat.gz" />
+	<geodata theme="nav" type="xplane" ref="../nav.dat.gz" />
+	<geodata theme="awy" type="xplane" ref="../awy.dat.gz" />
+	<geodata theme="landmass" type="poly" ref="landmass.poly" />
+	<geodata theme="water" type="poly" ref="lake.poly" />
 </sector>

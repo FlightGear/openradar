@@ -1,13 +1,13 @@
 <sector>
 	<initialcenter lon="9.511500" lat="47.671333" elev="1367.0"/>
 	<maprange x="3.0" y="1.5" />
-	<geodata type="xplane_apts" ref="../apt.dat.gz" />
+	<geodata theme="apts" type="xplane" ref="../apt.dat.gz" />
 	<!-- <geodata type="xplane_fixes" ref="../fix.dat.gz" /> -->
-	<geodata type="xplane_nav" ref="../nav.dat.gz" />
-	<geodata type="xplane_awy" ref="../awy.dat.gz" />
-	<geodata type="poly_landmass" ref="landmass.poly" />
-	<geodata type="poly_water" ref="lake.poly" />
-	<geodata type="poly_restricted" ref="restricted.poly" />
-	<geodata type="poly_sector" ref="airspace.poly" />
-	<geodata type="point_fixes" ref="fixes.point" />
+	<geodata theme="nav" type="xplane" ref="../nav.dat.gz" />
+	<geodata theme="awy" type="xplane" ref="../awy.dat.gz" />
+	<geodata theme="landmass" type="shape" ref="v0_landmass.shp" />
+	<geodata theme="water" type="shape" ref="v0_lake.shp" />
+	<geodata theme="restricted" type="poly" ref="restricted.poly" />
+	<geodata theme="sector" type="poly" ref="airspace.poly" />
+	<geodata theme="fixes" type="point" ref="fixes.point" />
 </sector>

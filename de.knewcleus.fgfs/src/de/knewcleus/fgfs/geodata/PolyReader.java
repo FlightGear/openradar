@@ -1,12 +1,10 @@
-package de.knewcleus.radar.sector;
+package de.knewcleus.fgfs.geodata;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-
-import de.knewcleus.fgfs.location.Position;
 
 public class PolyReader {
 	protected Polygon readPolygon(BufferedReader bufferedReader) throws IOException {
@@ -21,8 +19,7 @@ public class PolyReader {
 		for (int i=0;i<contourCount;i++) {
 			String pointCountLine=bufferedReader.readLine();
 			int pointCount=Integer.parseInt(pointCountLine);
-			// All contours other than the first are holes
-			PolygonContour contour=new PolygonContour(i>0);
+			Ring contour=new Ring();
 			
 			for (int j=0;j<pointCount;j++) {
 				String pointLine=bufferedReader.readLine();
@@ -36,10 +33,12 @@ public class PolyReader {
 					z=Double.parseDouble(coords[2]);
 				}
 				
-				contour.addPoint(new Position(x,y,z));
+				final Point point=new Point(x,y,z);
+				
+				contour.add(point);
 			}
 			
-			polygon.addContour(contour);
+			polygon.add(contour);
 		}
 		
 		return polygon;

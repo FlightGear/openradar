@@ -8,10 +8,10 @@ import java.awt.geom.Path2D;
 import java.util.Iterator;
 import java.util.List;
 
+import de.knewcleus.fgfs.geodata.Point;
+import de.knewcleus.fgfs.geodata.Polygon;
+import de.knewcleus.fgfs.geodata.Ring;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
-import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.radar.sector.Polygon;
-import de.knewcleus.radar.sector.PolygonContour;
 import de.knewcleus.radar.utils.TransformedShape;
 
 public class PolygonMapLayer implements IMapLayer {
@@ -37,12 +37,12 @@ public class PolygonMapLayer implements IMapLayer {
 	}
 	
 	protected Area polygonToArea(Polygon polygon) {
-		Iterator<PolygonContour> contourIterator=polygon.iterator();
+		Iterator<Ring> contourIterator=polygon.iterator();
 		
 		if (!contourIterator.hasNext())
 			return new Area();
 		
-		PolygonContour contour=contourIterator.next();
+		Ring contour=contourIterator.next();
 		
 		Shape mainShape=contourToShape(contour);
 		
@@ -59,21 +59,21 @@ public class PolygonMapLayer implements IMapLayer {
 		return area;
 	}
 	
-	protected Shape contourToShape(PolygonContour contour) {
+	protected Shape contourToShape(Ring contour) {
 		Path2D path=new Path2D.Double();
 		
-		Iterator<Position> posIterator=contour.iterator();
+		Iterator<Point> posIterator=contour.iterator();
 		
 		if (!posIterator.hasNext())
 			return path;
 		
-		Position position=posIterator.next();
+		Point point=posIterator.next();
 		
-		path.moveTo(position.getX(), position.getY());
+		path.moveTo(point.getX(), point.getY());
 		
 		while (posIterator.hasNext()) {
-			position=posIterator.next();
-			path.lineTo(position.getX(), position.getY());
+			point=posIterator.next();
+			path.lineTo(point.getX(), point.getY());
 		}
 		
 		path.closePath();
