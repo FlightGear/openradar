@@ -3,7 +3,6 @@ package de.knewcleus.radar.ui.labels;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
@@ -12,7 +11,7 @@ public class LabelElement {
 	protected LabelElementContainer parent=null;
 	protected Dimension2D minimumSize=null;
 	protected boolean enabled=true;
-	protected Rectangle2D bounds2d=new Rectangle(0,0,1,1);
+	protected Rectangle2D bounds2d=new Rectangle2D.Double();
 	protected Color backgroundColor=null;
 	protected Color foregroundColor=null;
 	

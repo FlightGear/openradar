@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="de/knewcleus/radar/ui/vehicles/ActualLevelLabelElement.java|de/knewcleus/radar/ui/vehicles/CallsignLabelElement.java|de/knewcleus/radar/ui/vehicles/ClearedLevelLabelElement.java|de/knewcleus/radar/ui/vehicles/GroundSpeedLabelElement.java" kind="src" path="src"/>
+	<classpathentry excluding="de/knewcleus/radar/ui/vehicles/ClearedLevelLabelElement.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="sectordata"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.knewcleus.fgfs"/>

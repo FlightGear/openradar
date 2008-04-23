@@ -16,6 +16,7 @@ public class ComposedTrackSymbol extends ComposedSymbol {
 	protected final TrackSymbol trackSymbol;
 	protected final TrailSymbol trailSymbol;
 	protected final HeadingLineSymbol headingLineSymbol;
+	protected final TrackLabelSymbol trackLabelSymbol;
 	
 	protected final List<Symbol> symbolParts=new ArrayList<Symbol>(2);
 	
@@ -25,13 +26,19 @@ public class ComposedTrackSymbol extends ComposedSymbol {
 		trackSymbol=new TrackSymbol(this);
 		trailSymbol=new TrailSymbol(this);
 		headingLineSymbol=new HeadingLineSymbol(this);
+		trackLabelSymbol=new TrackLabelSymbol(this);
 		symbolParts.add(headingLineSymbol);
 		symbolParts.add(trailSymbol);
 		symbolParts.add(trackSymbol);
+		symbolParts.add(trackLabelSymbol);
 	}
 	
 	public Track getAssociatedTrack() {
 		return associatedTrack;
+	}
+	
+	public TrackSymbol getTrackSymbol() {
+		return trackSymbol;
 	}
 	
 	@Override

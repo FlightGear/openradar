@@ -2,17 +2,18 @@ package de.knewcleus.radar.ui.vehicles;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.radar.ui.labels.AbstractTextLabelElement;
+import de.knewcleus.radar.vessels.Track;
 
 public class GroundSpeedLabelElement extends AbstractTextLabelElement {
-	protected final Aircraft aircraft;
+	protected final Track track;
 	
-	public GroundSpeedLabelElement(Aircraft aircraft) {
-		this.aircraft=aircraft;
+	public GroundSpeedLabelElement(Track track) {
+		this.track=track;
 	}
 
 	@Override
 	protected String getText() {
-		return String.format("%03d",(int)Math.round(aircraft.getTrack().getGroundSpeed()/Units.KNOTS/10.0));
+		return String.format("%03d",(int)Math.round(track.getGroundSpeed()/Units.KNOTS/10.0));
 	}
 
 }
