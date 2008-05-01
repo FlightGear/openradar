@@ -30,4 +30,9 @@ public class TrackDisplayHelper {
 		return new Rectangle2D.Double(center.getX()-trailRadius, center.getY()-trailRadius,
 				2*trailRadius, 2*trailRadius);
 	}
+	
+	public static Point2D getRelativeTrackSymbolHookPoint(double vx, double vy) {
+		final double len=Math.sqrt(vx*vx+vy*vy);
+		return new Point2D.Double(vx*(symbolRadius+1)/len, vy*(symbolRadius+1)/len);
+	}
 }

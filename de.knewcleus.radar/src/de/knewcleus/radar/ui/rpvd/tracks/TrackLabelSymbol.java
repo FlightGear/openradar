@@ -118,6 +118,7 @@ public class TrackLabelSymbol extends WorkObjectSymbol implements ILabel {
 		labelCY=parentCY+trackDy+dirY*len+labelDy;
 		
 		labelContainer.setPosition(labelCX-labelBounds.getWidth()/2.0, labelCY-labelBounds.getHeight()/2.0);
+		validateDependents();
 		invalidate();
 	}
 

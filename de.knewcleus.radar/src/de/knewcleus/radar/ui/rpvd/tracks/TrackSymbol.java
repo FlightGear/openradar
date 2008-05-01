@@ -46,6 +46,7 @@ public class TrackSymbol extends WorkObjectSymbol implements DisplayObject {
 
 	@Override
 	public void validate() {
+		invalidate();
 		final RadarMapPanel mapPanel=(RadarMapPanel) getDisplayComponent();
 		final ICoordinateTransformation mapTransformation=mapPanel.getMapTransformation();
 		final IDeviceTransformation deviceTransformation=mapPanel.getDeviceTransformation();
@@ -53,6 +54,8 @@ public class TrackSymbol extends WorkObjectSymbol implements DisplayObject {
 		final Position realPosition=getAssociatedTrack().getPosition();
 		final Position mapPosition=mapTransformation.forward(realPosition);
 		devicePosition=deviceTransformation.toDevice(mapPosition);
+		validateDependents();
+		invalidate();
 	}
 
 	@Override
@@ -68,5 +71,11 @@ public class TrackSymbol extends WorkObjectSymbol implements DisplayObject {
 	@Override
 	public double getPriority() {
 		return 10;
+	}
+	
+	@Override
+	public Point2D getRelativeHookPoint(double vx, double vy) {
+		// TODO: if we have an correlated vessel, ask the vessel for the hook point
+		return TrackDisplayHelper.getRelativeTrackSymbolHookPoint(vx, vy);
 	}
 }

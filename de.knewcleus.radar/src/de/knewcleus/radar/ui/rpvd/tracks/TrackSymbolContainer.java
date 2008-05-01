@@ -1,5 +1,6 @@
 package de.knewcleus.radar.ui.rpvd.tracks;
 
+import de.knewcleus.radar.DisplayEdge;
 import de.knewcleus.radar.DisplayElementContainer;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
 import de.knewcleus.radar.vessels.Track;
@@ -11,6 +12,7 @@ public class TrackSymbolContainer extends DisplayElementContainer {
 	protected final TrailSymbol trailSymbol;
 	protected final HeadingLineSymbol headingLineSymbol;
 	protected final TrackLabelSymbol trackLabelSymbol;
+	protected final DisplayEdge leaderLine;
 	
 	public TrackSymbolContainer(Track associatedTrack) {
 		this.associatedTrack=associatedTrack;
@@ -18,11 +20,13 @@ public class TrackSymbolContainer extends DisplayElementContainer {
 		trailSymbol=new TrailSymbol(associatedTrack);
 		headingLineSymbol=new HeadingLineSymbol(associatedTrack);
 		trackLabelSymbol=new TrackLabelSymbol(trackSymbol);
+		leaderLine=new DisplayEdge(trackSymbol, trackLabelSymbol);
 		
 		add(headingLineSymbol);
 		add(trailSymbol);
 		add(trackSymbol);
 		add(trackLabelSymbol);
+		add(leaderLine);
 	}
 	
 	public Track getAssociatedTrack() {
