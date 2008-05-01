@@ -19,9 +19,9 @@ import javax.swing.JPanel;
 import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.Updater;
 import de.knewcleus.radar.autolabel.ChargePotentialAutolabeller;
+import de.knewcleus.radar.autolabel.DisplayObject;
 import de.knewcleus.radar.autolabel.ILabelPotentialGradientCalculator;
 import de.knewcleus.radar.autolabel.ILabel;
-import de.knewcleus.radar.autolabel.ILabeledObject;
 
 public class AutolabellerTest extends JPanel implements IUpdateable {
 	private static final long serialVersionUID = 1541306043056168679L;
@@ -45,7 +45,7 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 					vx=(random.nextDouble()-0.5)*0.005;
 					vy=(random.nextDouble()-0.5)*0.005;
 					PointObject labeledObject=new PointObject(x,y,vx,vy,0.005);
-					autolabeller.addLabeledObject(labeledObject);
+					autolabeller.addLabel(labeledObject.getLabel());
 				}
 				repaint();
 			}
@@ -54,20 +54,21 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 	
 	@Override
 	public void update(double dt) {
-		Set<ILabeledObject> objectsToRemove=new  HashSet<ILabeledObject>();
-		for (ILabeledObject labeledObject: autolabeller.getLabeledObjects()) {
-			if (labeledObject instanceof PointObject) {
-				PointObject pointObject=(PointObject)labeledObject;
+		Set<ILabel> objectsToRemove=new  HashSet<ILabel>();
+		for (ILabel label: autolabeller.getLabels()) {
+			final DisplayObject object=label.getLabeledObject();
+			if (object instanceof PointObject) {
+				PointObject pointObject=(PointObject)object;
 				pointObject.update();
 				if (pointObject.getX()<0.0 || pointObject.getX()>1.0 ||
 						pointObject.getY()<0.0 || pointObject.getY()>1.0) {
-					objectsToRemove.add(labeledObject);
+					objectsToRemove.add(label);
 				}
 			}
 		}
 	
-		for (ILabeledObject labeledObject: objectsToRemove) {
-			autolabeller.removeLabeledObject(labeledObject);
+		for (ILabel label: objectsToRemove) {
+			autolabeller.removeLabel(label);
 		}
 		long startTime=System.currentTimeMillis();
 		int i=0;
@@ -77,7 +78,7 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 		}
 		long endTimeReduction=System.currentTimeMillis();
 		
-		double totalRuns=(double)i/autolabeller.getLabeledObjects().size();
+		double totalRuns=(double)i/autolabeller.getLabels().size();
 		System.out.println("time for "+totalRuns+" runs");
 		System.out.println("    runtime    : "+(endTimeReduction-startTime)*1.0E-3+" seconds");
 		
@@ -92,7 +93,7 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 			vx=(random.nextDouble()-0.5)*0.005;
 			vy=(random.nextDouble()-0.5)*0.005;
 			PointObject labeledObject=new PointObject(x,y,vx,vy,0.005);
-			autolabeller.addLabeledObject(labeledObject);
+			autolabeller.addLabel(labeledObject.getLabel());
 		}
 	}
 	
@@ -102,7 +103,8 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 		
 		Graphics2D g2d=(Graphics2D)g;
 		
-		for (ILabeledObject object: autolabeller.getLabeledObjects()) {
+		for (ILabel label: autolabeller.getLabels()) {
+			final DisplayObject object=label.getLabeledObject();
 			if (!(object instanceof PointObject))
 				continue;
 			PointObject labeledObject=(PointObject)object;
@@ -117,7 +119,6 @@ public class AutolabellerTest extends JPanel implements IUpdateable {
 			g2d.setColor(Color.BLACK);
 			g2d.draw(pointMarker);
 			
-			ILabel label=object.getLabel();
 			final double top,bottom,left,right;
 			
 			final Rectangle2D labelBounds=label.getBounds2D();

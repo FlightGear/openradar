@@ -2,10 +2,10 @@ package de.knewcleus.radar.autolabel.test;
 
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.radar.autolabel.DisplayObject;
 import de.knewcleus.radar.autolabel.ILabel;
-import de.knewcleus.radar.autolabel.ILabeledObject;
 
-public class PointObject implements ILabeledObject {
+public class PointObject implements DisplayObject {
 	protected double x,y;
 	protected final double r;
 	protected final double vx,vy;
@@ -27,7 +27,6 @@ public class PointObject implements ILabeledObject {
 		this.label=new SimpleLabel(this,labelWidth,labelHeight);
 	}
 
-	@Override
 	public ILabel getLabel() {
 		return label;
 	}

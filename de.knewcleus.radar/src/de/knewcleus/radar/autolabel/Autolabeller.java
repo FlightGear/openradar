@@ -8,10 +8,10 @@ import java.util.Set;
 
 public abstract class Autolabeller {
 
-	protected final Set<ILabeledObject> labeledObjects = new HashSet<ILabeledObject>();
+	protected final Set<ILabel> labels = new HashSet<ILabel>();
 
 	protected final Set<DisplayObject> displayObjects = new HashSet<DisplayObject>();
-	protected final Deque<ILabeledObject> objectsToProcess = new ArrayDeque<ILabeledObject>();
+	protected final Deque<ILabel> labelsToProcess = new ArrayDeque<ILabel>();
 	protected final double minimumDisplacement;
 	protected final double maximumDisplacement;
 	
@@ -20,18 +20,18 @@ public abstract class Autolabeller {
 		this.maximumDisplacement=maximumDisplacement;
 	}
 
-	public synchronized void addLabeledObject(ILabeledObject object) {
-		labeledObjects.add(object);
-		objectsToProcess.addLast(object);
+	public synchronized void addLabel(ILabel label) {
+		labels.add(label);
+		labelsToProcess.addLast(label);
 	}
 
-	public synchronized void removeLabeledObject(ILabeledObject object) {
-		labeledObjects.remove(object);
-		objectsToProcess.remove(object);
+	public synchronized void removeLabel(ILabel label) {
+		labels.remove(label);
+		labelsToProcess.remove(label);
 	}
 
-	public Set<ILabeledObject> getLabeledObjects() {
-		return Collections.unmodifiableSet(labeledObjects);
+	public Set<ILabel> getLabels() {
+		return Collections.unmodifiableSet(labels);
 	}
 
 	public synchronized void addDisplayObject(DisplayObject object) {
@@ -47,16 +47,15 @@ public abstract class Autolabeller {
 	}
 
 	public synchronized void updateOneLabel() {
-		if (objectsToProcess.isEmpty())
+		if (labelsToProcess.isEmpty())
 			return;
 		
-		final ILabeledObject labeledObject=objectsToProcess.removeFirst();
-		final ILabel label=labeledObject.getLabel();
+		final ILabel label=labelsToProcess.removeFirst();
 		if (label!=null && label.isAutolabelled()) {
 			updateLabel(label);
 		}
 		
-		objectsToProcess.addLast(labeledObject);
+		labelsToProcess.addLast(label);
 	}
 
 	protected abstract void updateLabel(ILabel label);
