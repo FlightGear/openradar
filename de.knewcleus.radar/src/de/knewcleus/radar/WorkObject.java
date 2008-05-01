@@ -69,12 +69,12 @@ public abstract class WorkObject implements ISymbolActivationListener {
 	}
 	
 	@Override
-	public void symbolActivated(Symbol symbol) {
+	public void symbolActivated(WorkObjectSymbol symbol) {
 		setArmed(true);
 	}
 	
 	@Override
-	public void symbolDeactivated(Symbol symbol) {
+	public void symbolDeactivated(WorkObjectSymbol symbol) {
 		setArmed(false);
 	}
 }

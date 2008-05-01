@@ -22,12 +22,12 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.Runway;
-import de.knewcleus.radar.Symbol;
+import de.knewcleus.radar.DisplayElement;
 import de.knewcleus.radar.sector.Sector;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.RadarWorkstation;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
-import de.knewcleus.radar.ui.rpvd.tracks.ComposedTrackSymbol;
+import de.knewcleus.radar.ui.rpvd.tracks.TrackSymbolContainer;
 import de.knewcleus.radar.vessels.ITrackUpdateListener;
 import de.knewcleus.radar.vessels.Track;
 
@@ -37,7 +37,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 
 	protected final RadarWorkstation workstation;
 
-	protected final Map<Track, Symbol> trackSymbolMap=new HashMap<Track, Symbol>(); 
+	protected final Map<Track, DisplayElement> trackSymbolMap=new HashMap<Track, DisplayElement>(); 
 
 	protected final IMapLayer landmassLayer;
 	protected final IMapLayer waterLayer;
@@ -174,9 +174,10 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 	@Override
 	public synchronized void tracksUpdated(Set<Track> targets) {
 		for (Track track: targets) {
-			Symbol symbol=trackSymbolMap.get(track);
+			DisplayElement symbol=trackSymbolMap.get(track);
 			if (symbol==null) {
-				symbol=new ComposedTrackSymbol(this, track);
+				symbol=new TrackSymbolContainer(track);
+				symbol.setDisplayComponent(this);
 				add(symbol);
 				trackSymbolMap.put(track, symbol);
 			} else {
@@ -189,7 +190,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 	public synchronized void trackLost(Track target) {
 		if (!trackSymbolMap.containsKey(target))
 			return;
-		final Symbol symbol=trackSymbolMap.get(target);
+		final DisplayElement symbol=trackSymbolMap.get(target);
 		trackSymbolMap.remove(target);
 		remove(symbol);
 	}

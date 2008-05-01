@@ -7,14 +7,28 @@ import java.awt.geom.Rectangle2D;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.radar.WorkObjectSymbol;
+import de.knewcleus.radar.autolabel.DisplayObject;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
+import de.knewcleus.radar.vessels.Track;
+import de.knewcleus.radar.vessels.Vessel;
 
-public class TrackSymbol extends ComposedTrackSymbolPart {
-	protected Point2D devicePosition;
+public class TrackSymbol extends WorkObjectSymbol implements DisplayObject {
+	protected final Track associatedTrack;
+	protected Point2D devicePosition=new Point2D.Double();
 
-	public TrackSymbol(ComposedTrackSymbol parent) {
-		super(parent);
+	public TrackSymbol(Track associatedTrack) {
+		this.associatedTrack=associatedTrack;
+	}
+	
+	public Track getAssociatedTrack() {
+		return associatedTrack;
+	}
+	
+	@Override
+	public Vessel getAssociatedObject() {
+		return associatedTrack.getAssociatedVessel();
 	}
 	
 	@Override
@@ -32,12 +46,27 @@ public class TrackSymbol extends ComposedTrackSymbolPart {
 
 	@Override
 	public void validate() {
-		final RadarMapPanel mapPanel=getParent().getDisplayComponent();
+		final RadarMapPanel mapPanel=(RadarMapPanel) getDisplayComponent();
 		final ICoordinateTransformation mapTransformation=mapPanel.getMapTransformation();
 		final IDeviceTransformation deviceTransformation=mapPanel.getDeviceTransformation();
 		
-		final Position realPosition=getParent().getAssociatedTrack().getPosition();
+		final Position realPosition=getAssociatedTrack().getPosition();
 		final Position mapPosition=mapTransformation.forward(realPosition);
 		devicePosition=deviceTransformation.toDevice(mapPosition);
+	}
+
+	@Override
+	public boolean isHit(Point2D position) {
+		return getBounds().contains(position);
+	}
+
+	@Override
+	public Rectangle2D getBounds2D() {
+		return getBounds();
+	}
+
+	@Override
+	public double getPriority() {
+		return 10;
 	}
 }

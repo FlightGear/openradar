@@ -17,7 +17,7 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
-import de.knewcleus.radar.Symbol;
+import de.knewcleus.radar.DisplayElement;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public abstract class RadarMapPanel extends JComponent {
@@ -27,7 +27,7 @@ public abstract class RadarMapPanel extends JComponent {
 	protected final RadarMapDeviceTransformation deviceTransformation=new RadarMapDeviceTransformation();
 	protected final RadarPlanViewSettings settings;
 	protected double xRange=30*Units.NM;
-	protected final Collection<Symbol> displayedSymbols=new HashSet<Symbol>();
+	protected final Collection<DisplayElement> displayedSymbols=new HashSet<DisplayElement>();
 
 	public RadarMapPanel(RadarPlanViewSettings settings, ICoordinateTransformation mapTransformation) {
 		this.settings=settings;
@@ -88,28 +88,27 @@ public abstract class RadarMapPanel extends JComponent {
 	protected synchronized void paintSymbols(Graphics2D g) {
 		final Rectangle clipBounds=g.getClipBounds();
 		
-		for (Symbol symbol: displayedSymbols) {
+		for (DisplayElement symbol: displayedSymbols) {
 			final Rectangle2D symbolBounds=symbol.getBounds();
-			if (symbolBounds==null)
+			if (symbolBounds==null || !clipBounds.intersects(symbolBounds)) {
 				continue;
-			if (!clipBounds.intersects(symbolBounds))
-				continue;
+			}
 			symbol.paint(g);
 		}
 	}
 	
 	public void validateAllSymbols() {
-		for (Symbol symbol: displayedSymbols) {
+		for (DisplayElement symbol: displayedSymbols) {
 			symbol.validate();
 		}
 	}
 	
-	public synchronized void add(Symbol symbol) {
+	public synchronized void add(DisplayElement symbol) {
 		displayedSymbols.add(symbol);
 		symbol.validate();
 	}
 	
-	public synchronized void remove(Symbol symbol) {
+	public synchronized void remove(DisplayElement symbol) {
 		displayedSymbols.remove(symbol);
 		symbol.validate();
 	}

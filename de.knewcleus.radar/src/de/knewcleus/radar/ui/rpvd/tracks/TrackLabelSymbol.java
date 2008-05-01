@@ -1,32 +1,39 @@
 package de.knewcleus.radar.ui.rpvd.tracks;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.radar.WorkObject;
+import de.knewcleus.radar.WorkObjectSymbol;
+import de.knewcleus.radar.autolabel.ILabel;
 import de.knewcleus.radar.ui.labels.LabelElementContainer;
 import de.knewcleus.radar.ui.labels.LabelLineLayoutManager;
 import de.knewcleus.radar.ui.labels.MultiLineLabelLayoutManager;
 import de.knewcleus.radar.ui.vehicles.CallsignLabelElement;
 import de.knewcleus.radar.ui.vehicles.CurrentLevelLabelElement;
 import de.knewcleus.radar.ui.vehicles.GroundSpeedLabelElement;
+import de.knewcleus.radar.vessels.Track;
 
-public class TrackLabelSymbol extends ComposedTrackSymbolPart {
+public class TrackLabelSymbol extends WorkObjectSymbol implements ILabel {
+	protected final TrackSymbol labeledSymbol;
 	protected final LabelElementContainer labelContainer=new LabelElementContainer();
 	protected final CallsignLabelElement callsignLabelElement;
 	protected final LabelElementContainer secondLabelLine;
 	protected final GroundSpeedLabelElement groundSpeedLabelElement;
 	protected final CurrentLevelLabelElement currentLevelLabelElement;
+	
+	protected boolean isAutolabelled=false;
 
-	public TrackLabelSymbol(ComposedTrackSymbol parent) {
-		super(parent);
+	public TrackLabelSymbol(TrackSymbol labeledSymbol) {
+		this.labeledSymbol=labeledSymbol;
 		
 		labelContainer.setLayoutManager(new MultiLineLabelLayoutManager());
-		labelContainer.setDisplayComponent(getDisplayComponent());
 		
-		callsignLabelElement=new CallsignLabelElement(parent.getAssociatedTrack());
+		callsignLabelElement=new CallsignLabelElement(getAssociatedTrack());
 		secondLabelLine=new LabelElementContainer();
-		groundSpeedLabelElement=new GroundSpeedLabelElement(parent.getAssociatedTrack());
-		currentLevelLabelElement=new CurrentLevelLabelElement(parent.getAssociatedTrack());
+		groundSpeedLabelElement=new GroundSpeedLabelElement(getAssociatedTrack());
+		currentLevelLabelElement=new CurrentLevelLabelElement(getAssociatedTrack());
 		secondLabelLine.setLayoutManager(new LabelLineLayoutManager());
 		secondLabelLine.add(groundSpeedLabelElement);
 		secondLabelLine.add(currentLevelLabelElement);
@@ -35,6 +42,30 @@ public class TrackLabelSymbol extends ComposedTrackSymbolPart {
 		populateDefaultLabel();
 	}
 	
+	public Track getAssociatedTrack() {
+		return getLabeledObject().getAssociatedTrack();
+	}
+
+	@Override
+	public WorkObject getAssociatedObject() {
+		return getAssociatedTrack().getAssociatedVessel();
+	}
+
+	@Override
+	public TrackSymbol getLabeledObject() {
+		return labeledSymbol;
+	}
+
+	@Override
+	public TrackSymbolContainer getParent() {
+		return (TrackSymbolContainer) super.getParent();
+	}
+
+	@Override
+	public Rectangle2D getBounds() {
+		return labelContainer.getBounds2D();
+	}
+
 	protected void populateDefaultLabel() {
 		labelContainer.removeAll();
 		labelContainer.add(callsignLabelElement);
@@ -42,21 +73,17 @@ public class TrackLabelSymbol extends ComposedTrackSymbolPart {
 	}
 	
 	@Override
-	public Rectangle2D getBounds() {
-		return labelContainer.getBounds2D();
-	}
-
-	@Override
 	public void paint(Graphics2D g) {
 		labelContainer.paint(g);
 	}
-
+	
 	@Override
 	public void validate() {
 		invalidate();
+		labelContainer.setDisplayComponent(getDisplayComponent());
 		labelContainer.pack();
 
-		final Rectangle2D trackBounds=parent.getTrackSymbol().getBounds();
+		final Rectangle2D trackBounds=getLabeledObject().getBounds();
 		final Rectangle2D labelBounds=labelContainer.getBounds2D();
 		
 		final double dirX=1.0/Math.sqrt(2), dirY=-1.0/Math.sqrt(2);
@@ -92,6 +119,32 @@ public class TrackLabelSymbol extends ComposedTrackSymbolPart {
 		
 		labelContainer.setPosition(labelCX-labelBounds.getWidth()/2.0, labelCY-labelBounds.getHeight()/2.0);
 		invalidate();
+	}
+
+	@Override
+	public boolean isHit(Point2D position) {
+		return getBounds2D().contains(position);
+	}
+
+	@Override
+	public boolean isAutolabelled() {
+		return isAutolabelled && !isActive();
+	}
+
+	@Override
+	public void setCentroidPosition(double x, double y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Rectangle2D getBounds2D() {
+		return getBounds();
+	}
+
+	@Override
+	public double getPriority() {
+		return 10;
 	}
 
 }

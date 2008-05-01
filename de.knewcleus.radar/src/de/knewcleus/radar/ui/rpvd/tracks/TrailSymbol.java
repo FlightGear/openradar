@@ -8,26 +8,25 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JComponent;
-
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.radar.DisplayElement;
 import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 import de.knewcleus.radar.vessels.Track;
 
-public class TrailSymbol extends ComposedTrackSymbolPart {
+public class TrailSymbol extends DisplayElement {
+	protected final Track associatedTrack;
 	protected final List<Point2D> trailPointPositions=new ArrayList<Point2D>();
 	
-	public TrailSymbol(ComposedTrackSymbol parent) {
-		super(parent);
+	public TrailSymbol(Track associatedTrack) {
+		this.associatedTrack=associatedTrack;
 	}
 	
-	@Override
-	public JComponent getDisplayComponent() {
-		return parent.getDisplayComponent();
+	public Track getAssociatedTrack() {
+		return associatedTrack;
 	}
 
 	@Override
@@ -60,9 +59,9 @@ public class TrailSymbol extends ComposedTrackSymbolPart {
 	public synchronized void validate() {
 		invalidate();
 		trailPointPositions.clear();
-		final RadarMapPanel mapPanel=getParent().getDisplayComponent();
+		final RadarMapPanel mapPanel=(RadarMapPanel) getDisplayComponent();
 		final RadarPlanViewSettings settings=mapPanel.getSettings();
-		final Track track=getParent().getAssociatedTrack();
+		final Track track=getAssociatedTrack();
 		final Deque<Position> positionBuffer=track.getPositionBuffer();
 		if (positionBuffer.size()<2)
 			return;
@@ -80,5 +79,11 @@ public class TrailSymbol extends ComposedTrackSymbolPart {
 			trailPointPositions.add(devicePosition);
 		}
 		invalidate();
+	}
+
+	@Override
+	public boolean isHit(Point2D position) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
