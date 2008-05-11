@@ -1,12 +1,12 @@
 package de.knewcleus.radar.vessels;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 
 /**
  * The track manager updates the tracks using data from one or more position data providers.
@@ -20,9 +20,18 @@ import java.util.logging.Logger;
  */
 public class TrackManager implements IPositionUpdateListener {
 	private final static Logger logger=Logger.getLogger(TrackManager.class.getName());
+	protected final ICorrelationDatabase correlationDatabase;
 	protected final Set<IPositionDataProvider> positionDataProviders=new HashSet<IPositionDataProvider>();
 	protected final Map<Object, Track> targetMap=new HashMap<Object, Track>();
 	protected final Set<ITrackUpdateListener> trackListeners=new HashSet<ITrackUpdateListener>();
+	
+	public TrackManager(ICorrelationDatabase correlationDatabase) {
+		this.correlationDatabase=correlationDatabase;
+	}
+	
+	public ICorrelationDatabase getCorrelationDatabase() {
+		return correlationDatabase;
+	}
 	
 	public synchronized void addPositionDataProvider(IPositionDataProvider provider) {
 		if (positionDataProviders.add(provider)) {
@@ -82,9 +91,5 @@ public class TrackManager implements IPositionUpdateListener {
 		assert(aircraftState!=null);
 		targetMap.remove(trackIdentifier);
 		fireTrackLost(aircraftState);
-	}
-	
-	public Collection<Track> getAircraftStates() {
-		return Collections.unmodifiableCollection(targetMap.values());
 	}
 }

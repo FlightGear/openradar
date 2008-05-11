@@ -48,7 +48,7 @@ public class TrackLabelSymbol extends WorkObjectSymbol implements ILabel {
 
 	@Override
 	public WorkObject getAssociatedObject() {
-		return getAssociatedTrack().getAssociatedVessel();
+		return getAssociatedTrack().getCorrelatedVessel();
 	}
 
 	@Override

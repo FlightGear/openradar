@@ -5,6 +5,7 @@ import java.util.Deque;
 import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 
 public class Track {
 	public static class PositionBacklogEntry {
@@ -32,7 +33,8 @@ public class Track {
 	protected SSRMode ssrMode;
 	protected String ssrCode;
 	protected double pressureAltitude=0.0;
-	protected Vessel associatedVessel=null;
+	protected String correlatedCallsign=null;
+	protected Vessel correlatedVessel=null;
 	
 	/**
 	 * Maximum position backlog in seconds.
@@ -75,8 +77,12 @@ public class Track {
 		return pressureAltitude;
 	}
 	
-	public Vessel getAssociatedVessel() {
-		return associatedVessel;
+	public String getCorrelatedCallsign() {
+		return correlatedCallsign;
+	}
+	
+	public Vessel getCorrelatedVessel() {
+		return correlatedVessel;
 	}
 	
 	public int getFlightLevel() {
@@ -84,22 +90,31 @@ public class Track {
 	}
 	
 	public void update(PositionUpdate targetInformation) {
-		// TODO: update associated vessel if any
 		logger.fine("Updating aircraft state "+this+" from "+targetInformation);
+		
+		/* Update the backlog */
 		final Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
 		final PositionBacklogEntry entry=new PositionBacklogEntry(targetInformation.getTimestamp(), currentGeodPosition);
 		positionBacklog.addLast(entry);
 		final double newestTimestamp=targetInformation.getTimestamp();
-		
-		/* Clean up the backlog */
 		while (positionBacklog.getFirst().getTimestamp()<newestTimestamp-maximumPositionBacklogSecs) {
 			positionBacklog.removeFirst();
 		}
 		
+		/* Update current information */
 		groundSpeed=targetInformation.getGroundSpeed();
 		trueCourse=targetInformation.getTrueCourse();
 		ssrMode=targetInformation.getSSRMode();
 		ssrCode=targetInformation.getSSRCode();
 		pressureAltitude=targetInformation.getPressureAltitude();
+		
+		/* Update the correlated callsign and vessel */
+		if (ssrMode.hasSSRCode()) {
+			final ICorrelationDatabase correlationDatabase=trackManager.getCorrelationDatabase();
+			correlatedCallsign=correlationDatabase.correlateToCallsign(ssrCode);
+		} else {
+			correlatedCallsign=null;
+		}
+		// TODO: update the correlated vessel
 	}
 }

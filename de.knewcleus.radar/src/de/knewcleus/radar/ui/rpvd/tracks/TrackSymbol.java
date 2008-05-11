@@ -28,7 +28,7 @@ public class TrackSymbol extends WorkObjectSymbol implements DisplayObject {
 	
 	@Override
 	public Vessel getAssociatedObject() {
-		return associatedTrack.getAssociatedVessel();
+		return associatedTrack.getCorrelatedVessel();
 	}
 	
 	@Override

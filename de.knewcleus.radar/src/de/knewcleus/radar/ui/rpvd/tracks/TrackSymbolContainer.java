@@ -43,6 +43,6 @@ public class TrackSymbolContainer extends DisplayElementContainer {
 	}
 	
 	public Vessel getAssociatedObject() {
-		return getAssociatedTrack().getAssociatedVessel();
+		return getAssociatedTrack().getCorrelatedVessel();
 	}
 }

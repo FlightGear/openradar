@@ -16,8 +16,8 @@ public class CallsignLabelElement extends AbstractTextLabelElement {
 	}
 	
 	protected String getDisplayedCallsign() {
-		if (track.getAssociatedVessel()!=null) {
-			return track.getAssociatedVessel().getCallsign();
+		if (track.getCorrelatedCallsign()!=null) {
+			return track.getCorrelatedCallsign();
 		}
 		if (!track.getSSRMode().hasSSRCode()) {
 			return "****";
