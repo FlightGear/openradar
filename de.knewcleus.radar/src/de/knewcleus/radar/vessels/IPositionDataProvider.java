@@ -5,7 +5,6 @@ package de.knewcleus.radar.vessels;
  * @author Ralf Gerlich
  */
 public interface IPositionDataProvider {
-	public abstract int getSecondsBetweenUpdates();
 	public abstract void registerPositionUpdateListener(IPositionUpdateListener listener);
 	public abstract void unregisterPositionUpdateListener(IPositionUpdateListener listener);
 }

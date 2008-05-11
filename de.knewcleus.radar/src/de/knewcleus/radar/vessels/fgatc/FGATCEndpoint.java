@@ -28,6 +28,7 @@ public class FGATCEndpoint implements Runnable, IPositionDataProvider {
 	protected final static int receiveBufferLength=1024;
 	protected final Set<IPositionUpdateListener> listeners=new HashSet<IPositionUpdateListener>();
 	protected final Map<Object, ClientStatus> clients=new HashMap<Object, ClientStatus>();
+	protected final static int updateMillis=1000;
 	protected final int timeoutMillis=5000;
 	protected long nextRadarUpdate;
 
@@ -46,18 +47,18 @@ public class FGATCEndpoint implements Runnable, IPositionDataProvider {
 	
 	public FGATCEndpoint() throws IOException {
 		datagramSocket=new DatagramSocket();
-		datagramSocket.setSoTimeout(getSecondsBetweenUpdates()*1000);
+		datagramSocket.setSoTimeout(updateMillis);
 	}
 	
 	public FGATCEndpoint(int port) throws IOException {
 		datagramSocket=new DatagramSocket(port);
-		datagramSocket.setSoTimeout(getSecondsBetweenUpdates()*1000);
+		datagramSocket.setSoTimeout(updateMillis);
 	}
 	
 	@Override
 	public void run() {
 		Thread myThread=Thread.currentThread();
-		nextRadarUpdate=System.currentTimeMillis()+getSecondsBetweenUpdates()*1000;
+		nextRadarUpdate=System.currentTimeMillis()+updateMillis;
 		while (!myThread.isInterrupted()) {
 			try {
 				receivePacket();
@@ -70,7 +71,7 @@ public class FGATCEndpoint implements Runnable, IPositionDataProvider {
 			expireClients();
 			if (System.currentTimeMillis()>=nextRadarUpdate) {
 				sendTargetUpdate();
-				nextRadarUpdate+=1000*getSecondsBetweenUpdates();
+				nextRadarUpdate+=updateMillis;
 			}
 		}
 	}
@@ -186,11 +187,6 @@ public class FGATCEndpoint implements Runnable, IPositionDataProvider {
 			}
 		}
 		clients.put(id, clientStatus);
-	}
-	
-	@Override
-	public int getSecondsBetweenUpdates() {
-		return 1;
 	}
 	
 	@Override

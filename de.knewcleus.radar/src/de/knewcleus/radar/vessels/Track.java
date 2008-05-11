@@ -17,6 +17,8 @@ public class Track {
 	protected double pressureAltitude=0.0;
 	protected Vessel associatedVessel=null;
 	
+	protected static int maximumPositionBufferLength=1200;
+	
 	public Track(TrackManager trackManager) {
 		this.trackManager=trackManager;
 	}
@@ -63,7 +65,7 @@ public class Track {
 		Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
 		positionBuffer.addLast(new Position(currentGeodPosition));
 		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */
-		if (positionBuffer.size()>trackManager.getMaximumPositionBufferLength()) {
+		if (positionBuffer.size()>maximumPositionBufferLength) {
 			positionBuffer.removeFirst();
 		}
 		

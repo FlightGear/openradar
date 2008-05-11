@@ -17,7 +17,8 @@ import de.knewcleus.radar.vessels.PositionUpdate;
 
 public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implements IPositionDataProvider, IUpdateable {
 	protected final Set<IPositionUpdateListener> listeners=new HashSet<IPositionUpdateListener>();
-	protected final Updater radarUpdater=new Updater(this,1000*getSecondsBetweenUpdates());
+	protected final static int updateMillis=1000;
+	protected final Updater radarUpdater=new Updater(this,updateMillis);
 	protected final ISquawkAllocator squawkAllocator;
 	protected final ICorrelationDatabase correlationDatabase;
 	
@@ -38,11 +39,6 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 		correlationDatabase.registerSquawk(squawk, callsign);
 		FGMPAircraft aircraft=new FGMPAircraft(address,callsign,squawk);
 		return aircraft;
-	}
-	
-	@Override
-	public int getSecondsBetweenUpdates() {
-		return 1;
 	}
 	
 	@Override

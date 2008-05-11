@@ -8,33 +8,32 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+/**
+ * The track manager updates the tracks using data from one or more position data providers.
+ * 
+ * The respective data providers need to be registered using the methods {@link #addPositionDataProvider(IPositionDataProvider)} and
+ * {@link #removePositionDataProvider(IPositionDataProvider)}.
+ * 
+ * @author Ralf Gerlich
+ * @see IPositionDataProvider
+ *
+ */
 public class TrackManager implements IPositionUpdateListener {
 	private final static Logger logger=Logger.getLogger(TrackManager.class.getName());
-	protected final IPositionDataProvider radarDataProvider;
+	protected final Set<IPositionDataProvider> positionDataProviders=new HashSet<IPositionDataProvider>();
 	protected final Map<Object, Track> targetMap=new HashMap<Object, Track>();
 	protected final Set<ITrackUpdateListener> trackListeners=new HashSet<ITrackUpdateListener>();
-	protected final int maximumPositionBufferLength;
 	
-	public TrackManager(IPositionDataProvider radarDataProvider) {
-		this.radarDataProvider=radarDataProvider;
-
-		/*
-		 * Note that we only register here. A radar data provider does not provide information
-		 * about the current set of acquired targets. Instead a set of radar target information updates
-		 * is sent every update cycle. With that information we also get the list of known targets.
-		 */
-		radarDataProvider.registerPositionUpdateListener(this);
-		
-		/* We record position data up to 15 minutes backwards */
-		maximumPositionBufferLength=15*60/radarDataProvider.getSecondsBetweenUpdates();
+	public synchronized void addPositionDataProvider(IPositionDataProvider provider) {
+		if (positionDataProviders.add(provider)) {
+			provider.registerPositionUpdateListener(this);
+		}
 	}
 	
-	public int getMaximumPositionBufferLength() {
-		return maximumPositionBufferLength;
-	}
-	
-	public int getSecondsBetweenUpdates() {
-		return radarDataProvider.getSecondsBetweenUpdates();
+	public synchronized void removePositionDataProvider(IPositionDataProvider provider) {
+		if (positionDataProviders.remove(provider)) {
+			provider.unregisterPositionUpdateListener(this);
+		}
 	}
 	
 	public synchronized void registerTrackUpdateListener(ITrackUpdateListener consumer) {
