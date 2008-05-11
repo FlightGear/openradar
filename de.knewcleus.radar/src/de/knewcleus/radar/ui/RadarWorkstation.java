@@ -37,6 +37,7 @@ public class RadarWorkstation {
 		this.sector=sector;
 		this.squawkAllocator=squawkAllocator;
 		this.correlationDatabase=correlationDatabase;
+		radarPlanViewSettings.setRange(sector.getDefaultXRange());
 		targetManager=new TrackManager(correlationDatabase);
 		targetManager.addPositionDataProvider(radarDataProvider);
 		aircraftStateManager=new AircraftStateManager();

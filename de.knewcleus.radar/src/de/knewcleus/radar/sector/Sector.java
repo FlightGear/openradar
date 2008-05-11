@@ -37,6 +37,7 @@ public class Sector implements INavaidDatabase {
 	protected final Position initialCenter;
 	protected final double latRange;
 	protected final double lonRange;
+	protected final int defaultXRange;
 	protected List<Polygon> landmassPolygons=new ArrayList<Polygon>();
 	protected List<Polygon> waterPolygons=new ArrayList<Polygon>();
 	protected List<Polygon> restrictedPolygons=new ArrayList<Polygon>();
@@ -44,10 +45,11 @@ public class Sector implements INavaidDatabase {
 	protected final NamedFixDB fixDatabase=new NamedFixDB();
 	protected final AirwayDB airwayDatabase=new AirwayDB();
 	
-	public Sector(Position initialCenter, double latRange, double lonRange) {
+	public Sector(Position initialCenter, double latRange, double lonRange, int defaultXRange) {
 		this.initialCenter=initialCenter;
 		this.latRange=latRange;
 		this.lonRange=lonRange;
+		this.defaultXRange=defaultXRange;
 	}
 	
 	public static Sector loadFromURL(URL url) throws IOException, ParserConfigurationException, SAXException, DBParserException {
@@ -66,6 +68,7 @@ public class Sector implements INavaidDatabase {
 		double initialElev=0.0;
 		double latRange=3.0;
 		double lonRange=3.0;
+		int defaultXRange=30;
 		
 		NodeList initialCenterNodes=document.getElementsByTagName("initialcenter");
 		Element initialCenterElem=(Element)initialCenterNodes.item(0);
@@ -74,13 +77,17 @@ public class Sector implements INavaidDatabase {
 		initialLon=Double.parseDouble(initialCenterElem.getAttribute("lon"))*Units.DEG;
 		initialElev=Double.parseDouble(initialCenterElem.getAttribute("elev"))*Units.FT;
 		
+		if (initialCenterElem.hasAttribute("xrange_nm")) {
+			defaultXRange=Integer.parseInt(initialCenterElem.getAttribute("xrange_nm"));
+		}
+		
 		NodeList mapRangeNodes=document.getElementsByTagName("maprange");
 		Element mapRangeElem=(Element)mapRangeNodes.item(0);
 		
 		lonRange=Double.parseDouble(mapRangeElem.getAttribute("x"))*Units.DEG;
 		latRange=Double.parseDouble(mapRangeElem.getAttribute("y"))*Units.DEG;
 		
-		Sector sector=new Sector(new Position(initialLon,initialLat,initialElev),latRange,lonRange);
+		Sector sector=new Sector(new Position(initialLon,initialLat,initialElev),latRange,lonRange, defaultXRange);
 		
 		double north,west,south,east;
 		
@@ -207,6 +214,10 @@ public class Sector implements INavaidDatabase {
 	
 	public double getLonRange() {
 		return lonRange;
+	}
+	
+	public int getDefaultXRange() {
+		return defaultXRange;
 	}
 	
 	public double getNorthBorder() {
