@@ -7,9 +7,26 @@ import java.util.logging.Logger;
 import de.knewcleus.fgfs.location.Position;
 
 public class Track {
+	public static class PositionBacklogEntry {
+		protected final double timestamp;
+		protected final Position position;
+		
+		public PositionBacklogEntry(double timestamp, Position position) {
+			this.timestamp=timestamp;
+			this.position=position;
+		}
+		
+		public double getTimestamp() {
+			return timestamp;
+		}
+		
+		public Position getPosition() {
+			return position;
+		}
+	}
 	protected final static Logger logger=Logger.getLogger(Track.class.getName());
 	protected final TrackManager trackManager;
-	protected final Deque<Position> positionBuffer=new ArrayDeque<Position>();
+	protected final Deque<PositionBacklogEntry> positionBacklog=new ArrayDeque<PositionBacklogEntry>();
 	protected double groundSpeed=0.0;
 	protected double trueCourse=0.0;
 	protected SSRMode ssrMode;
@@ -17,18 +34,25 @@ public class Track {
 	protected double pressureAltitude=0.0;
 	protected Vessel associatedVessel=null;
 	
-	protected static int maximumPositionBufferLength=1200;
+	/**
+	 * Maximum position backlog in seconds.
+	 * 
+	 * This value gives the maximum timestamp difference between the oldest and the newest
+	 * entry in the position backlog in seconds. On each update the oldest entries exceeding this
+	 * difference are removed.
+	 */
+	protected static double maximumPositionBacklogSecs=3600.0;
 	
 	public Track(TrackManager trackManager) {
 		this.trackManager=trackManager;
 	}
 	
-	public Deque<Position> getPositionBuffer() {
-		return positionBuffer;
+	public Deque<PositionBacklogEntry> getPositionBacklog() {
+		return positionBacklog;
 	}
 	
 	public Position getPosition() {
-		return positionBuffer.getLast();
+		return positionBacklog.getLast().getPosition();
 	}
 	
 	public double getGroundSpeed() {
@@ -62,11 +86,14 @@ public class Track {
 	public void update(PositionUpdate targetInformation) {
 		// TODO: update associated vessel if any
 		logger.fine("Updating aircraft state "+this+" from "+targetInformation);
-		Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
-		positionBuffer.addLast(new Position(currentGeodPosition));
-		/* We always keep at least the last cartesianPosition, so the limit is historyLength+1 */
-		if (positionBuffer.size()>maximumPositionBufferLength) {
-			positionBuffer.removeFirst();
+		final Position currentGeodPosition=new Position(targetInformation.getLongitude(),targetInformation.getLatitude(),0);
+		final PositionBacklogEntry entry=new PositionBacklogEntry(targetInformation.getTimestamp(), currentGeodPosition);
+		positionBacklog.addLast(entry);
+		final double newestTimestamp=targetInformation.getTimestamp();
+		
+		/* Clean up the backlog */
+		while (positionBacklog.getFirst().getTimestamp()<newestTimestamp-maximumPositionBacklogSecs) {
+			positionBacklog.removeFirst();
 		}
 		
 		groundSpeed=targetInformation.getGroundSpeed();

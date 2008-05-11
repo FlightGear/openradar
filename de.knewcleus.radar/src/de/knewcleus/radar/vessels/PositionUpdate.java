@@ -1,7 +1,24 @@
 package de.knewcleus.radar.vessels;
 
+/**
+ * A position update represents information about a newly detected position of a given target.
+ * 
+ * It is associated with a track identifier, a timestamp, the position, speed and true course of
+ * the target, and, if available, SSR data including the SSR mode and code in use as well as the
+ * pressure altitude transmitted, if available.
+ * 
+ * The timestamp is attached by the position data provider and represents the actual time of detection
+ * for the presented position of the given target. Each target may have its own time reference, so
+ * no synchronization between timestamps of different targets may be assumed.
+ * 
+ * PositionUpdate instances are non-modifiable.
+ * 
+ * @author Ralf Gerlich
+ *
+ */
 public class PositionUpdate {
 	protected final Object trackIdentifier;
+	protected final double timestamp;
 	protected final double longitude;
 	protected final double latitude;
 	protected final double groundSpeed;
@@ -12,6 +29,7 @@ public class PositionUpdate {
 	protected final double pressureAltitude;
 	
 	public PositionUpdate(Object trackIdentifier,
+			double timestamp,
 			double longitude, double latitude,
 			double groundSpeed, double trueCourse,
 			SSRMode ssrMode,
@@ -19,6 +37,7 @@ public class PositionUpdate {
 			double pressureAltitude)
 	{
 		this.trackIdentifier=trackIdentifier;
+		this.timestamp=timestamp;
 		this.longitude=longitude;
 		this.latitude=latitude;
 		this.groundSpeed=groundSpeed;
@@ -30,6 +49,10 @@ public class PositionUpdate {
 
 	public Object getTrackIdentifier() {
 		return trackIdentifier;
+	}
+	
+	public double getTimestamp() {
+		return timestamp;
 	}
 
 	public double getLongitude() {

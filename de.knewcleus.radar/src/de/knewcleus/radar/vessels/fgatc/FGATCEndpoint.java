@@ -161,8 +161,13 @@ public class FGATCEndpoint implements Runnable, IPositionDataProvider {
 				ssrMode=SSRMode.MODEA;
 			}
 			
+			/*
+			 * NOTE: We are reporting the time sent in the update packet as timestamp,
+			 *       as this is independent of network lag.
+			 */
 			PositionUpdate targetInformation=new PositionUpdate(
 					trackID,
+					clientStatus.positionTime,
 					clientStatus.longitude,clientStatus.latitude,
 					clientStatus.groundSpeed,clientStatus.trueCourse,
 					ssrMode,clientStatus.ssrCode,clientStatus.pressureAltitude);

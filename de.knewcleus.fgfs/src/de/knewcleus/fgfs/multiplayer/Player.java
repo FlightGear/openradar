@@ -9,8 +9,9 @@ public class Player {
 	protected final PlayerAddress address;
 	protected final String callsign;
 	protected long expiryTime;
-	protected long lastPositionTime;
+	protected long lastPositionLocalTime;
 	protected boolean isLocalPlayer=true;
+	protected double positionTime;
 	protected Position cartesianPosition=new Position();
 	protected Quaternion orientation=Quaternion.one;
 	protected Vector3D linearVelocity=new Vector3D();
@@ -37,6 +38,10 @@ public class Player {
 		return expiryTime;
 	}
 	
+	public double getPositionTime() {
+		return positionTime;
+	}
+	
 	public Position getCartesianPosition() {
 		return cartesianPosition;
 	}
@@ -58,7 +63,8 @@ public class Player {
 	}
 	
 	public void updatePosition(long t, PositionMessage packet) {
-		lastPositionTime=t;
+		lastPositionLocalTime=t;
+		positionTime=packet.getTime();
 		cartesianPosition=packet.getPosition();
 		orientation=Quaternion.fromAngleAxis(packet.getOrientation());
 		linearVelocity=packet.getLinearVelocity();

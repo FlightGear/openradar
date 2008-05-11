@@ -16,6 +16,7 @@ import de.knewcleus.radar.ui.Palette;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 import de.knewcleus.radar.vessels.Track;
+import de.knewcleus.radar.vessels.Track.PositionBacklogEntry;
 
 public class TrailSymbol extends DisplayElement {
 	protected final Track associatedTrack;
@@ -62,10 +63,10 @@ public class TrailSymbol extends DisplayElement {
 		final RadarMapPanel mapPanel=(RadarMapPanel) getDisplayComponent();
 		final RadarPlanViewSettings settings=mapPanel.getSettings();
 		final Track track=getAssociatedTrack();
-		final Deque<Position> positionBuffer=track.getPositionBuffer();
+		final Deque<PositionBacklogEntry> positionBuffer=track.getPositionBacklog();
 		if (positionBuffer.size()<2)
 			return;
-		final Iterator<Position> trailIterator=positionBuffer.descendingIterator();
+		final Iterator<PositionBacklogEntry> trailIterator=positionBuffer.descendingIterator();
 		trailIterator.next();
 		
 		final ICoordinateTransformation mapTransformation=mapPanel.getMapTransformation();
@@ -73,7 +74,7 @@ public class TrailSymbol extends DisplayElement {
 		
 		for (int i=0;i<settings.getTrackHistoryLength() && trailIterator.hasNext();i++) {
 			
-			final Position realPosition=trailIterator.next();
+			final Position realPosition=trailIterator.next().getPosition();
 			final Position mapPosition=mapTransformation.forward(realPosition);
 			final Point2D devicePosition=deviceTransformation.toDevice(mapPosition);
 			trailPointPositions.add(devicePosition);

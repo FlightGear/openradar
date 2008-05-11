@@ -76,7 +76,12 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 	public synchronized void update(double dt) {
 		Set<PositionUpdate> targets=new HashSet<PositionUpdate>();
 		for (FGMPAircraft aircraft: getPlayers()) {
+			/*
+			 * NOTE: We are reporting the time sent in the update packet as timestamp,
+			 *       as this is independent of network lag.
+			 */
 			targets.add(new PositionUpdate(aircraft,
+								aircraft.getPositionTime(),
 								aircraft.getLongitude(),aircraft.getLatitude(),
 								aircraft.getGroundSpeed(),aircraft.getTrueCourse(),
 								aircraft.getSSRMode(),aircraft.getSSRCode(),aircraft.getPressureAltitude()));
