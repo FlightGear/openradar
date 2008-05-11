@@ -5,6 +5,6 @@
 	<geodata theme="fixes" type="xplane" ref="../fix.dat.gz" />
 	<geodata theme="nav" type="xplane" ref="../nav.dat.gz" />
 	<geodata theme="awy" type="xplane" ref="../awy.dat.gz" />
-	<geodata theme="landmass" type="poly" ref="landmass.poly" />
-	<geodata theme="water" type="poly" ref="lake.poly" />
+	<geodata theme="landmass" type="shape" ref="v0_landmass.shp" />
+	<geodata theme="water" type="shape" ref="v0_lake.shp" />
 </sector>

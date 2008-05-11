@@ -32,7 +32,7 @@ public abstract class RadarMapPanel extends JComponent {
 	public RadarMapPanel(RadarPlanViewSettings settings, ICoordinateTransformation mapTransformation) {
 		this.settings=settings;
 		this.mapTransformation=mapTransformation;
-		setXRange(settings.getRange());
+		setXRange(settings.getRange()*Units.NM);
 		setDoubleBuffered(true);
 		enableEvents(AWTEvent.COMPONENT_EVENT_MASK);
 	}
@@ -69,7 +69,7 @@ public abstract class RadarMapPanel extends JComponent {
 	
 	@Override
 	protected void processComponentEvent(ComponentEvent e) {
-		if (e.getID()==ComponentEvent.COMPONENT_RESIZED) {
+		if (e.getID()==ComponentEvent.COMPONENT_RESIZED || e.getID()==ComponentEvent.COMPONENT_SHOWN) {
 			deviceTransformation.validate();
 			validateAllSymbols();
 		}
