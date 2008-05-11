@@ -179,29 +179,38 @@
         <ownedAttribute xmi:id="_1M-EsAi3Ed27QtBxg_nn2Q" name="squawk"/>
         <ownedAttribute xmi:id="_25po8Ai3Ed27QtBxg_nn2Q" name="callsign"/>
         <ownedAttribute xmi:id="_C4Rk0gi9Ed27QtBxg_nn2Q" name="plannedRoute"/>
-        <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_VHfD0BCrEd2jVMrdUSmufA" name="Clearance_Workstate">
-          <region xmi:id="_XHho8hCrEd2jVMrdUSmufA" name="Region1">
-            <subvertex xmi:type="uml:Pseudostate" xmi:id="_XkKhoBCrEd2jVMrdUSmufA" name="Pseudostate1"/>
-            <subvertex xmi:type="uml:State" xmi:id="_YCjGwBCrEd2jVMrdUSmufA" name="Not concerned"/>
-            <subvertex xmi:type="uml:State" xmi:id="_ZkD80BCrEd2jVMrdUSmufA" name="Pending In"/>
-            <subvertex xmi:type="uml:State" xmi:id="_adeREBCrEd2jVMrdUSmufA" name="Assumed">
-              <region xmi:id="_adeRERCrEd2jVMrdUSmufA" name="Region1">
-                <subvertex xmi:type="uml:Pseudostate" xmi:id="_sY574BCrEd2jVMrdUSmufA" name="Pseudostate1"/>
-                <subvertex xmi:type="uml:State" xmi:id="_thtXABCrEd2jVMrdUSmufA" name="Not Cleared"/>
-                <subvertex xmi:type="uml:State" xmi:id="_u32DgBCrEd2jVMrdUSmufA" name="Clearance"/>
-                <subvertex xmi:type="uml:State" xmi:id="_wSCJkBCrEd2jVMrdUSmufA" name="Startup"/>
-                <transition xmi:id="_20fJ8xCrEd2jVMrdUSmufA" name="Transition1" target="_thtXABCrEd2jVMrdUSmufA" source="_sY574BCrEd2jVMrdUSmufA"/>
-                <transition xmi:id="_2-IOIBCrEd2jVMrdUSmufA" name="CLEARANCE" target="_u32DgBCrEd2jVMrdUSmufA" source="_thtXABCrEd2jVMrdUSmufA"/>
-                <transition xmi:id="_3HKOUxCrEd2jVMrdUSmufA" name="STARTUP" target="_wSCJkBCrEd2jVMrdUSmufA" source="_u32DgBCrEd2jVMrdUSmufA"/>
-                <transition xmi:id="_3R3pgxCrEd2jVMrdUSmufA" name="TRANSFER" target="_hZ20YBCrEd2jVMrdUSmufA" source="_wSCJkBCrEd2jVMrdUSmufA"/>
-                <transition xmi:id="_7EYR0xCrEd2jVMrdUSmufA" name="STARTUP" target="_wSCJkBCrEd2jVMrdUSmufA" source="_wSCJkBCrEd2jVMrdUSmufA"/>
+        <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_cde-QBeAEd2cNPa0tBNeTQ" name="Dep_CLD_Workstate">
+          <region xmi:id="_fm8CgBeAEd2cNPa0tBNeTQ" name="Region1">
+            <ownedComment xmi:id="_68s88BeEEd2cNPa0tBNeTQ" annotatedElement="_5JsuQBeEEd2cNPa0tBNeTQ">
+              <body>GND can assume by ASSUME, TAXI or PUSHBACK</body>
+            </ownedComment>
+            <ownedComment xmi:id="_FjWLgheFEd2cNPa0tBNeTQ" annotatedElement="_jqBgoxeEEd2cNPa0tBNeTQ">
+              <body>Vessel becomes Pending for GND-Controller</body>
+            </ownedComment>
+            <ownedComment xmi:id="_eM5MwBeIEd2cNPa0tBNeTQ" annotatedElement="_3LHhsxeEEd2cNPa0tBNeTQ">
+              <body>Vessel becomes Pending In for GND-Controller</body>
+            </ownedComment>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_gWnzABeAEd2cNPa0tBNeTQ" name="Pseudostate1"/>
+            <subvertex xmi:type="uml:State" xmi:id="_guuJ8BeAEd2cNPa0tBNeTQ" name="NotConcerned"/>
+            <subvertex xmi:type="uml:State" xmi:id="_h8dvcBeAEd2cNPa0tBNeTQ" name="Pending In"/>
+            <subvertex xmi:type="uml:State" xmi:id="_7uoloBeDEd2cNPa0tBNeTQ" name="Assumed Out"/>
+            <subvertex xmi:type="uml:State" xmi:id="_VEXe0BeEEd2cNPa0tBNeTQ" name="Assumed">
+              <region xmi:id="_VEXe0ReEEd2cNPa0tBNeTQ" name="Region1">
+                <subvertex xmi:type="uml:State" xmi:id="_SnM40BeEEd2cNPa0tBNeTQ" name="Cleared"/>
+                <subvertex xmi:type="uml:State" xmi:id="_R9AsUBeEEd2cNPa0tBNeTQ" name="Startup"/>
+                <subvertex xmi:type="uml:Pseudostate" xmi:id="_eaMlwBeEEd2cNPa0tBNeTQ" name="Pseudostate1"/>
+                <transition xmi:id="_jfQbExeEEd2cNPa0tBNeTQ" name="CLD CLR" target="_SnM40BeEEd2cNPa0tBNeTQ" source="_eaMlwBeEEd2cNPa0tBNeTQ"/>
+                <transition xmi:id="_jqBgoxeEEd2cNPa0tBNeTQ" name="CLD STARTUP" target="_R9AsUBeEEd2cNPa0tBNeTQ" source="_SnM40BeEEd2cNPa0tBNeTQ"/>
+                <transition xmi:id="_3LHhsxeEEd2cNPa0tBNeTQ" name="CLD TRANSFER" target="_7uoloBeDEd2cNPa0tBNeTQ" source="_R9AsUBeEEd2cNPa0tBNeTQ"/>
               </region>
             </subvertex>
-            <subvertex xmi:type="uml:State" xmi:id="_hZ20YBCrEd2jVMrdUSmufA" name="Assumed Out"/>
-            <transition xmi:id="_jsTYIBCrEd2jVMrdUSmufA" name="Transition1" target="_YCjGwBCrEd2jVMrdUSmufA" source="_XkKhoBCrEd2jVMrdUSmufA"/>
-            <transition xmi:id="_j5VukxCrEd2jVMrdUSmufA" name="EOBT-5min" target="_ZkD80BCrEd2jVMrdUSmufA" source="_YCjGwBCrEd2jVMrdUSmufA"/>
-            <transition xmi:id="_l2KAkxCrEd2jVMrdUSmufA" name="ASSUME" target="_adeREBCrEd2jVMrdUSmufA" source="_ZkD80BCrEd2jVMrdUSmufA"/>
-            <transition xmi:id="_JfnMUxCsEd2jVMrdUSmufA" name="Assumed by GND" target="_YCjGwBCrEd2jVMrdUSmufA" source="_hZ20YBCrEd2jVMrdUSmufA"/>
+            <transition xmi:id="_A4O8sBeEEd2cNPa0tBNeTQ" name="" target="_guuJ8BeAEd2cNPa0tBNeTQ" source="_gWnzABeAEd2cNPa0tBNeTQ"/>
+            <transition xmi:id="_BTKlMxeEEd2cNPa0tBNeTQ" name="EOBT-5min" target="_h8dvcBeAEd2cNPa0tBNeTQ" source="_guuJ8BeAEd2cNPa0tBNeTQ">
+              <trigger xmi:id="_Deks0BeEEd2cNPa0tBNeTQ" name="EOBT-5min"/>
+            </transition>
+            <transition xmi:id="_IE1GQxeEEd2cNPa0tBNeTQ" name="CLD Assume" source="_h8dvcBeAEd2cNPa0tBNeTQ"/>
+            <transition xmi:id="_e9QPgxeEEd2cNPa0tBNeTQ" name="CLD ASSUME" target="_VEXe0BeEEd2cNPa0tBNeTQ" source="_h8dvcBeAEd2cNPa0tBNeTQ"/>
+            <transition xmi:id="_5JsuQBeEEd2cNPa0tBNeTQ" name="GND ASSUME" target="_guuJ8BeAEd2cNPa0tBNeTQ" source="_7uoloBeDEd2cNPa0tBNeTQ"/>
           </region>
         </ownedBehavior>
         <ownedOperation xmi:id="_tmEn8gi7Ed27QtBxg_nn2Q" name="paintTrackSymbol" isAbstract="true"/>
