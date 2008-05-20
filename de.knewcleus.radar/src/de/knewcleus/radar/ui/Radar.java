@@ -52,7 +52,12 @@ public class Radar {
 		Logger.getLogger("de.knewcleus.radar").setLevel(Level.SEVERE);
 		
 		/* Load sector data */
-		URL sectorURL=Radar.class.getResource("/sectors/EDDI/sector.xml");
+		SectorSelectionDialog sectorSelectionDialog=new SectorSelectionDialog();
+		sectorSelectionDialog.setVisible(true);
+		
+		URL sectorURL=sectorSelectionDialog.getSelectedURL();
+		if (sectorURL==null)
+			return;
 		Sector sector=Sector.loadFromURL(sectorURL);
 
 		/* Prepare radar data provider */
