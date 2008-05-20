@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.location.Position;
@@ -18,17 +19,35 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
 	protected final Queue<String> chatQueue=new ArrayDeque<String>();
 	protected String lastChatMessage="";
 	
+	public final static String clientPortKey="clientPort";
+	public final static String serverHostKey="serverHost";
+	public final static String serverPortKey="serverPort";
+	
 	public MultiplayerClient(IPlayerRegistry<T> playerRegistry) throws IOException {
-		super(playerRegistry, getStandardPort());
-		String serverName=System.getProperty("de.knewcleus.fgfs.multiplayer.server.host", "localhost");
-		serverAddress=InetAddress.getByName(serverName);
-		serverPort=Integer.getInteger("de.knewcleus.fgfs.multiplayer.server.port", MultiplayerServer.STANDARD_PORT);
+		super(playerRegistry, getStandardClientPort());
+		serverAddress=InetAddress.getByName(getStandardServerHost());
+		serverPort=getStandardServerPort();
 	}
 	
-	protected static int getStandardPort() {
-		return Integer.getInteger("de.knewcleus.fgfs.multiplayer.client.port", 0);
+	public static Preferences getPreferences() {
+		return Preferences.userNodeForPackage(MultiplayerClient.class);
 	}
-
+	
+	public static String getStandardServerHost() {
+		final Preferences preferences=getPreferences();
+		return preferences.get(serverHostKey, "localhost");
+	}
+	
+	public static int getStandardServerPort() {
+		final Preferences preferences=getPreferences();
+		return preferences.getInt(serverPortKey, MultiplayerServer.STANDARD_PORT);
+	}
+	
+	public static int getStandardClientPort() {
+		final Preferences preferences=getPreferences();
+		return preferences.getInt(clientPortKey, 0);
+	}
+	
 	@Override
 	protected void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException {
 		if (mppacket.getMessage() instanceof PositionMessage) {

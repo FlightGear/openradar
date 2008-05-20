@@ -13,17 +13,27 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.GroupLayout.Alignment;
 
-public class SectorSelectionDialog extends JDialog implements ActionListener {
+import de.knewcleus.fgfs.multiplayer.MultiplayerClient;
+
+public class SetupDialog extends JDialog implements ActionListener {
 	private static final long serialVersionUID = -2675313456609634813L;
 	
 	protected final JComboBox urlEntryBox=new JComboBox();
 	protected final JButton fileBrowserButton=new JButton("Browse");
+	
+	protected final JTextField serverHostField=new JTextField();
+	protected final JTextField serverPortField=new JTextField();
+	protected final JTextField clientPortField=new JTextField();
 	
 	protected final JButton okButton=new JButton("OK");
 	protected final JButton cancelButton=new JButton("Cancel");
@@ -32,18 +42,22 @@ public class SectorSelectionDialog extends JDialog implements ActionListener {
 	
 	protected URL selectedURL=null;
 
-	public SectorSelectionDialog() {
+	public SetupDialog() {
 		super((Frame)null, "Select Sector description file", true);
 		
 		JPanel entryPanel=new JPanel();
+		JPanel multiplayerPanel=new JPanel();
 		JPanel buttonsPanel=new JPanel();
 		
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		
 		add(entryPanel);
+		add(multiplayerPanel);
 		add(buttonsPanel);
 		
+		GroupLayout mpLayout=new GroupLayout(multiplayerPanel);
 		entryPanel.setLayout(new BoxLayout(entryPanel, BoxLayout.X_AXIS));
+		multiplayerPanel.setLayout(mpLayout);
 		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
 		
 		Dimension minSize=urlEntryBox.getMinimumSize();
@@ -56,6 +70,27 @@ public class SectorSelectionDialog extends JDialog implements ActionListener {
 		entryPanel.add(urlEntryBox);
 		entryPanel.add(fileBrowserButton);
 		
+		GroupLayout.SequentialGroup mpHorizGroup=mpLayout.createSequentialGroup();
+		GroupLayout.SequentialGroup mpVertGroup=mpLayout.createSequentialGroup();
+		mpLayout.setHorizontalGroup(mpHorizGroup);
+		mpLayout.setVerticalGroup(mpVertGroup);
+		
+		JLabel serverHostLabel=new JLabel("Server Hostname:");
+		JLabel serverPortLabel=new JLabel("Server Port:");
+		JLabel clientPortLabel=new JLabel("Client Port:");
+		
+		mpHorizGroup.addGroup(mpLayout.createParallelGroup().
+				addComponent(serverHostLabel).addComponent(serverPortLabel).addComponent(clientPortLabel));
+		mpHorizGroup.addGroup(mpLayout.createParallelGroup().
+				addComponent(serverHostField).addComponent(serverPortField).addComponent(clientPortField));
+		
+		mpVertGroup.addGroup(mpLayout.createParallelGroup(Alignment.BASELINE).
+				addComponent(serverHostLabel).addComponent(serverHostField));
+		mpVertGroup.addGroup(mpLayout.createParallelGroup(Alignment.BASELINE).
+				addComponent(serverPortLabel).addComponent(serverPortField));
+		mpVertGroup.addGroup(mpLayout.createParallelGroup(Alignment.BASELINE).
+				addComponent(clientPortLabel).addComponent(clientPortField));
+		
 		buttonsPanel.add(okButton);
 		buttonsPanel.add(cancelButton);
 		
@@ -66,11 +101,15 @@ public class SectorSelectionDialog extends JDialog implements ActionListener {
 		
 		populateRecentSectorsList();
 		
+		serverHostField.setText(MultiplayerClient.getStandardServerHost());
+		serverPortField.setText(Integer.toString(MultiplayerClient.getStandardServerPort()));
+		clientPortField.setText(Integer.toString(MultiplayerClient.getStandardClientPort()));
+		
 		pack();
 	}
 	
 	protected void populateRecentSectorsList() {
-		Preferences preferences=Preferences.userNodeForPackage(SectorSelectionDialog.class);
+		Preferences preferences=Preferences.userNodeForPackage(SetupDialog.class);
 		Preferences recentSectors=preferences.node("recentSectors");
 		final int recentSectorCount=preferences.getInt("recentSectorCount", 0);
 		
@@ -83,7 +122,7 @@ public class SectorSelectionDialog extends JDialog implements ActionListener {
 	}
 	
 	protected void storeRecentSectorsList() {
-		Preferences preferences=Preferences.userNodeForPackage(SectorSelectionDialog.class);
+		Preferences preferences=Preferences.userNodeForPackage(SetupDialog.class);
 		Preferences recentSectors=preferences.node("recentSectors");
 		final int recentSectorCount=urlEntryBox.getItemCount();
 		preferences.putInt("recentSectorCount", recentSectorCount);
@@ -99,12 +138,20 @@ public class SectorSelectionDialog extends JDialog implements ActionListener {
 			recentSectors.put(String.format("item%d",i), recentSector.toString());
 		}
 	}
+	
+	protected void storeMultiplayerSettings() {
+		final Preferences mpPreferences=MultiplayerClient.getPreferences();
+		mpPreferences.put(MultiplayerClient.serverHostKey, serverHostField.getText());
+		mpPreferences.putInt(MultiplayerClient.serverPortKey, Integer.parseInt(serverPortField.getText()));
+		mpPreferences.putInt(MultiplayerClient.clientPortKey, Integer.parseInt(clientPortField.getText()));
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==okButton) {
 			urlEntryBox.addItem(urlEntryBox.getSelectedItem());
 			storeRecentSectorsList();
+			storeMultiplayerSettings();
 			setVisible(false);
 		} else if (e.getSource()==cancelButton) {
 			selectedURL=null;

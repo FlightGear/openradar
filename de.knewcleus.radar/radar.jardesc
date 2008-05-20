@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="/home/ralfg/misc/aviation/eclipse/radar.public/de.knewcleus.radar/lib/radar.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/de.knewcleus.radar/radar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" mainClassHandleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui{Radar.java[Radar" manifestLocation="/de.knewcleus.radar/radar.Manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/de.knewcleus.radar/.project"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui.labels"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.autolabel"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.vessels.fgmp"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui.rpvd.tracks"/>
+        <file path="/de.knewcleus.radar/.classpath"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui.plaf"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.aircraft"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.vessels.fgatc"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.sector"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui.vehicles"/>
+        <javaElement handleIdentifier="=de.knewcleus.fgfs/src"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar"/>
+        <file path="/de.knewcleus.radar/.gitignore"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui.map"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.vessels"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui.rpvd.toolbox"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui.rpvd"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.aircraft.fltplan"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.utils"/>
+        <javaElement handleIdentifier="=de.knewcleus.radar/src&lt;de.knewcleus.radar.ui.plaf.refghmi"/>
+    </selectedElements>
+</jardesc>
