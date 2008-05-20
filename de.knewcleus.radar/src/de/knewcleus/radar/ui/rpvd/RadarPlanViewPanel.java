@@ -21,6 +21,7 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
+import de.knewcleus.fgfs.navaids.DesignatedPoint;
 import de.knewcleus.fgfs.navaids.Runway;
 import de.knewcleus.radar.DisplayElement;
 import de.knewcleus.radar.sector.Sector;
@@ -68,6 +69,8 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 
 		Set<Aerodrome> aerodromes=sector.getFixDB().getFixes(Aerodrome.class);
 		waypointDisplayLayer.getFixesWithDesignator().addAll(aerodromes);
+		Set<DesignatedPoint> designatedPoints=sector.getFixDB().getFixes(DesignatedPoint.class);
+		waypointDisplayLayer.getFixesWithDesignator().addAll(designatedPoints);
 
 		setBackground(Palette.WATERMASS);
 

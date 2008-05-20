@@ -9,5 +9,5 @@
 	<geodata theme="water" type="shape" ref="v0_lake.shp" />
 	<!-- <geodata theme="restricted" type="poly" ref="restricted.poly" /> -->
 	<!-- <geodata theme="sector" type="poly" ref="airspace.poly" /> -->
-	<!-- <geodata theme="fixes" type="point" ref="fixes.point" /> -->
+	<geodata theme="fixes" type="point" ref="fixes.point" />
 </sector>
