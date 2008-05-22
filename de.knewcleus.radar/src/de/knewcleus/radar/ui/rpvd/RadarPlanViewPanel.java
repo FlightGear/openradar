@@ -44,6 +44,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 	protected final IMapLayer waterLayer;
 	protected final IMapLayer restrictedLayer;
 	protected final IMapLayer sectorLayer;
+	protected final IMapLayer pavementLayer;
 	protected final WaypointDisplayLayer waypointDisplayLayer;
 	protected final RangeMarkLayer rangeMarkLayer=new RangeMarkLayer();
 
@@ -65,6 +66,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		waterLayer=new PolygonMapLayer(Palette.WATERMASS,sector.getWaterPolygons());
 		restrictedLayer=new PolygonMapLayer(Palette.RESTRICTED,sector.getRestrictedPolygons());
 		sectorLayer=new PolygonMapLayer(Palette.SECTOR,sector.getSectorPolygons());
+		pavementLayer=new PolygonMapLayer(Palette.PAVEMENT,sector.getPavementPolygons());
 		waypointDisplayLayer=new WaypointDisplayLayer(sector);
 
 		Set<Aerodrome> aerodromes=sector.getFixDB().getFixes(Aerodrome.class);
@@ -157,6 +159,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		if (getSettings().isShowingCoastline()) {
 			landmassLayer.draw(g2d,mapTransformation);
 			waterLayer.draw(g2d,mapTransformation);
+			pavementLayer.draw(g2d,mapTransformation);
 		}
 		if (getSettings().isShowingWaypoints()) {
 			waypointDisplayLayer.draw(g2d,mapTransformation);

@@ -42,6 +42,7 @@ public class Sector implements INavaidDatabase {
 	protected List<Polygon> waterPolygons=new ArrayList<Polygon>();
 	protected List<Polygon> restrictedPolygons=new ArrayList<Polygon>();
 	protected List<Polygon> sectorPolygons=new ArrayList<Polygon>();
+	protected List<Polygon> pavementPolygons=new ArrayList<Polygon>();
 	protected final NamedFixDB fixDatabase=new NamedFixDB();
 	protected final AirwayDB airwayDatabase=new AirwayDB();
 	
@@ -122,6 +123,8 @@ public class Sector implements INavaidDatabase {
 				sector.readPolygons(location, type, north, west, south, east, sector.getRestrictedPolygons());
 			} else if (theme.equals("sector")) {
 				sector.readPolygons(location, type, north, west, south, east, sector.getSectorPolygons());
+			} else if (theme.equals("pavement")) {
+				sector.readPolygons(location, type, north, west, south, east, sector.getPavementPolygons());
 			} else {
 				logger.info("Unknown theme "+theme);
 			}
@@ -250,6 +253,10 @@ public class Sector implements INavaidDatabase {
 	
 	public List<Polygon> getSectorPolygons() {
 		return sectorPolygons;
+	}
+	
+	public List<Polygon> getPavementPolygons() {
+		return pavementPolygons;
 	}
 	
 	public AirwayDB getAirwayDB() {
