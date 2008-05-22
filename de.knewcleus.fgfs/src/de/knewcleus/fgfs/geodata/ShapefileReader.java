@@ -101,7 +101,7 @@ public class ShapefileReader {
 		if (shapeDataStream.readInt()!=9994) {
 			throw new DataFormatException("Invalid shapefile header");
 		}
-		shapeDataStream.skip(20);
+		shapeDataStream.skipBytes(20);
 		fileLengthBytes=shapeDataStream.readInt()*2;
 		version=readLEInt(shapeDataStream);
 		shapeType=readLEInt(shapeDataStream);
@@ -201,7 +201,7 @@ public class ShapefileReader {
 		case TYPE_POLYGONZ:
 			return readPolygonRecord(true, true);
 		default:
-			shapeDataStream.skip(2*contentLength);
+			shapeDataStream.skipBytes(2*contentLength);
 			throw new DataFormatException("Cannot read records of type "+Integer.toHexString(recordShapeType)+", index "+Integer.toHexString(lastRecordNumber));
 		}
 	}
@@ -215,7 +215,7 @@ public class ShapefileReader {
 	}
 	
 	protected Geometry readPolyLineRecord(boolean hasZ, boolean hasM) throws IOException {
-		shapeDataStream.skip(4*8); // skip bounding box, we're calculating our own
+		shapeDataStream.skipBytes(4*8); // skip bounding box, we're calculating our own
 		final int numParts=readLEInt(shapeDataStream);
 		final int numPoints=readLEInt(shapeDataStream);
 		final int parts[]=new int[numParts];
@@ -232,7 +232,7 @@ public class ShapefileReader {
 		}
 		
 		if (hasZ) {
-			shapeDataStream.skip(2*8); // skip z-range
+			shapeDataStream.skipBytes(2*8); // skip z-range
 			pointsz=new double[numPoints];
 			for (int i=0;i<numPoints;i++) {
 				pointsz[i]=readLEDouble(shapeDataStream);
@@ -242,7 +242,7 @@ public class ShapefileReader {
 		}
 		
 		if (hasM) {
-			shapeDataStream.skip(2*8); // skip m-range
+			shapeDataStream.skipBytes(2*8); // skip m-range
 			pointsm=new double[numPoints];
 			for (int i=0;i<numPoints;i++) {
 				pointsm[i]=readLEDouble(shapeDataStream);
@@ -273,7 +273,7 @@ public class ShapefileReader {
 	}
 	
 	protected Geometry readPolygonRecord(boolean hasZ, boolean hasM) throws IOException, DataFormatException {
-		shapeDataStream.skip(4*8); // skip bounding box, we're calculating our own
+		shapeDataStream.skipBytes(4*8); // skip bounding box, we're calculating our own
 		final int numParts=readLEInt(shapeDataStream);
 		final int numPoints=readLEInt(shapeDataStream);
 		final int parts[]=new int[numParts];
@@ -290,7 +290,7 @@ public class ShapefileReader {
 		}
 		
 		if (hasZ) {
-			shapeDataStream.skip(2*8); // skip z-range
+			shapeDataStream.skipBytes(2*8); // skip z-range
 			pointsz=new double[numPoints];
 			for (int i=0;i<numPoints;i++) {
 				pointsz[i]=readLEDouble(shapeDataStream);
@@ -300,7 +300,7 @@ public class ShapefileReader {
 		}
 		
 		if (hasM) {
-			shapeDataStream.skip(2*8); // skip m-range
+			shapeDataStream.skipBytes(2*8); // skip m-range
 			pointsm=new double[numPoints];
 			for (int i=0;i<numPoints;i++) {
 				pointsm[i]=readLEDouble(shapeDataStream);
