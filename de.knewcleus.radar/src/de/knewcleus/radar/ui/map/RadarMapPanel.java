@@ -97,7 +97,7 @@ public abstract class RadarMapPanel extends JComponent {
 		}
 	}
 	
-	public void validateAllSymbols() {
+	public synchronized void validateAllSymbols() {
 		for (DisplayElement symbol: displayedSymbols) {
 			symbol.validate();
 		}
