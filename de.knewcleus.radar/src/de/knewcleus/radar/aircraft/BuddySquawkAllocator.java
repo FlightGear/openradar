@@ -101,7 +101,7 @@ public class BuddySquawkAllocator implements ISquawkAllocator {
 		int bitIndex=rangeStart>>(level+1);
 		int rangeLength=1<<level;
 		
-		while (level<availableLevels && buckets[level].buddyBits.get(bitIndex)) {
+		while (level<availableLevels-1 && buckets[level].buddyBits.get(bitIndex)) {
 			/* our buddy is available */
 			final int buddyStart=rangeStart^rangeLength;
 			buckets[level].freeRanges.remove(buddyStart);
