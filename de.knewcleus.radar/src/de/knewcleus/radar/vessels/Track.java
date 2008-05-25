@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.logging.Logger;
 
+import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 
@@ -86,7 +87,7 @@ public class Track {
 	}
 	
 	public int getFlightLevel() {
-		return (int)Math.round(pressureAltitude/100.0);
+		return (int)Math.round(pressureAltitude/Units.FT/100.0);
 	}
 	
 	public void update(PositionUpdate targetInformation) {
