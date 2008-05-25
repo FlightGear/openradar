@@ -1,12 +1,14 @@
 package de.knewcleus.radar.ui;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class FGCOMFrame extends WorkstationGlobalFrame {
+public class FGCOMFrame extends WorkstationGlobalFrame implements ActionListener {
 	private static final long serialVersionUID = 287028884912477276L;
 	
 	protected final JTextField activeFrequency=new JTextField();
@@ -28,6 +30,18 @@ public class FGCOMFrame extends WorkstationGlobalFrame {
 		activeFrequency.setColumns(7);
 		standbyFrequency.setColumns(7);
 		
+		swapButton.addActionListener(this);
+		
 		pack();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource()==swapButton) {
+			final String active=activeFrequency.getText();
+			final String standby=standbyFrequency.getText();
+			activeFrequency.setText(standby);
+			standbyFrequency.setText(active);
+		}
 	}
 }

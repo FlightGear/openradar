@@ -49,13 +49,13 @@ public abstract class WorkstationGlobalFrame extends JInternalFrame {
 		assert(isIconifiable() || desktop!=null);
 		
 		if (desktop!=null) {
+			
+			desktop.add(this);
+			setVisible(true);
 			final Rectangle newBounds=desktop.getGlobalFrameBounds(this);
 			if (newBounds!=null) {
 				setBounds(newBounds);
 			}
-			
-			desktop.add(this);
-			setVisible(true);
 		}
 		currentDesktop=desktop;
 	}
