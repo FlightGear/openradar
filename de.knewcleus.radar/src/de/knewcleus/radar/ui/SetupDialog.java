@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -113,9 +115,14 @@ public class SetupDialog extends JDialog implements ActionListener {
 		Preferences recentSectors=preferences.node("recentSectors");
 		final int recentSectorCount=preferences.getInt("recentSectorCount", 0);
 		
+		final Set<String> knownSectors=new HashSet<String>();
+		
 		for (int i=0;i<recentSectorCount;i++) {
 			String recentSector=recentSectors.get(String.format("item%d",i), null);
 			if (recentSector!=null) {
+				if (knownSectors.contains(recentSector))
+					continue;
+				knownSectors.add(recentSector);
 				urlEntryBox.addItem(recentSector);
 			}
 		}
@@ -149,7 +156,12 @@ public class SetupDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==okButton) {
-			urlEntryBox.addItem(urlEntryBox.getSelectedItem());
+			final Object selectedItem=urlEntryBox.getSelectedItem();
+			if (urlEntryBox.getSelectedIndex()!=-1) {
+				urlEntryBox.removeItemAt(urlEntryBox.getSelectedIndex());
+			}
+			urlEntryBox.insertItemAt(selectedItem, 0);
+			urlEntryBox.setSelectedIndex(0);
 			storeRecentSectorsList();
 			storeMultiplayerSettings();
 			setVisible(false);
