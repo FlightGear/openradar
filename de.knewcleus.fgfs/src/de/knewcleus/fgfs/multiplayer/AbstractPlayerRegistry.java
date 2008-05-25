@@ -15,7 +15,7 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 	public abstract T createNewPlayer(PlayerAddress address, String callsign) throws MultiplayerException;
 
 	protected final Set<T> players = new HashSet<T>();
-	protected final Map<PlayerAddress, T> playersByAddress = new HashMap<PlayerAddress, T>();
+	protected final Map<String, T> playersByAddress = new HashMap<String, T>();
 
 	public AbstractPlayerRegistry() {
 		super();
@@ -34,12 +34,12 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 		if (hasPlayer(player.getAddress()))
 			unregisterPlayer(getPlayer(player.getAddress()));
 		players.add(player);
-		playersByAddress.put(player.getAddress(),player);
+		playersByAddress.put(player.getCallsign(),player);
 	}
 
 	public synchronized void unregisterPlayer(T expiredPlayer) {
 		players.remove(expiredPlayer);
-		playersByAddress.remove(expiredPlayer.getAddress());
+		playersByAddress.remove(expiredPlayer.getCallsign());
 	}
 	
 	public Collection<T> getPlayers() {
