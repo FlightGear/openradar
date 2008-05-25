@@ -13,7 +13,7 @@ public class DisplayElementContainer extends DisplayElement {
 	protected Rectangle2D currentBounds=null;
 	protected boolean isValidating=false;
 	
-	public boolean add(DisplayElement e) {
+	public synchronized boolean add(DisplayElement e) {
 		boolean retval=children.add(e);
 		if (!retval)
 			return false;
@@ -22,17 +22,17 @@ public class DisplayElementContainer extends DisplayElement {
 		return true;
 	}
 
-	public void add(int index, DisplayElement element) {
+	public synchronized void add(int index, DisplayElement element) {
 		children.add(index, element);
 		element.parent=this;
 		updateBounds();
 	}
 
-	public int indexOf(DisplayElement o) {
+	public synchronized int indexOf(DisplayElement o) {
 		return children.indexOf(o);
 	}
 
-	public DisplayElement remove(int index) {
+	public synchronized DisplayElement remove(int index) {
 		DisplayElement removedChild=children.remove(index);
 		assert(removedChild!=null);
 		removedChild.parent=null;
@@ -40,7 +40,7 @@ public class DisplayElementContainer extends DisplayElement {
 		return removedChild;
 	}
 
-	public boolean remove(DisplayElement o) {
+	public synchronized boolean remove(DisplayElement o) {
 		boolean retval=children.remove(o);
 		if (!retval)
 			return false;
@@ -50,12 +50,12 @@ public class DisplayElementContainer extends DisplayElement {
 	}
 
 	@Override
-	public Rectangle2D getBounds() {
+	public synchronized Rectangle2D getBounds() {
 		return currentBounds;
 	}
 
 	@Override
-	public void paint(Graphics2D g) {
+	public synchronized void paint(Graphics2D g) {
 		final Rectangle clipBounds=g.getClipBounds();
 		for (DisplayElement child: children) {
 			final Rectangle2D childBounds=child.getBounds();
@@ -65,7 +65,7 @@ public class DisplayElementContainer extends DisplayElement {
 		}
 	}
 	
-	public void updateBounds() {
+	public synchronized void updateBounds() {
 		if (isValidating) {
 			/* Ignore possibly repeated calls during validation */
 			return;
@@ -86,7 +86,7 @@ public class DisplayElementContainer extends DisplayElement {
 	}
 
 	@Override
-	public void validate() {
+	public synchronized void validate() {
 		isValidating=true;
 		for (DisplayElement child: children) {
 			child.validate();
@@ -104,7 +104,7 @@ public class DisplayElementContainer extends DisplayElement {
 	/**
 	 * Provide the list of objects containing the given position, in order from bottom to top.
 	 */
-	public void getHitObjects(Point2D position, Collection<DisplayElement> elements) {
+	public synchronized void getHitObjects(Point2D position, Collection<DisplayElement> elements) {
 		for (DisplayElement child: children) {
 			final Rectangle2D bounds=child.getBounds();
 			if (bounds==null || !bounds.contains(position))

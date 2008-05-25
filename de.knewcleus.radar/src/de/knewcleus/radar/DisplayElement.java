@@ -41,11 +41,11 @@ public abstract class DisplayElement {
 	}
 
 	public void invalidate() {
-		final Rectangle2D bounds=getBounds();
-		if (bounds==null)
-			return;
 		final JComponent displayComponent=getDisplayComponent();
 		if (displayComponent==null)
+			return;
+		final Rectangle2D bounds=getBounds();
+		if (bounds==null)
 			return;
 		displayComponent.repaint(bounds.getBounds());
 	}

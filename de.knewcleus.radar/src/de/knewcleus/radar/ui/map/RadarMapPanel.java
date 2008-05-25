@@ -3,12 +3,12 @@ package de.knewcleus.radar.ui.map;
 import java.awt.AWTEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Deque;
 
 import javax.swing.JComponent;
 
@@ -18,6 +18,8 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.DisplayElement;
+import de.knewcleus.radar.DisplayElementContainer;
+import de.knewcleus.radar.WorkObjectSymbol;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public abstract class RadarMapPanel extends JComponent {
@@ -27,21 +29,23 @@ public abstract class RadarMapPanel extends JComponent {
 	protected final RadarMapDeviceTransformation deviceTransformation=new RadarMapDeviceTransformation();
 	protected final RadarPlanViewSettings settings;
 	protected double xRange=30*Units.NM;
-	protected final Collection<DisplayElement> displayedSymbols=new HashSet<DisplayElement>();
+	protected final DisplayElementContainer displayElementContainer=new DisplayElementContainer();
+	protected DisplayElement activeElement=null;
 
 	public RadarMapPanel(RadarPlanViewSettings settings, ICoordinateTransformation mapTransformation) {
 		this.settings=settings;
 		this.mapTransformation=mapTransformation;
+		displayElementContainer.setDisplayComponent(this);
 		setXRange(settings.getRange()*Units.NM);
 		setDoubleBuffered(true);
-		enableEvents(AWTEvent.COMPONENT_EVENT_MASK);
+		enableEvents(AWTEvent.COMPONENT_EVENT_MASK|AWTEvent.MOUSE_MOTION_EVENT_MASK);
 	}
 	
 	public void setMapTransformation(ICoordinateTransformation mapTransformation) {
 		if (this.mapTransformation.equals(mapTransformation))
 			return;
 		this.mapTransformation = mapTransformation;
-		validateAllSymbols();
+		displayElementContainer.validate();
 	}
 	
 	public ICoordinateTransformation getMapTransformation() {
@@ -63,7 +67,7 @@ public abstract class RadarMapPanel extends JComponent {
 	public void setXRange(double range) {
 		xRange = range;
 		deviceTransformation.validate();
-		validateAllSymbols();
+		displayElementContainer.validate();
 		repaint();
 	}
 	
@@ -71,9 +75,35 @@ public abstract class RadarMapPanel extends JComponent {
 	protected void processComponentEvent(ComponentEvent e) {
 		if (e.getID()==ComponentEvent.COMPONENT_RESIZED || e.getID()==ComponentEvent.COMPONENT_SHOWN) {
 			deviceTransformation.validate();
-			validateAllSymbols();
+			displayElementContainer.validate();
 		}
 		super.processComponentEvent(e);
+	}
+	
+	@Override
+	protected void processMouseMotionEvent(MouseEvent e) {
+		if (activeElement==null || !activeElement.isHit(e.getPoint())) {
+			/* The active element has precedence,
+			 * only if it is not still hit, search for the next-best hit
+			 */
+			final Deque<DisplayElement> hitElements=new ArrayDeque<DisplayElement>();
+			
+			getHitObjects(e.getPoint(), hitElements);
+			
+			if (activeElement instanceof WorkObjectSymbol) {
+				((WorkObjectSymbol)activeElement).deactivateSymbol();
+			}
+			
+			if (!hitElements.isEmpty()) {
+				activeElement=hitElements.getLast();
+				if (activeElement instanceof WorkObjectSymbol) {
+					((WorkObjectSymbol)activeElement).activateSymbol();
+				}
+			}
+		}
+		if (!e.isConsumed()) {
+			super.processMouseMotionEvent(e);
+		}
 	}
 	
 	@Override
@@ -86,31 +116,25 @@ public abstract class RadarMapPanel extends JComponent {
 	protected abstract void paintMapBackground(Graphics2D g);
 	
 	protected synchronized void paintSymbols(Graphics2D g) {
-		final Rectangle clipBounds=g.getClipBounds();
-		
-		for (DisplayElement symbol: displayedSymbols) {
-			final Rectangle2D symbolBounds=symbol.getBounds();
-			if (symbolBounds==null || !clipBounds.intersects(symbolBounds)) {
-				continue;
-			}
-			symbol.paint(g);
-		}
-	}
-	
-	public synchronized void validateAllSymbols() {
-		for (DisplayElement symbol: displayedSymbols) {
-			symbol.validate();
-		}
+		displayElementContainer.paint(g);
 	}
 	
 	public synchronized void add(DisplayElement symbol) {
-		displayedSymbols.add(symbol);
+		displayElementContainer.add(symbol);
 		symbol.validate();
 	}
 	
 	public synchronized void remove(DisplayElement symbol) {
-		displayedSymbols.remove(symbol);
+		displayElementContainer.remove(symbol);
 		symbol.validate();
+	}
+	
+	public void getHitObjects(Point2D position, Collection<DisplayElement> elements) {
+		displayElementContainer.getHitObjects(position, elements);
+	}
+
+	public void validate() {
+		displayElementContainer.validate();
 	}
 
 	@Override
