@@ -7,17 +7,15 @@ import java.awt.LayoutManager;
 import java.beans.PropertyVetoException;
 
 import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
 import javax.swing.JLayeredPane;
 
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.radar.ui.RadarWorkstation;
+import de.knewcleus.radar.ui.WorkstationGlobalFrame;
 import de.knewcleus.radar.ui.rpvd.toolbox.RadarToolbox;
 
-public class RadarPlanViewDisplay extends JInternalFrame {
+public class RadarPlanViewDisplay extends WorkstationGlobalFrame {
 	private static final long serialVersionUID = 5923481231980915972L;
-	
-	protected final RadarWorkstation workstation;
 	
 	protected final JLayeredPane layeredPane=new JLayeredPane();
 	protected final JDesktopPane subDesktopPane=new JDesktopPane();
@@ -28,8 +26,7 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 	protected final Integer DESKTOP_LAYER=1;
 	
 	public RadarPlanViewDisplay(RadarWorkstation workstation, ICoordinateTransformation mapTransformation) {
-		super("RPVD",true,false,true,false);
-		this.workstation=workstation;
+		super(workstation,"RPVD","Radar Plan View Display",true,false,true,false);
 		
 		radarMapPanel=new RadarPlanViewPanel(workstation, mapTransformation);
 
@@ -60,10 +57,6 @@ public class RadarPlanViewDisplay extends JInternalFrame {
 	
 	public JDesktopPane getSubDesktopPane() {
 		return subDesktopPane;
-	}
-	
-	public RadarWorkstation getWorkstation() {
-		return workstation;
 	}
 	
 	public RadarPlanViewPanel getRadarMapPanel() {

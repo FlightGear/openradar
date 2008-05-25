@@ -25,10 +25,8 @@ public class GeneralToolbox extends JInternalFrame implements InternalFrameListe
 	protected final SquaredHorizontalLayout parkingRankLayout=new SquaredHorizontalLayout();
 	protected final JPanel parkingRank=new JPanel(parkingRankLayout);
 	protected final JToggleButton toggleRPVD=new JToggleButton("PVD");
-	protected final JToggleButton toggleVAW=new JToggleButton("VAW");
-	protected final JToggleButton toggleCRD=new JToggleButton("CRD");
+	protected final JToggleButton toggleCOM=new JToggleButton("COM");
 	protected final JToggleButton togglePREF=new JToggleButton("PREF");
-	protected final JToggleButton toggleFLEX=new JToggleButton("FLEX");
 	protected final JButton clock=new JButton();
 	
 	protected final PreferencesFrame preferencesFrame;
@@ -45,14 +43,21 @@ public class GeneralToolbox extends JInternalFrame implements InternalFrameListe
 		
 		setLayout(toolBoxLayout);
 		parkingRank.setLayout(parkingRankLayout);
-
-		parkingRank.add(toggleRPVD);
-		//parkingRank.add(toggleVAW);
-		//parkingRank.add(toggleCRD);
-		parkingRank.add(togglePREF);
-		//parkingRank.add(toggleFLEX);
 		
-		toggleRPVD.addActionListener(this);
+		for (final WorkstationGlobalFrame frame: desktop.getWorkstation().getGlobalFrames()) {
+			JToggleButton frameToggle=new JToggleButton(frame.getShortTitle());
+			frame.getParkingRankButtonGroup().add(frameToggle);
+			parkingRank.add(frameToggle);
+			frameToggle.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					frame.acquire(desktop);
+				}
+			});
+		}
+
+		parkingRank.add(togglePREF);
+		
 		togglePREF.addActionListener(this);
 		
 		clock.addActionListener(this);
@@ -80,15 +85,9 @@ public class GeneralToolbox extends JInternalFrame implements InternalFrameListe
 		return preferencesFrame;
 	}
 	
-	public void setRPVDPresent(boolean b) {
-		toggleRPVD.setSelected(b);
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource()==toggleRPVD) {
-			desktop.acquireRadarPlanViewDisplay();
-		} else if (e.getSource()==togglePREF) {
+		if (e.getSource()==togglePREF) {
 			preferencesFrame.setVisible(togglePREF.isSelected());
 		} else if (e.getSource()==clock) {
 			parkingRank.setVisible(!parkingRank.isVisible());

@@ -27,11 +27,10 @@ public class RadarWorkstation {
 	protected final RadarPlanViewSettings radarPlanViewSettings=new RadarPlanViewSettings();
 	
 	/* Globally provided windows */
-	protected final RadarPlanViewDisplay radarPlanViewDisplay;
+	protected final List<WorkstationGlobalFrame> globalFrames=new ArrayList<WorkstationGlobalFrame>();
 	
 	/* The set of desktops */
 	protected final List<RadarDesktop> desktops=new ArrayList<RadarDesktop>();
-	protected RadarDesktop radarPlanViewDesktop;
 
 	public RadarWorkstation(Sector sector, IPositionDataProvider radarDataProvider, ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) {
 		this.sector=sector;
@@ -41,9 +40,13 @@ public class RadarWorkstation {
 		targetManager=new TrackManager(correlationDatabase);
 		targetManager.addPositionDataProvider(radarDataProvider);
 		aircraftStateManager=new AircraftStateManager();
-		radarPlanViewDisplay=new RadarPlanViewDisplay(this, new LocalProjection(sector.getInitialCenter()));
-
-
+		
+		/* Make sure to register all global frames before creating the desktops */
+		final RadarPlanViewDisplay radarPlanViewDisplay=new RadarPlanViewDisplay(this, new LocalProjection(sector.getInitialCenter()));
+		registerGlobalFrame(radarPlanViewDisplay);
+		final FGCOMFrame comFrame=new FGCOMFrame(this);
+		registerGlobalFrame(comFrame);
+		
 		/* Create a desktop on every device */
 		GraphicsEnvironment graphicsEnvironment=GraphicsEnvironment.getLocalGraphicsEnvironment();
 		for (GraphicsDevice graphicsDevice: graphicsEnvironment.getScreenDevices()) {
@@ -54,10 +57,12 @@ public class RadarWorkstation {
 			desktops.add(desktop);
 		}
 		
-		RadarDesktop primaryDesktop=desktops.get(0);
+		final RadarDesktop primaryDesktop=desktops.get(0);
 		
-		/* Place the plan view panel on the first desktop */
-		primaryDesktop.acquireRadarPlanViewDisplay();
+		/* Place the global frames on the first desktop */
+		for (WorkstationGlobalFrame frame: globalFrames) {
+			frame.acquire(primaryDesktop);
+		}
 	}
 	
 	public void setVisible(boolean visible) {
@@ -98,15 +103,15 @@ public class RadarWorkstation {
 		return radarPlanViewSettings;
 	}
 	
-	public RadarPlanViewDisplay getRadarPlanViewDisplay() {
-		return radarPlanViewDisplay;
+	public void registerGlobalFrame(WorkstationGlobalFrame frame) {
+		globalFrames.add(frame);
 	}
 	
-	public RadarDesktop getRadarPlanViewDesktop() {
-		return radarPlanViewDesktop;
+	public List<WorkstationGlobalFrame> getGlobalFrames() {
+		return globalFrames;
 	}
 	
-	public void setRadarPlanViewDesktop(RadarDesktop radarPlanViewDesktop) {
-		this.radarPlanViewDesktop = radarPlanViewDesktop;
+	public void unregisterGlobalFrame(WorkstationGlobalFrame frame) {
+		globalFrames.remove(frame);
 	}
 }

@@ -3,12 +3,12 @@ package de.knewcleus.radar.ui;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
-
-import de.knewcleus.radar.ui.rpvd.RadarPlanViewDisplay;
 
 public class RadarDesktop extends JFrame {
 	private static final long serialVersionUID = 8819041738184510314L;
@@ -20,9 +20,10 @@ public class RadarDesktop extends JFrame {
 	protected final GeneralToolbox generalToolbox;
 	
 	protected Rectangle lastRPVDBounds;
+	protected final Map<WorkstationGlobalFrame, Rectangle> globalFrameBounds=new HashMap<WorkstationGlobalFrame, Rectangle>();
 	
 	public RadarDesktop(GraphicsConfiguration gc, RadarWorkstation workstation) {
-		super(gc);
+		super("OpenRadar", gc);
 		this.workstation=workstation;
 		setContentPane(desktopPane);
 		
@@ -50,25 +51,11 @@ public class RadarDesktop extends JFrame {
 		return generalToolbox;
 	}
 	
-	public void acquireRadarPlanViewDisplay() {
-		RadarPlanViewDisplay radarPlanViewDisplay=workstation.getRadarPlanViewDisplay();
-
-		RadarDesktop oldDesktop=workstation.getRadarPlanViewDesktop();
-		if (oldDesktop!=this) {
-			if (oldDesktop!=null) {
-				oldDesktop.lastRPVDBounds=radarPlanViewDisplay.getBounds();
-				radarPlanViewDisplay.setVisible(false);
-				oldDesktop.remove(radarPlanViewDisplay);
-				oldDesktop.generalToolbox.setRPVDPresent(false);
-			}
-			if (lastRPVDBounds!=null) {
-				radarPlanViewDisplay.setBounds(lastRPVDBounds);
-			}
-			add(radarPlanViewDisplay,JDesktopPane.DEFAULT_LAYER);
-			radarPlanViewDisplay.setVisible(true);
-		}
-		
-		generalToolbox.setRPVDPresent(true);
-		workstation.setRadarPlanViewDesktop(this);
+	public Rectangle getGlobalFrameBounds(WorkstationGlobalFrame frame) {
+		return globalFrameBounds.get(frame);
+	}
+	
+	public void setGlobalFrameBounds(WorkstationGlobalFrame frame, Rectangle bounds) {
+		globalFrameBounds.put(frame, bounds);
 	}
 }
