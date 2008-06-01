@@ -11,8 +11,8 @@ import java.util.List;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.radar.DisplayElement;
 import de.knewcleus.radar.ui.Palette;
+import de.knewcleus.radar.ui.core.DisplayElement;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 import de.knewcleus.radar.vessels.Track;
@@ -45,7 +45,7 @@ public class TrailSymbol extends DisplayElement {
 	}
 
 	@Override
-	public synchronized void paint(Graphics2D g) {
+	public synchronized void paintElement(Graphics2D g) {
 		if (trailPointPositions.isEmpty())
 			return;
 		// TODO: if we have a correlated vessel, ask the vessel for the trail color

@@ -7,9 +7,9 @@ import java.awt.geom.Rectangle2D;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.radar.WorkObjectSymbol;
 import de.knewcleus.radar.autolabel.DisplayObject;
 import de.knewcleus.radar.ui.Palette;
+import de.knewcleus.radar.ui.core.WorkObjectSymbol;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
 import de.knewcleus.radar.vessels.Track;
 import de.knewcleus.radar.vessels.Vessel;
@@ -38,7 +38,7 @@ public class TrackSymbol extends WorkObjectSymbol implements DisplayObject {
 	}
 
 	@Override
-	public void paint(Graphics2D g) {
+	public void paintElement(Graphics2D g) {
 		// TODO: if we have a correlated vessel, tell the vessel to paint
 		g.setColor(Palette.BLACK);
 		TrackDisplayHelper.drawTrackSymbol(g, devicePosition);

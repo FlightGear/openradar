@@ -1,7 +1,7 @@
 package de.knewcleus.radar.ui.rpvd.tracks;
 
-import de.knewcleus.radar.DisplayEdge;
-import de.knewcleus.radar.DisplayElementContainer;
+import de.knewcleus.radar.ui.core.DisplayEdge;
+import de.knewcleus.radar.ui.core.DisplayElementContainer;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
 import de.knewcleus.radar.vessels.Track;
 import de.knewcleus.radar.vessels.Vessel;

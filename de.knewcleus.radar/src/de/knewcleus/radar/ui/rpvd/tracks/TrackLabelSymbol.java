@@ -4,9 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.radar.WorkObject;
-import de.knewcleus.radar.WorkObjectSymbol;
 import de.knewcleus.radar.autolabel.ILabel;
+import de.knewcleus.radar.ui.core.WorkObject;
+import de.knewcleus.radar.ui.core.WorkObjectSymbol;
 import de.knewcleus.radar.ui.labels.LabelElementContainer;
 import de.knewcleus.radar.ui.labels.LabelLineLayoutManager;
 import de.knewcleus.radar.ui.labels.MultiLineLabelLayoutManager;
@@ -73,7 +73,7 @@ public class TrackLabelSymbol extends WorkObjectSymbol implements ILabel {
 	}
 	
 	@Override
-	public void paint(Graphics2D g) {
+	public void paintElement(Graphics2D g) {
 		labelContainer.paint(g);
 	}
 	

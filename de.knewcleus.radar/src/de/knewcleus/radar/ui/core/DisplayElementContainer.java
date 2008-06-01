@@ -56,6 +56,7 @@ public class DisplayElementContainer extends DisplayElement {
 
 	@Override
 	public synchronized void paint(Graphics2D g) {
+		paintElement(g);
 		final Rectangle clipBounds=g.getClipBounds();
 		for (DisplayElement child: children) {
 			final Rectangle2D childBounds=child.getBounds();
@@ -63,6 +64,11 @@ public class DisplayElementContainer extends DisplayElement {
 				continue;
 			child.paint(g);
 		}
+	}
+
+	@Override
+	public void paintElement(Graphics2D g) {
+		/* Containers are typically empty */
 	}
 	
 	public synchronized void updateBounds() {
@@ -97,7 +103,7 @@ public class DisplayElementContainer extends DisplayElement {
 	
 	@Override
 	public final boolean isHit(Point2D position) {
-		/* Containers cannot be hit themselves */
+		/* Containers typically cannot be hit themselves */
 		return false;
 	}
 
@@ -105,6 +111,9 @@ public class DisplayElementContainer extends DisplayElement {
 	 * Provide the list of objects containing the given position, in order from bottom to top.
 	 */
 	public synchronized void getHitObjects(Point2D position, Collection<DisplayElement> elements) {
+		/* The container is drawn below its children */
+		if (isHit(position))
+			elements.add(this);
 		for (DisplayElement child: children) {
 			final Rectangle2D bounds=child.getBounds();
 			if (bounds==null || !bounds.contains(position))

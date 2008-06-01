@@ -1,6 +1,6 @@
 package de.knewcleus.radar.vessels;
 
-import de.knewcleus.radar.WorkObject;
+import de.knewcleus.radar.ui.core.WorkObject;
 
 public abstract class Vessel extends WorkObject {
 	protected String callsign;

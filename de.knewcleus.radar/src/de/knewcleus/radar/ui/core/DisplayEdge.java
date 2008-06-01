@@ -46,7 +46,7 @@ public class DisplayEdge extends DisplayElement {
 	}
 
 	@Override
-	public void paint(Graphics2D g) {
+	public void paintElement(Graphics2D g) {
 		if (line==null)
 			return;
 		g.draw(line);

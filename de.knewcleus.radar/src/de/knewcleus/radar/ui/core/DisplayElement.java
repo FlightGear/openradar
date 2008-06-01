@@ -16,8 +16,12 @@ public abstract class DisplayElement {
 	public DisplayElementContainer getParent() {
 		return parent;
 	}
+	
+	public void paint(Graphics2D g) {
+		paintElement(g);
+	}
 
-	public abstract void paint(Graphics2D g);
+	public abstract void paintElement(Graphics2D g);
 
 	public abstract void validate();
 
@@ -26,13 +30,14 @@ public abstract class DisplayElement {
 	public abstract boolean isHit(Point2D position);
 	
 	public JComponent getDisplayComponent() {
-		if (displayComponent!=null) {
-			return displayComponent;
+		DisplayElement element=this;
+		
+		while (element!=null && element.displayComponent==null) {
+			element=element.parent;
 		}
-		if (parent!=null) {
-			return parent.getDisplayComponent();
-		}
-		return null;
+		if (element==null)
+			return null;
+		return element.displayComponent;
 	}
 	
 	public void setDisplayComponent(JComponent displayComponent) {

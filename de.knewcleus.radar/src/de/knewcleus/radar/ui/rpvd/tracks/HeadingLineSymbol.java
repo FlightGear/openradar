@@ -12,8 +12,8 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
-import de.knewcleus.radar.DisplayElement;
 import de.knewcleus.radar.ui.Palette;
+import de.knewcleus.radar.ui.core.DisplayElement;
 import de.knewcleus.radar.ui.map.RadarMapPanel;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 import de.knewcleus.radar.vessels.Track;
@@ -41,7 +41,7 @@ public class HeadingLineSymbol extends DisplayElement {
 	}
 
 	@Override
-	public void paint(Graphics2D g) {
+	public void paintElement(Graphics2D g) {
 		if (headingLine==null)
 			return;
 		g.setColor(Palette.BLACK);
