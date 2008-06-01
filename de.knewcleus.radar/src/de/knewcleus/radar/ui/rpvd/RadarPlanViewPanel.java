@@ -183,7 +183,6 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 			DisplayElement symbol=trackSymbolMap.get(track);
 			if (symbol==null) {
 				symbol=new TrackSymbolContainer(track);
-				symbol.setDisplayComponent(this);
 				add(symbol);
 				trackSymbolMap.put(track, symbol);
 			} else {

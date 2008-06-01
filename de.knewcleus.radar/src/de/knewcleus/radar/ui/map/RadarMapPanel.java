@@ -121,12 +121,12 @@ public abstract class RadarMapPanel extends JComponent {
 	
 	public synchronized void add(DisplayElement symbol) {
 		displayElementContainer.add(symbol);
-		symbol.validate();
+		symbol.invalidate();
 	}
 	
 	public synchronized void remove(DisplayElement symbol) {
+		symbol.invalidate();
 		displayElementContainer.remove(symbol);
-		symbol.validate();
 	}
 	
 	public void getHitObjects(Point2D position, Collection<DisplayElement> elements) {
