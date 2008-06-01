@@ -1,4 +1,4 @@
-package de.knewcleus.radar;
+package de.knewcleus.radar.ui.core;
 
 import java.util.EventListener;
 

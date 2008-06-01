@@ -1,4 +1,4 @@
-package de.knewcleus.radar;
+package de.knewcleus.radar.ui.core;
 
 
 import javax.swing.event.EventListenerList;
@@ -10,11 +10,15 @@ public abstract class WorkObjectSymbol extends DisplayElement {
 	public abstract WorkObject getAssociatedObject();
 	
 	public void activateSymbol() {
+		if (active)
+			return;
 		active=true;
 		fireSymbolActivated();
 	}
 	
 	public void deactivateSymbol() {
+		if (!active)
+			return;
 		active=false;
 		fireSymbolDeactivated();
 	}

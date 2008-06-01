@@ -1,4 +1,4 @@
-package de.knewcleus.radar.ui;
+package de.knewcleus.radar.ui.core;
 
 public class DefaultActivationModel {
 	protected boolean mouseover=false;
