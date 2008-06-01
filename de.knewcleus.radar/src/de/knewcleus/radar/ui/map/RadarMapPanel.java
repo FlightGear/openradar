@@ -17,9 +17,9 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
-import de.knewcleus.radar.DisplayElement;
-import de.knewcleus.radar.DisplayElementContainer;
-import de.knewcleus.radar.WorkObjectSymbol;
+import de.knewcleus.radar.ui.core.DisplayElement;
+import de.knewcleus.radar.ui.core.DisplayElementContainer;
+import de.knewcleus.radar.ui.core.WorkObjectSymbol;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public abstract class RadarMapPanel extends JComponent {
