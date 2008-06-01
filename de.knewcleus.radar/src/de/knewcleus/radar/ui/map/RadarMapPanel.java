@@ -30,7 +30,7 @@ public abstract class RadarMapPanel extends JComponent {
 	protected final RadarPlanViewSettings settings;
 	protected double xRange=30*Units.NM;
 	protected final DisplayElementContainer displayElementContainer=new DisplayElementContainer();
-	protected DisplayElement activeElement=null;
+	protected WorkObjectSymbol activeSymbol=null;
 
 	public RadarMapPanel(RadarPlanViewSettings settings, ICoordinateTransformation mapTransformation) {
 		this.settings=settings;
@@ -82,23 +82,29 @@ public abstract class RadarMapPanel extends JComponent {
 	
 	@Override
 	protected void processMouseMotionEvent(MouseEvent e) {
-		if (activeElement==null || !activeElement.isHit(e.getPoint())) {
-			/* The active element has precedence,
-			 * only if it is not still hit, search for the next-best hit
+		if (activeSymbol==null || !activeSymbol.isHit(e.getPoint())) {
+			/* The previously active symbol has precedence.
+			 * Check whether it is still active.
 			 */
 			final Deque<DisplayElement> hitElements=new ArrayDeque<DisplayElement>();
 			
 			getHitObjects(e.getPoint(), hitElements);
 			
-			if (activeElement instanceof WorkObjectSymbol) {
-				((WorkObjectSymbol)activeElement).deactivateSymbol();
+			if (activeSymbol!=null) {
+				activeSymbol.deactivateSymbol();
 			}
 			
-			if (!hitElements.isEmpty()) {
-				activeElement=hitElements.getLast();
-				if (activeElement instanceof WorkObjectSymbol) {
-					((WorkObjectSymbol)activeElement).activateSymbol();
+			activeSymbol=null;
+			while (!hitElements.isEmpty()) {
+				final DisplayElement topElement=hitElements.removeLast();
+				if (topElement instanceof WorkObjectSymbol) {
+					activeSymbol=(WorkObjectSymbol)topElement;
+					break;
 				}
+			}
+			
+			if (activeSymbol!=null) {
+				activeSymbol.activateSymbol();
 			}
 		}
 		if (!e.isConsumed()) {
