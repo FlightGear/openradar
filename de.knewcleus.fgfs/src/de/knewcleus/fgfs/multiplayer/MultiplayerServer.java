@@ -54,7 +54,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 						continue;
 					
 					for (MultiplayerPacket queuedPacket: queuedPackets)
-						sendPacket(otherPlayer.getAddress(), queuedPacket);
+						sendPacket(otherPlayer, queuedPacket);
 					
 					/* Don't send to sender itself */
 					if (player==otherPlayer)
@@ -66,7 +66,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 					if (delta.getLength()>maxDistance)
 						continue;
 					
-					sendPacket(otherPlayer.getAddress(), mppacket);
+					sendPacket(otherPlayer, mppacket);
 				}
 			}
 			queuedPackets.clear();
@@ -90,7 +90,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 		
 		ChatMessage message=new ChatMessage("server: Welcome to the FlightGear Multiplayer server at "+datagramSocket.getLocalSocketAddress()+":"+datagramSocket.getLocalPort());
 		MultiplayerPacket packet=new MultiplayerPacket("*server*",message);
-		sendPacket(player.getAddress(), packet);
+		sendPacket(player, packet);
 		
 		broadcastChatMessage("server:"+player.getCallsign()+" came online");
 	}

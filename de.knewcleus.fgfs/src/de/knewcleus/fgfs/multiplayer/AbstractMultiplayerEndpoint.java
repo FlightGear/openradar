@@ -77,8 +77,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		xdrInputStream=new XDRInputStream(byteInputStream);
 		
 		MultiplayerPacket mppacket=MultiplayerPacket.decode(xdrInputStream);
-		PlayerAddress address=new PlayerAddress(mppacket.getCallsign(),packet.getAddress(),packet.getPort());
-		processPacket(address, mppacket);
+		processPacket(packet.getAddress(), packet.getPort(), mppacket);
 	}
 	
 	protected void sendPacket(InetAddress address, int port, MultiplayerPacket mppacket) throws MultiplayerException {
@@ -97,22 +96,25 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		}
 	}
 	
-	protected void sendPacket(PlayerAddress address, MultiplayerPacket mppacket) throws MultiplayerException {
-		sendPacket(address.getAddress(), address.getPort(), mppacket);
+	protected void sendPacket(Player player, MultiplayerPacket mppacket) throws MultiplayerException {
+		sendPacket(player.getAddress(), player.getPort(), mppacket);
 	}
 
-	protected void processPacket(PlayerAddress address, MultiplayerPacket mppacket) throws MultiplayerException {
+	protected void processPacket(InetAddress address, int port, MultiplayerPacket mppacket) throws MultiplayerException {
 		T player;
+		final String callsign=mppacket.getCallsign();
 		synchronized (playerRegistry) {
-			if (playerRegistry.hasPlayer(address)) {
-				player=playerRegistry.getPlayer(address);
+			if (playerRegistry.hasPlayer(callsign)) {
+				player=playerRegistry.getPlayer(callsign);
 			} else {
-				player=playerRegistry.createNewPlayer(address, mppacket.getCallsign());
+				player=playerRegistry.createNewPlayer(mppacket.getCallsign());
 				playerRegistry.registerPlayer(player);
 				newPlayerLogon(player);
 			}
 		}
 		player.setExpiryTime(System.currentTimeMillis()+timeoutMillis);
+		player.setAddress(address);
+		player.setPort(port);
 		processPacket(player,mppacket);
 	}
 	

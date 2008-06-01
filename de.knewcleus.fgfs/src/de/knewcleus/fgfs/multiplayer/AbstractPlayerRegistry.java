@@ -12,29 +12,29 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 	protected final static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final int playerExpirationTime = 15000;
 
-	public abstract T createNewPlayer(PlayerAddress address, String callsign) throws MultiplayerException;
+	public abstract T createNewPlayer(String callsign) throws MultiplayerException;
 
 	protected final Set<T> players = new HashSet<T>();
-	protected final Map<PlayerAddress, T> playersByAddress = new HashMap<PlayerAddress, T>();
+	protected final Map<String, T> playersByAddress = new HashMap<String, T>();
 
 	public AbstractPlayerRegistry() {
 		super();
 	}
 
-	public synchronized boolean hasPlayer(PlayerAddress address) {
-		return playersByAddress.containsKey(address);
+	public synchronized boolean hasPlayer(String callsign) {
+		return playersByAddress.containsKey(callsign);
 	}
 
-	public synchronized T getPlayer(PlayerAddress address) {
-		return playersByAddress.get(address);
+	public synchronized T getPlayer(String callsign) {
+		return playersByAddress.get(callsign);
 	}
 
 	public synchronized void registerPlayer(T player) {
 		/* First unregister any old player at that address */
-		if (hasPlayer(player.getAddress()))
-			unregisterPlayer(getPlayer(player.getAddress()));
+		if (hasPlayer(player.getCallsign()))
+			unregisterPlayer(getPlayer(player.getCallsign()));
 		players.add(player);
-		playersByAddress.put(player.getAddress(),player);
+		playersByAddress.put(player.getCallsign(),player);
 	}
 
 	public synchronized void unregisterPlayer(T expiredPlayer) {

@@ -7,7 +7,6 @@ import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.Updater;
 import de.knewcleus.fgfs.multiplayer.AbstractPlayerRegistry;
 import de.knewcleus.fgfs.multiplayer.MultiplayerException;
-import de.knewcleus.fgfs.multiplayer.PlayerAddress;
 import de.knewcleus.radar.aircraft.ICorrelationDatabase;
 import de.knewcleus.radar.aircraft.ISquawkAllocator;
 import de.knewcleus.radar.aircraft.OutOfSquawksException;
@@ -29,7 +28,7 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 	}
 	
 	@Override
-	public FGMPAircraft createNewPlayer(PlayerAddress address, String callsign) throws MultiplayerException {
+	public FGMPAircraft createNewPlayer(String callsign) throws MultiplayerException {
 		String squawk;
 		try {
 			squawk = squawkAllocator.allocateSquawk();
@@ -37,7 +36,7 @@ public class FGMPRegistry extends AbstractPlayerRegistry<FGMPAircraft> implement
 			throw new MultiplayerException(e);
 		}
 		correlationDatabase.registerSquawk(squawk, callsign);
-		FGMPAircraft aircraft=new FGMPAircraft(address,callsign,squawk);
+		FGMPAircraft aircraft=new FGMPAircraft(callsign,squawk);
 		return aircraft;
 	}
 	

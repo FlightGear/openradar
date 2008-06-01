@@ -7,7 +7,6 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Quaternion;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.multiplayer.Player;
-import de.knewcleus.fgfs.multiplayer.PlayerAddress;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
 import de.knewcleus.radar.vessels.SSRMode;
 
@@ -19,8 +18,8 @@ public class FGMPAircraft extends Player {
 	protected double groundSpeed=0f;
 	protected double trueCourse=0f;
 	
-	public FGMPAircraft(PlayerAddress address, String callsign, String simulatedSquawk) {
-		super(address, callsign);
+	public FGMPAircraft(String callsign, String simulatedSquawk) {
+		super(callsign);
 		this.simulatedSquawk=simulatedSquawk;
 	}
 
