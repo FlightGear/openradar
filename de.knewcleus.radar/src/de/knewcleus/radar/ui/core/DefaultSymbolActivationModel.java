@@ -1,6 +1,6 @@
 package de.knewcleus.radar.ui.core;
 
-public class DefaultActivationModel {
+public class DefaultSymbolActivationModel extends AbstractSymbolActivationModel implements ISymbolActivationModel {
 	protected boolean mouseover=false;
 	protected boolean pressed=false;
 
@@ -14,16 +14,15 @@ public class DefaultActivationModel {
 	
 	public void setMouseover(boolean mouseover) {
 		this.mouseover = mouseover;
+		setArmedForActivation(pressed||mouseover);
 	}
 	
 	public void setPressed(boolean pressed) {
 		if (!mouseover) {
+			/* Ignore mouse presses, if the mouse is not inside the symbol */
 			pressed=false;
 		}
 		this.pressed = pressed;
-	}
-	
-	public boolean isActive() {
-		return mouseover;
+		setArmedForActivation(pressed||mouseover);
 	}
 }

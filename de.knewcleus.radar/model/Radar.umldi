@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_kITOEAlMEd2PPIcUAqatFw" activeDiagram="_fSvUIBeAEd2cNPa0tBNeTQ">
+<diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_kITOEAlMEd2PPIcUAqatFw" activeDiagram="_I16lgAlNEd2PPIcUAqatFw">
   <model href="Radar.uml#_w8IxIM37EdqwVrslYOdUDA"/>
   <subdiagrams xmi:id="_Rm3agA7vEd213d5xsH42IA">
     <model href="Radar.uml#_B4v70A7vEd213d5xsH42IA"/>
-    <diagrams xmi:id="_Rm9hIA7vEd213d5xsH42IA" position="0,0" size="100,100" name="Interactive Objects" zoom="0.5" viewport="-4,-4">
+    <diagrams xmi:id="_Rm9hIA7vEd213d5xsH42IA" position="0,0" size="100,100" name="Interactive Objects" zoom="0.5" viewport="0,0">
       <property xmi:id="_RntIAA7vEd213d5xsH42IA" key="pageFormatName" value="A4"/>
       <property xmi:id="_RntIAQ7vEd213d5xsH42IA" key="diagramWidth" value="840"/>
       <property xmi:id="_RntIAg7vEd213d5xsH42IA" key="diagramHeight" value="1188"/>
@@ -16,7 +16,7 @@
       <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_Rm9hIQ7vEd213d5xsH42IA" presentation="org.topcased.modeler.uml.classdiagram">
         <element href="Radar.uml#_B4v70A7vEd213d5xsH42IA"/>
       </semanticModel>
-      <contained xsi:type="di:GraphNode" xmi:id="_jTRK0A7vEd213d5xsH42IA" position="41,447" size="114,-1">
+      <contained xsi:type="di:GraphNode" xmi:id="_jTRK0A7vEd213d5xsH42IA" position="41,441" size="114,-1">
         <anchorage xmi:id="_jks5EA7vEd213d5xsH42IA" graphEdge="_jktgIA7vEd213d5xsH42IA _HOCvcBQnEd2aaeFsfDR5cA"/>
         <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_jTRK0Q7vEd213d5xsH42IA" presentation="default">
           <element href="Radar.uml#_wcSIMAlMEd2PPIcUAqatFw"/>
@@ -50,11 +50,6 @@
           <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_jkrD5w7vEd213d5xsH42IA" presentation="default">
             <element href="Radar.uml#_xED54AlMEd2PPIcUAqatFw"/>
           </semanticModel>
-          <contained xsi:type="di:GraphNode" xmi:id="_7LziEBQlEd2aaeFsfDR5cA" position="0,0" size="-1,-1">
-            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_7LziERQlEd2aaeFsfDR5cA" presentation="default">
-              <element href="Radar.uml#_7L0JIBQlEd2aaeFsfDR5cA"/>
-            </semanticModel>
-          </contained>
         </contained>
       </contained>
       <contained xsi:type="di:GraphEdge" xmi:id="_jktgIA7vEd213d5xsH42IA" anchor="_jks5EA7vEd213d5xsH42IA _jks5EQ7vEd213d5xsH42IA">
@@ -109,7 +104,7 @@
       <contained xsi:type="di:GraphEdge" xmi:id="_Pb5MkBQlEd2aaeFsfDR5cA" anchor="_Pb4lgBQlEd2aaeFsfDR5cA _Pb4lgRQlEd2aaeFsfDR5cA">
         <semanticModel xsi:type="di:SimpleSemanticModelElement" xmi:id="_Pb5MkRQlEd2aaeFsfDR5cA" presentation="default" typeInfo="CommentLink"/>
       </contained>
-      <contained xsi:type="di:GraphNode" xmi:id="_yX6DgBQlEd2aaeFsfDR5cA" position="357,37" size="140,-1">
+      <contained xsi:type="di:GraphNode" xmi:id="_yX6DgBQlEd2aaeFsfDR5cA" position="304,37" size="244,-1">
         <anchorage xmi:id="_I4J9UBQmEd2aaeFsfDR5cA" graphEdge="_I4KkYBQmEd2aaeFsfDR5cA _JFeAkBQmEd2aaeFsfDR5cA _NNatYBQmEd2aaeFsfDR5cA"/>
         <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_yX6DgRQlEd2aaeFsfDR5cA" presentation="default">
           <element href="Radar.uml#_yX6qkBQlEd2aaeFsfDR5cA"/>
@@ -145,6 +140,11 @@
               <element href="Radar.uml#_3SZnkhQlEd2aaeFsfDR5cA"/>
             </semanticModel>
           </contained>
+          <contained xsi:type="di:GraphNode" xmi:id="_YXx1gS_cEd2NT_b9vkPl_g" position="0,0" size="-1,-1">
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_YXx1gi_cEd2NT_b9vkPl_g" presentation="default">
+              <element href="Radar.uml#_YYLeIC_cEd2NT_b9vkPl_g"/>
+            </semanticModel>
+          </contained>
         </contained>
       </contained>
       <contained xsi:type="di:GraphEdge" xmi:id="_I4KkYBQmEd2aaeFsfDR5cA" anchor="_jks5EQ7vEd213d5xsH42IA _I4J9UBQmEd2aaeFsfDR5cA">
@@ -171,7 +171,7 @@
         <contained xsi:type="di:EdgeObjectUV" xmi:id="_NNatZRQmEd2aaeFsfDR5cA" id="targetCountEdgeObject" uDistance="10" vDistance="-10"/>
         <contained xsi:type="di:EdgeObjectOffset" xmi:id="_NNatZhQmEd2aaeFsfDR5cA" visible="false" id="middleNameEdgeObject" offset="0,10"/>
         <contained xsi:type="di:EdgeObjectOffset" xmi:id="_NNatZxQmEd2aaeFsfDR5cA" id="stereotypeEdgeObject" offset="0,-10"/>
-        <waypoints>[0, -186, 474, 0]</waypoints>
+        <waypoints>[0, -178, 476, 0]</waypoints>
       </contained>
       <contained xsi:type="di:GraphNode" xmi:id="_B_ltkBQnEd2aaeFsfDR5cA" position="45,630" size="200,49">
         <anchorage xmi:id="_HOCIYBQnEd2aaeFsfDR5cA" graphEdge="_HOCvcBQnEd2aaeFsfDR5cA"/>
@@ -194,7 +194,7 @@
     </diagrams>
     <subdiagrams xmi:id="_I127IAlNEd2PPIcUAqatFw">
       <model href="Radar.uml#_GjdasAlNEd2PPIcUAqatFw"/>
-      <diagrams xmi:id="_I16lgAlNEd2PPIcUAqatFw" position="0,0" size="100,100" name="unnamed" zoom="0.75" viewport="0,137">
+      <diagrams xmi:id="_I16lgAlNEd2PPIcUAqatFw" position="0,0" size="100,100" name="Symbol Activation State" zoom="0.75" viewport="0,258">
         <property xmi:id="_I3Vh0AlNEd2PPIcUAqatFw" key="pageFormatName" value="A4"/>
         <property xmi:id="_I3Vh0QlNEd2PPIcUAqatFw" key="diagramWidth" value="840"/>
         <property xmi:id="_I3Vh0glNEd2PPIcUAqatFw" key="diagramHeight" value="1188"/>
@@ -338,16 +338,11 @@
             <contained xsi:type="di:EdgeObjectOffset" xmi:id="_34GkEglNEd2PPIcUAqatFw" id="nameEdgeObject" offset="2,-16"/>
           </contained>
         </contained>
-        <contained xsi:type="di:GraphNode" xmi:id="_ZW1XIA5QEd2R8JFLfVZ40A" position="0,0" size="-1,-1">
-          <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_ZW1XIQ5QEd2R8JFLfVZ40A" presentation="default">
-            <element href="Radar.uml#_ZW1XIg5QEd2R8JFLfVZ40A"/>
-          </semanticModel>
-        </contained>
       </diagrams>
     </subdiagrams>
     <subdiagrams xmi:id="_fZ9ZMAlYEd2PPIcUAqatFw">
       <model href="Radar.uml#_ehpRIAlYEd2PPIcUAqatFw"/>
-      <diagrams xmi:id="_faBDkAlYEd2PPIcUAqatFw" position="0,0" size="100,100" name="unnamed" zoom="0.75" viewport="0,-4">
+      <diagrams xmi:id="_faBDkAlYEd2PPIcUAqatFw" position="0,0" size="100,100" name="WorkObject Activation State" zoom="0.75" viewport="0,38">
         <property xmi:id="_fakdMAlYEd2PPIcUAqatFw" key="pageFormatName" value="A4"/>
         <property xmi:id="_fakdMQlYEd2PPIcUAqatFw" key="diagramWidth" value="840"/>
         <property xmi:id="_fakdMglYEd2PPIcUAqatFw" key="diagramHeight" value="1188"/>
@@ -786,7 +781,7 @@
     <subdiagrams xmi:id="_kQ7_YBdzEd2cNPa0tBNeTQ"/>
     <subdiagrams xmi:id="_fSrpwBeAEd2cNPa0tBNeTQ">
       <model href="Radar.uml#_cde-QBeAEd2cNPa0tBNeTQ"/>
-      <diagrams xmi:id="_fSvUIBeAEd2cNPa0tBNeTQ" position="0,0" size="100,100" name="unnamed" zoom="0.5" viewport="0,0">
+      <diagrams xmi:id="_fSvUIBeAEd2cNPa0tBNeTQ" position="0,0" size="100,100" name="Departure Workstate (with CLD)" zoom="0.5" viewport="0,0">
         <property xmi:id="_fTY0YBeAEd2cNPa0tBNeTQ" key="pageFormatName" value="A4"/>
         <property xmi:id="_fTY0YReAEd2cNPa0tBNeTQ" key="diagramWidth" value="840"/>
         <property xmi:id="_fTY0YheAEd2cNPa0tBNeTQ" key="diagramHeight" value="1188"/>

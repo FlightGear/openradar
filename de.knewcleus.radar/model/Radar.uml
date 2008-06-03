@@ -15,7 +15,7 @@
         <body>Must be informed about changes in its children.</body>
       </ownedComment>
       <packagedElement xmi:type="uml:Class" xmi:id="_wcSIMAlMEd2PPIcUAqatFw" name="WorkObject" isAbstract="true">
-        <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_ehpRIAlYEd2PPIcUAqatFw">
+        <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_ehpRIAlYEd2PPIcUAqatFw" name="WorkObjectActivationState">
           <region xmi:id="_gUSTcAlYEd2PPIcUAqatFw" name="Region1">
             <subvertex xmi:type="uml:Pseudostate" xmi:id="_iOnSIAlYEd2PPIcUAqatFw" name="Pseudostate1"/>
             <subvertex xmi:type="uml:State" xmi:id="_i4YA0AlYEd2PPIcUAqatFw" name="Disabled"/>
@@ -88,7 +88,7 @@
               </effect>
               <trigger xmi:id="_Ob1PsAlOEd2PPIcUAqatFw" name="mouseEnter" event="_zQhqEAlPEd2PPIcUAqatFw"/>
             </transition>
-            <transition xmi:id="_xFF_MwlNEd2PPIcUAqatFw" name="Transition3" target="_mDB_8AlNEd2PPIcUAqatFw" source="_lCX0MAlNEd2PPIcUAqatFw">
+            <transition xmi:id="_xFF_MwlNEd2PPIcUAqatFw" name="" target="_mDB_8AlNEd2PPIcUAqatFw" source="_lCX0MAlNEd2PPIcUAqatFw">
               <trigger xmi:id="_xTqfUAlQEd2PPIcUAqatFw" event="_-gJkMAlPEd2PPIcUAqatFw"/>
             </transition>
             <transition xmi:id="_xRElsAlNEd2PPIcUAqatFw" name="Transition4" target="_myg8IAlNEd2PPIcUAqatFw" source="_mDB_8AlNEd2PPIcUAqatFw">
@@ -98,13 +98,13 @@
               <effect xmi:type="uml:Activity" xmi:id="_7tjrUAlQEd2PPIcUAqatFw" name="deactivateSymbol">
                 <node xmi:type="uml:SendSignalAction" xmi:id="__DKVMAlQEd2PPIcUAqatFw" signal="_tHGNtQlPEd2PPIcUAqatFw"/>
               </effect>
-              <trigger xmi:id="_4xW_8AlQEd2PPIcUAqatFw" event="_DCnp0AlQEd2PPIcUAqatFw"/>
+              <trigger xmi:id="_4xW_8AlQEd2PPIcUAqatFw" name="mouseReleased" event="_DCnp0AlQEd2PPIcUAqatFw"/>
             </transition>
             <transition xmi:id="_zgY88wlNEd2PPIcUAqatFw" name="Transition6" target="_kGA5oAlNEd2PPIcUAqatFw" source="_lCX0MAlNEd2PPIcUAqatFw">
               <effect xmi:type="uml:Activity" xmi:id="_p5M44AlQEd2PPIcUAqatFw" name="deactivateSymbol">
                 <node xmi:type="uml:SendSignalAction" xmi:id="_rjpogAlQEd2PPIcUAqatFw" signal="_tHGNtQlPEd2PPIcUAqatFw"/>
               </effect>
-              <trigger xmi:id="_uKyC0AlQEd2PPIcUAqatFw" name="mouseLeave" event="_14hnEAlPEd2PPIcUAqatFw"/>
+              <trigger xmi:id="_uKyC0AlQEd2PPIcUAqatFw" name="mouseExited" event="_14hnEAlPEd2PPIcUAqatFw"/>
             </transition>
             <transition xmi:id="_0xzhgwlNEd2PPIcUAqatFw" name="Transition7" target="_lCX0MAlNEd2PPIcUAqatFw" source="_mDB_8AlNEd2PPIcUAqatFw">
               <trigger xmi:id="_y48bEAlQEd2PPIcUAqatFw" event="_DCnp0AlQEd2PPIcUAqatFw"/>
@@ -113,13 +113,8 @@
               <trigger xmi:id="_1NfQkAlQEd2PPIcUAqatFw" event="_zQhqEAlPEd2PPIcUAqatFw"/>
             </transition>
           </region>
-          <region xmi:id="_ZW1XIg5QEd2R8JFLfVZ40A" name="Region3"/>
         </ownedBehavior>
         <interfaceRealization xmi:id="_rmQwkxQlEd2aaeFsfDR5cA" name="InterfaceRealization1" client="_xED54AlMEd2PPIcUAqatFw"/>
-        <ownedOperation xmi:id="_7L0JIBQlEd2aaeFsfDR5cA" name="isHit">
-          <ownedParameter xmi:id="_8EHqIBQlEd2aaeFsfDR5cA" name="retval" type="_4kGDgBQmEd2aaeFsfDR5cA" direction="return"/>
-          <ownedParameter xmi:id="_B4-ksBQmEd2aaeFsfDR5cA" name="position" type="_FoeAIBQkEd2aaeFsfDR5cA"/>
-        </ownedOperation>
       </packagedElement>
       <packagedElement xmi:type="uml:Association" xmi:id="_yLrpSAlMEd2PPIcUAqatFw" name="Association6" memberEnd="_yLrpSQlMEd2PPIcUAqatFw _yLrpTAlMEd2PPIcUAqatFw" navigableOwnedEnd="_yLrpSQlMEd2PPIcUAqatFw">
         <ownedEnd xmi:id="_yLrpSQlMEd2PPIcUAqatFw" name="associatedObject" type="_wcSIMAlMEd2PPIcUAqatFw" isDerived="true" association="_yLrpSAlMEd2PPIcUAqatFw">
@@ -132,7 +127,7 @@
         </ownedEnd>
       </packagedElement>
       <packagedElement xmi:type="uml:Signal" xmi:id="_tHGNsAlPEd2PPIcUAqatFw" name="mouseEntered"/>
-      <packagedElement xmi:type="uml:Signal" xmi:id="_tHGNsQlPEd2PPIcUAqatFw" name="mouseLeft"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_tHGNsQlPEd2PPIcUAqatFw" name="mouseExited"/>
       <packagedElement xmi:type="uml:Signal" xmi:id="_tHGNsglPEd2PPIcUAqatFw" name="mousePressed"/>
       <packagedElement xmi:type="uml:Signal" xmi:id="_tHGNswlPEd2PPIcUAqatFw" name="mouseReleased"/>
       <packagedElement xmi:type="uml:Signal" xmi:id="_tHGNtAlPEd2PPIcUAqatFw" name="symbolActivated"/>
@@ -140,7 +135,7 @@
       <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_tHGNtglPEd2PPIcUAqatFw" name="symbolActivated" signal="_tHGNtAlPEd2PPIcUAqatFw"/>
       <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_wn5a8AlPEd2PPIcUAqatFw" name="symbolDeactivated" signal="_tHGNtQlPEd2PPIcUAqatFw"/>
       <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_zQhqEAlPEd2PPIcUAqatFw" name="mouseEntered" signal="_tHGNsAlPEd2PPIcUAqatFw"/>
-      <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_14hnEAlPEd2PPIcUAqatFw" name="mouseLeft" signal="_tHGNsQlPEd2PPIcUAqatFw"/>
+      <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_14hnEAlPEd2PPIcUAqatFw" name="mouseExited" signal="_tHGNsQlPEd2PPIcUAqatFw"/>
       <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_-gJkMAlPEd2PPIcUAqatFw" name="mousePressed" signal="_tHGNsglPEd2PPIcUAqatFw"/>
       <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_DCnp0AlQEd2PPIcUAqatFw" name="mouseReleased" signal="_tHGNswlPEd2PPIcUAqatFw"/>
       <packagedElement xmi:type="uml:Signal" xmi:id="_2Cvj8AlYEd2PPIcUAqatFw" name="objectEnabled"/>
@@ -161,6 +156,10 @@
         <ownedOperation xmi:id="_1XfaEhQlEd2aaeFsfDR5cA" name="paint"/>
         <ownedOperation xmi:id="_2In8EhQlEd2aaeFsfDR5cA" name="validate"/>
         <ownedOperation xmi:id="_3SZnkhQlEd2aaeFsfDR5cA" name="invalidate"/>
+        <ownedOperation xmi:id="_YYLeIC_cEd2NT_b9vkPl_g" name="isHit">
+          <ownedParameter xmi:id="_bTVAoC_cEd2NT_b9vkPl_g" name="return" type="_4kGDgBQmEd2aaeFsfDR5cA" direction="return"/>
+          <ownedParameter xmi:id="_cfza0C_cEd2NT_b9vkPl_g" name="position" type="_FoeAIBQkEd2aaeFsfDR5cA" effect="read"/>
+        </ownedOperation>
       </packagedElement>
       <packagedElement xmi:type="uml:Association" xmi:id="_NNataBQmEd2aaeFsfDR5cA" name="Association2" memberEnd="_NNataRQmEd2aaeFsfDR5cA _NNatbBQmEd2aaeFsfDR5cA">
         <ownedEnd xmi:id="_NNataRQmEd2aaeFsfDR5cA" name="parent" type="_9kBMEBQkEd2aaeFsfDR5cA" association="_NNataBQmEd2aaeFsfDR5cA">

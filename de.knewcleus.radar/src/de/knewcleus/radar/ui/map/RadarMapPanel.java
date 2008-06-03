@@ -4,11 +4,8 @@ import java.awt.AWTEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Deque;
 
 import javax.swing.JComponent;
 
@@ -19,7 +16,7 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.radar.ui.core.DisplayElement;
 import de.knewcleus.radar.ui.core.DisplayElementContainer;
-import de.knewcleus.radar.ui.core.WorkObjectSymbol;
+import de.knewcleus.radar.ui.core.SymbolActivationManager;
 import de.knewcleus.radar.ui.rpvd.RadarPlanViewSettings;
 
 public abstract class RadarMapPanel extends JComponent {
@@ -30,15 +27,18 @@ public abstract class RadarMapPanel extends JComponent {
 	protected final RadarPlanViewSettings settings;
 	protected double xRange=30*Units.NM;
 	protected final DisplayElementContainer displayElementContainer=new DisplayElementContainer();
-	protected WorkObjectSymbol activeSymbol=null;
+	protected final SymbolActivationManager symbolFocusManager=new SymbolActivationManager(displayElementContainer);
 
 	public RadarMapPanel(RadarPlanViewSettings settings, ICoordinateTransformation mapTransformation) {
 		this.settings=settings;
 		this.mapTransformation=mapTransformation;
 		displayElementContainer.setDisplayComponent(this);
+		displayElementContainer.setSymbolActivationManager(symbolFocusManager);
 		setXRange(settings.getRange()*Units.NM);
 		setDoubleBuffered(true);
-		enableEvents(AWTEvent.COMPONENT_EVENT_MASK|AWTEvent.MOUSE_MOTION_EVENT_MASK);
+		enableEvents(AWTEvent.COMPONENT_EVENT_MASK);
+		addMouseListener(symbolFocusManager);
+		addMouseMotionListener(symbolFocusManager);
 	}
 	
 	public void setMapTransformation(ICoordinateTransformation mapTransformation) {
@@ -78,38 +78,6 @@ public abstract class RadarMapPanel extends JComponent {
 			displayElementContainer.validate();
 		}
 		super.processComponentEvent(e);
-	}
-	
-	@Override
-	protected void processMouseMotionEvent(MouseEvent e) {
-		if (activeSymbol==null || !activeSymbol.isHit(e.getPoint())) {
-			/* The previously active symbol has precedence.
-			 * Check whether it is still active.
-			 */
-			final Deque<DisplayElement> hitElements=new ArrayDeque<DisplayElement>();
-			
-			getHitObjects(e.getPoint(), hitElements);
-			
-			if (activeSymbol!=null) {
-				activeSymbol.deactivateSymbol();
-			}
-			
-			activeSymbol=null;
-			while (!hitElements.isEmpty()) {
-				final DisplayElement topElement=hitElements.removeLast();
-				if (topElement instanceof WorkObjectSymbol) {
-					activeSymbol=(WorkObjectSymbol)topElement;
-					break;
-				}
-			}
-			
-			if (activeSymbol!=null) {
-				activeSymbol.activateSymbol();
-			}
-		}
-		if (!e.isConsumed()) {
-			super.processMouseMotionEvent(e);
-		}
 	}
 	
 	@Override

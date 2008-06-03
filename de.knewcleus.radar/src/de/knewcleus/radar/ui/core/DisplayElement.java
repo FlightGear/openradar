@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 public abstract class DisplayElement {
 	protected DisplayElementContainer parent=null;
 	protected JComponent displayComponent=null;
+	protected SymbolActivationManager symbolActivationManager=null;
 	protected final Set<DisplayElement> dependents = new HashSet<DisplayElement>();
 
 	public DisplayElementContainer getParent() {
@@ -43,6 +44,21 @@ public abstract class DisplayElement {
 	public void setDisplayComponent(JComponent displayComponent) {
 		this.displayComponent = displayComponent;
 		validate();
+	}
+	
+	public SymbolActivationManager getSymbolActivationManager() {
+		DisplayElement element=this;
+		
+		while (element!=null && element.symbolActivationManager==null) {
+			element=element.parent;
+		}
+		if (element==null)
+			return null;
+		return element.symbolActivationManager;
+	}
+	
+	public void setSymbolActivationManager(SymbolActivationManager symbolActivationManager) {
+		this.symbolActivationManager = symbolActivationManager;
 	}
 
 	public void invalidate() {
