@@ -1,6 +1,7 @@
 package de.knewcleus.openradar.ui.rpvd.tracks;
 
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -22,6 +23,8 @@ public class TrackLabelSymbol extends WorkObjectSymbol implements ILabel {
 	protected final LabelElementContainer secondLabelLine;
 	protected final GroundSpeedLabelElement groundSpeedLabelElement;
 	protected final CurrentLevelLabelElement currentLevelLabelElement;
+	protected double grabDeltaX, grabDeltaY;
+	protected double labelDeltaX=30.0/Math.sqrt(2), labelDeltaY=-30.0/Math.sqrt(2);
 	
 	protected boolean isAutolabelled=false;
 
@@ -84,39 +87,16 @@ public class TrackLabelSymbol extends WorkObjectSymbol implements ILabel {
 		labelContainer.pack();
 
 		final Rectangle2D trackBounds=getLabeledObject().getBounds();
-		final Rectangle2D labelBounds=labelContainer.getBounds2D();
 		
-		final double dirX=1.0/Math.sqrt(2), dirY=-1.0/Math.sqrt(2);
-		final double len=30;
-		
-		final double parentCX, parentCY;
-		parentCX=trackBounds.getCenterX();
-		parentCY=trackBounds.getCenterY();
-		
-		final double trackDx, trackDy;
-		
-		if (Math.abs(dirX)*trackBounds.getHeight()>Math.abs(dirY)*trackBounds.getWidth()) {
-			trackDx=trackBounds.getWidth()*Math.signum(dirX)/2.0;
-			trackDy=trackDx*dirY/dirX;
-		} else {
-			trackDy=trackBounds.getHeight()*Math.signum(dirY)/2.0;
-			trackDx=trackDy*dirX/dirY;
-		}
-		
-		final double labelDx, labelDy;
-
-		if (Math.abs(dirX)*labelBounds.getHeight()>Math.abs(dirY)*labelBounds.getWidth()) {
-			labelDx=labelBounds.getWidth()*Math.signum(dirX)/2.0;
-			labelDy=labelDx*dirY/dirX;
-		} else {
-			labelDy=labelBounds.getHeight()*Math.signum(dirY)/2.0;
-			labelDx=labelDy*dirX/dirY;
-		}
+		final double trackCX, trackCY;
+		trackCX=trackBounds.getCenterX();
+		trackCY=trackBounds.getCenterY();
 		
 		final double labelCX, labelCY;
-		labelCX=parentCX+trackDx+dirX*len+labelDx;
-		labelCY=parentCY+trackDy+dirY*len+labelDy;
+		labelCX=trackCX+labelDeltaX;
+		labelCY=trackCY+labelDeltaY;
 		
+		final Rectangle2D labelBounds=labelContainer.getBounds2D();
 		labelContainer.setPosition(labelCX-labelBounds.getWidth()/2.0, labelCY-labelBounds.getHeight()/2.0);
 		validateDependents();
 		invalidate();
@@ -134,8 +114,20 @@ public class TrackLabelSymbol extends WorkObjectSymbol implements ILabel {
 
 	@Override
 	public void setCentroidPosition(double x, double y) {
-		// TODO Auto-generated method stub
+		invalidate();
+		final Rectangle2D trackBounds=getLabeledObject().getBounds();
 		
+		final double trackCX, trackCY;
+		trackCX=trackBounds.getCenterX();
+		trackCY=trackBounds.getCenterY();
+		
+		labelDeltaX=x-trackCX;
+		labelDeltaY=y-trackCY;
+		
+		final Rectangle2D labelBounds=labelContainer.getBounds2D();
+		labelContainer.setPosition(x-labelBounds.getWidth()/2.0, y-labelBounds.getHeight()/2.0);
+		validateDependents();
+		invalidate();
 	}
 
 	@Override
@@ -148,4 +140,24 @@ public class TrackLabelSymbol extends WorkObjectSymbol implements ILabel {
 		return 10;
 	}
 
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (e.getButton()==MouseEvent.BUTTON1) {
+			final Rectangle2D bounds=getBounds2D();
+			grabDeltaX=e.getPoint().getX()-bounds.getCenterX();
+			grabDeltaY=e.getPoint().getY()-bounds.getCenterY();
+		}
+		super.mousePressed(e);
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK)==MouseEvent.BUTTON1_DOWN_MASK) {
+			final double centerX, centerY;
+			centerX=e.getPoint().getX()-grabDeltaX;
+			centerY=e.getPoint().getY()-grabDeltaY;
+			setCentroidPosition(centerX, centerY);
+		}
+		super.mouseDragged(e);
+	}
 }

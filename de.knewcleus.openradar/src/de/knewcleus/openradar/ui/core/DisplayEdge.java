@@ -52,7 +52,7 @@ public class DisplayEdge extends DisplayElement {
 		g.draw(line);
 	}
 	
-	protected Point2D getHookPoint(DisplayElement src, DisplayElement dst) {
+	protected static Point2D getHookPoint(DisplayElement src, DisplayElement dst) {
 		final double vx, vy;
 		
 		final Rectangle2D srcbounds=src.getBounds();

@@ -45,7 +45,8 @@ public abstract class WorkObjectSymbol extends DisplayElement implements MouseLi
 	}
 	
 	@Override
-	public void mouseDragged(MouseEvent e) {}
+	public void mouseDragged(MouseEvent e) {
+	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {}
