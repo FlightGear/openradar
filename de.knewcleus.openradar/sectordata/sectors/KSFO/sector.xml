@@ -7,4 +7,6 @@
 	<geodata theme="awy" type="xplane" ref="../awy.dat.gz" />
 	<geodata theme="landmass" type="shape" ref="v0_landmass.shp" />
 	<geodata theme="water" type="shape" ref="v0_lake.shp" />
+	<geodata theme="pavement" type="shape" ref="apt_runway.shp" />
+	<geodata theme="pavement" type="shape" ref="apt_tarmac.shp" />
 </sector>
