@@ -41,16 +41,16 @@ public class SHPFileReader {
 		}
 		shapeDataStream.skipBytes(20);
 		fileLengthBytes=shapeDataStream.readInt()*2;
-		version=readLEInt(shapeDataStream);
-		shapeType=readLEInt(shapeDataStream);
-		xMin=readLEDouble(shapeDataStream);
-		yMin=readLEDouble(shapeDataStream);
-		xMax=readLEDouble(shapeDataStream);
-		yMax=readLEDouble(shapeDataStream);
-		zMin=readLEDouble(shapeDataStream);
-		zMax=readLEDouble(shapeDataStream);
-		mMin=readLEDouble(shapeDataStream);
-		mMax=readLEDouble(shapeDataStream);
+		version=LittleEndianHelper.readInt(shapeDataStream);
+		shapeType=LittleEndianHelper.readInt(shapeDataStream);
+		xMin=LittleEndianHelper.readDouble(shapeDataStream);
+		yMin=LittleEndianHelper.readDouble(shapeDataStream);
+		xMax=LittleEndianHelper.readDouble(shapeDataStream);
+		yMax=LittleEndianHelper.readDouble(shapeDataStream);
+		zMin=LittleEndianHelper.readDouble(shapeDataStream);
+		zMax=LittleEndianHelper.readDouble(shapeDataStream);
+		mMin=LittleEndianHelper.readDouble(shapeDataStream);
+		mMax=LittleEndianHelper.readDouble(shapeDataStream);
 	}
 	
 	public SHPFileReader(URL location) throws DataFormatException, IOException {
@@ -61,28 +61,6 @@ public class SHPFileReader {
 		this(new DataInputStream(new FileInputStream(shapeFile)));
 	}
 	
-	protected int readLEInt(DataInputStream dataStream) throws IOException {
-		return (dataStream.read() |
-				dataStream.read()<<8 |
-				dataStream.read()<<16 |
-				dataStream.read()<<24);
-	}
-	
-	protected long readLELong(DataInputStream dataStream) throws IOException {
-		return ((long)dataStream.read() |
-				(long)dataStream.read()<<8 |
-				(long)dataStream.read()<<16 |
-				(long)dataStream.read()<<24 |
-				(long)dataStream.read()<<32 |
-				(long)dataStream.read()<<40 |
-				(long)dataStream.read()<<48 |
-				(long)dataStream.read()<<56);
-	}
-	
-	protected double readLEDouble(DataInputStream dataStream) throws IOException {
-		return Double.longBitsToDouble(readLELong(dataStream));
-	}
-
 	public double getXMin() {
 		return xMin;
 	}
@@ -123,7 +101,7 @@ public class SHPFileReader {
 		final int contentLength;
 		lastRecordNumber=shapeDataStream.readInt();
 		contentLength=shapeDataStream.readInt()*2;
-		final int recordShapeType=readLEInt(shapeDataStream);
+		final int recordShapeType=LittleEndianHelper.readInt(shapeDataStream);
 		
 		switch (recordShapeType) {
 		case TYPE_NULL_SHAPE:
@@ -153,35 +131,35 @@ public class SHPFileReader {
 	}
 	
 	protected Point readPoint(boolean hasZ, boolean hasM) throws IOException {
-		final double x=readLEDouble(shapeDataStream);
-		final double y=readLEDouble(shapeDataStream);
-		final double z=(hasZ?readLEDouble(shapeDataStream):0);
-		final double m=(hasM?readLEDouble(shapeDataStream):0);
+		final double x=LittleEndianHelper.readDouble(shapeDataStream);
+		final double y=LittleEndianHelper.readDouble(shapeDataStream);
+		final double z=(hasZ?LittleEndianHelper.readDouble(shapeDataStream):0);
+		final double m=(hasM?LittleEndianHelper.readDouble(shapeDataStream):0);
 		return new Point(x,y,z,m,hasZ,hasM);
 	}
 	
 	protected Geometry readPolyLineRecord(boolean hasZ, boolean hasM) throws IOException {
 		shapeDataStream.skipBytes(4*8); // skip bounding box, we're calculating our own
-		final int numParts=readLEInt(shapeDataStream);
-		final int numPoints=readLEInt(shapeDataStream);
+		final int numParts=LittleEndianHelper.readInt(shapeDataStream);
+		final int numPoints=LittleEndianHelper.readInt(shapeDataStream);
 		final int parts[]=new int[numParts];
 		final double points[]=new double[numPoints*2];
 		final double pointsz[];
 		final double pointsm[];
 		
 		for (int i=0;i<numParts;i++) {
-			parts[i]=readLEInt(shapeDataStream);
+			parts[i]=LittleEndianHelper.readInt(shapeDataStream);
 		}
 		
 		for (int i=0;i<numPoints*2;i++) {
-			points[i]=readLEDouble(shapeDataStream);
+			points[i]=LittleEndianHelper.readDouble(shapeDataStream);
 		}
 		
 		if (hasZ) {
 			shapeDataStream.skipBytes(2*8); // skip z-range
 			pointsz=new double[numPoints];
 			for (int i=0;i<numPoints;i++) {
-				pointsz[i]=readLEDouble(shapeDataStream);
+				pointsz[i]=LittleEndianHelper.readDouble(shapeDataStream);
 			}
 		} else {
 			pointsz=null;
@@ -191,7 +169,7 @@ public class SHPFileReader {
 			shapeDataStream.skipBytes(2*8); // skip m-range
 			pointsm=new double[numPoints];
 			for (int i=0;i<numPoints;i++) {
-				pointsm[i]=readLEDouble(shapeDataStream);
+				pointsm[i]=LittleEndianHelper.readDouble(shapeDataStream);
 			}
 		} else {
 			pointsm=null;
@@ -220,26 +198,26 @@ public class SHPFileReader {
 	
 	protected Geometry readPolygonRecord(boolean hasZ, boolean hasM) throws IOException, DataFormatException {
 		shapeDataStream.skipBytes(4*8); // skip bounding box, we're calculating our own
-		final int numParts=readLEInt(shapeDataStream);
-		final int numPoints=readLEInt(shapeDataStream);
+		final int numParts=LittleEndianHelper.readInt(shapeDataStream);
+		final int numPoints=LittleEndianHelper.readInt(shapeDataStream);
 		final int parts[]=new int[numParts];
 		final double points[]=new double[numPoints*2];
 		final double pointsz[];
 		final double pointsm[];
 		
 		for (int i=0;i<numParts;i++) {
-			parts[i]=readLEInt(shapeDataStream);
+			parts[i]=LittleEndianHelper.readInt(shapeDataStream);
 		}
 		
 		for (int i=0;i<numPoints*2;i++) {
-			points[i]=readLEDouble(shapeDataStream);
+			points[i]=LittleEndianHelper.readDouble(shapeDataStream);
 		}
 		
 		if (hasZ) {
 			shapeDataStream.skipBytes(2*8); // skip z-range
 			pointsz=new double[numPoints];
 			for (int i=0;i<numPoints;i++) {
-				pointsz[i]=readLEDouble(shapeDataStream);
+				pointsz[i]=LittleEndianHelper.readDouble(shapeDataStream);
 			}
 		} else {
 			pointsz=null;
@@ -249,7 +227,7 @@ public class SHPFileReader {
 			shapeDataStream.skipBytes(2*8); // skip m-range
 			pointsm=new double[numPoints];
 			for (int i=0;i<numPoints;i++) {
-				pointsm[i]=readLEDouble(shapeDataStream);
+				pointsm[i]=LittleEndianHelper.readDouble(shapeDataStream);
 			}
 		} else {
 			pointsm=null;
