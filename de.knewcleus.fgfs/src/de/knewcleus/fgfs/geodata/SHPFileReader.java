@@ -9,10 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShapefileReader {
+public class SHPFileReader {
 	protected final DataInputStream shapeDataStream;
-	protected final DataInputStream indexDataStream;
-	protected final DataInputStream databaseDataStream;
 	
 	protected final static int TYPE_NULL_SHAPE=0;
 	protected final static int TYPE_POINT=1;
@@ -29,75 +27,15 @@ public class ShapefileReader {
 	protected final static int TYPE_MULTIPOINTM=28;
 	protected final static int TYPE_MULTIPATCH=31;
 	
-	protected int fileLengthBytes;
-	protected int version;
-	protected int shapeType;
-	protected double xMin, xMax, yMin, yMax, zMin, zMax, mMin, mMax;
+	protected final int fileLengthBytes;
+	protected final int version;
+	protected final int shapeType;
+	protected final double xMin, xMax, yMin, yMax, zMin, zMax, mMin, mMax;
 	protected int lastRecordNumber=-1;
 	
-	public ShapefileReader(InputStream shapeFileStream, InputStream indexFileStream, InputStream databaseFileStream) throws IOException, DataFormatException {
-		this.shapeDataStream=new DataInputStream(shapeFileStream);
-		this.indexDataStream=(indexFileStream!=null?new DataInputStream(indexFileStream):null);
-		this.databaseDataStream=(databaseFileStream!=null?new DataInputStream(databaseFileStream):null);
-		
-		open();
-	}
-	
-	public ShapefileReader(URL location) throws DataFormatException, IOException {
-		final String shapeFilePath=location.getPath();
-		final String basePath=(shapeFilePath.endsWith(".shp")?shapeFilePath.substring(0, shapeFilePath.length()-4):shapeFilePath);
-		final URL indexFileLocation=new URL(location, basePath+".shx");
-		final URL databaseFileLocation=new URL(location, basePath+".dbf");
-		
-		final InputStream shapeFileStream=location.openStream();
-		this.shapeDataStream=new DataInputStream(shapeFileStream);
-
-		InputStream indexFileStream=null;
-		try {
-			indexFileStream=indexFileLocation.openStream();
-		} catch (IOException e) {
-		}
-		this.indexDataStream=(indexFileStream!=null?new DataInputStream(indexFileStream):null);
-
-		InputStream databaseFileStream=null;
-		try {
-			databaseFileStream=databaseFileLocation.openStream();
-		} catch (IOException e) {
-		}
-		this.databaseDataStream=(databaseFileStream!=null?new DataInputStream(databaseFileStream):null);
-		
-		open();
-}
-	
-	public ShapefileReader(File shapeFile) throws IOException, DataFormatException {
-		final InputStream shapeFileStream=new FileInputStream(shapeFile);
+	public SHPFileReader(InputStream shapeFileStream) throws IOException, DataFormatException {
 		this.shapeDataStream=new DataInputStream(shapeFileStream);
 		
-		final File directory=shapeFile.getParentFile();
-		final String shapeFileName=shapeFile.getName();
-		final String baseFileName=(shapeFileName.endsWith(".shp")?shapeFileName.substring(0, shapeFileName.length()-4):shapeFileName);
-		
-		final File indexFile=new File(directory, baseFileName+".shx");
-		final File databaseFile=new File(directory, baseFileName+".dbf");
-		
-		if (indexFile.canRead()) {
-			final InputStream indexFileStream=new FileInputStream(indexFile);
-			this.indexDataStream=new DataInputStream(indexFileStream);
-		} else {
-			indexDataStream=null;
-		}
-		
-		if (databaseFile.canRead()) {
-			final InputStream databaseFileStream=new FileInputStream(databaseFile);
-			this.databaseDataStream=new DataInputStream(databaseFileStream);
-		} else {
-			databaseDataStream=null;
-		}
-		
-		open();
-	}
-	
-	protected void open() throws IOException, DataFormatException {
 		if (shapeDataStream.readInt()!=9994) {
 			throw new DataFormatException("Invalid shapefile header");
 		}
@@ -113,6 +51,14 @@ public class ShapefileReader {
 		zMax=readLEDouble(shapeDataStream);
 		mMin=readLEDouble(shapeDataStream);
 		mMax=readLEDouble(shapeDataStream);
+	}
+	
+	public SHPFileReader(URL location) throws DataFormatException, IOException {
+		this(new DataInputStream(location.openStream()));
+	}
+	
+	public SHPFileReader(File shapeFile) throws IOException, DataFormatException {
+		this(new DataInputStream(new FileInputStream(shapeFile)));
 	}
 	
 	protected int readLEInt(DataInputStream dataStream) throws IOException {

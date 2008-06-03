@@ -21,7 +21,7 @@ import de.knewcleus.fgfs.geodata.DataFormatException;
 import de.knewcleus.fgfs.geodata.Geometry;
 import de.knewcleus.fgfs.geodata.PolyReader;
 import de.knewcleus.fgfs.geodata.Polygon;
-import de.knewcleus.fgfs.geodata.ShapefileReader;
+import de.knewcleus.fgfs.geodata.SHPFileReader;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.AirwayDB;
 import de.knewcleus.fgfs.navaids.DBParserException;
@@ -187,7 +187,7 @@ public class Sector implements INavaidDatabase {
 			polyReader.readPolygons(geoStream, polygons);
 		} else if (type.equals("shape")) {
 			try {
-				ShapefileReader shapefileReader=new ShapefileReader(location);
+				SHPFileReader shapefileReader=new SHPFileReader(location);
 				Geometry geometry;
 				while (true) {
 					try {
