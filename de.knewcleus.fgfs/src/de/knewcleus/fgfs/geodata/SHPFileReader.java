@@ -1,6 +1,7 @@
 package de.knewcleus.fgfs.geodata;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class SHPFileReader {
 	protected final int version;
 	protected final int shapeType;
 	protected final double xMin, xMax, yMin, yMax, zMin, zMax, mMin, mMax;
-	protected int lastRecordNumber=-1;
+	protected int lastFeatureID=-1;
 	
 	public SHPFileReader(InputStream shapeFileStream) throws IOException, DataFormatException {
 		this.shapeDataStream=new DataInputStream(shapeFileStream);
@@ -93,14 +94,20 @@ public class SHPFileReader {
 		return mMax;
 	}
 	
-	public int getLastRecordNumber() {
-		return lastRecordNumber;
+	public int getLastFeatureID() {
+		return lastFeatureID;
 	}
 	
 	public Geometry readRecord() throws IOException, DataFormatException {
-		final int contentLength;
-		lastRecordNumber=shapeDataStream.readInt();
+		int recordFeatureID, contentLength;
+		try {
+			recordFeatureID=shapeDataStream.readInt();
+		} catch (EOFException e) {
+			return null;
+		}
 		contentLength=shapeDataStream.readInt()*2;
+		lastFeatureID=recordFeatureID;
+		
 		final int recordShapeType=LittleEndianHelper.readInt(shapeDataStream);
 		
 		switch (recordShapeType) {
@@ -126,7 +133,7 @@ public class SHPFileReader {
 			return readPolygonRecord(true, true);
 		default:
 			shapeDataStream.skipBytes(2*contentLength);
-			throw new DataFormatException("Cannot read records of type "+Integer.toHexString(recordShapeType)+", index "+Integer.toHexString(lastRecordNumber));
+			throw new DataFormatException("Cannot read records of type "+Integer.toHexString(recordShapeType)+", index "+Integer.toHexString(lastFeatureID));
 		}
 	}
 	

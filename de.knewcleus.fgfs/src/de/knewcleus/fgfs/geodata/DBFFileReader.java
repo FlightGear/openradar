@@ -2,11 +2,12 @@ package de.knewcleus.fgfs.geodata;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DBFReader {
+public class DBFFileReader {
 	protected final DataInputStream dbfInputStream;
 	
 	protected final byte versionNumber;
@@ -20,8 +21,8 @@ public class DBFReader {
 	protected final Charset charset=Charset.forName("US-ASCII");
 	protected int currentRow=0;
 	
-	public DBFReader(DataInputStream dbfInputStream) throws IOException, DataFormatException {
-		this.dbfInputStream=dbfInputStream;
+	public DBFFileReader(InputStream inputStream) throws IOException, DataFormatException {
+		this.dbfInputStream=new DataInputStream(inputStream);
 		
 		/* Read the header */
 		versionNumber=dbfInputStream.readByte();
@@ -81,7 +82,7 @@ public class DBFReader {
 	}
 	
 	public Object[] readRow(int row) throws IOException {
-		if (row<currentRow) {
+		if (row<currentRow || row>=recordCount) {
 			return null;
 		}
 		dbfInputStream.skipBytes(recordLength*(row-currentRow));
@@ -156,6 +157,10 @@ public class DBFReader {
 		return rowData;
 	}
 	
+	public FieldDescriptor[] getFieldDescriptors() {
+		return fieldDescriptors;
+	}
+	
 	public int getRecordCount() {
 		return recordCount;
 	}
@@ -164,13 +169,33 @@ public class DBFReader {
 		return currentRow;
 	}
 	
-	protected static class DBFFieldDescriptor {
+	public int getColumnCount() {
+		return columnCount;
+	}
+	
+	protected static FieldType convertDBFFieldType(char fieldType) {
+		switch (fieldType) {
+		case 'N': case 'O': case 'F':
+			return FieldType.NUMBER;
+		case 'I':
+			return FieldType.INTEGER;
+		case 'D':
+			return FieldType.DATE;
+		case 'L':
+			return FieldType.LOGICAL;
+		default:
+			return FieldType.UNDEFINED;
+		}
+	}
+	
+	protected static class DBFFieldDescriptor extends FieldDescriptor {
 		protected final String fieldName;
 		protected final char fieldType;
 		protected final int fieldLength;
 		protected final int decimalCount;
 		
 		public DBFFieldDescriptor(String fieldName, char fieldType, int fieldLength, int decimalCount) {
+			super(fieldName, convertDBFFieldType(fieldType));
 			this.fieldName=fieldName;
 			this.fieldType=fieldType;
 			this.fieldLength=fieldLength;
