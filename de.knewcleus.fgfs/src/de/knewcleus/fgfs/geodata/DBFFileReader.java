@@ -72,7 +72,6 @@ public class DBFFileReader {
 			}
 			dbfInputStream.skipBytes(14);
 			fieldDescriptors[col]=new DBFFieldDescriptor(fieldName, fieldType, fieldLength, decimalCount);
-			System.out.println("column "+col+":"+fieldDescriptors[col]);
 			checkRecordLength+=fieldLength;
 		}
 		dbfInputStream.skipBytes(1);

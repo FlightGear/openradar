@@ -18,10 +18,10 @@ import org.xml.sax.SAXException;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.DataFormatException;
-import de.knewcleus.fgfs.geodata.Geometry;
+import de.knewcleus.fgfs.geodata.Feature;
 import de.knewcleus.fgfs.geodata.PolyReader;
 import de.knewcleus.fgfs.geodata.Polygon;
-import de.knewcleus.fgfs.geodata.SHPFileReader;
+import de.knewcleus.fgfs.geodata.ShapefileLayer;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.AirwayDB;
 import de.knewcleus.fgfs.navaids.DBParserException;
@@ -104,27 +104,26 @@ public class Sector implements INavaidDatabase {
 			final String theme=geodataElem.getAttribute("theme");
 			final String type=geodataElem.getAttribute("type");
 			final String ref=geodataElem.getAttribute("ref");
-			URL location=new URL(url,ref);
 			
 			long startTime=System.currentTimeMillis();
 			if (theme.equals("fixes")) {
-				sector.readFixes(location,type, north, west, south, east);
+				sector.readFixes(url, geodataElem, north, west, south, east);
 			} else if (theme.equals("apts")) {
-				sector.readAirports(location, type, north, west, south, east);
+				sector.readAirports(url, geodataElem, north, west, south, east);
 			} else if (theme.equals("nav")) {
-				sector.readNavaids(location, type, north, west, south, east);
+				sector.readNavaids(url, geodataElem, north, west, south, east);
 			} else if (theme.equals("awy")) {
-				sector.readAirways(location, type, north, west, south, east);
+				sector.readAirways(url, geodataElem, north, west, south, east);
 			} else if (theme.equals("landmass")) {
-				sector.readPolygons(location, type, north, west, south, east, sector.getLandmassPolygons());
+				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getLandmassPolygons());
 			} else if (theme.equals("water")) {
-				sector.readPolygons(location, type, north, west, south, east, sector.getWaterPolygons());
+				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getWaterPolygons());
 			} else if (theme.equals("restricted")) {
-				sector.readPolygons(location, type, north, west, south, east, sector.getRestrictedPolygons());
+				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getRestrictedPolygons());
 			} else if (theme.equals("sector")) {
-				sector.readPolygons(location, type, north, west, south, east, sector.getSectorPolygons());
+				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getSectorPolygons());
 			} else if (theme.equals("pavement")) {
-				sector.readPolygons(location, type, north, west, south, east, sector.getPavementPolygons());
+				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getPavementPolygons());
 			} else {
 				logger.info("Unknown theme "+theme);
 			}
@@ -136,12 +135,17 @@ public class Sector implements INavaidDatabase {
 		return sector;
 	}
 	
-	protected void readFixes(URL location, String type, double north, double west, double south, double east) throws IOException, DBParserException {
+	protected void readFixes(URL context, Element geodataElem, double north, double west, double south, double east) throws IOException, DBParserException {
+		final String type=geodataElem.getAttribute("type");
 		if (type.equals("xplane")) {
+			final String ref=geodataElem.getAttribute("ref");
+			final URL location=new URL(context, ref);
 			FixParser fixParser=new FixParser(getFixDB(),north,west,south,east);
 			InputStream geoStream=location.openStream();
 			fixParser.readCompressed(geoStream);
 		} else if (type.equals("point")) {
+			final String ref=geodataElem.getAttribute("ref");
+			final URL location=new URL(context, ref);
 			PointReader pointReader=new PointFixReader();
 			InputStream geoStream=location.openStream();
 			pointReader.readPoints(getFixDB(), geoStream);
@@ -150,8 +154,11 @@ public class Sector implements INavaidDatabase {
 		}
 	}
 	
-	protected void readAirports(URL location, String type, double north, double west, double south, double east) throws IOException, DBParserException {
+	protected void readAirports(URL context, Element geodataElem, double north, double west, double south, double east) throws IOException, DBParserException {
+		final String type=geodataElem.getAttribute("type");
 		if (type.equals("xplane")) {
+			final String ref=geodataElem.getAttribute("ref");
+			final URL location=new URL(context, ref);
 			AerodromeParser aerodromeParser=new AerodromeParser(getFixDB(),north,west,south,east);
 			InputStream geoStream=location.openStream();
 			aerodromeParser.readCompressed(geoStream);
@@ -160,8 +167,11 @@ public class Sector implements INavaidDatabase {
 		}
 	}
 	
-	protected void readNavaids(URL location, String type, double north, double west, double south, double east) throws IOException, DBParserException {
+	protected void readNavaids(URL context, Element geodataElem, double north, double west, double south, double east) throws IOException, DBParserException {
+		final String type=geodataElem.getAttribute("type");
 		if (type.equals("xplane")) {
+			final String ref=geodataElem.getAttribute("ref");
+			final URL location=new URL(context, ref);
 			NavParser navParser=new NavParser(getFixDB(),north,west,south,east);
 			InputStream geoStream=location.openStream();
 			navParser.readCompressed(geoStream);
@@ -170,8 +180,11 @@ public class Sector implements INavaidDatabase {
 		}
 	}
 	
-	protected void readAirways(URL location, String type, double north, double west, double south, double east) throws IOException, DBParserException {
+	protected void readAirways(URL context, Element geodataElem, double north, double west, double south, double east) throws IOException, DBParserException {
+		final String type=geodataElem.getAttribute("type");
 		if (type.equals("xplane")) {
+			final String ref=geodataElem.getAttribute("ref");
+			final URL location=new URL(context, ref);
 			AirwayParser airwayParser=new AirwayParser(getAirwayDB(),north,west,south,east);
 			InputStream geoStream=location.openStream();
 			airwayParser.readCompressed(geoStream);
@@ -180,20 +193,28 @@ public class Sector implements INavaidDatabase {
 		}
 	}
 	
-	protected void readPolygons(URL location, String type, double north, double west, double south, double east, List<Polygon> polygons) throws DBParserException, IOException {
+	protected void readPolygons(URL context, Element geodataElem, double north, double west, double south, double east, List<Polygon> polygons) throws DBParserException, IOException {
+		final String type=geodataElem.getAttribute("type");
 		if (type.equals("poly")) {
+			final String ref=geodataElem.getAttribute("ref");
+			final URL location=new URL(context, ref);
 			PolyReader polyReader=new PolyReader();
 			InputStream geoStream=location.openStream();
 			polyReader.readPolygons(geoStream, polygons);
 		} else if (type.equals("shape")) {
 			try {
-				SHPFileReader shapefileReader=new SHPFileReader(location);
-				Geometry geometry;
+				final String datasourceRef=geodataElem.getAttribute("datasource");
+				final String layer=geodataElem.getAttribute("layer");
+				final URL datasourceLocation=new URL(context, datasourceRef);
+				final ShapefileLayer shapefileLayer=new ShapefileLayer(datasourceLocation, layer);
 				while (true) {
 					try {
-						geometry=shapefileReader.readRecord();
-						if (geometry instanceof Polygon) {
-							polygons.add((Polygon)geometry);
+						final Feature feature=shapefileLayer.getNextFeature();
+						if (feature==null) {
+							break;
+						}
+						if (feature.getGeometry() instanceof Polygon) {
+							polygons.add((Polygon)feature.getGeometry());
 						}
 					} catch (IOException e) {
 						break;
