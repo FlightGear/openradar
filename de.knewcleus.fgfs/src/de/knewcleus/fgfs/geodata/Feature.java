@@ -4,13 +4,13 @@ public class Feature {
 	protected final FeatureDefinition featureDefinition;
 	protected final int featureID;
 	protected final Geometry geometry;
-	protected final Object[] fields;
+	protected final DatabaseRow databaseRow;
 	
-	public Feature(FeatureDefinition featureDefinition, int featureID, Geometry geometry, Object[] fields) {
+	public Feature(FeatureDefinition featureDefinition, int featureID, Geometry geometry, DatabaseRow databaseRow) {
 		this.featureDefinition=featureDefinition;
 		this.featureID=featureID;
 		this.geometry=geometry;
-		this.fields=fields;
+		this.databaseRow=databaseRow;
 	}
 	
 	public FeatureDefinition getFeatureDefinition() {
@@ -25,7 +25,7 @@ public class Feature {
 		return geometry;
 	}
 	
-	public Object[] getFields() {
-		return fields;
+	public DatabaseRow getDatabaseRow() {
+		return databaseRow;
 	}
 }

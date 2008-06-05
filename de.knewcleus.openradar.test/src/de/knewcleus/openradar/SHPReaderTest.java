@@ -2,10 +2,8 @@ package de.knewcleus.openradar;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 import de.knewcleus.fgfs.geodata.DataFormatException;
-import de.knewcleus.fgfs.geodata.Feature;
 import de.knewcleus.fgfs.geodata.FeatureDefinition;
 import de.knewcleus.fgfs.geodata.FieldDescriptor;
 import de.knewcleus.fgfs.geodata.ShapefileLayer;
@@ -15,7 +13,6 @@ public class SHPReaderTest {
 		final String datasource=args[0];
 		final String layer=args[1];
 		final ShapefileLayer shapefileLayer=new ShapefileLayer(new File(datasource), layer);
-		Feature feature;
 		
 		final FeatureDefinition featureDefinition=shapefileLayer.getFeatureDefinition();
 		
@@ -24,9 +21,14 @@ public class SHPReaderTest {
 			System.out.println("Field "+i+":"+fieldDescriptor.getName()+"; "+fieldDescriptor.getType());
 		}
 		
-		while ((feature=shapefileLayer.getNextFeature())!=null) {
-			System.out.println(feature.getGeometry()+", "+Arrays.toString(feature.getFields()));
+		int recordCount=0;
+		long startMillis=System.currentTimeMillis();
+		while (shapefileLayer.getNextFeature()!=null) {
+			recordCount++;
 		}
+		long endMillis=System.currentTimeMillis();
+		
+		System.out.println("Time for "+recordCount+" records:"+(endMillis-startMillis)+"ms");
 	}
 
 }

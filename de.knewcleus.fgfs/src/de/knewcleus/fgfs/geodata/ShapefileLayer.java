@@ -70,12 +70,12 @@ public class ShapefileLayer implements Layer {
 		if (geometry==null)
 			return null;
 		final int featureID=shpFileReader.getLastFeatureID();
-		final Object[] fields;
+		final DatabaseRow row;
 		if (dbfFileReader!=null) {
-			fields=dbfFileReader.readRow(featureID-1);
+			row=dbfFileReader.readRow(featureID-1);
 		} else {
-			fields=new Object[0];
+			row=null;
 		}
-		return new Feature(featureDefinition, featureID, geometry, fields);
+		return new Feature(featureDefinition, featureID, geometry, row);
 	}
 }
