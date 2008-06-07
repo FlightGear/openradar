@@ -1,7 +1,6 @@
 <sector>
 	<initialcenter lon="13.403854" lat="52.473154" elev="167.0" xrange_nm="50"/>
-	<maprange north="53.223154" south="51.723154"
-	          east="14.903854" west="11.903854" />
+	<maprange north="54" south="51" east="15" west="12" />
 	<geodata theme="apts" type="xplane" ref="../apt.dat.gz" />
 	<geodata type="xplane_fixes" ref="../fix.dat.gz" />
 	<geodata theme="nav" type="xplane" ref="../nav.dat.gz" />
