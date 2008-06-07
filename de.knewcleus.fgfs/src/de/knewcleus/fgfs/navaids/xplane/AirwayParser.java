@@ -1,5 +1,7 @@
 package de.knewcleus.fgfs.navaids.xplane;
 
+import java.awt.Shape;
+
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Airway;
 import de.knewcleus.fgfs.navaids.AirwayDB;
@@ -9,8 +11,8 @@ import de.knewcleus.fgfs.navaids.DBParserException;
 public class AirwayParser extends AbstractXPlaneParser {
 	protected final AirwayDB airwayDB;
 
-	public AirwayParser(AirwayDB airwayDB, double north, double west, double south, double east) {
-		super(north, west, south, east);
+	public AirwayParser(AirwayDB airwayDB, Shape geographicBounds) {
+		super(geographicBounds);
 		this.airwayDB=airwayDB;
 	}
 	

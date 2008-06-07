@@ -1,5 +1,7 @@
 package de.knewcleus.fgfs.navaids.ead;
 
+import java.awt.Shape;
+
 import org.w3c.dom.Element;
 
 import de.knewcleus.fgfs.location.Position;
@@ -11,9 +13,8 @@ import de.knewcleus.fgfs.navaids.DBParserException;
 public class AirwayParser extends AbstractSDOParser {
 	protected final AirwayDB airwayDB;
 
-	public AirwayParser(AirwayDB airwayDB, double north, double west,
-			double south, double east) {
-		super(north, west, south, east);
+	public AirwayParser(AirwayDB airwayDB, Shape geographicBounds) {
+		super(geographicBounds);
 		this.airwayDB=airwayDB;
 	}
 

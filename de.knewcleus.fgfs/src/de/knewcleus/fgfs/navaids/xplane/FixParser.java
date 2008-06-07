@@ -1,6 +1,8 @@
 package de.knewcleus.fgfs.navaids.xplane;
 
 
+import java.awt.Shape;
+
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.DBParserException;
 import de.knewcleus.fgfs.navaids.DesignatedPoint;
@@ -9,9 +11,9 @@ import de.knewcleus.fgfs.navaids.NamedFixDB;
 public class FixParser extends AbstractXPlaneParser {
 	protected final NamedFixDB namedFixDB;
 
-	public FixParser(NamedFixDB namedFixDB, double north, double west, double south, double east)
+	public FixParser(NamedFixDB namedFixDB, Shape geographicBounds)
 	{
-		super(north,west,south,east);
+		super(geographicBounds);
 		this.namedFixDB=namedFixDB;
 	}
 	

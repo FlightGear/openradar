@@ -7,6 +7,8 @@ import static de.knewcleus.fgfs.Units.NM;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
+import java.awt.Shape;
+
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.DBParserException;
 import de.knewcleus.fgfs.navaids.NamedFixDB;
@@ -15,8 +17,8 @@ import de.knewcleus.fgfs.navaids.VOR;
 public class NavParser extends AbstractXPlaneParser {
 	protected final NamedFixDB namedFixDB;
 
-	public NavParser(NamedFixDB namedFixDB, double north, double west, double south, double east) {
-		super(north, west, south, east);
+	public NavParser(NamedFixDB namedFixDB, Shape geographicBounds) {
+		super(geographicBounds);
 		this.namedFixDB=namedFixDB;
 	}
 	

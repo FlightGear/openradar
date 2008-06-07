@@ -1,5 +1,6 @@
 package de.knewcleus.fgfs.navaids.ead;
 
+import java.awt.Shape;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ import de.knewcleus.fgfs.navaids.DBParserException;
 
 public abstract class AbstractSDOParser extends AbstractDBParser {
 
-	public AbstractSDOParser(double north, double west, double south, double east) {
-		super(north, west, south, east);
+	public AbstractSDOParser(Shape geographicBounds) {
+		super(geographicBounds);
 	}
 
 	@Override

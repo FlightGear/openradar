@@ -1,5 +1,7 @@
 package de.knewcleus.openradar.sector;
 
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -35,8 +37,7 @@ import de.knewcleus.fgfs.navaids.xplane.NavParser;
 public class Sector implements INavaidDatabase {
 	protected static Logger logger=Logger.getLogger(Sector.class.getName());
 	protected final Position initialCenter;
-	protected final double latRange;
-	protected final double lonRange;
+	protected final Shape geographicBounds;
 	protected final int defaultXRange;
 	protected List<Polygon> landmassPolygons=new ArrayList<Polygon>();
 	protected List<Polygon> waterPolygons=new ArrayList<Polygon>();
@@ -46,10 +47,9 @@ public class Sector implements INavaidDatabase {
 	protected final NamedFixDB fixDatabase=new NamedFixDB();
 	protected final AirwayDB airwayDatabase=new AirwayDB();
 	
-	public Sector(Position initialCenter, double latRange, double lonRange, int defaultXRange) {
+	public Sector(Position initialCenter, Shape geographicBounds, int defaultXRange) {
 		this.initialCenter=initialCenter;
-		this.latRange=latRange;
-		this.lonRange=lonRange;
+		this.geographicBounds=geographicBounds;
 		this.defaultXRange=defaultXRange;
 	}
 	
@@ -88,14 +88,11 @@ public class Sector implements INavaidDatabase {
 		lonRange=Double.parseDouble(mapRangeElem.getAttribute("x"))*Units.DEG;
 		latRange=Double.parseDouble(mapRangeElem.getAttribute("y"))*Units.DEG;
 		
-		Sector sector=new Sector(new Position(initialLon,initialLat,initialElev),latRange,lonRange, defaultXRange);
-		
-		double north,west,south,east;
-		
-		north=initialLat+latRange/2.0;
-		west=initialLon-latRange/2.0;
-		south=initialLat-latRange/2.0;
-		east=initialLon+latRange/2.0;
+		final Position initialPosition=new Position(initialLon,initialLat,initialElev);
+		final Rectangle2D geographicalRange=new Rectangle2D.Double(
+				initialLon-lonRange/2.0, initialLat-latRange/2.0,
+				lonRange, latRange);
+		Sector sector=new Sector(initialPosition, geographicalRange, defaultXRange);
 		
 		NodeList geodataNodes=document.getElementsByTagName("geodata");
 		
@@ -107,23 +104,23 @@ public class Sector implements INavaidDatabase {
 			
 			long startTime=System.currentTimeMillis();
 			if (theme.equals("fixes")) {
-				sector.readFixes(url, geodataElem, north, west, south, east);
+				sector.readFixes(url, geodataElem);
 			} else if (theme.equals("apts")) {
-				sector.readAirports(url, geodataElem, north, west, south, east);
+				sector.readAirports(url, geodataElem);
 			} else if (theme.equals("nav")) {
-				sector.readNavaids(url, geodataElem, north, west, south, east);
+				sector.readNavaids(url, geodataElem);
 			} else if (theme.equals("awy")) {
-				sector.readAirways(url, geodataElem, north, west, south, east);
+				sector.readAirways(url, geodataElem);
 			} else if (theme.equals("landmass")) {
-				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getLandmassPolygons());
+				sector.readPolygons(url, geodataElem, sector.getLandmassPolygons());
 			} else if (theme.equals("water")) {
-				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getWaterPolygons());
+				sector.readPolygons(url, geodataElem, sector.getWaterPolygons());
 			} else if (theme.equals("restricted")) {
-				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getRestrictedPolygons());
+				sector.readPolygons(url, geodataElem, sector.getRestrictedPolygons());
 			} else if (theme.equals("sector")) {
-				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getSectorPolygons());
+				sector.readPolygons(url, geodataElem, sector.getSectorPolygons());
 			} else if (theme.equals("pavement")) {
-				sector.readPolygons(url, geodataElem, north, west, south, east, sector.getPavementPolygons());
+				sector.readPolygons(url, geodataElem, sector.getPavementPolygons());
 			} else {
 				logger.info("Unknown theme "+theme);
 			}
@@ -135,12 +132,12 @@ public class Sector implements INavaidDatabase {
 		return sector;
 	}
 	
-	protected void readFixes(URL context, Element geodataElem, double north, double west, double south, double east) throws IOException, DBParserException {
+	protected void readFixes(URL context, Element geodataElem) throws IOException, DBParserException {
 		final String type=geodataElem.getAttribute("type");
 		if (type.equals("xplane")) {
 			final String ref=geodataElem.getAttribute("ref");
 			final URL location=new URL(context, ref);
-			FixParser fixParser=new FixParser(getFixDB(),north,west,south,east);
+			FixParser fixParser=new FixParser(getFixDB(), geographicBounds);
 			InputStream geoStream=location.openStream();
 			fixParser.readCompressed(geoStream);
 		} else if (type.equals("point")) {
@@ -154,12 +151,12 @@ public class Sector implements INavaidDatabase {
 		}
 	}
 	
-	protected void readAirports(URL context, Element geodataElem, double north, double west, double south, double east) throws IOException, DBParserException {
+	protected void readAirports(URL context, Element geodataElem) throws IOException, DBParserException {
 		final String type=geodataElem.getAttribute("type");
 		if (type.equals("xplane")) {
 			final String ref=geodataElem.getAttribute("ref");
 			final URL location=new URL(context, ref);
-			AerodromeParser aerodromeParser=new AerodromeParser(getFixDB(),north,west,south,east);
+			AerodromeParser aerodromeParser=new AerodromeParser(getFixDB(), geographicBounds);
 			InputStream geoStream=location.openStream();
 			aerodromeParser.readCompressed(geoStream);
 		} else {
@@ -167,12 +164,12 @@ public class Sector implements INavaidDatabase {
 		}
 	}
 	
-	protected void readNavaids(URL context, Element geodataElem, double north, double west, double south, double east) throws IOException, DBParserException {
+	protected void readNavaids(URL context, Element geodataElem) throws IOException, DBParserException {
 		final String type=geodataElem.getAttribute("type");
 		if (type.equals("xplane")) {
 			final String ref=geodataElem.getAttribute("ref");
 			final URL location=new URL(context, ref);
-			NavParser navParser=new NavParser(getFixDB(),north,west,south,east);
+			NavParser navParser=new NavParser(getFixDB(), geographicBounds);
 			InputStream geoStream=location.openStream();
 			navParser.readCompressed(geoStream);
 		} else {
@@ -180,12 +177,12 @@ public class Sector implements INavaidDatabase {
 		}
 	}
 	
-	protected void readAirways(URL context, Element geodataElem, double north, double west, double south, double east) throws IOException, DBParserException {
+	protected void readAirways(URL context, Element geodataElem) throws IOException, DBParserException {
 		final String type=geodataElem.getAttribute("type");
 		if (type.equals("xplane")) {
 			final String ref=geodataElem.getAttribute("ref");
 			final URL location=new URL(context, ref);
-			AirwayParser airwayParser=new AirwayParser(getAirwayDB(),north,west,south,east);
+			AirwayParser airwayParser=new AirwayParser(getAirwayDB(), geographicBounds);
 			InputStream geoStream=location.openStream();
 			airwayParser.readCompressed(geoStream);
 		} else {
@@ -193,7 +190,7 @@ public class Sector implements INavaidDatabase {
 		}
 	}
 	
-	protected void readPolygons(URL context, Element geodataElem, double north, double west, double south, double east, List<Polygon> polygons) throws DBParserException, IOException {
+	protected void readPolygons(URL context, Element geodataElem, List<Polygon> polygons) throws DBParserException, IOException {
 		final String type=geodataElem.getAttribute("type");
 		if (type.equals("poly")) {
 			final String ref=geodataElem.getAttribute("ref");
@@ -232,32 +229,12 @@ public class Sector implements INavaidDatabase {
 		return initialCenter;
 	}
 	
-	public double getLatRange() {
-		return latRange;
-	}
-	
-	public double getLonRange() {
-		return lonRange;
-	}
-	
 	public int getDefaultXRange() {
 		return defaultXRange;
 	}
 	
-	public double getNorthBorder() {
-		return initialCenter.getY()+latRange/2.0;
-	}
-	
-	public double getSouthBorder() {
-		return initialCenter.getY()-latRange/2.0;
-	}
-	
-	public double getEastBorder() {
-		return initialCenter.getX()+lonRange/2.0;
-	}
-	
-	public double getWestBorder() {
-		return initialCenter.getX()-lonRange/2.0;
+	public Shape getGeographicBounds() {
+		return geographicBounds;
 	}
 	
 	public List<Polygon> getLandmassPolygons() {

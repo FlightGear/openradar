@@ -1,5 +1,6 @@
 package de.knewcleus.fgfs.navaids.xplane;
 
+import java.awt.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class AerodromeParser extends AbstractXPlaneParser {
 	protected Vector3D runwayMoment;
 	protected List<Runway> runways=new ArrayList<Runway>();
 
-	public AerodromeParser(NamedFixDB namedFixDB, double north, double west, double south, double east) {
-		super(north, west, south, east);
+	public AerodromeParser(NamedFixDB namedFixDB, Shape geographicBounds) {
+		super(geographicBounds);
 		this.namedFixDB=namedFixDB;
 	}
 

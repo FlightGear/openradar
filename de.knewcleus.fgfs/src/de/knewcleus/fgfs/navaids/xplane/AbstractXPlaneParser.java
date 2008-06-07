@@ -1,5 +1,6 @@
 package de.knewcleus.fgfs.navaids.xplane;
 
+import java.awt.Shape;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,8 +11,8 @@ import de.knewcleus.fgfs.navaids.DBParserException;
 
 public abstract class AbstractXPlaneParser extends AbstractDBParser {
 
-	protected AbstractXPlaneParser(double north, double west, double south, double east) {
-		super(north, west, south, east);
+	protected AbstractXPlaneParser(Shape geographicBounds) {
+		super(geographicBounds);
 	}
 	
 	protected abstract void processRecord(String line) throws DBParserException;

@@ -2,6 +2,8 @@ package de.knewcleus.fgfs.navaids.ead;
 
 import static java.lang.Double.parseDouble;
 
+import java.awt.Shape;
+
 import org.w3c.dom.Element;
 
 import de.knewcleus.fgfs.Units;
@@ -13,9 +15,8 @@ import de.knewcleus.fgfs.navaids.VOR;
 public class VORParser extends AbstractSDOParser {
 	protected final NamedFixDB namedFixDB;
 
-	public VORParser(NamedFixDB namedFixDB,
-			double north, double west, double south, double east) {
-		super(north, west, south, east);
+	public VORParser(NamedFixDB namedFixDB, Shape geographicBounds) {
+		super(geographicBounds);
 		this.namedFixDB=namedFixDB;
 	}
 

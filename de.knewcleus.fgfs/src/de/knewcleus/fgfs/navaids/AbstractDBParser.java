@@ -1,21 +1,16 @@
 package de.knewcleus.fgfs.navaids;
 
+import java.awt.Shape;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 public abstract class AbstractDBParser {
-	protected final double north;
-	protected final double west;
-	protected final double south;
-	protected final double east;
+	protected final Shape geographicBounds;
 
-	public AbstractDBParser(double north, double west, double south, double east)
+	public AbstractDBParser(Shape geographicBounds)
 	{
-		this.north=north;
-		this.west=west;
-		this.south=south;
-		this.east=east;
+		this.geographicBounds=geographicBounds;
 	}
 
 	public void readCompressed(InputStream inputStream) throws DBParserException {
@@ -32,7 +27,7 @@ public abstract class AbstractDBParser {
 	public abstract void read(InputStream inputStream) throws DBParserException;
 
 	protected boolean isInRange(double lon, double lat) {
-		return (west<=lon && lon<=east) && (south<=lat && lat<=north);
+		return geographicBounds.contains(lon, lat);
 	}
 
 }
