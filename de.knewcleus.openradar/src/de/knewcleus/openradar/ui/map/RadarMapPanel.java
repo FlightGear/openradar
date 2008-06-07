@@ -76,6 +76,7 @@ public abstract class RadarMapPanel extends JComponent {
 		if (e.getID()==ComponentEvent.COMPONENT_RESIZED || e.getID()==ComponentEvent.COMPONENT_SHOWN) {
 			deviceTransformation.validate();
 			displayElementContainer.validate();
+			repaint();
 		}
 		super.processComponentEvent(e);
 	}
@@ -105,10 +106,6 @@ public abstract class RadarMapPanel extends JComponent {
 	
 	public void getHitObjects(Point2D position, Collection<DisplayElement> elements) {
 		displayElementContainer.getHitObjects(position, elements);
-	}
-
-	public void validate() {
-		displayElementContainer.validate();
 	}
 
 	@Override
