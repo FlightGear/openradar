@@ -14,11 +14,29 @@ import de.knewcleus.fgfs.location.MapTransformationHelper;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.openradar.ui.Palette;
 
-public class RangeMarkLayer {
+public class RangeMarkLayer implements IMapLayer {
 	protected double rangeMarks=10.0*Units.NM;
 	protected static Stroke rangeMarkStroke=new BasicStroke(0.0f);
+	protected boolean visible=false;
 
+	@Override
+	public String getName() {
+		return "R-Rings";
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible=visible;
+	}
+	
 	public void draw(Graphics2D g2d, IDeviceTransformation mapTransformation) {
+		if (!isVisible())
+			return;
 		g2d.setColor(Palette.WINDOW_BLUE);
 		g2d.setStroke(rangeMarkStroke);
 

@@ -5,12 +5,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -22,7 +23,7 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.DesignatedPoint;
-import de.knewcleus.fgfs.navaids.Runway;
+import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.openradar.sector.Sector;
 import de.knewcleus.openradar.ui.Palette;
 import de.knewcleus.openradar.ui.RadarWorkstation;
@@ -41,12 +42,12 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 	protected final Map<Track, DisplayElement> trackSymbolMap=new HashMap<Track, DisplayElement>(); 
 
 	protected final IMapLayer landmassLayer;
-	protected final IMapLayer waterLayer;
 	protected final IMapLayer restrictedLayer;
 	protected final IMapLayer sectorLayer;
 	protected final IMapLayer pavementLayer;
 	protected final WaypointDisplayLayer waypointDisplayLayer;
-	protected final RangeMarkLayer rangeMarkLayer=new RangeMarkLayer();
+	protected final IMapLayer rangeMarkLayer=new RangeMarkLayer();
+	protected final List<IMapLayer> mapLayers;
 
 	protected final float scaleMarkerSize=10.0f;
 	protected final float scaleMarkerDistance=10.0f*(float)Units.NM;
@@ -54,7 +55,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 
 	protected static int selectionRange=10;
 
-	public RadarPlanViewPanel(RadarWorkstation workstation, ICoordinateTransformation mapTransformation) {
+	public RadarPlanViewPanel(RadarWorkstation workstation, ICoordinateTransformation mapTransformation) throws GeometryConversionException {
 		super(workstation.getRadarPlanViewSettings(), mapTransformation);
 		setDoubleBuffered(true); /* Is double buffered */
 		this.workstation=workstation;
@@ -62,12 +63,14 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		workstation.getRadarPlanViewSettings().addPropertyChangeListener(this);
 
 		final Sector sector=workstation.getSector();
-		landmassLayer=new PolygonMapLayer(Palette.LANDMASS,sector.getLandmassPolygons());
-		waterLayer=new PolygonMapLayer(Palette.WATERMASS,sector.getWaterPolygons());
-		restrictedLayer=new PolygonMapLayer(Palette.RESTRICTED,sector.getRestrictedPolygons());
-		sectorLayer=new PolygonMapLayer(Palette.SECTOR,sector.getSectorPolygons());
-		pavementLayer=new PolygonMapLayer(Palette.PAVEMENT,sector.getPavementPolygons());
-		waypointDisplayLayer=new WaypointDisplayLayer(sector);
+		landmassLayer=new LandmassMapLayer("Shoreline",
+				Palette.LANDMASS, sector.getLandmassPolygons(),
+				Palette.WATERMASS, sector.getWaterPolygons());
+		restrictedLayer=new GeometryMapLayer("Restricted", Palette.RESTRICTED,sector.getRestrictedPolygons());
+		sectorLayer=new GeometryMapLayer("Sector", Palette.SECTOR,sector.getSectorPolygons());
+		pavementLayer=new GeometryMapLayer("Pavement", Palette.PAVEMENT,sector.getPavementPolygons());
+		waypointDisplayLayer=new WaypointDisplayLayer("Waypoints", sector);
+		mapLayers=Arrays.asList(landmassLayer, restrictedLayer, sectorLayer, pavementLayer, waypointDisplayLayer, rangeMarkLayer);
 
 		Set<Aerodrome> aerodromes=sector.getFixDB().getFixes(Aerodrome.class);
 		waypointDisplayLayer.getFixesWithDesignator().addAll(aerodromes);
@@ -82,6 +85,10 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		enableEvents(AWTEvent.MOUSE_MOTION_EVENT_MASK|AWTEvent.MOUSE_EVENT_MASK|AWTEvent.COMPONENT_EVENT_MASK);
 
 		workstation.getTargetManager().registerTrackUpdateListener(this);
+	}
+	
+	public List<IMapLayer> getMapLayers() {
+		return mapLayers;
 	}
 
 	@Override
@@ -153,26 +160,8 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 	protected void paintMapBackground(Graphics2D g2d) {
 		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(getMapTransformation(), getDeviceTransformation());
 
-		Rectangle clipRect=g2d.getClipBounds();
-		g2d.setColor((getSettings().isShowingCoastline()?Palette.WATERMASS:Palette.LANDMASS));
-		g2d.fillRect(clipRect.x,clipRect.y,clipRect.width,clipRect.height);
-		if (getSettings().isShowingCoastline()) {
-			landmassLayer.draw(g2d,mapTransformation);
-			waterLayer.draw(g2d,mapTransformation);
-			pavementLayer.draw(g2d,mapTransformation);
-		}
-		if (getSettings().isShowingWaypoints()) {
-			waypointDisplayLayer.draw(g2d,mapTransformation);
-			drawRunwayCentrelines(g2d,getDeviceTransformation(),getMapTransformation());
-		}
-		if (getSettings().isShowingSector()) {
-			sectorLayer.draw(g2d,mapTransformation);
-		}
-		if (getSettings().isShowingMilitary()) {
-			restrictedLayer.draw(g2d,mapTransformation);
-		}
-		if (getSettings().isShowingRings()) {
-			rangeMarkLayer.draw(g2d, getDeviceTransformation());
+		for (IMapLayer layer: getMapLayers()) {
+			layer.draw(g2d, mapTransformation);
 		}
 		drawScaleMarkers(g2d, getDeviceTransformation());
 	}
@@ -252,34 +241,6 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 				marker.closePath();
 
 				g2d.fill(marker);
-			}
-		}
-	}
-
-	private void drawRunwayCentrelines(Graphics2D g2d, IDeviceTransformation deviceTransformation, ICoordinateTransformation transform) {
-		Set<Aerodrome> aerodromes=workstation.getSector().getFixDB().getFixes(Aerodrome.class);
-
-		g2d.setColor(Palette.BEACON);
-
-		for (Aerodrome aerodrome: aerodromes) {
-			for (Runway runway: aerodrome.getRunways()) {
-				Position pos=transform.forward(runway.getCenter());
-				double dx,dy;
-				double length=runway.getLength();
-				double heading=runway.getTrueHeading()/Units.RAD;
-
-				dx=Math.sin(heading)*(centrelineLength+length/2.0);
-				dy=Math.cos(heading)*(centrelineLength+length/2.0);
-
-				Position end1=new Position(pos.getX()+dx,pos.getY()+dy,0.0);
-				Position end2=new Position(pos.getX()-dx,pos.getY()-dy,0.0);
-
-				Point2D deviceEnd1=deviceTransformation.toDevice(end1);
-				Point2D deviceEnd2=deviceTransformation.toDevice(end2);
-
-				Line2D line=new Line2D.Double(deviceEnd1,deviceEnd2);
-
-				g2d.draw(line);
 			}
 		}
 	}

@@ -10,6 +10,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JLayeredPane;
 
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
+import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.openradar.ui.RadarWorkstation;
 import de.knewcleus.openradar.ui.WorkstationGlobalFrame;
 import de.knewcleus.openradar.ui.rpvd.toolbox.RadarToolbox;
@@ -25,7 +26,7 @@ public class RadarPlanViewDisplay extends WorkstationGlobalFrame {
 	protected final Integer RPVD_LAYER=0;
 	protected final Integer DESKTOP_LAYER=1;
 	
-	public RadarPlanViewDisplay(RadarWorkstation workstation, ICoordinateTransformation mapTransformation) {
+	public RadarPlanViewDisplay(RadarWorkstation workstation, ICoordinateTransformation mapTransformation) throws GeometryConversionException {
 		super(workstation,"RPVD","Radar Plan View Display",true,false,true,false);
 		
 		radarMapPanel=new RadarPlanViewPanel(workstation, mapTransformation);

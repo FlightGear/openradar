@@ -19,18 +19,36 @@ import de.knewcleus.fgfs.navaids.NamedFix;
 import de.knewcleus.openradar.ui.Palette;
 
 public class WaypointDisplayLayer implements IMapLayer {
+	protected final String name;
 	protected final INavaidDatabase scenario;
 	protected float fixSize=5.0f;
 	protected float tagDistance=5.0f;
 	protected float tagDirX=1.0f;
 	protected float tagDirY=-1.0f;
+	protected boolean visible=true;
 
 	protected Stroke fixStroke=new BasicStroke(0.0f);
 	
 	protected final Set<NamedFix> fixesWithDesignator=new HashSet<NamedFix>();
 
-	public WaypointDisplayLayer(INavaidDatabase scenario) {
+	public WaypointDisplayLayer(String name, INavaidDatabase scenario) {
+		this.name=name;
 		this.scenario=scenario;
+	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		this.visible=visible;
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return visible;
 	}
 	
 	public Set<NamedFix> getFixesWithDesignator() {
@@ -39,6 +57,9 @@ public class WaypointDisplayLayer implements IMapLayer {
 	
 	@Override
 	public void draw(Graphics2D g2d, IDeviceTransformation deviceTransformation) {
+		if (!isVisible())
+			return;
+
 		Collection<NamedFix> fixes=scenario.getFixDB().getFixes();
 		
 		g2d.setFont(Palette.BEACON_FONT);

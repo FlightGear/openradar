@@ -19,6 +19,7 @@ import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 import de.knewcleus.fgfs.navaids.DBParserException;
+import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.openradar.aircraft.BuddySquawkAllocator;
 import de.knewcleus.openradar.aircraft.CorrelationDatabase;
 import de.knewcleus.openradar.aircraft.ICorrelationDatabase;
@@ -33,7 +34,7 @@ import de.knewcleus.openradar.vessels.fgmp.FGMPAircraft;
 import de.knewcleus.openradar.vessels.fgmp.FGMPRegistry;
 
 public class OpenRadar {
-	public static void main(String[] args) throws DBParserException, IOException, ClassNotFoundException, MultiplayerException, ParserConfigurationException, SAXException {
+	public static void main(String[] args) throws DBParserException, IOException, ClassNotFoundException, MultiplayerException, ParserConfigurationException, SAXException, GeometryConversionException {
 		LookAndFeel refghmiLookAndFeel=new REFGHMILookAndFeel();
 		try {
 			UIManager.setLookAndFeel(refghmiLookAndFeel);

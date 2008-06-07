@@ -9,6 +9,7 @@ import java.util.prefs.Preferences;
 import javax.swing.JFrame;
 
 import de.knewcleus.fgfs.location.LocalProjection;
+import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.openradar.aircraft.AircraftStateManager;
 import de.knewcleus.openradar.aircraft.ICorrelationDatabase;
 import de.knewcleus.openradar.aircraft.ISquawkAllocator;
@@ -32,7 +33,7 @@ public class RadarWorkstation {
 	/* The set of desktops */
 	protected final List<RadarDesktop> desktops=new ArrayList<RadarDesktop>();
 
-	public RadarWorkstation(Sector sector, IPositionDataProvider radarDataProvider, ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) {
+	public RadarWorkstation(Sector sector, IPositionDataProvider radarDataProvider, ISquawkAllocator squawkAllocator, ICorrelationDatabase correlationDatabase) throws GeometryConversionException {
 		this.sector=sector;
 		this.squawkAllocator=squawkAllocator;
 		this.correlationDatabase=correlationDatabase;
