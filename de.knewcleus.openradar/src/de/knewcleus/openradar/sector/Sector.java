@@ -67,9 +67,12 @@ public class Sector implements INavaidDatabase {
 		double initialLat=0.0;
 		double initialLon=0.0;
 		double initialElev=0.0;
-		double latRange=3.0;
-		double lonRange=3.0;
 		int defaultXRange=30;
+
+		NodeList mapRangeNodes=document.getElementsByTagName("maprange");
+		Element mapRangeElem=(Element)mapRangeNodes.item(0);
+
+		final Shape mapRange=parseMapRange(mapRangeElem);
 		
 		NodeList initialCenterNodes=document.getElementsByTagName("initialcenter");
 		Element initialCenterElem=(Element)initialCenterNodes.item(0);
@@ -82,17 +85,8 @@ public class Sector implements INavaidDatabase {
 			defaultXRange=Integer.parseInt(initialCenterElem.getAttribute("xrange_nm"));
 		}
 		
-		NodeList mapRangeNodes=document.getElementsByTagName("maprange");
-		Element mapRangeElem=(Element)mapRangeNodes.item(0);
-		
-		lonRange=Double.parseDouble(mapRangeElem.getAttribute("x"))*Units.DEG;
-		latRange=Double.parseDouble(mapRangeElem.getAttribute("y"))*Units.DEG;
-		
 		final Position initialPosition=new Position(initialLon,initialLat,initialElev);
-		final Rectangle2D geographicalRange=new Rectangle2D.Double(
-				initialLon-lonRange/2.0, initialLat-latRange/2.0,
-				lonRange, latRange);
-		Sector sector=new Sector(initialPosition, geographicalRange, defaultXRange);
+		Sector sector=new Sector(initialPosition, mapRange, defaultXRange);
 		
 		NodeList geodataNodes=document.getElementsByTagName("geodata");
 		
@@ -130,6 +124,20 @@ public class Sector implements INavaidDatabase {
 		}
 		
 		return sector;
+	}
+	
+	protected static Shape parseMapRange(Element mapRangeElem) {
+		final String northText=mapRangeElem.getAttribute("north");
+		final String southText=mapRangeElem.getAttribute("south");
+		final String eastText=mapRangeElem.getAttribute("east");
+		final String westText=mapRangeElem.getAttribute("west");
+		
+		final double north=Double.parseDouble(northText);
+		final double south=Double.parseDouble(southText);
+		final double east=Double.parseDouble(eastText);
+		final double west=Double.parseDouble(westText);
+		
+		return new Rectangle2D.Double(south, west, east-west, north-south);
 	}
 	
 	protected void readFixes(URL context, Element geodataElem) throws IOException, DBParserException {
