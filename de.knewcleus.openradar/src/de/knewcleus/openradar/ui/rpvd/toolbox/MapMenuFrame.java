@@ -9,9 +9,9 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import de.knewcleus.openradar.ui.rpvd.IMapLayer;
+import de.knewcleus.openradar.ui.map.IMapLayer;
+import de.knewcleus.openradar.ui.map.RadarMapPanel;
 import de.knewcleus.openradar.ui.rpvd.RadarPlanViewDisplay;
-import de.knewcleus.openradar.ui.rpvd.RadarPlanViewPanel;
 
 public class MapMenuFrame extends JInternalFrame {
 	private static final long serialVersionUID = 6741748501762906857L;
@@ -27,7 +27,7 @@ public class MapMenuFrame extends JInternalFrame {
 		
 		final RadarPlanViewDisplay radarPlanViewDisplay=radarToolbox.getRadarPlanViewDisplay();
 		
-		final RadarPlanViewPanel radarMapPanel=radarPlanViewDisplay.getRadarMapPanel();
+		final RadarMapPanel radarMapPanel=radarPlanViewDisplay.getRadarMapPanel();
 		
 		for (final IMapLayer layer: radarMapPanel.getMapLayers()) {
 			final JCheckBox layerCheckbox=new JCheckBox(layer.getName());

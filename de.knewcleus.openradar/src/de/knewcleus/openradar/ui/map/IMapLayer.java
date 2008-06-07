@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.ui.rpvd;
+package de.knewcleus.openradar.ui.map;
 
 import java.awt.Graphics2D;
 

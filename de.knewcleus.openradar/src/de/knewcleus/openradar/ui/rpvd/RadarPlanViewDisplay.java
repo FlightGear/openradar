@@ -13,6 +13,7 @@ import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.openradar.ui.RadarWorkstation;
 import de.knewcleus.openradar.ui.WorkstationGlobalFrame;
+import de.knewcleus.openradar.ui.map.RadarMapPanel;
 import de.knewcleus.openradar.ui.rpvd.toolbox.RadarToolbox;
 
 public class RadarPlanViewDisplay extends WorkstationGlobalFrame {
@@ -20,7 +21,7 @@ public class RadarPlanViewDisplay extends WorkstationGlobalFrame {
 	
 	protected final JLayeredPane layeredPane=new JLayeredPane();
 	protected final JDesktopPane subDesktopPane=new JDesktopPane();
-	protected final RadarPlanViewPanel radarMapPanel;
+	protected final RadarMapPanel radarMapPanel;
 	protected final RadarToolbox radarToolbox;
 
 	protected final Integer RPVD_LAYER=0;
@@ -60,7 +61,7 @@ public class RadarPlanViewDisplay extends WorkstationGlobalFrame {
 		return subDesktopPane;
 	}
 	
-	public RadarPlanViewPanel getRadarMapPanel() {
+	public RadarMapPanel getRadarMapPanel() {
 		return radarMapPanel;
 	}
 	

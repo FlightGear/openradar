@@ -9,15 +9,12 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.location.CoordinateDeviceTransformation;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
@@ -28,7 +25,10 @@ import de.knewcleus.openradar.sector.Sector;
 import de.knewcleus.openradar.ui.Palette;
 import de.knewcleus.openradar.ui.RadarWorkstation;
 import de.knewcleus.openradar.ui.core.DisplayElement;
+import de.knewcleus.openradar.ui.map.GeometryMapLayer;
+import de.knewcleus.openradar.ui.map.LandmassMapLayer;
 import de.knewcleus.openradar.ui.map.RadarMapPanel;
+import de.knewcleus.openradar.ui.map.WaypointDisplayLayer;
 import de.knewcleus.openradar.ui.rpvd.tracks.TrackSymbolContainer;
 import de.knewcleus.openradar.vessels.ITrackUpdateListener;
 import de.knewcleus.openradar.vessels.Track;
@@ -41,14 +41,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 
 	protected final Map<Track, DisplayElement> trackSymbolMap=new HashMap<Track, DisplayElement>(); 
 
-	protected final IMapLayer landmassLayer;
-	protected final IMapLayer restrictedLayer;
-	protected final IMapLayer sectorLayer;
-	protected final IMapLayer pavementLayer;
 	protected final WaypointDisplayLayer waypointDisplayLayer;
-	protected final IMapLayer rangeMarkLayer=new RangeMarkLayer();
-	protected final List<IMapLayer> mapLayers;
-
 	protected final float scaleMarkerSize=10.0f;
 	protected final float scaleMarkerDistance=10.0f*(float)Units.NM;
 	protected final float centrelineLength=5.0f*(float)Units.NM;
@@ -63,19 +56,19 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		workstation.getRadarPlanViewSettings().addPropertyChangeListener(this);
 
 		final Sector sector=workstation.getSector();
-		landmassLayer=new LandmassMapLayer("Shoreline",
+		add(new LandmassMapLayer("Shoreline",
 				Palette.LANDMASS, sector.getLandmassPolygons(),
-				Palette.WATERMASS, sector.getWaterPolygons());
-		restrictedLayer=new GeometryMapLayer("Restricted", Palette.RESTRICTED,sector.getRestrictedPolygons());
-		sectorLayer=new GeometryMapLayer("Sector", Palette.SECTOR,sector.getSectorPolygons());
-		pavementLayer=new GeometryMapLayer("Pavement", Palette.PAVEMENT,sector.getPavementPolygons());
-		waypointDisplayLayer=new WaypointDisplayLayer("Waypoints", sector);
-		mapLayers=Arrays.asList(landmassLayer, restrictedLayer, sectorLayer, pavementLayer, waypointDisplayLayer, rangeMarkLayer);
+				Palette.WATERMASS, sector.getWaterPolygons()));
+		add(new GeometryMapLayer("Restricted", Palette.RESTRICTED,sector.getRestrictedPolygons()));
+		add(new GeometryMapLayer("Sector", Palette.SECTOR,sector.getSectorPolygons()));
+		add(new GeometryMapLayer("Pavement", Palette.PAVEMENT,sector.getPavementPolygons()));
 
+		waypointDisplayLayer=new WaypointDisplayLayer("Waypoints", sector);
 		Set<Aerodrome> aerodromes=sector.getFixDB().getFixes(Aerodrome.class);
 		waypointDisplayLayer.getFixesWithDesignator().addAll(aerodromes);
 		Set<DesignatedPoint> designatedPoints=sector.getFixDB().getFixes(DesignatedPoint.class);
 		waypointDisplayLayer.getFixesWithDesignator().addAll(designatedPoints);
+		add(waypointDisplayLayer);
 
 		setBackground(Palette.WATERMASS);
 
@@ -87,10 +80,12 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		workstation.getTargetManager().registerTrackUpdateListener(this);
 	}
 	
-	public List<IMapLayer> getMapLayers() {
-		return mapLayers;
+	@Override
+	protected void paintMapBackground(Graphics2D g2d) {
+		super.paintMapBackground(g2d);
+		drawScaleMarkers(g2d, getDeviceTransformation());
 	}
-
+	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getOldValue().equals(evt.getNewValue())) {
@@ -157,16 +152,6 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 	}
 
 	@Override
-	protected void paintMapBackground(Graphics2D g2d) {
-		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(getMapTransformation(), getDeviceTransformation());
-
-		for (IMapLayer layer: getMapLayers()) {
-			layer.draw(g2d, mapTransformation);
-		}
-		drawScaleMarkers(g2d, getDeviceTransformation());
-	}
-
-	@Override
 	public synchronized void tracksUpdated(Set<Track> targets) {
 		for (Track track: targets) {
 			DisplayElement symbol=trackSymbolMap.get(track);
@@ -189,7 +174,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		remove(symbol);
 	}
 
-	private void drawScaleMarkers(Graphics2D g2d, IDeviceTransformation mapTransformation) {
+	public void drawScaleMarkers(Graphics2D g2d, IDeviceTransformation mapTransformation) {
 		Rectangle bounds=g2d.getClipBounds();
 
 		g2d.setColor(Palette.WINDOW_BLUE);

@@ -6,10 +6,13 @@ import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Point2D;
 import java.util.Collection;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JComponent;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.fgfs.location.CoordinateDeviceTransformation;
 import de.knewcleus.fgfs.location.ICoordinateTransformation;
 import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.location.Position;
@@ -28,6 +31,8 @@ public abstract class RadarMapPanel extends JComponent {
 	protected double xRange=30*Units.NM;
 	protected final DisplayElementContainer displayElementContainer=new DisplayElementContainer();
 	protected final SymbolActivationManager symbolFocusManager=new SymbolActivationManager(displayElementContainer);
+
+	protected final List<IMapLayer> mapLayers=new Vector<IMapLayer>();
 
 	public RadarMapPanel(RadarPlanViewSettings settings, ICoordinateTransformation mapTransformation) {
 		this.settings=settings;
@@ -87,8 +92,14 @@ public abstract class RadarMapPanel extends JComponent {
 		paintMapBackground(g2d);
 		paintSymbols(g2d);
 	}
+
+	protected void paintMapBackground(Graphics2D g2d) {
+		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(getMapTransformation(), getDeviceTransformation());
 	
-	protected abstract void paintMapBackground(Graphics2D g);
+		for (IMapLayer layer: getMapLayers()) {
+			layer.draw(g2d, mapTransformation);
+		}
+	}
 	
 	protected synchronized void paintSymbols(Graphics2D g) {
 		displayElementContainer.paint(g);
@@ -113,6 +124,22 @@ public abstract class RadarMapPanel extends JComponent {
 		return true;
 	}
 	
+	public void add(IMapLayer layer) {
+		mapLayers.add(layer);
+	}
+	
+	public void add(IMapLayer layer, int index) {
+		mapLayers.add(index, layer);
+	}
+	
+	public void remove(IMapLayer layer) {
+		mapLayers.remove(layer);
+	}
+	
+	public List<IMapLayer> getMapLayers() {
+		return mapLayers;
+	}
+
 	protected class RadarMapDeviceTransformation implements IDeviceTransformation {
 		protected double centerX, centerY;
 		protected double scale;

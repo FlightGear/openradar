@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.ui.rpvd;
+package de.knewcleus.openradar.ui.map;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -17,6 +17,7 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 import de.knewcleus.fgfs.navaids.INavaidDatabase;
 import de.knewcleus.fgfs.navaids.NamedFix;
 import de.knewcleus.openradar.ui.Palette;
+import de.knewcleus.openradar.ui.rpvd.TagLayout;
 
 public class WaypointDisplayLayer implements IMapLayer {
 	protected final String name;
