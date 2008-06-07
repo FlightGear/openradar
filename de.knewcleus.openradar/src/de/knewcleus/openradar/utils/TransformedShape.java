@@ -13,20 +13,21 @@ import de.knewcleus.fgfs.location.IDeviceTransformation;
 public class TransformedShape implements Shape {
 	protected final Shape originalShape;
 	protected final IDeviceTransformation deviceTransformation;
-	
-	public TransformedShape(Shape originalShape, IDeviceTransformation deviceTransformation) {
-		this.originalShape=originalShape;
-		this.deviceTransformation=deviceTransformation;
+
+	public TransformedShape(Shape originalShape,
+			IDeviceTransformation deviceTransformation) {
+		this.originalShape = originalShape;
+		this.deviceTransformation = deviceTransformation;
 	}
 
 	@Override
 	public boolean contains(Point2D p) {
-		return contains(p.getX(),p.getY());
+		return contains(p.getX(), p.getY());
 	}
 
 	@Override
 	public boolean contains(Rectangle2D r) {
-		return contains(r.getX(),r.getY(),r.getWidth(),r.getHeight());
+		return contains(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class TransformedShape implements Shape {
 
 	@Override
 	public boolean intersects(Rectangle2D r) {
-		return intersects(r.getX(),r.getY(),r.getWidth(),r.getHeight());
+		return intersects(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	}
 
 	@Override
@@ -51,12 +52,14 @@ public class TransformedShape implements Shape {
 
 	@Override
 	public PathIterator getPathIterator(AffineTransform at) {
-		return new TransformingPathIterator(at,originalShape.getPathIterator(null),deviceTransformation);
+		return new TransformingPathIterator(at, originalShape
+				.getPathIterator(null), deviceTransformation);
 	}
 
 	@Override
 	public PathIterator getPathIterator(AffineTransform at, double flatness) {
-		return new TransformingPathIterator(at,originalShape.getPathIterator(null, flatness),deviceTransformation);
+		return new TransformingPathIterator(at, originalShape.getPathIterator(
+				null, flatness), deviceTransformation);
 	}
 
 	@Override
@@ -66,10 +69,9 @@ public class TransformedShape implements Shape {
 
 	@Override
 	public Rectangle2D getBounds2D() {
-		final PathIterator pi=getPathIterator(null);
 		final double coords[]=new double[6];
 		Rectangle2D bounds=new Rectangle2D.Double();
-		while(!pi.isDone()) {
+		for (PathIterator pi=getPathIterator(null);!pi.isDone();pi.next()) {
 			final int type=pi.currentSegment(coords);
 			switch (type) {
 			case PathIterator.SEG_QUADTO:
