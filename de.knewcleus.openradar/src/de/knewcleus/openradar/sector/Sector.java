@@ -137,7 +137,7 @@ public class Sector implements INavaidDatabase {
 		final double east=Double.parseDouble(eastText);
 		final double west=Double.parseDouble(westText);
 		
-		return new Rectangle2D.Double(south, west, east-west, north-south);
+		return new Rectangle2D.Double(west, south, east-west, north-south);
 	}
 	
 	protected void readFixes(URL context, Element geodataElem) throws IOException, DBParserException {
