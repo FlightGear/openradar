@@ -1,9 +1,8 @@
 <sector>
-	<initialcenter lon="8.54902" lat="50.02968" elev="364" xrange_nm="50"/>
-	<maprange north="51" south="49"
-	          east="9.5" west="7.5" />
-	<geodata theme="apts" type="xplane" ref="../apt.dat.gz" />
-	<!-- <geodata theme="fixes" type="xplane" ref="../fix.dat.gz" /> -->
+	<initialcenter lon="13.403854" lat="52.473154" elev="167.0" xrange_nm="50"/>
+	<maprange north="54" south="51" east="15" west="12" />
+	<geodata theme="apts" type="shape" layer="apt_airfield" />
+	<geodata type="xplane_fixes" ref="../fix.dat.gz" />
 	<geodata theme="nav" type="xplane" ref="../nav.dat.gz" />
 	<geodata theme="awy" type="xplane" ref="../awy.dat.gz" />
 	<geodata theme="landmass" type="shape" layer="v0_landmass" />
@@ -11,6 +10,6 @@
 	<geodata theme="pavement" type="shape" layer="apt_runway" />
 	<geodata theme="pavement" type="shape" layer="apt_tarmac" />
 	<!-- <geodata theme="restricted" type="poly" ref="restricted.poly" /> -->
-	<!-- <geodata theme="sector" type="shape" layer="apt_ctr" /> -->
-	<!-- <geodata theme="fixes" type="point" ref="fixes.point" /> -->
+	<geodata theme="sector" type="shape" layer="apt_ctr" />
+	<geodata theme="fixes" type="point" ref="fixes.point" />
 </sector>

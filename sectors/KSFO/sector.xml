@@ -2,7 +2,7 @@
 	<initialcenter lon="-122.37489" lat="37.61896" elev="0.0"/>
 	<maprange north="40" south="36"
 	          east="-120" west="-124" />
-	<geodata theme="apts" type="xplane" ref="../apt.dat.gz" />
+	<geodata theme="apts" type="shape" layer="apt_airfield" />
 	<geodata theme="fixes" type="xplane" ref="../fix.dat.gz" />
 	<geodata theme="nav" type="xplane" ref="../nav.dat.gz" />
 	<geodata theme="awy" type="xplane" ref="../awy.dat.gz" />

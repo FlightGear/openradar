@@ -21,10 +21,12 @@ import org.xml.sax.SAXException;
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.DataFormatException;
 import de.knewcleus.fgfs.geodata.Feature;
+import de.knewcleus.fgfs.geodata.Point;
 import de.knewcleus.fgfs.geodata.PolyReader;
 import de.knewcleus.fgfs.geodata.Polygon;
 import de.knewcleus.fgfs.geodata.ShapefileLayer;
 import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.AirwayDB;
 import de.knewcleus.fgfs.navaids.DBParserException;
 import de.knewcleus.fgfs.navaids.INavaidDatabase;
@@ -167,6 +169,35 @@ public class Sector implements INavaidDatabase {
 			AerodromeParser aerodromeParser=new AerodromeParser(getFixDB(), geographicBounds);
 			InputStream geoStream=location.openStream();
 			aerodromeParser.readCompressed(geoStream);
+		} else if (type.equals("shape")) {
+			try {
+				final String datasourceRef=geodataElem.getAttribute("datasource");
+				final String layer=geodataElem.getAttribute("layer");
+				final URL datasourceLocation=new URL(context, datasourceRef);
+				final ShapefileLayer shapefileLayer=new ShapefileLayer(datasourceLocation, layer);
+				final int icaoIndex=shapefileLayer.getFeatureDefinition().getColumnIndex("ICAO");
+				if (icaoIndex==-1) {
+					throw new DBParserException("Shapefile has no ICAO column");
+				}
+				while (true) {
+					try {
+						final Feature feature=shapefileLayer.getNextFeature();
+						if (feature==null) {
+							break;
+						}
+						if (feature.getGeometry() instanceof Point) {
+							final String icaoID=(String)feature.getDatabaseRow().getField(icaoIndex);
+							final Point arp=(Point)feature.getGeometry();
+							// FIXME: Aerodrome name is missing
+							getFixDB().addFix(new Aerodrome(icaoID, icaoID, new Position(arp.getX(), arp.getY(), arp.getZ())));
+						}
+					} catch (IOException e) {
+						break;
+					}
+				}
+			} catch (DataFormatException e) {
+				throw new DBParserException(e);
+			}
 		} else {
 			logger.info("Unknown type "+type+" for theme 'apts'");
 		}
