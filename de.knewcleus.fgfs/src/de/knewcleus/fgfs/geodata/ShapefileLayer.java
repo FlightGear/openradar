@@ -70,7 +70,7 @@ public class ShapefileLayer implements Layer {
 		if (geometry==null)
 			return null;
 		final int featureID=shpFileReader.getLastFeatureID();
-		final DatabaseRow row;
+		final IDatabaseRow row;
 		if (dbfFileReader!=null) {
 			row=dbfFileReader.readRow(featureID-1);
 		} else {

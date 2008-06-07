@@ -1,5 +1,5 @@
 package de.knewcleus.fgfs.geodata;
 
-public interface DatabaseRow {
+public interface IDatabaseRow {
 	public abstract Object getField(int index);
 }

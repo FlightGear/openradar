@@ -121,7 +121,7 @@ public class DBFFileReader {
 		}
 	}
 
-	public DatabaseRow readRow(int row) throws IOException {
+	public IDatabaseRow readRow(int row) throws IOException {
 		if (row<currentRow || row>=recordCount) {
 			return null;
 		}
@@ -167,7 +167,7 @@ public class DBFFileReader {
 		}
 	}
 
-	protected class DBFRow implements DatabaseRow {
+	protected class DBFRow implements IDatabaseRow {
 		protected final byte[] recordData;
 		protected final Object[] fieldCache;
 

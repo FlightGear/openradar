@@ -4,9 +4,9 @@ public class Feature {
 	protected final FeatureDefinition featureDefinition;
 	protected final int featureID;
 	protected final Geometry geometry;
-	protected final DatabaseRow databaseRow;
+	protected final IDatabaseRow databaseRow;
 	
-	public Feature(FeatureDefinition featureDefinition, int featureID, Geometry geometry, DatabaseRow databaseRow) {
+	public Feature(FeatureDefinition featureDefinition, int featureID, Geometry geometry, IDatabaseRow databaseRow) {
 		this.featureDefinition=featureDefinition;
 		this.featureID=featureID;
 		this.geometry=geometry;
@@ -25,7 +25,7 @@ public class Feature {
 		return geometry;
 	}
 	
-	public DatabaseRow getDatabaseRow() {
+	public IDatabaseRow getDatabaseRow() {
 		return databaseRow;
 	}
 }
