@@ -3,12 +3,12 @@ package de.knewcleus.openradar.ui.rpvd;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 
 
-public class RadarDeviceTransformation implements IDeviceTransformation {
+public class RadarDeviceTransformation implements IMapProjection {
 	protected final RadarPlanViewSettings radarPlanViewSettings;
 	private double centerx, centery, scale=1;
 	
@@ -22,7 +22,7 @@ public class RadarDeviceTransformation implements IDeviceTransformation {
 		scale=2.0/Math.min(width,height);
 	}
 
-	public Position fromDevice(Point2D point) {
+	public Position backward(Point2D point) {
 		double range=radarPlanViewSettings.getRange()*Units.NM;
 		return new Position((point.getX()-centerx)*range*scale,(centery-point.getY())*range*scale,0.0);
 	}
@@ -32,7 +32,7 @@ public class RadarDeviceTransformation implements IDeviceTransformation {
 		return new Position(dimension.getX()*range*scale,-dimension.getY()*range*scale,0.0);
 	}
 
-	public Point2D toDevice(Position pos) {
+	public Point2D forward(Position pos) {
 		double range=radarPlanViewSettings.getRange()*Units.NM;
 		return new Point2D.Double(centerx+pos.getX()/range/scale,centery-pos.getY()/range/scale);
 	}

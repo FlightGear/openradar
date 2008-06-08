@@ -8,14 +8,14 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 
 public class TransformedShape implements Shape {
 	protected final Shape originalShape;
-	protected final IDeviceTransformation deviceTransformation;
+	protected final IMapProjection deviceTransformation;
 
 	public TransformedShape(Shape originalShape,
-			IDeviceTransformation deviceTransformation) {
+			IMapProjection deviceTransformation) {
 		this.originalShape = originalShape;
 		this.deviceTransformation = deviceTransformation;
 	}

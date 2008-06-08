@@ -15,8 +15,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.location.ICoordinateTransformation;
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.DesignatedPoint;
@@ -48,7 +47,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 
 	protected static int selectionRange=10;
 
-	public RadarPlanViewPanel(RadarWorkstation workstation, ICoordinateTransformation mapTransformation) throws GeometryConversionException {
+	public RadarPlanViewPanel(RadarWorkstation workstation, IMapProjection mapTransformation) throws GeometryConversionException {
 		super(workstation.getRadarPlanViewSettings(), mapTransformation);
 		setDoubleBuffered(true); /* Is double buffered */
 		this.workstation=workstation;
@@ -69,6 +68,8 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		Set<DesignatedPoint> designatedPoints=sector.getFixDB().getFixes(DesignatedPoint.class);
 		waypointDisplayLayer.getFixesWithDesignator().addAll(designatedPoints);
 		add(waypointDisplayLayer);
+		
+		add(new RangeMarkLayer());
 
 		setBackground(Palette.WATERMASS);
 
@@ -83,7 +84,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 	@Override
 	protected void paintMapBackground(Graphics2D g2d) {
 		super.paintMapBackground(g2d);
-		drawScaleMarkers(g2d, getDeviceTransformation());
+		drawScaleMarkers(g2d);
 	}
 	
 	@Override
@@ -174,7 +175,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		remove(symbol);
 	}
 
-	public void drawScaleMarkers(Graphics2D g2d, IDeviceTransformation mapTransformation) {
+	public void drawScaleMarkers(Graphics2D g2d) {
 		Rectangle bounds=g2d.getClipBounds();
 
 		g2d.setColor(Palette.WINDOW_BLUE);
@@ -182,8 +183,8 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		if (bounds.getMinX()<=scaleMarkerSize && bounds.getMaxX()>=scaleMarkerSize) {
 			/* Draw left scale markers */
 			Position bottom,top;
-			bottom=mapTransformation.fromDevice(new Point2D.Double(0.0,bounds.getMaxY()));
-			top=mapTransformation.fromDevice(new Point2D.Double(0.0,bounds.getMinY()));
+			bottom=projection.backward(new Point2D.Double(0.0,bounds.getMaxY()));
+			top=projection.backward(new Point2D.Double(0.0,bounds.getMinY()));
 
 			int bottomNumber=(int)Math.floor(bottom.getY()/scaleMarkerDistance);
 			int topNumber=(int)Math.ceil(top.getY()/scaleMarkerDistance);
@@ -193,7 +194,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 
 				Path2D marker=new Path2D.Double();
 
-				Point2D position=mapTransformation.toDevice(new Position(0.0,y,0.0));
+				Point2D position=projection.forward(new Position(0.0,y,0.0));
 
 				marker.moveTo(0.0,position.getY()-scaleMarkerSize*.25f);
 				marker.lineTo(0.0,position.getY()+scaleMarkerSize*.25f);
@@ -207,8 +208,8 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		if (bounds.getMinY()<=getHeight()-scaleMarkerSize && bounds.getMaxY()>=getHeight()) {
 			/* Draw bottom scale markers */
 			Position left,right;
-			left=mapTransformation.fromDevice(new Point2D.Double(bounds.getMinX(),getHeight()));
-			right=mapTransformation.fromDevice(new Point2D.Double(bounds.getMaxX(),getHeight()));
+			left=projection.backward(new Point2D.Double(bounds.getMinX(),getHeight()));
+			right=projection.backward(new Point2D.Double(bounds.getMaxX(),getHeight()));
 
 			int leftNumber=(int)Math.floor(left.getX()/scaleMarkerDistance);
 			int rightNumber=(int)Math.ceil(right.getX()/scaleMarkerDistance);
@@ -218,7 +219,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 
 				Path2D marker=new Path2D.Double();
 
-				Point2D position=mapTransformation.toDevice(new Position(x,0.0,0.0));
+				Point2D position=projection.forward(new Position(x,0.0,0.0));
 
 				marker.moveTo(position.getX()-scaleMarkerSize*.25f,getHeight()-1.0);
 				marker.lineTo(position.getX()+scaleMarkerSize*.25f,getHeight()-1.0);

@@ -7,13 +7,14 @@ import static java.lang.Math.toRadians;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.navaids.INavaidDatabase;
 import de.knewcleus.fgfs.navaids.NamedFix;
 import de.knewcleus.openradar.ui.Palette;
@@ -57,7 +58,7 @@ public class WaypointDisplayLayer implements IMapLayer {
 	}
 	
 	@Override
-	public void draw(Graphics2D g2d, IDeviceTransformation deviceTransformation) {
+	public void draw(Graphics2D g2d, AffineTransform mapTransform, IMapProjection projection) {
 		if (!isVisible())
 			return;
 
@@ -68,7 +69,8 @@ public class WaypointDisplayLayer implements IMapLayer {
 		g2d.setStroke(fixStroke);
 		
 		for (NamedFix fix: fixes) {
-			Point2D pos=deviceTransformation.toDevice(fix.getPosition());
+			final Point2D pos=projection.forward(fix.getPosition());
+			mapTransform.transform(pos, pos);
 			
 			Path2D fixMarker=new Path2D.Double();
 			fixMarker.moveTo(pos.getX(), pos.getY()-fixSize);

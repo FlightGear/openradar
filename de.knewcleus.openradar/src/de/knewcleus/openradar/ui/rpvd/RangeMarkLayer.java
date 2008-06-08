@@ -4,12 +4,13 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.location.MapTransformationHelper;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.openradar.ui.Palette;
@@ -35,20 +36,19 @@ public class RangeMarkLayer implements IMapLayer {
 		this.visible=visible;
 	}
 	
-	public void draw(Graphics2D g2d, IDeviceTransformation mapTransformation) {
+	public void draw(Graphics2D g2d, AffineTransform mapTransformation, IMapProjection projection) {
 		if (!isVisible())
 			return;
 		g2d.setColor(Palette.WINDOW_BLUE);
 		g2d.setStroke(rangeMarkStroke);
 
+		final AffineTransform oldTransformation=g2d.getTransform();
+		g2d.transform(mapTransformation);
 		Rectangle2D clipRect=g2d.getClipBounds().getBounds2D();
 
-		Point2D topLeftLocal=new Point2D.Double(clipRect.getMinX(),clipRect.getMinY());
-		Point2D bottomRightLocal=new Point2D.Double(clipRect.getMaxX(),clipRect.getMaxY());
+		Point2D topLeft=new Point2D.Double(clipRect.getMinX(),clipRect.getMinY());
+		Point2D bottomRight=new Point2D.Double(clipRect.getMaxX(),clipRect.getMaxY());
 		
-		Position topLeft=mapTransformation.fromDevice(topLeftLocal);
-		Position bottomRight=mapTransformation.fromDevice(bottomRightLocal);
-
 		double rSquaredMax=(Math.max(topLeft.getX()*topLeft.getX(), bottomRight.getX()*bottomRight.getX())+
 				Math.max(topLeft.getY()*topLeft.getY(),bottomRight.getY()*bottomRight.getY()));
 
@@ -58,12 +58,13 @@ public class RangeMarkLayer implements IMapLayer {
 		rMin=Math.max(rangeMarks,Math.floor(rMin/rangeMarks)*rangeMarks);
 		rMax=Math.ceil(rMax/rangeMarks)*rangeMarks;
 		
-		MapTransformationHelper mapTransformationHelper=new MapTransformationHelper(mapTransformation);
+		MapTransformationHelper mapTransformationHelper=new MapTransformationHelper(projection);
 		for (double r=rMin;r<=rMax;r+=rangeMarks) {
 			Rectangle2D markBox=mapTransformationHelper.toLocal(new Position(-r,-r,0.0), new Position(r,r,0.0));
 			Shape mark=new Ellipse2D.Double(markBox.getX(),markBox.getY(),markBox.getWidth(), markBox.getHeight());
 			g2d.draw(mark);
 		}
+		g2d.setTransform(oldTransformation);
 	}
 
 }

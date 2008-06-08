@@ -5,15 +5,15 @@ import java.awt.geom.Rectangle2D;
 
 
 public class MapTransformationHelper {
-	protected IDeviceTransformation mapTransformation;
+	protected IMapProjection mapTransformation;
 	
-	public MapTransformationHelper(IDeviceTransformation mapTransformation) {
+	public MapTransformationHelper(IMapProjection mapTransformation) {
 		this.mapTransformation=mapTransformation;
 	}
 	
 	public Rectangle2D toLocal(Position p0, Position p1) {
-		Point2D localP0=mapTransformation.toDevice(p0);
-		Point2D localP1=mapTransformation.toDevice(p1);
+		Point2D localP0=mapTransformation.forward(p0);
+		Point2D localP1=mapTransformation.forward(p1);
 		
 		double xmin,xmax,ymin,ymax;
 		

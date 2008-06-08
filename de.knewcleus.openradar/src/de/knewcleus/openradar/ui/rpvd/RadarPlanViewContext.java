@@ -1,14 +1,14 @@
 package de.knewcleus.openradar.ui.rpvd;
 
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.openradar.ui.map.RadarMapPanel;
 
 public class RadarPlanViewContext {
 	protected final RadarMapPanel radarPlanViewPanel;
 	protected final RadarPlanViewSettings radarPlanViewSettings;
-	protected final IDeviceTransformation deviceTransformation;
+	protected final IMapProjection deviceTransformation;
 	
-	public RadarPlanViewContext(RadarMapPanel radarPlanViewPanel, RadarPlanViewSettings radarPlanViewSettings, IDeviceTransformation deviceTransformation) {
+	public RadarPlanViewContext(RadarMapPanel radarPlanViewPanel, RadarPlanViewSettings radarPlanViewSettings, IMapProjection deviceTransformation) {
 		this.radarPlanViewPanel=radarPlanViewPanel;
 		this.radarPlanViewSettings=radarPlanViewSettings;
 		this.deviceTransformation=deviceTransformation;
@@ -22,7 +22,7 @@ public class RadarPlanViewContext {
 		return radarPlanViewSettings;
 	}
 	
-	public IDeviceTransformation getDeviceTransformation() {
+	public IMapProjection getDeviceTransformation() {
 		return deviceTransformation;
 	}
 }

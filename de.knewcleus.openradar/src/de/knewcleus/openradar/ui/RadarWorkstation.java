@@ -8,7 +8,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 
-import de.knewcleus.fgfs.location.LocalProjection;
+import de.knewcleus.fgfs.location.LocalSphericalProjection;
 import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.openradar.aircraft.AircraftStateManager;
 import de.knewcleus.openradar.aircraft.ICorrelationDatabase;
@@ -43,7 +43,7 @@ public class RadarWorkstation {
 		aircraftStateManager=new AircraftStateManager();
 		
 		/* Make sure to register all global frames before creating the desktops */
-		final RadarPlanViewDisplay radarPlanViewDisplay=new RadarPlanViewDisplay(this, new LocalProjection(sector.getInitialCenter()));
+		final RadarPlanViewDisplay radarPlanViewDisplay=new RadarPlanViewDisplay(this, new LocalSphericalProjection(sector.getInitialCenter()));
 		registerGlobalFrame(radarPlanViewDisplay);
 		final FGCOMFrame comFrame=new FGCOMFrame(this);
 		registerGlobalFrame(comFrame);

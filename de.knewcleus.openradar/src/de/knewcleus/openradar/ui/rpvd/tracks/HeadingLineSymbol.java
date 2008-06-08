@@ -1,6 +1,7 @@
 package de.knewcleus.openradar.ui.rpvd.tracks;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -8,8 +9,7 @@ import java.awt.geom.Rectangle2D;
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodesicUtils;
-import de.knewcleus.fgfs.location.ICoordinateTransformation;
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.openradar.ui.Palette;
@@ -53,8 +53,8 @@ public class HeadingLineSymbol extends DisplayElement {
 		invalidate();
 		final RadarMapPanel mapPanel=(RadarMapPanel)getDisplayComponent();
 		final RadarPlanViewSettings settings=mapPanel.getSettings();
-		final ICoordinateTransformation mapTransformation=mapPanel.getMapTransformation();
-		final IDeviceTransformation deviceTransformation=mapPanel.getDeviceTransformation();
+		final IMapProjection projection=mapPanel.getProjection();
+		final AffineTransform deviceXForm=mapPanel.getMapTransformation();
 		final Position currentPosition=associatedTrack.getPosition();
 		final double deltaS=associatedTrack.getGroundSpeed()*settings.getSpeedVectorMinutes()*Units.MIN;
 		
@@ -63,13 +63,12 @@ public class HeadingLineSymbol extends DisplayElement {
 				associatedTrack.getTrueCourse(), deltaS);
 		final Position futurePosition=geodesicInformation.getEndPos();
 		
-		final Position currentMapPosition=mapTransformation.forward(currentPosition);
-		final Point2D currentDevicePosition=deviceTransformation.toDevice(currentMapPosition);
+		final Point2D currentMapPosition=projection.forward(currentPosition);
+		final Point2D futureMapPosition=projection.forward(futurePosition);
+		deviceXForm.transform(currentMapPosition, currentMapPosition);
+		deviceXForm.transform(futureMapPosition, futureMapPosition);
 		
-		final Position futureMapPosition=mapTransformation.forward(futurePosition);
-		final Point2D futureDevicePosition=deviceTransformation.toDevice(futureMapPosition);
-		
-		headingLine=new Line2D.Double(currentDevicePosition, futureDevicePosition);
+		headingLine=new Line2D.Double(currentMapPosition, futureMapPosition);
 		invalidate();
 	}
 

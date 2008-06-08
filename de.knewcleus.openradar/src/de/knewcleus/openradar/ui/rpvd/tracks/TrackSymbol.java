@@ -1,11 +1,11 @@
 package de.knewcleus.openradar.ui.rpvd.tracks;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.fgfs.location.ICoordinateTransformation;
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.openradar.autolabel.DisplayObject;
 import de.knewcleus.openradar.ui.Palette;
@@ -48,12 +48,12 @@ public class TrackSymbol extends WorkObjectSymbol implements DisplayObject {
 	public void validate() {
 		invalidate();
 		final RadarMapPanel mapPanel=(RadarMapPanel) getDisplayComponent();
-		final ICoordinateTransformation mapTransformation=mapPanel.getMapTransformation();
-		final IDeviceTransformation deviceTransformation=mapPanel.getDeviceTransformation();
+		final IMapProjection projection=mapPanel.getProjection();
+		final AffineTransform deviceXForm=mapPanel.getMapTransformation();
 		
 		final Position realPosition=getAssociatedTrack().getPosition();
-		final Position mapPosition=mapTransformation.forward(realPosition);
-		devicePosition=deviceTransformation.toDevice(mapPosition);
+		final Point2D mapPosition=projection.forward(realPosition);
+		deviceXForm.transform(mapPosition, devicePosition);
 		validateDependents();
 		invalidate();
 	}

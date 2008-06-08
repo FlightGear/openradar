@@ -4,15 +4,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.location.Position;
 
 public class TransformingPathIterator implements PathIterator {
 	protected final AffineTransform affineTransform;
 	protected final PathIterator originalIterator;
-	protected final IDeviceTransformation deviceTransformation;
+	protected final IMapProjection deviceTransformation;
 
-	public TransformingPathIterator(AffineTransform affineTransform, PathIterator originalIterator, IDeviceTransformation deviceTransformation) {
+	public TransformingPathIterator(AffineTransform affineTransform, PathIterator originalIterator, IMapProjection deviceTransformation) {
 		this.affineTransform=affineTransform;
 		this.originalIterator=originalIterator;
 		this.deviceTransformation=deviceTransformation;
@@ -58,7 +58,7 @@ public class TransformingPathIterator implements PathIterator {
 		for (int i=0;i<numPts;i++) {
 			int off=2*(offset+i);
 			Position position=new Position(coords[off],coords[off+1],0.0);
-			Point2D point=deviceTransformation.toDevice(position);
+			Point2D point=deviceTransformation.forward(position);
 			coords[off]=point.getX();
 			coords[off+1]=point.getY();
 		}
@@ -70,7 +70,7 @@ public class TransformingPathIterator implements PathIterator {
 		for (int i=0;i<numPts;i++) {
 			int off=2*(offset+i);
 			Position position=new Position(coords[off],coords[off+1],0.0);
-			Point2D point=deviceTransformation.toDevice(position);
+			Point2D point=deviceTransformation.forward(position);
 			coords[off]=(float)point.getX();
 			coords[off+1]=(float)point.getY();
 		}

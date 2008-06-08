@@ -1,6 +1,7 @@
 package de.knewcleus.openradar.ui.rpvd.tracks;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -8,8 +9,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
-import de.knewcleus.fgfs.location.ICoordinateTransformation;
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.openradar.ui.Palette;
 import de.knewcleus.openradar.ui.core.DisplayElement;
@@ -69,15 +69,15 @@ public class TrailSymbol extends DisplayElement {
 		final Iterator<PositionBacklogEntry> trailIterator=positionBuffer.descendingIterator();
 		trailIterator.next();
 		
-		final ICoordinateTransformation mapTransformation=mapPanel.getMapTransformation();
-		final IDeviceTransformation deviceTransformation=mapPanel.getDeviceTransformation();
+		final IMapProjection mapTransformation=mapPanel.getProjection();
+		final AffineTransform deviceTransformation=mapPanel.getMapTransformation();
 		
 		for (int i=0;i<settings.getTrackHistoryLength() && trailIterator.hasNext();i++) {
 			
 			final Position realPosition=trailIterator.next().getPosition();
-			final Position mapPosition=mapTransformation.forward(realPosition);
-			final Point2D devicePosition=deviceTransformation.toDevice(mapPosition);
-			trailPointPositions.add(devicePosition);
+			final Point2D mapPosition=mapTransformation.forward(realPosition);
+			deviceTransformation.transform(mapPosition, mapPosition);
+			trailPointPositions.add(mapPosition);
 		}
 		invalidate();
 	}

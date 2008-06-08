@@ -3,11 +3,12 @@ package de.knewcleus.openradar.ui.map;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.knewcleus.fgfs.geodata.Geometry;
-import de.knewcleus.fgfs.location.IDeviceTransformation;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.fgfs.util.GeometryToShapeConverter;
 import de.knewcleus.fgfs.util.TransformedShape;
@@ -43,13 +44,16 @@ public class GeometryMapLayer implements IMapLayer {
 	}
 	
 	@Override
-	public void draw(Graphics2D g2d, IDeviceTransformation transform) {
+	public void draw(Graphics2D g2d, AffineTransform mapTransform, IMapProjection projection) {
 		if (!isVisible())
 			return;
+		final AffineTransform oldTransform=g2d.getTransform();
+		g2d.transform(mapTransform);
 		g2d.setColor(color);
 		for (Shape shape: shapes) {
-			final Shape transformedShape=new TransformedShape(shape,transform);
+			final Shape transformedShape=new TransformedShape(shape,projection);
 			g2d.fill(transformedShape);
 		}
+		g2d.setTransform(oldTransform);
 	}
 }

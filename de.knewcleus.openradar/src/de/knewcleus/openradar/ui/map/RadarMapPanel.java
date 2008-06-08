@@ -4,6 +4,7 @@ import java.awt.AWTEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.List;
@@ -12,11 +13,7 @@ import java.util.Vector;
 import javax.swing.JComponent;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.location.CoordinateDeviceTransformation;
-import de.knewcleus.fgfs.location.ICoordinateTransformation;
-import de.knewcleus.fgfs.location.IDeviceTransformation;
-import de.knewcleus.fgfs.location.Position;
-import de.knewcleus.fgfs.location.Vector3D;
+import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.openradar.ui.core.DisplayElement;
 import de.knewcleus.openradar.ui.core.DisplayElementContainer;
 import de.knewcleus.openradar.ui.core.SymbolActivationManager;
@@ -25,8 +22,7 @@ import de.knewcleus.openradar.ui.rpvd.RadarPlanViewSettings;
 public abstract class RadarMapPanel extends JComponent {
 	private static final long serialVersionUID = 242911155359395299L;
 	
-	protected ICoordinateTransformation mapTransformation;
-	protected final RadarMapDeviceTransformation deviceTransformation=new RadarMapDeviceTransformation();
+	protected IMapProjection projection;
 	protected final RadarPlanViewSettings settings;
 	protected double xRange=30*Units.NM;
 	protected final DisplayElementContainer displayElementContainer=new DisplayElementContainer();
@@ -34,9 +30,9 @@ public abstract class RadarMapPanel extends JComponent {
 
 	protected final List<IMapLayer> mapLayers=new Vector<IMapLayer>();
 
-	public RadarMapPanel(RadarPlanViewSettings settings, ICoordinateTransformation mapTransformation) {
+	public RadarMapPanel(RadarPlanViewSettings settings, IMapProjection mapTransformation) {
 		this.settings=settings;
-		this.mapTransformation=mapTransformation;
+		this.projection=mapTransformation;
 		displayElementContainer.setDisplayComponent(this);
 		displayElementContainer.setSymbolActivationManager(symbolFocusManager);
 		setXRange(settings.getRange()*Units.NM);
@@ -46,19 +42,16 @@ public abstract class RadarMapPanel extends JComponent {
 		addMouseMotionListener(symbolFocusManager);
 	}
 	
-	public void setMapTransformation(ICoordinateTransformation mapTransformation) {
-		if (this.mapTransformation.equals(mapTransformation))
+	public void setProjection(IMapProjection projection) {
+		if (this.projection.equals(projection))
 			return;
-		this.mapTransformation = mapTransformation;
+		this.projection = projection;
 		displayElementContainer.validate();
+		repaint();
 	}
 	
-	public ICoordinateTransformation getMapTransformation() {
-		return mapTransformation;
-	}
-	
-	public IDeviceTransformation getDeviceTransformation() {
-		return deviceTransformation;
+	public IMapProjection getProjection() {
+		return projection;
 	}
 	
 	public RadarPlanViewSettings getSettings() {
@@ -71,7 +64,6 @@ public abstract class RadarMapPanel extends JComponent {
 	
 	public void setXRange(double range) {
 		xRange = range;
-		deviceTransformation.validate();
 		displayElementContainer.validate();
 		repaint();
 	}
@@ -79,7 +71,6 @@ public abstract class RadarMapPanel extends JComponent {
 	@Override
 	protected void processComponentEvent(ComponentEvent e) {
 		if (e.getID()==ComponentEvent.COMPONENT_RESIZED || e.getID()==ComponentEvent.COMPONENT_SHOWN) {
-			deviceTransformation.validate();
 			displayElementContainer.validate();
 			repaint();
 		}
@@ -92,12 +83,19 @@ public abstract class RadarMapPanel extends JComponent {
 		paintMapBackground(g2d);
 		paintSymbols(g2d);
 	}
-
-	protected void paintMapBackground(Graphics2D g2d) {
-		IDeviceTransformation mapTransformation=new CoordinateDeviceTransformation(getMapTransformation(), getDeviceTransformation());
 	
+	public AffineTransform getMapTransformation() {
+		final double scale=getWidth()/xRange;
+		final AffineTransform scaleXForm=AffineTransform.getScaleInstance(scale, -scale);
+		final AffineTransform translateXForm=AffineTransform.getTranslateInstance(getWidth()/2.0, getHeight()/2.0);
+		translateXForm.concatenate(scaleXForm);
+		return translateXForm;
+	}
+	
+	protected void paintMapBackground(Graphics2D g2d) {
+		final AffineTransform mapTransformation=getMapTransformation();
 		for (IMapLayer layer: getMapLayers()) {
-			layer.draw(g2d, mapTransformation);
+			layer.draw(g2d, mapTransformation, getProjection());
 		}
 	}
 	
@@ -138,39 +136,5 @@ public abstract class RadarMapPanel extends JComponent {
 	
 	public List<IMapLayer> getMapLayers() {
 		return mapLayers;
-	}
-
-	protected class RadarMapDeviceTransformation implements IDeviceTransformation {
-		protected double centerX, centerY;
-		protected double scale;
-		
-		public void validate() {
-			final int width=getWidth();
-			final int height=getHeight();
-			centerX=width/2;
-			centerY=height/2;
-			scale=width/xRange;
-		}
-		
-		@Override
-		public Position fromDevice(Point2D point) {
-			return new Position((point.getX()-centerX)/scale, (centerY-point.getY())/scale, 0.0);
-		}
-
-		@Override
-		public Position fromDeviceRelative(Point2D dimension) {
-			return new Position(dimension.getX()/scale, -dimension.getY()/scale, 0.0);
-		}
-
-		@Override
-		public Point2D toDevice(Position pos) {
-			return new Point2D.Double(centerX+pos.getX()*scale, centerY-pos.getY()*scale);
-		}
-
-		@Override
-		public Point2D toDeviceRelative(Vector3D dimension) {
-			return new Point2D.Double(dimension.getX()*scale, -dimension.getY()*scale);
-		}
-		
 	}
 }
