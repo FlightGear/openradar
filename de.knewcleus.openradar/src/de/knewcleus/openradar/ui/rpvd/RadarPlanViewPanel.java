@@ -52,6 +52,10 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		setDoubleBuffered(true); /* Is double buffered */
 		this.workstation=workstation;
 
+		final double xRange=getSettings().getRange()*Units.NM;
+		final int viewWidth=getVisibleRect().width;
+		setScale(viewWidth/xRange);
+		
 		workstation.getRadarPlanViewSettings().addPropertyChangeListener(this);
 
 		final Sector sector=workstation.getSector();
@@ -97,9 +101,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 			String propertyName=evt.getPropertyName();
 			final RadarPlanViewSettings settings=getSettings();
 
-			if (propertyName.equals(RadarPlanViewSettings.RANGE_PROPERTY)) {
-				setXRange(getSettings().getRange()*Units.NM);
-			} else if (propertyName.equals(RadarPlanViewSettings.IS_AUTOMATIC_LABELING_ENABLED_PROPERTY) ||
+			if (propertyName.equals(RadarPlanViewSettings.IS_AUTOMATIC_LABELING_ENABLED_PROPERTY) ||
 					propertyName.equals(RadarPlanViewSettings.STANDARD_LABEL_POSITION_PROPERTY) ||
 					propertyName.equals(RadarPlanViewSettings.STANDARD_LABEL_DISTANCE_PROPERTY)) {
 

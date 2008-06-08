@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import javax.swing.JComponent;
 
-import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.openradar.ui.core.DisplayElement;
 import de.knewcleus.openradar.ui.core.DisplayElementContainer;
@@ -24,7 +23,7 @@ public abstract class RadarMapPanel extends JComponent {
 	
 	protected IMapProjection projection;
 	protected final RadarPlanViewSettings settings;
-	protected double xRange=30*Units.NM;
+	protected double scale=1.0;
 	protected final DisplayElementContainer displayElementContainer=new DisplayElementContainer();
 	protected final SymbolActivationManager symbolFocusManager=new SymbolActivationManager(displayElementContainer);
 
@@ -35,7 +34,6 @@ public abstract class RadarMapPanel extends JComponent {
 		this.projection=mapTransformation;
 		displayElementContainer.setDisplayComponent(this);
 		displayElementContainer.setSymbolActivationManager(symbolFocusManager);
-		setXRange(settings.getRange()*Units.NM);
 		setDoubleBuffered(true);
 		enableEvents(AWTEvent.COMPONENT_EVENT_MASK);
 		addMouseListener(symbolFocusManager);
@@ -58,14 +56,14 @@ public abstract class RadarMapPanel extends JComponent {
 		return settings;
 	}
 	
-	public double getXRange() {
-		return xRange;
-	}
-	
-	public void setXRange(double range) {
-		xRange = range;
+	public void setScale(double scale) {
+		this.scale = scale;
 		displayElementContainer.validate();
 		repaint();
+	}
+	
+	public double getScale() {
+		return scale;
 	}
 	
 	@Override
@@ -85,7 +83,6 @@ public abstract class RadarMapPanel extends JComponent {
 	}
 	
 	public AffineTransform getMapTransformation() {
-		final double scale=getWidth()/xRange;
 		final AffineTransform scaleXForm=AffineTransform.getScaleInstance(scale, -scale);
 		final AffineTransform translateXForm=AffineTransform.getTranslateInstance(getWidth()/2.0, getHeight()/2.0);
 		translateXForm.concatenate(scaleXForm);

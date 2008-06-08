@@ -4,11 +4,18 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JLayeredPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.openradar.ui.RadarWorkstation;
@@ -16,7 +23,7 @@ import de.knewcleus.openradar.ui.WorkstationGlobalFrame;
 import de.knewcleus.openradar.ui.map.RadarMapPanel;
 import de.knewcleus.openradar.ui.rpvd.toolbox.RadarToolbox;
 
-public class RadarPlanViewDisplay extends WorkstationGlobalFrame {
+public class RadarPlanViewDisplay extends WorkstationGlobalFrame implements ChangeListener, PropertyChangeListener, ComponentListener {
 	private static final long serialVersionUID = 5923481231980915972L;
 	
 	protected final JLayeredPane layeredPane=new JLayeredPane();
@@ -54,6 +61,9 @@ public class RadarPlanViewDisplay extends WorkstationGlobalFrame {
 			e.printStackTrace();
 		}
 		
+		workstation.getRadarPlanViewSettings().addPropertyChangeListener(this);
+		radarMapPanel.addComponentListener(this);
+		
 		pack();
 	}
 	
@@ -64,6 +74,41 @@ public class RadarPlanViewDisplay extends WorkstationGlobalFrame {
 	public RadarMapPanel getRadarMapPanel() {
 		return radarMapPanel;
 	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getSource()==radarMapPanel.getSettings() &&
+				evt.getPropertyName().equals(RadarPlanViewSettings.RANGE_PROPERTY)) {
+			updateScale();
+		}
+	}
+	
+	protected void updateScale() {
+		final RadarPlanViewSettings settings=radarMapPanel.getSettings();
+
+		final double xRange=settings.getRange()*Units.NM;
+		final int viewWidth=radarMapPanel.getVisibleRect().width;
+		radarMapPanel.setScale(viewWidth/xRange);
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		updateScale();
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		updateScale();
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {}
+
+	@Override
+	public void componentShown(ComponentEvent e) {}
 	
 	class OverlayLayout implements LayoutManager {
 		@Override
