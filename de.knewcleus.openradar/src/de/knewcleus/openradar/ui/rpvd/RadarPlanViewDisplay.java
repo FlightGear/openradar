@@ -11,7 +11,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 
 import javax.swing.JDesktopPane;
-import javax.swing.JLayeredPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -26,7 +25,6 @@ import de.knewcleus.openradar.ui.rpvd.toolbox.RadarToolbox;
 public class RadarPlanViewDisplay extends WorkstationGlobalFrame implements ChangeListener, PropertyChangeListener, ComponentListener {
 	private static final long serialVersionUID = 5923481231980915972L;
 	
-	protected final JLayeredPane layeredPane=new JLayeredPane();
 	protected final JDesktopPane subDesktopPane=new JDesktopPane();
 	protected final RadarMapPanel radarMapPanel;
 	protected final RadarToolbox radarToolbox;
@@ -39,11 +37,9 @@ public class RadarPlanViewDisplay extends WorkstationGlobalFrame implements Chan
 		
 		radarMapPanel=new RadarPlanViewPanel(workstation, mapTransformation);
 
-		layeredPane.setLayout(new OverlayLayout());
-		
-		layeredPane.add(radarMapPanel,RPVD_LAYER);
-		layeredPane.add(subDesktopPane,DESKTOP_LAYER);
-		setContentPane(layeredPane);
+		setLayout(new OverlayLayout());
+		add(subDesktopPane);
+		add(radarMapPanel);
 		
 		radarToolbox=new RadarToolbox(this);
 		
