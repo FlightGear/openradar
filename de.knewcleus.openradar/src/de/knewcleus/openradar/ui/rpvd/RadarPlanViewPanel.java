@@ -5,8 +5,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
@@ -20,6 +23,7 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.DesignatedPoint;
 import de.knewcleus.fgfs.util.GeometryConversionException;
+import de.knewcleus.fgfs.util.TransformedShape;
 import de.knewcleus.openradar.sector.Sector;
 import de.knewcleus.openradar.ui.Palette;
 import de.knewcleus.openradar.ui.RadarWorkstation;
@@ -51,10 +55,6 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 		super(workstation.getRadarPlanViewSettings(), mapTransformation);
 		setDoubleBuffered(true); /* Is double buffered */
 		this.workstation=workstation;
-
-		final double xRange=getSettings().getRange()*Units.NM;
-		final int viewWidth=getVisibleRect().width;
-		setScale(viewWidth/xRange);
 		
 		workstation.getRadarPlanViewSettings().addPropertyChangeListener(this);
 
@@ -235,6 +235,21 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(400,400);
+		final Shape geographicBorder=workstation.getSector().getGeographicBounds();
+		final Shape projectedBorder=new TransformedShape(geographicBorder, getProjection());
+		final Rectangle2D projectedBounds=projectedBorder.getBounds2D();
+		final AffineTransform mapTransformation=getMapTransformation();
+		
+		final Point2D topLeft=new Point2D.Double(projectedBounds.getMinX(), projectedBounds.getMinY());
+		final Point2D bottomRight=new Point2D.Double(projectedBounds.getMaxX(), projectedBounds.getMaxY());
+		
+		mapTransformation.transform(topLeft, topLeft);
+		mapTransformation.transform(bottomRight, bottomRight);
+		
+		projectedBounds.setFrameFromDiagonal(topLeft, bottomRight);
+		
+		final Dimension size=projectedBounds.getBounds().getSize();
+		
+		return size;
 	}
 }

@@ -11,8 +11,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 
 import javax.swing.JDesktopPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.IMapProjection;
@@ -22,7 +20,7 @@ import de.knewcleus.openradar.ui.WorkstationGlobalFrame;
 import de.knewcleus.openradar.ui.map.RadarMapPanel;
 import de.knewcleus.openradar.ui.rpvd.toolbox.RadarToolbox;
 
-public class RadarPlanViewDisplay extends WorkstationGlobalFrame implements ChangeListener, PropertyChangeListener, ComponentListener {
+public class RadarPlanViewDisplay extends WorkstationGlobalFrame implements PropertyChangeListener, ComponentListener {
 	private static final long serialVersionUID = 5923481231980915972L;
 	
 	protected final JDesktopPane subDesktopPane=new JDesktopPane();
@@ -80,20 +78,17 @@ public class RadarPlanViewDisplay extends WorkstationGlobalFrame implements Chan
 	}
 	
 	protected void updateScale() {
+		final int viewWidth=radarMapPanel.getVisibleRect().width;
+		if (viewWidth==0)
+			return;
 		final RadarPlanViewSettings settings=radarMapPanel.getSettings();
 
 		final double xRange=settings.getRange()*Units.NM;
-		final int viewWidth=radarMapPanel.getVisibleRect().width;
 		radarMapPanel.setScale(viewWidth/xRange);
 	}
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		updateScale();
-	}
-
-	@Override
-	public void stateChanged(ChangeEvent e) {
 		updateScale();
 	}
 

@@ -1,8 +1,10 @@
 package de.knewcleus.openradar.ui.map;
 
 import java.awt.AWTEvent;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JComponent;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
 
 import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.openradar.ui.core.DisplayElement;
@@ -18,7 +22,7 @@ import de.knewcleus.openradar.ui.core.DisplayElementContainer;
 import de.knewcleus.openradar.ui.core.SymbolActivationManager;
 import de.knewcleus.openradar.ui.rpvd.RadarPlanViewSettings;
 
-public abstract class RadarMapPanel extends JComponent {
+public abstract class RadarMapPanel extends JComponent implements Scrollable {
 	private static final long serialVersionUID = 242911155359395299L;
 	
 	protected IMapProjection projection;
@@ -59,6 +63,7 @@ public abstract class RadarMapPanel extends JComponent {
 	public void setScale(double scale) {
 		this.scale = scale;
 		displayElementContainer.validate();
+		revalidate();
 		repaint();
 	}
 	
@@ -133,5 +138,34 @@ public abstract class RadarMapPanel extends JComponent {
 	
 	public List<IMapLayer> getMapLayers() {
 		return mapLayers;
+	}
+
+	@Override
+	public Dimension getPreferredScrollableViewportSize() {
+		return getPreferredSize();
+	}
+
+	@Override
+	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+		if (orientation==SwingConstants.VERTICAL) {
+			return visibleRect.height;
+		} else {
+			return visibleRect.width;
+		}
+	}
+
+	@Override
+	public boolean getScrollableTracksViewportHeight() {
+		return false;
+	}
+
+	@Override
+	public boolean getScrollableTracksViewportWidth() {
+		return false;
+	}
+
+	@Override
+	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+		return 1;
 	}
 }
