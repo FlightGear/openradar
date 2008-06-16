@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="idPackage" name="Controller Workflows">
+  <packagedElement xmi:type="uml:Package" xmi:id="_2fH-EDsVEd2mFqxpSS-P0A" name="IFR workflow">
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_j1k5YDqvEd2mFqxpSS-P0A" name="Departure Combined CLD GND">
+      <region xmi:id="_t7LQYDqvEd2mFqxpSS-P0A" name="Region1">
+        <ownedComment xmi:id="_4VtHMjr_Ed2mFqxpSS-P0A" annotatedElement="_5oEVUDqvEd2mFqxpSS-P0A _Jy7qsDsOEd2mFqxpSS-P0A">
+          <body>Input of any command available in Waiting for Clearance state will trigger auto-assume.</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_uH0lQDqvEd2mFqxpSS-P0A" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_utqdQDqvEd2mFqxpSS-P0A" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_5oEVUDqvEd2mFqxpSS-P0A" name="Pending in"/>
+        <subvertex xmi:type="uml:State" xmi:id="_8ml78DqvEd2mFqxpSS-P0A" name="Assumed">
+          <region xmi:id="_8ml78TqvEd2mFqxpSS-P0A" name="Region1">
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_BtwDADqwEd2mFqxpSS-P0A" name="Pseudostate1"/>
+            <subvertex xmi:type="uml:State" xmi:id="_eAanYDqwEd2mFqxpSS-P0A" name="Startup approved"/>
+            <subvertex xmi:type="uml:State" xmi:id="_g8joYDqwEd2mFqxpSS-P0A" name="Pushback approved"/>
+            <subvertex xmi:type="uml:State" xmi:id="_jYiioDqwEd2mFqxpSS-P0A" name="Ready for Taxi"/>
+            <subvertex xmi:type="uml:State" xmi:id="_k_0CcDqwEd2mFqxpSS-P0A" name="Taxiing"/>
+            <subvertex xmi:type="uml:State" xmi:id="_qxUHADqwEd2mFqxpSS-P0A" name="Holding"/>
+            <subvertex xmi:type="uml:State" xmi:id="_3U1KkDqzEd2mFqxpSS-P0A" name="Clearance received"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_97VkgDqzEd2mFqxpSS-P0A" name="Pseudostate2"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_qBKIgDrIEd2mFqxpSS-P0A" name="Pseudostate3" kind="exitPoint"/>
+            <subvertex xmi:type="uml:State" xmi:id="_Jy7qsDsOEd2mFqxpSS-P0A" name="Waiting for Clearance"/>
+            <transition xmi:id="_xV8RoTqwEd2mFqxpSS-P0A" name="Pushback" target="_jYiioDqwEd2mFqxpSS-P0A" source="_eAanYDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_xsaQ4zqwEd2mFqxpSS-P0A" name="Startup" target="_jYiioDqwEd2mFqxpSS-P0A" source="_g8joYDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_y1icIzqwEd2mFqxpSS-P0A" name="Taxi" target="_k_0CcDqwEd2mFqxpSS-P0A" source="_eAanYDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_6-ZZozqwEd2mFqxpSS-P0A" name="Hold" target="_qxUHADqwEd2mFqxpSS-P0A" source="_k_0CcDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_Acoj8zqxEd2mFqxpSS-P0A" name="Taxi" target="_k_0CcDqwEd2mFqxpSS-P0A" source="_qxUHADqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_Hhz24DqxEd2mFqxpSS-P0A" name="Taxi" target="_k_0CcDqwEd2mFqxpSS-P0A" source="_jYiioDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_Pql74zqxEd2mFqxpSS-P0A" name="Transfer" target="_qBKIgDrIEd2mFqxpSS-P0A" source="_k_0CcDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_Bf-v8Dq0Ed2mFqxpSS-P0A" name="" target="_Jy7qsDsOEd2mFqxpSS-P0A" source="_97VkgDqzEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_B9MQYzq0Ed2mFqxpSS-P0A" name="Startup" target="_eAanYDqwEd2mFqxpSS-P0A" source="_3U1KkDqzEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_CKaNADq0Ed2mFqxpSS-P0A" name="Pushback" target="_g8joYDqwEd2mFqxpSS-P0A" source="_3U1KkDqzEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_Tnrfszq1Ed2mFqxpSS-P0A" name="Cancel Startup" target="_3U1KkDqzEd2mFqxpSS-P0A" source="_eAanYDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_cD1zszq1Ed2mFqxpSS-P0A" name="Cancel Pushback" target="_3U1KkDqzEd2mFqxpSS-P0A" source="_g8joYDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_c4j1Mzq1Ed2mFqxpSS-P0A" name="Cancel Startup" target="_g8joYDqwEd2mFqxpSS-P0A" source="_jYiioDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_dGwCMzq1Ed2mFqxpSS-P0A" name="Cancel Pushback" target="_eAanYDqwEd2mFqxpSS-P0A" source="_jYiioDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_sErfcDrIEd2mFqxpSS-P0A" name="" target="_pUsYADqwEd2mFqxpSS-P0A" source="_qBKIgDrIEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_NRnYEzsOEd2mFqxpSS-P0A" name="Clearance" target="_3U1KkDqzEd2mFqxpSS-P0A" source="_Jy7qsDsOEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_Rg1xkzsOEd2mFqxpSS-P0A" name="Data-Link Clearance" target="_3U1KkDqzEd2mFqxpSS-P0A" source="_Jy7qsDsOEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_WYwNMzuGEd26faMQhL7mWQ" name="Aircraft reaches holding point" target="_qBKIgDrIEd2mFqxpSS-P0A" source="_k_0CcDqwEd2mFqxpSS-P0A"/>
+          </region>
+        </subvertex>
+        <subvertex xmi:type="uml:State" xmi:id="_pUsYADqwEd2mFqxpSS-P0A" name="Assumed out"/>
+        <subvertex xmi:type="uml:State" xmi:id="_AedzIDq1Ed2mFqxpSS-P0A" name="Pending"/>
+        <transition xmi:id="_PraQszqwEd2mFqxpSS-P0A" name="" target="_utqdQDqvEd2mFqxpSS-P0A" source="_uH0lQDqvEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_P5kBczqwEd2mFqxpSS-P0A" name="EOBT-5min" target="_AedzIDq1Ed2mFqxpSS-P0A" source="_utqdQDqvEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_RBR3czqwEd2mFqxpSS-P0A" name="Assume" target="_8ml78DqvEd2mFqxpSS-P0A" source="_5oEVUDqvEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_TFeuYjqxEd2mFqxpSS-P0A" name="Assume by next Controller" target="_utqdQDqvEd2mFqxpSS-P0A" source="_pUsYADqwEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_D1fZUzq1Ed2mFqxpSS-P0A" name="EOBT-2min" target="_5oEVUDqvEd2mFqxpSS-P0A" source="_AedzIDq1Ed2mFqxpSS-P0A"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_2oHU4Dq7Ed2mFqxpSS-P0A" name="Departure CLD">
+      <region xmi:id="_yQjsgDrAEd2mFqxpSS-P0A" name="Region1">
+        <ownedComment xmi:id="_D5Pb0jsAEd2mFqxpSS-P0A" annotatedElement="_0D5SYDrAEd2mFqxpSS-P0A _t0PcwDrBEd2mFqxpSS-P0A">
+          <body>Input of any command available in Waiting for Clearance state will trigger auto-assume.</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_yeR_cDrAEd2mFqxpSS-P0A" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_y-eicDrAEd2mFqxpSS-P0A" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_0D5SYDrAEd2mFqxpSS-P0A" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_3soToDrAEd2mFqxpSS-P0A" name="Assumed">
+          <region xmi:id="_3soToTrAEd2mFqxpSS-P0A" name="Region1">
+            <subvertex xmi:type="uml:State" xmi:id="_t0PcwDrBEd2mFqxpSS-P0A" name="Waiting for Clearance"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_wAcOkDrBEd2mFqxpSS-P0A" name="Pseudostate1"/>
+            <subvertex xmi:type="uml:State" xmi:id="_wVhGsDrBEd2mFqxpSS-P0A" name="Clearance Received"/>
+            <subvertex xmi:type="uml:State" xmi:id="_xsgu0DrBEd2mFqxpSS-P0A" name="Startup Approved"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="__pIWgDrIEd2mFqxpSS-P0A" name="Pseudostate2" kind="exitPoint"/>
+            <transition xmi:id="_z_F1czrBEd2mFqxpSS-P0A" name="" target="_t0PcwDrBEd2mFqxpSS-P0A" source="_wAcOkDrBEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_0KBTEzrBEd2mFqxpSS-P0A" name="Clearance" target="_wVhGsDrBEd2mFqxpSS-P0A" source="_t0PcwDrBEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_0XHT4zrBEd2mFqxpSS-P0A" name="Startup" target="_xsgu0DrBEd2mFqxpSS-P0A" source="_wVhGsDrBEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_GGLhMzrDEd2mFqxpSS-P0A" name="Transfer" target="__pIWgDrIEd2mFqxpSS-P0A" source="_xsgu0DrBEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_nGYLsDrDEd2mFqxpSS-P0A" name="Data Link Clearance" target="_wVhGsDrBEd2mFqxpSS-P0A" source="_t0PcwDrBEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_BwGqEzrJEd2mFqxpSS-P0A" name="" target="_89yEMDrAEd2mFqxpSS-P0A" source="__pIWgDrIEd2mFqxpSS-P0A"/>
+          </region>
+        </subvertex>
+        <subvertex xmi:type="uml:State" xmi:id="_89yEMDrAEd2mFqxpSS-P0A" name="Assumed Out"/>
+        <subvertex xmi:type="uml:State" xmi:id="_Vm6rMDrDEd2mFqxpSS-P0A" name="Pending"/>
+        <transition xmi:id="_Tv378zrBEd2mFqxpSS-P0A" name="" target="_y-eicDrAEd2mFqxpSS-P0A" source="_yeR_cDrAEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_T6l-MzrBEd2mFqxpSS-P0A" name="EOBT-5min" target="_Vm6rMDrDEd2mFqxpSS-P0A" source="_y-eicDrAEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_UPWGMjrBEd2mFqxpSS-P0A" name="Assume" target="_3soToDrAEd2mFqxpSS-P0A" source="_0D5SYDrAEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_JOmDozrDEd2mFqxpSS-P0A" name="Assume by next controller" target="_y-eicDrAEd2mFqxpSS-P0A" source="_89yEMDrAEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_Y9BEUzrDEd2mFqxpSS-P0A" name="EOBT-2min" target="_0D5SYDrAEd2mFqxpSS-P0A" source="_Vm6rMDrDEd2mFqxpSS-P0A"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_LqygoDrAEd2mFqxpSS-P0A" name="Departure GND">
+      <region xmi:id="_BHOecjrEEd2mFqxpSS-P0A" name="Region1">
+        <ownedComment xmi:id="_LwVT4jsAEd2mFqxpSS-P0A" annotatedElement="_CpXmoDrEEd2mFqxpSS-P0A _oE3-0DrEEd2mFqxpSS-P0A">
+          <body>Input of any command available in Ready for Taxi/Pushback state will trigger auto-assume.</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_BXB1ADrEEd2mFqxpSS-P0A" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_BzRsIDrEEd2mFqxpSS-P0A" name="Pending"/>
+        <subvertex xmi:type="uml:State" xmi:id="_CpXmoDrEEd2mFqxpSS-P0A" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_D0c5sDrEEd2mFqxpSS-P0A" name="Assumed">
+          <region xmi:id="_D0c5sTrEEd2mFqxpSS-P0A" name="Region1">
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_XAt6QDrEEd2mFqxpSS-P0A" name="Pseudostate1"/>
+            <subvertex xmi:type="uml:State" xmi:id="_oE3-0DrEEd2mFqxpSS-P0A" name="Ready for Taxi/Pushback"/>
+            <subvertex xmi:type="uml:State" xmi:id="_sgCikDrEEd2mFqxpSS-P0A" name="Pushback Approved"/>
+            <subvertex xmi:type="uml:State" xmi:id="_up6ZIDrEEd2mFqxpSS-P0A" name="Taxi"/>
+            <subvertex xmi:type="uml:State" xmi:id="_vxeeIDrEEd2mFqxpSS-P0A" name="Hold"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_EuOBADrJEd2mFqxpSS-P0A" name="Pseudostate2" kind="exitPoint"/>
+            <transition xmi:id="_3CVcozrEEd2mFqxpSS-P0A" name="" target="_oE3-0DrEEd2mFqxpSS-P0A" source="_XAt6QDrEEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_3MyZIzrEEd2mFqxpSS-P0A" name="Pushback" target="_sgCikDrEEd2mFqxpSS-P0A" source="_oE3-0DrEEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_3XWqYzrEEd2mFqxpSS-P0A" name="Taxi" target="_up6ZIDrEEd2mFqxpSS-P0A" source="_sgCikDrEEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_3iuz8DrEEd2mFqxpSS-P0A" name="Taxi" target="_up6ZIDrEEd2mFqxpSS-P0A" source="_oE3-0DrEEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_4gDX0zrEEd2mFqxpSS-P0A" name="Hold" target="_vxeeIDrEEd2mFqxpSS-P0A" source="_up6ZIDrEEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_7NtQ4zrEEd2mFqxpSS-P0A" name="Taxi" target="_up6ZIDrEEd2mFqxpSS-P0A" source="_vxeeIDrEEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_KI8hIzrFEd2mFqxpSS-P0A" name="Transfer" target="_EuOBADrJEd2mFqxpSS-P0A" source="_up6ZIDrEEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_WXHuMzrFEd2mFqxpSS-P0A" name="Cancel Pushback" target="_oE3-0DrEEd2mFqxpSS-P0A" source="_sgCikDrEEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_HapyEjrJEd2mFqxpSS-P0A" name="" target="_ZB6V8DrEEd2mFqxpSS-P0A" source="_EuOBADrJEd2mFqxpSS-P0A"/>
+          </region>
+        </subvertex>
+        <subvertex xmi:type="uml:State" xmi:id="_ZB6V8DrEEd2mFqxpSS-P0A" name="Assumed Out"/>
+        <subvertex xmi:type="uml:State" xmi:id="_MBYCYDrFEd2mFqxpSS-P0A" name="Not Concerned"/>
+        <transition xmi:id="_fD_0MzrEEd2mFqxpSS-P0A" name="" target="_MBYCYDrFEd2mFqxpSS-P0A" source="_BXB1ADrEEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_fQkQkzrEEd2mFqxpSS-P0A" name="Transfer by previous controller" target="_CpXmoDrEEd2mFqxpSS-P0A" source="_BzRsIDrEEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_fY0NozrEEd2mFqxpSS-P0A" name="Assume" target="_D0c5sDrEEd2mFqxpSS-P0A" source="_CpXmoDrEEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_PryeoDrFEd2mFqxpSS-P0A" name="Startup by previous controller" target="_BzRsIDrEEd2mFqxpSS-P0A" source="_MBYCYDrFEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_SvBmIzrFEd2mFqxpSS-P0A" name="Assume by next controller" target="_MBYCYDrFEd2mFqxpSS-P0A" source="_ZB6V8DrEEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_qhFQozrGEd2mFqxpSS-P0A" name="Transfer by previous controller" target="_CpXmoDrEEd2mFqxpSS-P0A" source="_MBYCYDrFEd2mFqxpSS-P0A"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_DbA-oDrHEd2mFqxpSS-P0A" name="Departure RWY">
+      <region xmi:id="_ha89IjrHEd2mFqxpSS-P0A" name="Region1">
+        <ownedComment xmi:id="_Ts8lIjsAEd2mFqxpSS-P0A" annotatedElement="_jqbscDrHEd2mFqxpSS-P0A _VzUj8DrNEd2mFqxpSS-P0A">
+          <body>Input of any command available in Ready for Departure state will trigger auto-assume.</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_hmzn0DrHEd2mFqxpSS-P0A" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_iGB6cDrHEd2mFqxpSS-P0A" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_jI8I8DrHEd2mFqxpSS-P0A" name="Pending"/>
+        <subvertex xmi:type="uml:State" xmi:id="_jqbscDrHEd2mFqxpSS-P0A" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_kXLdsDrHEd2mFqxpSS-P0A" name="Assumed">
+          <region xmi:id="_kXLdsTrHEd2mFqxpSS-P0A" name="Region1">
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_LBO3MDrJEd2mFqxpSS-P0A" name="Pseudostate1" kind="exitPoint"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_VeHI8DrNEd2mFqxpSS-P0A" name="Pseudostate2"/>
+            <subvertex xmi:type="uml:State" xmi:id="_VzUj8DrNEd2mFqxpSS-P0A" name="Ready for Departure"/>
+            <subvertex xmi:type="uml:State" xmi:id="_qU_wEDsAEd2mFqxpSS-P0A" name="Cleared for takeoff"/>
+            <subvertex xmi:type="uml:State" xmi:id="_1xfBgDsAEd2mFqxpSS-P0A" name="Line Up"/>
+            <subvertex xmi:type="uml:State" xmi:id="_8mpigDsAEd2mFqxpSS-P0A" name="Aborted Take-Off"/>
+            <subvertex xmi:type="uml:State" xmi:id="_m1hjEDsBEd2mFqxpSS-P0A" name="Vacated"/>
+            <subvertex xmi:type="uml:State" xmi:id="_h0buIDsJEd2mFqxpSS-P0A" name="Hold"/>
+            <transition xmi:id="_eq2XkzrIEd2mFqxpSS-P0A" name="" target="_k4Z7cDrHEd2mFqxpSS-P0A" source="_LBO3MDrJEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_ZR1KAzsAEd2mFqxpSS-P0A" name="" target="_VzUj8DrNEd2mFqxpSS-P0A" source="_VeHI8DrNEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_xJT8gzsAEd2mFqxpSS-P0A" name="Take-Off" target="_qU_wEDsAEd2mFqxpSS-P0A" source="_VzUj8DrNEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_3Pw9YzsAEd2mFqxpSS-P0A" name="Conditional Line-Up" target="_1xfBgDsAEd2mFqxpSS-P0A" source="_VzUj8DrNEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_4ORNADsAEd2mFqxpSS-P0A" name="Line-Up" target="_1xfBgDsAEd2mFqxpSS-P0A" source="_VzUj8DrNEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_6hWp8zsAEd2mFqxpSS-P0A" name="Take-Off" target="_qU_wEDsAEd2mFqxpSS-P0A" source="_1xfBgDsAEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_AEosUzsBEd2mFqxpSS-P0A" name="Abort Take-Off" target="_8mpigDsAEd2mFqxpSS-P0A" source="_qU_wEDsAEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_j07f4zsBEd2mFqxpSS-P0A" name="Transfer to APP/DEP" target="_LBO3MDrJEd2mFqxpSS-P0A" source="_qU_wEDsAEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_ocMl8zsBEd2mFqxpSS-P0A" name="Vacate" target="_m1hjEDsBEd2mFqxpSS-P0A" source="_8mpigDsAEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_oytBczsBEd2mFqxpSS-P0A" name="Vacate" target="_m1hjEDsBEd2mFqxpSS-P0A" source="_1xfBgDsAEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_s8MmYzsBEd2mFqxpSS-P0A" name="Transfer to GND" target="_LBO3MDrJEd2mFqxpSS-P0A" source="_m1hjEDsBEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_jniqgzsJEd2mFqxpSS-P0A" name="Hold" target="_h0buIDsJEd2mFqxpSS-P0A" source="_1xfBgDsAEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_oJ1xAzsJEd2mFqxpSS-P0A" name="Vacate" target="_m1hjEDsBEd2mFqxpSS-P0A" source="_h0buIDsJEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_tBk8AzsJEd2mFqxpSS-P0A" name="Line-Up" target="_1xfBgDsAEd2mFqxpSS-P0A" source="_h0buIDsJEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_vDqIgzsJEd2mFqxpSS-P0A" name="Conditional Line-Up" target="_1xfBgDsAEd2mFqxpSS-P0A" source="_h0buIDsJEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_5CjakDsJEd2mFqxpSS-P0A" name="Take-Off" target="_qU_wEDsAEd2mFqxpSS-P0A" source="_h0buIDsJEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_uYcggzuGEd26faMQhL7mWQ" name="Aircraft reaches predefined height" target="_LBO3MDrJEd2mFqxpSS-P0A" source="_qU_wEDsAEd2mFqxpSS-P0A"/>
+          </region>
+        </subvertex>
+        <subvertex xmi:type="uml:State" xmi:id="_k4Z7cDrHEd2mFqxpSS-P0A" name="Assumed Out"/>
+        <transition xmi:id="_uBN6EzrHEd2mFqxpSS-P0A" name="" target="_iGB6cDrHEd2mFqxpSS-P0A" source="_hmzn0DrHEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_uM0GEzrHEd2mFqxpSS-P0A" name="Startup or Taxi by previous controller" target="_jI8I8DrHEd2mFqxpSS-P0A" source="_iGB6cDrHEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_uZP_kDrHEd2mFqxpSS-P0A" name="Transfer by previous controller" target="_jqbscDrHEd2mFqxpSS-P0A" source="_jI8I8DrHEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_ugeo8zrHEd2mFqxpSS-P0A" name="Assume" target="_kXLdsDrHEd2mFqxpSS-P0A" source="_jqbscDrHEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_u7cGozrHEd2mFqxpSS-P0A" name="Assume by next controller" target="_iGB6cDrHEd2mFqxpSS-P0A" source="_k4Z7cDrHEd2mFqxpSS-P0A"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_037wEDsQEd2mFqxpSS-P0A" name="Arrival RWY">
+      <region xmi:id="_2WtbMjsQEd2mFqxpSS-P0A" name="Region1">
+        <ownedComment xmi:id="_y688ADt-Ed26faMQhL7mWQ" annotatedElement="_SZVYcDsREd2mFqxpSS-P0A _1vemoDsREd2mFqxpSS-P0A">
+          <body>Input of any command available in &quot;On Final&quot; state will trigger auto-assume.</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_PzpvoDsREd2mFqxpSS-P0A" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_QQutMDsREd2mFqxpSS-P0A" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_ROxCwDsREd2mFqxpSS-P0A" name="Pending"/>
+        <subvertex xmi:type="uml:State" xmi:id="_SZVYcDsREd2mFqxpSS-P0A" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_TLgcQDsREd2mFqxpSS-P0A" name="Assumed Out"/>
+        <subvertex xmi:type="uml:State" xmi:id="_UBr2UDsREd2mFqxpSS-P0A" name="Assumed">
+          <region xmi:id="_UBr2UTsREd2mFqxpSS-P0A" name="Region1">
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_ZZVQcDsREd2mFqxpSS-P0A" name="Pseudostate1" kind="exitPoint"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_1GG5gDsREd2mFqxpSS-P0A" name="Pseudostate2"/>
+            <subvertex xmi:type="uml:State" xmi:id="_1vemoDsREd2mFqxpSS-P0A" name="On Final"/>
+            <subvertex xmi:type="uml:State" xmi:id="_5xqCoDsREd2mFqxpSS-P0A" name="Cleared to Land"/>
+            <subvertex xmi:type="uml:State" xmi:id="_6vdHoDsREd2mFqxpSS-P0A" name="Going Around"/>
+            <subvertex xmi:type="uml:State" xmi:id="_CAN_gDsSEd2mFqxpSS-P0A" name="Landed"/>
+            <subvertex xmi:type="uml:State" xmi:id="_EJIMwDsSEd2mFqxpSS-P0A" name="In Visual Circuit"/>
+            <subvertex xmi:type="uml:State" xmi:id="_Kt6IYDsSEd2mFqxpSS-P0A" name="Vacated"/>
+            <transition xmi:id="_bEiOAzsREd2mFqxpSS-P0A" name="" target="_TLgcQDsREd2mFqxpSS-P0A" source="_ZZVQcDsREd2mFqxpSS-P0A"/>
+            <transition xmi:id="_PINJczsSEd2mFqxpSS-P0A" name="" target="_1vemoDsREd2mFqxpSS-P0A" source="_1GG5gDsREd2mFqxpSS-P0A"/>
+            <transition xmi:id="_PTHY8zsSEd2mFqxpSS-P0A" name="Cleared to Land" target="_5xqCoDsREd2mFqxpSS-P0A" source="_1vemoDsREd2mFqxpSS-P0A"/>
+            <transition xmi:id="_QhLHgzsSEd2mFqxpSS-P0A" name="Go Around" target="_6vdHoDsREd2mFqxpSS-P0A" source="_1vemoDsREd2mFqxpSS-P0A"/>
+            <transition xmi:id="_Sl6mczsSEd2mFqxpSS-P0A" name="Touchdown" target="_CAN_gDsSEd2mFqxpSS-P0A" source="_5xqCoDsREd2mFqxpSS-P0A"/>
+            <transition xmi:id="_S5YVAzsSEd2mFqxpSS-P0A" name="Go Around" target="_6vdHoDsREd2mFqxpSS-P0A" source="_5xqCoDsREd2mFqxpSS-P0A"/>
+            <transition xmi:id="_TTPmgzsSEd2mFqxpSS-P0A" name="Visual Circuit" target="_EJIMwDsSEd2mFqxpSS-P0A" source="_6vdHoDsREd2mFqxpSS-P0A"/>
+            <transition xmi:id="_Z3cTUzsSEd2mFqxpSS-P0A" name="Cleared to Land" target="_5xqCoDsREd2mFqxpSS-P0A" source="_EJIMwDsSEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_b-ffYzsSEd2mFqxpSS-P0A" name="Vacate" target="_Kt6IYDsSEd2mFqxpSS-P0A" source="_CAN_gDsSEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_dJtVUDsSEd2mFqxpSS-P0A" name="Transfer to GND" target="_ZZVQcDsREd2mFqxpSS-P0A" source="_CAN_gDsSEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_dbdMozsSEd2mFqxpSS-P0A" name="Transfer to GND" target="_ZZVQcDsREd2mFqxpSS-P0A" source="_Kt6IYDsSEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_oMyoQDsSEd2mFqxpSS-P0A" name="Transfer to DEP/APP" target="_ZZVQcDsREd2mFqxpSS-P0A" source="_6vdHoDsREd2mFqxpSS-P0A"/>
+          </region>
+        </subvertex>
+        <transition xmi:id="_aIy-gzsREd2mFqxpSS-P0A" name="" target="_QQutMDsREd2mFqxpSS-P0A" source="_PzpvoDsREd2mFqxpSS-P0A"/>
+        <transition xmi:id="_aTaTEjsREd2mFqxpSS-P0A" name="ELDT-20min" target="_ROxCwDsREd2mFqxpSS-P0A" source="_QQutMDsREd2mFqxpSS-P0A"/>
+        <transition xmi:id="_adPkgzsREd2mFqxpSS-P0A" name="ELDT-5min" target="_SZVYcDsREd2mFqxpSS-P0A" source="_ROxCwDsREd2mFqxpSS-P0A"/>
+        <transition xmi:id="_alLYgzsREd2mFqxpSS-P0A" name="Assume" target="_UBr2UDsREd2mFqxpSS-P0A" source="_SZVYcDsREd2mFqxpSS-P0A"/>
+        <transition xmi:id="_bXdKAzsREd2mFqxpSS-P0A" name="Assume by next controller" target="_QQutMDsREd2mFqxpSS-P0A" source="_TLgcQDsREd2mFqxpSS-P0A"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_8tiTADsTEd2mFqxpSS-P0A" name="Arrival GND">
+      <region xmi:id="_DaR30DsUEd2mFqxpSS-P0A" name="Region1">
+        <ownedComment xmi:id="_EP2_gDsVEd2mFqxpSS-P0A" annotatedElement="_T7bV8zsUEd2mFqxpSS-P0A _AHnXwzsVEd2mFqxpSS-P0A">
+          <body>Implies Assume</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_GQ4RgDsUEd2mFqxpSS-P0A" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_GlHcIDsUEd2mFqxpSS-P0A" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_HqAnoDsUEd2mFqxpSS-P0A" name="Pending"/>
+        <subvertex xmi:type="uml:State" xmi:id="_ITg3oDsUEd2mFqxpSS-P0A" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_KCEEIDsUEd2mFqxpSS-P0A" name="Assumed">
+          <region xmi:id="_KCEEITsUEd2mFqxpSS-P0A" name="Region1">
+            <ownedComment xmi:id="_h4sPsDuQEd2s45R7EVJBGA" annotatedElement="_9u1FkDuPEd2s45R7EVJBGA">
+              <body>Aircraft data is deleted.</body>
+            </ownedComment>
+            <subvertex xmi:type="uml:State" xmi:id="_0hBIEDsUEd2mFqxpSS-P0A" name="Taxiing"/>
+            <subvertex xmi:type="uml:State" xmi:id="_2GaYkDsUEd2mFqxpSS-P0A" name="Holding"/>
+            <subvertex xmi:type="uml:State" xmi:id="_5EgEcDuPEd2s45R7EVJBGA" name="In Block"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_9u1FkDuPEd2s45R7EVJBGA" name="Pseudostate2" kind="terminate"/>
+            <transition xmi:id="_37tGQzsUEd2mFqxpSS-P0A" name="Hold" target="_2GaYkDsUEd2mFqxpSS-P0A" source="_0hBIEDsUEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_6lOtQzsUEd2mFqxpSS-P0A" name="Taxi" target="_0hBIEDsUEd2mFqxpSS-P0A" source="_2GaYkDsUEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_CwQN8zsVEd2mFqxpSS-P0A" name="Aircraft reaches stand" target="_5EgEcDuPEd2s45R7EVJBGA" source="_0hBIEDsUEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_UfrSgzsUEd2mFqxpSS-P0A" name="AIBT+2min" target="_9u1FkDuPEd2s45R7EVJBGA" source="_5EgEcDuPEd2s45R7EVJBGA"/>
+          </region>
+        </subvertex>
+        <transition xmi:id="_TbIFQzsUEd2mFqxpSS-P0A" name="" target="_GlHcIDsUEd2mFqxpSS-P0A" source="_GQ4RgDsUEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_TldtAzsUEd2mFqxpSS-P0A" name="Assume by previous controller" target="_HqAnoDsUEd2mFqxpSS-P0A" source="_GlHcIDsUEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_TwJ6EzsUEd2mFqxpSS-P0A" name="Transfer by previous controller" target="_ITg3oDsUEd2mFqxpSS-P0A" source="_HqAnoDsUEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_T7bV8zsUEd2mFqxpSS-P0A" name="Taxi" target="_0hBIEDsUEd2mFqxpSS-P0A" source="_ITg3oDsUEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_AHnXwzsVEd2mFqxpSS-P0A" name="Hold" target="_2GaYkDsUEd2mFqxpSS-P0A" source="_ITg3oDsUEd2mFqxpSS-P0A"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_Jzw3gDsWEd2mFqxpSS-P0A" name="Enroute">
+      <region xmi:id="_OKMFMjsWEd2mFqxpSS-P0A" name="Region1">
+        <ownedComment xmi:id="_5LD4gDsYEd2mFqxpSS-P0A" annotatedElement="_ddRNszsWEd2mFqxpSS-P0A">
+          <body>ACT is sent either 10minutes before sector entry or on forced ACT by the previous controller.
+Assume applies for first enroute sector where previous controller is RWY role.</body>
+        </ownedComment>
+        <ownedComment xmi:id="_bwn-UjsZEd2mFqxpSS-P0A" annotatedElement="_P_U6gDsZEd2mFqxpSS-P0A">
+          <body>Available actions:
+- change cleared flight level
+- change exit flight level
+- change exit point/route
+- change next sector
+- change assigned heading
+- change assigned rate of climb/descent
+- change assigned speed
+- assign holding</body>
+        </ownedComment>
+        <ownedComment xmi:id="_BWHY8jsaEd2mFqxpSS-P0A" annotatedElement="_QE_lADsWEd2mFqxpSS-P0A">
+          <body>Available commands:
+- negotiate planned entry level
+- negotiate entry point
+- negotiate sector skipping
+</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_O5OVcDsWEd2mFqxpSS-P0A" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_PEJMADsWEd2mFqxpSS-P0A" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_QE_lADsWEd2mFqxpSS-P0A" name="Pending"/>
+        <subvertex xmi:type="uml:State" xmi:id="_Rj3WwDsWEd2mFqxpSS-P0A" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_SbhXgDsWEd2mFqxpSS-P0A" name="Assumed Out"/>
+        <subvertex xmi:type="uml:State" xmi:id="_P_U6gDsZEd2mFqxpSS-P0A" name="Assumed"/>
+        <transition xmi:id="_dO-6EzsWEd2mFqxpSS-P0A" name="" target="_PEJMADsWEd2mFqxpSS-P0A" source="_O5OVcDsWEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_ddRNszsWEd2mFqxpSS-P0A" name="Assume/ACT by previous controller" target="_QE_lADsWEd2mFqxpSS-P0A" source="_PEJMADsWEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_dnpRszsWEd2mFqxpSS-P0A" name="Transfer by previous controller" target="_Rj3WwDsWEd2mFqxpSS-P0A" source="_QE_lADsWEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_elmuwzsWEd2mFqxpSS-P0A" name="Assume by next controller" target="_PEJMADsWEd2mFqxpSS-P0A" source="_SbhXgDsWEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_SlENszsZEd2mFqxpSS-P0A" name="Assume" target="_P_U6gDsZEd2mFqxpSS-P0A" source="_Rj3WwDsWEd2mFqxpSS-P0A"/>
+        <transition xmi:id="_S39UgzsZEd2mFqxpSS-P0A" name="Transfer" target="_SbhXgDsWEd2mFqxpSS-P0A" source="_P_U6gDsZEd2mFqxpSS-P0A"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_72MYsDt-Ed26faMQhL7mWQ" name="Departure Combined CLD GND RWY">
+      <region xmi:id="_3MP8oDt_Ed26faMQhL7mWQ" name="Region1">
+        <ownedComment xmi:id="_fCs7ADuFEd26faMQhL7mWQ" annotatedElement="_57g_QDt_Ed26faMQhL7mWQ _eErT4DuCEd26faMQhL7mWQ">
+          <body>Input of any command available in Waiting for Clearance state will trigger auto-assume.</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_3aP8YDt_Ed26faMQhL7mWQ" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_3y3QsDt_Ed26faMQhL7mWQ" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_5IsbMDt_Ed26faMQhL7mWQ" name="Pending"/>
+        <subvertex xmi:type="uml:State" xmi:id="_57g_QDt_Ed26faMQhL7mWQ" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_6rkjMDt_Ed26faMQhL7mWQ" name="Assumed Out"/>
+        <subvertex xmi:type="uml:State" xmi:id="_8Ow0QDt_Ed26faMQhL7mWQ" name="Assumed">
+          <region xmi:id="_8Ow0QTt_Ed26faMQhL7mWQ" name="Region1">
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_-KzqMDt_Ed26faMQhL7mWQ" name="Pseudostate1" kind="exitPoint"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_agiewDuCEd26faMQhL7mWQ" name="Pseudostate2"/>
+            <subvertex xmi:type="uml:State" xmi:id="_eErT4DuCEd26faMQhL7mWQ" name="Waiting for Clearance"/>
+            <subvertex xmi:type="uml:State" xmi:id="_fkgH4DuCEd26faMQhL7mWQ" name="Clearance Received"/>
+            <subvertex xmi:type="uml:State" xmi:id="_g7fI8DuCEd26faMQhL7mWQ" name="Startup approved"/>
+            <subvertex xmi:type="uml:State" xmi:id="_iwmQcDuCEd26faMQhL7mWQ" name="Pushback approved"/>
+            <subvertex xmi:type="uml:State" xmi:id="_kTGlADuCEd26faMQhL7mWQ" name="Ready for Taxi"/>
+            <subvertex xmi:type="uml:State" xmi:id="_l4YgwDuCEd26faMQhL7mWQ" name="Taxiing"/>
+            <subvertex xmi:type="uml:State" xmi:id="_nHibgDuCEd26faMQhL7mWQ" name="Holding"/>
+            <subvertex xmi:type="uml:State" xmi:id="_osF-gDuCEd26faMQhL7mWQ" name="Ready for Departure"/>
+            <subvertex xmi:type="uml:State" xmi:id="_quCBEDuCEd26faMQhL7mWQ" name="Lining up"/>
+            <subvertex xmi:type="uml:State" xmi:id="_scMzEDuCEd26faMQhL7mWQ" name="Holding at RWY"/>
+            <subvertex xmi:type="uml:State" xmi:id="_u1ZfEDuCEd26faMQhL7mWQ" name="Cleared for Take-Off"/>
+            <subvertex xmi:type="uml:State" xmi:id="_wXIXkDuCEd26faMQhL7mWQ" name="Aborted Take-Off"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_Acm7cDuFEd26faMQhL7mWQ" name="Pseudostate3" kind="junction"/>
+            <transition xmi:id="_-pXOdDt_Ed26faMQhL7mWQ" name="" target="_6rkjMDt_Ed26faMQhL7mWQ" source="_-KzqMDt_Ed26faMQhL7mWQ"/>
+            <transition xmi:id="_EPoMAjuDEd26faMQhL7mWQ" name="Clearance" target="_fkgH4DuCEd26faMQhL7mWQ" source="_eErT4DuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_F_oxETuDEd26faMQhL7mWQ" name="" target="_eErT4DuCEd26faMQhL7mWQ" source="_agiewDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_GM1fkDuDEd26faMQhL7mWQ" name="Data-Link Clearance" target="_fkgH4DuCEd26faMQhL7mWQ" source="_eErT4DuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_H6OOczuDEd26faMQhL7mWQ" name="Startup" target="_g7fI8DuCEd26faMQhL7mWQ" source="_fkgH4DuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_JIXckzuDEd26faMQhL7mWQ" name="Cancel Startup" target="_fkgH4DuCEd26faMQhL7mWQ" source="_g7fI8DuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_JXjIEjuDEd26faMQhL7mWQ" name="Pushback" target="_iwmQcDuCEd26faMQhL7mWQ" source="_fkgH4DuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_KsI8czuDEd26faMQhL7mWQ" name="Cancel Pushback" target="_fkgH4DuCEd26faMQhL7mWQ" source="_iwmQcDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_LGVlIzuDEd26faMQhL7mWQ" name="Pushback" target="_kTGlADuCEd26faMQhL7mWQ" source="_g7fI8DuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_N4F7EzuDEd26faMQhL7mWQ" name="Cancel Pushback" target="_g7fI8DuCEd26faMQhL7mWQ" source="_kTGlADuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_QZA_szuDEd26faMQhL7mWQ" name="Startup" target="_kTGlADuCEd26faMQhL7mWQ" source="_iwmQcDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_RcKewzuDEd26faMQhL7mWQ" name="Cancel Startup" target="_iwmQcDuCEd26faMQhL7mWQ" source="_kTGlADuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_S5GW0zuDEd26faMQhL7mWQ" name="Taxi" target="_l4YgwDuCEd26faMQhL7mWQ" source="_g7fI8DuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_TGmAQzuDEd26faMQhL7mWQ" name="Taxi" target="_l4YgwDuCEd26faMQhL7mWQ" source="_kTGlADuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_VT4-QzuDEd26faMQhL7mWQ" name="Hold" target="_nHibgDuCEd26faMQhL7mWQ" source="_l4YgwDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_WcXpQzuDEd26faMQhL7mWQ" name="Taxi" target="_l4YgwDuCEd26faMQhL7mWQ" source="_nHibgDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_aoMJczuDEd26faMQhL7mWQ" name="Aircraft reaches holding point" target="_osF-gDuCEd26faMQhL7mWQ" source="_l4YgwDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_fXvBwzuDEd26faMQhL7mWQ" name="Conditional Line-Up" target="_quCBEDuCEd26faMQhL7mWQ" source="_osF-gDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_hgKG0DuDEd26faMQhL7mWQ" name="Line-Up" target="_quCBEDuCEd26faMQhL7mWQ" source="_osF-gDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_jTg60zuDEd26faMQhL7mWQ" name="Cleared for Take-Off" target="_u1ZfEDuCEd26faMQhL7mWQ" source="_quCBEDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_jf370zuDEd26faMQhL7mWQ" name="Hold" target="_scMzEDuCEd26faMQhL7mWQ" source="_quCBEDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_lLXNQzuDEd26faMQhL7mWQ" name="Cleared for Take-Off" target="_u1ZfEDuCEd26faMQhL7mWQ" source="_osF-gDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_Epm80zuEEd26faMQhL7mWQ" name="Cleared for Take-Off" target="_u1ZfEDuCEd26faMQhL7mWQ" source="_scMzEDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_IMDI0zuEEd26faMQhL7mWQ" name="Transfer to APP/DEP" target="_-KzqMDt_Ed26faMQhL7mWQ" source="_u1ZfEDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_e9ECgDuEEd26faMQhL7mWQ" name="Abort Take-Off" target="_wXIXkDuCEd26faMQhL7mWQ" source="_u1ZfEDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_EUAq0DuFEd26faMQhL7mWQ" name="Vacate" target="_Acm7cDuFEd26faMQhL7mWQ" source="_wXIXkDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_EmAZwzuFEd26faMQhL7mWQ" name="Vacate" target="_Acm7cDuFEd26faMQhL7mWQ" source="_scMzEDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_HZ758zuFEd26faMQhL7mWQ" name="" target="_kTGlADuCEd26faMQhL7mWQ" source="_Acm7cDuFEd26faMQhL7mWQ"/>
+            <transition xmi:id="_Cml00zuHEd26faMQhL7mWQ" name="Aircraft reaches predefined height" target="_-KzqMDt_Ed26faMQhL7mWQ" source="_u1ZfEDuCEd26faMQhL7mWQ"/>
+          </region>
+        </subvertex>
+        <transition xmi:id="_9BTrgzt_Ed26faMQhL7mWQ" name="" target="_3y3QsDt_Ed26faMQhL7mWQ" source="_3aP8YDt_Ed26faMQhL7mWQ"/>
+        <transition xmi:id="_9JhzYzt_Ed26faMQhL7mWQ" name="EOBT-5min" target="_5IsbMDt_Ed26faMQhL7mWQ" source="_3y3QsDt_Ed26faMQhL7mWQ"/>
+        <transition xmi:id="_9TiD8zt_Ed26faMQhL7mWQ" name="EOBT-2min" target="_57g_QDt_Ed26faMQhL7mWQ" source="_5IsbMDt_Ed26faMQhL7mWQ"/>
+        <transition xmi:id="_9y2dMzt_Ed26faMQhL7mWQ" name="Assume" target="_8Ow0QDt_Ed26faMQhL7mWQ" source="_57g_QDt_Ed26faMQhL7mWQ"/>
+        <transition xmi:id="_-3VZAzt_Ed26faMQhL7mWQ" name="Assume by next controller" target="_3y3QsDt_Ed26faMQhL7mWQ" source="_6rkjMDt_Ed26faMQhL7mWQ"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_-bSysDt-Ed26faMQhL7mWQ" name="Arrival Combined RWY GND">
+      <region xmi:id="_fGWaADuHEd26faMQhL7mWQ" name="Region1">
+        <ownedComment xmi:id="_WMiKkjuQEd2s45R7EVJBGA" annotatedElement="_Hd0awDuNEd2s45R7EVJBGA _cqw5oDuNEd2s45R7EVJBGA">
+          <body>Input of any command available in &quot;On Final&quot; state will trigger auto-assume.</body>
+        </ownedComment>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_fV-KYDuHEd26faMQhL7mWQ" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_F_liMDuNEd2s45R7EVJBGA" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_G0z6ADuNEd2s45R7EVJBGA" name="Pending"/>
+        <subvertex xmi:type="uml:State" xmi:id="_Hd0awDuNEd2s45R7EVJBGA" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_I7LwoDuNEd2s45R7EVJBGA" name="Assumed Out"/>
+        <subvertex xmi:type="uml:State" xmi:id="_JuNJADuNEd2s45R7EVJBGA" name="Assumed">
+          <region xmi:id="_JuNwEDuNEd2s45R7EVJBGA" name="Region1">
+            <ownedComment xmi:id="_diNXojuQEd2s45R7EVJBGA" annotatedElement="_3fiuQDuOEd2s45R7EVJBGA">
+              <body>Aircraft data is deleted</body>
+            </ownedComment>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_aCTCkDuNEd2s45R7EVJBGA" name="Pseudostate1"/>
+            <subvertex xmi:type="uml:State" xmi:id="_cqw5oDuNEd2s45R7EVJBGA" name="On Final"/>
+            <subvertex xmi:type="uml:State" xmi:id="_edW4oDuNEd2s45R7EVJBGA" name="Cleared to Land"/>
+            <subvertex xmi:type="uml:State" xmi:id="_fkAXoDuNEd2s45R7EVJBGA" name="In Visual Circuit"/>
+            <subvertex xmi:type="uml:State" xmi:id="_gztE8DuNEd2s45R7EVJBGA" name="Landed"/>
+            <subvertex xmi:type="uml:State" xmi:id="_hqqiIDuNEd2s45R7EVJBGA" name="Going Around"/>
+            <subvertex xmi:type="uml:State" xmi:id="_leJa0DuNEd2s45R7EVJBGA" name="Vacated"/>
+            <subvertex xmi:type="uml:State" xmi:id="_mrc7cDuNEd2s45R7EVJBGA" name="Taxiing"/>
+            <subvertex xmi:type="uml:State" xmi:id="_nUqQgDuNEd2s45R7EVJBGA" name="Holding"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_q8lZcDuNEd2s45R7EVJBGA" name="Pseudostate2" kind="exitPoint"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_3fiuQDuOEd2s45R7EVJBGA" name="Pseudostate3" kind="terminate"/>
+            <transition xmi:id="_ri-EAzuNEd2s45R7EVJBGA" name="" target="_I7LwoDuNEd2s45R7EVJBGA" source="_q8lZcDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_IAOHwzuOEd2s45R7EVJBGA" name="" target="_cqw5oDuNEd2s45R7EVJBGA" source="_aCTCkDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_Ipa1wzuOEd2s45R7EVJBGA" name="Cleared to Land" target="_edW4oDuNEd2s45R7EVJBGA" source="_cqw5oDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_KdiexDuOEd2s45R7EVJBGA" name="Go Around" target="_hqqiIDuNEd2s45R7EVJBGA" source="_cqw5oDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_LSGvQzuOEd2s45R7EVJBGA" name="Go Around" target="_hqqiIDuNEd2s45R7EVJBGA" source="_edW4oDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_QlgilDuOEd2s45R7EVJBGA" name="Visual Circuit" target="_fkAXoDuNEd2s45R7EVJBGA" source="_hqqiIDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_QyToczuOEd2s45R7EVJBGA" name="Cleared to Land" target="_edW4oDuNEd2s45R7EVJBGA" source="_fkAXoDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_RRgs8zuOEd2s45R7EVJBGA" name="Touchdown" target="_gztE8DuNEd2s45R7EVJBGA" source="_edW4oDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_Rnj1dDuOEd2s45R7EVJBGA" name="Vacate" target="_leJa0DuNEd2s45R7EVJBGA" source="_gztE8DuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_R8sX8zuOEd2s45R7EVJBGA" name="Taxi" target="_mrc7cDuNEd2s45R7EVJBGA" source="_gztE8DuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_VYM1gzuOEd2s45R7EVJBGA" name="Hold" target="_nUqQgDuNEd2s45R7EVJBGA" source="_gztE8DuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_Vr_UMzuOEd2s45R7EVJBGA" name="Hold" target="_nUqQgDuNEd2s45R7EVJBGA" source="_leJa0DuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_V9ukczuOEd2s45R7EVJBGA" name="Taxi" target="_mrc7cDuNEd2s45R7EVJBGA" source="_leJa0DuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_iCq9AzuOEd2s45R7EVJBGA" name="Transfer to APP/DEP" target="_q8lZcDuNEd2s45R7EVJBGA" source="_hqqiIDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_kAZ1AzuOEd2s45R7EVJBGA" name="Aircraft reaches stand" target="_3fiuQDuOEd2s45R7EVJBGA" source="_mrc7cDuNEd2s45R7EVJBGA"/>
+          </region>
+        </subvertex>
+        <transition xmi:id="_Qc7q0TuNEd2s45R7EVJBGA" name="" target="_F_liMDuNEd2s45R7EVJBGA" source="_fV-KYDuHEd26faMQhL7mWQ"/>
+        <transition xmi:id="_QmpngzuNEd2s45R7EVJBGA" name="EDLT-20min" target="_G0z6ADuNEd2s45R7EVJBGA" source="_F_liMDuNEd2s45R7EVJBGA"/>
+        <transition xmi:id="_QuFsQzuNEd2s45R7EVJBGA" name="ELDT-5min/Transfer by previous controller" target="_Hd0awDuNEd2s45R7EVJBGA" source="_G0z6ADuNEd2s45R7EVJBGA"/>
+        <transition xmi:id="_RmEdIzuNEd2s45R7EVJBGA" name="Assume" target="_JuNJADuNEd2s45R7EVJBGA" source="_Hd0awDuNEd2s45R7EVJBGA"/>
+        <transition xmi:id="_rukQAzuNEd2s45R7EVJBGA" name="Assume by next controller" target="_F_liMDuNEd2s45R7EVJBGA" source="_I7LwoDuNEd2s45R7EVJBGA"/>
+      </region>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_Brz48DsWEd2mFqxpSS-P0A" name="VFR workflow"/>
+  <packagedElement xmi:type="uml:StateMachine" xmi:id="_U4FTkDulEd2s45R7EVJBGA" name="Generic Workflow" isAbstract="true">
+    <region xmi:id="_bRfssDulEd2s45R7EVJBGA" name="Region1">
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="_bpk1gDulEd2s45R7EVJBGA" name="Pseudostate1"/>
+      <subvertex xmi:type="uml:State" xmi:id="_b-pGkDulEd2s45R7EVJBGA" name="Not Concerned">
+        <eAnnotations xmi:id="_xeItADuwEd2s45R7EVJBGA" source="http://www.topcased.org/documentation">
+          <details xmi:id="_xeJUEDuwEd2s45R7EVJBGA" key="documentation" value="Represents the state in which the aircraft is not correlated or no advanced information about the aircraft is available.&#xA;&#xA;Information available in this state consists of&#xA;- position&#xA;- ground speed&#xA;- course&#xA;- information provided by SSR (if available)&#xA;- correlated callsign (if available)&#xA;"/>
+        </eAnnotations>
+      </subvertex>
+      <subvertex xmi:type="uml:State" xmi:id="_d5ebkDulEd2s45R7EVJBGA" name="Pending">
+        <eAnnotations xmi:id="_1OD7YDuwEd2s45R7EVJBGA" source="http://www.topcased.org/documentation">
+          <details xmi:id="_1OEicDuwEd2s45R7EVJBGA" key="documentation" value="Represents the state in which advanced information about the vessel is available, but the vessel has not yet been passed to the current controller's responsibility.&#xA;&#xA;Entering the state also signals the start of lifetime for the actual workflow, as the information required to decide on the form of the workflow (departing or arriving aircraft, flight rules, etc.) are not available before the reception of advanced information.&#xA;&#xA;Coordination with the previous controller can take place in this state.&#xA;&#xA;Information available in this state includes:&#xA;- Information also available in &quot;Not Concerned&quot; state&#xA;- amended flightplan/route, if available&#xA;- estimated time of transfer of responsibility, if available&#xA;"/>
+        </eAnnotations>
+      </subvertex>
+      <subvertex xmi:type="uml:State" xmi:id="_elRKkDulEd2s45R7EVJBGA" name="Pending In">
+        <eAnnotations xmi:id="_3EUSYDuwEd2s45R7EVJBGA" source="http://www.topcased.org/documentation">
+          <details xmi:id="_3EU5cDuwEd2s45R7EVJBGA" key="documentation" value="Represents the state in which responsibility transfer was initiated by the previous controller position, but responsibility has not yet been assumed by the current controller positition.&#xA;&#xA;Responsibility is still with the previous controller, but the vessel may be in transition from the previous to the frequency of the current controller position.&#xA;&#xA;Available information is the same as in state &quot;Pending&quot;, but may have been updated in the process of coordination.&#xA;"/>
+        </eAnnotations>
+      </subvertex>
+      <subvertex xmi:type="uml:State" xmi:id="_ffU_EDulEd2s45R7EVJBGA" name="Assumed">
+        <eAnnotations xmi:id="_4mOxEDuwEd2s45R7EVJBGA" source="http://www.topcased.org/documentation">
+          <details xmi:id="_4mPYIDuwEd2s45R7EVJBGA" key="documentation" value="Represents the state in which the current controller position is responsible for the vessel.&#xA;&#xA;The current controller position is the master for the information about the vessel.&#xA;&#xA;Coordination with the next controller position is possible as soon as advanced information has been sent to the next controller position.&#xA;&#xA;In some cases, sending of advanced information to the next controller position starts with the assumption of responsibility by the current controller position, in some other cases advanced information is sent a given period of time before the estimated time of transfer of responsibility or when entering a given workstate. In the latter case, forcing the transmission of advanced information can be enforced by input of an appropriate command.&#xA;"/>
+        </eAnnotations>
+      </subvertex>
+      <subvertex xmi:type="uml:State" xmi:id="_gIdboDulEd2s45R7EVJBGA" name="Assumed Out">
+        <eAnnotations xmi:id="_6N2PIDuwEd2s45R7EVJBGA" source="http://www.topcased.org/documentation">
+          <details xmi:id="_6N22MDuwEd2s45R7EVJBGA" key="documentation" value="Represents the state in which the current controller position has initiated transfer of responsibility to the next controller position.&#xA;&#xA;The current controller position is still responsible for the vessel, but the vessel may be in transition to the frequency of the next controller position.&#xA;&#xA;Available information is the same as in &quot;Assumed&quot; state."/>
+        </eAnnotations>
+      </subvertex>
+      <transition xmi:id="_k4ZVhTulEd2s45R7EVJBGA" name="Reception of advanced information" target="_d5ebkDulEd2s45R7EVJBGA" source="_b-pGkDulEd2s45R7EVJBGA"/>
+      <transition xmi:id="_lBF-gzulEd2s45R7EVJBGA" name="Transfer from previous position" target="_elRKkDulEd2s45R7EVJBGA" source="_d5ebkDulEd2s45R7EVJBGA"/>
+      <transition xmi:id="_lKsmdDulEd2s45R7EVJBGA" name="Assume" target="_ffU_EDulEd2s45R7EVJBGA" source="_elRKkDulEd2s45R7EVJBGA"/>
+      <transition xmi:id="_lUnXczulEd2s45R7EVJBGA" name="Transfer to next position" target="_gIdboDulEd2s45R7EVJBGA" source="_ffU_EDulEd2s45R7EVJBGA"/>
+      <transition xmi:id="_lfDF0DulEd2s45R7EVJBGA" name="Assume by next position" target="_b-pGkDulEd2s45R7EVJBGA" source="_gIdboDulEd2s45R7EVJBGA"/>
+      <transition xmi:id="_ISDxwzumEd2s45R7EVJBGA" name="create" target="_b-pGkDulEd2s45R7EVJBGA" source="_bpk1gDulEd2s45R7EVJBGA"/>
+    </region>
+  </packagedElement>
+</uml:Package>
