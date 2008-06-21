@@ -9,7 +9,7 @@
         <subvertex xmi:type="uml:State" xmi:id="_BMuXYD-DEd2EZpzOUIIQYA" name="Pre-Taxi Preparation" isLeaf="true" submachine="_4GoLAD-BEd2EZpzOUIIQYA"/>
         <subvertex xmi:type="uml:State" xmi:id="_THJVkD-DEd2EZpzOUIIQYA" name="Taxi Outbound" submachine="_QXVD4D-EEd2EZpzOUIIQYA"/>
         <subvertex xmi:type="uml:State" xmi:id="_2maDgD-DEd2EZpzOUIIQYA" name="Take-Off" submachine="_WJzY0D-EEd2EZpzOUIIQYA">
-          <connection xmi:id="_yGywsD-bEd2EZpzOUIIQYA" name="Take-Off Aborted" exit="_TQ5CQD-VEd2EZpzOUIIQYA"/>
+          <connection xmi:id="_yGywsD-bEd2EZpzOUIIQYA" name="Take-Off Aborted" exit="_7ApvsD_PEd2EZpzOUIIQYA"/>
         </subvertex>
         <subvertex xmi:type="uml:State" xmi:id="_Xx_xwD-cEd2EZpzOUIIQYA" name="Departure"/>
         <subvertex xmi:type="uml:State" xmi:id="_Ye9I8D-dEd2EZpzOUIIQYA" name="Taxi Inbound"/>
@@ -27,8 +27,12 @@
         <transition xmi:id="_bv-00D-dEd2EZpzOUIIQYA" name="" target="_LJlVAD92Ed2EZpzOUIIQYA" source="_aC3LsD-dEd2EZpzOUIIQYA"/>
         <transition xmi:id="_tIMd0z-dEd2EZpzOUIIQYA" name="Abort Departure" target="_qz1OgD-dEd2EZpzOUIIQYA" source="_THJVkD-DEd2EZpzOUIIQYA"/>
         <transition xmi:id="_tpEWQz-dEd2EZpzOUIIQYA" name="" target="_Ye9I8D-dEd2EZpzOUIIQYA" source="_qz1OgD-dEd2EZpzOUIIQYA"/>
-        <transition xmi:id="_uApIwz-dEd2EZpzOUIIQYA" name="Return to Gate" target="_qz1OgD-dEd2EZpzOUIIQYA" source="_yGywsD-bEd2EZpzOUIIQYA"/>
-        <transition xmi:id="_CasyID-eEd2EZpzOUIIQYA" name="Return to RWY" target="_THJVkD-DEd2EZpzOUIIQYA" source="_yGywsD-bEd2EZpzOUIIQYA"/>
+        <transition xmi:id="_uApIwz-dEd2EZpzOUIIQYA" name="Return to Gate" target="_qz1OgD-dEd2EZpzOUIIQYA" source="_yGywsD-bEd2EZpzOUIIQYA">
+          <trigger xmi:id="_l0rLED_YEd2EZpzOUIIQYA" event="_jGrTwD_YEd2EZpzOUIIQYA"/>
+        </transition>
+        <transition xmi:id="_CasyID-eEd2EZpzOUIIQYA" name="Return to RWY" target="_THJVkD-DEd2EZpzOUIIQYA" source="_yGywsD-bEd2EZpzOUIIQYA">
+          <trigger xmi:id="_nl5RED_YEd2EZpzOUIIQYA" event="_f-v5gD_YEd2EZpzOUIIQYA"/>
+        </transition>
       </region>
     </packagedElement>
     <packagedElement xmi:type="uml:StateMachine" xmi:id="_4GoLAD-BEd2EZpzOUIIQYA" name="Pre-Taxi" submachineState="_BMuXYD-DEd2EZpzOUIIQYA">
@@ -36,7 +40,9 @@
         <subvertex xmi:type="uml:State" xmi:id="_iIa9YD94Ed2EZpzOUIIQYA" name="Waiting for Clearance"/>
         <subvertex xmi:type="uml:Pseudostate" xmi:id="_wGRP8D-GEd2EZpzOUIIQYA" name="Pseudostate1"/>
         <subvertex xmi:type="uml:FinalState" xmi:id="_xGunYD-GEd2EZpzOUIIQYA" name="Departure Clearance Received"/>
-        <transition xmi:id="__1MvUz94Ed2EZpzOUIIQYA" name="Departure Clearance" target="_xGunYD-GEd2EZpzOUIIQYA" source="_iIa9YD94Ed2EZpzOUIIQYA"/>
+        <transition xmi:id="__1MvUz94Ed2EZpzOUIIQYA" name="Departure Clearance" target="_xGunYD-GEd2EZpzOUIIQYA" source="_iIa9YD94Ed2EZpzOUIIQYA">
+          <trigger xmi:id="_VLYoID_ZEd2EZpzOUIIQYA" event="_K5IVMD_ZEd2EZpzOUIIQYA"/>
+        </transition>
         <transition xmi:id="_yujg0z-GEd2EZpzOUIIQYA" name="" target="_iIa9YD94Ed2EZpzOUIIQYA" source="_wGRP8D-GEd2EZpzOUIIQYA"/>
       </region>
       <region xmi:id="_hykCIT94Ed2EZpzOUIIQYA" name="Startup Approval">
@@ -44,8 +50,12 @@
         <subvertex xmi:type="uml:State" xmi:id="_mpDP8D94Ed2EZpzOUIIQYA" name="Startup"/>
         <subvertex xmi:type="uml:FinalState" xmi:id="_B_TuED-HEd2EZpzOUIIQYA" name="Startup Completed"/>
         <subvertex xmi:type="uml:Pseudostate" xmi:id="_CdYxMD-HEd2EZpzOUIIQYA" name="Pseudostate1"/>
-        <transition xmi:id="_-xOw4z94Ed2EZpzOUIIQYA" name="Startup approved" target="_mpDP8D94Ed2EZpzOUIIQYA" source="_jYnZ8D94Ed2EZpzOUIIQYA"/>
-        <transition xmi:id="__MFg4z94Ed2EZpzOUIIQYA" name="all engines running" target="_B_TuED-HEd2EZpzOUIIQYA" source="_mpDP8D94Ed2EZpzOUIIQYA"/>
+        <transition xmi:id="_-xOw4z94Ed2EZpzOUIIQYA" name="Startup approved" target="_mpDP8D94Ed2EZpzOUIIQYA" source="_jYnZ8D94Ed2EZpzOUIIQYA">
+          <trigger xmi:id="_N2T4AD_ZEd2EZpzOUIIQYA" event="_Dl70YD_ZEd2EZpzOUIIQYA"/>
+        </transition>
+        <transition xmi:id="__MFg4z94Ed2EZpzOUIIQYA" name="all engines running" target="_B_TuED-HEd2EZpzOUIIQYA" source="_mpDP8D94Ed2EZpzOUIIQYA">
+          <trigger xmi:id="_ree2wD_ZEd2EZpzOUIIQYA" event="_j598cD_ZEd2EZpzOUIIQYA"/>
+        </transition>
         <transition xmi:id="_F-vYEz-HEd2EZpzOUIIQYA" name="" target="_jYnZ8D94Ed2EZpzOUIIQYA" source="_CdYxMD-HEd2EZpzOUIIQYA"/>
       </region>
       <region xmi:id="_SzT_Ij95Ed2EZpzOUIIQYA" name="Pushback">
@@ -54,8 +64,12 @@
         <subvertex xmi:type="uml:Pseudostate" xmi:id="_KlCNwD-HEd2EZpzOUIIQYA" name="Pseudostate1"/>
         <subvertex xmi:type="uml:FinalState" xmi:id="_K2kCoD-HEd2EZpzOUIIQYA" name="Pushback Completed"/>
         <subvertex xmi:type="uml:Pseudostate" xmi:id="_SYX3ID-bEd2EZpzOUIIQYA" name="Pseudostate2" kind="choice"/>
-        <transition xmi:id="_apuhwz95Ed2EZpzOUIIQYA" name="Pushback approved" target="_WQ6ucD95Ed2EZpzOUIIQYA" source="_Ug_o8D95Ed2EZpzOUIIQYA"/>
-        <transition xmi:id="_axHjMz95Ed2EZpzOUIIQYA" name="pushback-point reached" target="_K2kCoD-HEd2EZpzOUIIQYA" source="_WQ6ucD95Ed2EZpzOUIIQYA"/>
+        <transition xmi:id="_apuhwz95Ed2EZpzOUIIQYA" name="Pushback approved" target="_WQ6ucD95Ed2EZpzOUIIQYA" source="_Ug_o8D95Ed2EZpzOUIIQYA">
+          <trigger xmi:id="_PU1rgD_ZEd2EZpzOUIIQYA" event="_EgqXQD_ZEd2EZpzOUIIQYA"/>
+        </transition>
+        <transition xmi:id="_axHjMz95Ed2EZpzOUIIQYA" name="pushback-point reached" target="_K2kCoD-HEd2EZpzOUIIQYA" source="_WQ6ucD95Ed2EZpzOUIIQYA">
+          <trigger xmi:id="_tCp_QD_ZEd2EZpzOUIIQYA" event="_mKLEgD_ZEd2EZpzOUIIQYA"/>
+        </transition>
         <transition xmi:id="_PeG1gz-HEd2EZpzOUIIQYA" name="" target="_SYX3ID-bEd2EZpzOUIIQYA" source="_KlCNwD-HEd2EZpzOUIIQYA"/>
         <transition xmi:id="_UrzSUz-bEd2EZpzOUIIQYA" name="pushback not required" guard="_gj46oD-bEd2EZpzOUIIQYA" target="_K2kCoD-HEd2EZpzOUIIQYA" source="_SYX3ID-bEd2EZpzOUIIQYA">
           <ownedRule xmi:id="_gj46oD-bEd2EZpzOUIIQYA" name="pushback not required">
@@ -98,6 +112,19 @@
         <transition xmi:id="_Z7ATYz-hEd2EZpzOUIIQYA" name="" target="_iQaRYD-cEd2EZpzOUIIQYA" source="_XGHw8D-hEd2EZpzOUIIQYA"/>
       </region>
     </packagedElement>
+    <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_Dl70YD_ZEd2EZpzOUIIQYA" name="Startup Approved">
+      <signal href="IntegratedATC.uml#__ReVkD_YEd2EZpzOUIIQYA"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_EgqXQD_ZEd2EZpzOUIIQYA" name="Pushback Approved">
+      <signal href="IntegratedATC.uml#_65j6ID_YEd2EZpzOUIIQYA"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_K5IVMD_ZEd2EZpzOUIIQYA" name="Departure Clearance">
+      <signal href="IntegratedATC.uml#_9yeoAD_YEd2EZpzOUIIQYA"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Signal" xmi:id="_X7_HgD_ZEd2EZpzOUIIQYA" name="All Engines Running"/>
+    <packagedElement xmi:type="uml:Signal" xmi:id="_fpnhkD_ZEd2EZpzOUIIQYA" name="Pushback Completed"/>
+    <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_j598cD_ZEd2EZpzOUIIQYA" name="All Engines Running" signal="_X7_HgD_ZEd2EZpzOUIIQYA"/>
+    <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_mKLEgD_ZEd2EZpzOUIIQYA" name="Pushback Completed" signal="_fpnhkD_ZEd2EZpzOUIIQYA"/>
   </packagedElement>
   <packagedElement xmi:type="uml:StateMachine" xmi:id="_QXVD4D-EEd2EZpzOUIIQYA" name="Taxi Outbound" submachineState="_THJVkD-DEd2EZpzOUIIQYA">
     <region xmi:id="_THJVkT-DEd2EZpzOUIIQYA" name="Taxi Outbound">
@@ -108,78 +135,126 @@
       <subvertex xmi:type="uml:FinalState" xmi:id="_h9WU0j-DEd2EZpzOUIIQYA" name="FinalState1"/>
       <subvertex xmi:type="uml:Pseudostate" xmi:id="_iq1F4D-DEd2EZpzOUIIQYA" name="Pseudostate1"/>
       <transition xmi:id="_lF4zEz-DEd2EZpzOUIIQYA" name="" target="_QiAq4D95Ed2EZpzOUIIQYA" source="_iq1F4D-DEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_ogSPoD9-Ed2EZpzOUIIQYA" name="Taxi Clearance" target="_X38rwD97Ed2EZpzOUIIQYA" source="_iAJjcD9-Ed2EZpzOUIIQYA"/>
-      <transition xmi:id="_cbVXYz97Ed2EZpzOUIIQYA" name="Taxi Clearance" target="_X38rwD97Ed2EZpzOUIIQYA" source="_QiAq4D95Ed2EZpzOUIIQYA"/>
-      <transition xmi:id="_sTmQkz97Ed2EZpzOUIIQYA" name="Continue Taxi" target="_X38rwD97Ed2EZpzOUIIQYA" source="_Y8US0D97Ed2EZpzOUIIQYA"/>
-      <transition xmi:id="_3DT7kz97Ed2EZpzOUIIQYA" name="Hold Position" target="_Y8US0D97Ed2EZpzOUIIQYA" source="_X38rwD97Ed2EZpzOUIIQYA"/>
-      <transition xmi:id="_AilSYz98Ed2EZpzOUIIQYA" name="intermediate holding point reached" target="_Y8US0D97Ed2EZpzOUIIQYA" source="_X38rwD97Ed2EZpzOUIIQYA"/>
-      <transition xmi:id="_lTplcz-HEd2EZpzOUIIQYA" name="final holding point reached" target="_h9WU0j-DEd2EZpzOUIIQYA" source="_X38rwD97Ed2EZpzOUIIQYA"/>
-      <transition xmi:id="_uLJKkz-HEd2EZpzOUIIQYA" name="clearance limit reached" target="_iAJjcD9-Ed2EZpzOUIIQYA" source="_X38rwD97Ed2EZpzOUIIQYA"/>
+      <transition xmi:id="_ogSPoD9-Ed2EZpzOUIIQYA" name="Further Taxi Clearance" target="_X38rwD97Ed2EZpzOUIIQYA" source="_iAJjcD9-Ed2EZpzOUIIQYA">
+        <trigger xmi:id="_INZnYD_cEd2EZpzOUIIQYA" event="_yVRdgD_bEd2EZpzOUIIQYA"/>
+      </transition>
+      <transition xmi:id="_cbVXYz97Ed2EZpzOUIIQYA" name="Initial Taxi Clearance" target="_X38rwD97Ed2EZpzOUIIQYA" source="_QiAq4D95Ed2EZpzOUIIQYA">
+        <trigger xmi:id="_FT2nYD_cEd2EZpzOUIIQYA" event="_yVRdgD_bEd2EZpzOUIIQYA"/>
+      </transition>
+      <transition xmi:id="_sTmQkz97Ed2EZpzOUIIQYA" name="Continue Taxi" target="_X38rwD97Ed2EZpzOUIIQYA" source="_Y8US0D97Ed2EZpzOUIIQYA">
+        <trigger xmi:id="_Dy81UD_cEd2EZpzOUIIQYA" event="_zEIHkD_bEd2EZpzOUIIQYA"/>
+      </transition>
+      <transition xmi:id="_3DT7kz97Ed2EZpzOUIIQYA" name="Hold Position" target="_Y8US0D97Ed2EZpzOUIIQYA" source="_X38rwD97Ed2EZpzOUIIQYA">
+        <trigger xmi:id="_AzokgD_cEd2EZpzOUIIQYA" event="_sOuYAD_FEd2EZpzOUIIQYA"/>
+        <trigger xmi:id="_Bz_1UD_cEd2EZpzOUIIQYA" event="_uBFrgD_bEd2EZpzOUIIQYA"/>
+      </transition>
+      <transition xmi:id="_lTplcz-HEd2EZpzOUIIQYA" name="final holding point reached" target="_h9WU0j-DEd2EZpzOUIIQYA" source="_X38rwD97Ed2EZpzOUIIQYA">
+        <trigger xmi:id="_JbytID_cEd2EZpzOUIIQYA" event="_w6PC4D_bEd2EZpzOUIIQYA"/>
+      </transition>
+      <transition xmi:id="_uLJKkz-HEd2EZpzOUIIQYA" name="clearance limit reached" target="_iAJjcD9-Ed2EZpzOUIIQYA" source="_X38rwD97Ed2EZpzOUIIQYA">
+        <trigger xmi:id="_G45SkD_cEd2EZpzOUIIQYA" event="_wDiEYD_bEd2EZpzOUIIQYA"/>
+      </transition>
     </region>
   </packagedElement>
   <packagedElement xmi:type="uml:StateMachine" xmi:id="_WJzY0D-EEd2EZpzOUIIQYA" name="Take-Off" submachineState="_2maDgD-DEd2EZpzOUIIQYA">
     <region xmi:id="_2maDgT-DEd2EZpzOUIIQYA" name="Take-Off">
-      <subvertex xmi:type="uml:State" xmi:id="_sJb7ED-TEd2EZpzOUIIQYA" name="Take-Off Preparations">
-        <region xmi:id="_sJb7ET-TEd2EZpzOUIIQYA" name="Region1">
-          <subvertex xmi:type="uml:Pseudostate" xmi:id="_wlHcMD-TEd2EZpzOUIIQYA" name="Pseudostate1"/>
-          <subvertex xmi:type="uml:FinalState" xmi:id="_xR2mYj-TEd2EZpzOUIIQYA" name="Cleared for Take-Off"/>
-          <subvertex xmi:type="uml:State" xmi:id="_3sIiMD-TEd2EZpzOUIIQYA" name="Waiting for Take-Off Clearance"/>
-          <transition xmi:id="_Gk34Ez-UEd2EZpzOUIIQYA" name="" target="_3sIiMD-TEd2EZpzOUIIQYA" source="_wlHcMD-TEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_Gz06Ez-UEd2EZpzOUIIQYA" name="Cleared for Take-Off" target="_xR2mYj-TEd2EZpzOUIIQYA" source="_3sIiMD-TEd2EZpzOUIIQYA"/>
+      <subvertex xmi:type="uml:FinalState" xmi:id="_tTSpoj-UEd2EZpzOUIIQYA" name="Airborne"/>
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="_81gaUD-UEd2EZpzOUIIQYA" name="Initial"/>
+      <subvertex xmi:type="uml:State" xmi:id="_qz0moD_NEd2EZpzOUIIQYA" name="Take-Off Preparation">
+        <region xmi:id="_qz0moT_NEd2EZpzOUIIQYA" name="Waiting for Clearance">
+          <subvertex xmi:type="uml:State" xmi:id="_u-p9cD_PEd2EZpzOUIIQYA" name="Waiting for Take-Off Clearance"/>
+          <subvertex xmi:type="uml:FinalState" xmi:id="_8h9xcD_PEd2EZpzOUIIQYA" name="FinalState1"/>
+          <subvertex xmi:type="uml:Pseudostate" xmi:id="_unwgYD_PEd2EZpzOUIIQYA" name="Pseudostate1"/>
+          <subvertex xmi:type="uml:State" xmi:id="_wlbuAD_PEd2EZpzOUIIQYA" name="Cleared for Take-Off"/>
+          <transition xmi:id="_7-nMwz_PEd2EZpzOUIIQYA" name="" target="_u-p9cD_PEd2EZpzOUIIQYA" source="_unwgYD_PEd2EZpzOUIIQYA"/>
+          <transition xmi:id="_9BwEwz_PEd2EZpzOUIIQYA" name="Transition8" target="_8h9xcD_PEd2EZpzOUIIQYA" source="_wlbuAD_PEd2EZpzOUIIQYA">
+            <trigger xmi:id="_03CQoD_QEd2EZpzOUIIQYA" event="_To_XYD_QEd2EZpzOUIIQYA"/>
+          </transition>
+          <transition xmi:id="_hCdgoD_VEd2EZpzOUIIQYA" name="Transition6" target="_wlbuAD_PEd2EZpzOUIIQYA" source="_u-p9cD_PEd2EZpzOUIIQYA">
+            <trigger xmi:id="_iv22kD_VEd2EZpzOUIIQYA" event="_3MbjED_CEd2EZpzOUIIQYA"/>
+          </transition>
+          <transition xmi:id="_saWFQz_dEd2EZpzOUIIQYA" name="Transition1" target="_1CUwED_PEd2EZpzOUIIQYA" source="_u-p9cD_PEd2EZpzOUIIQYA">
+            <trigger xmi:id="_0To8wD_dEd2EZpzOUIIQYA" event="_imbBAD_FEd2EZpzOUIIQYA"/>
+          </transition>
+          <transition xmi:id="_xBiS0z_dEd2EZpzOUIIQYA" name="Transition2" target="_zGt_AD_PEd2EZpzOUIIQYA" source="_wlbuAD_PEd2EZpzOUIIQYA">
+            <trigger xmi:id="_zFZoAD_dEd2EZpzOUIIQYA" event="_wXva0D_QEd2EZpzOUIIQYA"/>
+          </transition>
         </region>
-        <region xmi:id="_wBl4Yj-TEd2EZpzOUIIQYA" name="Region2">
-          <subvertex xmi:type="uml:Pseudostate" xmi:id="_w2L-ED-TEd2EZpzOUIIQYA" name="Pseudostate1"/>
-          <subvertex xmi:type="uml:FinalState" xmi:id="_xlFrcD-TEd2EZpzOUIIQYA" name="At Departure Point"/>
-          <subvertex xmi:type="uml:State" xmi:id="_p-ftgD-TEd2EZpzOUIIQYA" name="Lining Up"/>
-          <subvertex xmi:type="uml:State" xmi:id="_7lO6sD-TEd2EZpzOUIIQYA" name="At Holding Point"/>
-          <transition xmi:id="_F_fTEz-UEd2EZpzOUIIQYA" name="" target="_7lO6sD-TEd2EZpzOUIIQYA" source="_w2L-ED-TEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_GHbHEz-UEd2EZpzOUIIQYA" name="Cleared for Take-off" target="_p-ftgD-TEd2EZpzOUIIQYA" source="_7lO6sD-TEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_GThpYz-UEd2EZpzOUIIQYA" name="reached departure point" target="_xlFrcD-TEd2EZpzOUIIQYA" source="_p-ftgD-TEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_PhOIAz-UEd2EZpzOUIIQYA" name="Line Up" target="_p-ftgD-TEd2EZpzOUIIQYA" source="_7lO6sD-TEd2EZpzOUIIQYA"/>
-        </region>
-      </subvertex>
-      <subvertex xmi:type="uml:State" xmi:id="_hplbkD-UEd2EZpzOUIIQYA" name="Ready for Take-Off"/>
-      <subvertex xmi:type="uml:FinalState" xmi:id="_tTSpoj-UEd2EZpzOUIIQYA" name="Take-Off aborted"/>
-      <subvertex xmi:type="uml:Pseudostate" xmi:id="_81gaUD-UEd2EZpzOUIIQYA" name="Pseudostate1"/>
-      <subvertex xmi:type="uml:FinalState" xmi:id="_IcnAUD-VEd2EZpzOUIIQYA" name="Take-Off aborted"/>
-      <transition xmi:id="_j1GQ4z-UEd2EZpzOUIIQYA" name="" target="_hplbkD-UEd2EZpzOUIIQYA" source="_sJb7ED-TEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_54G1Ez-UEd2EZpzOUIIQYA" name="lift off" target="_tTSpoj-UEd2EZpzOUIIQYA" source="_hplbkD-UEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_9TNqAz-UEd2EZpzOUIIQYA" name="" target="_sJb7ED-TEd2EZpzOUIIQYA" source="_81gaUD-UEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_LOJT0z-VEd2EZpzOUIIQYA" name="Abort Take-Off" target="_IcnAUD-VEd2EZpzOUIIQYA" source="_hplbkD-UEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_Lwnuwz-VEd2EZpzOUIIQYA" name="Vacate" target="_IcnAUD-VEd2EZpzOUIIQYA" source="_sJb7ED-TEd2EZpzOUIIQYA"/>
-    </region>
-    <region xmi:id="_M4FYAj-TEd2EZpzOUIIQYA" name="Runway Entrance">
-      <subvertex xmi:type="uml:Pseudostate" xmi:id="_NIgZoD-TEd2EZpzOUIIQYA" name="Initial"/>
-      <subvertex xmi:type="uml:State" xmi:id="_OxbfQD-TEd2EZpzOUIIQYA" name="Holding Short Outbound"/>
-      <subvertex xmi:type="uml:FinalState" xmi:id="_VbSIIj-TEd2EZpzOUIIQYA" name="Airborne"/>
-      <subvertex xmi:type="uml:Pseudostate" xmi:id="_TQ5CQD-VEd2EZpzOUIIQYA" name="Take-Off Aborted" kind="exitPoint"/>
-      <subvertex xmi:type="uml:State" xmi:id="_oGh0YD-VEd2EZpzOUIIQYA" name="On Runway">
-        <region xmi:id="_oGh0YT-VEd2EZpzOUIIQYA" name="On Runway">
-          <subvertex xmi:type="uml:State" xmi:id="_qxovwD-VEd2EZpzOUIIQYA" name="For Departure"/>
-          <subvertex xmi:type="uml:State" xmi:id="_ztVfcD-VEd2EZpzOUIIQYA" name="Vacating"/>
-          <subvertex xmi:type="uml:State" xmi:id="_3plSkD-VEd2EZpzOUIIQYA" name="Take-Off Aborted"/>
-          <subvertex xmi:type="uml:Pseudostate" xmi:id="_MmvB8D-WEd2EZpzOUIIQYA" name="Pseudostate1"/>
-          <subvertex xmi:type="uml:State" xmi:id="_SCW1wD-ZEd2EZpzOUIIQYA" name="Take-Off Roll"/>
-          <transition xmi:id="_6T0rQz-VEd2EZpzOUIIQYA" name="Abort Take-Off" target="_3plSkD-VEd2EZpzOUIIQYA" source="_SCW1wD-ZEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_6gM6YT-VEd2EZpzOUIIQYA" name="Vacate" target="_ztVfcD-VEd2EZpzOUIIQYA" source="_3plSkD-VEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_Nn1Skz-WEd2EZpzOUIIQYA" name="" target="_qxovwD-VEd2EZpzOUIIQYA" source="_MmvB8D-WEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_RgAeAz-WEd2EZpzOUIIQYA" name="runway left" target="_KhWNUD-XEd2EZpzOUIIQYA" source="_ztVfcD-VEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_XImlkz-TEd2EZpzOUIIQYA" name="lift off" target="_VbSIIj-TEd2EZpzOUIIQYA" source="_SCW1wD-ZEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_UQVJMz-ZEd2EZpzOUIIQYA" name="begin take-off roll" target="_SCW1wD-ZEd2EZpzOUIIQYA" source="_qxovwD-VEd2EZpzOUIIQYA"/>
-          <transition xmi:id="_ZmLMgz-ZEd2EZpzOUIIQYA" name="Vacate" target="_ztVfcD-VEd2EZpzOUIIQYA" source="_qxovwD-VEd2EZpzOUIIQYA"/>
-          <transition xmi:id="__ShdEz-ZEd2EZpzOUIIQYA" name="Abort Take-Off" target="_3plSkD-VEd2EZpzOUIIQYA" source="_qxovwD-VEd2EZpzOUIIQYA"/>
+        <region xmi:id="_tVsGcj_NEd2EZpzOUIIQYA" name="Lining Up">
+          <subvertex xmi:type="uml:Pseudostate" xmi:id="_uUf4ED_NEd2EZpzOUIIQYA" name="Pseudostate1"/>
+          <subvertex xmi:type="uml:FinalState" xmi:id="_XoTiED_PEd2EZpzOUIIQYA" name="FinalState1"/>
+          <subvertex xmi:type="uml:State" xmi:id="_ZgRJQD_PEd2EZpzOUIIQYA" name="Holding"/>
+          <subvertex xmi:type="uml:State" xmi:id="_an_mUD_PEd2EZpzOUIIQYA" name="Lining Up"/>
+          <transition xmi:id="_gHhKEz_PEd2EZpzOUIIQYA" name="" target="_ZgRJQD_PEd2EZpzOUIIQYA" source="_uUf4ED_NEd2EZpzOUIIQYA"/>
+          <transition xmi:id="_gO6ykz_PEd2EZpzOUIIQYA" name="Transition2" target="_an_mUD_PEd2EZpzOUIIQYA" source="_ZgRJQD_PEd2EZpzOUIIQYA">
+            <trigger xmi:id="_LSuQAD_QEd2EZpzOUIIQYA" event="_3MbjED_CEd2EZpzOUIIQYA"/>
+            <trigger xmi:id="_M0dIgD_QEd2EZpzOUIIQYA" event="_5uVfID_CEd2EZpzOUIIQYA"/>
+          </transition>
+          <transition xmi:id="_gdyVAz_PEd2EZpzOUIIQYA" name="Transition3" target="_XoTiED_PEd2EZpzOUIIQYA" source="_an_mUD_PEd2EZpzOUIIQYA">
+            <trigger xmi:id="_N-kLMD_QEd2EZpzOUIIQYA" event="_To_XYD_QEd2EZpzOUIIQYA"/>
+          </transition>
+          <transition xmi:id="_e2uo4z_VEd2EZpzOUIIQYA" name="Transition4" target="_qz0moD_NEd2EZpzOUIIQYA" source="_an_mUD_PEd2EZpzOUIIQYA">
+            <trigger xmi:id="_j72IkD_VEd2EZpzOUIIQYA" event="_sOuYAD_FEd2EZpzOUIIQYA"/>
+          </transition>
         </region>
       </subvertex>
-      <subvertex xmi:type="uml:State" xmi:id="_1DkdID-WEd2EZpzOUIIQYA" name="In Transit"/>
-      <subvertex xmi:type="uml:State" xmi:id="_KhWNUD-XEd2EZpzOUIIQYA" name="Returning to Hold Short Point"/>
-      <subvertex xmi:type="uml:State" xmi:id="_Mn1_wD-XEd2EZpzOUIIQYA" name="Take-Off Aborted"/>
-      <transition xmi:id="_W0FuIz-TEd2EZpzOUIIQYA" name="" target="_OxbfQD-TEd2EZpzOUIIQYA" source="_NIgZoD-TEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_W82okz-TEd2EZpzOUIIQYA" name="runway entered" target="_oGh0YD-VEd2EZpzOUIIQYA" source="_1DkdID-WEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_goadAz-VEd2EZpzOUIIQYA" name="Abort Take-Off" target="_TQ5CQD-VEd2EZpzOUIIQYA" source="_OxbfQD-TEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_7bclMz-WEd2EZpzOUIIQYA" name="transit started" target="_1DkdID-WEd2EZpzOUIIQYA" source="_OxbfQD-TEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_USNDYz-XEd2EZpzOUIIQYA" name="Abort Take-Off" target="_Mn1_wD-XEd2EZpzOUIIQYA" source="_1DkdID-WEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_Uf4TAz-XEd2EZpzOUIIQYA" name="Taxi and Hold Short" target="_KhWNUD-XEd2EZpzOUIIQYA" source="_Mn1_wD-XEd2EZpzOUIIQYA"/>
-      <transition xmi:id="_aRH44z-XEd2EZpzOUIIQYA" name="hold short point reached" target="_TQ5CQD-VEd2EZpzOUIIQYA" source="_KhWNUD-XEd2EZpzOUIIQYA"/>
+      <subvertex xmi:type="uml:State" xmi:id="_nwFd8D_PEd2EZpzOUIIQYA" name="Take-Off Roll"/>
+      <subvertex xmi:type="uml:State" xmi:id="_1CUwED_PEd2EZpzOUIIQYA" name="Vacating"/>
+      <subvertex xmi:type="uml:State" xmi:id="_zGt_AD_PEd2EZpzOUIIQYA" name="Aborted Take-Off"/>
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="_7ApvsD_PEd2EZpzOUIIQYA" name="Take-Off Aborted" kind="exitPoint"/>
+      <transition xmi:id="_naqnkz_PEd2EZpzOUIIQYA" name="" target="_qz0moD_NEd2EZpzOUIIQYA" source="_81gaUD-UEd2EZpzOUIIQYA"/>
+      <transition xmi:id="_rbeKkz_PEd2EZpzOUIIQYA" name="" target="_nwFd8D_PEd2EZpzOUIIQYA" source="_qz0moD_NEd2EZpzOUIIQYA"/>
+      <transition xmi:id="_roBY0z_PEd2EZpzOUIIQYA" name="Transition2" target="_tTSpoj-UEd2EZpzOUIIQYA" source="_nwFd8D_PEd2EZpzOUIIQYA">
+        <trigger xmi:id="_c80TMD_QEd2EZpzOUIIQYA" event="_X841gD_QEd2EZpzOUIIQYA"/>
+      </transition>
+      <transition xmi:id="_iLIq0z_TEd2EZpzOUIIQYA" name="Transition1" target="_zGt_AD_PEd2EZpzOUIIQYA" source="_nwFd8D_PEd2EZpzOUIIQYA">
+        <trigger xmi:id="_j4JmQD_TEd2EZpzOUIIQYA" event="_wXva0D_QEd2EZpzOUIIQYA"/>
+      </transition>
+      <transition xmi:id="_6mCQQz_PEd2EZpzOUIIQYA" name="Transition3" target="_1CUwED_PEd2EZpzOUIIQYA" source="_zGt_AD_PEd2EZpzOUIIQYA">
+        <trigger xmi:id="_qv3MUD_QEd2EZpzOUIIQYA" event="_imbBAD_FEd2EZpzOUIIQYA"/>
+      </transition>
+      <transition xmi:id="_6wQjQz_PEd2EZpzOUIIQYA" name="Transition4" target="_7ApvsD_PEd2EZpzOUIIQYA" source="_1CUwED_PEd2EZpzOUIIQYA">
+        <trigger xmi:id="_pQCYUD_QEd2EZpzOUIIQYA" event="_jx4tkD_QEd2EZpzOUIIQYA"/>
+      </transition>
     </region>
   </packagedElement>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_3MbjED_CEd2EZpzOUIIQYA" name="Cleared for Take-Off">
+    <signal href="IntegratedATC.uml#_D5YW0D_DEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_5uVfID_CEd2EZpzOUIIQYA" name="Line Up">
+    <signal href="IntegratedATC.uml#_D5YW0D_DEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_imbBAD_FEd2EZpzOUIIQYA" name="Vacate">
+    <signal href="IntegratedATC.uml#_gIQVcD_FEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_sOuYAD_FEd2EZpzOUIIQYA" name="Hold Position">
+    <signal href="IntegratedATC.uml#_uqsZQD_HEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_To_XYD_QEd2EZpzOUIIQYA" name="Reaching Departure Point" signal="_rVzUgD_cEd2EZpzOUIIQYA"/>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_X841gD_QEd2EZpzOUIIQYA" name="Lift Off" signal="_vpHj0D_cEd2EZpzOUIIQYA"/>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_jx4tkD_QEd2EZpzOUIIQYA" name="Reaching Hold Short Point" signal="_0LPEID_cEd2EZpzOUIIQYA"/>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_wXva0D_QEd2EZpzOUIIQYA" name="Abort Take-Off">
+    <signal href="IntegratedATC.uml#_txH94D_QEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_f-v5gD_YEd2EZpzOUIIQYA" name="Ready for Departure">
+    <signal href="IntegratedATC.uml#_VZrYQD_YEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_jGrTwD_YEd2EZpzOUIIQYA" name="Request Return to Gate">
+    <signal href="IntegratedATC.uml#_SZyfsD_YEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Signal" xmi:id="_izXO0D_bEd2EZpzOUIIQYA" name="Reaching Intermediate Holding Point"/>
+  <packagedElement xmi:type="uml:Signal" xmi:id="_nn5U0D_bEd2EZpzOUIIQYA" name="Reaching Clearance Limit"/>
+  <packagedElement xmi:type="uml:Signal" xmi:id="_p0u_0D_bEd2EZpzOUIIQYA" name="Reaching Final Holding Point"/>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_uBFrgD_bEd2EZpzOUIIQYA" name="Reaching Intermediate Holding Point" signal="_izXO0D_bEd2EZpzOUIIQYA"/>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_wDiEYD_bEd2EZpzOUIIQYA" name="Reaching Clearance Limit" signal="_nn5U0D_bEd2EZpzOUIIQYA"/>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_w6PC4D_bEd2EZpzOUIIQYA" name="Reaching Final Holding Point" signal="_p0u_0D_bEd2EZpzOUIIQYA"/>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_yVRdgD_bEd2EZpzOUIIQYA" name="Taxi">
+    <signal href="IntegratedATC.uml#_dDZbUD_bEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:ReceiveSignalEvent" xmi:id="_zEIHkD_bEd2EZpzOUIIQYA" name="Continue Taxi">
+    <signal href="IntegratedATC.uml#_e9r9wD_bEd2EZpzOUIIQYA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Signal" xmi:id="_rVzUgD_cEd2EZpzOUIIQYA" name="Reaching Departure Point"/>
+  <packagedElement xmi:type="uml:Signal" xmi:id="_vpHj0D_cEd2EZpzOUIIQYA" name="Lift Off"/>
+  <packagedElement xmi:type="uml:Signal" xmi:id="_0LPEID_cEd2EZpzOUIIQYA" name="Reaching Hold Short Point"/>
 </uml:Package>

@@ -3,6 +3,24 @@
   <packagedElement xmi:type="uml:Package" href="ControllerWorkflows.uml#idPackage"/>
   <packagedElement xmi:type="uml:Package" href="UserInterface.uml#_n4HCYDu6Ed2fwOR4B9Vm2Q"/>
   <packagedElement xmi:type="uml:Package" href="AircraftLifecycles.uml#_2W9PED9_Ed2EZpzOUIIQYA"/>
+  <packagedElement xmi:type="uml:Package" xmi:id="_M3GEcD_eEd2EZpzOUIIQYA" name="Signals">
+    <packagedElement xmi:type="uml:Package" xmi:id="_uiJTgD_CEd2EZpzOUIIQYA" name="ATC Commands">
+      <packagedElement xmi:type="uml:Signal" xmi:id="_B8elQD_DEd2EZpzOUIIQYA" name="Line Up"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_D5YW0D_DEd2EZpzOUIIQYA" name="Cleared for Take-Off"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_gIQVcD_FEd2EZpzOUIIQYA" name="Vacate"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_uqsZQD_HEd2EZpzOUIIQYA" name="Hold Position"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_txH94D_QEd2EZpzOUIIQYA" name="Abort Take-Off"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_65j6ID_YEd2EZpzOUIIQYA" name="Pushback Approved"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_9yeoAD_YEd2EZpzOUIIQYA" name="Departure Clearance"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="__ReVkD_YEd2EZpzOUIIQYA" name="Startup Approved"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_dDZbUD_bEd2EZpzOUIIQYA" name="Taxi"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_e9r9wD_bEd2EZpzOUIIQYA" name="Continue Taxi"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_QkDtID_YEd2EZpzOUIIQYA" name="Aircraft Messages">
+      <packagedElement xmi:type="uml:Signal" xmi:id="_SZyfsD_YEd2EZpzOUIIQYA" name="Request Return to Gate"/>
+      <packagedElement xmi:type="uml:Signal" xmi:id="_VZrYQD_YEd2EZpzOUIIQYA" name="Ready for Departure"/>
+    </packagedElement>
+  </packagedElement>
   <profileApplication xmi:id="_vXgMIDu6Ed2fwOR4B9Vm2Q">
     <eAnnotations xmi:id="_vX-GMDu6Ed2fwOR4B9Vm2Q" source="http://www.eclipse.org/uml2/2.0.0/UML">
       <references xmi:type="ecore:EPackage" href="pathmap://UML_PROFILES/Standard.profile.uml#_yzU58YinEdqtvbnfB2L_5w"/>
