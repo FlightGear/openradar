@@ -39,6 +39,7 @@
             <transition xmi:id="_NRnYEzsOEd2mFqxpSS-P0A" name="Clearance" target="_3U1KkDqzEd2mFqxpSS-P0A" source="_Jy7qsDsOEd2mFqxpSS-P0A"/>
             <transition xmi:id="_Rg1xkzsOEd2mFqxpSS-P0A" name="Data-Link Clearance" target="_3U1KkDqzEd2mFqxpSS-P0A" source="_Jy7qsDsOEd2mFqxpSS-P0A"/>
             <transition xmi:id="_WYwNMzuGEd26faMQhL7mWQ" name="Aircraft reaches holding point" target="_qBKIgDrIEd2mFqxpSS-P0A" source="_k_0CcDqwEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_CDO0ATvSEd2fwOR4B9Vm2Q" name="Taxi" target="_k_0CcDqwEd2mFqxpSS-P0A" source="_k_0CcDqwEd2mFqxpSS-P0A"/>
           </region>
         </subvertex>
         <subvertex xmi:type="uml:State" xmi:id="_pUsYADqwEd2mFqxpSS-P0A" name="Assumed out"/>
@@ -107,6 +108,7 @@
             <transition xmi:id="_KI8hIzrFEd2mFqxpSS-P0A" name="Transfer" target="_EuOBADrJEd2mFqxpSS-P0A" source="_up6ZIDrEEd2mFqxpSS-P0A"/>
             <transition xmi:id="_WXHuMzrFEd2mFqxpSS-P0A" name="Cancel Pushback" target="_oE3-0DrEEd2mFqxpSS-P0A" source="_sgCikDrEEd2mFqxpSS-P0A"/>
             <transition xmi:id="_HapyEjrJEd2mFqxpSS-P0A" name="" target="_ZB6V8DrEEd2mFqxpSS-P0A" source="_EuOBADrJEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_ns3HwjvSEd2fwOR4B9Vm2Q" name="Taxi" target="_up6ZIDrEEd2mFqxpSS-P0A" source="_up6ZIDrEEd2mFqxpSS-P0A"/>
           </region>
         </subvertex>
         <subvertex xmi:type="uml:State" xmi:id="_ZB6V8DrEEd2mFqxpSS-P0A" name="Assumed Out"/>
@@ -155,6 +157,7 @@
             <transition xmi:id="_vDqIgzsJEd2mFqxpSS-P0A" name="Conditional Line-Up" target="_1xfBgDsAEd2mFqxpSS-P0A" source="_h0buIDsJEd2mFqxpSS-P0A"/>
             <transition xmi:id="_5CjakDsJEd2mFqxpSS-P0A" name="Take-Off" target="_qU_wEDsAEd2mFqxpSS-P0A" source="_h0buIDsJEd2mFqxpSS-P0A"/>
             <transition xmi:id="_uYcggzuGEd26faMQhL7mWQ" name="Aircraft reaches predefined height" target="_LBO3MDrJEd2mFqxpSS-P0A" source="_qU_wEDsAEd2mFqxpSS-P0A"/>
+            <transition xmi:id="_te_eczvSEd2fwOR4B9Vm2Q" name="Hold" target="_h0buIDsJEd2mFqxpSS-P0A" source="_qU_wEDsAEd2mFqxpSS-P0A"/>
           </region>
         </subvertex>
         <subvertex xmi:type="uml:State" xmi:id="_k4Z7cDrHEd2mFqxpSS-P0A" name="Assumed Out"/>
@@ -228,6 +231,7 @@
             <transition xmi:id="_6lOtQzsUEd2mFqxpSS-P0A" name="Taxi" target="_0hBIEDsUEd2mFqxpSS-P0A" source="_2GaYkDsUEd2mFqxpSS-P0A"/>
             <transition xmi:id="_CwQN8zsVEd2mFqxpSS-P0A" name="Aircraft reaches stand" target="_5EgEcDuPEd2s45R7EVJBGA" source="_0hBIEDsUEd2mFqxpSS-P0A"/>
             <transition xmi:id="_UfrSgzsUEd2mFqxpSS-P0A" name="AIBT+2min" target="_9u1FkDuPEd2s45R7EVJBGA" source="_5EgEcDuPEd2s45R7EVJBGA"/>
+            <transition xmi:id="_83XWozvSEd2fwOR4B9Vm2Q" name="Taxi" target="_0hBIEDsUEd2mFqxpSS-P0A" source="_0hBIEDsUEd2mFqxpSS-P0A"/>
           </region>
         </subvertex>
         <transition xmi:id="_TbIFQzsUEd2mFqxpSS-P0A" name="" target="_GlHcIDsUEd2mFqxpSS-P0A" source="_GQ4RgDsUEd2mFqxpSS-P0A"/>
@@ -331,6 +335,9 @@ Assume applies for first enroute sector where previous controller is RWY role.</
             <transition xmi:id="_EmAZwzuFEd26faMQhL7mWQ" name="Vacate" target="_Acm7cDuFEd26faMQhL7mWQ" source="_scMzEDuCEd26faMQhL7mWQ"/>
             <transition xmi:id="_HZ758zuFEd26faMQhL7mWQ" name="" target="_kTGlADuCEd26faMQhL7mWQ" source="_Acm7cDuFEd26faMQhL7mWQ"/>
             <transition xmi:id="_Cml00zuHEd26faMQhL7mWQ" name="Aircraft reaches predefined height" target="_-KzqMDt_Ed26faMQhL7mWQ" source="_u1ZfEDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_LHY8IzvSEd2fwOR4B9Vm2Q" name="Taxi" target="_l4YgwDuCEd26faMQhL7mWQ" source="_l4YgwDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_Q2Lq8zvSEd2fwOR4B9Vm2Q" name="Line-Up" target="_quCBEDuCEd26faMQhL7mWQ" source="_scMzEDuCEd26faMQhL7mWQ"/>
+            <transition xmi:id="_a4oAQzvSEd2fwOR4B9Vm2Q" name="Conditional Line-Up" target="_quCBEDuCEd26faMQhL7mWQ" source="_scMzEDuCEd26faMQhL7mWQ"/>
           </region>
         </subvertex>
         <transition xmi:id="_9BTrgzt_Ed26faMQhL7mWQ" name="" target="_3y3QsDt_Ed26faMQhL7mWQ" source="_3aP8YDt_Ed26faMQhL7mWQ"/>
@@ -381,6 +388,8 @@ Assume applies for first enroute sector where previous controller is RWY role.</
             <transition xmi:id="_V9ukczuOEd2s45R7EVJBGA" name="Taxi" target="_mrc7cDuNEd2s45R7EVJBGA" source="_leJa0DuNEd2s45R7EVJBGA"/>
             <transition xmi:id="_iCq9AzuOEd2s45R7EVJBGA" name="Transfer to APP/DEP" target="_q8lZcDuNEd2s45R7EVJBGA" source="_hqqiIDuNEd2s45R7EVJBGA"/>
             <transition xmi:id="_kAZ1AzuOEd2s45R7EVJBGA" name="Aircraft reaches stand" target="_3fiuQDuOEd2s45R7EVJBGA" source="_mrc7cDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_1P85UzvSEd2fwOR4B9Vm2Q" name="Hold" target="_nUqQgDuNEd2s45R7EVJBGA" source="_mrc7cDuNEd2s45R7EVJBGA"/>
+            <transition xmi:id="_1cFQ0zvSEd2fwOR4B9Vm2Q" name="Taxi" target="_mrc7cDuNEd2s45R7EVJBGA" source="_nUqQgDuNEd2s45R7EVJBGA"/>
           </region>
         </subvertex>
         <transition xmi:id="_Qc7q0TuNEd2s45R7EVJBGA" name="" target="_F_liMDuNEd2s45R7EVJBGA" source="_fV-KYDuHEd26faMQhL7mWQ"/>
@@ -388,6 +397,34 @@ Assume applies for first enroute sector where previous controller is RWY role.</
         <transition xmi:id="_QuFsQzuNEd2s45R7EVJBGA" name="ELDT-5min/Transfer by previous controller" target="_Hd0awDuNEd2s45R7EVJBGA" source="_G0z6ADuNEd2s45R7EVJBGA"/>
         <transition xmi:id="_RmEdIzuNEd2s45R7EVJBGA" name="Assume" target="_JuNJADuNEd2s45R7EVJBGA" source="_Hd0awDuNEd2s45R7EVJBGA"/>
         <transition xmi:id="_rukQAzuNEd2s45R7EVJBGA" name="Assume by next controller" target="_F_liMDuNEd2s45R7EVJBGA" source="_I7LwoDuNEd2s45R7EVJBGA"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_8cZccDvTEd2fwOR4B9Vm2Q" name="Arrival APP">
+      <region xmi:id="_iENyUDvUEd2fwOR4B9Vm2Q" name="Region1">
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_iPo_MDvUEd2fwOR4B9Vm2Q" name="Pseudostate1"/>
+        <subvertex xmi:type="uml:State" xmi:id="_ijtxwDvUEd2fwOR4B9Vm2Q" name="Not Concerned"/>
+        <subvertex xmi:type="uml:State" xmi:id="_juaqUDvUEd2fwOR4B9Vm2Q" name="Pending"/>
+        <subvertex xmi:type="uml:State" xmi:id="_kuWdUDvUEd2fwOR4B9Vm2Q" name="Pending In"/>
+        <subvertex xmi:type="uml:State" xmi:id="_lxq7gDvUEd2fwOR4B9Vm2Q" name="Assumed Out"/>
+        <subvertex xmi:type="uml:State" xmi:id="_pT8IYDvUEd2fwOR4B9Vm2Q" name="Assumed">
+          <region xmi:id="_pT8IYTvUEd2fwOR4B9Vm2Q" name="Region1">
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_ty-fgDvUEd2fwOR4B9Vm2Q" name="Pseudostate1" kind="exitPoint"/>
+            <subvertex xmi:type="uml:Pseudostate" xmi:id="_gCqU0DvVEd2fwOR4B9Vm2Q" name="Pseudostate2"/>
+            <subvertex xmi:type="uml:State" xmi:id="_qiiNADvVEd2fwOR4B9Vm2Q" name="Ready for Initial Approach"/>
+            <subvertex xmi:type="uml:State" xmi:id="_wBSUsDvVEd2fwOR4B9Vm2Q" name="Cleared for Initial Approach"/>
+            <subvertex xmi:type="uml:State" xmi:id="_7UGFsDvVEd2fwOR4B9Vm2Q" name="Cleared for Final Approach"/>
+            <transition xmi:id="_udCwMzvUEd2fwOR4B9Vm2Q" name="" target="_lxq7gDvUEd2fwOR4B9Vm2Q" source="_ty-fgDvUEd2fwOR4B9Vm2Q"/>
+            <transition xmi:id="_-An9YzvVEd2fwOR4B9Vm2Q" name="Transfer" target="_ty-fgDvUEd2fwOR4B9Vm2Q" source="_7UGFsDvVEd2fwOR4B9Vm2Q"/>
+            <transition xmi:id="_-Q_7szvVEd2fwOR4B9Vm2Q" name="" target="_qiiNADvVEd2fwOR4B9Vm2Q" source="_gCqU0DvVEd2fwOR4B9Vm2Q"/>
+            <transition xmi:id="_-ayw4zvVEd2fwOR4B9Vm2Q" name="Initial Approach Clearance" target="_wBSUsDvVEd2fwOR4B9Vm2Q" source="_qiiNADvVEd2fwOR4B9Vm2Q"/>
+            <transition xmi:id="_-pmo8zvVEd2fwOR4B9Vm2Q" name="Final Approach Clearance" target="_7UGFsDvVEd2fwOR4B9Vm2Q" source="_wBSUsDvVEd2fwOR4B9Vm2Q"/>
+          </region>
+        </subvertex>
+        <transition xmi:id="_uzZasDvUEd2fwOR4B9Vm2Q" name="" target="_ijtxwDvUEd2fwOR4B9Vm2Q" source="_iPo_MDvUEd2fwOR4B9Vm2Q"/>
+        <transition xmi:id="_u8sgozvUEd2fwOR4B9Vm2Q" name="Reception of advanced information" target="_juaqUDvUEd2fwOR4B9Vm2Q" source="_ijtxwDvUEd2fwOR4B9Vm2Q"/>
+        <transition xmi:id="_vFsrozvUEd2fwOR4B9Vm2Q" name="Transfer by previous controller" target="_kuWdUDvUEd2fwOR4B9Vm2Q" source="_juaqUDvUEd2fwOR4B9Vm2Q"/>
+        <transition xmi:id="_vL4MIzvUEd2fwOR4B9Vm2Q" name="Assume" target="_pT8IYDvUEd2fwOR4B9Vm2Q" source="_kuWdUDvUEd2fwOR4B9Vm2Q"/>
+        <transition xmi:id="_vh2cIzvUEd2fwOR4B9Vm2Q" name="Assume by TWR" target="_ijtxwDvUEd2fwOR4B9Vm2Q" source="_lxq7gDvUEd2fwOR4B9Vm2Q"/>
       </region>
     </packagedElement>
   </packagedElement>
@@ -410,7 +447,7 @@ Assume applies for first enroute sector where previous controller is RWY role.</
           <details xmi:id="_3EU5cDuwEd2s45R7EVJBGA" key="documentation" value="Represents the state in which responsibility transfer was initiated by the previous controller position, but responsibility has not yet been assumed by the current controller positition.&#xA;&#xA;Responsibility is still with the previous controller, but the vessel may be in transition from the previous to the frequency of the current controller position.&#xA;&#xA;Available information is the same as in state &quot;Pending&quot;, but may have been updated in the process of coordination.&#xA;"/>
         </eAnnotations>
       </subvertex>
-      <subvertex xmi:type="uml:State" xmi:id="_ffU_EDulEd2s45R7EVJBGA" name="Assumed">
+      <subvertex xmi:type="uml:State" xmi:id="_ffU_EDulEd2s45R7EVJBGA" name="Assumed2">
         <eAnnotations xmi:id="_4mOxEDuwEd2s45R7EVJBGA" source="http://www.topcased.org/documentation">
           <details xmi:id="_4mPYIDuwEd2s45R7EVJBGA" key="documentation" value="Represents the state in which the current controller position is responsible for the vessel.&#xA;&#xA;The current controller position is the master for the information about the vessel.&#xA;&#xA;Coordination with the next controller position is possible as soon as advanced information has been sent to the next controller position.&#xA;&#xA;In some cases, sending of advanced information to the next controller position starts with the assumption of responsibility by the current controller position, in some other cases advanced information is sent a given period of time before the estimated time of transfer of responsibility or when entering a given workstate. In the latter case, forcing the transmission of advanced information can be enforced by input of an appropriate command.&#xA;"/>
         </eAnnotations>
