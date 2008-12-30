@@ -24,6 +24,7 @@ public class Map extends Notifier implements IMap {
 	public void setProjection(IProjection projection) {
 		this.projection = projection;
 		notify(new CoordinateSystemNotification(this, false, true));
+		// TODO: Actually we should wait for individual view notifications, some views may be independent of the projection
 		notify(new ViewNotification(this));
 	}
 
@@ -44,7 +45,9 @@ public class Map extends Notifier implements IMap {
 	
 	protected void notifyStructuralChange(ILayer layer, StructuralNotification.ChangeType changeType) {
 		notify(new StructuralNotification(this, layer, changeType));
+		// TODO: actually, we might want to send an individual notification for the layer
 		notify(new ViewNotification(this));
+		// TODO: register as a listener on the new layer?
 	}
 	
 	@Override
@@ -99,18 +102,19 @@ public class Map extends Notifier implements IMap {
 		deviceToLogicalTransform = null;
 		logicalToDeviceTransform = null;
 		notify(new CoordinateSystemNotification(this, true, false));
+		// TODO: Actually we should wait for individual view notifications, some views may be independent of the projection
 		notify(new ViewNotification(this));
 	}
 	
 	protected void updateTransforms() {
 		deviceToLogicalTransform = new AffineTransform(
 				logicalScale, 0,
-				0, logicalScale,
-				logicalOffsetX, logicalOffsetY);
+				0, -logicalScale,
+				logicalOffsetX, -logicalOffsetY);
 		logicalToDeviceTransform = new AffineTransform(
 				1.0/logicalScale, 0,
-				0, 1.0/logicalScale,
-				-logicalOffsetX/logicalScale, -logicalOffsetY/logicalScale);
+				0, -1.0/logicalScale,
+				-logicalOffsetX/logicalScale, logicalOffsetY/logicalScale);
 	}
 	
 	@Override

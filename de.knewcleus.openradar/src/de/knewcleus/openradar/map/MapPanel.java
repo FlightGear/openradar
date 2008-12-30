@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Rectangle2D;
 
@@ -50,7 +49,7 @@ public class MapPanel extends JComponent implements INotificationListener {
 		final Graphics2D g2d = (Graphics2D)g;
 		if (g2d.getClip()==null) {
 			final Dimension dimension=getSize();
-			g2d.setClip(new Rectangle(0, 0, dimension.width, dimension.height));
+			g2d.clipRect(0, 0, dimension.width, dimension.height);
 		}
 		ViewPaintVisitor viewPaintVisitor=new ViewPaintVisitor(g2d);
 		map.accept(viewPaintVisitor);
