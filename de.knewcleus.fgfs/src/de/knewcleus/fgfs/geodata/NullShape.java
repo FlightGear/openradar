@@ -40,5 +40,9 @@ public class NullShape extends Geometry {
 	public double getZMin() {
 		return 0;
 	}
-
+	
+	@Override
+	public void accept(IGeometryVisitor visitor) {
+		visitor.visit(this);
+	}
 }

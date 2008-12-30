@@ -7,4 +7,6 @@ public abstract class Geometry {
 	public abstract double getYMax();
 	public abstract double getZMin();
 	public abstract double getZMax();
+	
+	public abstract void accept(IGeometryVisitor visitor);
 }

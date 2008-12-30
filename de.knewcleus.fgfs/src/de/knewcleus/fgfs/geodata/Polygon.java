@@ -29,4 +29,9 @@ public class Polygon extends GeometryContainer<Ring> {
 		
 		return area;
 	}
+	
+	@Override
+	public void accept(IGeometryVisitor visitor) {
+		visitor.visit(this);
+	}
 }

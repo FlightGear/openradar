@@ -47,4 +47,9 @@ public class Ring extends LineString {
 	public boolean isClockWise() {
 		return getEnclosedArea()>0.0;
 	}
+	
+	@Override
+	public void accept(IGeometryVisitor visitor) {
+		visitor.visit(this);
+	}
 }

@@ -85,4 +85,9 @@ public class Point extends Geometry {
 	public double getZMin() {
 		return z;
 	}
+	
+	@Override
+	public void accept(IGeometryVisitor visitor) {
+		visitor.visit(this);
+	}
 }

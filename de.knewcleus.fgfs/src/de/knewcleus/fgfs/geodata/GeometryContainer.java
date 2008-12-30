@@ -67,4 +67,10 @@ public abstract class GeometryContainer<T extends Geometry> extends Geometry imp
 	public Iterator<T> iterator() {
 		return getContainedGeometry().iterator();
 	}
+	
+	public void traverse(IGeometryVisitor visitor) {
+		for (T child: containedGeometry) {
+			child.accept(visitor);
+		}
+	}
 }
