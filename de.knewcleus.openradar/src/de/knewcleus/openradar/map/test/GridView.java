@@ -21,6 +21,11 @@ public class GridView extends Notifier implements ILayer {
 		this.gridX = gridX;
 		this.gridY = gridY;
 	}
+	
+	@Override
+	public String getName() {
+		return "Grid";
+	}
 
 	@Override
 	public void accept(IViewVisitor visitor) {
@@ -30,11 +35,6 @@ public class GridView extends Notifier implements ILayer {
 	@Override
 	public IMap getMap() {
 		return map;
-	}
-	
-	@Override
-	public String getName() {
-		return "Grid";
 	}
 	
 	@Override
@@ -62,10 +62,5 @@ public class GridView extends Notifier implements ILayer {
 		}
 		
 		g2d.setTransform(oldTransform);
-	}
-	
-	@Override
-	public void traverse(IViewVisitor visitor) {
-		// TODO Auto-generated method stub
 	}
 }
