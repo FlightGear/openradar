@@ -7,10 +7,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-import de.knewcleus.fgfs.geodata.Geometry;
-import de.knewcleus.fgfs.geodata.Point;
-import de.knewcleus.fgfs.geodata.Polygon;
-import de.knewcleus.fgfs.geodata.Ring;
+import de.knewcleus.fgfs.geodata.geometry.Geometry;
+import de.knewcleus.fgfs.geodata.geometry.Point;
+import de.knewcleus.fgfs.geodata.geometry.Polygon;
+import de.knewcleus.fgfs.geodata.geometry.Ring;
 
 public class GeometryToShapeConverter {
 	public Shape convert(Geometry geometry) throws GeometryConversionException {

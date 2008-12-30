@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.geodata;
+package de.knewcleus.fgfs.geodata.shapefile;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -6,6 +6,11 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
+
+import de.knewcleus.fgfs.geodata.DataFormatException;
+import de.knewcleus.fgfs.geodata.FieldDescriptor;
+import de.knewcleus.fgfs.geodata.FieldType;
+import de.knewcleus.fgfs.geodata.IDatabaseRow;
 
 public class DBFFileReader {
 	protected final DataInputStream dbfInputStream;

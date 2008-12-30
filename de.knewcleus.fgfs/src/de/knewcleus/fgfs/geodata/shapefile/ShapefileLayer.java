@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.geodata;
+package de.knewcleus.fgfs.geodata.shapefile;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -6,7 +6,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class ShapefileLayer implements Layer {
+import de.knewcleus.fgfs.geodata.DataFormatException;
+import de.knewcleus.fgfs.geodata.Feature;
+import de.knewcleus.fgfs.geodata.FeatureDefinition;
+import de.knewcleus.fgfs.geodata.FieldDescriptor;
+import de.knewcleus.fgfs.geodata.IDatabaseRow;
+import de.knewcleus.fgfs.geodata.IGeodataLayer;
+import de.knewcleus.fgfs.geodata.geometry.Geometry;
+
+public class ShapefileLayer implements IGeodataLayer {
 	protected final SHPFileReader shpFileReader;
 	protected final DBFFileReader dbfFileReader;
 	protected final FeatureDefinition featureDefinition;

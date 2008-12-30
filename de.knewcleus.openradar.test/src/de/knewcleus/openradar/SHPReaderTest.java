@@ -6,7 +6,7 @@ import java.io.IOException;
 import de.knewcleus.fgfs.geodata.DataFormatException;
 import de.knewcleus.fgfs.geodata.FeatureDefinition;
 import de.knewcleus.fgfs.geodata.FieldDescriptor;
-import de.knewcleus.fgfs.geodata.ShapefileLayer;
+import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
 
 public class SHPReaderTest {
 	public static void main(String[] args) throws IOException, DataFormatException {

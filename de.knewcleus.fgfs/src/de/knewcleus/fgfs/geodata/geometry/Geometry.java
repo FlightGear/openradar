@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.geodata;
+package de.knewcleus.fgfs.geodata.geometry;
 
 public abstract class Geometry {
 	public abstract double getXMin();

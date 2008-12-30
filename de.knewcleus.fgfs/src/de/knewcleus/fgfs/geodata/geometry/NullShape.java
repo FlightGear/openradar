@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.geodata;
+package de.knewcleus.fgfs.geodata.geometry;
 
 public class NullShape extends Geometry {
 	protected final static NullShape instance=new NullShape();

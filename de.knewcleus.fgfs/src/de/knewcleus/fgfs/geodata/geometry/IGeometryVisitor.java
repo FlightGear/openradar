@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.geodata;
+package de.knewcleus.fgfs.geodata.geometry;
 
 public interface IGeometryVisitor {
 	public void visit(Geometry geometry) throws GeometryException;

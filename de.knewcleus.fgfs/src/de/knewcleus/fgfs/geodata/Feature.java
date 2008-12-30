@@ -1,5 +1,7 @@
 package de.knewcleus.fgfs.geodata;
 
+import de.knewcleus.fgfs.geodata.geometry.Geometry;
+
 public class Feature {
 	protected final FeatureDefinition featureDefinition;
 	protected final int featureID;

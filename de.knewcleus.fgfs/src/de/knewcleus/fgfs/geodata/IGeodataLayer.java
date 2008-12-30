@@ -2,7 +2,7 @@ package de.knewcleus.fgfs.geodata;
 
 import java.io.IOException;
 
-public interface Layer {
+public interface IGeodataLayer {
 
 	public abstract int getRecordCount();
 

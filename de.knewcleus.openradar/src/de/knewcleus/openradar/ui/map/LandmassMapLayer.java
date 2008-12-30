@@ -8,7 +8,7 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.knewcleus.fgfs.geodata.Geometry;
+import de.knewcleus.fgfs.geodata.geometry.Geometry;
 import de.knewcleus.fgfs.location.IMapProjection;
 import de.knewcleus.fgfs.util.GeometryConversionException;
 import de.knewcleus.fgfs.util.GeometryToShapeConverter;

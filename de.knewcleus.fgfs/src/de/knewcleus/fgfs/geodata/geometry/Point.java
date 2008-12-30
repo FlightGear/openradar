@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.geodata;
+package de.knewcleus.fgfs.geodata.geometry;
 
 public class Point extends Geometry {
 	protected final double x, y, z, m;

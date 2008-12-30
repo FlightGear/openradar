@@ -6,6 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import de.knewcleus.fgfs.geodata.geometry.Point;
+import de.knewcleus.fgfs.geodata.geometry.Polygon;
+import de.knewcleus.fgfs.geodata.geometry.Ring;
+
 public class PolyReader {
 	protected Polygon readPolygon(BufferedReader bufferedReader) throws IOException {
 		String contourCountLine=bufferedReader.readLine();

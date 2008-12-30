@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.geodata;
+package de.knewcleus.fgfs.geodata.shapefile;
 
 import java.io.DataInputStream;
 import java.io.IOException;

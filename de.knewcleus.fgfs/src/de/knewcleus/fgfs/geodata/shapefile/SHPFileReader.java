@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.geodata;
+package de.knewcleus.fgfs.geodata.shapefile;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -9,6 +9,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.knewcleus.fgfs.geodata.DataFormatException;
+import de.knewcleus.fgfs.geodata.geometry.Geometry;
+import de.knewcleus.fgfs.geodata.geometry.LineString;
+import de.knewcleus.fgfs.geodata.geometry.MultiLineString;
+import de.knewcleus.fgfs.geodata.geometry.NullShape;
+import de.knewcleus.fgfs.geodata.geometry.Point;
+import de.knewcleus.fgfs.geodata.geometry.Polygon;
+import de.knewcleus.fgfs.geodata.geometry.Ring;
 
 public class SHPFileReader {
 	protected final DataInputStream shapeDataStream;

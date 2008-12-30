@@ -1,6 +1,6 @@
 package de.knewcleus.fgfs.util;
 
-import de.knewcleus.fgfs.geodata.Geometry;
+import de.knewcleus.fgfs.geodata.geometry.Geometry;
 
 public class GeometryConversionException extends Exception {
 	private static final long serialVersionUID = 7886609488023149701L;
