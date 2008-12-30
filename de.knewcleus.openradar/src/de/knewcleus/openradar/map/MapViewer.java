@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
@@ -13,13 +14,13 @@ import javax.swing.JComponent;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 
-public class MapPanel extends JComponent implements INotificationListener {
+public class MapViewer extends JComponent implements INotificationListener {
 	private static final long serialVersionUID = -3173711704273558768L;
 	
 	protected final IMapViewAdapter mapViewAdapter;
 	protected final IView rootView;
 
-	public MapPanel(IMapViewAdapter mapViewAdapter, IView rootView) {
+	public MapViewer(IMapViewAdapter mapViewAdapter, IView rootView) {
 		this.mapViewAdapter = mapViewAdapter;
 		this.rootView = rootView;
 		setDoubleBuffered(true);
@@ -64,13 +65,20 @@ public class MapPanel extends JComponent implements INotificationListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		final Dimension size=getSize();
+		
 		final Graphics2D g2d = (Graphics2D)g;
 		if (g2d.getClip()==null) {
-			final Dimension dimension=getSize();
-			g2d.clipRect(0, 0, dimension.width, dimension.height);
+			g2d.clipRect(0, 0, size.width, size.height);
 		}
+		
+		/* Translate the view to the center of the viewer */
+		final AffineTransform oldTransform = g2d.getTransform();
+		g2d.transform(AffineTransform.getTranslateInstance(size.getWidth()/2.0, size.getHeight()/2.0));
+		
 		ViewPaintVisitor viewPaintVisitor=new ViewPaintVisitor(g2d);
 		rootView.accept(viewPaintVisitor);
+		g2d.setTransform(oldTransform);
 	}
 	
 	@Override

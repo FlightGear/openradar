@@ -9,8 +9,6 @@ public class MapViewAdapter extends Notifier implements IMapViewAdapter {
 	protected double logicalScale=1.0;
 	protected double logicalOffsetX=0.0;
 	protected double logicalOffsetY=0.0;
-	protected double deviceOffsetX=0.0;
-	protected double deviceOffsetY=0.0;
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 	protected IProjection projection = new IdentityProjection();

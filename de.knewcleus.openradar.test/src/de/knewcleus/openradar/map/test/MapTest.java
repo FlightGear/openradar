@@ -15,14 +15,14 @@ import de.knewcleus.openradar.map.IMapViewAdapter;
 import de.knewcleus.openradar.map.IProjection;
 import de.knewcleus.openradar.map.LocalSphericalProjection;
 import de.knewcleus.openradar.map.LayeredView;
-import de.knewcleus.openradar.map.MapPanel;
+import de.knewcleus.openradar.map.MapViewer;
 import de.knewcleus.openradar.map.MapViewAdapter;
 import de.knewcleus.openradar.map.view.GeodataView;
 
 public class MapTest {
 	public static void main(String[] args) throws MalformedURLException, GeodataException {
 		IMapViewAdapter mapViewAdapter=new MapViewAdapter();
-		IProjection projection = new LocalSphericalProjection(new Point2D.Double( 8, 48));
+		IProjection projection = new LocalSphericalProjection(new Point2D.Double( 9.5, 47.5));
 		mapViewAdapter.setProjection(projection);
 		mapViewAdapter.setLogicalScale(100.0);
 
@@ -35,7 +35,7 @@ public class MapTest {
 		
 		final GeodataView geodataView = new GeodataView(mapViewAdapter, shapefileLayer);
 		geodataView.setColor(Color.BLUE);
-		geodataView.setFill(false);
+		geodataView.setFill(true);
 		rootView.pushView(geodataView);
 		
 		GridView gridView=new GridView(mapViewAdapter, 10.0*Units.KM, 10.0*Units.KM);
@@ -44,7 +44,7 @@ public class MapTest {
 		JFrame frame=new JFrame("Map Test");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-		MapPanel mapPanel=new MapPanel(mapViewAdapter, rootView);
+		MapViewer mapPanel=new MapViewer(mapViewAdapter, rootView);
 		frame.setContentPane(mapPanel);
 		
 		frame.setSize(640, 480);
