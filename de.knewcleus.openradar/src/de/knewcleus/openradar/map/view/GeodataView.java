@@ -31,7 +31,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	protected boolean fill = true;
 	
 	protected Rectangle2D deviceBounds = null;
-	protected List<Shape> deviceShapes = null;
+	protected Rectangle2D logicalBounds = null;
 	protected List<Shape> logicalShapes = null;
 
 	public GeodataView(IMapViewAdapter mapViewAdapter, IGeodataLayer geodataLayer) throws GeodataException {
@@ -75,7 +75,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 				invalidateLogicalShapes();
 			}
 			if (coordinateSystemNotification.isTransformationChanged()) {
-				invalidateDeviceShapes();
+				invalidateDeviceBounds();
 			}
 			fireViewNotification(new ViewNotification(this));
 		}
@@ -86,46 +86,45 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 		if (deviceBounds != null) {
 			return deviceBounds;
 		}
-		final List<Shape> deviceShapes = getDeviceShapes();
-		deviceBounds = new Rectangle2D.Double();
-		for (Shape deviceShape: deviceShapes) {
-			final Rectangle2D bounds = deviceShape.getBounds2D();
-			Rectangle2D.union(deviceBounds, bounds, deviceBounds);
-		}
+		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
+		final Rectangle2D logicalBounds = getLogicalBounds();
+		deviceBounds = logicalToDevice.createTransformedShape(logicalBounds).getBounds2D();
 		return deviceBounds;
+	}
+	
+	protected Rectangle2D getLogicalBounds() {
+		if (logicalBounds!=null) {
+			return logicalBounds;
+		}
+		final List<Shape> logicalShapes = getLogicalShapes();
+		logicalBounds = new Rectangle2D.Double();
+		for (Shape shape: logicalShapes) {
+			final Rectangle2D bounds = shape.getBounds2D();
+			Rectangle2D.union(logicalBounds, bounds, logicalBounds);
+		}
+		return logicalBounds;
 	}
 	
 	@Override
 	public void paint(Graphics2D g2d) {
 		g2d.setColor(color);
-		final List<Shape> deviceShapes = getDeviceShapes();
+		final AffineTransform oldTransform = g2d.getTransform();
+		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
+		g2d.transform(logicalToDevice);
+		final List<Shape> shapes = getLogicalShapes();
 		if (isFill()) {
-			for (Shape deviceShape: deviceShapes) {
-				g2d.fill(deviceShape);
+			for (Shape shape: shapes) {
+				g2d.fill(shape);
 			}
 		} else {
-			for (Shape deviceShape: deviceShapes) {
-				g2d.draw(deviceShape);
+			for (Shape shape: shapes) {
+				g2d.draw(shape);
 			}
 		}
+		g2d.setTransform(oldTransform);
 	}
 
-	protected List<Shape> getDeviceShapes() {
-		if (deviceShapes != null) {
-			return deviceShapes;
-		}
-		final AffineTransform logicalToDevice;
-		logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
-		final List<Shape> logicalShapes = getLogicalShapes();
-		deviceShapes = new ArrayList<Shape>();
-		for (Shape logicalShape: logicalShapes) {
-			deviceShapes.add(logicalToDevice.createTransformedShape(logicalShape));
-		}
-		return deviceShapes;
-	}
-
-	protected void invalidateDeviceShapes() {
-		deviceShapes = null;
+	protected void invalidateDeviceBounds() {
 		deviceBounds = null;
 	}
 	
@@ -149,8 +148,9 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	}
 
 	protected void invalidateLogicalShapes() {
+		logicalBounds = null;
 		logicalShapes = null;
-		invalidateDeviceShapes();
+		invalidateDeviceBounds();
 	}
 	
 	protected void fireViewNotification(ViewNotification notification) {
