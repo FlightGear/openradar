@@ -13,12 +13,18 @@ public class Map extends Notifier implements IMap {
 	protected double offsetY=0.0;
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
-	protected IProjection projection = null;
+	protected IProjection projection = new IdentityProjection();
 	protected final List<ILayer> layers=new ArrayList<ILayer>();
 	
 	@Override
 	public IProjection getProjection() {
-		throw new UnsupportedOperationException();
+		return projection;
+	}
+	
+	public void setProjection(IProjection projection) {
+		this.projection = projection;
+		notify(new CoordinateSystemNotification(this));
+		notify(new ViewNotification(this));
 	}
 
 	@Override
