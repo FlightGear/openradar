@@ -32,8 +32,23 @@ public class MapPanel extends JComponent implements INotificationListener {
 	
 	@Override
 	public void acceptNotification(INotification notification) {
-		if (notification instanceof ViewNotification) {
-			IView source = ((ViewNotification)notification).getSource();
+		if (notification instanceof StructuralNotification) {
+			final StructuralNotification structuralNotification;
+			structuralNotification=(StructuralNotification)notification;
+			final IView element = structuralNotification.getElement();
+			
+			/* Make sure we receive view notifications from all views */
+			switch (structuralNotification.getChangeType()) {
+			case ADD:
+				element.registerListener(this);
+				break;
+			case REMOVE:
+				element.unregisterListener(this);
+				break;
+			}
+		} else if (notification instanceof ViewNotification) {
+			/* Initiate a repaint of the concerned region */
+			final IView source = ((ViewNotification)notification).getSource();
 			if (source instanceof IBoundedView) {
 				final Rectangle2D extents = ((IBoundedView)source).getDisplayExtents();
 				repaint(extents.getBounds());
@@ -59,7 +74,7 @@ public class MapPanel extends JComponent implements INotificationListener {
 	protected void processMouseWheelEvent(MouseWheelEvent e) {
 		double scale=map.getLogicalScale();
 		scale*=Math.pow(1.1, e.getWheelRotation());
-		map.setLogicalScale(scale);
+		map.setLogicalScale(scale); 
 		super.processMouseWheelEvent(e);
 	}
 }

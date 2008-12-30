@@ -23,6 +23,9 @@ public class MapTest {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		Map map=new Map();
+		// FIXME: currently, the viewer only gets view notifications when the views are added after the view is constructed
+		MapPanel mapPanel=new MapPanel(map);
+		
 		IProjection projection = new LocalSphericalProjection(new Point2D.Double( 8, 48));
 		map.setProjection(projection);
 		map.setLogicalScale(100.0);
@@ -39,7 +42,6 @@ public class MapTest {
 		GridView gridView=new GridView(map, 10.0*Units.KM, 10.0*Units.KM);
 		map.pushLayer(gridView);
 
-		MapPanel mapPanel=new MapPanel(map);
 		
 		frame.setContentPane(mapPanel);
 		

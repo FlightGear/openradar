@@ -6,12 +6,16 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.map.CoordinateSystemNotification;
 import de.knewcleus.openradar.map.ILayer;
 import de.knewcleus.openradar.map.IMap;
 import de.knewcleus.openradar.map.IViewVisitor;
+import de.knewcleus.openradar.map.ViewNotification;
+import de.knewcleus.openradar.notify.INotification;
+import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.Notifier;
 
-public class GridView extends Notifier implements ILayer {
+public class GridView extends Notifier implements ILayer, INotificationListener {
 	protected final IMap map;
 	protected final double gridX, gridY;
 	
@@ -20,6 +24,7 @@ public class GridView extends Notifier implements ILayer {
 		this.map = map;
 		this.gridX = gridX;
 		this.gridY = gridY;
+		map.registerListener(this);
 	}
 	
 	@Override
@@ -62,5 +67,17 @@ public class GridView extends Notifier implements ILayer {
 		}
 		
 		g2d.setTransform(oldTransform);
+	}
+	
+	@Override
+	public void acceptNotification(INotification notification) {
+		if (notification instanceof CoordinateSystemNotification) {
+			/* When the logical coordinate system has change, update the view */
+			final CoordinateSystemNotification coordinateSystemNotification;
+			coordinateSystemNotification=(CoordinateSystemNotification)notification;
+			if (coordinateSystemNotification.isTransformationChanged()) {
+				notify(new ViewNotification(this));
+			}
+		}
 	}
 }

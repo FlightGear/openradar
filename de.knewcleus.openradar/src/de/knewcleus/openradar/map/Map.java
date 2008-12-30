@@ -11,6 +11,8 @@ public class Map extends Notifier implements IMap {
 	protected double logicalScale=1.0;
 	protected double logicalOffsetX=0.0;
 	protected double logicalOffsetY=0.0;
+	protected double deviceOffsetX=0.0;
+	protected double deviceOffsetY=0.0;
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 	protected IProjection projection = new IdentityProjection();
@@ -24,8 +26,6 @@ public class Map extends Notifier implements IMap {
 	public void setProjection(IProjection projection) {
 		this.projection = projection;
 		notify(new CoordinateSystemNotification(this, false, true));
-		// TODO: Actually we should wait for individual view notifications, some views may be independent of the projection
-		notify(new ViewNotification(this));
 	}
 
 	@Override
@@ -35,19 +35,20 @@ public class Map extends Notifier implements IMap {
 	
 	public void pushLayer(ILayer layer) {
 		layers.add(layer);
-		notifyStructuralChange(layer, StructuralNotification.ChangeType.ADD);
+		notify(new StructuralNotification(this,
+				layer,
+				StructuralNotification.ChangeType.ADD));
 	}
 	
 	public void removeLayer(ILayer layer) {
 		layers.remove(layer);
-		notifyStructuralChange(layer, StructuralNotification.ChangeType.REMOVE);
+		notify(new StructuralNotification(this,
+				layer,
+				StructuralNotification.ChangeType.REMOVE));
 	}
 	
 	protected void notifyStructuralChange(ILayer layer, StructuralNotification.ChangeType changeType) {
 		notify(new StructuralNotification(this, layer, changeType));
-		// TODO: actually, we might want to send an individual notification for the layer
-		notify(new ViewNotification(this));
-		// TODO: register as a listener on the new layer?
 	}
 	
 	@Override
@@ -102,8 +103,6 @@ public class Map extends Notifier implements IMap {
 		deviceToLogicalTransform = null;
 		logicalToDeviceTransform = null;
 		notify(new CoordinateSystemNotification(this, true, false));
-		// TODO: Actually we should wait for individual view notifications, some views may be independent of the projection
-		notify(new ViewNotification(this));
 	}
 	
 	protected void updateTransforms() {
