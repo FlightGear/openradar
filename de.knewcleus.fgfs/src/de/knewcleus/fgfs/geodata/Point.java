@@ -87,7 +87,7 @@ public class Point extends Geometry {
 	}
 	
 	@Override
-	public void accept(IGeometryVisitor visitor) {
+	public void accept(IGeometryVisitor visitor) throws GeometryException {
 		visitor.visit(this);
 	}
 }

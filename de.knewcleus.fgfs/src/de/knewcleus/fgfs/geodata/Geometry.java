@@ -8,5 +8,5 @@ public abstract class Geometry {
 	public abstract double getZMin();
 	public abstract double getZMax();
 	
-	public abstract void accept(IGeometryVisitor visitor);
+	public abstract void accept(IGeometryVisitor visitor) throws GeometryException;
 }

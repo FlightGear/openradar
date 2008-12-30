@@ -8,7 +8,7 @@ public class LineString extends GeometryContainer<Point> {
 	}
 	
 	@Override
-	public void accept(IGeometryVisitor visitor) {
+	public void accept(IGeometryVisitor visitor) throws GeometryException {
 		visitor.visit(this);
 	}
 }
