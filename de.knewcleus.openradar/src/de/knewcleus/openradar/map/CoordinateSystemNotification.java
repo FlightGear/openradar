@@ -12,13 +12,25 @@ import de.knewcleus.openradar.notify.INotifier;
  */
 public class CoordinateSystemNotification implements INotification {
 	protected final IMap source;
+	protected final boolean transformationChanged;
+	protected final boolean projectionChanged;
 
-	public CoordinateSystemNotification(IMap source) {
+	public CoordinateSystemNotification(IMap source, boolean transformationChanged, boolean projectionChanged) {
 		this.source = source;
+		this.transformationChanged = transformationChanged;
+		this.projectionChanged = projectionChanged;
 	}
 
 	@Override
 	public INotifier getSource() {
 		return source;
+	}
+	
+	public boolean isTransformationChanged() {
+		return transformationChanged;
+	}
+	
+	public boolean isProjectionChanged() {
+		return projectionChanged;
 	}
 }

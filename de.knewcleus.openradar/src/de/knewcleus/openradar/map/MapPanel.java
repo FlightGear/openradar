@@ -58,9 +58,9 @@ public class MapPanel extends JComponent implements INotificationListener {
 	
 	@Override
 	protected void processMouseWheelEvent(MouseWheelEvent e) {
-		double scale=map.getScale();
+		double scale=map.getLogicalScale();
 		scale*=Math.pow(1.1, e.getWheelRotation());
-		map.setScale(scale);
+		map.setLogicalScale(scale);
 		super.processMouseWheelEvent(e);
 	}
 }

@@ -8,9 +8,9 @@ import java.util.List;
 import de.knewcleus.openradar.notify.Notifier;
 
 public class Map extends Notifier implements IMap {
-	protected double scale=1.0;
-	protected double offsetX=0.0;
-	protected double offsetY=0.0;
+	protected double logicalScale=1.0;
+	protected double logicalOffsetX=0.0;
+	protected double logicalOffsetY=0.0;
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 	protected IProjection projection = new IdentityProjection();
@@ -23,7 +23,7 @@ public class Map extends Notifier implements IMap {
 	
 	public void setProjection(IProjection projection) {
 		this.projection = projection;
-		notify(new CoordinateSystemNotification(this));
+		notify(new CoordinateSystemNotification(this, false, true));
 		notify(new ViewNotification(this));
 	}
 
@@ -48,13 +48,30 @@ public class Map extends Notifier implements IMap {
 	}
 	
 	@Override
-	public double getScale() {
-		return scale;
+	public double getLogicalScale() {
+		return logicalScale;
 	}
 	
 	@Override
-	public void setScale(double scale) {
-		this.scale = scale;
+	public void setLogicalScale(double scale) {
+		this.logicalScale = scale;
+		invalidateTransforms();
+	}
+	
+	@Override
+	public double getLogicalOffsetX() {
+		return logicalOffsetX;
+	}
+	
+	@Override
+	public double getLogicalOffsetY() {
+		return logicalOffsetY;
+	}
+	
+	@Override
+	public void setLogicalOffset(double offsetX, double offsetY) {
+		this.logicalOffsetX = offsetX;
+		this.logicalOffsetY = offsetY;
 		invalidateTransforms();
 	}
 	
@@ -75,21 +92,25 @@ public class Map extends Notifier implements IMap {
 	}
 	
 	protected void invalidateTransforms() {
+		if (deviceToLogicalTransform==null || logicalToDeviceTransform==null) {
+			/* No need to invalidate and update if they are still invalidated */
+			return;
+		}
 		deviceToLogicalTransform = null;
 		logicalToDeviceTransform = null;
-		notify(new CoordinateSystemNotification(this));
+		notify(new CoordinateSystemNotification(this, true, false));
 		notify(new ViewNotification(this));
 	}
 	
 	protected void updateTransforms() {
 		deviceToLogicalTransform = new AffineTransform(
-				scale, 0,
-				0, scale,
-				offsetX, offsetY);
+				logicalScale, 0,
+				0, logicalScale,
+				logicalOffsetX, logicalOffsetY);
 		logicalToDeviceTransform = new AffineTransform(
-				1.0/scale, 0,
-				0, 1.0/scale,
-				-offsetX/scale, -offsetY/scale);
+				1.0/logicalScale, 0,
+				0, 1.0/logicalScale,
+				-logicalOffsetX/logicalScale, -logicalOffsetY/logicalScale);
 	}
 	
 	@Override

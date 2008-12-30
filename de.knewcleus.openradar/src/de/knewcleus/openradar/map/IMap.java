@@ -20,7 +20,12 @@ public interface IMap extends INotifier, IContainer {
 	 */
 	public AffineTransform getDeviceToLogicalTransform();
 
-	public abstract double getScale();
+	public double getLogicalScale();
 
-	public abstract void setScale(double scale);
+	public void setLogicalScale(double scale);
+	
+	public double getLogicalOffsetX();
+	public double getLogicalOffsetY();
+	
+	public void setLogicalOffset(double offsetX, double offsetY);
 }
