@@ -1,13 +1,11 @@
 package de.knewcleus.openradar.map;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
-import java.util.List;
 
+import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.Notifier;
 
-public class Map extends Notifier implements IMap {
+public class MapViewAdapter extends Notifier implements IMapViewAdapter {
 	protected double logicalScale=1.0;
 	protected double logicalOffsetX=0.0;
 	protected double logicalOffsetY=0.0;
@@ -16,7 +14,6 @@ public class Map extends Notifier implements IMap {
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 	protected IProjection projection = new IdentityProjection();
-	protected final List<ILayer> layers=new ArrayList<ILayer>();
 	
 	@Override
 	public IProjection getProjection() {
@@ -26,29 +23,6 @@ public class Map extends Notifier implements IMap {
 	public void setProjection(IProjection projection) {
 		this.projection = projection;
 		notify(new CoordinateSystemNotification(this, false, true));
-	}
-
-	@Override
-	public IMap getMap() {
-		return this;
-	}
-	
-	public void pushLayer(ILayer layer) {
-		layers.add(layer);
-		notify(new StructuralNotification(this,
-				layer,
-				StructuralNotification.ChangeType.ADD));
-	}
-	
-	public void removeLayer(ILayer layer) {
-		layers.remove(layer);
-		notify(new StructuralNotification(this,
-				layer,
-				StructuralNotification.ChangeType.REMOVE));
-	}
-	
-	protected void notifyStructuralChange(ILayer layer, StructuralNotification.ChangeType changeType) {
-		notify(new StructuralNotification(this, layer, changeType));
 	}
 	
 	@Override
@@ -115,19 +89,10 @@ public class Map extends Notifier implements IMap {
 				0, -1.0/logicalScale,
 				-logicalOffsetX/logicalScale, logicalOffsetY/logicalScale);
 	}
-	
-	@Override
-	public void accept(IViewVisitor visitor) {
-		visitor.visitContainer(this);
-	}
-	
-	@Override
-	public void traverse(IViewVisitor visitor) {
-		for (ILayer layer: layers) {
-			layer.accept(visitor);
-		}
-	}
 
 	@Override
-	public void paint(Graphics2D g2d) {}
+	public void acceptNotification(INotification notification) {
+		/* Simply forward the notifications */
+		notify(notification);
+	}
 }

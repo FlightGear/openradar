@@ -14,8 +14,7 @@ import de.knewcleus.fgfs.geodata.IGeodataLayer;
 import de.knewcleus.fgfs.geodata.geometry.Geometry;
 import de.knewcleus.openradar.map.CoordinateSystemNotification;
 import de.knewcleus.openradar.map.IBoundedView;
-import de.knewcleus.openradar.map.ILayer;
-import de.knewcleus.openradar.map.IMap;
+import de.knewcleus.openradar.map.IMapViewAdapter;
 import de.knewcleus.openradar.map.IProjection;
 import de.knewcleus.openradar.map.IViewVisitor;
 import de.knewcleus.openradar.map.ViewNotification;
@@ -24,9 +23,8 @@ import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.Notifier;
 
-public class GeodataView extends Notifier implements ILayer, IBoundedView, INotificationListener {
-	protected final IMap map;
-	protected final String name;
+public class GeodataView extends Notifier implements IBoundedView, INotificationListener {
+	protected final IMapViewAdapter mapViewAdapter;
 	protected final List<Geometry> geometries = new ArrayList<Geometry>();
 	
 	protected Color color = Color.BLACK;
@@ -36,19 +34,13 @@ public class GeodataView extends Notifier implements ILayer, IBoundedView, INoti
 	protected List<Shape> deviceShapes = null;
 	protected List<Shape> logicalShapes = null;
 
-	public GeodataView(IMap map, String name, IGeodataLayer geodataLayer) throws GeodataException {
-		this.map = map;
-		this.name = name;
-		map.registerListener(this);
+	public GeodataView(IMapViewAdapter mapViewAdapter, IGeodataLayer geodataLayer) throws GeodataException {
+		this.mapViewAdapter = mapViewAdapter;
+		mapViewAdapter.registerListener(this);
 		Feature feature;
 		while ((feature=geodataLayer.getNextFeature())!=null) {
 			geometries.add(feature.getGeometry());
 		}
-	}
-	
-	@Override
-	public String getName() {
-		return name;
 	}
 	
 	public Color getColor() {
@@ -57,7 +49,7 @@ public class GeodataView extends Notifier implements ILayer, IBoundedView, INoti
 	
 	public void setColor(Color color) {
 		this.color = color;
-		notify(new ViewNotification(this));
+		fireViewNotification(new ViewNotification(this));
 	}
 	
 	public boolean isFill() {
@@ -66,12 +58,7 @@ public class GeodataView extends Notifier implements ILayer, IBoundedView, INoti
 	
 	public void setFill(boolean fill) {
 		this.fill = fill;
-		notify(new ViewNotification(this));
-	}
-
-	@Override
-	public IMap getMap() {
-		return map;
+		fireViewNotification(new ViewNotification(this));
 	}
 
 	@Override
@@ -90,7 +77,7 @@ public class GeodataView extends Notifier implements ILayer, IBoundedView, INoti
 			if (coordinateSystemNotification.isTransformationChanged()) {
 				invalidateDeviceShapes();
 			}
-			// TODO: shouldn't we send an individual view notification here?
+			fireViewNotification(new ViewNotification(this));
 		}
 	}
 	
@@ -128,7 +115,7 @@ public class GeodataView extends Notifier implements ILayer, IBoundedView, INoti
 			return deviceShapes;
 		}
 		final AffineTransform logicalToDevice;
-		logicalToDevice = getMap().getLogicalToDeviceTransform();
+		logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
 		final List<Shape> logicalShapes = getLogicalShapes();
 		deviceShapes = new ArrayList<Shape>();
 		for (Shape logicalShape: logicalShapes) {
@@ -146,7 +133,7 @@ public class GeodataView extends Notifier implements ILayer, IBoundedView, INoti
 		if (logicalShapes != null) {
 			return logicalShapes;
 		}
-		final IProjection projection = getMap().getProjection();
+		final IProjection projection = mapViewAdapter.getProjection();
 		final GeometryToShapeProjector shapeProjector;
 		shapeProjector = new GeometryToShapeProjector(projection);
 		for (Geometry geometry: geometries) {
@@ -164,5 +151,10 @@ public class GeodataView extends Notifier implements ILayer, IBoundedView, INoti
 	protected void invalidateLogicalShapes() {
 		logicalShapes = null;
 		invalidateDeviceShapes();
+	}
+	
+	protected void fireViewNotification(ViewNotification notification) {
+		notify(notification);
+		mapViewAdapter.acceptNotification(notification);
 	}
 }

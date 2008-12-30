@@ -7,29 +7,24 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.map.CoordinateSystemNotification;
-import de.knewcleus.openradar.map.ILayer;
-import de.knewcleus.openradar.map.IMap;
+import de.knewcleus.openradar.map.IMapViewAdapter;
+import de.knewcleus.openradar.map.IView;
 import de.knewcleus.openradar.map.IViewVisitor;
 import de.knewcleus.openradar.map.ViewNotification;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.Notifier;
 
-public class GridView extends Notifier implements ILayer, INotificationListener {
-	protected final IMap map;
+public class GridView extends Notifier implements IView, INotificationListener {
+	protected final IMapViewAdapter mapViewAdapter;
 	protected final double gridX, gridY;
 	
-	public GridView(IMap map, double gridX, double gridY) {
+	public GridView(IMapViewAdapter mapViewAdapter, double gridX, double gridY) {
 		super();
-		this.map = map;
+		this.mapViewAdapter = mapViewAdapter;
 		this.gridX = gridX;
 		this.gridY = gridY;
-		map.registerListener(this);
-	}
-	
-	@Override
-	public String getName() {
-		return "Grid";
+		mapViewAdapter.registerListener(this);
 	}
 
 	@Override
@@ -38,14 +33,9 @@ public class GridView extends Notifier implements ILayer, INotificationListener 
 	}
 	
 	@Override
-	public IMap getMap() {
-		return map;
-	}
-	
-	@Override
 	public void paint(Graphics2D g2d) {
 		final AffineTransform oldTransform = g2d.getTransform();
-		g2d.transform(map.getLogicalToDeviceTransform());
+		g2d.transform(mapViewAdapter.getLogicalToDeviceTransform());
 		
 		final Rectangle2D clipBounds = g2d.getClipBounds();
 		final double minX, maxX, minY, maxY;
@@ -76,8 +66,13 @@ public class GridView extends Notifier implements ILayer, INotificationListener 
 			final CoordinateSystemNotification coordinateSystemNotification;
 			coordinateSystemNotification=(CoordinateSystemNotification)notification;
 			if (coordinateSystemNotification.isTransformationChanged()) {
-				notify(new ViewNotification(this));
+				fireViewChange(new ViewNotification(this));
 			}
 		}
+	}
+	
+	protected void fireViewChange(ViewNotification notification) {
+		notify(notification);
+		mapViewAdapter.acceptNotification(notification);
 	}
 }

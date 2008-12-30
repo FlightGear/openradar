@@ -16,18 +16,24 @@ import de.knewcleus.openradar.notify.INotificationListener;
 public class MapPanel extends JComponent implements INotificationListener {
 	private static final long serialVersionUID = -3173711704273558768L;
 	
-	protected final IMap map;
+	protected final IMapViewAdapter mapViewAdapter;
+	protected final IView rootView;
 
-	public MapPanel(IMap map) {
-		this.map = map;
+	public MapPanel(IMapViewAdapter mapViewAdapter, IView rootView) {
+		this.mapViewAdapter = mapViewAdapter;
+		this.rootView = rootView;
 		setDoubleBuffered(true);
 		setBackground(Color.BLACK);
-		map.registerListener(this);
+		mapViewAdapter.registerListener(this);
 		enableEvents(AWTEvent.MOUSE_WHEEL_EVENT_MASK);
 	}
 	
-	public IMap getMap() {
-		return map;
+	public IMapViewAdapter getMapViewAdapter() {
+		return mapViewAdapter;
+	}
+	
+	public IView getRootView() {
+		return rootView;
 	}
 	
 	@Override
@@ -37,24 +43,21 @@ public class MapPanel extends JComponent implements INotificationListener {
 			structuralNotification=(StructuralNotification)notification;
 			final IView element = structuralNotification.getElement();
 			
-			/* Make sure we receive view notifications from all views */
-			switch (structuralNotification.getChangeType()) {
-			case ADD:
-				element.registerListener(this);
-				break;
-			case REMOVE:
-				element.unregisterListener(this);
-				break;
-			}
+			/* Ensure that the view respectively its extents are redrawn */
+			repaintView(element);
 		} else if (notification instanceof ViewNotification) {
 			/* Initiate a repaint of the concerned region */
 			final IView source = ((ViewNotification)notification).getSource();
-			if (source instanceof IBoundedView) {
-				final Rectangle2D extents = ((IBoundedView)source).getDisplayExtents();
-				repaint(extents.getBounds());
-			} else {
-				repaint();
-			}
+			repaintView(source);
+		}
+	}
+	
+	protected void repaintView(IView view) {
+		if (view instanceof IBoundedView) {
+			final Rectangle2D extents = ((IBoundedView)view).getDisplayExtents();
+			repaint(extents.getBounds());
+		} else {
+			repaint();
 		}
 	}
 	
@@ -67,14 +70,14 @@ public class MapPanel extends JComponent implements INotificationListener {
 			g2d.clipRect(0, 0, dimension.width, dimension.height);
 		}
 		ViewPaintVisitor viewPaintVisitor=new ViewPaintVisitor(g2d);
-		map.accept(viewPaintVisitor);
+		rootView.accept(viewPaintVisitor);
 	}
 	
 	@Override
 	protected void processMouseWheelEvent(MouseWheelEvent e) {
-		double scale=map.getLogicalScale();
+		double scale=mapViewAdapter.getLogicalScale();
 		scale*=Math.pow(1.1, e.getWheelRotation());
-		map.setLogicalScale(scale); 
+		mapViewAdapter.setLogicalScale(scale); 
 		super.processMouseWheelEvent(e);
 	}
 }

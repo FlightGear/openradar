@@ -11,38 +11,40 @@ import javax.swing.JFrame;
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
+import de.knewcleus.openradar.map.IMapViewAdapter;
 import de.knewcleus.openradar.map.IProjection;
 import de.knewcleus.openradar.map.LocalSphericalProjection;
-import de.knewcleus.openradar.map.Map;
+import de.knewcleus.openradar.map.LayeredView;
 import de.knewcleus.openradar.map.MapPanel;
+import de.knewcleus.openradar.map.MapViewAdapter;
 import de.knewcleus.openradar.map.view.GeodataView;
 
 public class MapTest {
 	public static void main(String[] args) throws MalformedURLException, GeodataException {
-		JFrame frame=new JFrame("Map Test");
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
-		Map map=new Map();
-		// FIXME: currently, the viewer only gets view notifications when the views are added after the view is constructed
-		MapPanel mapPanel=new MapPanel(map);
-		
+		IMapViewAdapter mapViewAdapter=new MapViewAdapter();
 		IProjection projection = new LocalSphericalProjection(new Point2D.Double( 8, 48));
-		map.setProjection(projection);
-		map.setLogicalScale(100.0);
+		mapViewAdapter.setProjection(projection);
+		mapViewAdapter.setLogicalScale(100.0);
+
+		LayeredView rootView=new LayeredView(mapViewAdapter);
 		
+
 		final File file = new File(args[0]);
 		final URL shapeURL = file.toURI().toURL();
 		ShapefileLayer shapefileLayer = new ShapefileLayer(shapeURL, args[1]);
 		
-		final GeodataView geodataView = new GeodataView(map, args[1], shapefileLayer);
+		final GeodataView geodataView = new GeodataView(mapViewAdapter, shapefileLayer);
 		geodataView.setColor(Color.BLUE);
 		geodataView.setFill(false);
-		map.pushLayer(geodataView);
+		rootView.pushView(geodataView);
 		
-		GridView gridView=new GridView(map, 10.0*Units.KM, 10.0*Units.KM);
-		map.pushLayer(gridView);
+		GridView gridView=new GridView(mapViewAdapter, 10.0*Units.KM, 10.0*Units.KM);
+		rootView.pushView(gridView);
 
+		JFrame frame=new JFrame("Map Test");
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
+		MapPanel mapPanel=new MapPanel(mapViewAdapter, rootView);
 		frame.setContentPane(mapPanel);
 		
 		frame.setSize(640, 480);

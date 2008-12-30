@@ -11,11 +11,11 @@ import de.knewcleus.openradar.notify.INotifier;
  *
  */
 public class CoordinateSystemNotification implements INotification {
-	protected final IMap source;
+	protected final IMapViewAdapter source;
 	protected final boolean transformationChanged;
 	protected final boolean projectionChanged;
 
-	public CoordinateSystemNotification(IMap source, boolean transformationChanged, boolean projectionChanged) {
+	public CoordinateSystemNotification(IMapViewAdapter source, boolean transformationChanged, boolean projectionChanged) {
 		this.source = source;
 		this.transformationChanged = transformationChanged;
 		this.projectionChanged = projectionChanged;

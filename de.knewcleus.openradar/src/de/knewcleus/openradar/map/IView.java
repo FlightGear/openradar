@@ -17,11 +17,6 @@ public interface IView extends INotifier {
 	public void paint(Graphics2D g2d);
 	
 	/**
-	 * @return the map in which ths view is container
-	 */
-	public IMap getMap();
-	
-	/**
 	 * Accept the view visitor.
 	 */
 	public void accept(IViewVisitor visitor);
