@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import de.knewcleus.fgfs.geodata.GeodataException;
+
 public abstract class GeometryContainer<T extends Geometry> extends Geometry implements Iterable<T> {
 	protected double xMin, xMax, yMin, yMax, zMin, zMax;
 	
@@ -68,7 +70,7 @@ public abstract class GeometryContainer<T extends Geometry> extends Geometry imp
 		return getContainedGeometry().iterator();
 	}
 	
-	public void traverse(IGeometryVisitor visitor) throws GeometryException {
+	public void traverse(IGeometryVisitor visitor) throws GeodataException {
 		for (T child: containedGeometry) {
 			child.accept(visitor);
 		}

@@ -1,8 +1,7 @@
 package de.knewcleus.fgfs.geodata;
 
-import de.knewcleus.fgfs.geodata.geometry.GeometryException;
 
-public class UnsupportedGeometryException extends GeometryException {
+public class UnsupportedGeometryException extends GeodataException {
 	private static final long serialVersionUID = 6910694957385366958L;
 
 	public UnsupportedGeometryException() {

@@ -2,6 +2,8 @@ package de.knewcleus.fgfs.geodata.geometry;
 
 import java.util.List;
 
+import de.knewcleus.fgfs.geodata.GeodataException;
+
 public class Polygon extends GeometryContainer<Ring> {
 	protected Ring outerRing=null;
 	
@@ -31,7 +33,7 @@ public class Polygon extends GeometryContainer<Ring> {
 	}
 	
 	@Override
-	public void accept(IGeometryVisitor visitor) throws GeometryException {
+	public void accept(IGeometryVisitor visitor) throws GeodataException {
 		visitor.visit(this);
 	}
 }

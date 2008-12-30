@@ -1,5 +1,7 @@
 package de.knewcleus.fgfs.geodata.geometry;
 
+import de.knewcleus.fgfs.geodata.GeodataException;
+
 public class NullShape extends Geometry {
 	protected final static NullShape instance=new NullShape();
 	
@@ -42,7 +44,7 @@ public class NullShape extends Geometry {
 	}
 	
 	@Override
-	public void accept(IGeometryVisitor visitor) throws GeometryException {
+	public void accept(IGeometryVisitor visitor) throws GeodataException {
 		visitor.visit(this);
 	}
 }

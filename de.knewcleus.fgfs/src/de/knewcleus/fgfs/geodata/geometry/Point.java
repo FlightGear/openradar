@@ -1,5 +1,7 @@
 package de.knewcleus.fgfs.geodata.geometry;
 
+import de.knewcleus.fgfs.geodata.GeodataException;
+
 public class Point extends Geometry {
 	protected final double x, y, z, m;
 	protected final boolean hasZ;
@@ -87,7 +89,7 @@ public class Point extends Geometry {
 	}
 	
 	@Override
-	public void accept(IGeometryVisitor visitor) throws GeometryException {
+	public void accept(IGeometryVisitor visitor) throws GeodataException {
 		visitor.visit(this);
 	}
 }

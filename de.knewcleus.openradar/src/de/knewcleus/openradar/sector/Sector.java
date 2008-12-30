@@ -19,8 +19,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.geodata.DataFormatException;
 import de.knewcleus.fgfs.geodata.Feature;
+import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.PolyReader;
 import de.knewcleus.fgfs.geodata.geometry.Point;
 import de.knewcleus.fgfs.geodata.geometry.Polygon;
@@ -191,11 +191,11 @@ public class Sector implements INavaidDatabase {
 							// FIXME: Aerodrome name is missing
 							getFixDB().addFix(new Aerodrome(icaoID, icaoID, new Position(arp.getX(), arp.getY(), arp.getZ())));
 						}
-					} catch (IOException e) {
+					} catch (GeodataException e) {
 						break;
 					}
 				}
-			} catch (DataFormatException e) {
+			} catch (GeodataException e) {
 				throw new DBParserException(e);
 			}
 		} else {
@@ -252,11 +252,11 @@ public class Sector implements INavaidDatabase {
 						if (feature.getGeometry() instanceof Polygon) {
 							polygons.add((Polygon)feature.getGeometry());
 						}
-					} catch (IOException e) {
+					} catch (GeodataException e) {
 						break;
 					}
 				}
-			} catch (DataFormatException e) {
+			} catch (GeodataException e) {
 				throw new DBParserException(e);
 			}
 		} else {

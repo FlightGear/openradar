@@ -2,6 +2,8 @@ package de.knewcleus.fgfs.geodata.geometry;
 
 import java.util.Iterator;
 
+import de.knewcleus.fgfs.geodata.GeodataException;
+
 
 public class Ring extends LineString {
 	public void closeRing() {
@@ -49,7 +51,7 @@ public class Ring extends LineString {
 	}
 	
 	@Override
-	public void accept(IGeometryVisitor visitor) throws GeometryException {
+	public void accept(IGeometryVisitor visitor) throws GeodataException {
 		visitor.visit(this);
 	}
 }
