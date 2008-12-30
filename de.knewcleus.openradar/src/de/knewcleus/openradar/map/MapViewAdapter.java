@@ -1,6 +1,7 @@
 package de.knewcleus.openradar.map;
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.Notifier;
@@ -9,9 +10,21 @@ public class MapViewAdapter extends Notifier implements IMapViewAdapter {
 	protected double logicalScale=1.0;
 	protected double logicalOffsetX=0.0;
 	protected double logicalOffsetY=0.0;
+	protected Rectangle2D viewerExtents = new Rectangle2D.Double();
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 	protected IProjection projection = new IdentityProjection();
+	
+	@Override
+	public Rectangle2D getViewerExtents() {
+		return viewerExtents;
+	}
+	
+	@Override
+	public void setViewerExtents(Rectangle2D extents) {
+		viewerExtents = extents;
+		invalidateTransforms();
+	}
 	
 	@Override
 	public IProjection getProjection() {
@@ -78,14 +91,19 @@ public class MapViewAdapter extends Notifier implements IMapViewAdapter {
 	}
 	
 	protected void updateTransforms() {
+		final double cx = viewerExtents.getCenterX();
+		final double cy = viewerExtents.getCenterY();
+		
 		deviceToLogicalTransform = new AffineTransform(
 				logicalScale, 0,
 				0, -logicalScale,
-				logicalOffsetX, -logicalOffsetY);
+				- logicalOffsetX - cx * logicalScale,
+				- logicalOffsetY + cy * logicalScale);
 		logicalToDeviceTransform = new AffineTransform(
 				1.0/logicalScale, 0,
 				0, -1.0/logicalScale,
-				-logicalOffsetX/logicalScale, logicalOffsetY/logicalScale);
+				logicalOffsetX/logicalScale + cx,
+				- logicalOffsetY/logicalScale + cy);
 	}
 
 	@Override

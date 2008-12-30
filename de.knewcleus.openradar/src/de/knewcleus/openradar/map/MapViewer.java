@@ -5,8 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
@@ -26,7 +27,7 @@ public class MapViewer extends JComponent implements INotificationListener {
 		setDoubleBuffered(true);
 		setBackground(Color.BLACK);
 		mapViewAdapter.registerListener(this);
-		enableEvents(AWTEvent.MOUSE_WHEEL_EVENT_MASK);
+		enableEvents(AWTEvent.MOUSE_WHEEL_EVENT_MASK + AWTEvent.COMPONENT_EVENT_MASK);
 	}
 	
 	public IMapViewAdapter getMapViewAdapter() {
@@ -65,20 +66,24 @@ public class MapViewer extends JComponent implements INotificationListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		final Dimension size=getSize();
 		
 		final Graphics2D g2d = (Graphics2D)g;
 		if (g2d.getClip()==null) {
+			final Dimension size=getSize();
 			g2d.clipRect(0, 0, size.width, size.height);
 		}
-		
-		/* Translate the view to the center of the viewer */
-		final AffineTransform oldTransform = g2d.getTransform();
-		g2d.transform(AffineTransform.getTranslateInstance(size.getWidth()/2.0, size.getHeight()/2.0));
-		
 		ViewPaintVisitor viewPaintVisitor=new ViewPaintVisitor(g2d);
 		rootView.accept(viewPaintVisitor);
-		g2d.setTransform(oldTransform);
+	}
+	
+	@Override
+	protected void processComponentEvent(ComponentEvent e) {
+		super.processComponentEvent(e);
+		if (e.getID() == ComponentEvent.COMPONENT_RESIZED) {
+			Dimension size = getSize();
+			Rectangle viewerExtents = new Rectangle(size);
+			mapViewAdapter.setViewerExtents(viewerExtents);
+		}
 	}
 	
 	@Override

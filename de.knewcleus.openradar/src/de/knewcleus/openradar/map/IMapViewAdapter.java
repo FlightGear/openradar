@@ -1,6 +1,7 @@
 package de.knewcleus.openradar.map;
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.INotifier;
@@ -15,6 +16,16 @@ import de.knewcleus.openradar.notify.INotifier;
  *
  */
 public interface IMapViewAdapter extends INotifier, INotificationListener {
+	/**
+	 * @return the current device extents of the viewer.
+	 */
+	public Rectangle2D getViewerExtents();
+	
+	/**
+	 * Set the device extents of the viewer and issue a notification about the change.
+	 */
+	public void setViewerExtents(Rectangle2D extents);
+	
 	/**
 	 * @return the current projection for this map.
 	 */
