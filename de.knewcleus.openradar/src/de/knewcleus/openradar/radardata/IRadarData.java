@@ -18,13 +18,13 @@ public interface IRadarData {
 	 * If the target was not seen, the data from the last available
 	 * scan or estimated data is provided.
 	 * 
-	 * @return <code>true</code>, if and only if the data in this record
-	 *         is estimated.
+	 * @return <code>true</code>, if and only if the target was seen
+	 *         in the last scan.
 	 */
-	public boolean isEstimate();
+	public boolean wasSeenOnLastScan();
 	
 	/**
-	 * Every radar datum is associated with a timestamp.
+	 * Every radar datum is associated with a timestamp expressed in seconds.
 	 */
 	public float getTimestamp();
 	
