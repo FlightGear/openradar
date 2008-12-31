@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.knewcleus.openradar.notify.Notifier;
-import de.knewcleus.openradar.radardata.IRadarData;
+import de.knewcleus.openradar.radardata.IRadarDataPacket;
 import de.knewcleus.openradar.radardata.IRadarDataProvider;
 import de.knewcleus.openradar.radardata.IRadarDataRecipient;
 import de.knewcleus.openradar.tracks.TrackLifetimeNotification.LifetimeState;
@@ -27,7 +27,7 @@ public class TrackManager extends Notifier implements ITrackManager, IRadarDataR
 	protected long trackRetirementTimeoutMsecs = 30 * 60 * 1000;
 
 	@Override
-	public void acceptRadarData(IRadarDataProvider provider, IRadarData radarData) {
+	public void acceptRadarData(IRadarDataProvider provider, IRadarDataPacket radarData) {
 		final Object trackIdentifier = radarData.getTrackingIdentifier();
 		final Track track;
 		final boolean isNewTrack = !trackMap.containsKey(trackIdentifier);

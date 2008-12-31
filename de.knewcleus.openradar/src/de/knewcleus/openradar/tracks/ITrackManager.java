@@ -7,7 +7,7 @@ import de.knewcleus.openradar.notify.INotifier;
  * provided by radar data providers.
  * 
  * @see de.knewcleus.openradar.radardata.IRadarDataProvider
- * @see de.knewcleus.openradar.radardata.IRadarData
+ * @see de.knewcleus.openradar.radardata.IRadarDataPacket
  * 
  * @author Ralf Gerlich
  */

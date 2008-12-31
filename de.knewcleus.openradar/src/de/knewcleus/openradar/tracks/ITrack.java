@@ -3,7 +3,7 @@ package de.knewcleus.openradar.tracks;
 import java.util.Iterator;
 
 import de.knewcleus.openradar.notify.INotifier;
-import de.knewcleus.openradar.radardata.IRadarData;
+import de.knewcleus.openradar.radardata.IRadarDataPacket;
 
 /**
  * A track represents the state history of a radar target.
@@ -13,7 +13,7 @@ import de.knewcleus.openradar.radardata.IRadarData;
  * @see ITrackManager
  *
  */
-public interface ITrack extends INotifier, Iterable<IRadarData> {
+public interface ITrack extends INotifier, Iterable<IRadarDataPacket> {
 	/**
 	 * @return the number of states available.
 	 */
@@ -35,7 +35,7 @@ public interface ITrack extends INotifier, Iterable<IRadarData> {
 	 * @return the state with the given index.
 	 * @throws IndexOutOfBoundsException	The given index is out of bounds.
 	 */
-	public IRadarData getState(int index);
+	public IRadarDataPacket getState(int index);
 	
 	/**
 	 * Return the current state of the track.
@@ -44,7 +44,7 @@ public interface ITrack extends INotifier, Iterable<IRadarData> {
 	 * @return the current state of the track.
 	 * @see #getState(int)
 	 */
-	public IRadarData getCurrentState();
+	public IRadarDataPacket getCurrentState();
 	
 	/**
 	 * Return an iterator over the states of the track.
@@ -52,5 +52,5 @@ public interface ITrack extends INotifier, Iterable<IRadarData> {
 	 * The iterator starts with the current state and proceeds backwards in history.
 	 */
 	@Override
-	public Iterator<IRadarData> iterator();
+	public Iterator<IRadarDataPacket> iterator();
 }

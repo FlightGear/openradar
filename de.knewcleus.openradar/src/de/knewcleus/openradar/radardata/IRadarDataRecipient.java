@@ -7,5 +7,5 @@ package de.knewcleus.openradar.radardata;
  *
  */
 public interface IRadarDataRecipient {
-	public void acceptRadarData(IRadarDataProvider provider, IRadarData radarData);
+	public void acceptRadarData(IRadarDataProvider provider, IRadarDataPacket radarData);
 }
