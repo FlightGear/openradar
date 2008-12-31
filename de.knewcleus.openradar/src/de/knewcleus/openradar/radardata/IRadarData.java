@@ -12,6 +12,23 @@ import java.awt.geom.Point2D;
  */
 public interface IRadarData {
 	/**
+	 * Determine whether the target was actually seen in the last
+	 * radar antenna scan.
+	 * 
+	 * If the target was not seen, the data from the last available
+	 * scan or estimated data is provided.
+	 * 
+	 * @return <code>true</code>, if and only if the data in this record
+	 *         is estimated.
+	 */
+	public boolean isEstimate();
+	
+	/**
+	 * Every radar datum is associated with a timestamp.
+	 */
+	public float getTimestamp();
+	
+	/**
 	 * @return the geographic position of the radar target.
 	 */
 	public Point2D getPosition();
