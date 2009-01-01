@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map.test;
+package de.knewcleus.openradar.view.map.test;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -83,7 +83,7 @@ public class RadarTargetView extends Notifier implements IBoundedView, INotifica
 		} else if (notification instanceof TrackUpdateNotification) {
 			invalidateLogicalExtents();
 		} else if (notification instanceof TrackLossStatusNotification) {
-			invalidateLogicalExtents();
+			fireViewNotification(new ViewNotification(this, false));
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class RadarTargetView extends Notifier implements IBoundedView, INotifica
 	protected void invalidateDisplayExtents() {
 		displayShape = null;
 		displayExtents = null;
-		fireViewNotification(new ViewNotification(this));
+		fireViewNotification(new ViewNotification(this, true));
 	}
 	
 	protected void fireViewNotification(ViewNotification notification) {

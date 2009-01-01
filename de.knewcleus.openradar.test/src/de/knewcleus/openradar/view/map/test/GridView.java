@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map.test;
+package de.knewcleus.openradar.view.map.test;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -63,7 +63,7 @@ public class GridView extends Notifier implements IView, INotificationListener {
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof CoordinateSystemNotification) {
 			/* When the logical coordinate system has changed, update the view */
-			fireViewNotification(new ViewNotification(this));
+			fireViewNotification(new ViewNotification(this, false));
 		}
 	}
 	

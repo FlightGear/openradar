@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map.test;
+package de.knewcleus.openradar.view.map.test;
 
 import java.util.HashMap;
 import java.util.Map;

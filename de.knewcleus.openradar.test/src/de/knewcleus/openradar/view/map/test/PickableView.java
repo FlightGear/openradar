@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map.test;
+package de.knewcleus.openradar.view.map.test;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -42,7 +42,7 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 			return;
 		}
 		this.selected = selected;
-		fireViewNotification(new ViewNotification(this));
+		fireViewNotification(new ViewNotification(this, false));
 	}
 
 	protected void fireViewNotification(ViewNotification viewNotification) {
@@ -93,7 +93,7 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 	}
 
 	protected void invalidateDeviceBounds() {
+		fireViewNotification(new ViewNotification(this, true));
 		deviceBounds = null;
-		fireViewNotification(new ViewNotification(this));
 	}
 }

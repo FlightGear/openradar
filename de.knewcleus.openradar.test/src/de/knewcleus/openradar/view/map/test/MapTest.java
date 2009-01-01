@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map.test;
+package de.knewcleus.openradar.view.map.test;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -29,7 +29,7 @@ public class MapTest {
 		radarAdapter.registerRecipient(trackManager);
 		
 		IMapViewerAdapter mapViewAdapter=new MapViewerAdapter();
-		IProjection projection = new LocalSphericalProjection(new Point2D.Double(-121.5, 38));
+		IProjection projection = new LocalSphericalProjection(new Point2D.Double(-122.37489, 37.61896));
 		mapViewAdapter.setProjection(projection);
 		mapViewAdapter.setLogicalScale(100.0);
 
