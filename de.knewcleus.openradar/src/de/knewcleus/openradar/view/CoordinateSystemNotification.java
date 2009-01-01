@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view;
 
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotifier;
@@ -11,9 +11,9 @@ import de.knewcleus.openradar.notify.INotifier;
  *
  */
 public class CoordinateSystemNotification implements INotification {
-	protected final IViewAdapter source;
+	protected final IViewerAdapter source;
 
-	public CoordinateSystemNotification(IViewAdapter source) {
+	public CoordinateSystemNotification(IViewerAdapter source) {
 		this.source = source;
 	}
 

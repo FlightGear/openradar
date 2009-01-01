@@ -7,18 +7,18 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.openradar.map.CoordinateSystemNotification;
-import de.knewcleus.openradar.map.IBoundedView;
-import de.knewcleus.openradar.map.IMapViewAdapter;
-import de.knewcleus.openradar.map.IPickable;
-import de.knewcleus.openradar.map.IViewVisitor;
-import de.knewcleus.openradar.map.ViewNotification;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.Notifier;
+import de.knewcleus.openradar.view.CoordinateSystemNotification;
+import de.knewcleus.openradar.view.IBoundedView;
+import de.knewcleus.openradar.view.IPickable;
+import de.knewcleus.openradar.view.IViewVisitor;
+import de.knewcleus.openradar.view.IViewerAdapter;
+import de.knewcleus.openradar.view.ViewNotification;
 
 public class PickableView extends Notifier implements IPickable, IBoundedView, INotificationListener {
-	protected final IMapViewAdapter mapViewAdapter;
+	protected final IViewerAdapter viewAdapter;
 	protected final Rectangle2D logicalBounds;
 	protected final Color selectedColor;
 	protected final Color unselectedColor;
@@ -26,10 +26,10 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 	
 	protected Rectangle2D deviceBounds = null;
 
-	public PickableView(IMapViewAdapter mapViewAdapter,
+	public PickableView(IViewerAdapter mapViewAdapter,
 			Rectangle2D logicalBounds,
 			Color selectedColor, Color unselectedColor) {
-		this.mapViewAdapter = mapViewAdapter;
+		this.viewAdapter = mapViewAdapter;
 		this.logicalBounds = logicalBounds;
 		this.selectedColor = selectedColor;
 		this.unselectedColor = unselectedColor;
@@ -47,12 +47,12 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 
 	protected void fireViewNotification(ViewNotification viewNotification) {
 		notify(viewNotification);
-		mapViewAdapter.acceptNotification(viewNotification);
+		viewAdapter.acceptNotification(viewNotification);
 	}
 
 	@Override
 	public boolean contains(Point2D devicePoint) {
-		final AffineTransform deviceToLogical = mapViewAdapter.getDeviceToLogicalTransform();
+		final AffineTransform deviceToLogical = viewAdapter.getDeviceToLogicalTransform();
 		final Point2D logicalPoint = deviceToLogical.transform(devicePoint, null);
 		return logicalBounds.contains(logicalPoint);
 	}
@@ -62,7 +62,7 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 		if (deviceBounds != null) {
 			return deviceBounds;
 		}
-		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
+		final AffineTransform logicalToDevice = viewAdapter.getLogicalToDeviceTransform();
 		final Shape deviceShape = logicalToDevice.createTransformedShape(logicalBounds);
 		deviceBounds = deviceShape.getBounds2D();
 		return deviceBounds;
@@ -76,7 +76,7 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 	@Override
 	public void paint(Graphics2D g2d) {
 		final AffineTransform oldTransform = g2d.getTransform();
-		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
+		final AffineTransform logicalToDevice = viewAdapter.getLogicalToDeviceTransform();
 		g2d.transform(logicalToDevice);
 		g2d.setColor(selected?selectedColor:unselectedColor);
 		g2d.fill(logicalBounds);

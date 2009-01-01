@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view;
 
 /**
  * A layer is a named view.

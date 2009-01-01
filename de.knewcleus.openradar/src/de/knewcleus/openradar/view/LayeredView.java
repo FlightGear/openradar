@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -7,11 +7,11 @@ import java.util.List;
 import de.knewcleus.openradar.notify.Notifier;
 
 public class LayeredView extends Notifier implements IContainer {
-	protected final IMapViewAdapter mapViewAdapter;
+	protected final IViewerAdapter viewAdapter;
 	protected final List<IView> views=new ArrayList<IView>();
 	
-	public LayeredView(IMapViewAdapter mapViewAdapter) {
-		this.mapViewAdapter = mapViewAdapter;
+	public LayeredView(IViewerAdapter mapViewAdapter) {
+		this.viewAdapter = mapViewAdapter;
 	}
 
 	public void pushView(IView view) {
@@ -30,7 +30,7 @@ public class LayeredView extends Notifier implements IContainer {
 	
 	protected void fireStructuralChange(StructuralNotification notification) {
 		notify(notification);
-		mapViewAdapter.acceptNotification(notification);
+		viewAdapter.acceptNotification(notification);
 		
 	}
 	

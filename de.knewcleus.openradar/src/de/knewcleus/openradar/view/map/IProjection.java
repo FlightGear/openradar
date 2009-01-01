@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view.map;
 
 import java.awt.geom.Point2D;
 

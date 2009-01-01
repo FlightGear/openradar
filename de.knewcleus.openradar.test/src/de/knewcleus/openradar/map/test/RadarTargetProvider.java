@@ -3,22 +3,22 @@ package de.knewcleus.openradar.map.test;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.knewcleus.openradar.map.IMapViewAdapter;
-import de.knewcleus.openradar.map.LayeredView;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.tracks.ITrack;
 import de.knewcleus.openradar.tracks.ITrackManager;
 import de.knewcleus.openradar.tracks.TrackLifetimeNotification;
+import de.knewcleus.openradar.view.LayeredView;
+import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class RadarTargetProvider implements INotificationListener {
-	protected final IMapViewAdapter mapViewAdapter;
+	protected final IMapViewerAdapter mapViewAdapter;
 	protected final LayeredView radarTargetLayer;
 	protected final ITrackManager trackManager;
 	
 	protected final Map<ITrack, RadarTargetView> viewMap = new HashMap<ITrack, RadarTargetView>();
 	
-	public RadarTargetProvider(IMapViewAdapter mapViewAdapter, LayeredView radarTargetLayer, ITrackManager trackManager) {
+	public RadarTargetProvider(IMapViewerAdapter mapViewAdapter, LayeredView radarTargetLayer, ITrackManager trackManager) {
 		this.mapViewAdapter = mapViewAdapter;
 		this.radarTargetLayer = radarTargetLayer;
 		this.trackManager = trackManager;

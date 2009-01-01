@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view.map;
 
 import de.knewcleus.openradar.notify.INotification;
 
@@ -9,14 +9,14 @@ import de.knewcleus.openradar.notify.INotification;
  *
  */
 public class ProjectionNotification implements INotification {
-	protected final IMapViewAdapter source;
+	protected final IMapViewerAdapter source;
 
-	public ProjectionNotification(IMapViewAdapter source) {
+	public ProjectionNotification(IMapViewerAdapter source) {
 		this.source = source;
 	}
 
 	@Override
-	public IMapViewAdapter getSource() {
+	public IMapViewerAdapter getSource() {
 		return source;
 	}
 

@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -6,7 +6,7 @@ import java.awt.geom.Rectangle2D;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.Notifier;
 
-public class ViewAdapter extends Notifier implements IViewAdapter {
+public class ViewerAdapter extends Notifier implements IViewerAdapter {
 
 	protected double logicalScale = 1.0;
 	protected double logicalOffsetX = 0.0;
@@ -15,7 +15,7 @@ public class ViewAdapter extends Notifier implements IViewAdapter {
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 
-	public ViewAdapter() {
+	public ViewerAdapter() {
 		super();
 	}
 

@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
@@ -15,14 +15,14 @@ import javax.swing.JComponent;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 
-public class MapViewer extends JComponent implements INotificationListener {
+public class Viewer extends JComponent implements INotificationListener {
 	private static final long serialVersionUID = -3173711704273558768L;
 	
-	protected final IMapViewAdapter mapViewAdapter;
+	protected final IViewerAdapter viewAdapter;
 	protected final IView rootView;
 
-	public MapViewer(IMapViewAdapter mapViewAdapter, IView rootView) {
-		this.mapViewAdapter = mapViewAdapter;
+	public Viewer(IViewerAdapter mapViewAdapter, IView rootView) {
+		this.viewAdapter = mapViewAdapter;
 		this.rootView = rootView;
 		setDoubleBuffered(true);
 		setBackground(Color.BLACK);
@@ -30,8 +30,8 @@ public class MapViewer extends JComponent implements INotificationListener {
 		enableEvents(AWTEvent.MOUSE_WHEEL_EVENT_MASK + AWTEvent.COMPONENT_EVENT_MASK);
 	}
 	
-	public IMapViewAdapter getMapViewAdapter() {
-		return mapViewAdapter;
+	public IViewerAdapter getViewAdapter() {
+		return viewAdapter;
 	}
 	
 	public IView getRootView() {
@@ -82,15 +82,15 @@ public class MapViewer extends JComponent implements INotificationListener {
 		if (e.getID() == ComponentEvent.COMPONENT_RESIZED) {
 			Dimension size = getSize();
 			Rectangle viewerExtents = new Rectangle(size);
-			mapViewAdapter.setViewerExtents(viewerExtents);
+			viewAdapter.setViewerExtents(viewerExtents);
 		}
 	}
 	
 	@Override
 	protected void processMouseWheelEvent(MouseWheelEvent e) {
-		double scale=mapViewAdapter.getLogicalScale();
+		double scale=viewAdapter.getLogicalScale();
 		scale*=Math.pow(1.1, e.getWheelRotation());
-		mapViewAdapter.setLogicalScale(scale); 
+		viewAdapter.setLogicalScale(scale); 
 		super.processMouseWheelEvent(e);
 	}
 }

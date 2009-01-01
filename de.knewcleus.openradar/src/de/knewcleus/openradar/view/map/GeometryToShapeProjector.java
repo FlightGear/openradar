@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map.util;
+package de.knewcleus.openradar.view.map;
 
 import java.awt.Shape;
 import java.awt.geom.Area;
@@ -20,7 +20,6 @@ import de.knewcleus.fgfs.geodata.geometry.NullShape;
 import de.knewcleus.fgfs.geodata.geometry.Point;
 import de.knewcleus.fgfs.geodata.geometry.Polygon;
 import de.knewcleus.fgfs.geodata.geometry.Ring;
-import de.knewcleus.openradar.map.IProjection;
 
 public class GeometryToShapeProjector implements IGeometryVisitor {
 	protected final IProjection projection;

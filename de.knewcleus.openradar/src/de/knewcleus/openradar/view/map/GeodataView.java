@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map.view;
+package de.knewcleus.openradar.view.map;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -12,20 +12,16 @@ import de.knewcleus.fgfs.geodata.Feature;
 import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.IGeodataLayer;
 import de.knewcleus.fgfs.geodata.geometry.Geometry;
-import de.knewcleus.openradar.map.CoordinateSystemNotification;
-import de.knewcleus.openradar.map.IBoundedView;
-import de.knewcleus.openradar.map.IMapViewAdapter;
-import de.knewcleus.openradar.map.IProjection;
-import de.knewcleus.openradar.map.IViewVisitor;
-import de.knewcleus.openradar.map.ProjectionNotification;
-import de.knewcleus.openradar.map.ViewNotification;
-import de.knewcleus.openradar.map.util.GeometryToShapeProjector;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.Notifier;
+import de.knewcleus.openradar.view.CoordinateSystemNotification;
+import de.knewcleus.openradar.view.IBoundedView;
+import de.knewcleus.openradar.view.IViewVisitor;
+import de.knewcleus.openradar.view.ViewNotification;
 
 public class GeodataView extends Notifier implements IBoundedView, INotificationListener {
-	protected final IMapViewAdapter mapViewAdapter;
+	protected final IMapViewerAdapter mapViewAdapter;
 	protected final List<Geometry> geometries = new ArrayList<Geometry>();
 	
 	protected Color color = Color.BLACK;
@@ -35,7 +31,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	protected Rectangle2D logicalBounds = null;
 	protected List<Shape> logicalShapes = null;
 
-	public GeodataView(IMapViewAdapter mapViewAdapter, IGeodataLayer geodataLayer) throws GeodataException {
+	public GeodataView(IMapViewerAdapter mapViewAdapter, IGeodataLayer geodataLayer) throws GeodataException {
 		this.mapViewAdapter = mapViewAdapter;
 		mapViewAdapter.registerListener(this);
 		Feature feature;

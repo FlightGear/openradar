@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view;
 
 public interface IViewVisitor {
 	public void visitView(IView view);

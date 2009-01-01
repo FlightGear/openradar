@@ -1,12 +1,14 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view.map;
+
+import de.knewcleus.openradar.view.IViewerAdapter;
 
 /**
- * A map view adapter is a view adapter for a map viewer.
+ * A map viewer adapter is a viewer adapter for a map viewer.
 
  * @author Ralf Gerlich
  *
  */
-public interface IMapViewAdapter extends IViewAdapter {
+public interface IMapViewerAdapter extends IViewerAdapter {
 	/**
 	 * @return the current projection for this map.
 	 */

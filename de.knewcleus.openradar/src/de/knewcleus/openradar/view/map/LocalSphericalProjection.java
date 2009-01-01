@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view.map;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.toRadians;

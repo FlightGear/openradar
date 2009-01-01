@@ -6,22 +6,22 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.openradar.map.CoordinateSystemNotification;
-import de.knewcleus.openradar.map.IMapViewAdapter;
-import de.knewcleus.openradar.map.IView;
-import de.knewcleus.openradar.map.IViewVisitor;
-import de.knewcleus.openradar.map.ViewNotification;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.Notifier;
+import de.knewcleus.openradar.view.CoordinateSystemNotification;
+import de.knewcleus.openradar.view.IView;
+import de.knewcleus.openradar.view.IViewVisitor;
+import de.knewcleus.openradar.view.IViewerAdapter;
+import de.knewcleus.openradar.view.ViewNotification;
 
 public class GridView extends Notifier implements IView, INotificationListener {
-	protected final IMapViewAdapter mapViewAdapter;
+	protected final IViewerAdapter viewAdapter;
 	protected final double gridX, gridY;
 	
-	public GridView(IMapViewAdapter mapViewAdapter, double gridX, double gridY) {
+	public GridView(IViewerAdapter mapViewAdapter, double gridX, double gridY) {
 		super();
-		this.mapViewAdapter = mapViewAdapter;
+		this.viewAdapter = mapViewAdapter;
 		this.gridX = gridX;
 		this.gridY = gridY;
 		mapViewAdapter.registerListener(this);
@@ -35,7 +35,7 @@ public class GridView extends Notifier implements IView, INotificationListener {
 	@Override
 	public void paint(Graphics2D g2d) {
 		final AffineTransform oldTransform = g2d.getTransform();
-		g2d.transform(mapViewAdapter.getLogicalToDeviceTransform());
+		g2d.transform(viewAdapter.getLogicalToDeviceTransform());
 		
 		final Rectangle2D clipBounds = g2d.getClipBounds();
 		final double minX, maxX, minY, maxY;
@@ -69,6 +69,6 @@ public class GridView extends Notifier implements IView, INotificationListener {
 	
 	protected void fireViewNotification(ViewNotification notification) {
 		notify(notification);
-		mapViewAdapter.acceptNotification(notification);
+		viewAdapter.acceptNotification(notification);
 	}
 }

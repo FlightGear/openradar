@@ -8,13 +8,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.openradar.map.CoordinateSystemNotification;
-import de.knewcleus.openradar.map.IBoundedView;
-import de.knewcleus.openradar.map.IMapViewAdapter;
-import de.knewcleus.openradar.map.IProjection;
-import de.knewcleus.openradar.map.IViewVisitor;
-import de.knewcleus.openradar.map.ProjectionNotification;
-import de.knewcleus.openradar.map.ViewNotification;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.Notifier;
@@ -22,18 +15,25 @@ import de.knewcleus.openradar.radardata.IRadarDataPacket;
 import de.knewcleus.openradar.tracks.ITrack;
 import de.knewcleus.openradar.tracks.TrackLossStatusNotification;
 import de.knewcleus.openradar.tracks.TrackUpdateNotification;
+import de.knewcleus.openradar.view.CoordinateSystemNotification;
+import de.knewcleus.openradar.view.IBoundedView;
+import de.knewcleus.openradar.view.IViewVisitor;
+import de.knewcleus.openradar.view.ViewNotification;
+import de.knewcleus.openradar.view.map.IMapViewerAdapter;
+import de.knewcleus.openradar.view.map.IProjection;
+import de.knewcleus.openradar.view.map.ProjectionNotification;
 
 public class RadarTargetView extends Notifier implements IBoundedView, INotificationListener {
 	protected final static int targetDotRadius = 5;
 	
-	protected final IMapViewAdapter mapViewAdapter;
+	protected final IMapViewerAdapter mapViewAdapter;
 	protected final ITrack track;
 	
 	protected Point2D logicalPosition = null;
 	protected Ellipse2D displayShape = null;
 	protected Rectangle2D displayExtents = null;
 	
-	public RadarTargetView(IMapViewAdapter mapViewAdapter, ITrack track) {
+	public RadarTargetView(IMapViewerAdapter mapViewAdapter, ITrack track) {
 		this.mapViewAdapter = mapViewAdapter;
 		this.track = track;
 		mapViewAdapter.registerListener(this);

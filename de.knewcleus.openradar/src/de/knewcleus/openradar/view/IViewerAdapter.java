@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -15,7 +15,7 @@ import de.knewcleus.openradar.notify.INotifier;
  * @author Ralf Gerlich
  *
  */
-public interface IViewAdapter extends INotifier, INotificationListener {
+public interface IViewerAdapter extends INotifier, INotificationListener {
 
 	/**
 	 * @return the current device extents of the viewer.

@@ -11,16 +11,16 @@ import javax.swing.JFrame;
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
-import de.knewcleus.openradar.map.IMapViewAdapter;
-import de.knewcleus.openradar.map.IProjection;
-import de.knewcleus.openradar.map.LocalSphericalProjection;
-import de.knewcleus.openradar.map.LayeredView;
-import de.knewcleus.openradar.map.MapViewer;
-import de.knewcleus.openradar.map.MapViewAdapter;
-import de.knewcleus.openradar.map.view.GeodataView;
 import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
 import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
 import de.knewcleus.openradar.tracks.TrackManager;
+import de.knewcleus.openradar.view.LayeredView;
+import de.knewcleus.openradar.view.Viewer;
+import de.knewcleus.openradar.view.map.GeodataView;
+import de.knewcleus.openradar.view.map.IMapViewerAdapter;
+import de.knewcleus.openradar.view.map.IProjection;
+import de.knewcleus.openradar.view.map.LocalSphericalProjection;
+import de.knewcleus.openradar.view.map.MapViewerAdapter;
 
 public class MapTest {
 	public static void main(String[] args) throws GeodataException, IOException {
@@ -28,7 +28,7 @@ public class MapTest {
 		final TrackManager trackManager = new TrackManager();
 		radarAdapter.registerRecipient(trackManager);
 		
-		IMapViewAdapter mapViewAdapter=new MapViewAdapter();
+		IMapViewerAdapter mapViewAdapter=new MapViewerAdapter();
 		IProjection projection = new LocalSphericalProjection(new Point2D.Double(-121.5, 38));
 		mapViewAdapter.setProjection(projection);
 		mapViewAdapter.setLogicalScale(100.0);
@@ -54,7 +54,7 @@ public class MapTest {
 		JFrame frame=new JFrame("Map Test");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-		MapViewer mapPanel=new MapViewer(mapViewAdapter, rootView);
+		Viewer mapPanel=new Viewer(mapViewAdapter, rootView);
 		frame.setContentPane(mapPanel);
 		
 		frame.setSize(640, 480);

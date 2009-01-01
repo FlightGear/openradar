@@ -1,6 +1,8 @@
-package de.knewcleus.openradar.map;
+package de.knewcleus.openradar.view.map;
 
-public class MapViewAdapter extends ViewAdapter implements IMapViewAdapter {
+import de.knewcleus.openradar.view.ViewerAdapter;
+
+public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter {
 	protected IProjection projection = new IdentityProjection();
 	
 	@Override
