@@ -18,7 +18,7 @@ public abstract class RadarDataProvider implements IRadarDataProvider {
 		recipients.remove(recipient);
 	}
 	
-	protected void publish(IRadarDataPacket data) {
+	protected void publishRadarDataPacket(IRadarDataPacket data) {
 		for (IRadarDataRecipient recipient: recipients) {
 			recipient.acceptRadarData(this, data);
 		}

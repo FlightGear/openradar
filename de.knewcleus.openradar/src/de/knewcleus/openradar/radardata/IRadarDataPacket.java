@@ -2,6 +2,7 @@ package de.knewcleus.openradar.radardata;
 
 import java.awt.geom.Point2D;
 
+
 /**
  * Radar packets contain data about a target detected by surveillance radar.
  * 
@@ -21,23 +22,28 @@ public interface IRadarDataPacket {
 	 * @return <code>true</code>, if and only if the target was seen
 	 *         in the last scan.
 	 */
-	public boolean wasSeenOnLastScan();
-	
+	public abstract boolean wasSeenOnLastScan();
+
 	/**
 	 * Every radar datum is associated with a timestamp expressed in seconds.
 	 */
-	public float getTimestamp();
-	
+	public abstract float getTimestamp();
+
 	/**
 	 * @return the geographic position of the radar target.
 	 */
-	public Point2D getPosition();
-	
+	public abstract Point2D getPosition();
+
 	/**
 	 * @return the tracking identifier.
 	 */
-	public Object getTrackingIdentifier();
-	
+	public abstract Object getTrackingIdentifier();
+
+	/**
+	 * @return SSR data, if any, or null if no SSR data is available for this target.
+	 */
+	public abstract ISSRData getSSRData();
+
 	/**
 	 * @return the calculated velocity.
 	 */
@@ -47,9 +53,4 @@ public interface IRadarDataPacket {
 	 * @return the calculated true course.
 	 */
 	public float getCalculatedTrueCourse();
-	
-	/**
-	 * @return SSR data, if any, or null if no SSR data is available for this target.
-	 */
-	public ISSRData getSSRData();
 }

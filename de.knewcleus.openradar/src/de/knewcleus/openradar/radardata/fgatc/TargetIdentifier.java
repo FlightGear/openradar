@@ -1,21 +1,21 @@
-package de.knewcleus.openradar.vessels.fgatc;
+package de.knewcleus.openradar.radardata.fgatc;
 
 import java.net.InetAddress;
 
-public class ClientAddress {
+public class TargetIdentifier {
 	protected final InetAddress address;
 	protected final int port;
 	
-	public ClientAddress(InetAddress address, int port) {
+	public TargetIdentifier(InetAddress address, int port) {
 		this.address=address;
 		this.port=port;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof ClientAddress))
+		if (!(obj instanceof TargetIdentifier))
 			return false;
-		ClientAddress otherAddress=(ClientAddress)obj;
+		TargetIdentifier otherAddress=(TargetIdentifier)obj;
 		return otherAddress.address.equals(address) && otherAddress.port==port;
 	}
 	
