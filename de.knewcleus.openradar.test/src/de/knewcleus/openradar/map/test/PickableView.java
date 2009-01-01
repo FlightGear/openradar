@@ -88,11 +88,7 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 	@Override
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof CoordinateSystemNotification) {
-			final CoordinateSystemNotification coordinateSystemNotification;
-			coordinateSystemNotification=(CoordinateSystemNotification)notification;
-			if (coordinateSystemNotification.isTransformationChanged()) {
-				invalidateDeviceBounds();
-			}
+			invalidateDeviceBounds();
 		}
 	}
 

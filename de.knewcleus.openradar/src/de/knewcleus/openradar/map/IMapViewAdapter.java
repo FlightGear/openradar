@@ -1,31 +1,12 @@
 package de.knewcleus.openradar.map;
 
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-
-import de.knewcleus.openradar.notify.INotificationListener;
-import de.knewcleus.openradar.notify.INotifier;
-
 /**
- * A map view adapter centrally manages the aspects of a map view,
- * such as the projected, logical and device coordinate systems.
- * 
- * It is also the central interface between the map viewer and the map elements.
- * 
+ * A map view adapter is a view adapter for a map viewer.
+
  * @author Ralf Gerlich
  *
  */
-public interface IMapViewAdapter extends INotifier, INotificationListener {
-	/**
-	 * @return the current device extents of the viewer.
-	 */
-	public Rectangle2D getViewerExtents();
-	
-	/**
-	 * Set the device extents of the viewer and issue a notification about the change.
-	 */
-	public void setViewerExtents(Rectangle2D extents);
-	
+public interface IMapViewAdapter extends IViewAdapter {
 	/**
 	 * @return the current projection for this map.
 	 */
@@ -36,42 +17,4 @@ public interface IMapViewAdapter extends INotifier, INotificationListener {
 	 * @param projection	The new projection
 	 */
 	public void setProjection(IProjection projection);
-	
-	/**
-	 * @return the current logical-to-device transformation for this map.
-	 */
-	public AffineTransform getLogicalToDeviceTransform();
-	
-	/**
-	 * @return the current device-to-logical transformation for this map.
-	 */
-	public AffineTransform getDeviceToLogicalTransform();
-
-	/**
-	 * @return the current logical scale.
-	 */
-	public double getLogicalScale();
-
-	/**
-	 * Set the logical scale and issue a notification about the change.
-	 * @param scale		The new scale.
-	 */
-	public void setLogicalScale(double scale);
-	
-	/**
-	 * @return the current logical x-offset.
-	 */
-	public double getLogicalOffsetX();
-
-	/**
-	 * @return the current logical y-offset.
-	 */
-	public double getLogicalOffsetY();
-	
-	/**
-	 * Set the logical offsets and issue a notification about the change.
-	 * @param offsetX	The new logical x-offset
-	 * @param offsetY	The new logical y-offset
-	 */
-	public void setLogicalOffset(double offsetX, double offsetY);
 }

@@ -17,6 +17,7 @@ import de.knewcleus.openradar.map.IBoundedView;
 import de.knewcleus.openradar.map.IMapViewAdapter;
 import de.knewcleus.openradar.map.IProjection;
 import de.knewcleus.openradar.map.IViewVisitor;
+import de.knewcleus.openradar.map.ProjectionNotification;
 import de.knewcleus.openradar.map.ViewNotification;
 import de.knewcleus.openradar.map.util.GeometryToShapeProjector;
 import de.knewcleus.openradar.notify.INotification;
@@ -30,7 +31,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	protected Color color = Color.BLACK;
 	protected boolean fill = true;
 	
-	protected Rectangle2D deviceBounds = null;
+	protected Rectangle2D displayExtents = null;
 	protected Rectangle2D logicalBounds = null;
 	protected List<Shape> logicalShapes = null;
 
@@ -68,28 +69,22 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	
 	@Override
 	public void acceptNotification(INotification notification) {
-		if (notification instanceof CoordinateSystemNotification) {
-			final CoordinateSystemNotification coordinateSystemNotification;
-			coordinateSystemNotification=(CoordinateSystemNotification)notification;
-			if (coordinateSystemNotification.isProjectionChanged()) {
-				invalidateLogicalShapes();
-			}
-			if (coordinateSystemNotification.isTransformationChanged()) {
-				invalidateDeviceBounds();
-			}
-			fireViewNotification(new ViewNotification(this));
+		if (notification instanceof ProjectionNotification) {
+			invalidateLogicalShapes();
+		} else if (notification instanceof CoordinateSystemNotification) {
+			invalidateDisplayExtents();
 		}
 	}
 	
 	@Override
 	public Rectangle2D getDisplayExtents() {
-		if (deviceBounds != null) {
-			return deviceBounds;
+		if (displayExtents != null) {
+			return displayExtents;
 		}
 		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
 		final Rectangle2D logicalBounds = getLogicalBounds();
-		deviceBounds = logicalToDevice.createTransformedShape(logicalBounds).getBounds2D();
-		return deviceBounds;
+		displayExtents = logicalToDevice.createTransformedShape(logicalBounds).getBounds2D();
+		return displayExtents;
 	}
 	
 	protected Rectangle2D getLogicalBounds() {
@@ -124,8 +119,9 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 		g2d.setTransform(oldTransform);
 	}
 
-	protected void invalidateDeviceBounds() {
-		deviceBounds = null;
+	protected void invalidateDisplayExtents() {
+		displayExtents = null;
+		fireViewNotification(new ViewNotification(this));
 	}
 	
 	protected List<Shape> getLogicalShapes() {
@@ -150,7 +146,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	protected void invalidateLogicalShapes() {
 		logicalBounds = null;
 		logicalShapes = null;
-		invalidateDeviceBounds();
+		invalidateDisplayExtents();
 	}
 	
 	protected void fireViewNotification(ViewNotification notification) {

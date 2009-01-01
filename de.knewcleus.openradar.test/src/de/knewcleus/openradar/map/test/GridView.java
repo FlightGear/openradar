@@ -62,16 +62,12 @@ public class GridView extends Notifier implements IView, INotificationListener {
 	@Override
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof CoordinateSystemNotification) {
-			/* When the logical coordinate system has change, update the view */
-			final CoordinateSystemNotification coordinateSystemNotification;
-			coordinateSystemNotification=(CoordinateSystemNotification)notification;
-			if (coordinateSystemNotification.isTransformationChanged()) {
-				fireViewChange(new ViewNotification(this));
-			}
+			/* When the logical coordinate system has changed, update the view */
+			fireViewNotification(new ViewNotification(this));
 		}
 	}
 	
-	protected void fireViewChange(ViewNotification notification) {
+	protected void fireViewNotification(ViewNotification notification) {
 		notify(notification);
 		mapViewAdapter.acceptNotification(notification);
 	}

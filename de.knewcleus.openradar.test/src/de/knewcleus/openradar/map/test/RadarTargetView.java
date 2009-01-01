@@ -13,6 +13,7 @@ import de.knewcleus.openradar.map.IBoundedView;
 import de.knewcleus.openradar.map.IMapViewAdapter;
 import de.knewcleus.openradar.map.IProjection;
 import de.knewcleus.openradar.map.IViewVisitor;
+import de.knewcleus.openradar.map.ProjectionNotification;
 import de.knewcleus.openradar.map.ViewNotification;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
@@ -75,14 +76,10 @@ public class RadarTargetView extends Notifier implements IBoundedView, INotifica
 	
 	@Override
 	public void acceptNotification(INotification notification) {
-		if (notification instanceof CoordinateSystemNotification) {
-			final CoordinateSystemNotification coordinateSystemNotification;
-			coordinateSystemNotification = (CoordinateSystemNotification)notification;
-			if (coordinateSystemNotification.isProjectionChanged()) {
-				invalidateLogicalExtents();
-			} else if (coordinateSystemNotification.isTransformationChanged()) {
-				invalidateDisplayExtents();
-			}
+		if (notification instanceof ProjectionNotification) {
+			invalidateLogicalExtents();
+		} else if (notification instanceof CoordinateSystemNotification) {
+			invalidateDisplayExtents();
 		} else if (notification instanceof TrackUpdateNotification) {
 			invalidateLogicalExtents();
 		} else if (notification instanceof TrackLossStatusNotification) {
