@@ -34,7 +34,7 @@ public class TrackLifetimeNotification implements INotification {
 		return trackManager;
 	}
 
-	public ITrack getNewTrack() {
+	public ITrack getTrack() {
 		return newTrack;
 	}
 	

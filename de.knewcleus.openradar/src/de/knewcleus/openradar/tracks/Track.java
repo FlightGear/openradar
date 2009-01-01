@@ -65,6 +65,7 @@ public class Track extends Notifier implements ITrack {
 		}
 		history[headIndex]=state;
 		++age;
+		notify(new TrackUpdateNotification(this));
 	}
 	
 	public void setLastUpdateTimestamp(long lastUpdateTimestamp) {
