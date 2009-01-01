@@ -46,7 +46,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	
 	public void setColor(Color color) {
 		this.color = color;
-		fireViewNotification(new ViewNotification(this));
+		fireViewNotification(new ViewNotification(this, false));
 	}
 	
 	public boolean isFill() {
@@ -55,7 +55,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	
 	public void setFill(boolean fill) {
 		this.fill = fill;
-		fireViewNotification(new ViewNotification(this));
+		fireViewNotification(new ViewNotification(this, false));
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 
 	protected void invalidateDisplayExtents() {
 		displayExtents = null;
-		fireViewNotification(new ViewNotification(this));
+		fireViewNotification(new ViewNotification(this, true));
 	}
 	
 	protected List<Shape> getLogicalShapes() {

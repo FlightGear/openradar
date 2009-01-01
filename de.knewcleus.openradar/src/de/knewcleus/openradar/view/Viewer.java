@@ -18,10 +18,12 @@ import de.knewcleus.openradar.notify.INotificationListener;
 public class Viewer extends JComponent implements INotificationListener {
 	private static final long serialVersionUID = -3173711704273558768L;
 	
+	protected final IViewerRepaintManager viewerRepaintManager;
 	protected final IViewerAdapter viewAdapter;
 	protected final IView rootView;
 
 	public Viewer(IViewerAdapter mapViewAdapter, IView rootView) {
+		this.viewerRepaintManager = new DeferredViewerRepaintManager(this);
 		this.viewAdapter = mapViewAdapter;
 		this.rootView = rootView;
 		setDoubleBuffered(true);
@@ -46,20 +48,30 @@ public class Viewer extends JComponent implements INotificationListener {
 			final IView element = structuralNotification.getElement();
 			
 			/* Ensure that the view respectively its extents are redrawn */
-			repaintView(element);
+			switch (structuralNotification.getChangeType()) {
+			case ADD:
+				viewerRepaintManager.addDirtyView(element);
+				break;
+			case REMOVE:
+				repaintCurrentViewBounds(element);
+				break;
+			}
 		} else if (notification instanceof ViewNotification) {
-			/* Initiate a repaint of the concerned region */
-			final IView source = ((ViewNotification)notification).getSource();
-			repaintView(source);
+			final ViewNotification viewNotification=(ViewNotification)notification;
+			final IView source = viewNotification.getSource();
+			if (viewNotification.invalidateBounds()) {
+				repaintCurrentViewBounds(source);
+			}
+			viewerRepaintManager.addDirtyView(source);
 		}
 	}
 	
-	protected void repaintView(IView view) {
+	protected void repaintCurrentViewBounds(IView view) {
 		if (view instanceof IBoundedView) {
 			final Rectangle2D extents = ((IBoundedView)view).getDisplayExtents();
-			repaint(extents.getBounds());
+			viewerRepaintManager.addDirtyRegion(extents);
 		} else {
-			repaint();
+			viewerRepaintManager.scheduleFullRepaint();
 		}
 	}
 	

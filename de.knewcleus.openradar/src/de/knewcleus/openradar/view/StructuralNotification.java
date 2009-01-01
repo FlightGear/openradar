@@ -3,7 +3,7 @@ package de.knewcleus.openradar.view;
 import de.knewcleus.openradar.notify.INotification;
 
 /**
- * A structural notification is sent whenever an element is added or removed.
+ * A structural notification is issued by an IContainer whenever an element is added or removed.
  * @author Ralf Gerlich
  *
  */

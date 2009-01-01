@@ -11,13 +11,19 @@ import de.knewcleus.openradar.notify.INotification;
  */
 public class ViewNotification implements INotification {
 	protected final IView source;
+	protected final boolean invalidateBounds;
 
-	public ViewNotification(IView notifyingElement) {
+	public ViewNotification(IView notifyingElement, boolean invalidateBounds) {
 		this.source = notifyingElement;
+		this.invalidateBounds = invalidateBounds;
 	}
 
 	@Override
 	public IView getSource() {
 		return source;
+	}
+	
+	public boolean invalidateBounds() {
+		return invalidateBounds;
 	}
 }
