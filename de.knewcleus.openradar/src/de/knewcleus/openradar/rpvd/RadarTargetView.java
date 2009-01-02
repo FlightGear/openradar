@@ -17,7 +17,6 @@ import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
-import de.knewcleus.openradar.notify.Notifier;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
 import de.knewcleus.openradar.tracks.ITrack;
 import de.knewcleus.openradar.tracks.TrackUpdateNotification;
@@ -35,7 +34,7 @@ import de.knewcleus.openradar.view.map.ProjectionNotification;
  * @author Ralf Gerlich
  *
  */
-public class RadarTargetView extends Notifier implements IBoundedView, INotificationListener {
+public class RadarTargetView implements IBoundedView, INotificationListener {
 	protected final static double targetDotRadius = 3.0;
 	
 	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);

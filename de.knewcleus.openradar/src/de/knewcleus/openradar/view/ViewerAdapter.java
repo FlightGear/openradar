@@ -3,7 +3,6 @@ package de.knewcleus.openradar.view;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.Notifier;
 
 public class ViewerAdapter extends Notifier implements IViewerAdapter {
@@ -114,11 +113,4 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 				logicalOffsetX/logicalScale + cx,
 				- logicalOffsetY/logicalScale + cy);
 	}
-
-	@Override
-	public void acceptNotification(INotification notification) {
-		/* Simply forward the notifications */
-		notify(notification);
-	}
-
 }

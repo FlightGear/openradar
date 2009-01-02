@@ -14,12 +14,11 @@ import de.knewcleus.fgfs.geodata.IGeodataLayer;
 import de.knewcleus.fgfs.geodata.geometry.Geometry;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
-import de.knewcleus.openradar.notify.Notifier;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IBoundedView;
 import de.knewcleus.openradar.view.IViewVisitor;
 
-public class GeodataView extends Notifier implements IBoundedView, INotificationListener {
+public class GeodataView implements IBoundedView, INotificationListener {
 	protected final IMapViewerAdapter mapViewAdapter;
 	protected final List<Geometry> geometries = new ArrayList<Geometry>();
 	

@@ -4,9 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.knewcleus.openradar.notify.Notifier;
-
-public class LayeredView extends Notifier implements IContainer {
+public class LayeredView implements IContainer {
 	protected final IViewerAdapter viewAdapter;
 	protected final List<IView> views=new ArrayList<IView>();
 	

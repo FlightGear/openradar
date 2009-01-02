@@ -3,7 +3,6 @@ package de.knewcleus.openradar.view;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
-import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.INotifier;
 
 /**
@@ -15,7 +14,7 @@ import de.knewcleus.openradar.notify.INotifier;
  * @author Ralf Gerlich
  *
  */
-public interface IViewerAdapter extends INotifier, INotificationListener {
+public interface IViewerAdapter extends INotifier {
 	/**
 	 * Revalidate the adapter.
 	 * 

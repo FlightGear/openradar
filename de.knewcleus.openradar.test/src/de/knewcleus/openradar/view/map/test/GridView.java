@@ -8,13 +8,12 @@ import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
-import de.knewcleus.openradar.notify.Notifier;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IView;
 import de.knewcleus.openradar.view.IViewVisitor;
 import de.knewcleus.openradar.view.IViewerAdapter;
 
-public class GridView extends Notifier implements IView, INotificationListener {
+public class GridView implements IView, INotificationListener {
 	protected final IViewerAdapter viewAdapter;
 	protected final double gridX, gridY;
 	

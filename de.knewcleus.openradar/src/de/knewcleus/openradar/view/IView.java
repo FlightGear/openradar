@@ -2,14 +2,12 @@ package de.knewcleus.openradar.view;
 
 import java.awt.Graphics2D;
 
-import de.knewcleus.openradar.notify.INotifier;
-
 /**
  * A view is an entity on the map display.
  * 
  * @author Ralf Gerlich
  */
-public interface IView extends INotifier {
+public interface IView {
 	/**
 	 * Paint this view.
 	 * @param g2d  The graphics context to paint on.
