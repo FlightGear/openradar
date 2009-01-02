@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.view.map.test;
+package de.knewcleus.openradar.rpvd;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,17 +9,16 @@ import de.knewcleus.openradar.tracks.ITrack;
 import de.knewcleus.openradar.tracks.ITrackManager;
 import de.knewcleus.openradar.tracks.TrackLifetimeNotification;
 import de.knewcleus.openradar.view.LayeredView;
-import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class RadarTargetProvider implements INotificationListener {
-	protected final IMapViewerAdapter mapViewAdapter;
+	protected final IRadarMapViewerAdapter radarMapViewAdapter;
 	protected final LayeredView radarTargetLayer;
 	protected final ITrackManager trackManager;
 	
 	protected final Map<ITrack, RadarTargetView> viewMap = new HashMap<ITrack, RadarTargetView>();
 	
-	public RadarTargetProvider(IMapViewerAdapter mapViewAdapter, LayeredView radarTargetLayer, ITrackManager trackManager) {
-		this.mapViewAdapter = mapViewAdapter;
+	public RadarTargetProvider(IRadarMapViewerAdapter radarMapViewAdapter, LayeredView radarTargetLayer, ITrackManager trackManager) {
+		this.radarMapViewAdapter = radarMapViewAdapter;
 		this.radarTargetLayer = radarTargetLayer;
 		this.trackManager = trackManager;
 		trackManager.registerListener(this);
@@ -34,7 +33,7 @@ public class RadarTargetProvider implements INotificationListener {
 			final ITrack track=lifetimeNotification.getTrack();
 			switch (lifetimeNotification.getLifetimeState()) {
 			case CREATED:
-				final RadarTargetView newView = new RadarTargetView(mapViewAdapter, track);
+				final RadarTargetView newView = new RadarTargetView(radarMapViewAdapter, track);
 				viewMap.put(track, newView);
 				radarTargetLayer.pushView(newView);
 				break;

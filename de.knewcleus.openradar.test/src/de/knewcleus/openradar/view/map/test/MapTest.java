@@ -13,6 +13,8 @@ import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
 import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
 import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
+import de.knewcleus.openradar.rpvd.RadarMapViewerAdapter;
+import de.knewcleus.openradar.rpvd.RadarTargetProvider;
 import de.knewcleus.openradar.tracks.TrackManager;
 import de.knewcleus.openradar.view.BufferedCanvas;
 import de.knewcleus.openradar.view.ComponentCanvas;
@@ -21,7 +23,6 @@ import de.knewcleus.openradar.view.Viewer;
 import de.knewcleus.openradar.view.map.GeodataView;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
-import de.knewcleus.openradar.view.map.MapViewerAdapter;
 
 public class MapTest {
 	public static void main(String[] args) throws GeodataException, IOException {
@@ -29,34 +30,34 @@ public class MapTest {
 		final TrackManager trackManager = new TrackManager();
 		radarAdapter.registerRecipient(trackManager);
 		
-		MapViewerAdapter mapViewAdapter=new MapViewerAdapter();
+		RadarMapViewerAdapter radarMapViewAdapter=new RadarMapViewerAdapter();
 		IProjection projection = new LocalSphericalProjection(new Point2D.Double(-122.37489, 37.61896));
-		mapViewAdapter.setProjection(projection);
-		mapViewAdapter.setLogicalScale(100.0);
+		radarMapViewAdapter.setProjection(projection);
+		radarMapViewAdapter.setLogicalScale(100.0);
 
-		LayeredView rootView=mapViewAdapter.getRootView();
+		LayeredView rootView=radarMapViewAdapter.getRootView();
 
 		final File file = new File(args[0]);
 		final URL shapeURL = file.toURI().toURL();
 		ShapefileLayer shapefileLayer = new ShapefileLayer(shapeURL, args[1]);
 		
-		final GeodataView geodataView = new GeodataView(mapViewAdapter, shapefileLayer);
+		final GeodataView geodataView = new GeodataView(radarMapViewAdapter, shapefileLayer);
 		geodataView.setColor(Color.GREEN);
 		geodataView.setFill(true);
 		rootView.pushView(geodataView);
 		
-		GridView gridView=new GridView(mapViewAdapter, 10.0*Units.KM, 10.0*Units.KM);
+		GridView gridView=new GridView(radarMapViewAdapter, 10.0*Units.KM, 10.0*Units.KM);
 		rootView.pushView(gridView);
 		
-		LayeredView targetView = new LayeredView(mapViewAdapter);
-		RadarTargetProvider radarTargetProvider = new RadarTargetProvider(mapViewAdapter, targetView, trackManager);
+		LayeredView targetView = new LayeredView(radarMapViewAdapter);
+		RadarTargetProvider radarTargetProvider = new RadarTargetProvider(radarMapViewAdapter, targetView, trackManager);
 		rootView.pushView(targetView);
 
 		JFrame frame=new JFrame("Map Test");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-		Viewer mapPanel=new Viewer(mapViewAdapter);
-		mapViewAdapter.getUpdateManager().setCanvas(new BufferedCanvas(new ComponentCanvas(mapPanel)));
+		Viewer mapPanel=new Viewer(radarMapViewAdapter);
+		radarMapViewAdapter.getUpdateManager().setCanvas(new BufferedCanvas(new ComponentCanvas(mapPanel)));
 		frame.setContentPane(mapPanel);
 		
 		frame.setSize(640, 480);
