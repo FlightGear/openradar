@@ -16,9 +16,11 @@ public class LayeredView extends Notifier implements IContainer {
 
 	public void pushView(IView view) {
 		views.add(view);
+		viewAdapter.getUpdateManager().invalidateView(view);
 	}
 
 	public void removeView(IView view) {
+		viewAdapter.getUpdateManager().addDirtyView(view);
 		views.remove(view);
 	}
 	
