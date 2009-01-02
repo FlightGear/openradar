@@ -28,7 +28,7 @@ public class Track extends Notifier implements ITrack {
 		if (index>=size) {
 			throw new IndexOutOfBoundsException();
 		}
-		return history[(headIndex + index) % size];
+		return history[(headIndex + index) % historySize];
 	}
 
 	@Override
@@ -55,6 +55,7 @@ public class Track extends Notifier implements ITrack {
 	}
 	
 	public void addState(IRadarDataPacket state) {
+		assert(state!=null);
 		if (headIndex==0) {
 			headIndex = historySize - 1;
 		} else {
@@ -96,7 +97,7 @@ public class Track extends Notifier implements ITrack {
 			if (index >= size) {
 				throw new NoSuchElementException();
 			}
-			return history[index++];
+			return getState(index++);
 		}
 		
 		@Override

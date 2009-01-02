@@ -19,6 +19,9 @@ public class ComponentCanvas implements ICanvas {
 	@Override
 	public Graphics2D getGraphics(Rectangle2D region) {
 		Graphics2D g2d = (Graphics2D)managedComponent.getGraphics();
+		if (g2d==null) {
+			return null;
+		}
 		g2d.clip(region);
 		return g2d;
 	}
