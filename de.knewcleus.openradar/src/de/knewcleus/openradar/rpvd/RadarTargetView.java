@@ -1,15 +1,20 @@
 package de.knewcleus.openradar.rpvd;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.knewcleus.fgfs.location.Ellipsoid;
+import de.knewcleus.fgfs.location.GeodesicUtils;
+import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.notify.Notifier;
@@ -33,12 +38,14 @@ import de.knewcleus.openradar.view.map.ProjectionNotification;
 public class RadarTargetView extends Notifier implements IBoundedView, INotificationListener {
 	protected final static double targetDotRadius = 3.0;
 	
+	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
+	
 	protected final IRadarMapViewerAdapter radarMapViewAdapter;
 	protected final ITrack track;
 	
 	protected final List<Point2D> logicalDotPositions = new ArrayList<Point2D>();
 	protected final List<Shape> displayDotShapes = new ArrayList<Shape>();
-	protected Ellipse2D logicalHeadingLine = null;
+	protected Line2D logicalHeadingLine = null;
 	protected Rectangle2D displayExtents = new Rectangle2D.Double();
 	
 	public RadarTargetView(IRadarMapViewerAdapter radarMapViewAdapter, ITrack track) {
@@ -60,10 +67,20 @@ public class RadarTargetView extends Notifier implements IBoundedView, INotifica
 	
 	@Override
 	public void paint(Graphics2D g2d) {
-		g2d.setColor(Palette.BLACK);
+		Color color=Palette.BLACK;
+		final int count = radarMapViewAdapter.getTrackHistoryLength();
+		int i = count;
 		for (Shape displayDotShape: displayDotShapes) {
+			color=new Color(color.getRed(), color.getGreen(), color.getBlue(), 255*i/count);
+			g2d.setColor(color);
 			g2d.fill(displayDotShape);
+			--i;
 		}
+		g2d.setColor(Palette.BLACK);
+		final AffineTransform oldTransform = g2d.getTransform();
+		g2d.transform(radarMapViewAdapter.getLogicalToDeviceTransform());
+		g2d.draw(logicalHeadingLine);
+		g2d.setTransform(oldTransform);
 	}
 	
 	@Override
@@ -104,13 +121,27 @@ public class RadarTargetView extends Notifier implements IBoundedView, INotifica
 			final Point2D logicalPosition = projection.toLogical(geographicalPosition);
 			logicalDotPositions.add(logicalPosition);
 		}
+		
+		final IRadarDataPacket currentStatus = track.getCurrentState();
+		final Point2D currentGeoPosition = currentStatus.getPosition();
+		final GeodesicInformation geodInfo = geodesicUtils.direct(
+				currentGeoPosition.getX(), currentGeoPosition.getY(),
+				currentStatus.getCalculatedTrueCourse(),
+				currentStatus.getCalculatedVelocity()*radarMapViewAdapter.getHeadingVectorTime());
+		final Point2D futureGeoPosition = new Point2D.Double(geodInfo.getEndLon(), geodInfo.getEndLat());
+		
+		final Point2D currentLogicalPosition = projection.toLogical(currentGeoPosition);
+		final Point2D futureLogicalPosition = projection.toLogical(futureGeoPosition);
+		
+		logicalHeadingLine = new Line2D.Double(currentLogicalPosition, futureLogicalPosition);
 		updateDisplayPositions();
 	}
 	
 	protected void updateDisplayPositions() {
 		final AffineTransform logical2device = radarMapViewAdapter.getLogicalToDeviceTransform();
 		displayDotShapes.clear();
-		displayExtents = null;
+		final Shape displayHeadingLine = logical2device.createTransformedShape(logicalHeadingLine);
+		displayExtents = displayHeadingLine.getBounds2D();;
 		
 		for (Point2D logicalPosition: logicalDotPositions) {
 			final Point2D displayPosition = logical2device.transform(logicalPosition, null);
@@ -119,11 +150,7 @@ public class RadarTargetView extends Notifier implements IBoundedView, INotifica
 					displayPosition.getY()-targetDotRadius,
 					2.0*targetDotRadius, 2.0*targetDotRadius);
 			displayDotShapes.add(displayDotShape);
-			if (displayExtents==null) {
-				displayExtents = displayDotShape.getBounds2D();
-			} else {
-				Rectangle2D.union(displayDotShape.getBounds2D(), displayExtents, displayExtents);
-			}
+			Rectangle2D.union(displayDotShape.getBounds2D(), displayExtents, displayExtents);
 		}
 		repaint();
 	}
