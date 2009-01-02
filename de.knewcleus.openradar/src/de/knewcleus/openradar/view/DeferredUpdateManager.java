@@ -74,10 +74,10 @@ public class DeferredUpdateManager implements IUpdateManager, Runnable {
 			}
 			final Graphics2D g2d = canvas.getGraphics(dirtyRegion);
 			final Rectangle clipRectangle = dirtyRegion.getBounds();
-			g2d.clip(dirtyRegion);
 			g2d.clearRect(clipRectangle.x, clipRectangle.y, clipRectangle.width, clipRectangle.height);
 			final ViewPaintVisitor viewPaintVisitor = new ViewPaintVisitor(g2d);
 			viewerAdapter.getRootView().accept(viewPaintVisitor);
+			canvas.flushGraphics();
 		}
 		dirtyRegion = new Rectangle2D.Double();
 		fullRepaint = false;

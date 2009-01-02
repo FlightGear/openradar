@@ -8,29 +8,22 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
-public class Viewer extends JComponent implements ICanvas {
+public class Viewer extends JComponent {
 	private static final long serialVersionUID = -3173711704273558768L;
 	
 	protected final IViewerAdapter viewAdapter;
 
 	public Viewer(IViewerAdapter viewAdapter) {
 		this.viewAdapter = viewAdapter;
-		viewAdapter.getUpdateManager().setCanvas(this);
 		setBackground(Color.BLACK);
 		enableEvents(AWTEvent.MOUSE_WHEEL_EVENT_MASK + AWTEvent.COMPONENT_EVENT_MASK);
 	}
 	
 	public IViewerAdapter getViewAdapter() {
 		return viewAdapter;
-	}
-	
-	@Override
-	public Graphics2D getGraphics(Rectangle2D region) {
-		return (Graphics2D)getGraphics();
 	}
 	
 	@Override

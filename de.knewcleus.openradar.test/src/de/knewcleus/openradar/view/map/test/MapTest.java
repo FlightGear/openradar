@@ -14,6 +14,8 @@ import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
 import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
 import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
 import de.knewcleus.openradar.tracks.TrackManager;
+import de.knewcleus.openradar.view.BufferedCanvas;
+import de.knewcleus.openradar.view.ComponentCanvas;
 import de.knewcleus.openradar.view.LayeredView;
 import de.knewcleus.openradar.view.Viewer;
 import de.knewcleus.openradar.view.map.GeodataView;
@@ -54,6 +56,7 @@ public class MapTest {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		Viewer mapPanel=new Viewer(mapViewAdapter);
+		mapViewAdapter.getUpdateManager().setCanvas(new BufferedCanvas(new ComponentCanvas(mapPanel)));
 		frame.setContentPane(mapPanel);
 		
 		frame.setSize(640, 480);
