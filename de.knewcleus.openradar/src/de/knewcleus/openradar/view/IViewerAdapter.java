@@ -16,6 +16,12 @@ import de.knewcleus.openradar.notify.INotifier;
  *
  */
 public interface IViewerAdapter extends INotifier, INotificationListener {
+	/**
+	 * Revalidate the adapter.
+	 * 
+	 * @see IView#revalidate()
+	 */
+	public abstract void revalidate();
 
 	/**
 	 * @return the current device extents of the viewer.
@@ -26,6 +32,16 @@ public interface IViewerAdapter extends INotifier, INotificationListener {
 	 * Set the device extents of the viewer and issue a notification about the change.
 	 */
 	public abstract void setViewerExtents(Rectangle2D extents);
+	
+	/**
+	 * @return the update manager for the viewer.
+	 */
+	public abstract IUpdateManager getUpdateManager();
+	
+	/**
+	 * @return the root view.
+	 */
+	public abstract IView getRootView();
 
 	/**
 	 * @return the current logical-to-device transformation for this map.

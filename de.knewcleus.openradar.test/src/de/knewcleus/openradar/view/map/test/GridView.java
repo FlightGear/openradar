@@ -13,18 +13,17 @@ import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IView;
 import de.knewcleus.openradar.view.IViewVisitor;
 import de.knewcleus.openradar.view.IViewerAdapter;
-import de.knewcleus.openradar.view.ViewNotification;
 
 public class GridView extends Notifier implements IView, INotificationListener {
 	protected final IViewerAdapter viewAdapter;
 	protected final double gridX, gridY;
 	
-	public GridView(IViewerAdapter mapViewAdapter, double gridX, double gridY) {
+	public GridView(IViewerAdapter viewAdapter, double gridX, double gridY) {
 		super();
-		this.viewAdapter = mapViewAdapter;
+		this.viewAdapter = viewAdapter;
 		this.gridX = gridX;
 		this.gridY = gridY;
-		mapViewAdapter.registerListener(this);
+		viewAdapter.registerListener(this);
 	}
 
 	@Override
@@ -60,15 +59,13 @@ public class GridView extends Notifier implements IView, INotificationListener {
 	}
 	
 	@Override
+	public void revalidate() {}
+	
+	@Override
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof CoordinateSystemNotification) {
 			/* When the logical coordinate system has changed, update the view */
-			fireViewNotification(new ViewNotification(this, false));
+			viewAdapter.getUpdateManager().addDirtyView(this);
 		}
-	}
-	
-	protected void fireViewNotification(ViewNotification notification) {
-		notify(notification);
-		viewAdapter.acceptNotification(notification);
 	}
 }

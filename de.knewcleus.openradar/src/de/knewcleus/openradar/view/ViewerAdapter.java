@@ -7,11 +7,12 @@ import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.Notifier;
 
 public class ViewerAdapter extends Notifier implements IViewerAdapter {
-
+	protected Rectangle2D viewerExtents = new Rectangle2D.Double();
+	protected IUpdateManager updateManager = new DeferredUpdateManager(this); 
+	protected final LayeredView rootView = new LayeredView(this);
 	protected double logicalScale = 1.0;
 	protected double logicalOffsetX = 0.0;
 	protected double logicalOffsetY = 0.0;
-	protected Rectangle2D viewerExtents = new Rectangle2D.Double();
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 
@@ -28,6 +29,16 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	public void setViewerExtents(Rectangle2D extents) {
 		viewerExtents = extents;
 		invalidateTransforms();
+	}
+	
+	@Override
+	public IUpdateManager getUpdateManager() {
+		return updateManager;
+	}
+	
+	@Override
+	public LayeredView getRootView() {
+		return rootView;
 	}
 
 	@Override
@@ -79,11 +90,15 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 			/* No need to invalidate and update if they are still invalidated */
 			return;
 		}
-		deviceToLogicalTransform = null;
-		logicalToDeviceTransform = null;
 		notify(new CoordinateSystemNotification(this));
 	}
 
+	@Override
+	public void revalidate() {
+		deviceToLogicalTransform = null;
+		logicalToDeviceTransform = null;
+	}
+	
 	protected void updateTransforms() {
 		final double cx = viewerExtents.getCenterX();
 		final double cy = viewerExtents.getCenterY();

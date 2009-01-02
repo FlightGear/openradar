@@ -15,7 +15,6 @@ import de.knewcleus.openradar.view.IBoundedView;
 import de.knewcleus.openradar.view.IPickable;
 import de.knewcleus.openradar.view.IViewVisitor;
 import de.knewcleus.openradar.view.IViewerAdapter;
-import de.knewcleus.openradar.view.ViewNotification;
 
 public class PickableView extends Notifier implements IPickable, IBoundedView, INotificationListener {
 	protected final IViewerAdapter viewAdapter;
@@ -42,12 +41,7 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 			return;
 		}
 		this.selected = selected;
-		fireViewNotification(new ViewNotification(this, false));
-	}
-
-	protected void fireViewNotification(ViewNotification viewNotification) {
-		notify(viewNotification);
-		viewAdapter.acceptNotification(viewNotification);
+		repaint();
 	}
 
 	@Override
@@ -93,7 +87,17 @@ public class PickableView extends Notifier implements IPickable, IBoundedView, I
 	}
 
 	protected void invalidateDeviceBounds() {
-		fireViewNotification(new ViewNotification(this, true));
+		viewAdapter.getUpdateManager().invalidateView(this);
+		repaint();
+	}
+	
+	@Override
+	public void revalidate() {
 		deviceBounds = null;
+		repaint();
+	}
+	
+	protected void repaint() {
+		viewAdapter.getUpdateManager().addDirtyView(this);
 	}
 }

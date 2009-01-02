@@ -12,23 +12,15 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 
-import de.knewcleus.openradar.notify.INotification;
-import de.knewcleus.openradar.notify.INotificationListener;
-
-public class Viewer extends JComponent implements INotificationListener {
+public class Viewer extends JComponent implements ICanvas {
 	private static final long serialVersionUID = -3173711704273558768L;
 	
-	protected final IViewerRepaintManager viewerRepaintManager;
 	protected final IViewerAdapter viewAdapter;
-	protected final IView rootView;
 
-	public Viewer(IViewerAdapter mapViewAdapter, IView rootView) {
-		this.viewerRepaintManager = new DeferredViewerRepaintManager(this);
-		this.viewAdapter = mapViewAdapter;
-		this.rootView = rootView;
-		setDoubleBuffered(true);
+	public Viewer(IViewerAdapter viewAdapter) {
+		this.viewAdapter = viewAdapter;
+		viewAdapter.getUpdateManager().setCanvas(this);
 		setBackground(Color.BLACK);
-		mapViewAdapter.registerListener(this);
 		enableEvents(AWTEvent.MOUSE_WHEEL_EVENT_MASK + AWTEvent.COMPONENT_EVENT_MASK);
 	}
 	
@@ -36,43 +28,9 @@ public class Viewer extends JComponent implements INotificationListener {
 		return viewAdapter;
 	}
 	
-	public IView getRootView() {
-		return rootView;
-	}
-	
 	@Override
-	public void acceptNotification(INotification notification) {
-		if (notification instanceof StructuralNotification) {
-			final StructuralNotification structuralNotification;
-			structuralNotification=(StructuralNotification)notification;
-			final IView element = structuralNotification.getElement();
-			
-			/* Ensure that the view respectively its extents are redrawn */
-			switch (structuralNotification.getChangeType()) {
-			case ADD:
-				viewerRepaintManager.addDirtyView(element);
-				break;
-			case REMOVE:
-				repaintCurrentViewBounds(element);
-				break;
-			}
-		} else if (notification instanceof ViewNotification) {
-			final ViewNotification viewNotification=(ViewNotification)notification;
-			final IView source = viewNotification.getSource();
-			if (viewNotification.invalidateBounds()) {
-				repaintCurrentViewBounds(source);
-			}
-			viewerRepaintManager.addDirtyView(source);
-		}
-	}
-	
-	protected void repaintCurrentViewBounds(IView view) {
-		if (view instanceof IBoundedView) {
-			final Rectangle2D extents = ((IBoundedView)view).getDisplayExtents();
-			viewerRepaintManager.addDirtyRegion(extents);
-		} else {
-			viewerRepaintManager.scheduleFullRepaint();
-		}
+	public Graphics2D getGraphics(Rectangle2D region) {
+		return (Graphics2D)getGraphics();
 	}
 	
 	@Override
@@ -80,12 +38,8 @@ public class Viewer extends JComponent implements INotificationListener {
 		super.paintComponent(g);
 		
 		final Graphics2D g2d = (Graphics2D)g;
-		if (g2d.getClip()==null) {
-			final Dimension size=getSize();
-			g2d.clipRect(0, 0, size.width, size.height);
-		}
 		ViewPaintVisitor viewPaintVisitor=new ViewPaintVisitor(g2d);
-		rootView.accept(viewPaintVisitor);
+		viewAdapter.getRootView().accept(viewPaintVisitor);
 	}
 	
 	@Override

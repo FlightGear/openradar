@@ -17,7 +17,6 @@ import de.knewcleus.openradar.tracks.TrackManager;
 import de.knewcleus.openradar.view.LayeredView;
 import de.knewcleus.openradar.view.Viewer;
 import de.knewcleus.openradar.view.map.GeodataView;
-import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
 import de.knewcleus.openradar.view.map.MapViewerAdapter;
@@ -28,12 +27,12 @@ public class MapTest {
 		final TrackManager trackManager = new TrackManager();
 		radarAdapter.registerRecipient(trackManager);
 		
-		IMapViewerAdapter mapViewAdapter=new MapViewerAdapter();
+		MapViewerAdapter mapViewAdapter=new MapViewerAdapter();
 		IProjection projection = new LocalSphericalProjection(new Point2D.Double(-122.37489, 37.61896));
 		mapViewAdapter.setProjection(projection);
 		mapViewAdapter.setLogicalScale(100.0);
 
-		LayeredView rootView=new LayeredView(mapViewAdapter);
+		LayeredView rootView=mapViewAdapter.getRootView();
 
 		final File file = new File(args[0]);
 		final URL shapeURL = file.toURI().toURL();
@@ -54,7 +53,7 @@ public class MapTest {
 		JFrame frame=new JFrame("Map Test");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-		Viewer mapPanel=new Viewer(mapViewAdapter, rootView);
+		Viewer mapPanel=new Viewer(mapViewAdapter);
 		frame.setContentPane(mapPanel);
 		
 		frame.setSize(640, 480);

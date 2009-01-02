@@ -16,22 +16,10 @@ public class LayeredView extends Notifier implements IContainer {
 
 	public void pushView(IView view) {
 		views.add(view);
-		fireStructuralChange(new StructuralNotification(this,
-				view,
-				StructuralNotification.ChangeType.ADD));
 	}
 
 	public void removeView(IView view) {
 		views.remove(view);
-		fireStructuralChange(new StructuralNotification(this,
-				view,
-				StructuralNotification.ChangeType.REMOVE));
-	}
-	
-	protected void fireStructuralChange(StructuralNotification notification) {
-		notify(notification);
-		viewAdapter.acceptNotification(notification);
-		
 	}
 	
 	@Override
@@ -45,6 +33,9 @@ public class LayeredView extends Notifier implements IContainer {
 			view.accept(visitor);
 		}
 	}
+	
+	@Override
+	public void revalidate() {}
 
 	@Override
 	public void paint(Graphics2D g2d) {}

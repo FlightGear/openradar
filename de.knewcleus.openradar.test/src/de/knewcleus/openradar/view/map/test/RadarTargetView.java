@@ -18,7 +18,6 @@ import de.knewcleus.openradar.tracks.TrackUpdateNotification;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IBoundedView;
 import de.knewcleus.openradar.view.IViewVisitor;
-import de.knewcleus.openradar.view.ViewNotification;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.ProjectionNotification;
@@ -83,24 +82,29 @@ public class RadarTargetView extends Notifier implements IBoundedView, INotifica
 		} else if (notification instanceof TrackUpdateNotification) {
 			invalidateLogicalExtents();
 		} else if (notification instanceof TrackLossStatusNotification) {
-			fireViewNotification(new ViewNotification(this, false));
+			repaint();
 		}
 	}
 	
 	protected void invalidateLogicalExtents() {
-		logicalPosition = null;
 		invalidateDisplayExtents();
 	}
 	
 	protected void invalidateDisplayExtents() {
-		displayShape = null;
-		displayExtents = null;
-		fireViewNotification(new ViewNotification(this, true));
+		mapViewAdapter.getUpdateManager().invalidateView(this);
+		repaint();
 	}
 	
-	protected void fireViewNotification(ViewNotification notification) {
-		notify(notification);
-		mapViewAdapter.acceptNotification(notification);
+	@Override
+	public void revalidate() {
+		displayShape = null;
+		displayExtents = null;
+		logicalPosition = null;
+		repaint();
+	}
+	
+	protected void repaint() {
+		mapViewAdapter.getUpdateManager().addDirtyView(this);
 	}
 	
 	protected Point2D getLogicalPosition() {

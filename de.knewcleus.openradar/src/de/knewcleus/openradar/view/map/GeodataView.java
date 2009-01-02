@@ -18,7 +18,6 @@ import de.knewcleus.openradar.notify.Notifier;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IBoundedView;
 import de.knewcleus.openradar.view.IViewVisitor;
-import de.knewcleus.openradar.view.ViewNotification;
 
 public class GeodataView extends Notifier implements IBoundedView, INotificationListener {
 	protected final IMapViewerAdapter mapViewAdapter;
@@ -46,7 +45,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	
 	public void setColor(Color color) {
 		this.color = color;
-		fireViewNotification(new ViewNotification(this, false));
+		repaint();
 	}
 	
 	public boolean isFill() {
@@ -55,7 +54,7 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	
 	public void setFill(boolean fill) {
 		this.fill = fill;
-		fireViewNotification(new ViewNotification(this, false));
+		repaint();
 	}
 
 	@Override
@@ -116,8 +115,8 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	}
 
 	protected void invalidateDisplayExtents() {
-		displayExtents = null;
-		fireViewNotification(new ViewNotification(this, true));
+		mapViewAdapter.getUpdateManager().invalidateView(this);
+		repaint();
 	}
 	
 	protected List<Shape> getLogicalShapes() {
@@ -140,13 +139,18 @@ public class GeodataView extends Notifier implements IBoundedView, INotification
 	}
 
 	protected void invalidateLogicalShapes() {
-		logicalBounds = null;
-		logicalShapes = null;
 		invalidateDisplayExtents();
 	}
 	
-	protected void fireViewNotification(ViewNotification notification) {
-		notify(notification);
-		mapViewAdapter.acceptNotification(notification);
+	@Override
+	public void revalidate() {
+		logicalBounds = null;
+		logicalShapes = null;
+		displayExtents = null;
+		repaint();
+	}
+	
+	protected void repaint() {
+		mapViewAdapter.getUpdateManager().addDirtyView(this);
 	}
 }

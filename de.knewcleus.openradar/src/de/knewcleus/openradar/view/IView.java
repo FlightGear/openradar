@@ -17,6 +17,13 @@ public interface IView extends INotifier {
 	public void paint(Graphics2D g2d);
 	
 	/**
+	 * Revalidate this view.
+	 * 
+	 * Here views should recalculate device coordinates, layout and similar.
+	 */
+	public void revalidate();
+	
+	/**
 	 * Accept the view visitor.
 	 */
 	public void accept(IViewVisitor visitor);
