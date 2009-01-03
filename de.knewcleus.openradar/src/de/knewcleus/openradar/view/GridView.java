@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.view.map.test;
+package de.knewcleus.openradar.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -8,21 +8,25 @@ import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
-import de.knewcleus.openradar.view.CoordinateSystemNotification;
-import de.knewcleus.openradar.view.IView;
-import de.knewcleus.openradar.view.IViewVisitor;
-import de.knewcleus.openradar.view.IViewerAdapter;
 
 public class GridView implements IView, INotificationListener {
 	protected final IViewerAdapter viewAdapter;
-	protected final double gridX, gridY;
+	protected double gridLogicalSize;
 	
-	public GridView(IViewerAdapter viewAdapter, double gridX, double gridY) {
+	public GridView(IViewerAdapter viewAdapter, double gridLogicalSize) {
 		super();
 		this.viewAdapter = viewAdapter;
-		this.gridX = gridX;
-		this.gridY = gridY;
+		this.gridLogicalSize = gridLogicalSize;
 		viewAdapter.registerListener(this);
+	}
+	
+	public double getGridLogicalSize() {
+		return gridLogicalSize;
+	}
+	
+	public void setGridLogicalSize(double gridLogicalSize) {
+		this.gridLogicalSize = gridLogicalSize;
+		viewAdapter.getUpdateManager().addDirtyView(this);
 	}
 
 	@Override
@@ -38,18 +42,18 @@ public class GridView implements IView, INotificationListener {
 		final Rectangle2D clipBounds = g2d.getClipBounds();
 		final double minX, maxX, minY, maxY;
 		
-		minX=Math.floor(clipBounds.getMinX()/gridX)*gridX;
-		minY=Math.floor(clipBounds.getMinY()/gridY)*gridY;
-		maxX=Math.ceil(clipBounds.getMaxX()/gridX)*gridX;
-		maxY=Math.ceil(clipBounds.getMaxY()/gridY)*gridY;
+		minX=Math.floor(clipBounds.getMinX()/gridLogicalSize)*gridLogicalSize;
+		minY=Math.floor(clipBounds.getMinY()/gridLogicalSize)*gridLogicalSize;
+		maxX=Math.ceil(clipBounds.getMaxX()/gridLogicalSize)*gridLogicalSize;
+		maxY=Math.ceil(clipBounds.getMaxY()/gridLogicalSize)*gridLogicalSize;
 	
 		g2d.setColor(Color.BLACK);
-		for (double x=minX; x<=maxX; x+=gridX) {
+		for (double x=minX; x<=maxX; x+=gridLogicalSize) {
 			Line2D line=new Line2D.Double(x,minY,x,maxY);
 			g2d.draw(line);
 		}
 		
-		for (double y=minY; y<=maxY; y+=gridY) {
+		for (double y=minY; y<=maxY; y+=gridLogicalSize) {
 			Line2D line=new Line2D.Double(minX,y,maxX,y);
 			g2d.draw(line);
 		}
