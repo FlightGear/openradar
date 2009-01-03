@@ -13,7 +13,13 @@ public interface IRadarMapViewerAdapter extends IMapViewerAdapter {
 	 */
 	public abstract void setTrackHistoryLength(int trackHistoryLength);
 
+	/**
+	 * @return the lookahead-time represented by the heading vector.
+	 */
 	public abstract void setHeadingVectorTime(double headingVectorTime);
 
+	/**
+	 * Set the lookahead-time represented by the heading vector.
+	 */
 	public abstract double getHeadingVectorTime();
 }

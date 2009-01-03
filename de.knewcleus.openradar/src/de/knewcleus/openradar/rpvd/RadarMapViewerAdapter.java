@@ -21,17 +21,11 @@ public class RadarMapViewerAdapter extends MapViewerAdapter implements IRadarMap
 		notify(new RadarMapViewerNotification(this));
 	}
 	
-	/**
-	 * @return the lookahead-time represented by the heading vector.
-	 */
 	@Override
 	public double getHeadingVectorTime() {
 		return headingVectorTime;
 	}
 	
-	/**
-	 * Set the lookahead-time represented by the heading vector.
-	 */
 	@Override
 	public void setHeadingVectorTime(double headingVectorTime) {
 		this.headingVectorTime = headingVectorTime;
