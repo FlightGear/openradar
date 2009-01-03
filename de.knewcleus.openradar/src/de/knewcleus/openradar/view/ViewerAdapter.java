@@ -1,6 +1,7 @@
 package de.knewcleus.openradar.view;
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.notify.Notifier;
@@ -10,10 +11,8 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	protected IUpdateManager updateManager = new DeferredUpdateManager(this); 
 	protected final LayeredView rootView = new LayeredView(this);
 	protected double logicalScale = 1.0;
-	protected double logicalOriginX = 0.0;
-	protected double logicalOriginY = 0.0;
-	protected double deviceOriginX = 0.0;
-	protected double deviceOriginY = 0.0;
+	protected Point2D logicalOrigin = new Point2D.Double();
+	protected Point2D deviceOrigin = new Point2D.Double();
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 
@@ -29,7 +28,7 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	@Override
 	public void setViewerExtents(Rectangle2D extents) {
 		viewerExtents = extents;
-		invalidateTransforms();
+		notify(new CoordinateSystemNotification(this));
 	}
 	
 	@Override
@@ -43,19 +42,19 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	}
 	
 	@Override
-	public double getDeviceOriginX() {
-		return deviceOriginX;
-	}
-	
-	@Override
-	public double getDeviceOriginY() {
-		return deviceOriginY;
+	public Point2D getDeviceOrigin() {
+		return deviceOrigin;
 	}
 	
 	@Override
 	public void setDeviceOrigin(double originX, double originY) {
-		deviceOriginX = originX;
-		deviceOriginY = originY;
+		deviceOrigin = new Point2D.Double(originX, originY);
+		invalidateTransforms();
+	}
+	
+	@Override
+	public void setDeviceOrigin(Point2D origin) {
+		deviceOrigin = origin;
 		invalidateTransforms();
 	}
 
@@ -71,20 +70,20 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	}
 
 	@Override
-	public double getLogicalOriginX() {
-		return logicalOriginX;
-	}
-
-	@Override
-	public double getLogicalOriginY() {
-		return logicalOriginY;
-	}
-
-	@Override
 	public void setLogicalOrigin(double offsetX, double offsetY) {
-		this.logicalOriginX = offsetX;
-		this.logicalOriginY = offsetY;
+		logicalOrigin = new Point2D.Double(offsetX, offsetY);
 		invalidateTransforms();
+	}
+	
+	@Override
+	public void setLogicalOrigin(Point2D origin) {
+		logicalOrigin = origin;
+		invalidateTransforms();
+	}
+	
+	@Override
+	public Point2D getLogicalOrigin() {
+		return logicalOrigin;
 	}
 
 	@Override
@@ -121,12 +120,12 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 		deviceToLogicalTransform = new AffineTransform(
 				logicalScale, 0,
 				0, -logicalScale,
-				logicalOriginX - logicalScale * deviceOriginX,
-				logicalOriginY + logicalScale * deviceOriginY);
+				logicalOrigin.getX() - logicalScale * deviceOrigin.getX(),
+				logicalOrigin.getY() + logicalScale * deviceOrigin.getY());
 		logicalToDeviceTransform = new AffineTransform(
 				1.0/logicalScale, 0,
 				0, -1.0/logicalScale,
-				deviceOriginX - logicalOriginX/logicalScale,
-				deviceOriginY + logicalOriginY/logicalScale);
+				deviceOrigin.getX() - logicalOrigin.getX()/logicalScale,
+				deviceOrigin.getY() + logicalOrigin.getY()/logicalScale);
 	}
 }

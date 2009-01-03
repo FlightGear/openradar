@@ -1,6 +1,7 @@
 package de.knewcleus.openradar.view;
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.notify.INotifier;
@@ -53,14 +54,16 @@ public interface IViewerAdapter extends INotifier {
 	public abstract AffineTransform getDeviceToLogicalTransform();
 	
 	/**
-	 * @return the current device x-origin
+	 * @return the current device origin.
 	 */
-	public abstract double getDeviceOriginX();
+	public abstract Point2D getDeviceOrigin();
 	
 	/**
-	 * @return the current device y-origin
+	 * Set the device origin.
+	 * 
+	 * @param origin  The new device origin.
 	 */
-	public abstract double getDeviceOriginY();
+	public abstract void setDeviceOrigin(Point2D origin);
 	
 	/**
 	 * Set the device origin and issue a notification about the change.
@@ -80,22 +83,23 @@ public interface IViewerAdapter extends INotifier {
 	 * @param scale		The new scale.
 	 */
 	public abstract void setLogicalScale(double scale);
-
+	
 	/**
-	 * @return the current logical x-origin.
+	 * @return the current logical origin.
 	 */
-	public abstract double getLogicalOriginX();
+	public abstract Point2D getLogicalOrigin();
 
 	/**
-	 * @return the current logical y-origin.
-	 */
-	public abstract double getLogicalOriginY();
-
-	/**
-	 * Set the logical origin and issue a notification about the change.
+	 * Set the logical origin.
 	 * @param originX	The new logical x-origin
 	 * @param originY	The new logical y-origin
 	 */
 	public abstract void setLogicalOrigin(double originX, double originY);
+	
+	/**
+	 * Set the logical origin.
+	 * @param origin 	The new logical origin.
+	 */
+	public abstract void setLogicalOrigin(Point2D origin);
 
 }
