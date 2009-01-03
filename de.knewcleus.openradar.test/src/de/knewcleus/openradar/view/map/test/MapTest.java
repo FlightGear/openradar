@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.swing.JFrame;
+import javax.xml.ws.handler.MessageContext.Scope;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
@@ -15,6 +16,8 @@ import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
 import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
 import de.knewcleus.openradar.rpvd.RadarMapViewerAdapter;
 import de.knewcleus.openradar.rpvd.RadarTargetProvider;
+import de.knewcleus.openradar.rpvd.ScaleMarkerView;
+import de.knewcleus.openradar.rpvd.ScaleMarkerView.Side;
 import de.knewcleus.openradar.tracks.TrackManager;
 import de.knewcleus.openradar.view.BufferedCanvas;
 import de.knewcleus.openradar.view.ComponentCanvas;
@@ -46,8 +49,13 @@ public class MapTest {
 		geodataView.setFill(true);
 		rootView.pushView(geodataView);
 		
-		GridView gridView=new GridView(radarMapViewAdapter, 10.0*Units.KM, 10.0*Units.KM);
+		GridView gridView=new GridView(radarMapViewAdapter, 10.0*Units.NM, 10.0*Units.NM);
 		rootView.pushView(gridView);
+		
+		ScaleMarkerView southMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.SOUTH);
+		rootView.pushView(southMarkerView);
+		ScaleMarkerView westMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.WEST);
+		rootView.pushView(westMarkerView);
 		
 		LayeredView targetView = new LayeredView(radarMapViewAdapter);
 		RadarTargetProvider radarTargetProvider = new RadarTargetProvider(radarMapViewAdapter, targetView, trackManager);
