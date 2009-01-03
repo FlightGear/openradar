@@ -10,8 +10,10 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	protected IUpdateManager updateManager = new DeferredUpdateManager(this); 
 	protected final LayeredView rootView = new LayeredView(this);
 	protected double logicalScale = 1.0;
-	protected double logicalOffsetX = 0.0;
-	protected double logicalOffsetY = 0.0;
+	protected double logicalOriginX = 0.0;
+	protected double logicalOriginY = 0.0;
+	protected double deviceOriginX = 0.0;
+	protected double deviceOriginY = 0.0;
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 
@@ -39,6 +41,23 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	public LayeredView getRootView() {
 		return rootView;
 	}
+	
+	@Override
+	public double getDeviceOriginX() {
+		return deviceOriginX;
+	}
+	
+	@Override
+	public double getDeviceOriginY() {
+		return deviceOriginY;
+	}
+	
+	@Override
+	public void setDeviceOrigin(double originX, double originY) {
+		deviceOriginX = originX;
+		deviceOriginY = originY;
+		invalidateTransforms();
+	}
 
 	@Override
 	public double getLogicalScale() {
@@ -52,19 +71,19 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	}
 
 	@Override
-	public double getLogicalOffsetX() {
-		return logicalOffsetX;
+	public double getLogicalOriginX() {
+		return logicalOriginX;
 	}
 
 	@Override
-	public double getLogicalOffsetY() {
-		return logicalOffsetY;
+	public double getLogicalOriginY() {
+		return logicalOriginY;
 	}
 
 	@Override
-	public void setLogicalOffset(double offsetX, double offsetY) {
-		this.logicalOffsetX = offsetX;
-		this.logicalOffsetY = offsetY;
+	public void setLogicalOrigin(double offsetX, double offsetY) {
+		this.logicalOriginX = offsetX;
+		this.logicalOriginY = offsetY;
 		invalidateTransforms();
 	}
 
@@ -99,18 +118,15 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	}
 	
 	protected void updateTransforms() {
-		final double cx = viewerExtents.getCenterX();
-		final double cy = viewerExtents.getCenterY();
-		
 		deviceToLogicalTransform = new AffineTransform(
 				logicalScale, 0,
 				0, -logicalScale,
-				- logicalOffsetX - cx * logicalScale,
-				- logicalOffsetY + cy * logicalScale);
+				logicalOriginX - logicalScale * deviceOriginX,
+				logicalOriginY + logicalScale * deviceOriginY);
 		logicalToDeviceTransform = new AffineTransform(
 				1.0/logicalScale, 0,
 				0, -1.0/logicalScale,
-				logicalOffsetX/logicalScale + cx,
-				- logicalOffsetY/logicalScale + cy);
+				deviceOriginX - logicalOriginX/logicalScale,
+				deviceOriginY + logicalOriginY/logicalScale);
 	}
 }

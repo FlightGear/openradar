@@ -42,6 +42,7 @@ public class Viewer extends JComponent {
 			Dimension size = getSize();
 			Rectangle viewerExtents = new Rectangle(size);
 			viewAdapter.setViewerExtents(viewerExtents);
+			viewAdapter.setDeviceOrigin(viewerExtents.getCenterX(), viewerExtents.getCenterY());
 		}
 	}
 	

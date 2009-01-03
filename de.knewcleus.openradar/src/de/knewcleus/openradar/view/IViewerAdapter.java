@@ -51,6 +51,24 @@ public interface IViewerAdapter extends INotifier {
 	 * @return the current device-to-logical transformation for this map.
 	 */
 	public abstract AffineTransform getDeviceToLogicalTransform();
+	
+	/**
+	 * @return the current device x-origin
+	 */
+	public abstract double getDeviceOriginX();
+	
+	/**
+	 * @return the current device y-origin
+	 */
+	public abstract double getDeviceOriginY();
+	
+	/**
+	 * Set the device origin and issue a notification about the change.
+	 * 
+	 * @param originX	The new x-origin
+	 * @param originY	The new y-origin
+	 */
+	public abstract void setDeviceOrigin(double originX, double originY);
 
 	/**
 	 * @return the current logical scale.
@@ -64,20 +82,20 @@ public interface IViewerAdapter extends INotifier {
 	public abstract void setLogicalScale(double scale);
 
 	/**
-	 * @return the current logical x-offset.
+	 * @return the current logical x-origin.
 	 */
-	public abstract double getLogicalOffsetX();
+	public abstract double getLogicalOriginX();
 
 	/**
-	 * @return the current logical y-offset.
+	 * @return the current logical y-origin.
 	 */
-	public abstract double getLogicalOffsetY();
+	public abstract double getLogicalOriginY();
 
 	/**
-	 * Set the logical offsets and issue a notification about the change.
-	 * @param offsetX	The new logical x-offset
-	 * @param offsetY	The new logical y-offset
+	 * Set the logical origin and issue a notification about the change.
+	 * @param originX	The new logical x-origin
+	 * @param originY	The new logical y-origin
 	 */
-	public abstract void setLogicalOffset(double offsetX, double offsetY);
+	public abstract void setLogicalOrigin(double originX, double originY);
 
 }
