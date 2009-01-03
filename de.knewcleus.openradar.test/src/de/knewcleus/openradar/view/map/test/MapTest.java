@@ -19,6 +19,7 @@ import de.knewcleus.openradar.rpvd.RadarTargetProvider;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView.Side;
 import de.knewcleus.openradar.tracks.TrackManager;
+import de.knewcleus.openradar.ui.Palette;
 import de.knewcleus.openradar.view.BufferedCanvas;
 import de.knewcleus.openradar.view.ComponentCanvas;
 import de.knewcleus.openradar.view.LayeredView;
@@ -52,9 +53,9 @@ public class MapTest {
 		GridView gridView=new GridView(radarMapViewAdapter, 10.0*Units.NM, 10.0*Units.NM);
 		rootView.pushView(gridView);
 		
-		ScaleMarkerView southMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.SOUTH);
+		ScaleMarkerView southMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.SOUTH, Palette.WINDOW_BLUE);
 		rootView.pushView(southMarkerView);
-		ScaleMarkerView westMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.WEST);
+		ScaleMarkerView westMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.WEST, Palette.WINDOW_BLUE);
 		rootView.pushView(westMarkerView);
 		
 		LayeredView targetView = new LayeredView(radarMapViewAdapter);

@@ -1,5 +1,6 @@
 package de.knewcleus.openradar.rpvd;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -18,6 +19,8 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 	protected final ViewerAdapter viewerAdapter;
 	protected final Side side;
 	
+	protected Color color;
+	
 	protected final static double scaleMarkerDisplayHeight = 10.0;
 	protected final static double scaleMarkerDisplayWidth = 0.5 * scaleMarkerDisplayHeight;
 	protected double scaleMarkerLogicalDistance = 10.0 * Units.NM;
@@ -28,11 +31,21 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 		NORTH, SOUTH, EAST, WEST;
 	}
 	
-	public ScaleMarkerView(ViewerAdapter viewerAdapter, Side side) {
+	public ScaleMarkerView(ViewerAdapter viewerAdapter, Side side, Color color) {
 		this.viewerAdapter = viewerAdapter;
 		this.side = side;
+		this.color = color;
 		
 		viewerAdapter.registerListener(this);
+	}
+	
+	public Color getColor() {
+		return color;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
+		viewerAdapter.getUpdateManager().addDirtyView(this);
 	}
 	
 	@Override
