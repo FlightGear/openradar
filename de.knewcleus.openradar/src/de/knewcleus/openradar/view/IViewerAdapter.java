@@ -22,6 +22,10 @@ public interface IViewerAdapter extends INotifier {
 	 * @see IView#revalidate()
 	 */
 	public abstract void revalidate();
+	
+	public abstract ICanvas getCanvas();
+	
+	public abstract void setCanvas(ICanvas canvas);
 
 	/**
 	 * @return the current device extents of the viewer.

@@ -17,7 +17,6 @@ import javax.swing.SwingUtilities;
  */
 public class DeferredUpdateManager implements IUpdateManager, Runnable {
 	protected final IViewerAdapter viewerAdapter;
-	protected ICanvas canvas;
 	
 	protected Rectangle2D dirtyRegion = new Rectangle2D.Double();
 	protected final Set<IView> invalidViews = new HashSet<IView>();
@@ -26,16 +25,6 @@ public class DeferredUpdateManager implements IUpdateManager, Runnable {
 	
 	public DeferredUpdateManager(IViewerAdapter viewerAdapter) {
 		this.viewerAdapter = viewerAdapter;
-	}
-	
-	@Override
-	public void setCanvas(ICanvas canvas) {
-		this.canvas = canvas;
-	}
-	
-	@Override
-	public ICanvas getCanvas() {
-		return canvas;
 	}
 	
 	@Override
@@ -71,17 +60,17 @@ public class DeferredUpdateManager implements IUpdateManager, Runnable {
 	}
 	
 	protected synchronized void repairDamage() {
-		if (canvas!=null) {
+		if (viewerAdapter.getCanvas()!=null) {
 			if (fullRepaint) {
 				dirtyRegion = viewerAdapter.getViewerExtents();
 			}
-			final Graphics2D g2d = canvas.getGraphics(dirtyRegion);
+			final Graphics2D g2d = viewerAdapter.getCanvas().getGraphics(dirtyRegion);
 			if (g2d!=null) {
 				final Rectangle clipRectangle = dirtyRegion.getBounds();
 				g2d.clearRect(clipRectangle.x, clipRectangle.y, clipRectangle.width, clipRectangle.height);
 				final ViewPaintVisitor viewPaintVisitor = new ViewPaintVisitor(g2d);
 				viewerAdapter.getRootView().accept(viewPaintVisitor);
-				canvas.flushGraphics();
+				viewerAdapter.getCanvas().flushGraphics();
 			}
 		}
 		dirtyRegion = new Rectangle2D.Double();

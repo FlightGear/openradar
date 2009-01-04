@@ -1,7 +1,6 @@
 package de.knewcleus.openradar.view.map.test;
 
 import java.awt.Color;
-import java.awt.LayoutManager;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
@@ -67,7 +66,7 @@ public class MapTest {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		Viewer mapPanel=new Viewer(radarMapViewAdapter);
-		radarMapViewAdapter.getUpdateManager().setCanvas(new BufferedCanvas(new ComponentCanvas(mapPanel)));
+		radarMapViewAdapter.setCanvas(new BufferedCanvas(new ComponentCanvas(mapPanel)));
 		frame.setContentPane(mapPanel);
 		
 		frame.setSize(640, 480);

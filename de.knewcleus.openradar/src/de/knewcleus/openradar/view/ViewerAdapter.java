@@ -7,6 +7,7 @@ import java.awt.geom.Rectangle2D;
 import de.knewcleus.openradar.notify.Notifier;
 
 public class ViewerAdapter extends Notifier implements IViewerAdapter {
+	protected ICanvas canvas = null;
 	protected Rectangle2D viewerExtents = new Rectangle2D.Double();
 	protected IUpdateManager updateManager = new DeferredUpdateManager(this); 
 	protected final LayeredView rootView = new LayeredView(this);
@@ -18,6 +19,18 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 
 	public ViewerAdapter() {
 		super();
+	}
+	
+	@Override
+	public ICanvas getCanvas() {
+		return canvas;
+	}
+	
+	@Override
+	public void setCanvas(ICanvas canvas) {
+		this.canvas = canvas;
+		notify(new CanvasChangeNotification(this));
+		updateManager.addDirtyView(rootView);
 	}
 
 	@Override
