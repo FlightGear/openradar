@@ -89,22 +89,35 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 	
 	@Override
 	public void acceptNotification(INotification notification) {
-		if (notification instanceof ProjectionNotification) {
-			invalidate();
+		if (notification instanceof TrackUpdateNotification) {
+			updateGeographicPositions();
+		} else if (notification instanceof ProjectionNotification) {
+			updateLogicalPositions();
 		} else if (notification instanceof CoordinateSystemNotification) {
-			invalidate();
-		} else if (notification instanceof TrackUpdateNotification) {
-			invalidate();
+			updateDisplayPositions();
 		}
 	}
 	
-	protected void invalidate() {
-		radarMapViewAdapter.getUpdateManager().invalidateView(this);
-		repaint();
+	protected void repaint() {
+		radarMapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
 	}
 	
-	protected void repaint() {
-		radarMapViewAdapter.getUpdateManager().addDirtyView(this);
+	protected void updateGeographicPositions() {
+		final IProjection projection = radarMapViewAdapter.getProjection();
+		final IRadarDataPacket currentStatus = track.getCurrentState();
+		final Point2D currentGeoPosition = currentStatus.getPosition();
+		final GeodesicInformation geodInfo = geodesicUtils.direct(
+				currentGeoPosition.getX(), currentGeoPosition.getY(),
+				currentStatus.getCalculatedTrueCourse(),
+				currentStatus.getCalculatedVelocity()*radarMapViewAdapter.getHeadingVectorTime());
+		final Point2D futureGeoPosition = new Point2D.Double(geodInfo.getEndLon(), geodInfo.getEndLat());
+		
+		final Point2D currentLogicalPosition = projection.toLogical(currentGeoPosition);
+		final Point2D futureLogicalPosition = projection.toLogical(futureGeoPosition);
+		
+		logicalHeadingLine = new Line2D.Double(currentLogicalPosition, futureLogicalPosition);
+		
+		updateLogicalPositions();
 	}
 	
 	protected void updateLogicalPositions() {
@@ -121,22 +134,13 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 			logicalDotPositions.add(logicalPosition);
 		}
 		
-		final IRadarDataPacket currentStatus = track.getCurrentState();
-		final Point2D currentGeoPosition = currentStatus.getPosition();
-		final GeodesicInformation geodInfo = geodesicUtils.direct(
-				currentGeoPosition.getX(), currentGeoPosition.getY(),
-				currentStatus.getCalculatedTrueCourse(),
-				currentStatus.getCalculatedVelocity()*radarMapViewAdapter.getHeadingVectorTime());
-		final Point2D futureGeoPosition = new Point2D.Double(geodInfo.getEndLon(), geodInfo.getEndLat());
-		
-		final Point2D currentLogicalPosition = projection.toLogical(currentGeoPosition);
-		final Point2D futureLogicalPosition = projection.toLogical(futureGeoPosition);
-		
-		logicalHeadingLine = new Line2D.Double(currentLogicalPosition, futureLogicalPosition);
 		updateDisplayPositions();
 	}
 	
 	protected void updateDisplayPositions() {
+		/* Ensure that the formerly occupied region is repainted */
+		radarMapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
+		
 		final AffineTransform logical2device = radarMapViewAdapter.getLogicalToDeviceTransform();
 		displayDotShapes.clear();
 		final Shape displayHeadingLine = logical2device.createTransformedShape(logicalHeadingLine);

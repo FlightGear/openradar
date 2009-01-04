@@ -14,11 +14,19 @@ public class LayeredView implements IContainer {
 
 	public void pushView(IView view) {
 		views.add(view);
-		viewAdapter.getUpdateManager().invalidateView(view);
+		if (view instanceof IBoundedView) {
+			viewAdapter.getUpdateManager().markRegionDirty(((IBoundedView)view).getDisplayExtents());
+		} else {
+			viewAdapter.getUpdateManager().markViewportDirty();
+		}
 	}
 
 	public void removeView(IView view) {
-		viewAdapter.getUpdateManager().addDirtyView(view);
+		if (view instanceof IBoundedView) {
+			viewAdapter.getUpdateManager().markRegionDirty(((IBoundedView)view).getDisplayExtents());
+		} else {
+			viewAdapter.getUpdateManager().markViewportDirty();
+		}
 		views.remove(view);
 	}
 	

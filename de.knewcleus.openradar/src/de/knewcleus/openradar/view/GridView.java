@@ -26,7 +26,7 @@ public class GridView implements IView, INotificationListener {
 	
 	public void setGridLogicalSize(double gridLogicalSize) {
 		this.gridLogicalSize = gridLogicalSize;
-		viewAdapter.getUpdateManager().addDirtyView(this);
+		viewAdapter.getUpdateManager().markViewportDirty();
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class GridView implements IView, INotificationListener {
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof CoordinateSystemNotification) {
 			/* When the logical coordinate system has changed, update the view */
-			viewAdapter.getUpdateManager().addDirtyView(this);
+			viewAdapter.getUpdateManager().markViewportDirty();
 		}
 	}
 }

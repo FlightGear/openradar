@@ -45,7 +45,7 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 	
 	public void setColor(Color color) {
 		this.color = color;
-		viewerAdapter.getUpdateManager().addDirtyView(this);
+		viewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
 	}
 	
 	@Override
@@ -58,8 +58,10 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 		return displayExtents;
 	}
 	
-	@Override
-	public void revalidate() {
+	protected void updateDisplayExtents() {
+		/* Ensure that the formerly occupied region is repainted */
+		viewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
+		
 		final Rectangle2D viewerExtents = viewerAdapter.getViewerExtents();
 		switch (side) {
 		case NORTH:
@@ -83,8 +85,11 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 					scaleMarkerDisplayHeight, viewerExtents.getHeight());
 			break;
 		}
-		viewerAdapter.getUpdateManager().addDirtyView(this);
+		viewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
 	}
+	
+	@Override
+	public void revalidate() {}
 	
 	@Override
 	public void paint(Graphics2D g2d) {
@@ -165,8 +170,7 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 	@Override
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof CoordinateSystemNotification) {
-			viewerAdapter.getUpdateManager().invalidateView(this);
-			viewerAdapter.getUpdateManager().addDirtyView(this);
+			updateDisplayExtents();
 		}
 	}
 }
