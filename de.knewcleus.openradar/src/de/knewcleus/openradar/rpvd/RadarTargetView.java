@@ -60,9 +60,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 	}
 	
 	@Override
-	public void revalidate() {
-		updateLogicalPositions();
-	}
+	public void revalidate() {}
 	
 	@Override
 	public void paint(Graphics2D g2d) {

@@ -16,13 +16,6 @@ import de.knewcleus.openradar.notify.INotifier;
  *
  */
 public interface IViewerAdapter extends INotifier {
-	/**
-	 * Revalidate the adapter.
-	 * 
-	 * @see IView#revalidate()
-	 */
-	public abstract void revalidate();
-	
 	public abstract ICanvas getCanvas();
 	
 	public abstract void setCanvas(ICanvas canvas);

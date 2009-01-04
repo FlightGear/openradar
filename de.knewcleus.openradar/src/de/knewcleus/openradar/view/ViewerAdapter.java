@@ -18,7 +18,7 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	protected AffineTransform logicalToDeviceTransform = null;
 
 	public ViewerAdapter() {
-		super();
+		updateTransforms();
 	}
 	
 	@Override
@@ -62,13 +62,13 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	@Override
 	public void setDeviceOrigin(double originX, double originY) {
 		deviceOrigin = new Point2D.Double(originX, originY);
-		invalidateTransforms();
+		updateTransforms();
 	}
 	
 	@Override
 	public void setDeviceOrigin(Point2D origin) {
 		deviceOrigin = origin;
-		invalidateTransforms();
+		updateTransforms();
 	}
 
 	@Override
@@ -79,19 +79,19 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	@Override
 	public void setLogicalScale(double scale) {
 		this.logicalScale = scale;
-		invalidateTransforms();
+		updateTransforms();
 	}
 
 	@Override
 	public void setLogicalOrigin(double offsetX, double offsetY) {
 		logicalOrigin = new Point2D.Double(offsetX, offsetY);
-		invalidateTransforms();
+		updateTransforms();
 	}
 	
 	@Override
 	public void setLogicalOrigin(Point2D origin) {
 		logicalOrigin = origin;
-		invalidateTransforms();
+		updateTransforms();
 	}
 	
 	@Override
@@ -101,32 +101,12 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 
 	@Override
 	public AffineTransform getDeviceToLogicalTransform() {
-		if (deviceToLogicalTransform==null) {
-			updateTransforms();
-		}
 		return deviceToLogicalTransform;
 	}
 
 	@Override
 	public AffineTransform getLogicalToDeviceTransform() {
-		if (logicalToDeviceTransform==null) {
-			updateTransforms();
-		}
 		return logicalToDeviceTransform;
-	}
-
-	protected void invalidateTransforms() {
-		if (deviceToLogicalTransform==null || logicalToDeviceTransform==null) {
-			/* No need to invalidate and update if they are still invalidated */
-			return;
-		}
-		notify(new CoordinateSystemNotification(this));
-	}
-
-	@Override
-	public void revalidate() {
-		deviceToLogicalTransform = null;
-		logicalToDeviceTransform = null;
 	}
 	
 	protected void updateTransforms() {
@@ -140,5 +120,6 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 				0, -1.0/logicalScale,
 				deviceOrigin.getX() - logicalOrigin.getX()/logicalScale,
 				deviceOrigin.getY() + logicalOrigin.getY()/logicalScale);
+		notify(new CoordinateSystemNotification(this));
 	}
 }

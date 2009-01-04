@@ -52,7 +52,6 @@ public class DeferredUpdateManager implements IUpdateManager, Runnable {
 	}
 	
 	protected synchronized void performRevalidation() {
-		viewerAdapter.revalidate();
 		for (IView view: invalidViews) {
 			view.revalidate();
 		}
