@@ -124,7 +124,11 @@ public class VerticalFlowLayoutManager implements ILayoutManager {
 			
 			usedWidth = availableWidth;
 			usedHeight = Math.min(availableHeight, preferredSize.getHeight());
-			allocationFactor = (usedHeight - minimumSize.getHeight()) / (preferredSize.getHeight() - minimumSize.getHeight());
+			if (preferredSize.getHeight() > minimumSize.getHeight()) {
+				allocationFactor = (usedHeight - minimumSize.getHeight()) / (preferredSize.getHeight() - minimumSize.getHeight());
+			} else {
+				allocationFactor = 0;
+			}
 			
 			x = bounds.getMinX() + insets.getLeftInset();
 			final double colStart = bounds.getMinY() + insets.getTopInset();

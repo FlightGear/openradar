@@ -51,7 +51,7 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	
 	@Override
 	public void accept(IViewVisitor visitor) {
-		visitor.visitView(this);
+		visitor.visitContainer(this);
 	}
 	
 	@Override
