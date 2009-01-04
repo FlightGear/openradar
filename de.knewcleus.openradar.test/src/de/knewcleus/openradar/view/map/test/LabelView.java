@@ -10,6 +10,7 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
+import de.knewcleus.openradar.radardata.ISSRData;
 import de.knewcleus.openradar.rpvd.IRadarMapViewerAdapter;
 import de.knewcleus.openradar.tracks.ITrack;
 import de.knewcleus.openradar.tracks.TrackUpdateNotification;
@@ -17,12 +18,13 @@ import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IBoundedView;
 import de.knewcleus.openradar.view.IContainer;
 import de.knewcleus.openradar.view.IViewVisitor;
+import de.knewcleus.openradar.view.layout.Alignment;
+import de.knewcleus.openradar.view.layout.HorizontalFlowLayoutManager;
 import de.knewcleus.openradar.view.layout.ILayoutManager;
 import de.knewcleus.openradar.view.layout.ILayoutPartContainer;
 import de.knewcleus.openradar.view.layout.ILayoutPartVisitor;
 import de.knewcleus.openradar.view.layout.Insets2D;
 import de.knewcleus.openradar.view.layout.VerticalFlowLayoutManager;
-import de.knewcleus.openradar.view.layout.VerticalFlowLayoutManager.Alignment;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.ProjectionNotification;
 
@@ -35,15 +37,31 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	protected Point2D displayTrackPosition;
 	protected Rectangle2D displayExtents = new Rectangle2D.Double();
 	
+	protected final LayoutGroup lines[] = new LayoutGroup[2];
+	
 	protected final TextView callsignView;
 	protected final TextView speedView;
+	protected final TextView flightLevelView;
 	
 	public LabelView(IRadarMapViewerAdapter radarMapViewerAdapter, ITrack track) {
 		this.radarMapViewerAdapter = radarMapViewerAdapter;
 		this.track = track;
 		layoutManager = new VerticalFlowLayoutManager(this, Alignment.LEADING);
-		callsignView = new TextView(radarMapViewerAdapter, this);
-		speedView = new TextView(radarMapViewerAdapter, this);
+		
+		lines[0] = new LayoutGroup(this);
+		lines[1] = new LayoutGroup(this);
+		
+		lines[0].setLayoutManager(new HorizontalFlowLayoutManager(lines[0], Alignment.TRAILING));
+		lines[1].setLayoutManager(new HorizontalFlowLayoutManager(lines[1], Alignment.LEADING, 5));
+		
+		callsignView = new TextView(radarMapViewerAdapter, lines[0]);
+		speedView = new TextView(radarMapViewerAdapter, lines[1]);
+		flightLevelView = new TextView(radarMapViewerAdapter, lines[1]);
+		
+		lines[0].add(callsignView);
+		lines[1].add(speedView);
+		lines[1].add(flightLevelView);
+		
 		radarMapViewerAdapter.registerListener(this);
 		track.registerListener(this);
 	}
@@ -70,15 +88,26 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 		final int speed10Kts = (int)Math.round(currentState.getCalculatedVelocity() / Units.KNOTS / 10.0);
 		final String speedString = String.format("%03d",speed10Kts);
 		
+		final ISSRData ssrData = currentState.getSSRData();
+		
 		final String callsignString;
-		if (currentState.getSSRData() == null || !currentState.getSSRData().hasMarkXModeACode()) {
+		if (ssrData == null || !ssrData.hasMarkXModeACode()) {
 			callsignString ="-----";
 		} else {
-			callsignString = String.format("A%4s",currentState.getSSRData().getMarkXModeACode());
+			callsignString = String.format("A%4s",ssrData.getMarkXModeACode());
+		}
+		
+		final String flightlevelString;
+		if (ssrData == null || !ssrData.hasMarkXModeCElevation()) {
+			flightlevelString="---";
+		} else {
+			final int flightlevel = (int)Math.round(ssrData.getMarkXModeCElevation() / Units.FT / 100);
+			flightlevelString = String.format("%03d",flightlevel);
 		}
 		
 		callsignView.setText(callsignString);
 		speedView.setText(speedString);
+		flightLevelView.setText(flightlevelString);
 	}
 	
 	@Override
@@ -129,14 +158,15 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	
 	@Override
 	public void traverse(ILayoutPartVisitor visitor) {
-		visitor.visit(callsignView);
-		visitor.visit(speedView);
+		visitor.visit(lines[0]);
+		visitor.visit(lines[1]);
 	}
 	
 	@Override
 	public void traverse(IViewVisitor visitor) {
 		callsignView.accept(visitor);
 		speedView.accept(visitor);
+		flightLevelView.accept(visitor);
 	}
 	
 	@Override

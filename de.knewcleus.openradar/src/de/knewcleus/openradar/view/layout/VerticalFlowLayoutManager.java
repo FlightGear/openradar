@@ -15,10 +15,6 @@ public class VerticalFlowLayoutManager implements ILayoutManager {
 	protected Alignment alignment;
 	protected double gap;
 	
-	public enum Alignment {
-		LEADING, CENTER, TRAILING;
-	}
-	
 	protected Dimension2D minimumSize = null;
 	protected Dimension2D preferredSize = null;
 	
@@ -36,6 +32,24 @@ public class VerticalFlowLayoutManager implements ILayoutManager {
 	
 	public VerticalFlowLayoutManager(ILayoutPartContainer container) {
 		this(container, Alignment.LEADING, 0);
+	}
+	
+	public Alignment getAlignment() {
+		return alignment;
+	}
+	
+	public double getGap() {
+		return gap;
+	}
+	
+	public void setAlignment(Alignment alignment) {
+		this.alignment = alignment;
+		container.invalidate();
+	}
+	
+	public void setGap(double gap) {
+		this.gap = gap;
+		container.invalidate();
 	}
 
 	@Override

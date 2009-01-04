@@ -89,6 +89,7 @@ public class LayoutGroup implements ILayoutPart, ILayoutPartContainer {
 
 	@Override
 	public void invalidate() {
+		layoutManager.invalidate();
 		container.invalidate();
 	}
 
