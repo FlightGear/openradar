@@ -1,6 +1,5 @@
 package de.knewcleus.openradar.view.map.test;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
@@ -84,6 +83,7 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	
 	@Override
 	public void invalidate() {
+		layoutManager.invalidate();
 		radarMapViewerAdapter.getUpdateManager().markViewInvalid(this);
 	}
 	
@@ -96,28 +96,26 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	}
 	
 	protected void calculateDisplayPosition() {
-		
 		final AffineTransform logical2device = radarMapViewerAdapter.getLogicalToDeviceTransform();
 		displayTrackPosition = logical2device.transform(logicalTrackPosition, null);
 		
-		setBounds(new Rectangle2D.Double(
-				displayTrackPosition.getX() + 50, displayTrackPosition.getY() - 50,
-				displayExtents.getWidth(), displayExtents.getHeight()));
-	}
-	
-	protected void setBounds(Rectangle2D bounds) {
 		/* Ensure that our formerly occupied region is repainted */
 		radarMapViewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
-		displayExtents = bounds;
+		displayExtents=new Rectangle2D.Double(
+				displayTrackPosition.getX() + 50, displayTrackPosition.getY() - 50,
+				displayExtents.getWidth(), displayExtents.getHeight());
 		radarMapViewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
+		invalidate();
 	}
 	
 	@Override
 	public void revalidate() {
 		final Dimension2D labelSize = layoutManager.getPreferredSize();
-		setBounds(new Rectangle2D.Double(
+		radarMapViewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
+		displayExtents = new Rectangle2D.Double(
 				displayExtents.getX(), displayExtents.getY(),
-				labelSize.getWidth(), labelSize.getHeight()));
+				labelSize.getWidth(), labelSize.getHeight());
+		radarMapViewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
 		layoutManager.layout(displayExtents);
 	}
 	
