@@ -19,11 +19,6 @@ public interface ILayoutPartContainer {
 	 * recalculated.
 	 */
 	public void invalidateLayout();
-	
-	/**
-	 * Layout this container.
-	 */
-	public void layout();
 
 	/**
 	 * Return the insets of this container.
