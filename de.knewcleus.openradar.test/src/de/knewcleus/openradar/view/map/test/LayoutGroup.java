@@ -24,17 +24,17 @@ public class LayoutGroup implements ILayoutPart, ILayoutPartContainer {
 	
 	public void add(ILayoutPart part) {
 		parts.add(part);
-		invalidateLayout();
+		invalidate();
 	}
 	
 	public void remove(ILayoutPart part) {
 		parts.remove(part);
-		invalidateLayout();
+		invalidate();
 	}
 	
 	public void clear() {
 		parts.clear();
-		invalidateLayout();
+		invalidate();
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class LayoutGroup implements ILayoutPart, ILayoutPartContainer {
 	
 	public void setLayoutManager(ILayoutManager layoutManager) {
 		this.layoutManager = layoutManager;
-		invalidateLayout();
+		invalidate();
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class LayoutGroup implements ILayoutPart, ILayoutPartContainer {
 	
 	public void setVisible(boolean visible) {
 		this.visible = visible;
-		invalidateLayout();
+		invalidate();
 	}
 
 	@Override
@@ -84,12 +84,12 @@ public class LayoutGroup implements ILayoutPart, ILayoutPartContainer {
 	
 	public void setInsets(Insets2D insets) {
 		this.insets = insets;
-		invalidateLayout();
+		invalidate();
 	}
 
 	@Override
-	public void invalidateLayout() {
-		container.invalidateLayout();
+	public void invalidate() {
+		container.invalidate();
 	}
 
 	@Override

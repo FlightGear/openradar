@@ -28,20 +28,20 @@ public class DeferredUpdateManager implements IUpdateManager, Runnable {
 	}
 	
 	@Override
-	public synchronized void invalidateView(IView view) {
-		invalidViews.add(view);
+	public synchronized void markViewportDirty() {
+		fullRepaint = true;
 		scheduleUpdate();
 	}
-
+	
 	@Override
-	public synchronized void addDirtyView(IView view) {
-		if (view instanceof IBoundedView) {
-			final IBoundedView boundedView=(IBoundedView)view;
-			Rectangle2D.union(boundedView.getDisplayExtents(), dirtyRegion, dirtyRegion);
-		} else {
-			fullRepaint = true;
-		}
+	public synchronized void markRegionDirty(Rectangle2D bounds) {
+		Rectangle2D.union(bounds, dirtyRegion, dirtyRegion);
 		scheduleUpdate();
+	}
+	
+	@Override
+	public synchronized void markViewInvalid(IView view) {
+		invalidViews.add(view);
 	}
 
 	protected void scheduleUpdate() {
@@ -51,7 +51,7 @@ public class DeferredUpdateManager implements IUpdateManager, Runnable {
 		repaintScheduled=true;
 	}
 	
-	protected synchronized void performValidation() {
+	protected synchronized void performRevalidation() {
 		viewerAdapter.revalidate();
 		for (IView view: invalidViews) {
 			view.revalidate();
@@ -80,7 +80,7 @@ public class DeferredUpdateManager implements IUpdateManager, Runnable {
 	
 	@Override
 	public void run() {
-		performValidation();
+		performRevalidation();
 		repairDamage();
 	}
 }

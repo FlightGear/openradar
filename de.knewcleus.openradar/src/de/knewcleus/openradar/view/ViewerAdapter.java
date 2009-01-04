@@ -30,7 +30,7 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	public void setCanvas(ICanvas canvas) {
 		this.canvas = canvas;
 		notify(new CanvasChangeNotification(this));
-		updateManager.addDirtyView(rootView);
+		updateManager.markViewportDirty();
 	}
 
 	@Override

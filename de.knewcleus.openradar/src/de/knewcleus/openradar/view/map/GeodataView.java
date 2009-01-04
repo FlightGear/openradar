@@ -36,6 +36,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 		while ((feature=geodataLayer.getNextFeature())!=null) {
 			geometries.add(feature.getGeometry());
 		}
+		updateLogicalShapes();
 	}
 	
 	public Color getColor() {
@@ -64,34 +65,15 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	@Override
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof ProjectionNotification) {
-			invalidateLogicalShapes();
+			updateLogicalShapes();
 		} else if (notification instanceof CoordinateSystemNotification) {
-			invalidateDisplayExtents();
+			updateDisplayExtents();
 		}
 	}
 	
 	@Override
 	public Rectangle2D getDisplayExtents() {
-		if (displayExtents != null) {
-			return displayExtents;
-		}
-		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
-		final Rectangle2D logicalBounds = getLogicalBounds();
-		displayExtents = logicalToDevice.createTransformedShape(logicalBounds).getBounds2D();
 		return displayExtents;
-	}
-	
-	protected Rectangle2D getLogicalBounds() {
-		if (logicalBounds!=null) {
-			return logicalBounds;
-		}
-		final List<Shape> logicalShapes = getLogicalShapes();
-		logicalBounds = new Rectangle2D.Double();
-		for (Shape shape: logicalShapes) {
-			final Rectangle2D bounds = shape.getBounds2D();
-			Rectangle2D.union(logicalBounds, bounds, logicalBounds);
-		}
-		return logicalBounds;
 	}
 	
 	@Override
@@ -100,7 +82,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 		final AffineTransform oldTransform = g2d.getTransform();
 		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
 		g2d.transform(logicalToDevice);
-		final List<Shape> shapes = getLogicalShapes();
+		final List<Shape> shapes = logicalShapes;
 		if (isFill()) {
 			for (Shape shape: shapes) {
 				g2d.fill(shape);
@@ -112,16 +94,8 @@ public class GeodataView implements IBoundedView, INotificationListener {
 		}
 		g2d.setTransform(oldTransform);
 	}
-
-	protected void invalidateDisplayExtents() {
-		mapViewAdapter.getUpdateManager().invalidateView(this);
-		repaint();
-	}
 	
-	protected List<Shape> getLogicalShapes() {
-		if (logicalShapes != null) {
-			return logicalShapes;
-		}
+	protected void updateLogicalShapes() {
 		final IProjection projection = mapViewAdapter.getProjection();
 		final GeometryToShapeProjector shapeProjector;
 		shapeProjector = new GeometryToShapeProjector(projection);
@@ -134,11 +108,26 @@ public class GeodataView implements IBoundedView, INotificationListener {
 			}
 		}
 		logicalShapes = shapeProjector.getShapes();
-		return logicalShapes;
+		updateLogicalBounds();
 	}
-
-	protected void invalidateLogicalShapes() {
-		invalidateDisplayExtents();
+	
+	protected void updateLogicalBounds() {
+		logicalBounds = new Rectangle2D.Double();
+		for (Shape shape: logicalShapes) {
+			final Rectangle2D bounds = shape.getBounds2D();
+			Rectangle2D.union(logicalBounds, bounds, logicalBounds);
+		}
+		updateDisplayExtents();
+	}
+	
+	protected void updateDisplayExtents() {
+		if (displayExtents!=null) {
+			/* Make sure the previously occupied region is repainted */
+			mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
+		}
+		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
+		displayExtents = logicalToDevice.createTransformedShape(logicalBounds).getBounds2D();
+		repaint();
 	}
 	
 	@Override
@@ -150,6 +139,6 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	}
 	
 	protected void repaint() {
-		mapViewAdapter.getUpdateManager().addDirtyView(this);
+		mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
 	}
 }

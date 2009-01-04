@@ -7,6 +7,7 @@ import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
@@ -56,35 +57,68 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	@Override
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof CoordinateSystemNotification) {
-			invalidate();
+			calculateDisplayPosition();
 		} else if (notification instanceof ProjectionNotification) {
-			invalidate();
+			calculateLogicalPosition();
 		} else if (notification instanceof TrackUpdateNotification) {
-			invalidate();
+			updateLabelContents();
+			calculateLogicalPosition();
 		}
 	}
 	
-	protected void invalidate() {
-		radarMapViewerAdapter.getUpdateManager().invalidateView(this);
-		radarMapViewerAdapter.getUpdateManager().addDirtyView(this);
+	protected void updateLabelContents() {
+		final IRadarDataPacket currentState = track.getCurrentState();
+		final int speed10Kts = (int)Math.round(currentState.getCalculatedVelocity() / Units.KNOTS / 10.0);
+		final String speedString = String.format("%03d",speed10Kts);
+		
+		final String callsignString;
+		if (currentState.getSSRData() == null || currentState.getSSRData().hasMarkXModeACode()) {
+			callsignString ="-----";
+		} else {
+			callsignString = String.format("A%04s",currentState.getSSRData().getMarkXModeACode());
+		}
+		
+		callsignView.setText(callsignString);
+		speedView.setText(speedString);
 	}
 	
 	@Override
-	public void revalidate() {
+	public void invalidate() {
+		radarMapViewerAdapter.getUpdateManager().markViewInvalid(this);
+	}
+	
+	protected void calculateLogicalPosition() {
 		final IRadarDataPacket currentTrackStatus = track.getCurrentState();
 		final Point2D geographicalPosition = currentTrackStatus.getPosition();
 		final IProjection projection = radarMapViewerAdapter.getProjection();
 		logicalTrackPosition = projection.toLogical(geographicalPosition);
+		calculateDisplayPosition();
+	}
+	
+	protected void calculateDisplayPosition() {
 		
 		final AffineTransform logical2device = radarMapViewerAdapter.getLogicalToDeviceTransform();
 		displayTrackPosition = logical2device.transform(logicalTrackPosition, null);
 		
-		final Dimension2D labelSize = layoutManager.getPreferredSize();
-		displayExtents = new Rectangle2D.Double(
+		setBounds(new Rectangle2D.Double(
 				displayTrackPosition.getX() + 50, displayTrackPosition.getY() - 50,
-				labelSize.getWidth(), labelSize.getHeight());
+				displayExtents.getWidth(), displayExtents.getHeight()));
+	}
+	
+	protected void setBounds(Rectangle2D bounds) {
+		/* Ensure that our formerly occupied region is repainted */
+		radarMapViewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
+		displayExtents = bounds;
+		radarMapViewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
+	}
+	
+	@Override
+	public void revalidate() {
+		final Dimension2D labelSize = layoutManager.getPreferredSize();
+		setBounds(new Rectangle2D.Double(
+				displayExtents.getX(), displayExtents.getY(),
+				labelSize.getWidth(), labelSize.getHeight()));
 		layoutManager.layout(displayExtents);
-		radarMapViewerAdapter.getUpdateManager().addDirtyView(this);
 	}
 	
 	@Override
@@ -99,20 +133,15 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	}
 	
 	@Override
-	public void invalidateLayout() {
-		invalidate();
-	}
-	
-	@Override
 	public void traverse(ILayoutPartVisitor visitor) {
-		// TODO Auto-generated method stub
-		
+		visitor.visit(callsignView);
+		visitor.visit(speedView);
 	}
 	
 	@Override
 	public void traverse(IViewVisitor visitor) {
-		// TODO Auto-generated method stub
-		
+		callsignView.accept(visitor);
+		speedView.accept(visitor);
 	}
 	
 	@Override

@@ -25,6 +25,7 @@ public class TextView implements IBoundedView, ILayoutPart {
 	protected boolean visible = true;
 	protected String text = "";
 	
+	protected boolean sizesValid = false;
 	protected Dimension2D preferredSize = new Size2D();
 	protected double baselineOffset = 0;
 	
@@ -35,9 +36,13 @@ public class TextView implements IBoundedView, ILayoutPart {
 	
 	public void setText(String text) {
 		this.text = text;
-		viewerAdapter.getUpdateManager().invalidateView(this);
-		viewerAdapter.getUpdateManager().addDirtyView(this);
-		container.invalidateLayout();
+		invalidate();
+		viewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
+	}
+	
+	protected void invalidate() {
+		sizesValid = false;
+		container.invalidate();
 	}
 	
 	@Override
@@ -49,16 +54,19 @@ public class TextView implements IBoundedView, ILayoutPart {
 
 	@Override
 	public Dimension2D getMinimumSize() {
+		calculateSizes();
 		return preferredSize;
 	}
 	
 	@Override
 	public Dimension2D getPreferredSize() {
+		calculateSizes();
 		return preferredSize;
 	}
 	
 	@Override
 	public double getBaselineOffset(Dimension2D size) {
+		calculateSizes();
 		return baselineOffset;
 	}
 	
@@ -74,8 +82,10 @@ public class TextView implements IBoundedView, ILayoutPart {
 	
 	@Override
 	public void setBounds(Rectangle2D bounds) {
+		/* Ensure that the formerly occupied region is repainted */
+		viewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
 		displayExtents = bounds;
-		viewerAdapter.getUpdateManager().addDirtyView(this);
+		viewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
 	}
 	
 	@Override
@@ -88,13 +98,18 @@ public class TextView implements IBoundedView, ILayoutPart {
 		return visible;
 	}
 	
-	@Override
-	public void revalidate() {
+	protected void calculateSizes() {
+		if (sizesValid) {
+			return;
+		}
 		final FontMetrics fm = viewerAdapter.getCanvas().getFontMetrics(font);
 		final FontRenderContext frc = fm.getFontRenderContext();
 		baselineOffset = fm.getMaxAscent();
 		final Rectangle2D stringBounds = font.getStringBounds(text, frc);
 		preferredSize = new Size2D(stringBounds.getWidth(), stringBounds.getHeight());
-		viewerAdapter.getUpdateManager().addDirtyView(this);
+		sizesValid = true;
 	}
+	
+	@Override
+	public void revalidate() {}
 }

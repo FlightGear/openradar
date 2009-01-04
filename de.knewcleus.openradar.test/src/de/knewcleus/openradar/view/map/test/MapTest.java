@@ -14,7 +14,6 @@ import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
 import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
 import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
 import de.knewcleus.openradar.rpvd.RadarMapViewerAdapter;
-import de.knewcleus.openradar.rpvd.RadarTargetProvider;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView.Side;
 import de.knewcleus.openradar.tracks.TrackManager;

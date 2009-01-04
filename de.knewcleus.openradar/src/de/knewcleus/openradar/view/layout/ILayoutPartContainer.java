@@ -18,7 +18,7 @@ public interface ILayoutPartContainer {
 	 * Mark the layout in this container as invalid and ensure that it is
 	 * recalculated.
 	 */
-	public void invalidateLayout();
+	public void invalidate();
 
 	/**
 	 * Return the insets of this container.
