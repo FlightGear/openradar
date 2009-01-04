@@ -1,13 +1,13 @@
 package de.knewcleus.openradar.view.map.test;
 
 import java.awt.Color;
+import java.awt.LayoutManager;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.swing.JFrame;
-import javax.xml.ws.handler.MessageContext.Scope;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
