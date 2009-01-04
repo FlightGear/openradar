@@ -1,5 +1,7 @@
 package de.knewcleus.openradar.view;
 
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -54,6 +56,11 @@ public class BufferedCanvas implements ICanvas {
 		}
 		
 		return graphics;
+	}
+	
+	@Override
+	public FontMetrics getFontMetrics(Font font) {
+		return delegateCanvas.getFontMetrics(font);
 	}
 	
 	@Override

@@ -1,5 +1,7 @@
 package de.knewcleus.openradar.view;
 
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
@@ -11,6 +13,11 @@ public interface ICanvas {
 	 * @return the graphics context.
 	 */
 	public Graphics2D getGraphics(Rectangle2D region);
+	
+	/**
+	 * Get font metrics for the given font.
+	 */
+	public FontMetrics getFontMetrics(Font font);
 	
 	/**
 	 * Flush graphics to the canvas.
