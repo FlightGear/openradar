@@ -48,6 +48,7 @@ public class TextView implements IBoundedView, ILayoutPart {
 	@Override
 	public void paint(Graphics2D g2d) {
 		g2d.setColor(Color.WHITE);
+		g2d.setFont(font);
 		g2d.drawString(text,
 				(float)displayExtents.getMinX(), (float)(displayExtents.getMinY()+baselineOffset));
 	}

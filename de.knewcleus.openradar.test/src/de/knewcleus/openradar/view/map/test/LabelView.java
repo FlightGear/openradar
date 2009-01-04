@@ -72,10 +72,10 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 		final String speedString = String.format("%03d",speed10Kts);
 		
 		final String callsignString;
-		if (currentState.getSSRData() == null || currentState.getSSRData().hasMarkXModeACode()) {
+		if (currentState.getSSRData() == null || !currentState.getSSRData().hasMarkXModeACode()) {
 			callsignString ="-----";
 		} else {
-			callsignString = String.format("A%04s",currentState.getSSRData().getMarkXModeACode());
+			callsignString = String.format("A%4s",currentState.getSSRData().getMarkXModeACode());
 		}
 		
 		callsignView.setText(callsignString);
@@ -127,10 +127,7 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	}
 	
 	@Override
-	public void paint(Graphics2D g2d) {
-		g2d.setColor(Color.GRAY);
-		g2d.draw(displayExtents);
-	}
+	public void paint(Graphics2D g2d) {}
 	
 	@Override
 	public void traverse(ILayoutPartVisitor visitor) {
