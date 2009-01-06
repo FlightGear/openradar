@@ -3,11 +3,16 @@ package de.knewcleus.fgfs.navdata.impl;
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.model.IFrequency;
 
-public class NDBFrequency implements IFrequency {
-	protected final float freqKHz;
+public class VORFrequency implements IFrequency {
+	protected final float freqMHz;
 	
-	public NDBFrequency(float freqKHz) {
-		this.freqKHz = freqKHz;
+	public VORFrequency(float freqMHz) {
+		this.freqMHz = freqMHz;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%6.1f", freqMHz);
 	}
 	
 	@Override
@@ -16,17 +21,12 @@ public class NDBFrequency implements IFrequency {
 			return false;
 		}
 		final IFrequency other = (IFrequency)obj;
-		return Math.abs(other.getValue() - getValue()) < 0.25 * Units.KHz;
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("%05.1f", freqKHz);
+		return Math.abs(other.getValue() - getValue()) < 0.05 * Units.MHz;
 	}
 
 	@Override
 	public float getValue() {
-		return freqKHz*Units.KHz;
+		return freqMHz * Units.MHz;
 	}
 
 }

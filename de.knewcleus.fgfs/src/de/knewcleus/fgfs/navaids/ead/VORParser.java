@@ -38,7 +38,7 @@ public class VORParser extends AbstractSDOParser {
 		
 		// TODO: determine range and variation
 		
-		namedFixDB.addFix(new VOR(id,pos,name,parseDouble(frequency)*Units.MHZ,100.0,0.0));
+		namedFixDB.addFix(new VOR(id,pos,name,parseDouble(frequency)*Units.MHz,100.0,0.0));
 	}
 
 }

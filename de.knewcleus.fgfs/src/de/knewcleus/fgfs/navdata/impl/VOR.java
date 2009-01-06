@@ -4,25 +4,27 @@ import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.model.IFrequency;
-import de.knewcleus.fgfs.navdata.model.INDB;
+import de.knewcleus.fgfs.navdata.model.IVOR;
 
-public class NDB implements INDB {
+public class VOR implements IVOR {
 	protected final Point2D geographicPosition;
 	protected final float elevation;
 	protected final String identification;
 	protected final String name;
 	protected final IFrequency frequency;
 	protected final float range;
+	protected final float variation;
 
-	public NDB(Point2D geographicPosition, float elevation,
+	public VOR(Point2D geographicPosition, float elevation,
 			String identification, String name, IFrequency frequency,
-			float range) {
+			float range, float variation) {
 		this.geographicPosition = geographicPosition;
 		this.elevation = elevation;
 		this.identification = identification;
 		this.name = name;
 		this.frequency = frequency;
 		this.range = range;
+		this.variation = variation;
 	}
 
 	@Override
@@ -56,13 +58,19 @@ public class NDB implements INDB {
 	}
 	
 	@Override
+	public float getVariation() {
+		return variation;
+	}
+	
+	@Override
 	public String toString() {
-		return String.format("NDB %3s %+10.6f %+11.6f elev %4fft freq %s range %3fNM name %s",
+		return String.format("VOR %3s %+10.6f %+11.6f elev %4fft freq %s variation %+6.1f range %3fNM name %s",
 				identification,
 				geographicPosition.getY(),
 				geographicPosition.getX(),
 				elevation / Units.FT,
 				frequency.toString(),
+				variation / Units.DEG,
 				range / Units.NM,
 				name);
 	}

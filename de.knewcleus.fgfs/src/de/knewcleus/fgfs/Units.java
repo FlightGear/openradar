@@ -17,13 +17,13 @@ public class Units {
 	
 	/* Frequency */
 	public final static float HZ=1.0f;
-	public final static float KHZ=1.0E3f*HZ;
-	public final static float MHZ=1.0E6f*HZ;
+	public final static float KHz=1.0E3f*HZ;
+	public final static float MHz=1.0E6f*HZ;
 	
 	/* Angles */
-	public final static double DEG=1.0f;
-	public final static double RAD=180.0f/Math.PI*DEG;
-	public final static double FULLCIRCLE=360.0f*DEG;
+	public final static float DEG=1.0f;
+	public final static float RAD=180.0f*DEG/(float)Math.PI;
+	public final static float FULLCIRCLE=360.0f*DEG;
 
 	/* Velocities */
 	public final static float MPS=M/SEC;

@@ -2,7 +2,7 @@ package de.knewcleus.fgfs.navaids.xplane;
 
 import static de.knewcleus.fgfs.Units.DEG;
 import static de.knewcleus.fgfs.Units.FT;
-import static de.knewcleus.fgfs.Units.MHZ;
+import static de.knewcleus.fgfs.Units.MHz;
 import static de.knewcleus.fgfs.Units.NM;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -47,7 +47,7 @@ public class NavParser extends AbstractXPlaneParser {
 		
 		switch (type) {
 		case 3:
-			namedFixDB.addFix(new VOR(id,pos,name,freq*MHZ/100.0,range,parseDouble(tokens[6])*DEG));
+			namedFixDB.addFix(new VOR(id,pos,name,freq*MHz/100.0,range,parseDouble(tokens[6])*DEG));
 			break;
 		}
 	}
