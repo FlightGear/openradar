@@ -8,11 +8,19 @@ import java.util.NoSuchElementException;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.NavDataStreamException;
+import de.knewcleus.fgfs.navdata.impl.DME;
+import de.knewcleus.fgfs.navdata.impl.Glideslope;
+import de.knewcleus.fgfs.navdata.impl.Localizer;
+import de.knewcleus.fgfs.navdata.impl.MarkerBeacon;
 import de.knewcleus.fgfs.navdata.impl.NDB;
 import de.knewcleus.fgfs.navdata.impl.NDBFrequency;
 import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.fgfs.navdata.impl.VORFrequency;
+import de.knewcleus.fgfs.navdata.model.IDME;
 import de.knewcleus.fgfs.navdata.model.IFrequency;
+import de.knewcleus.fgfs.navdata.model.IGlideslope;
+import de.knewcleus.fgfs.navdata.model.ILocalizer;
+import de.knewcleus.fgfs.navdata.model.IMarkerBeacon;
 import de.knewcleus.fgfs.navdata.model.INDB;
 import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
@@ -84,6 +92,20 @@ public class NavDatStream implements INavDataStream<INavPoint> {
 			return parseNDB(fieldIterator);
 		case 3:
 			return parseVOR(fieldIterator);
+		case 4:
+		case 5:
+			return parseLocalizer(fieldIterator);
+		case 6:
+			return parseGlideslope(fieldIterator);
+		case 7:
+			return parseMarkerBeacon(IMarkerBeacon.Type.Outer, fieldIterator);
+		case 8:
+			return parseMarkerBeacon(IMarkerBeacon.Type.Middle, fieldIterator);
+		case 9:
+			return parseMarkerBeacon(IMarkerBeacon.Type.Inner, fieldIterator);
+		case 12:
+		case 13:
+			return parseDME(fieldIterator);
 		default:
 			return null;
 		}
@@ -146,12 +168,153 @@ public class NavDatStream implements INavDataStream<INavPoint> {
 			elev = Float.parseFloat(elevString)*Units.FT;
 			range = Float.parseFloat(rangeString)*Units.NM;
 			variation = Float.parseFloat(varString)*Units.DEG;
-			freqMHz = Float.parseFloat(freqString);
+			freqMHz = Float.parseFloat(freqString) / 100.0f;
 		} catch (NumberFormatException e) {
 			throw new NavDataStreamException(e);
 		}
 		final Point2D geographicPosition = new Point2D.Double(lon, lat);
 		final IFrequency frequency = new VORFrequency(freqMHz);
 		return new VOR(geographicPosition, elev, identification, name, frequency, range, variation);
+	}
+	
+	protected ILocalizer parseLocalizer(FieldIterator fieldIterator) throws NavDataStreamException {
+		final String latString, lonString, elevString, freqString, rangeString, trueHeadingString;
+		final String identification, airportID, runwayID;
+		try {
+			latString = fieldIterator.next();
+			lonString = fieldIterator.next();
+			elevString = fieldIterator.next();
+			freqString = fieldIterator.next();
+			rangeString = fieldIterator.next();
+			trueHeadingString = fieldIterator.next();
+			identification = fieldIterator.next();
+			airportID = fieldIterator.next();
+			runwayID = fieldIterator.next();
+			// skip component type
+			fieldIterator.next();
+		} catch (NoSuchElementException e) {
+			throw new NavDataStreamException(e);
+		}
+		final double lat, lon;
+		final float elev, range, trueHeading;
+		final float freqMHz;
+		try {
+			lat = Double.parseDouble(latString) * Units.DEG;
+			lon = Double.parseDouble(lonString) * Units.DEG;
+			elev = Float.parseFloat(elevString)*Units.FT;
+			range = Float.parseFloat(rangeString)*Units.NM;
+			trueHeading = Float.parseFloat(trueHeadingString)*Units.DEG;
+			freqMHz = Float.parseFloat(freqString) / 100.0f;
+		} catch (NumberFormatException e) {
+			throw new NavDataStreamException(e);
+		}
+		final Point2D geographicPosition = new Point2D.Double(lon, lat);
+		final IFrequency frequency = new VORFrequency(freqMHz);
+		return new Localizer(geographicPosition, elev, identification, frequency, range, airportID, runwayID, trueHeading);
+	}
+	
+	protected IGlideslope parseGlideslope(FieldIterator fieldIterator) throws NavDataStreamException {
+		final String latString, lonString, elevString, freqString, rangeString, glideslopeAngleString;
+		final String identification, airportID, runwayID;
+		try {
+			latString = fieldIterator.next();
+			lonString = fieldIterator.next();
+			elevString = fieldIterator.next();
+			freqString = fieldIterator.next();
+			rangeString = fieldIterator.next();
+			glideslopeAngleString = fieldIterator.next();
+			identification = fieldIterator.next();
+			airportID = fieldIterator.next();
+			runwayID = fieldIterator.next();
+			// skip component type
+			fieldIterator.next();
+		} catch (NoSuchElementException e) {
+			throw new NavDataStreamException(e);
+		}
+		final double lat, lon;
+		final float elev, range, glideslopeAngle;
+		final float freqMHz;
+		try {
+			lat = Double.parseDouble(latString) * Units.DEG;
+			lon = Double.parseDouble(lonString) * Units.DEG;
+			elev = Float.parseFloat(elevString)*Units.FT;
+			range = Float.parseFloat(rangeString)*Units.NM;
+			glideslopeAngle = Integer.parseInt(glideslopeAngleString.substring(0, 3))*0.01f*Units.DEG;
+			freqMHz = Float.parseFloat(freqString) / 100.0f;
+		} catch (NumberFormatException e) {
+			throw new NavDataStreamException(e);
+		}
+		final Point2D geographicPosition = new Point2D.Double(lon, lat);
+		final IFrequency frequency = new VORFrequency(freqMHz);
+		return new Glideslope(geographicPosition, elev, identification, frequency, range, airportID, runwayID, glideslopeAngle);
+	}
+	
+	protected IMarkerBeacon parseMarkerBeacon(IMarkerBeacon.Type type, FieldIterator fieldIterator) throws NavDataStreamException {
+		final String latString, lonString, elevString;
+		final String airportID, runwayID;
+		try {
+			latString = fieldIterator.next();
+			lonString = fieldIterator.next();
+			elevString = fieldIterator.next();
+			// skip frequency
+			fieldIterator.next();
+			// skip range
+			fieldIterator.next();
+			// skip multipurpose field
+			fieldIterator.next();
+			// skip identification
+			fieldIterator.next();
+			
+			airportID = fieldIterator.next();
+			runwayID = fieldIterator.next();
+			// skip component type
+			fieldIterator.next();
+		} catch (NoSuchElementException e) {
+			throw new NavDataStreamException(fieldIterator.getLine(),e);
+		}
+		final double lat, lon;
+		final float elev;
+		try {
+			lat = Double.parseDouble(latString) * Units.DEG;
+			lon = Double.parseDouble(lonString) * Units.DEG;
+			elev = Float.parseFloat(elevString)*Units.FT;
+		} catch (NumberFormatException e) {
+			throw new NavDataStreamException(e);
+		}
+		final Point2D geographicPosition = new Point2D.Double(lon, lat);
+		return new MarkerBeacon(geographicPosition, elev, type, airportID, runwayID);
+	}
+	
+	protected IDME parseDME(FieldIterator fieldIterator) throws NavDataStreamException {
+		final String latString, lonString, elevString, freqString, rangeString, biasString;
+		final String identification, name;
+		try {
+			latString = fieldIterator.next();
+			lonString = fieldIterator.next();
+			elevString = fieldIterator.next();
+			freqString = fieldIterator.next();
+			rangeString = fieldIterator.next();
+			biasString = fieldIterator.next();
+			identification = fieldIterator.next();
+			name = fieldIterator.restOfLine();
+		} catch (NoSuchElementException e) {
+			throw new NavDataStreamException(e);
+		}
+		final double lat, lon;
+		final float elev, range, bias;
+		final float freqMHz;
+		try {
+			lat = Double.parseDouble(latString) * Units.DEG;
+			lon = Double.parseDouble(lonString) * Units.DEG;
+			elev = Float.parseFloat(elevString)*Units.FT;
+			range = Float.parseFloat(rangeString)*Units.NM;
+			bias = Float.parseFloat(biasString)*Units.NM;
+			freqMHz = Float.parseFloat(freqString) / 100.0f;
+		} catch (NumberFormatException e) {
+			throw new NavDataStreamException(e);
+		}
+		final Point2D geographicPosition = new Point2D.Double(lon, lat);
+		final IFrequency frequency = new VORFrequency(freqMHz);
+		return new DME(geographicPosition, elev, identification, name, frequency, range, bias);
 	}
 }

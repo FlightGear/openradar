@@ -14,6 +14,10 @@ public class FieldIterator implements Iterator<String> {
 		startOfField = skipWhitespace(0);
 	}
 	
+	public String getLine() {
+		return line;
+	}
+	
 	public void reset() {
 		startOfField = skipWhitespace(0);
 	}
