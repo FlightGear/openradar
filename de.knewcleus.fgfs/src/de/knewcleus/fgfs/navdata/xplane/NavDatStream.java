@@ -18,14 +18,22 @@ import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.model.IVOR;
 
-public class NavFile implements INavDataStream<INavPoint> {
+/**
+ * A <code>NavDatStream</code> is an {@link INavDataStream} reading the
+ * <a href="http://www.x-plane.org/home/robinp/Nav810.htm">nav.dat format</a>
+ * as defined for X-Plane.
+ * 
+ * @author Ralf Gerlich
+ *
+ */
+public class NavDatStream implements INavDataStream<INavPoint> {
 	protected final BufferedReader bufferedReader;
 	
-	public NavFile(Reader reader) throws IOException {
+	public NavDatStream(Reader reader) throws IOException {
 		this(new BufferedReader(reader));
 	}
 	
-	public NavFile(BufferedReader bufferedReader) throws IOException {
+	public NavDatStream(BufferedReader bufferedReader) throws IOException {
 		this.bufferedReader = bufferedReader;
 		// Skip the line-ending-marker (I/A)
 		bufferedReader.readLine();
@@ -101,8 +109,8 @@ public class NavFile implements INavDataStream<INavPoint> {
 		final float elev, range;
 		final float freqKHz;
 		try {
-			lat = Double.parseDouble(latString);
-			lon = Double.parseDouble(lonString);
+			lat = Double.parseDouble(latString) * Units.DEG;
+			lon = Double.parseDouble(lonString) * Units.DEG;
 			elev = Float.parseFloat(elevString)*Units.FT;
 			range = Float.parseFloat(rangeString)*Units.NM;
 			freqKHz = Float.parseFloat(freqString);
@@ -133,8 +141,8 @@ public class NavFile implements INavDataStream<INavPoint> {
 		final float elev, range, variation;
 		final float freqMHz;
 		try {
-			lat = Double.parseDouble(latString);
-			lon = Double.parseDouble(lonString);
+			lat = Double.parseDouble(latString) * Units.DEG;
+			lon = Double.parseDouble(lonString) * Units.DEG;
 			elev = Float.parseFloat(elevString)*Units.FT;
 			range = Float.parseFloat(rangeString)*Units.NM;
 			variation = Float.parseFloat(varString)*Units.DEG;

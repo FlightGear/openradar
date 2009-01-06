@@ -13,7 +13,7 @@ import de.knewcleus.fgfs.navdata.INavDatumFilter;
 import de.knewcleus.fgfs.navdata.NavDataStreamException;
 import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
-import de.knewcleus.fgfs.navdata.xplane.NavFile;
+import de.knewcleus.fgfs.navdata.xplane.NavDatStream;
 
 public class NavDataTest {
 
@@ -21,7 +21,7 @@ public class NavDataTest {
 		final File inputFile = new File(args[0]);
 		final InputStream compressedStream = new FileInputStream(inputFile);
 		final GZIPInputStream uncompressedStream = new GZIPInputStream(compressedStream);
-		final NavFile navStream = new NavFile(new InputStreamReader(uncompressedStream));
+		final NavDatStream navStream = new NavDatStream(new InputStreamReader(uncompressedStream));
 		final INavDataStream<INavPoint> filteredStream;
 		final INavDatumFilter<INavPoint> filter;
 		

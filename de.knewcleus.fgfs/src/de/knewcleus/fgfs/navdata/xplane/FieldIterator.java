@@ -14,6 +14,10 @@ public class FieldIterator implements Iterator<String> {
 		startOfField = skipWhitespace(0);
 	}
 	
+	public void reset() {
+		startOfField = skipWhitespace(0);
+	}
+	
 	@Override
 	public boolean hasNext() {
 		return startOfField < length;
