@@ -8,8 +8,8 @@ public interface INavAirwaySegment extends INavDatum, INavDatumWithID {
 	public String getIdentification();
 	public Category getCategory();
 	
-	public INavPoint getStartPoint();
-	public INavPoint getEndPoint();
+	public IIntersection getStartPoint();
+	public IIntersection getEndPoint();
 	
 	public boolean isOneWay();
 	
