@@ -1,11 +1,10 @@
 package de.knewcleus.fgfs.navdata.model;
 
-public interface INavAirwaySegment extends INavDatum, INavDatumWithID {
+public interface IAirwaySegment extends INavDatum, INavDatumWithID {
 	public enum Category {
 		Low, High;
 	}
 	
-	public String getIdentification();
 	public Category getCategory();
 	
 	public IIntersection getStartPoint();
