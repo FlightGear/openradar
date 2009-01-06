@@ -1,5 +1,8 @@
 package de.knewcleus.fgfs.navdata;
 
+import de.knewcleus.fgfs.navdata.model.INavDataStream;
+import de.knewcleus.fgfs.navdata.model.INavDatum;
+
 public class FilteredNavDataStream<T extends INavDatum> implements INavDataStream<T> {
 	protected final INavDataStream<T> delegate;
 	protected final INavDatumFilter<T> filter;

@@ -1,7 +1,7 @@
 package de.knewcleus.fgfs.navdata.impl;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.navdata.IFrequency;
+import de.knewcleus.fgfs.navdata.model.IFrequency;
 
 public class NDBFrequency implements IFrequency {
 	protected final float freqKHz;

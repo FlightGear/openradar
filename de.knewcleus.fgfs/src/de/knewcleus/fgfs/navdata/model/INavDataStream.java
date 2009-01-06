@@ -1,4 +1,6 @@
-package de.knewcleus.fgfs.navdata;
+package de.knewcleus.fgfs.navdata.model;
+
+import de.knewcleus.fgfs.navdata.NavDataStreamException;
 
 /**
  * An <code>INavDataStream</code> provides a stream of {@link INavDatum} elements.

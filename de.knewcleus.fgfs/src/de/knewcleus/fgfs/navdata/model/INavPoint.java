@@ -1,4 +1,4 @@
-package de.knewcleus.fgfs.navdata;
+package de.knewcleus.fgfs.navdata.model;
 
 import java.awt.geom.Point2D;
 

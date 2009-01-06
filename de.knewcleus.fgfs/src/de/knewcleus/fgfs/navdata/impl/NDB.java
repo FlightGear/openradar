@@ -2,8 +2,8 @@ package de.knewcleus.fgfs.navdata.impl;
 
 import java.awt.geom.Point2D;
 
-import de.knewcleus.fgfs.navdata.IFrequency;
-import de.knewcleus.fgfs.navdata.INDB;
+import de.knewcleus.fgfs.navdata.model.IFrequency;
+import de.knewcleus.fgfs.navdata.model.INDB;
 
 public class NDB implements INDB {
 	protected final Point2D geographicPosition;

@@ -7,13 +7,13 @@ import java.io.Reader;
 import java.util.NoSuchElementException;
 
 import de.knewcleus.fgfs.Units;
-import de.knewcleus.fgfs.navdata.IFrequency;
-import de.knewcleus.fgfs.navdata.INDB;
-import de.knewcleus.fgfs.navdata.INavDataStream;
-import de.knewcleus.fgfs.navdata.INavPoint;
 import de.knewcleus.fgfs.navdata.NavDataStreamException;
 import de.knewcleus.fgfs.navdata.impl.NDB;
 import de.knewcleus.fgfs.navdata.impl.NDBFrequency;
+import de.knewcleus.fgfs.navdata.model.IFrequency;
+import de.knewcleus.fgfs.navdata.model.INDB;
+import de.knewcleus.fgfs.navdata.model.INavDataStream;
+import de.knewcleus.fgfs.navdata.model.INavPoint;
 
 public class NavFile implements INavDataStream<INavPoint> {
 	protected final BufferedReader bufferedReader;
