@@ -4,11 +4,11 @@ import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavDatum;
 
 public class FilteredNavDataStream<T extends INavDatum> implements INavDataStream<T> {
-	protected final INavDataStream<T> delegate;
-	protected final INavDatumFilter<T> filter;
+	protected final INavDataStream<T> stream;
+	protected final INavDatumFilter<? super T> filter;
 	
-	public FilteredNavDataStream(INavDataStream<T> stream, INavDatumFilter<T> filter) {
-		this.delegate = stream;
+	public FilteredNavDataStream(INavDataStream<T> stream, INavDatumFilter<? super T> filter) {
+		this.stream = stream;
 		this.filter = filter;
 	}
 	
@@ -16,7 +16,7 @@ public class FilteredNavDataStream<T extends INavDatum> implements INavDataStrea
 	public T readDatum() throws NavDataStreamException {
 		T datum;
 		do {
-			datum = delegate.readDatum();
+			datum = stream.readDatum();
 		} while (datum!=null && !filter.allow(datum));
 		return datum;
 	}
