@@ -143,20 +143,13 @@ public class AptDatStream implements INavDataStream<INavDatum> {
 		double totalWeight = 0.0;
 		double cogLonWeight = 0.0;
 		double cogLatWeight = 0.0;
-		final String[] runwayIDs = new String[runways.size()*2];
-		int i=0;
+		/* Calculate the center of gravity of the runway system as ARP */
 		for (Runway rwy: runways) {
-			runwayIDs[i++]=rwy.getDesignation();
-			runwayIDs[i++]=rwy.getOppositeEndDesignation();
-			
 			final Point2D center = rwy.getGeographicCenter();
 			final float rwyWeight = rwy.getWidth() * rwy.getLength();
 			cogLonWeight += center.getX() * rwyWeight;
 			cogLatWeight += center.getY() * rwyWeight;
 			totalWeight += rwyWeight;
-			
-			datumQueue.add(rwy.getEndA());
-			datumQueue.add(rwy.getEndB());
 		}
 		
 		final Point2D geographicPosition;
@@ -167,10 +160,12 @@ public class AptDatStream implements INavDataStream<INavDatum> {
 		final IAerodrome aerodrome = new Aerodrome(
 				geographicPosition, elevation,
 				identification, name,
-				aerodromeType,
-				runwayIDs);
+				aerodromeType);
 		for (Runway rwy: runways) {
 			rwy.setAerodrome(aerodrome);
+			
+			datumQueue.add(rwy.getEndA());
+			datumQueue.add(rwy.getEndB());
 		}
 		
 		return aerodrome;

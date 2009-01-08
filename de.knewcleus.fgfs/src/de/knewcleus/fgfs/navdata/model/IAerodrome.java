@@ -6,5 +6,4 @@ public interface IAerodrome extends INavPointWithElevation, INamedNavDatum, INav
 	}
 	
 	public Type getType();
-	public String[] getRunwayIDs();
 }
