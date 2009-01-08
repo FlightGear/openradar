@@ -1,6 +1,5 @@
 package de.knewcleus.fgfs.navdata.test;
 
-import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,11 +61,11 @@ public class NavDataTest {
 			} while (segment!=null);
 		}
 		
-		final INavDataStream<INavDatum> aptDatStream = openXPlaneAptDat(basedir);
-		final INavDataStream<INavDatum> filteredAptDatStream;
-		filteredAptDatStream = new FilteredNavDataStream<INavDatum>(aptDatStream, filter);
+		final INavDataStream<INavPoint> aptDatStream = openXPlaneAptDat(basedir);
+		final INavDataStream<INavPoint> filteredAptDatStream;
+		filteredAptDatStream = new FilteredNavDataStream<INavPoint>(aptDatStream, filter);
 		
-		INavDatum datum;
+		INavPoint datum;
 		do {
 			datum = filteredAptDatStream.readDatum();
 			System.out.println(datum);
@@ -94,34 +93,10 @@ public class NavDataTest {
 		return new AwyDatStream(new InputStreamReader(uncompressedStream));
 	}
 	
-	protected static INavDataStream<INavDatum> openXPlaneAptDat(File basedir) throws IOException {
+	protected static INavDataStream<INavPoint> openXPlaneAptDat(File basedir) throws IOException {
 		final File inputFile = new File(basedir, "apt.dat.gz");
 		final InputStream compressedStream = new FileInputStream(inputFile);
 		final GZIPInputStream uncompressedStream = new GZIPInputStream(compressedStream);
 		return new AptDatStream(new InputStreamReader(uncompressedStream));
-	}
-
-	protected static class SpatialFilter implements INavDatumFilter<INavDatum> {
-		protected final Rectangle2D bounds;
-		
-		public SpatialFilter(Rectangle2D bounds) {
-			this.bounds = bounds;
-		}
-		
-		@Override
-		public boolean allow(INavDatum datum) {
-			if (datum instanceof INavPoint) {
-				final INavPoint point = (INavPoint) datum;
-				return bounds.contains(point.getGeographicPosition());
-			} else if (datum instanceof IAirwaySegment) {
-				final IAirwaySegment segment = (IAirwaySegment) datum;
-				final IIntersection start, end;
-				start = segment.getStartPoint();
-				end = segment.getEndPoint();
-				final Line2D line = new Line2D.Double(start.getGeographicPosition(), end.getGeographicPosition());
-				return line.intersects(bounds);
-			} 
-			return true;
-		}
 	}
 }

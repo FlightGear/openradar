@@ -16,11 +16,12 @@ import de.knewcleus.fgfs.navdata.impl.Aerodrome;
 import de.knewcleus.fgfs.navdata.model.IAerodrome;
 import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavDatum;
+import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.model.SurfaceType;
 
-public class AptDatStream implements INavDataStream<INavDatum> {
+public class AptDatStream implements INavDataStream<INavPoint> {
 	protected final BufferedReader bufferedReader;
-	protected final Queue<INavDatum> datumQueue = new LinkedList<INavDatum>();
+	protected final Queue<INavPoint> datumQueue = new LinkedList<INavPoint>();
 	protected String nextLine = null;
 	
 	public AptDatStream(Reader reader) throws IOException {
@@ -65,7 +66,7 @@ public class AptDatStream implements INavDataStream<INavDatum> {
 	}
 	
 	@Override
-	public INavDatum readDatum() throws NavDataStreamException {
+	public INavPoint readDatum() throws NavDataStreamException {
 		if (!datumQueue.isEmpty()) {
 			return datumQueue.poll();
 		}
@@ -83,7 +84,7 @@ public class AptDatStream implements INavDataStream<INavDatum> {
 		return parseAirport();
 	}
 	
-	protected INavDatum parseAirport() throws NavDataStreamException {
+	protected INavPoint parseAirport() throws NavDataStreamException {
 		final String airportLine = peekLine();
 		final FieldIterator fieldIterator = new FieldIterator(airportLine);
 		assert(fieldIterator.hasNext());
