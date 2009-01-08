@@ -17,6 +17,7 @@ import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavDatum;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
+import de.knewcleus.fgfs.navdata.xplane.AptDatStream;
 import de.knewcleus.fgfs.navdata.xplane.AwyDatStream;
 import de.knewcleus.fgfs.navdata.xplane.FixDatStream;
 import de.knewcleus.fgfs.navdata.xplane.NavDatStream;
@@ -24,59 +25,80 @@ import de.knewcleus.fgfs.navdata.xplane.NavDatStream;
 public class NavDataTest {
 
 	public static void main(String[] args) throws IOException, NavDataStreamException {
+		final File basedir=new File(args[0]);
 		final INavDatumFilter<INavDatum> filter;
 		filter = new SpatialFilter(new Rectangle2D.Double(8, 46, 3.0, 3.0));
 		
-		final INavDataStream<INavPoint> navdatStream = openXPlaneNavDat(args[0]);
-		final INavDataStream<INavPoint> filteredNavDatStream;
-		filteredNavDatStream = new FilteredNavDataStream<INavPoint>(navdatStream, filter);
+		if (false) {
+			
+			final INavDataStream<INavPoint> navdatStream = openXPlaneNavDat(basedir);
+			final INavDataStream<INavPoint> filteredNavDatStream;
+			filteredNavDatStream = new FilteredNavDataStream<INavPoint>(navdatStream, filter);
+			
+			INavPoint navaid;
+			do {
+				navaid=filteredNavDatStream.readDatum();
+				System.out.println(navaid);
+			} while (navaid!=null);
+			
+			final INavDataStream<IIntersection> fixDatStream = openXPlaneFixDat(basedir);
+			final INavDataStream<IIntersection> filteredFixDatStream;
+			filteredFixDatStream = new FilteredNavDataStream<IIntersection>(fixDatStream, filter);
+			
+			IIntersection intersection;
+			do {
+				intersection = filteredFixDatStream.readDatum();
+				System.out.println(intersection);
+			} while (intersection!=null);
+			
+			final INavDataStream<IAirwaySegment> awyDatStream = openXPlaneAwyDat(basedir);
+			final INavDataStream<IAirwaySegment> filteredAwyDatStream;
+			filteredAwyDatStream = new FilteredNavDataStream<IAirwaySegment>(awyDatStream, filter);
+			
+			IAirwaySegment segment;
+			do {
+				segment = filteredAwyDatStream.readDatum();
+				System.out.println(segment);
+			} while (segment!=null);
+		}
 		
-		INavPoint navaid;
+		final INavDataStream<INavDatum> aptDatStream = openXPlaneAptDat(basedir);
+		final INavDataStream<INavDatum> filteredAptDatStream;
+		filteredAptDatStream = new FilteredNavDataStream<INavDatum>(aptDatStream, filter);
+		
+		INavDatum datum;
 		do {
-			navaid=filteredNavDatStream.readDatum();
-			System.out.println(navaid);
-		} while (navaid!=null);
-		
-		final INavDataStream<IIntersection> fixDatStream = openXPlaneFixDat(args[1]);
-		final INavDataStream<IIntersection> filteredFixDatStream;
-		filteredFixDatStream = new FilteredNavDataStream<IIntersection>(fixDatStream, filter);
-		
-		IIntersection intersection;
-		do {
-			intersection = filteredFixDatStream.readDatum();
-			System.out.println(intersection);
-		} while (intersection!=null);
-		
-		final INavDataStream<IAirwaySegment> awyDatStream = openXPlaneAwyDat(args[2]);
-		final INavDataStream<IAirwaySegment> filteredAwyDatStream;
-		filteredAwyDatStream = new FilteredNavDataStream<IAirwaySegment>(awyDatStream, filter);
-		
-		IAirwaySegment segment;
-		do {
-			segment = filteredAwyDatStream.readDatum();
-			System.out.println(segment);
-		} while (segment!=null);
+			datum = filteredAptDatStream.readDatum();
+			System.out.println(datum);
+		} while (datum!=null);
 	}
 	
-	protected static INavDataStream<INavPoint> openXPlaneNavDat(String filename) throws IOException {
-		final File inputFile = new File(filename);
+	protected static INavDataStream<INavPoint> openXPlaneNavDat(File basedir) throws IOException {
+		final File inputFile = new File(basedir, "nav.dat.gz");
 		final InputStream compressedStream = new FileInputStream(inputFile);
 		final GZIPInputStream uncompressedStream = new GZIPInputStream(compressedStream);
 		return new NavDatStream(new InputStreamReader(uncompressedStream));
 	}
 	
-	protected static INavDataStream<IIntersection> openXPlaneFixDat(String filename) throws IOException {
-		final File inputFile = new File(filename);
+	protected static INavDataStream<IIntersection> openXPlaneFixDat(File basedir) throws IOException {
+		final File inputFile = new File(basedir, "fix.dat.gz");
 		final InputStream compressedStream = new FileInputStream(inputFile);
 		final GZIPInputStream uncompressedStream = new GZIPInputStream(compressedStream);
 		return new FixDatStream(new InputStreamReader(uncompressedStream));
 	}
 	
-	protected static INavDataStream<IAirwaySegment> openXPlaneAwyDat(String filename) throws IOException {
-		final File inputFile = new File(filename);
+	protected static INavDataStream<IAirwaySegment> openXPlaneAwyDat(File basedir) throws IOException {
+		final File inputFile = new File(basedir, "awy.dat.gz");
 		final InputStream compressedStream = new FileInputStream(inputFile);
 		final GZIPInputStream uncompressedStream = new GZIPInputStream(compressedStream);
 		return new AwyDatStream(new InputStreamReader(uncompressedStream));
+	}
+	
+	protected static INavDataStream<INavDatum> openXPlaneAptDat(File basedir) throws IOException {
+		final File inputFile = new File(basedir, "apt.dat.gz");
+		final InputStream compressedStream = new FileInputStream(inputFile);
+		final GZIPInputStream uncompressedStream = new GZIPInputStream(compressedStream);
+		return new AptDatStream(new InputStreamReader(uncompressedStream));
 	}
 
 	protected static class SpatialFilter implements INavDatumFilter<INavDatum> {
@@ -98,7 +120,7 @@ public class NavDataTest {
 				end = segment.getEndPoint();
 				final Line2D line = new Line2D.Double(start.getGeographicPosition(), end.getGeographicPosition());
 				return line.intersects(bounds);
-			}
+			} 
 			return true;
 		}
 	}
