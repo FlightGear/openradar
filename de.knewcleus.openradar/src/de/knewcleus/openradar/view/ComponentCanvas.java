@@ -20,6 +20,7 @@ public class ComponentCanvas implements ICanvas {
 			return null;
 		}
 		g2d.clip(region);
+		g2d.setBackground(managedComponent.getBackground());
 		return g2d;
 	}
 	
