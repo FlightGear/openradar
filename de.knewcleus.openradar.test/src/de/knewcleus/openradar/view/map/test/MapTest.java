@@ -2,15 +2,28 @@ package de.knewcleus.openradar.view.map.test;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.zip.GZIPInputStream;
 
 import javax.swing.JFrame;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
+import de.knewcleus.fgfs.geodata.IGeodataLayer;
 import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
+import de.knewcleus.fgfs.navdata.FilteredNavDataStream;
+import de.knewcleus.fgfs.navdata.INavDatumFilter;
+import de.knewcleus.fgfs.navdata.NavDataStreamException;
+import de.knewcleus.fgfs.navdata.model.INavDataStream;
+import de.knewcleus.fgfs.navdata.model.INavDatum;
+import de.knewcleus.fgfs.navdata.model.INavPoint;
+import de.knewcleus.fgfs.navdata.xplane.AptDatStream;
 import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
 import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
 import de.knewcleus.openradar.rpvd.RadarMapViewerAdapter;
@@ -28,26 +41,65 @@ import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
 
 public class MapTest {
-	public static void main(String[] args) throws GeodataException, IOException {
+	public static void main(String[] args) throws GeodataException, IOException, NavDataStreamException {
+		final File basedir = new File(args[0]);
+		
 		SwingRadarDataAdapter radarAdapter = new SwingRadarDataAdapter();
 		final TrackManager trackManager = new TrackManager();
 		radarAdapter.registerRecipient(trackManager);
 		
+		final double width = 3.0*Units.DEG;
+		final double height = 3.0*Units.DEG;
+		final double centerLon = -122.37489 * Units.DEG;
+		final double centerLat = 37.61896 * Units.DEG;
+		
+		final Rectangle2D bounds = new Rectangle2D.Double(
+				centerLon-width/2.0, centerLat-height/2.0,
+				width, height);
+		final Point2D center = new Point2D.Double(centerLon, centerLat);
+		final INavDatumFilter<INavDatum> spatialFilter = new SpatialFilter(bounds);
+		
+		final INavDataStream<INavPoint> airportStream;
+		airportStream=new FilteredNavDataStream<INavPoint>(openXPlaneAptDat(basedir),spatialFilter);
+		
 		RadarMapViewerAdapter radarMapViewAdapter=new RadarMapViewerAdapter();
-		IProjection projection = new LocalSphericalProjection(new Point2D.Double(-122.37489, 37.61896));
+		IProjection projection = new LocalSphericalProjection(center);
 		radarMapViewAdapter.setProjection(projection);
 		radarMapViewAdapter.setLogicalScale(100.0);
 
 		LayeredView rootView=radarMapViewAdapter.getRootView();
 
-		final File file = new File(args[0]);
-		final URL shapeURL = file.toURI().toURL();
-		ShapefileLayer shapefileLayer = new ShapefileLayer(shapeURL, args[1]);
+		final File landmassShapeFile = new File(basedir,"v0_landmass");
+		final URL landmassShapeURL = landmassShapeFile.toURI().toURL();
+		IGeodataLayer landmassLayer = new ShapefileLayer(landmassShapeURL, "v0_landmass");
+
+		final File runwayShapeFile = new File(basedir,"apt_runway");
+		final URL runwayShapeURL = runwayShapeFile.toURI().toURL();
+		IGeodataLayer runwayLayer = new ShapefileLayer(runwayShapeURL, "apt_runway");
+
+		final File tarmacShapeFile = new File(basedir,"apt_tarmac");
+		final URL tarmacShapeURL = tarmacShapeFile.toURI().toURL();
+		IGeodataLayer tarmacLayer = new ShapefileLayer(tarmacShapeURL, "apt_tarmac");
+
+		final GeodataView landmassView = new GeodataView(radarMapViewAdapter, landmassLayer);
+		landmassView.setColor(Palette.LANDMASS);
+		landmassView.setFill(true);
+		rootView.pushView(landmassView);
 		
-		final GeodataView geodataView = new GeodataView(radarMapViewAdapter, shapefileLayer);
-		geodataView.setColor(Color.GREEN);
-		geodataView.setFill(true);
-		rootView.pushView(geodataView);
+		final GeodataView tarmacView = new GeodataView(radarMapViewAdapter, tarmacLayer);
+		tarmacView.setColor(Palette.PAVEMENT);
+		tarmacView.setFill(true);
+		rootView.pushView(tarmacView);
+		
+		final GeodataView runwayView = new GeodataView(radarMapViewAdapter, runwayLayer);
+		runwayView.setColor(Palette.PAVEMENT.darker());
+		runwayView.setFill(true);
+		rootView.pushView(runwayView);
+		
+		final LayeredView airportView = new LayeredView(radarMapViewAdapter);
+		final NavPointProvider navPointProvider=new NavPointProvider(radarMapViewAdapter, airportView);
+		rootView.pushView(airportView);
+		navPointProvider.addViews(airportStream);
 		
 		GridView gridView=new GridView(radarMapViewAdapter, 10.0*Units.NM);
 		rootView.pushView(gridView);
@@ -67,6 +119,7 @@ public class MapTest {
 		Viewer mapPanel=new Viewer(radarMapViewAdapter);
 		radarMapViewAdapter.setCanvas(new BufferedCanvas(new ComponentCanvas(mapPanel)));
 		frame.setContentPane(mapPanel);
+		mapPanel.setBackground(Palette.WATERMASS);
 		
 		frame.setSize(640, 480);
 		
@@ -93,5 +146,13 @@ public class MapTest {
 		};
 		lossChecker.setDaemon(true);
 		lossChecker.start();
+	}
+
+	
+	protected static INavDataStream<INavPoint> openXPlaneAptDat(File basedir) throws IOException {
+		final File inputFile = new File(basedir, "../apt.dat.gz");
+		final InputStream compressedStream = new FileInputStream(inputFile);
+		final GZIPInputStream uncompressedStream = new GZIPInputStream(compressedStream);
+		return new AptDatStream(new InputStreamReader(uncompressedStream));
 	}
 }
