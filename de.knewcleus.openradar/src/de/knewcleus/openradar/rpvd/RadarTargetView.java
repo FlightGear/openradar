@@ -52,6 +52,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 		this.track = track;
 		radarMapViewAdapter.registerListener(this);
 		track.registerListener(this);
+		updateGeographicPositions();
 	}
 	
 	@Override
