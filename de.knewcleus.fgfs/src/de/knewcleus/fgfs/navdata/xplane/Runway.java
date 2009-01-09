@@ -8,19 +8,11 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
-import de.knewcleus.fgfs.navdata.model.IAerodrome;
 import de.knewcleus.fgfs.navdata.model.IRunway;
 import de.knewcleus.fgfs.navdata.model.SurfaceType;
 
-public class Runway implements IRunway {
+public class Runway extends LandingSurface implements IRunway {
 	protected final static GeodesicUtils geodesicUtils = new GeodesicUtils(WGS84);
-	protected IAerodrome aerodrome;
-	protected final SurfaceType surfaceType;
-	protected final float length;
-	protected final float width;
-	protected final Point2D geographicCenter;
-	protected final float trueHeading;
-	protected final String designation;
 	protected final RunwayEnd endA, endB;
 	
 	public Runway(SurfaceType surfaceType, float length,
@@ -28,12 +20,7 @@ public class Runway implements IRunway {
 			String designation,
 			float endAThresholdLength, float endBThresholdLength,
 			float endAStopwayLength, float endBStopwayLength) {
-		this.surfaceType = surfaceType;
-		this.length = length;
-		this.width = width;
-		this.geographicCenter = geographicCenter;
-		this.trueHeading = trueHeading;
-		this.designation = designation;
+		super(surfaceType, length, width, geographicCenter, trueHeading, designation);
 		
 		final float oppositeHeading;
 		oppositeHeading = (
@@ -53,46 +40,6 @@ public class Runway implements IRunway {
 		
 		endA.setOppositeEnd(endB);
 		endB.setOppositeEnd(endA);
-	}
-	
-	protected void setAerodrome(IAerodrome aerodrome) {
-		this.aerodrome = aerodrome;
-	}
-
-	public IAerodrome getAerodrome() {
-		return aerodrome;
-	}
-	
-	@Override
-	public String getAirportID() {
-		return aerodrome.getIdentification();
-	}
-	
-	@Override
-	public SurfaceType getSurfaceType() {
-		return surfaceType;
-	}
-	
-	@Override
-	public float getLength() {
-		return length;
-	}
-	
-	@Override
-	public float getWidth() {
-		return width;
-	}
-	
-	public Point2D getGeographicCenter() {
-		return geographicCenter;
-	}
-	
-	public float getTrueHeading() {
-		return trueHeading;
-	}
-	
-	public String getDesignation() {
-		return designation;
 	}
 	
 	public String getOppositeEndDesignation() {

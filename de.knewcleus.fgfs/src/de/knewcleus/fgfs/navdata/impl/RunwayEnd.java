@@ -81,9 +81,10 @@ public class RunwayEnd implements IRunwayEnd {
 	
 	@Override
 	public String toString() {
-		return String.format("RWY End %s %s (%+10.6f,%+11.6f) hdg %05.1f stopway %3.0fft TORA %5.0fft LDA %5.0fft",
+		return String.format("RWY End %s %s %s (%+10.6f,%+11.6f) hdg %05.1f stopway %3.0fft TORA %5.0fft LDA %5.0fft",
 				runway.getAirportID(),
 				runwayID,
+				runway.getSurfaceType(),
 				geographicPosition.getY(),
 				geographicPosition.getX(),
 				trueHeading / Units.DEG,

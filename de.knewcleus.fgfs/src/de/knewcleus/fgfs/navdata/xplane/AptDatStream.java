@@ -119,7 +119,7 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 		}
 		consumeLine();
 		
-		final List<Runway> runways = new ArrayList<Runway>();
+		final List<LandingSurface> landingSurfaces = new ArrayList<LandingSurface>();
 		while (peekLine()!=null) {
 			final String recordLine = peekLine();
 			final FieldIterator recordIterator = new FieldIterator(recordLine);
@@ -131,10 +131,10 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 				/* end of file marker or next airport header */
 				break;
 			} else if (recordCode.equals("10")) {
-				// runway or taxiway
-				final Runway runway = parseRunway(recordIterator);
-				if (runway!=null) {
-					runways.add(runway);
+				// runway, helipad or taxiway
+				final LandingSurface surface = parseLandingSurface(recordIterator);
+				if (surface!=null) {
+					landingSurfaces.add(surface);
 				}
 			}
 			consumeLine();
@@ -144,7 +144,7 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 		double cogLonWeight = 0.0;
 		double cogLatWeight = 0.0;
 		/* Calculate the center of gravity of the runway system as ARP */
-		for (Runway rwy: runways) {
+		for (LandingSurface rwy: landingSurfaces) {
 			final Point2D center = rwy.getGeographicCenter();
 			final float rwyWeight = rwy.getWidth() * rwy.getLength();
 			cogLonWeight += center.getX() * rwyWeight;
@@ -161,17 +161,21 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 				geographicPosition, elevation,
 				identification, name,
 				aerodromeType);
-		for (Runway rwy: runways) {
-			rwy.setAerodrome(aerodrome);
+		for (LandingSurface surface: landingSurfaces) {
+			surface.setAerodrome(aerodrome);
 			
-			datumQueue.add(rwy.getEndA());
-			datumQueue.add(rwy.getEndB());
+			if (surface instanceof Runway) {
+				datumQueue.add(((Runway) surface).getEndA());
+				datumQueue.add(((Runway) surface).getEndB());
+			} else if (surface instanceof Helipad) {
+				datumQueue.add(surface);
+			}
 		}
 		
 		return aerodrome;
 	}
 	
-	protected Runway parseRunway(FieldIterator fieldIterator) throws NavDataStreamException {
+	protected LandingSurface parseLandingSurface(FieldIterator fieldIterator) throws NavDataStreamException {
 		final String latString, lonString, designation, headingString, lengthString;
 		final String thresholdString, stopwayString, widthString;
 		final String surfaceCodeString;
@@ -191,28 +195,14 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 		} catch (NoSuchElementException e) {
 			throw new NavDataStreamException("Missing field in runway definition",e);
 		}
-		if (designation.charAt(0)=='H' || designation.charAt(0)=='h') {
-			// Helipad, ignore for now
-			return null;
-		} else if (designation.equals("xxx")) {
+		if (designation.equals("xxx")) {
 			// Taxiway => ignore
 			return null;
-		}
-		
-		final int thresholdDotIndex = thresholdString.indexOf('.');
-		if (thresholdDotIndex==-1) {
-			throw new NavDataStreamException("Invalid format for threshold length field '"+thresholdString+"'");
-		}
-		final int stopwayDotIndex = stopwayString.indexOf('.');
-		if (stopwayDotIndex==-1) {
-			throw new NavDataStreamException("Invalid format for stopway length field '"+stopwayString+"'");
 		}
 		
 		final double latitude, longitude;
 		final float heading;
 		final float length, width;
-		final float endAthreshold, endBthreshold;
-		final float endAstopway, endBstopway;
 		final SurfaceType surfaceType;
 		try {
 			latitude = Double.parseDouble(latString) * Units.DEG;
@@ -220,26 +210,48 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 			heading = Float.parseFloat(headingString) * Units.DEG;
 			length = Float.parseFloat(lengthString) * Units.FT;
 			width = Float.parseFloat(widthString) * Units.FT;
-			endAthreshold = Integer.parseInt(thresholdString.substring(0,thresholdDotIndex)) * Units.FT;
-			endBthreshold = Integer.parseInt(thresholdString.substring(thresholdDotIndex+1)) * Units.FT;
-			endAstopway = Integer.parseInt(stopwayString.substring(0,stopwayDotIndex)) * Units.FT;
-			endBstopway = Integer.parseInt(stopwayString.substring(stopwayDotIndex+1)) * Units.FT;
 			surfaceType = getSurfaceType(Integer.parseInt(surfaceCodeString));
 		} catch (NumberFormatException e) {
 			throw new NavDataStreamException("Non-numeric value in numeric field",e);
 		}
 		
 		final String normalizedDesignation = normalizeDesignation(designation);
-		
 		final Point2D center = new Point2D.Double( longitude, latitude );
-		return new Runway(
-				surfaceType,
-				length, width,
-				center,
-				heading,
-				normalizedDesignation,
-				endAthreshold, endBthreshold,
-				endAstopway, endBstopway);
+		
+		if (designation.charAt(0)=='H') {
+			// Helipad
+			return new Helipad(surfaceType, length, width, center, heading, normalizedDesignation);
+		} else {
+			// real runway
+			final int thresholdDotIndex = thresholdString.indexOf('.');
+			if (thresholdDotIndex==-1) {
+				throw new NavDataStreamException("Invalid format for threshold length field '"+thresholdString+"'");
+			}
+			final int stopwayDotIndex = stopwayString.indexOf('.');
+			if (stopwayDotIndex==-1) {
+				throw new NavDataStreamException("Invalid format for stopway length field '"+stopwayString+"'");
+			}
+			
+			final float endAthreshold, endBthreshold;
+			final float endAstopway, endBstopway;
+			try {
+				endAthreshold = Integer.parseInt(thresholdString.substring(0,thresholdDotIndex)) * Units.FT;
+				endBthreshold = Integer.parseInt(thresholdString.substring(thresholdDotIndex+1)) * Units.FT;
+				endAstopway = Integer.parseInt(stopwayString.substring(0,stopwayDotIndex)) * Units.FT;
+				endBstopway = Integer.parseInt(stopwayString.substring(stopwayDotIndex+1)) * Units.FT;
+			} catch (NumberFormatException e) {
+				throw new NavDataStreamException("Non-numeric value in numeric field",e);
+			}
+	
+			return new Runway(
+					surfaceType,
+					length, width,
+					center,
+					heading,
+					normalizedDesignation,
+					endAthreshold, endBthreshold,
+					endAstopway, endBstopway);
+		}
 	}
 	
 	protected static String normalizeDesignation(String designation) {
@@ -249,8 +261,10 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 			normalizedDesignation=normalizedDesignation.substring(0,length-1);
 			length--;
 		}
-		if (length<2 || !Character.isDigit(normalizedDesignation.charAt(1))) {
-			normalizedDesignation="0" + normalizedDesignation;
+		if (normalizedDesignation.charAt(0)!='H' && normalizedDesignation.charAt(0)!='h') {
+			if (length<2 || !Character.isDigit(normalizedDesignation.charAt(1))) {
+				normalizedDesignation="0" + normalizedDesignation;
+			}
 		}
 		return normalizedDesignation.toUpperCase();
 	}

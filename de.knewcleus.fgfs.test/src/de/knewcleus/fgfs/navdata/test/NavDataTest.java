@@ -1,5 +1,6 @@
 package de.knewcleus.fgfs.navdata.test;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
 
+import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.FilteredNavDataStream;
 import de.knewcleus.fgfs.navdata.INavDatumFilter;
 import de.knewcleus.fgfs.navdata.NavDataStreamException;
@@ -25,14 +27,22 @@ public class NavDataTest {
 
 	public static void main(String[] args) throws IOException, NavDataStreamException {
 		final File basedir=new File(args[0]);
-		final INavDatumFilter<INavDatum> filter;
-		filter = new SpatialFilter(new Rectangle2D.Double(8, 46, 3.0, 3.0));
+		final double width = 3.0*Units.DEG;
+		final double height = 3.0*Units.DEG;
+		final double centerLon = -122.37489 * Units.DEG;
+		final double centerLat = 37.61896 * Units.DEG;
+		
+		final Rectangle2D bounds = new Rectangle2D.Double(
+				centerLon-width/2.0, centerLat-height/2.0,
+				width, height);
+		final Point2D center = new Point2D.Double(centerLon, centerLat);
+		final INavDatumFilter<INavDatum> spatialFilter = new SpatialFilter(bounds);
 		
 		if (false) {
 			
 			final INavDataStream<INavPoint> navdatStream = openXPlaneNavDat(basedir);
 			final INavDataStream<INavPoint> filteredNavDatStream;
-			filteredNavDatStream = new FilteredNavDataStream<INavPoint>(navdatStream, filter);
+			filteredNavDatStream = new FilteredNavDataStream<INavPoint>(navdatStream, spatialFilter);
 			
 			INavPoint navaid;
 			do {
@@ -42,7 +52,7 @@ public class NavDataTest {
 			
 			final INavDataStream<IIntersection> fixDatStream = openXPlaneFixDat(basedir);
 			final INavDataStream<IIntersection> filteredFixDatStream;
-			filteredFixDatStream = new FilteredNavDataStream<IIntersection>(fixDatStream, filter);
+			filteredFixDatStream = new FilteredNavDataStream<IIntersection>(fixDatStream, spatialFilter);
 			
 			IIntersection intersection;
 			do {
@@ -52,7 +62,7 @@ public class NavDataTest {
 			
 			final INavDataStream<IAirwaySegment> awyDatStream = openXPlaneAwyDat(basedir);
 			final INavDataStream<IAirwaySegment> filteredAwyDatStream;
-			filteredAwyDatStream = new FilteredNavDataStream<IAirwaySegment>(awyDatStream, filter);
+			filteredAwyDatStream = new FilteredNavDataStream<IAirwaySegment>(awyDatStream, spatialFilter);
 			
 			IAirwaySegment segment;
 			do {
@@ -63,7 +73,7 @@ public class NavDataTest {
 		
 		final INavDataStream<INavPoint> aptDatStream = openXPlaneAptDat(basedir);
 		final INavDataStream<INavPoint> filteredAptDatStream;
-		filteredAptDatStream = new FilteredNavDataStream<INavPoint>(aptDatStream, filter);
+		filteredAptDatStream = new FilteredNavDataStream<INavPoint>(aptDatStream, spatialFilter);
 		
 		INavPoint datum;
 		do {
