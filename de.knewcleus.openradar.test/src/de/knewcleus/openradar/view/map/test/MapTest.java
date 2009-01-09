@@ -19,6 +19,9 @@ import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
 import de.knewcleus.fgfs.navdata.FilteredNavDataStream;
 import de.knewcleus.fgfs.navdata.INavDatumFilter;
 import de.knewcleus.fgfs.navdata.NavDataStreamException;
+import de.knewcleus.fgfs.navdata.NavDatumFilterChain;
+import de.knewcleus.fgfs.navdata.NavDatumFilterChain.Kind;
+import de.knewcleus.fgfs.navdata.model.IAerodrome;
 import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavDatum;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
@@ -57,9 +60,13 @@ public class MapTest {
 				width, height);
 		final Point2D center = new Point2D.Double(centerLon, centerLat);
 		final INavDatumFilter<INavDatum> spatialFilter = new SpatialFilter(bounds);
+		final INavDatumFilter<INavDatum> typeFilter = new TypeFilter<INavDatum>(IAerodrome.class);
+		final NavDatumFilterChain<INavDatum> filter = new NavDatumFilterChain<INavDatum>(Kind.CONJUNCT);
+		filter.add(typeFilter);
+		filter.add(spatialFilter);
 		
 		final INavDataStream<INavPoint> airportStream;
-		airportStream=new FilteredNavDataStream<INavPoint>(openXPlaneAptDat(basedir),spatialFilter);
+		airportStream=new FilteredNavDataStream<INavPoint>(openXPlaneAptDat(basedir),filter);
 		
 		RadarMapViewerAdapter radarMapViewAdapter=new RadarMapViewerAdapter();
 		IProjection projection = new LocalSphericalProjection(center);
