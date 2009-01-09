@@ -15,7 +15,6 @@ import de.knewcleus.fgfs.navdata.NavDataStreamException;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
 import de.knewcleus.fgfs.navdata.model.IAerodrome;
 import de.knewcleus.fgfs.navdata.model.INavDataStream;
-import de.knewcleus.fgfs.navdata.model.INavDatum;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.model.SurfaceType;
 
