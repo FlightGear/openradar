@@ -22,6 +22,11 @@ public interface IView {
 	public void validate();
 	
 	/**
+	 * Determine whether the view is visible.
+	 */
+	public boolean isVisible();
+	
+	/**
 	 * Accept the view visitor.
 	 */
 	public void accept(IViewVisitor visitor);

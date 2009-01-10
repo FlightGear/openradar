@@ -20,7 +20,7 @@ public class ViewPaintVisitor implements IViewVisitor {
 
 	@Override
 	public void visitContainer(IContainer container) {
-		if (intersectsClip(container)) {
+		if (container.isVisible() && intersectsClip(container)) {
 			container.paint(g2d);
 			container.traverse(this);
 		}
@@ -33,7 +33,7 @@ public class ViewPaintVisitor implements IViewVisitor {
 
 	@Override
 	public void visitView(IView view) {
-		if (intersectsClip(view)) {
+		if (view.isVisible() && intersectsClip(view)) {
 			view.paint(g2d);
 		}
 	}

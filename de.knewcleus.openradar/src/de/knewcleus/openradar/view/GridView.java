@@ -12,6 +12,7 @@ import de.knewcleus.openradar.notify.INotificationListener;
 public class GridView implements IView, INotificationListener {
 	protected final IViewerAdapter viewAdapter;
 	protected double gridLogicalSize;
+	protected boolean visible = true;
 	
 	public GridView(IViewerAdapter viewAdapter, double gridLogicalSize) {
 		super();
@@ -32,6 +33,19 @@ public class GridView implements IView, INotificationListener {
 	@Override
 	public void accept(IViewVisitor visitor) {
 		visitor.visitView(this);
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		if (visible==this.visible) {
+			return;
+		}
+		this.visible = visible;
+		viewAdapter.getUpdateManager().markViewportDirty();
 	}
 	
 	@Override

@@ -72,6 +72,12 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	}
 	
 	@Override
+	public boolean isVisible() {
+		/* Radar labels are always visible */
+		return true;
+	}
+	
+	@Override
 	public void acceptNotification(INotification notification) {
 		if (notification instanceof CoordinateSystemNotification) {
 			calculateDisplayPosition();

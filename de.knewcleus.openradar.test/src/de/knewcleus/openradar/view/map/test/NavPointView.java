@@ -27,6 +27,8 @@ public class NavPointView implements IBoundedView, INotificationListener {
 	protected final IMapViewerAdapter mapViewAdapter;
 	protected final INavPoint navPoint;
 	
+	protected boolean visible = true;
+	
 	protected Point2D logicalPosition = new Point2D.Double();
 	protected Point2D displayPosition = new Point2D.Double();
 	protected Path2D displayShape = null;
@@ -47,6 +49,19 @@ public class NavPointView implements IBoundedView, INotificationListener {
 	@Override
 	public void accept(IViewVisitor visitor) {
 		visitor.visitView(this);
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		if (this.visible==visible) {
+			return;
+		}
+		this.visible = visible;
+		mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
 	}
 
 	@Override

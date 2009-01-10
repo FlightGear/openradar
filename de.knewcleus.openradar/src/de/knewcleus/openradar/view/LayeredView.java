@@ -7,6 +7,7 @@ import java.util.List;
 public class LayeredView implements IContainer {
 	protected final IViewerAdapter viewAdapter;
 	protected final List<IView> views=new ArrayList<IView>();
+	protected boolean visible = true;
 	
 	public LayeredView(IViewerAdapter mapViewAdapter) {
 		this.viewAdapter = mapViewAdapter;
@@ -28,6 +29,19 @@ public class LayeredView implements IContainer {
 			viewAdapter.getUpdateManager().markViewportDirty();
 		}
 		views.remove(view);
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		if (visible==this.visible) {
+			return;
+		}
+		this.visible = visible;
+		viewAdapter.getUpdateManager().markViewportDirty();
 	}
 	
 	@Override

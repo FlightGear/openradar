@@ -24,6 +24,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	
 	protected Color color = Color.BLACK;
 	protected boolean fill = true;
+	protected boolean visible = true;
 	
 	protected Rectangle2D displayExtents = null;
 	protected Rectangle2D logicalBounds = null;
@@ -60,6 +61,19 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	@Override
 	public void accept(IViewVisitor visitor) {
 		visitor.visitView(this);
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		if (this.visible==visible) {
+			return;
+		}
+		this.visible = visible;
+		mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
 	}
 	
 	@Override

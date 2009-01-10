@@ -20,6 +20,7 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 	protected final Side side;
 	
 	protected Color color;
+	protected boolean visible = true;
 	
 	protected final static double scaleMarkerDisplayHeight = 10.0;
 	protected final static double scaleMarkerDisplayWidth = 0.5 * scaleMarkerDisplayHeight;
@@ -51,6 +52,19 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 	@Override
 	public void accept(IViewVisitor visitor) {
 		visitor.visitView(this);
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	public void setVisible(boolean visible) {
+		if (this.visible == visible) {
+			return;
+		}
+		this.visible = visible;
+		viewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
 	}
 	
 	@Override

@@ -61,6 +61,12 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 	}
 	
 	@Override
+	public boolean isVisible() {
+		/* Radar tracks are always shown */
+		return true;
+	}
+	
+	@Override
 	public void validate() {}
 	
 	@Override
