@@ -31,6 +31,7 @@ public class Viewer extends JComponent {
 		super.paintComponent(g);
 		
 		final Graphics2D g2d = (Graphics2D)g;
+		g2d.setBackground(getBackground());
 		ViewPaintVisitor viewPaintVisitor=new ViewPaintVisitor(g2d);
 		viewAdapter.getRootView().accept(viewPaintVisitor);
 	}

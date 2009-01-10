@@ -20,7 +20,9 @@ public class Palette {
 	public final static Color DESKTOP=new Color(0.29f,0.32f,0.29f);
 	public final static Color LANDMASS=new Color(0.36f,0.34f,0.34f);
 	public final static Color WATERMASS=new Color(0.39f,0.39f,0.41f);
-	public final static Color PAVEMENT=new Color(0.30f, 0.28f, 0.28f);
+	
+	public final static Color TARMAC=new Color(0.30f, 0.28f, 0.28f);
+	public final static Color RUNWAY = new Color(0.21f, 0.196f, 0.196f);
 	
 	/* REFGHMI defines specific colors for all combinations of
 	 * (Land,Water)x(NotSector,Sector)x(NotRestricted,Restricted).

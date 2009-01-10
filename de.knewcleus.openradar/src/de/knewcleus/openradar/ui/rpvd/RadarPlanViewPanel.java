@@ -64,7 +64,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 				Palette.WATERMASS, sector.getWaterPolygons()));
 		add(new GeometryMapLayer("Restricted", Palette.RESTRICTED,sector.getRestrictedPolygons()));
 		add(new GeometryMapLayer("Sector", Palette.SECTOR,sector.getSectorPolygons()));
-		add(new GeometryMapLayer("Pavement", Palette.PAVEMENT,sector.getPavementPolygons()));
+		add(new GeometryMapLayer("Pavement", Palette.TARMAC,sector.getPavementPolygons()));
 
 		waypointDisplayLayer=new WaypointDisplayLayer("Waypoints", sector);
 		Set<Aerodrome> aerodromes=sector.getFixDB().getFixes(Aerodrome.class);

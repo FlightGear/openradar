@@ -93,12 +93,12 @@ public class MapTest {
 		rootView.pushView(landmassView);
 		
 		final GeodataView tarmacView = new GeodataView(radarMapViewAdapter, tarmacLayer);
-		tarmacView.setColor(Palette.PAVEMENT);
+		tarmacView.setColor(Palette.TARMAC);
 		tarmacView.setFill(true);
 		rootView.pushView(tarmacView);
 		
 		final GeodataView runwayView = new GeodataView(radarMapViewAdapter, runwayLayer);
-		runwayView.setColor(Palette.PAVEMENT.darker());
+		runwayView.setColor(Palette.RUNWAY);
 		runwayView.setFill(true);
 		rootView.pushView(runwayView);
 		
