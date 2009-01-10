@@ -33,7 +33,6 @@ import de.knewcleus.openradar.rpvd.ScaleMarkerView;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView.Side;
 import de.knewcleus.openradar.tracks.TrackManager;
 import de.knewcleus.openradar.ui.Palette;
-import de.knewcleus.openradar.view.GridView;
 import de.knewcleus.openradar.view.LayeredView;
 import de.knewcleus.openradar.view.MouseZoomListener;
 import de.knewcleus.openradar.view.Viewer;
@@ -107,9 +106,6 @@ public class MapTest {
 		final NavPointProvider navPointProvider=new NavPointProvider(radarMapViewAdapter, airportView);
 		rootView.pushView(airportView);
 		navPointProvider.addViews(airportStream);
-		
-		GridView gridView=new GridView(radarMapViewAdapter, 10.0*Units.NM);
-		rootView.pushView(gridView);
 		
 		ScaleMarkerView southMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.SOUTH, Palette.WINDOW_BLUE);
 		rootView.pushView(southMarkerView);
