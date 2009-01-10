@@ -28,7 +28,9 @@ import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.AptDatStream;
 import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
 import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
+import de.knewcleus.openradar.rpvd.MouseSelectionListener;
 import de.knewcleus.openradar.rpvd.RadarMapViewerAdapter;
+import de.knewcleus.openradar.rpvd.RadarTargetProvider;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView.Side;
 import de.knewcleus.openradar.tracks.TrackManager;
@@ -121,6 +123,7 @@ public class MapTest {
 		
 		mapPanel.addComponentListener(new ViewerCenteringListener(radarMapViewAdapter));
 		mapPanel.addMouseWheelListener(new MouseZoomListener(radarMapViewAdapter));
+		mapPanel.addMouseMotionListener(new MouseSelectionListener(radarMapViewAdapter, targetView));
 		frame.setContentPane(mapPanel);
 		mapPanel.setBackground(Palette.WATERMASS);
 		

@@ -33,7 +33,8 @@ public class RadarTargetProvider implements INotificationListener {
 			final ITrack track=lifetimeNotification.getTrack();
 			switch (lifetimeNotification.getLifetimeState()) {
 			case CREATED:
-				final RadarTargetView newView = new RadarTargetView(radarMapViewAdapter, track);
+				final TrackDisplayState displayState = new TrackDisplayState(track);
+				final RadarTargetView newView = new RadarTargetView(radarMapViewAdapter, displayState);
 				viewMap.put(track, newView);
 				radarTargetLayer.pushView(newView);
 				break;

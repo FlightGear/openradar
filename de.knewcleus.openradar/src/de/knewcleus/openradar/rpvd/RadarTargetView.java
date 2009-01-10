@@ -18,11 +18,11 @@ import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
-import de.knewcleus.openradar.tracks.ITrack;
 import de.knewcleus.openradar.tracks.TrackUpdateNotification;
 import de.knewcleus.openradar.ui.Palette;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IBoundedView;
+import de.knewcleus.openradar.view.IPickable;
 import de.knewcleus.openradar.view.IViewVisitor;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.ProjectionNotification;
@@ -34,25 +34,37 @@ import de.knewcleus.openradar.view.map.ProjectionNotification;
  * @author Ralf Gerlich
  *
  */
-public class RadarTargetView implements IBoundedView, INotificationListener {
+public class RadarTargetView implements IBoundedView, INotificationListener, IPickable, ITrackDisplay {
 	protected final static double targetDotRadius = 3.0;
 	
 	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
 	
 	protected final IRadarMapViewerAdapter radarMapViewAdapter;
-	protected final ITrack track;
+	protected final TrackDisplayState trackDisplayState;
 	
 	protected final List<Point2D> logicalDotPositions = new ArrayList<Point2D>();
 	protected final List<Shape> displayDotShapes = new ArrayList<Shape>();
-	protected Line2D logicalHeadingLine = null;
+	protected Line2D logicalHeadingLine = new Line2D.Double();
 	protected Rectangle2D displayExtents = new Rectangle2D.Double();
 	
-	public RadarTargetView(IRadarMapViewerAdapter radarMapViewAdapter, ITrack track) {
+	public RadarTargetView(IRadarMapViewerAdapter radarMapViewAdapter, TrackDisplayState trackDisplayState) {
 		this.radarMapViewAdapter = radarMapViewAdapter;
-		this.track = track;
+		this.trackDisplayState = trackDisplayState;
 		radarMapViewAdapter.registerListener(this);
-		track.registerListener(this);
+		trackDisplayState.registerListener(this);
+		trackDisplayState.getTrack().registerListener(this);
 		updateGeographicPositions();
+	}
+	
+	@Override
+	public boolean contains(Point2D devicePoint) {
+		for (Shape shape: displayDotShapes) {
+			if (shape.contains(devicePoint)) {
+				return true;
+			}
+		}
+		// TODO: check heading line
+		return false;
 	}
 	
 	@Override
@@ -67,11 +79,17 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 	}
 	
 	@Override
+	public TrackDisplayState getTrackDisplayState() {
+		return trackDisplayState;
+	}
+	
+	@Override
 	public void validate() {}
 	
 	@Override
 	public void paint(Graphics2D g2d) {
-		Color color=Palette.BLACK;
+		final Color baseColor = (trackDisplayState.isSelected()?Palette.WHITE:Palette.BLACK);
+		Color color = baseColor;
 		final int count = radarMapViewAdapter.getTrackHistoryLength();
 		int i = count;
 		for (Shape displayDotShape: displayDotShapes) {
@@ -80,7 +98,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 			g2d.fill(displayDotShape);
 			--i;
 		}
-		g2d.setColor(Palette.BLACK);
+		g2d.setColor(baseColor);
 		final AffineTransform oldTransform = g2d.getTransform();
 		g2d.transform(radarMapViewAdapter.getLogicalToDeviceTransform());
 		g2d.draw(logicalHeadingLine);
@@ -94,7 +112,9 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 	
 	@Override
 	public void acceptNotification(INotification notification) {
-		if (notification instanceof TrackUpdateNotification) {
+		if (notification instanceof SelectionChangeNotification) {
+			repaint();
+		} else if (notification instanceof TrackUpdateNotification) {
 			updateGeographicPositions();
 		} else if (notification instanceof ProjectionNotification) {
 			updateLogicalPositions();
@@ -109,7 +129,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 	
 	protected void updateGeographicPositions() {
 		final IProjection projection = radarMapViewAdapter.getProjection();
-		final IRadarDataPacket currentStatus = track.getCurrentState();
+		final IRadarDataPacket currentStatus = trackDisplayState.getTrack().getCurrentState();
 		final Point2D currentGeoPosition = currentStatus.getPosition();
 		final GeodesicInformation geodInfo = geodesicUtils.direct(
 				currentGeoPosition.getX(), currentGeoPosition.getY(),
@@ -129,7 +149,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener {
 		final IProjection projection = radarMapViewAdapter.getProjection();
 		logicalDotPositions.clear();
 		
-		final Iterator<IRadarDataPacket> radarDataIterator = track.iterator();
+		final Iterator<IRadarDataPacket> radarDataIterator = trackDisplayState.getTrack().iterator();
 		final int trackHistoryLength = radarMapViewAdapter.getTrackHistoryLength();
 		
 		for (int i=0; i<=trackHistoryLength && radarDataIterator.hasNext(); ++i) {
