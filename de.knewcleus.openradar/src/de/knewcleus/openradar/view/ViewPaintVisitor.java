@@ -27,11 +27,6 @@ public class ViewPaintVisitor implements IViewVisitor {
 	}
 
 	@Override
-	public void visitElement(IElement element) {
-		visitView(element);
-	}
-
-	@Override
 	public void visitView(IView view) {
 		if (view.isVisible() && intersectsClip(view)) {
 			view.paint(g2d);

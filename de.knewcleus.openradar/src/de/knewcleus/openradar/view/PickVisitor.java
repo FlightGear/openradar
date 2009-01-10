@@ -25,13 +25,6 @@ public class PickVisitor implements IViewVisitor {
 	}
 
 	@Override
-	public void visitElement(IElement element) {
-		if (mayBeInside(element)) {
-			checkPick(element);
-		}
-	}
-
-	@Override
 	public void visitView(IView view) {
 		if (mayBeInside(view)) {
 			checkPick(view);
