@@ -112,5 +112,5 @@ public class TextView implements IBoundedView, ILayoutPart {
 	}
 	
 	@Override
-	public void revalidate() {}
+	public void validate() {}
 }

@@ -1,30 +1,14 @@
 package de.knewcleus.openradar.view;
 
-import java.awt.AWTEvent;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JComponent;
 
 public class Viewer extends JComponent {
 	private static final long serialVersionUID = -3173711704273558768L;
-	
-	protected final IViewerAdapter viewAdapter;
-
-	public Viewer(IViewerAdapter viewAdapter) {
-		this.viewAdapter = viewAdapter;
-		setBackground(Color.BLACK);
-		enableEvents(AWTEvent.MOUSE_WHEEL_EVENT_MASK + AWTEvent.COMPONENT_EVENT_MASK);
-	}
-	
-	public IViewerAdapter getViewAdapter() {
-		return viewAdapter;
-	}
+	protected final SwingUpdateManager updateManager = new SwingUpdateManager(this);
+	protected final ComponentCanvas canvas = new ComponentCanvas(this);
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -32,26 +16,20 @@ public class Viewer extends JComponent {
 		
 		final Graphics2D g2d = (Graphics2D)g;
 		g2d.setBackground(getBackground());
-		ViewPaintVisitor viewPaintVisitor=new ViewPaintVisitor(g2d);
-		viewAdapter.getRootView().accept(viewPaintVisitor);
+		updateManager.paint(g2d);
 	}
 	
 	@Override
-	protected void processComponentEvent(ComponentEvent e) {
-		super.processComponentEvent(e);
-		if (e.getID() == ComponentEvent.COMPONENT_RESIZED) {
-			Dimension size = getSize();
-			Rectangle viewerExtents = new Rectangle(size);
-			viewAdapter.setViewerExtents(viewerExtents);
-			viewAdapter.setDeviceOrigin(viewerExtents.getCenterX(), viewerExtents.getCenterY());
-		}
+	public void validate() {
+		super.validate();
+		updateManager.validate();
 	}
 	
-	@Override
-	protected void processMouseWheelEvent(MouseWheelEvent e) {
-		double scale=viewAdapter.getLogicalScale();
-		scale*=Math.pow(1.1, e.getWheelRotation());
-		viewAdapter.setLogicalScale(scale); 
-		super.processMouseWheelEvent(e);
+	public SwingUpdateManager getUpdateManager() {
+		return updateManager;
+	}
+	
+	public ComponentCanvas getCanvas() {
+		return canvas;
 	}
 }

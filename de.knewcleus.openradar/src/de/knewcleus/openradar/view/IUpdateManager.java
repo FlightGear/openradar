@@ -25,4 +25,8 @@ public interface IUpdateManager {
 	 * Mark the given view as invalid, scheduling a revalidation.
 	 */
 	public void markViewInvalid(IView view);
+
+	public abstract void setRootView(IView rootView);
+
+	public abstract IView getRootView();
 }

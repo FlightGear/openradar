@@ -19,7 +19,7 @@ public interface IView {
 	 * 
 	 * Here views should recalculate device coordinates, layout and similar.
 	 */
-	public void revalidate();
+	public void validate();
 	
 	/**
 	 * Accept the view visitor.

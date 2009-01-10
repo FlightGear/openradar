@@ -138,7 +138,7 @@ public class LabelView implements IBoundedView, IContainer, INotificationListene
 	}
 	
 	@Override
-	public void revalidate() {
+	public void validate() {
 		final Dimension2D labelSize = layoutManager.getPreferredSize();
 		radarMapViewerAdapter.getUpdateManager().markRegionDirty(displayExtents);
 		displayExtents = new Rectangle2D.Double(

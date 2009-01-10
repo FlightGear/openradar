@@ -43,7 +43,7 @@ public class LayeredView implements IContainer {
 	}
 	
 	@Override
-	public void revalidate() {}
+	public void validate() {}
 
 	@Override
 	public void paint(Graphics2D g2d) {}

@@ -7,17 +7,18 @@ import java.awt.geom.Rectangle2D;
 import de.knewcleus.openradar.notify.Notifier;
 
 public class ViewerAdapter extends Notifier implements IViewerAdapter {
-	protected ICanvas canvas = null;
+	protected final ICanvas canvas;
+	protected final IUpdateManager updateManager; 
 	protected Rectangle2D viewerExtents = new Rectangle2D.Double();
-	protected IUpdateManager updateManager = new DeferredUpdateManager(this); 
-	protected final LayeredView rootView = new LayeredView(this);
 	protected double logicalScale = 1.0;
 	protected Point2D logicalOrigin = new Point2D.Double();
 	protected Point2D deviceOrigin = new Point2D.Double();
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 
-	public ViewerAdapter() {
+	public ViewerAdapter(ICanvas canvas, IUpdateManager updateManager) {
+		this.canvas = canvas;
+		this.updateManager = updateManager;
 		updateTransforms();
 	}
 	
@@ -27,10 +28,8 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	}
 	
 	@Override
-	public void setCanvas(ICanvas canvas) {
-		this.canvas = canvas;
-		notify(new CanvasChangeNotification(this));
-		updateManager.markViewportDirty();
+	public IUpdateManager getUpdateManager() {
+		return updateManager;
 	}
 
 	@Override
@@ -42,16 +41,6 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	public void setViewerExtents(Rectangle2D extents) {
 		viewerExtents = extents;
 		notify(new CoordinateSystemNotification(this));
-	}
-	
-	@Override
-	public IUpdateManager getUpdateManager() {
-		return updateManager;
-	}
-	
-	@Override
-	public LayeredView getRootView() {
-		return rootView;
 	}
 	
 	@Override

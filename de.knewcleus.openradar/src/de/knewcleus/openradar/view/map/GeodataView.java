@@ -131,7 +131,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	}
 	
 	@Override
-	public void revalidate() {
+	public void validate() {
 		logicalBounds = null;
 		logicalShapes = null;
 		displayExtents = null;

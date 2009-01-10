@@ -1,13 +1,18 @@
 package de.knewcleus.openradar.rpvd;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.openradar.view.ICanvas;
+import de.knewcleus.openradar.view.IUpdateManager;
+import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.MapViewerAdapter;
 
 public class RadarMapViewerAdapter extends MapViewerAdapter implements IRadarMapViewerAdapter {
 	protected int trackHistoryLength = 5;
 	protected double headingVectorTime = 1.0 * Units.MIN;
-
-	public RadarMapViewerAdapter() {
+	
+	public RadarMapViewerAdapter(ICanvas canvas, IUpdateManager updateManager,
+			IProjection projection) {
+		super(canvas, updateManager, projection);
 	}
 
 	@Override

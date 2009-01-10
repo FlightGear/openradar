@@ -89,7 +89,7 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 	}
 	
 	@Override
-	public void revalidate() {}
+	public void validate() {}
 	
 	@Override
 	public void paint(Graphics2D g2d) {

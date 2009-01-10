@@ -56,7 +56,7 @@ public class NavPointView implements IBoundedView, INotificationListener {
 	}
 
 	@Override
-	public void revalidate() {}
+	public void validate() {}
 
 	@Override
 	public void acceptNotification(INotification notification) {

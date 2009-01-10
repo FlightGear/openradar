@@ -33,17 +33,18 @@ import de.knewcleus.openradar.rpvd.ScaleMarkerView;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView.Side;
 import de.knewcleus.openradar.tracks.TrackManager;
 import de.knewcleus.openradar.ui.Palette;
-import de.knewcleus.openradar.view.BufferedCanvas;
-import de.knewcleus.openradar.view.ComponentCanvas;
 import de.knewcleus.openradar.view.GridView;
 import de.knewcleus.openradar.view.LayeredView;
+import de.knewcleus.openradar.view.MouseZoomListener;
 import de.knewcleus.openradar.view.Viewer;
+import de.knewcleus.openradar.view.ViewerCenteringListener;
 import de.knewcleus.openradar.view.map.GeodataView;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
 
 public class MapTest {
 	public static void main(String[] args) throws GeodataException, IOException, NavDataStreamException {
+		Viewer mapPanel=new Viewer();
 		final File basedir = new File(args[0]);
 		
 		SwingRadarDataAdapter radarAdapter = new SwingRadarDataAdapter();
@@ -68,12 +69,12 @@ public class MapTest {
 		final INavDataStream<INavPoint> airportStream;
 		airportStream=new FilteredNavDataStream<INavPoint>(openXPlaneAptDat(basedir),filter);
 		
-		RadarMapViewerAdapter radarMapViewAdapter=new RadarMapViewerAdapter();
 		IProjection projection = new LocalSphericalProjection(center);
-		radarMapViewAdapter.setProjection(projection);
+		RadarMapViewerAdapter radarMapViewAdapter=new RadarMapViewerAdapter(mapPanel.getCanvas(), mapPanel.getUpdateManager(), projection);
 		radarMapViewAdapter.setLogicalScale(100.0);
 
-		LayeredView rootView=radarMapViewAdapter.getRootView();
+		LayeredView rootView=new LayeredView(radarMapViewAdapter);
+		radarMapViewAdapter.getUpdateManager().setRootView(rootView);
 
 		final File landmassShapeFile = new File(basedir,"v0_landmass");
 		final URL landmassShapeURL = landmassShapeFile.toURI().toURL();
@@ -122,8 +123,8 @@ public class MapTest {
 		JFrame frame=new JFrame("Map Test");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-		Viewer mapPanel=new Viewer(radarMapViewAdapter);
-		radarMapViewAdapter.setCanvas(new BufferedCanvas(new ComponentCanvas(mapPanel)));
+		mapPanel.addComponentListener(new ViewerCenteringListener(radarMapViewAdapter));
+		mapPanel.addMouseWheelListener(new MouseZoomListener(radarMapViewAdapter));
 		frame.setContentPane(mapPanel);
 		mapPanel.setBackground(Palette.WATERMASS);
 		
