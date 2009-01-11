@@ -13,7 +13,15 @@ import de.knewcleus.fgfs.util.IOutputIterator;
 import de.knewcleus.openradar.view.IPickable;
 import de.knewcleus.openradar.view.IView;
 import de.knewcleus.openradar.view.PickVisitor;
+import de.knewcleus.openradar.view.mouse.MouseInteractionEvent.ButtonType;
 
+/**
+ * A mouse interaction manager provides {@link MouseInteractionEvent} instances
+ * to {@link IMouseTargetView} instances.
+ * 
+ * @author Ralf Gerlich
+ *
+ */
 public class MouseInteractionManager extends MouseAdapter {
 	protected enum State {
 		RELEASED, PRESSED, HOLDING, DRAGGING;
@@ -22,10 +30,10 @@ public class MouseInteractionManager extends MouseAdapter {
 	protected final IView rootView;
 	protected final int buttonNumber;
 	protected final int buttonMask;
-	protected final ButtonType buttonType;
+	protected final MouseInteractionEvent.ButtonType buttonType;
 	
 	protected int holdDelayMillis = 300;
-	protected int interclickDelayMillis = 300;
+	protected int multiClickDelayMillis = 300;
 	
 	protected State currentState = State.RELEASED;
 	protected long lastClickTime = 0;
@@ -36,14 +44,15 @@ public class MouseInteractionManager extends MouseAdapter {
 	protected final HoldTimerListener holdTimerListener = new HoldTimerListener();
 	protected final Timer holdTimer = new Timer(holdDelayMillis, holdTimerListener);
 	
-	public MouseInteractionManager(IView rootView, int buttonNumber, int buttonMask, ButtonType buttonType) {
+	public MouseInteractionManager(IView rootView, int buttonNumber,
+			int buttonMask, ButtonType buttonType) {
 		this.rootView = rootView;
 		this.buttonNumber = buttonNumber;
 		this.buttonMask = buttonMask;
 		this.buttonType = buttonType;
 		holdTimer.setRepeats(false);
 	}
-	
+
 	public void install(Component component) {
 		component.addMouseMotionListener(this);
 		component.addMouseListener(this);
@@ -63,12 +72,12 @@ public class MouseInteractionManager extends MouseAdapter {
 		holdTimer.setInitialDelay(holdDelayMillis);
 	}
 	
-	public int getInterclickDelayMillis() {
-		return interclickDelayMillis;
+	public int getMultiClickDelayMillis() {
+		return multiClickDelayMillis;
 	}
 	
 	public void setInterclickDelayMillis(int interclickDelayMillis) {
-		this.interclickDelayMillis = interclickDelayMillis;
+		this.multiClickDelayMillis = interclickDelayMillis;
 	}
 
 	@Override
@@ -108,24 +117,24 @@ public class MouseInteractionManager extends MouseAdapter {
 			holdTimer.stop();
 			break;
 		case HOLDING:
-			sendEvent(MouseInteractionType.END_HOLD, point, when);
+			sendEvent(MouseInteractionEvent.Type.END_HOLD, point, when);
 			break;
 		case DRAGGING:
-			sendEvent(MouseInteractionType.END_DRAG, point, when);
+			sendEvent(MouseInteractionEvent.Type.END_DRAG, point, when);
 			break;
 		}
 	}
 
 	protected void performTransition(State oldState, State newState, Point point, long when) {
 		if (oldState==State.PRESSED && newState==State.RELEASED) {
-			if (lastClickTime + interclickDelayMillis < when) {
+			if (lastClickTime + multiClickDelayMillis < when) {
 				clickCount = 0;
 			}
 			clickCount ++;
 			lastClickTime = when;
-			sendEvent(MouseInteractionType.CLICK, point, when);
+			sendEvent(MouseInteractionEvent.Type.CLICK, point, when);
 		} else if (oldState==State.DRAGGING && newState==State.DRAGGING) {
-			sendEvent(MouseInteractionType.DRAG, point, when);
+			sendEvent(MouseInteractionEvent.Type.DRAG, point, when);
 		}
 	}
 	
@@ -139,10 +148,10 @@ public class MouseInteractionManager extends MouseAdapter {
 			holdTimer.start();
 			break;
 		case HOLDING:
-			sendEvent(MouseInteractionType.START_HOLD, point, when);
+			sendEvent(MouseInteractionEvent.Type.START_HOLD, point, when);
 			break;
 		case DRAGGING:
-			sendEvent(MouseInteractionType.START_DRAG, point, when);
+			sendEvent(MouseInteractionEvent.Type.START_DRAG, point, when);
 			break;
 		}
 	}
@@ -162,7 +171,7 @@ public class MouseInteractionManager extends MouseAdapter {
 		}
 	}
 	
-	protected void sendEvent(MouseInteractionType type, Point point, long when) {
+	protected void sendEvent(MouseInteractionEvent.Type type, Point point, long when) {
 		if (concernedView==null) {
 			return;
 		}
