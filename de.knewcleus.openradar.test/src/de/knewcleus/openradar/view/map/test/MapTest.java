@@ -42,7 +42,7 @@ import de.knewcleus.openradar.view.map.GeodataView;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
 import de.knewcleus.openradar.view.mouse.FocusManager;
-import de.knewcleus.openradar.view.mouse.FocusMouseMotionListener;
+import de.knewcleus.openradar.view.mouse.MouseFocusManager;
 import de.knewcleus.openradar.view.mouse.IFocusManager;
 
 public class MapTest {
@@ -126,7 +126,8 @@ public class MapTest {
 		mapPanel.addComponentListener(new ViewerCenteringListener(radarMapViewAdapter));
 		mapPanel.addMouseWheelListener(new MouseZoomListener(radarMapViewAdapter));
 		final IFocusManager focusManager = new FocusManager();
-		mapPanel.addMouseMotionListener(new FocusMouseMotionListener(focusManager, rootView));
+		final MouseFocusManager mouseFocusManager = new MouseFocusManager(focusManager, rootView);
+		mouseFocusManager.install(mapPanel);
 		frame.setContentPane(mapPanel);
 		mapPanel.setBackground(Palette.WATERMASS);
 		
