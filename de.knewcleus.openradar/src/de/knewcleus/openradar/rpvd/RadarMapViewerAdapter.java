@@ -7,18 +7,12 @@ import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.MapViewerAdapter;
 
 public class RadarMapViewerAdapter extends MapViewerAdapter implements IRadarMapViewerAdapter {
-	protected final TrackSelectionManager trackSelectionManager = new TrackSelectionManager();
 	protected int trackHistoryLength = 5;
 	protected double headingVectorTime = 1.0 * Units.MIN;
 	
 	public RadarMapViewerAdapter(ICanvas canvas, IUpdateManager updateManager,
 			IProjection projection) {
 		super(canvas, updateManager, projection);
-	}
-	
-	@Override
-	public ITrackSelectionManager getTrackSelectionManager() {
-		return trackSelectionManager;
 	}
 
 	@Override

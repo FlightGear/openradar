@@ -3,8 +3,6 @@ package de.knewcleus.openradar.rpvd;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public interface IRadarMapViewerAdapter extends IMapViewerAdapter {
-	public ITrackSelectionManager getTrackSelectionManager();
-	
 	/**
 	 * @return the track history length.
 	 */

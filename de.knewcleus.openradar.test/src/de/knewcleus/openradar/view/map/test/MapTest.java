@@ -28,7 +28,6 @@ import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.AptDatStream;
 import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
 import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
-import de.knewcleus.openradar.rpvd.MouseSelectionListener;
 import de.knewcleus.openradar.rpvd.RadarMapViewerAdapter;
 import de.knewcleus.openradar.rpvd.RadarTargetProvider;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView;
@@ -42,6 +41,9 @@ import de.knewcleus.openradar.view.ViewerCenteringListener;
 import de.knewcleus.openradar.view.map.GeodataView;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
+import de.knewcleus.openradar.view.mouse.FocusManager;
+import de.knewcleus.openradar.view.mouse.FocusMouseMotionListener;
+import de.knewcleus.openradar.view.mouse.IFocusManager;
 
 public class MapTest {
 	public static void main(String[] args) throws GeodataException, IOException, NavDataStreamException {
@@ -123,7 +125,8 @@ public class MapTest {
 		
 		mapPanel.addComponentListener(new ViewerCenteringListener(radarMapViewAdapter));
 		mapPanel.addMouseWheelListener(new MouseZoomListener(radarMapViewAdapter));
-		mapPanel.addMouseMotionListener(new MouseSelectionListener(radarMapViewAdapter, targetView));
+		final IFocusManager focusManager = new FocusManager();
+		mapPanel.addMouseMotionListener(new FocusMouseMotionListener(focusManager, rootView));
 		frame.setContentPane(mapPanel);
 		mapPanel.setBackground(Palette.WATERMASS);
 		

@@ -22,10 +22,11 @@ import de.knewcleus.openradar.tracks.TrackUpdateNotification;
 import de.knewcleus.openradar.ui.Palette;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IBoundedView;
-import de.knewcleus.openradar.view.IPickable;
 import de.knewcleus.openradar.view.IViewVisitor;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.ProjectionNotification;
+import de.knewcleus.openradar.view.mouse.FocusChangeNotification;
+import de.knewcleus.openradar.view.mouse.IFocusableView;
 
 /**
  * The radar target view displays the symbols for a radar target, the radar trail and the 
@@ -34,7 +35,7 @@ import de.knewcleus.openradar.view.map.ProjectionNotification;
  * @author Ralf Gerlich
  *
  */
-public class RadarTargetView implements IBoundedView, INotificationListener, IPickable, ITrackDisplay {
+public class RadarTargetView implements IBoundedView, INotificationListener, IFocusableView, ITrackDisplay {
 	protected final static double targetDotRadius = 3.0;
 	
 	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
@@ -65,6 +66,11 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IPi
 		}
 		// TODO: check heading line
 		return false;
+	}
+	
+	@Override
+	public void focusChanged(FocusChangeNotification event) {
+		trackDisplayState.setSelected(event.getNewOwner()==this);
 	}
 	
 	@Override
