@@ -1,5 +1,6 @@
 package de.knewcleus.openradar.view.map.test;
 
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -41,9 +42,11 @@ import de.knewcleus.openradar.view.ViewerCenteringListener;
 import de.knewcleus.openradar.view.map.GeodataView;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
+import de.knewcleus.openradar.view.mouse.ButtonType;
 import de.knewcleus.openradar.view.mouse.FocusManager;
 import de.knewcleus.openradar.view.mouse.MouseFocusManager;
 import de.knewcleus.openradar.view.mouse.IFocusManager;
+import de.knewcleus.openradar.view.mouse.MouseInteractionManager;
 
 public class MapTest {
 	public static void main(String[] args) throws GeodataException, IOException, NavDataStreamException {
@@ -125,6 +128,10 @@ public class MapTest {
 		
 		mapPanel.addComponentListener(new ViewerCenteringListener(radarMapViewAdapter));
 		mapPanel.addMouseWheelListener(new MouseZoomListener(radarMapViewAdapter));
+		final MouseInteractionManager interactionManagerAction = new MouseInteractionManager(rootView, MouseEvent.BUTTON1, MouseEvent.BUTTON1_DOWN_MASK, ButtonType.ACTION_BUTTON);
+		final MouseInteractionManager interactionManagerInformation = new MouseInteractionManager(rootView, MouseEvent.BUTTON3, MouseEvent.BUTTON3_DOWN_MASK, ButtonType.INFORMATION_BUTTON);
+		interactionManagerAction.install(mapPanel);
+		interactionManagerInformation.install(mapPanel);
 		final IFocusManager focusManager = new FocusManager();
 		final MouseFocusManager mouseFocusManager = new MouseFocusManager(focusManager, rootView);
 		mouseFocusManager.install(mapPanel);

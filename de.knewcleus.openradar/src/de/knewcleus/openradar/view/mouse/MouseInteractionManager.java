@@ -1,6 +1,7 @@
 package de.knewcleus.openradar.view.mouse;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -8,27 +9,38 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.Timer;
 
+import de.knewcleus.fgfs.util.IOutputIterator;
+import de.knewcleus.openradar.view.IPickable;
+import de.knewcleus.openradar.view.IView;
+import de.knewcleus.openradar.view.PickVisitor;
+
 public class MouseInteractionManager extends MouseAdapter {
 	protected enum State {
 		RELEASED, PRESSED, HOLDING, DRAGGING;
 	}
 	
+	protected final IView rootView;
 	protected final int buttonNumber;
 	protected final int buttonMask;
+	protected final ButtonType buttonType;
 	
-	protected int holdDelayMillis = 700;
+	protected int holdDelayMillis = 300;
 	protected int interclickDelayMillis = 300;
 	
 	protected State currentState = State.RELEASED;
 	protected long lastClickTime = 0;
 	protected int clickCount = 0;
+	protected Point pressPoint = null;
+	protected IMouseTargetView concernedView = null;
 	
 	protected final HoldTimerListener holdTimerListener = new HoldTimerListener();
 	protected final Timer holdTimer = new Timer(holdDelayMillis, holdTimerListener);
 	
-	public MouseInteractionManager(int buttonNumber, int buttonMask) {
+	public MouseInteractionManager(IView rootView, int buttonNumber, int buttonMask, ButtonType buttonType) {
+		this.rootView = rootView;
 		this.buttonNumber = buttonNumber;
 		this.buttonMask = buttonMask;
+		this.buttonType = buttonType;
 		holdTimer.setRepeats(false);
 	}
 	
@@ -66,7 +78,8 @@ public class MouseInteractionManager extends MouseAdapter {
 			return;
 		}
 		assert(currentState==State.RELEASED);
-		transitionTo(State.PRESSED);
+		pressPoint = e.getPoint();
+		transitionTo(State.PRESSED, e.getPoint(), e.getWhen());
 	}
 	
 	@Override
@@ -76,7 +89,7 @@ public class MouseInteractionManager extends MouseAdapter {
 			return;
 		}
 		assert(currentState!=State.RELEASED);
-		transitionTo(State.RELEASED);
+		transitionTo(State.RELEASED, e.getPoint(), e.getWhen());
 	}
 	
 	@Override
@@ -86,70 +99,117 @@ public class MouseInteractionManager extends MouseAdapter {
 			return;
 		}
 		assert(currentState!=State.RELEASED);
-		transitionTo(State.DRAGGING);
+		transitionTo(State.DRAGGING, e.getPoint(), e.getWhen());
 	}
 	
-	protected void leaveState(State oldState) {
+	protected void leaveState(State oldState, Point point, long when) {
 		switch (oldState) {
 		case PRESSED:
 			holdTimer.stop();
 			break;
 		case HOLDING:
-			System.out.println("end hold");
+			sendEvent(MouseInteractionType.END_HOLD, point, when);
 			break;
 		case DRAGGING:
-			System.out.println("end drag");
+			sendEvent(MouseInteractionType.END_DRAG, point, when);
 			break;
 		}
 	}
-	
-	protected void performTransition(State oldState, State newState) {
+
+	protected void performTransition(State oldState, State newState, Point point, long when) {
 		if (oldState==State.PRESSED && newState==State.RELEASED) {
-			final long currentTime = System.currentTimeMillis();
-			if (lastClickTime + interclickDelayMillis < currentTime) {
+			if (lastClickTime + interclickDelayMillis < when) {
 				clickCount = 0;
 			}
 			clickCount ++;
-			System.out.println("click count="+clickCount);
-			lastClickTime = currentTime;
+			lastClickTime = when;
+			sendEvent(MouseInteractionType.CLICK, point, when);
+		} else if (oldState==State.DRAGGING && newState==State.DRAGGING) {
+			sendEvent(MouseInteractionType.DRAG, point, when);
 		}
 	}
 	
-	protected void enterState(State newState) {
+	protected void enterState(State newState, Point point, long when) {
 		switch (newState) {
+		case RELEASED:
+			updateConcernedView(point);
+			break;
 		case PRESSED:
+			updateConcernedView(point);
 			holdTimer.start();
 			break;
 		case HOLDING:
-			System.out.println("start hold");
+			sendEvent(MouseInteractionType.START_HOLD, point, when);
 			break;
 		case DRAGGING:
-			System.out.println("start drag");
+			sendEvent(MouseInteractionType.START_DRAG, point, when);
 			break;
 		}
 	}
 	
-	protected void transitionTo(State newState) {
+	protected void transitionTo(State newState, Point point, long when) {
 		final State oldState = currentState;
 		if (oldState!=newState) {
 			/* First leave the old state */
-			leaveState(oldState);
+			leaveState(oldState, point, when);
 		}
 		/* Now perform the transition */
-		performTransition(oldState, newState);
+		performTransition(oldState, newState, point, when);
 		currentState = newState;
 		if (oldState!=newState) {
 			/* Then enter the new state */
-			enterState(newState);
+			enterState(newState, point, when);
 		}
+	}
+	
+	protected void sendEvent(MouseInteractionType type, Point point, long when) {
+		if (concernedView==null) {
+			return;
+		}
+		final MouseInteractionEvent event;
+		event = new MouseInteractionEvent(
+				concernedView,
+				buttonType,
+				type,
+				clickCount,
+				point,
+				when);
+		concernedView.processMouseInteractionEvent(event);
+	}
+	
+	protected void updateConcernedView(Point point) {
+		final MouseTargetPickIterator iterator = new MouseTargetPickIterator();
+		final PickVisitor pickVisitor = new PickVisitor(point, iterator);
+		rootView.accept(pickVisitor);
+		concernedView = iterator.getTopTarget();
 	}
 	
 	protected class HoldTimerListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (currentState==State.PRESSED) {
-				transitionTo(State.HOLDING);
+				transitionTo(State.HOLDING, pressPoint, e.getWhen());
 			}
 		}
 	};
+	
+	protected class MouseTargetPickIterator implements IOutputIterator<IPickable> {
+		protected IMouseTargetView topTarget = null;
+		
+		@Override
+		public void next(IPickable v) {
+			if (v instanceof IMouseTargetView) {
+				topTarget = (IMouseTargetView)v;
+			}
+		}
+		
+		@Override
+		public boolean wantsNext() {
+			return true;
+		}
+		
+		public IMouseTargetView getTopTarget() {
+			return topTarget;
+		}
+	}
 }
