@@ -26,7 +26,7 @@ public class ADEXPParser {
 	}
 	
 	public IADEXPMessage parseMessage(Reader reader) throws IOException, ParserException {
-		final ADEXPMessage message = new ADEXPMessage();
+		final ADEXPMessage message = new ADEXPMessage(messageDescriptor);
 		final Set<String> knownToplevelFields = emptySet();
 		final String fieldName = parseFieldContainer(message, messageDescriptor, reader, knownToplevelFields);
 		assert(fieldName!=null);
@@ -64,16 +64,21 @@ public class ADEXPParser {
 				final IFieldDescriptor descriptor = containerDescriptor.getFieldDescriptor(fieldName);
 				if (descriptor instanceof IStructuredFieldDescriptor) {
 					/* a structured field */
-					final StructuredField field = new StructuredField(fieldName);
+					final StructuredField field = new StructuredField((IStructuredFieldDescriptor)descriptor);
 					fieldName=parseFieldContainer(
 							field,
-							(IStructuredFieldDescriptor)descriptor,
+							field.getDescriptor(),
 							reader, knownFields);
 					container.putField(field);
 				} else {
 					/* a basic field */
 					assert(descriptor instanceof BasicFieldDescriptor);
+					int nextChar = skipWhitespace(reader);
+					if (nextChar=='-') {
+						throw new ParserException("Field '"+fieldName+"' is not a structured field, but it's content starts with a '-'");
+					}
 					final StringBuilder contentBuilder = new StringBuilder();
+					contentBuilder.appendCodePoint(nextChar);
 					final String newFieldName;
 					newFieldName = parseBasicFieldContent(fieldName, reader, contentBuilder);
 					try {
@@ -99,7 +104,7 @@ public class ADEXPParser {
 	protected IListField parseListField(IListFieldDescriptor listDescriptor,
 			Reader reader) throws IOException, ParserException
 	{
-		final ListField listField = new ListField(listDescriptor.getFieldName());
+		final ListField listField = new ListField(listDescriptor);
 		String fieldName = readFieldName(reader);
 		final Set<String> knownFields = new HashSet<String>();
 		for (IFieldDescriptor descriptor: listDescriptor) {
@@ -108,7 +113,7 @@ public class ADEXPParser {
 		if (fieldName==null) {
 			throw new ParserException("Premature end-of-stream in list field '"+listDescriptor.getFieldName()+"'");
 		}
-		while (!fieldName.equalsIgnoreCase("END")) {
+		while (fieldName!=null && !fieldName.equalsIgnoreCase("END")) {
 			if (fieldName.equalsIgnoreCase("BEGIN")) {
 				/* a list field */
 				fieldName = readKeyword(reader);
@@ -123,18 +128,24 @@ public class ADEXPParser {
 			} else {
 				/* a basic or structured field */
 				final IFieldDescriptor descriptor = listDescriptor.getFieldDescriptor(fieldName);
+				
 				if (descriptor instanceof IStructuredFieldDescriptor) {
 					/* a structured field */
-					final StructuredField field = new StructuredField(fieldName);
+					final StructuredField field = new StructuredField((IStructuredFieldDescriptor)descriptor);
 					fieldName=parseFieldContainer(
 							field,
-							(IStructuredFieldDescriptor)descriptor,
+							field.getDescriptor(),
 							reader, knownFields);
 					listField.append(field);
 				} else {
 					/* a basic field */
 					assert(descriptor instanceof BasicFieldDescriptor);
+					int nextChar = skipWhitespace(reader);
+					if (nextChar=='-') {
+						throw new ParserException("Field '"+fieldName+"' is not a structured field, but it's content starts with a '-'");
+					}
 					final StringBuilder contentBuilder = new StringBuilder();
+					contentBuilder.appendCodePoint(nextChar);
 					final String newFieldName;
 					newFieldName = parseBasicFieldContent(fieldName, reader, contentBuilder);
 					try {
@@ -154,12 +165,13 @@ public class ADEXPParser {
 				}
 			}
 		}
-		if (fieldName.equalsIgnoreCase("END")) {
-			/* end of this list field */
-			fieldName = readKeyword(reader);
-			if (!fieldName.equalsIgnoreCase(listDescriptor.getFieldName())) {
-				throw new ParserException("Name mismatch at list field END: '"+listDescriptor.getFieldName()+"' expected, got '"+fieldName+"'");
-			}
+		if (fieldName==null) {
+			throw new ParserException("Premature end-of-stream in list field '"+listDescriptor.getFieldName()+"'");
+		}
+		assert(fieldName.equalsIgnoreCase("END"));
+		fieldName = readKeyword(reader);
+		if (!fieldName.equalsIgnoreCase(listDescriptor.getFieldName())) {
+			throw new ParserException("Name mismatch at list field END: '"+listDescriptor.getFieldName()+"' expected, got '"+fieldName+"'");
 		}
 		return listField;
 	}
@@ -167,14 +179,16 @@ public class ADEXPParser {
 	protected String parseBasicFieldContent(String fieldName, Reader reader, StringBuilder contentBuilder)
 		throws IOException, ParserException
 	{
-		int nextChar = skipWhitespace(reader);
-		if (nextChar == -1) {
-			throw new ParserException("Premature end-of-stream where field content for field '"+fieldName+"' was expected");
-		}
-		do {
-			if (nextChar == '-') {
+		boolean seenWhitespace = false;
+		int nextChar = reader.read();
+		while (nextChar!=-1) {
+			if (Character.isWhitespace(nextChar)) {
+				seenWhitespace = true;
+			}
+			if (seenWhitespace && nextChar == '-') {
 				/* save the skipped characters */
 				final StringBuilder skipBuilder = new StringBuilder();
+				skipBuilder.appendCodePoint(nextChar);
 				int skipChar = reader.read();
 				while (Character.isWhitespace(skipChar)) {
 					skipBuilder.appendCodePoint(skipChar);
@@ -184,6 +198,7 @@ public class ADEXPParser {
 					/* not a keyword */
 					contentBuilder.append(skipBuilder);
 					nextChar = skipChar;
+					seenWhitespace = Character.isWhitespace(nextChar);
 					continue;
 				}
 				/* might be a keyword */
@@ -196,16 +211,19 @@ public class ADEXPParser {
 					/* no whitespace separation => not a keyword */
 					contentBuilder.append(skipBuilder);
 					nextChar = skipChar;
+					seenWhitespace = false;
+					continue;
 				}
 				/* we have a keyword, so stop here and pass the field name on */
 				final String newFieldName = skipBuilder.substring(keywordStart);
-				contentBuilder.append(skipBuilder.subSequence(0, keywordStart));
 				return newFieldName;
-			} else {
-				contentBuilder.appendCodePoint(nextChar);
-				nextChar = reader.read();
 			}
-		} while (nextChar != -1);
+			if (!Character.isWhitespace(nextChar)) {
+				seenWhitespace = false;
+			}
+			contentBuilder.appendCodePoint(nextChar);
+			nextChar = reader.read();
+		}
 		return null;
 	}
 	

@@ -13,7 +13,7 @@ public abstract class AbstractFieldContainer implements IFieldContainer {
 	protected final Map<String, IField> fieldMap = new HashMap<String, IField>();
 	
 	public void putField(IField field) {
-		fieldMap.put(field.getFieldName(), field);
+		fieldMap.put(field.getDescriptor().getFieldName(), field);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ public class TextFieldParser implements IFieldParser {
 
 	@Override
 	public TextField parseField(IBasicFieldDescriptor descriptor, String content) throws ParserException {
-		return new TextField(descriptor.getFieldName(), content.trim());
+		return new TextField(descriptor, content.trim());
 	}
 
 }

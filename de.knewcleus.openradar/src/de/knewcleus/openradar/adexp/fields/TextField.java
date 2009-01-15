@@ -1,10 +1,12 @@
 package de.knewcleus.openradar.adexp.fields;
 
+import de.knewcleus.openradar.adexp.IBasicFieldDescriptor;
+
 public class TextField extends AbstractBasicField {
 	protected final String value;
 
-	public TextField(String fieldName, String value) {
-		super(fieldName);
+	public TextField(IBasicFieldDescriptor descriptor, String value) {
+		super(descriptor);
 		this.value = value;
 	}
 

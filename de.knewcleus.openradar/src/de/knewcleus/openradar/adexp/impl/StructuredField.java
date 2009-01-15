@@ -1,21 +1,36 @@
 package de.knewcleus.openradar.adexp.impl;
 
+import de.knewcleus.openradar.adexp.IFieldDescriptor;
 import de.knewcleus.openradar.adexp.IStructuredField;
+import de.knewcleus.openradar.adexp.IStructuredFieldDescriptor;
 
 public class StructuredField extends AbstractFieldContainer implements IStructuredField {
-	protected final String fieldName;
+	protected final IStructuredFieldDescriptor descriptor;
+
+	public StructuredField(IStructuredFieldDescriptor descriptor) {
+		this.descriptor = descriptor;
+	}
 	
-	public StructuredField(String fieldName) {
-		this.fieldName = fieldName;
+	@Override
+	public IStructuredFieldDescriptor getDescriptor() {
+		return descriptor;
 	}
 
 	@Override
 	public String getFieldName() {
-		return fieldName;
+		return descriptor.getFieldName();
 	}
 
 	@Override
 	public String toString() {
-		return "-"+getFieldName()+" "+super.toString();
+		String result = "-"+getFieldName();
+		for (IFieldDescriptor descriptor: getDescriptor()) {
+			final String fieldName = descriptor.getFieldName();
+			if (!hasField(fieldName)) {
+				continue;
+			}
+			result+=" "+getField(fieldName).toString();
+		}
+		return result;
 	}
 }

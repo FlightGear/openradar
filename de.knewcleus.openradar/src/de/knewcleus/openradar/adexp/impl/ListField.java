@@ -8,22 +8,28 @@ import java.util.Vector;
 
 import de.knewcleus.openradar.adexp.IField;
 import de.knewcleus.openradar.adexp.IListField;
+import de.knewcleus.openradar.adexp.IListFieldDescriptor;
 
 public class ListField implements IListField {
-	protected final String fieldName;
+	protected final IListFieldDescriptor descriptor;
 	protected final List<IField> fieldList = new Vector<IField>();
-
-	public ListField(String fieldName) {
-		this.fieldName = fieldName;
-	}
 	
+	public ListField(IListFieldDescriptor descriptor) {
+		this.descriptor = descriptor;
+	}
+
 	public void append(IField field) {
 		fieldList.add(field);
 	}
 	
 	@Override
+	public IListFieldDescriptor getDescriptor() {
+		return descriptor;
+	}
+	
+	@Override
 	public String getFieldName() {
-		return fieldName;
+		return descriptor.getFieldName();
 	}
 
 	@Override

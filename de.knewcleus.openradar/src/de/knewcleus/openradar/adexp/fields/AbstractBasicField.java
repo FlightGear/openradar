@@ -1,16 +1,22 @@
 package de.knewcleus.openradar.adexp.fields;
 
 import de.knewcleus.openradar.adexp.IBasicField;
+import de.knewcleus.openradar.adexp.IBasicFieldDescriptor;
 
 public abstract class AbstractBasicField implements IBasicField {
-	protected final String fieldName;
+	protected final IBasicFieldDescriptor descriptor;
 
-	public AbstractBasicField(String fieldName) {
-		this.fieldName = fieldName;
+	public AbstractBasicField(IBasicFieldDescriptor descriptor) {
+		this.descriptor = descriptor;
 	}
 
 	@Override
 	public String getFieldName() {
-		return fieldName;
+		return descriptor.getFieldName();
+	}
+	
+	@Override
+	public IBasicFieldDescriptor getDescriptor() {
+		return descriptor;
 	}
 }

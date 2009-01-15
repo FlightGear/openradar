@@ -27,7 +27,7 @@ public class ADEXPParserTest {
 		descriptor.putField(new BasicFieldDescriptor("RELEASE", new TextFieldParser()));
 		final ADEXPParser parser = new ADEXPParser(descriptor);
 		final IADEXPMessage message = parser.parseMessage("-TITLE RRQ -REFDATA -SENDER -FAC MC -RECVR -FAC E -SEQNUM 762 -ARCID KLM4273 -RELEASE D");
-		System.out.println(message.getField("REFDATA"));
+		System.out.println(message);
 	}
 
 }
