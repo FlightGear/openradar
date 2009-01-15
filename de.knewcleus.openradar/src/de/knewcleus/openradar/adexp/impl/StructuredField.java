@@ -17,13 +17,8 @@ public class StructuredField extends AbstractFieldContainer implements IStructur
 	}
 
 	@Override
-	public String getFieldName() {
-		return descriptor.getFieldName();
-	}
-
-	@Override
 	public String toString() {
-		String result = "-"+getFieldName();
+		String result = "-"+descriptor.getFieldName();
 		for (IFieldDescriptor descriptor: getDescriptor()) {
 			final String fieldName = descriptor.getFieldName();
 			if (!hasField(fieldName)) {

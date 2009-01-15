@@ -9,11 +9,6 @@ public abstract class AbstractBasicField implements IBasicField {
 	public AbstractBasicField(IBasicFieldDescriptor descriptor) {
 		this.descriptor = descriptor;
 	}
-
-	@Override
-	public String getFieldName() {
-		return descriptor.getFieldName();
-	}
 	
 	@Override
 	public IBasicFieldDescriptor getDescriptor() {

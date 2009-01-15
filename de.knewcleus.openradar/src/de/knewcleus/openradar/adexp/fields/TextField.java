@@ -18,6 +18,6 @@ public class TextField extends AbstractBasicField {
 	
 	@Override
 	public String toString() {
-		return "-"+getFieldName()+" "+value;
+		return "-"+descriptor.getFieldName()+" "+value;
 	}
 }

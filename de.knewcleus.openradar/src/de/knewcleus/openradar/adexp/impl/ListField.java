@@ -26,11 +26,6 @@ public class ListField implements IListField {
 	public IListFieldDescriptor getDescriptor() {
 		return descriptor;
 	}
-	
-	@Override
-	public String getFieldName() {
-		return descriptor.getFieldName();
-	}
 
 	@Override
 	public IField get(int index) {
@@ -49,11 +44,11 @@ public class ListField implements IListField {
 
 	@Override
 	public String toString() {
-		String result="-BEGIN"+getFieldName();
+		String result="-BEGIN"+descriptor.getFieldName();
 		for (IField field: fieldList) {
 			result+=" "+field.toString();
 		}
-		result+="-END "+getFieldName();
+		result+="-END "+descriptor.getFieldName();
 		return result;
 	}
 }
