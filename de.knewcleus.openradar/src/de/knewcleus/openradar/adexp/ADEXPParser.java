@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.knewcleus.openradar.adexp.impl.ADEXPMessage;
-import de.knewcleus.openradar.adexp.impl.IFieldRecipient;
+import de.knewcleus.openradar.adexp.impl.IModifiableFieldContainer;
 import de.knewcleus.openradar.adexp.impl.ListField;
 import de.knewcleus.openradar.adexp.impl.StructuredField;
 
@@ -32,7 +32,7 @@ public class ADEXPParser {
 		return message;
 	}
 	
-	protected String parseFieldContainer(IFieldRecipient container,
+	protected String parseFieldContainer(IModifiableFieldContainer container,
 			IFieldContainerDescriptor containerDescriptor,
 			Reader reader,
 			Set<String> knownToplevelFields) throws IOException, ParserException
@@ -79,7 +79,7 @@ public class ADEXPParser {
 	}
 	
 	
-	protected String parseField(IFieldRecipient container,
+	protected String parseField(IModifiableFieldContainer container,
 			IFieldContainerDescriptor containerDescriptor,
 			String fieldName,
 			Reader reader,

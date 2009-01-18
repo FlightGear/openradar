@@ -1,45 +1,107 @@
 package de.knewcleus.openradar.adexp.impl;
 
-import static java.util.Collections.unmodifiableCollection;
-
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Vector;
 
 import de.knewcleus.openradar.adexp.IField;
-import de.knewcleus.openradar.adexp.IFieldContainer;
 
-public abstract class AbstractFieldContainer implements IFieldContainer, IFieldRecipient {
-	protected final Map<String, IField> fieldMap = new HashMap<String, IField>();
-	
-	public void addField(IField field) {
-		fieldMap.put(field.getDescriptor().getFieldName(), field);
+public abstract class AbstractFieldContainer implements IModifiableFieldContainer {
+
+	protected final List<IField> fieldList = new Vector<IField>();
+
+	public AbstractFieldContainer() {
+		super();
 	}
 
 	@Override
-	public IField getField(String fieldname) {
-		return fieldMap.get(fieldname);
+	public int countByName(String fieldname) {
+		final Iterator<IField> iterator = fieldIterator(fieldname);
+		int count = 0;
+		while (iterator.hasNext()) {
+			count++;
+			iterator.next();
+		}
+		return count;
+	}
+
+	@Override
+	public Iterator<IField> fieldIterator(String fieldname) {
+		return new FieldIterator(fieldname);
 	}
 
 	@Override
 	public boolean hasField(String fieldname) {
-		return fieldMap.containsKey(fieldname);
+		return findNextField(fieldname, 0)!=-1;
+	}
+
+	@Override
+	public int size() {
+		return fieldList.size();
 	}
 
 	@Override
 	public Iterator<IField> iterator() {
-		return unmodifiableCollection(fieldMap.values()).iterator();
+		return Collections.unmodifiableList(fieldList).iterator();
+	}
+
+	@Override
+	public void addField(IField field) {
+		fieldList.add(field);
+	}
+
+	protected int findNextField(String fieldName, int startIndex) {
+		final int size= size();
+		for (int index=startIndex; index<size; index++) {
+			final IField field = fieldList.get(startIndex);
+			if (field.getDescriptor().getFieldName().equalsIgnoreCase(fieldName)) {
+				return index;
+			}
+		}
+		return -1;
+	}
+
+	protected class FieldIterator implements Iterator<IField> {
+		protected final String fieldName;
+		protected int nextIndex;
+		
+		public FieldIterator(String fieldName) {
+			this.fieldName = fieldName;
+			nextIndex = findNextField(fieldName, 0);
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return (nextIndex!=-1);
+		}
+		
+		@Override
+		public IField next() {
+			if (nextIndex==-1) {
+				throw new NoSuchElementException();
+			}
+			final IField field = fieldList.get(nextIndex);
+			nextIndex = findNextField(fieldName, nextIndex+1);
+			return field;
+		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	@Override
 	public String toString() {
-		String result="";
-		boolean first=true;
-		for (IField field: fieldMap.values()) {
+		boolean first = true;
+		String result = "";
+		for (IField field: this) {
 			if (!first) {
 				result+=" ";
 			}
-			first=false;
+			first= false;
 			result+=field.toString();
 		}
 		return result;

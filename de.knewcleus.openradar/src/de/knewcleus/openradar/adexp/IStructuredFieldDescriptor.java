@@ -1,6 +1,5 @@
 package de.knewcleus.openradar.adexp;
 
-public interface IStructuredFieldDescriptor extends IFieldDescriptor,
-		IFieldContainerDescriptor {
+public interface IStructuredFieldDescriptor extends ICompoundFieldDescriptor {
 
 }
