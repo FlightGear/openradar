@@ -10,7 +10,7 @@ import de.knewcleus.openradar.adexp.IField;
 import de.knewcleus.openradar.adexp.IListField;
 import de.knewcleus.openradar.adexp.IListFieldDescriptor;
 
-public class ListField implements IListField {
+public class ListField implements IListField, IFieldRecipient {
 	protected final IListFieldDescriptor descriptor;
 	protected final List<IField> fieldList = new Vector<IField>();
 	
@@ -18,7 +18,8 @@ public class ListField implements IListField {
 		this.descriptor = descriptor;
 	}
 
-	public void append(IField field) {
+	@Override
+	public void addField(IField field) {
 		fieldList.add(field);
 	}
 	

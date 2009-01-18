@@ -15,7 +15,7 @@ public class AbstractFieldContainerDescriptor implements IFieldContainerDescript
 	protected final List<IFieldDescriptor> fieldDescriptorList = new Vector<IFieldDescriptor>();
 	protected final Map<String, IFieldDescriptor> fieldDescriptorMap = new HashMap<String, IFieldDescriptor>();
 	
-	public void putField(IFieldDescriptor fieldDescriptor) {
+	public void addField(IFieldDescriptor fieldDescriptor) {
 		if (fieldDescriptorMap.containsKey(fieldDescriptor.getFieldName())) {
 			return;
 		}

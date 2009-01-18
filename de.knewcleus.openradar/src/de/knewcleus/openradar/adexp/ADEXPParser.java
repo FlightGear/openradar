@@ -8,9 +8,8 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.knewcleus.openradar.adexp.fields.BasicFieldDescriptor;
 import de.knewcleus.openradar.adexp.impl.ADEXPMessage;
-import de.knewcleus.openradar.adexp.impl.AbstractFieldContainer;
+import de.knewcleus.openradar.adexp.impl.IFieldRecipient;
 import de.knewcleus.openradar.adexp.impl.ListField;
 import de.knewcleus.openradar.adexp.impl.StructuredField;
 
@@ -33,7 +32,7 @@ public class ADEXPParser {
 		return message;
 	}
 	
-	protected String parseFieldContainer(AbstractFieldContainer container,
+	protected String parseFieldContainer(IFieldRecipient container,
 			IFieldContainerDescriptor containerDescriptor,
 			Reader reader,
 			Set<String> knownToplevelFields) throws IOException, ParserException
@@ -48,55 +47,7 @@ public class ADEXPParser {
 				/* pass on to toplevel */
 				return fieldName;
 			}
-			if (fieldName.equalsIgnoreCase("BEGIN")) {
-				/* a list field */
-				fieldName = readKeyword(reader);
-				final IListFieldDescriptor descriptor;
-				descriptor = (IListFieldDescriptor) containerDescriptor.getFieldDescriptor(fieldName);
-				if (!(descriptor instanceof IListFieldDescriptor)) {
-					throw new ParserException("Field '"+fieldName+"' is not a list field, but found list field content");
-				}
-				final IListField field = parseListField(descriptor, reader);
-				fieldName = readFieldName(reader);
-				container.putField(field);
-			} else {
-				/* a basic or structured field */
-				final IFieldDescriptor descriptor = containerDescriptor.getFieldDescriptor(fieldName);
-				if (descriptor instanceof IStructuredFieldDescriptor) {
-					/* a structured field */
-					final StructuredField field = new StructuredField((IStructuredFieldDescriptor)descriptor);
-					fieldName=parseFieldContainer(
-							field,
-							field.getDescriptor(),
-							reader, knownFields);
-					container.putField(field);
-				} else {
-					/* a basic field */
-					assert(descriptor instanceof BasicFieldDescriptor);
-					int nextChar = skipWhitespace(reader);
-					if (nextChar=='-') {
-						throw new ParserException("Field '"+fieldName+"' is not a structured field, but it's content starts with a '-'");
-					}
-					final StringBuilder contentBuilder = new StringBuilder();
-					contentBuilder.appendCodePoint(nextChar);
-					final String newFieldName;
-					newFieldName = parseBasicFieldContent(fieldName, reader, contentBuilder);
-					try {
-						if (descriptor == null) {
-							continue;
-						}
-						final IBasicFieldDescriptor basicFieldDescriptor = (IBasicFieldDescriptor)descriptor;
-						final IFieldParser parser = basicFieldDescriptor.getFieldParser();
-						if (parser == null) {
-							continue;
-						}
-						final IBasicField field = parser.parseField(basicFieldDescriptor, contentBuilder.toString());
-						container.putField(field);
-					} finally {
-						fieldName = newFieldName;
-					}
-				}
-			}
+			fieldName = parseField(container, containerDescriptor, fieldName, reader, knownFields);
 		}
 		return fieldName;
 	}
@@ -114,56 +65,7 @@ public class ADEXPParser {
 			throw new ParserException("Premature end-of-stream in list field '"+listDescriptor.getFieldName()+"'");
 		}
 		while (fieldName!=null && !fieldName.equalsIgnoreCase("END")) {
-			if (fieldName.equalsIgnoreCase("BEGIN")) {
-				/* a list field */
-				fieldName = readKeyword(reader);
-				final IListFieldDescriptor descriptor;
-				descriptor = (IListFieldDescriptor) listDescriptor.getFieldDescriptor(fieldName);
-				if (!(descriptor instanceof IListFieldDescriptor)) {
-					throw new ParserException("Field '"+fieldName+"' is not a list field, but found list field content");
-				}
-				final IListField field = parseListField(descriptor, reader);
-				fieldName = readFieldName(reader);
-				listField.append(field);
-			} else {
-				/* a basic or structured field */
-				final IFieldDescriptor descriptor = listDescriptor.getFieldDescriptor(fieldName);
-				
-				if (descriptor instanceof IStructuredFieldDescriptor) {
-					/* a structured field */
-					final StructuredField field = new StructuredField((IStructuredFieldDescriptor)descriptor);
-					fieldName=parseFieldContainer(
-							field,
-							field.getDescriptor(),
-							reader, knownFields);
-					listField.append(field);
-				} else {
-					/* a basic field */
-					assert(descriptor instanceof BasicFieldDescriptor);
-					int nextChar = skipWhitespace(reader);
-					if (nextChar=='-') {
-						throw new ParserException("Field '"+fieldName+"' is not a structured field, but it's content starts with a '-'");
-					}
-					final StringBuilder contentBuilder = new StringBuilder();
-					contentBuilder.appendCodePoint(nextChar);
-					final String newFieldName;
-					newFieldName = parseBasicFieldContent(fieldName, reader, contentBuilder);
-					try {
-						if (descriptor == null) {
-							continue;
-						}
-						final IBasicFieldDescriptor basicFieldDescriptor = (IBasicFieldDescriptor)descriptor;
-						final IFieldParser parser = basicFieldDescriptor.getFieldParser();
-						if (parser == null) {
-							continue;
-						}
-						final IBasicField field = parser.parseField(basicFieldDescriptor, contentBuilder.toString());
-						listField.append(field);
-					} finally {
-						fieldName = newFieldName;
-					}
-				}
-			}
+			fieldName = parseField(listField, listDescriptor, fieldName, reader, knownFields);
 		}
 		if (fieldName==null) {
 			throw new ParserException("Premature end-of-stream in list field '"+listDescriptor.getFieldName()+"'");
@@ -174,6 +76,59 @@ public class ADEXPParser {
 			throw new ParserException("Name mismatch at list field END: '"+listDescriptor.getFieldName()+"' expected, got '"+fieldName+"'");
 		}
 		return listField;
+	}
+	
+	
+	protected String parseField(IFieldRecipient container,
+			IFieldContainerDescriptor containerDescriptor,
+			String fieldName,
+			Reader reader,
+			Set<String> knownFields) throws IOException, ParserException
+	{
+		if (fieldName.equalsIgnoreCase("BEGIN")) {
+			/* a list field */
+			fieldName = readKeyword(reader);
+			final IListFieldDescriptor descriptor;
+			descriptor = (IListFieldDescriptor) containerDescriptor.getFieldDescriptor(fieldName);
+			if (!(descriptor instanceof IListFieldDescriptor)) {
+				throw new ParserException("Field '"+fieldName+"' is not a list field, but found list field content");
+			}
+			final IListField field = parseListField(descriptor, reader);
+			container.addField(field);
+			return readFieldName(reader);
+		}
+		/* a basic or structured field */
+		final IFieldDescriptor descriptor = containerDescriptor.getFieldDescriptor(fieldName);
+		if (descriptor instanceof IStructuredFieldDescriptor) {
+			/* a structured field */
+			final StructuredField field = new StructuredField((IStructuredFieldDescriptor)descriptor);
+			fieldName=parseFieldContainer(
+					field,
+					field.getDescriptor(),
+					reader, knownFields);
+			container.addField(field);
+			return fieldName;
+		}
+		/* a basic field or an unknown structured field */
+		final StringBuilder contentBuilder = new StringBuilder();
+		final String newFieldName;
+		newFieldName = parseBasicFieldContent(fieldName, reader, contentBuilder);
+		
+		if (descriptor == null) {
+			return newFieldName;
+		}
+		assert(descriptor instanceof IBasicFieldDescriptor);
+		if (contentBuilder.charAt(0)=='-') {
+			throw new ParserException("Field '"+fieldName+"' is a basic field, but it's content start with '-'");
+		}
+		final IBasicFieldDescriptor basicFieldDescriptor = (IBasicFieldDescriptor)descriptor;
+		final IFieldParser parser = basicFieldDescriptor.getFieldParser();
+		if (parser == null) {
+			return newFieldName;
+		}
+		final IBasicField field = parser.parseField(basicFieldDescriptor, contentBuilder.toString());
+		container.addField(field);
+		return newFieldName;
 	}
 	
 	protected String parseBasicFieldContent(String fieldName, Reader reader, StringBuilder contentBuilder)

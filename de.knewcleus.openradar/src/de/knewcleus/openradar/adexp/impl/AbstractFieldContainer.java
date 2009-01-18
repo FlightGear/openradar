@@ -9,10 +9,10 @@ import java.util.Map;
 import de.knewcleus.openradar.adexp.IField;
 import de.knewcleus.openradar.adexp.IFieldContainer;
 
-public abstract class AbstractFieldContainer implements IFieldContainer {
+public abstract class AbstractFieldContainer implements IFieldContainer, IFieldRecipient {
 	protected final Map<String, IField> fieldMap = new HashMap<String, IField>();
 	
-	public void putField(IField field) {
+	public void addField(IField field) {
 		fieldMap.put(field.getDescriptor().getFieldName(), field);
 	}
 
