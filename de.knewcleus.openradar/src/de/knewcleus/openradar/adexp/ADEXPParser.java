@@ -122,11 +122,7 @@ public class ADEXPParser {
 			throw new ParserException("Field '"+fieldName+"' is a basic field, but it's content start with '-'");
 		}
 		final IBasicFieldDescriptor basicFieldDescriptor = (IBasicFieldDescriptor)descriptor;
-		final IFieldParser parser = basicFieldDescriptor.getFieldParser();
-		if (parser == null) {
-			return newFieldName;
-		}
-		final IBasicField field = parser.parseField(basicFieldDescriptor, contentBuilder.toString());
+		final IBasicField field = basicFieldDescriptor.parseFieldContent(contentBuilder.toString());
 		container.addField(field);
 		return newFieldName;
 	}
