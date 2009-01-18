@@ -11,7 +11,7 @@ import java.util.Vector;
 import de.knewcleus.openradar.adexp.IFieldContainerDescriptor;
 import de.knewcleus.openradar.adexp.IFieldDescriptor;
 
-public class AbstractFieldContainerDescriptor implements IFieldContainerDescriptor {
+public class FieldContainerType implements IFieldContainerDescriptor {
 	protected final List<IFieldDescriptor> fieldDescriptorList = new Vector<IFieldDescriptor>();
 	protected final Map<String, IFieldDescriptor> fieldDescriptorMap = new HashMap<String, IFieldDescriptor>();
 	

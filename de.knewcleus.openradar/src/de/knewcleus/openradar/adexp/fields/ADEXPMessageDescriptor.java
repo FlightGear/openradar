@@ -2,9 +2,14 @@ package de.knewcleus.openradar.adexp.fields;
 
 import de.knewcleus.openradar.adexp.IADEXPMessageDescriptor;
 
-public class ADEXPMessageDescriptor extends AbstractFieldContainerDescriptor
+public class ADEXPMessageDescriptor extends TypedFieldContainerDescriptor
 		implements IADEXPMessageDescriptor {
+	
 	public ADEXPMessageDescriptor() {
-		addField(new TextFieldDescriptor("TITLE"));
+		super(new ADEXPMessageType());
+	}
+
+	public ADEXPMessageDescriptor(FieldContainerType type) {
+		super(type);
 	}
 }
