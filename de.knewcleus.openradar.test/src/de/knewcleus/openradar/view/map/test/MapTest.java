@@ -50,13 +50,14 @@ import de.knewcleus.openradar.view.mouse.MouseInteractionManager;
 
 public class MapTest {
 	public static void main(String[] args) throws GeodataException, IOException, NavDataStreamException {
-		Viewer mapPanel=new Viewer();
+		final Viewer mapPanel=new Viewer();
 		final File basedir = new File(args[0]);
 		
-		SwingRadarDataAdapter radarAdapter = new SwingRadarDataAdapter();
 		final TrackManager trackManager = new TrackManager();
+		final SwingRadarDataAdapter radarAdapter = new SwingRadarDataAdapter();
 		radarAdapter.registerRecipient(trackManager);
 		
+		/* Set up the initial display range */
 		final double width = 3.0*Units.DEG;
 		final double height = 3.0*Units.DEG;
 		final double centerLon = -122.37489 * Units.DEG;
@@ -66,6 +67,13 @@ public class MapTest {
 				centerLon-width/2.0, centerLat-height/2.0,
 				width, height);
 		final Point2D center = new Point2D.Double(centerLon, centerLat);
+		
+		/* Set up the projection */
+		final IProjection projection = new LocalSphericalProjection(center);
+		final RadarMapViewerAdapter radarMapViewAdapter=new RadarMapViewerAdapter(mapPanel.getCanvas(), mapPanel.getUpdateManager(), projection);
+		radarMapViewAdapter.setLogicalScale(100.0);
+		
+		/* Load the nav data */
 		final INavDatumFilter<INavDatum> spatialFilter = new SpatialFilter(bounds);
 		final INavDatumFilter<INavDatum> typeFilter = new TypeFilter<INavDatum>(IAerodrome.class);
 		final NavDatumFilterChain<INavDatum> filter = new NavDatumFilterChain<INavDatum>(Kind.CONJUNCT);
@@ -75,13 +83,7 @@ public class MapTest {
 		final INavDataStream<INavPoint> airportStream;
 		airportStream=new FilteredNavDataStream<INavPoint>(openXPlaneAptDat(basedir),filter);
 		
-		IProjection projection = new LocalSphericalProjection(center);
-		RadarMapViewerAdapter radarMapViewAdapter=new RadarMapViewerAdapter(mapPanel.getCanvas(), mapPanel.getUpdateManager(), projection);
-		radarMapViewAdapter.setLogicalScale(100.0);
-
-		LayeredView rootView=new LayeredView(radarMapViewAdapter);
-		radarMapViewAdapter.getUpdateManager().setRootView(rootView);
-
+		/* Load the shape data */
 		final File landmassShapeFile = new File(basedir,"v0_landmass");
 		final URL landmassShapeURL = landmassShapeFile.toURI().toURL();
 		IGeodataLayer landmassLayer = new ShapefileLayer(landmassShapeURL, "v0_landmass");
@@ -93,6 +95,11 @@ public class MapTest {
 		final File tarmacShapeFile = new File(basedir,"apt_tarmac");
 		final URL tarmacShapeURL = tarmacShapeFile.toURI().toURL();
 		IGeodataLayer tarmacLayer = new ShapefileLayer(tarmacShapeURL, "apt_tarmac");
+		
+		
+		/* Set up the views */
+		LayeredView rootView=new LayeredView(radarMapViewAdapter);
+		radarMapViewAdapter.getUpdateManager().setRootView(rootView);
 
 		final GeodataView landmassView = new GeodataView(radarMapViewAdapter, landmassLayer);
 		landmassView.setColor(Palette.LANDMASS);
@@ -122,7 +129,8 @@ public class MapTest {
 		LayeredView targetView = new LayeredView(radarMapViewAdapter);
 		RadarTargetProvider radarTargetProvider = new RadarTargetProvider(radarMapViewAdapter, targetView, trackManager);
 		rootView.pushView(targetView);
-
+		
+		/* Create the radar frame */
 		JFrame frame=new JFrame("Map Test");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
@@ -142,6 +150,7 @@ public class MapTest {
 		
 		frame.setVisible(true);
 		
+		/* Install the radar data provider(s) */
 		FGATCEndpoint radarProvider = new FGATCEndpoint(16662);
 		radarProvider.registerRecipient(radarAdapter);
 		Thread atcNetworkThread = new Thread(radarProvider);
