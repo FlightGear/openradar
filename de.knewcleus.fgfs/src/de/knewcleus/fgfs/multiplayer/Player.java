@@ -11,7 +11,7 @@ public class Player {
 	protected final String callsign;
 	protected InetAddress address;
 	protected int port;
-	protected long expiryTime;
+	protected long lastMessageTime;
 	protected long lastPositionLocalTime;
 	protected boolean isLocalPlayer=true;
 	protected double positionTime;
@@ -44,12 +44,12 @@ public class Player {
 		return callsign;
 	}
 	
-	public void setExpiryTime(long lastMessageTime) {
-		this.expiryTime = lastMessageTime;
+	public void setLastMessageTime(long lastMessageTime) {
+		this.lastMessageTime = lastMessageTime;
 	}
 	
-	public long getExpiryTime() {
-		return expiryTime;
+	public long getLastMessageTime() {
+		return lastMessageTime;
 	}
 	
 	public double getPositionTime() {

@@ -21,11 +21,10 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final DatagramSocket datagramSocket;
 	protected final IPlayerRegistry<T> playerRegistry;
-	protected final int timeoutMillis=5000;
 	
 	public AbstractMultiplayerEndpoint(IPlayerRegistry<T> playerRegistry) throws IOException {
 		datagramSocket=new DatagramSocket();
-		datagramSocket.setSoTimeout(timeoutMillis);
+		datagramSocket.setSoTimeout(getUpdateMillis());
 		this.playerRegistry=playerRegistry;
 	}
 	
@@ -35,8 +34,16 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		} else {
 			datagramSocket=new DatagramSocket(port);
 		}
-		datagramSocket.setSoTimeout(timeoutMillis);
+		datagramSocket.setSoTimeout(getUpdateMillis());
 		this.playerRegistry=playerRegistry;
+	}
+	
+	protected int getUpdateMillis() {
+		return getPlayerTimeoutMillis();
+	}
+	
+	protected int getPlayerTimeoutMillis() {
+		return 1000;
 	}
 	
 	public InetAddress getAddress() {
@@ -62,8 +69,12 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			expirePlayers();
+			update();
 		}
+	}
+	
+	protected void update() {
+		expirePlayers();
 	}
 	
 	protected void receivePacket() throws IOException, MultiplayerException {
@@ -112,7 +123,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 				newPlayerLogon(player);
 			}
 		}
-		player.setExpiryTime(System.currentTimeMillis()+timeoutMillis);
+		player.setLastMessageTime(System.currentTimeMillis());
 		player.setAddress(address);
 		player.setPort(port);
 		processPacket(player,mppacket);
@@ -121,9 +132,9 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	protected void expirePlayers() {
 		synchronized (playerRegistry) {
 			Set<T> expiredPlayers=new HashSet<T>();
-			long currentTime=System.currentTimeMillis();
+			long oldestExpireTime=System.currentTimeMillis()-getPlayerTimeoutMillis();
 			for (T player: playerRegistry.getPlayers()) {
-				if (player.getExpiryTime()<=currentTime) {
+				if (player.getLastMessageTime()<=oldestExpireTime) {
 					expiredPlayers.add(player);
 				}
 			}
@@ -132,6 +143,10 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 				playerRegistry.unregisterPlayer(player);
 			}
 		}
+	}
+	
+	public IPlayerRegistry<T> getPlayerRegistry() {
+		return playerRegistry;
 	}
 	
 	protected void newPlayerLogon(T player) throws MultiplayerException {

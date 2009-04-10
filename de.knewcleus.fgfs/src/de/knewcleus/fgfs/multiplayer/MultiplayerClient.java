@@ -7,17 +7,20 @@ import java.util.Queue;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import de.knewcleus.fgfs.IUpdateable;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
 
-public abstract class MultiplayerClient<T extends Player> extends AbstractMultiplayerEndpoint<T> implements IUpdateable {
+public abstract class MultiplayerClient<T extends Player> extends AbstractMultiplayerEndpoint<T> {
 	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final InetAddress serverAddress;
 	protected final int serverPort;
 	protected final Queue<String> chatQueue=new ArrayDeque<String>();
 	protected String lastChatMessage="";
+	
+	protected long lastPositionUpdateTimeMillis;
+	
+	protected final int interPositionUpdateTimeMillis = 1000;
 	
 	public final static String clientPortKey="clientPort";
 	public final static String serverHostKey="serverHost";
@@ -27,6 +30,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
 		super(playerRegistry, getStandardClientPort());
 		serverAddress=InetAddress.getByName(getStandardServerHost());
 		serverPort=getStandardServerPort();
+		lastPositionUpdateTimeMillis=System.currentTimeMillis();
 	}
 	
 	public static Preferences getPreferences() {
@@ -64,7 +68,16 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
 		sendPacket(serverAddress, serverPort, mppacket);
 	}
 	
-	public void update(double dt) {
+	@Override
+	protected void update() {
+		super.update();
+		sendPositionUpdate();
+	}
+	
+	protected void sendPositionUpdate() {
+		if (lastPositionUpdateTimeMillis+interPositionUpdateTimeMillis>System.currentTimeMillis()) {
+			return;
+		}
 		PositionMessage positionMessage=new PositionMessage();
 		positionMessage.setModel(getModel());
 		positionMessage.setPosition(getPosition());
@@ -84,6 +97,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		lastPositionUpdateTimeMillis=System.currentTimeMillis();
 	}
 	
 	public abstract String getModel();

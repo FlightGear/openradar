@@ -17,6 +17,11 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.IGeodataLayer;
 import de.knewcleus.fgfs.geodata.shapefile.ShapefileLayer;
+import de.knewcleus.fgfs.location.Ellipsoid;
+import de.knewcleus.fgfs.location.GeodToCartTransformation;
+import de.knewcleus.fgfs.location.Position;
+import de.knewcleus.fgfs.multiplayer.IPlayerRegistry;
+import de.knewcleus.fgfs.multiplayer.MultiplayerClient;
 import de.knewcleus.fgfs.navdata.FilteredNavDataStream;
 import de.knewcleus.fgfs.navdata.INavDatumFilter;
 import de.knewcleus.fgfs.navdata.NavDataStreamException;
@@ -28,7 +33,9 @@ import de.knewcleus.fgfs.navdata.model.INavDatum;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.AptDatStream;
 import de.knewcleus.openradar.radardata.SwingRadarDataAdapter;
-import de.knewcleus.openradar.radardata.fgatc.FGATCEndpoint;
+import de.knewcleus.openradar.radardata.fgmp.FGMPClient;
+import de.knewcleus.openradar.radardata.fgmp.FGMPRegistry;
+import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 import de.knewcleus.openradar.rpvd.RadarMapViewerAdapter;
 import de.knewcleus.openradar.rpvd.RadarTargetProvider;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView;
@@ -151,7 +158,10 @@ public class MapTest {
 		frame.setVisible(true);
 		
 		/* Install the radar data provider(s) */
-		FGATCEndpoint radarProvider = new FGATCEndpoint(16662);
+		final IPlayerRegistry<TargetStatus> playerRegistry=new FGMPRegistry();
+		final Position clientPosition=new Position(center.getX(), center.getY(), 0.0);
+		final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
+		FGMPClient<TargetStatus> radarProvider = new FGMPClient<TargetStatus>(playerRegistry, "OpnRadar", geodToCartTransformation.forward(clientPosition));
 		radarProvider.registerRecipient(radarAdapter);
 		Thread atcNetworkThread = new Thread(radarProvider);
 		atcNetworkThread.setDaemon(true);
