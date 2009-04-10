@@ -1,4 +1,4 @@
-package de.knewcleus.openradar.ui;
+package de.knewcleus.openradar;
 
 import java.awt.Color;
 import java.awt.Font;
