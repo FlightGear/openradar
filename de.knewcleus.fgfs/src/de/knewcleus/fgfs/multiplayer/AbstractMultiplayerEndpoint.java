@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
@@ -81,6 +82,31 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		byte[] buffer=new byte[MAX_PACKET_SIZE];
 		final DatagramPacket packet=new DatagramPacket(buffer,MAX_PACKET_SIZE);
 		datagramSocket.receive(packet);
+		
+		logger.finer("Received packet from "+packet.getAddress()+":"+packet.getPort()+", length="+packet.getLength());
+		if (logger.isLoggable(Level.FINEST)) {
+			int offset=0;
+			while (offset<packet.getLength()) {
+				String line="";
+				final int end=Math.min(offset+16,packet.getLength());
+				int i;
+				for (i=offset;i<end;i++) {
+					line+=String.format("%02x ",buffer[i]);
+				}
+				while (i<offset+16) {
+					line+="   ";
+				}
+				for (i=offset;i<end;i++) {
+					char ch=(char)buffer[i];
+					if (Character.isISOControl(ch)) {
+						ch='.';
+					}
+					line+=ch;
+				}
+				logger.finest(line);
+				offset=end;
+			}
+		}
 
 		ByteArrayInputStream byteInputStream;
 		XDRInputStream xdrInputStream;

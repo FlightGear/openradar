@@ -153,6 +153,7 @@ public class PositionMessage implements IMultiplayerMessage {
 			angularVelocity=MPUtils.readFloatPosition(inputStream);
 			linearAcceleration=MPUtils.readFloatPosition(inputStream);
 			angularAcceleration=MPUtils.readFloatPosition(inputStream);
+			inputStream.skipBytes(4);
 			decodeProperties(inputStream);
 		} catch (IOException e) {
 			throw new MultiplayerException(e);
@@ -257,6 +258,7 @@ public class PositionMessage implements IMultiplayerMessage {
 					logger.warning("Unknown property id "+id+", skipping rest of properties");
 					break;
 				}
+				logger.finer("Reading property "+descriptor.getPropertyID()+", name="+descriptor.getPropertyName());
 
 				Object value=null;
 				
