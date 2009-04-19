@@ -41,13 +41,21 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 	protected final static double targetDotRadius = 3.0;
 	
 	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
+
+	protected static final double headingLineVicinity = 3.0;
 	
 	protected final IRadarMapViewerAdapter radarMapViewAdapter;
 	protected final TrackDisplayState trackDisplayState;
 	
 	protected final List<Point2D> logicalDotPositions = new ArrayList<Point2D>();
 	protected final List<Shape> displayDotShapes = new ArrayList<Shape>();
-	protected Line2D logicalHeadingLine = new Line2D.Double();
+	protected Point2D currentGeoPosition = new Point2D.Double();
+	protected Point2D futureGeoPosition = new Point2D.Double();
+	protected Point2D currentLogicalPosition = new Point2D.Double();
+	protected Point2D futureLogicalPosition = new Point2D.Double();
+	protected Point2D currentDevicePosition = new Point2D.Double();
+	protected Point2D futureDevicePosition = new Point2D.Double();
+	protected Line2D displayHeadingLine = new Line2D.Double();
 	protected Rectangle2D displayExtents = new Rectangle2D.Double();
 	
 	public RadarTargetView(IRadarMapViewerAdapter radarMapViewAdapter, TrackDisplayState trackDisplayState) {
@@ -66,7 +74,18 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 				return true;
 			}
 		}
-		// TODO: check heading line
+		
+		/* Check heading line */
+		final double headX = futureDevicePosition.getX()-currentDevicePosition.getX();
+		final double headY = futureDevicePosition.getY()-currentDevicePosition.getY();
+		final double posX = devicePoint.getX()-currentDevicePosition.getX();
+		final double posY = devicePoint.getY()-currentDevicePosition.getY();
+		final double headLen = Math.sqrt(headX*headX+headY*headY);
+		final double projection = headX*posY-headY*posX;
+		if (Math.abs(projection)<headingLineVicinity*headLen) {
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -111,10 +130,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 			--i;
 		}
 		g2d.setColor(baseColor);
-		final AffineTransform oldTransform = g2d.getTransform();
-		g2d.transform(radarMapViewAdapter.getLogicalToDeviceTransform());
-		g2d.draw(logicalHeadingLine);
-		g2d.setTransform(oldTransform);
+		g2d.draw(displayHeadingLine);
 	}
 	
 	@Override
@@ -140,25 +156,23 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 	}
 	
 	protected void updateGeographicPositions() {
-		final IProjection projection = radarMapViewAdapter.getProjection();
 		final IRadarDataPacket currentStatus = trackDisplayState.getTrack().getCurrentState();
-		final Point2D currentGeoPosition = currentStatus.getPosition();
+		currentGeoPosition = currentStatus.getPosition();
 		final GeodesicInformation geodInfo = geodesicUtils.direct(
 				currentGeoPosition.getX(), currentGeoPosition.getY(),
 				currentStatus.getCalculatedTrueCourse(),
 				currentStatus.getCalculatedVelocity()*radarMapViewAdapter.getHeadingVectorTime());
-		final Point2D futureGeoPosition = new Point2D.Double(geodInfo.getEndLon(), geodInfo.getEndLat());
-		
-		final Point2D currentLogicalPosition = projection.toLogical(currentGeoPosition);
-		final Point2D futureLogicalPosition = projection.toLogical(futureGeoPosition);
-		
-		logicalHeadingLine = new Line2D.Double(currentLogicalPosition, futureLogicalPosition);
+		futureGeoPosition = new Point2D.Double(geodInfo.getEndLon(), geodInfo.getEndLat());
 		
 		updateLogicalPositions();
 	}
 	
 	protected void updateLogicalPositions() {
 		final IProjection projection = radarMapViewAdapter.getProjection();
+		
+		currentLogicalPosition = projection.toLogical(currentGeoPosition);
+		futureLogicalPosition = projection.toLogical(futureGeoPosition);
+		
 		logicalDotPositions.clear();
 		
 		final Iterator<IRadarDataPacket> radarDataIterator = trackDisplayState.getTrack().iterator();
@@ -180,7 +194,9 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 		
 		final AffineTransform logical2device = radarMapViewAdapter.getLogicalToDeviceTransform();
 		displayDotShapes.clear();
-		final Shape displayHeadingLine = logical2device.createTransformedShape(logicalHeadingLine);
+		logical2device.transform(currentLogicalPosition, currentDevicePosition);
+		logical2device.transform(futureLogicalPosition, futureDevicePosition);
+		displayHeadingLine = new Line2D.Double(currentDevicePosition, futureDevicePosition);
 		displayExtents = displayHeadingLine.getBounds2D();;
 		
 		for (Point2D logicalPosition: logicalDotPositions) {
