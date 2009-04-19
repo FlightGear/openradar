@@ -25,7 +25,7 @@ import de.knewcleus.openradar.view.IView;
  * interpreted the same as if the button had been released in the mean time.</p>
  * 
  * @author Ralf Gerlich
- * @see MouseInteractionManager
+ * @see MouseButtonManager
  * @see ButtonType
  */
 public interface IMouseTargetView extends IPickable, IView {

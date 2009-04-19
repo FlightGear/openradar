@@ -53,27 +53,6 @@ public class MouseInteractionEvent {
 		CLICK;
 	}
 	
-	/**
-	 * The <code>ButtonType</code> defines the types of buttons
-	 * available.
-	 * 
-	 * @author Ralf Gerlich
-	 *
-	 */
-	public static enum ButtonType {
-		/**
-		 * The action button is the button assigned for invoking
-		 * actions on the target.
-		 */
-		ACTION_BUTTON,
-		
-		/**
-		 * The information button is the button assigned for invoking
-		 * extended information on the target.
-		 */
-		INFORMATION_BUTTON;
-	}
-
 	protected final IMouseTargetView target;
 	protected final ButtonType button;
 	protected final Type type;

@@ -1,6 +1,5 @@
 package de.knewcleus.openradar.view.map.test;
 
-import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -21,7 +20,6 @@ import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.IPlayerRegistry;
-import de.knewcleus.fgfs.multiplayer.MultiplayerClient;
 import de.knewcleus.fgfs.navdata.FilteredNavDataStream;
 import de.knewcleus.fgfs.navdata.INavDatumFilter;
 import de.knewcleus.fgfs.navdata.NavDataStreamException;
@@ -52,8 +50,8 @@ import de.knewcleus.openradar.view.map.LocalSphericalProjection;
 import de.knewcleus.openradar.view.mouse.FocusManager;
 import de.knewcleus.openradar.view.mouse.MouseFocusManager;
 import de.knewcleus.openradar.view.mouse.IFocusManager;
-import de.knewcleus.openradar.view.mouse.MouseInteractionEvent;
 import de.knewcleus.openradar.view.mouse.MouseInteractionManager;
+import de.knewcleus.openradar.view.mouse.MouseInteractionManager.Handedness;
 
 public class MapTest {
 	public static void main(String[] args) throws GeodataException, IOException, NavDataStreamException {
@@ -143,10 +141,8 @@ public class MapTest {
 		
 		mapPanel.addComponentListener(new ViewerCenteringListener(radarMapViewAdapter));
 		mapPanel.addMouseWheelListener(new MouseZoomListener(radarMapViewAdapter));
-		final MouseInteractionManager interactionManagerAction = new MouseInteractionManager(rootView, MouseEvent.BUTTON1, MouseEvent.BUTTON1_DOWN_MASK, MouseInteractionEvent.ButtonType.ACTION_BUTTON);
-		final MouseInteractionManager interactionManagerInformation = new MouseInteractionManager(rootView, MouseEvent.BUTTON3, MouseEvent.BUTTON3_DOWN_MASK, MouseInteractionEvent.ButtonType.INFORMATION_BUTTON);
-		interactionManagerAction.install(mapPanel);
-		interactionManagerInformation.install(mapPanel);
+		final MouseInteractionManager interactionManager=new MouseInteractionManager(rootView);
+		interactionManager.install(mapPanel);
 		final IFocusManager focusManager = new FocusManager();
 		final MouseFocusManager mouseFocusManager = new MouseFocusManager(focusManager, rootView);
 		mouseFocusManager.install(mapPanel);
