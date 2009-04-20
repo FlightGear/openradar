@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
@@ -38,11 +39,11 @@ import de.knewcleus.openradar.view.mouse.MouseInteractionEvent;
  *
  */
 public class RadarTargetView implements IBoundedView, INotificationListener, IFocusableView, IMouseTargetView, ITrackDisplay {
-	protected final static double targetDotRadius = 3.0;
+	protected final static double targetDotRadius = 1.5*Units.MM/Units.PT;
 	
 	protected final static GeodesicUtils geodesicUtils=new GeodesicUtils(Ellipsoid.WGS84);
 
-	protected static final double headingLineVicinity = 3.0;
+	protected static final double headingLineVicinity = 0.5*Units.MM/Units.PT;
 	
 	protected final IRadarMapViewerAdapter radarMapViewAdapter;
 	protected final TrackDisplayState trackDisplayState;

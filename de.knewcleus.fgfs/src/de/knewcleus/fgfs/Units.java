@@ -7,6 +7,10 @@ public class Units {
 	public final static float KG=1.0f;
 
 	/* Distances */
+	public final static float MM=M/1000.0f;
+	public final static float CM=M/100.0f;
+	public final static float INCH=25.4E-3f*M;
+	public final static float PT=INCH/72.0f;
 	public final static float FT=0.3048f*M;
 	public final static float KM=1000.0f*M;
 	public final static float NM=1852.0f*M;
