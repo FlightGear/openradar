@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://knewcleus.de/openradar/sector" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:sector="http://knewcleus.de/openradar/sector">
+
+    <element name="sector" type="sector:SectorType"></element>
+    
+    <complexType name="SectorType">
+    	<sequence>
+    		<element name="name" minOccurs="1" maxOccurs="1"
+    			type="string">
+    		</element>
+    		<element name="description" type="string"></element>
+    		<element name="bounds" type="sector:BoundsType"></element>
+    		<element name="topology" type="sector:TopologyType">
+    		</element>
+    	</sequence>
+    </complexType>
+
+
+    <simpleType name="LatitudeType">
+    	<restriction base="string">
+    		<pattern
+    			value="[NS]\d{1,2}((\.\d+)?D|D(\d{1,2}((\.\d+)?M|M(\d{1,2}(\.\d+)?S)?)?)?)?">
+    		</pattern>
+    	</restriction>
+    </simpleType>
+
+    <simpleType name="LongitudeType">
+    	<restriction base="string">
+    		<pattern
+    			value="[EW]\d{1,3}((\.\d+)?D|D(\d{1,2}((\.\d+)?M|M(\d{1,2}(\.\d+)?S)?)?)?)?">
+    		</pattern>
+    	</restriction>
+    </simpleType>
+
+    <complexType name="PolygonType">
+    	<sequence>
+    		<element name="point" type="sector:GeographicPositionType" maxOccurs="unbounded" minOccurs="3"></element>
+    	</sequence>
+    </complexType>
+
+
+
+    <complexType name="GeographicPositionType">
+    	<sequence>
+    		<element name="latitude" type="sector:LatitudeType"></element>
+    		<element name="longitude" type="sector:LongitudeType"></element>
+    	</sequence>
+    </complexType>
+
+
+
+    <complexType name="BoundsType">
+    	<sequence>
+    		<element name="north" type="sector:LatitudeType"></element>
+    		<element name="south" type="sector:LatitudeType"></element>
+    		<element name="west" type="sector:LongitudeType"></element>
+    		<element name="east" type="sector:LongitudeType"></element>
+    	</sequence>
+    </complexType>
+
+
+    <complexType name="MapLayerType">
+    	<sequence>
+    		<choice minOccurs="1" maxOccurs="unbounded">
+    			<element name="filelayer"
+    				type="sector:FileLayerType">
+    			</element>
+                <element name="polygonlayer" type="sector:PolygonLayerType"></element>
+            </choice>
+    	</sequence>
+    </complexType>
+
+    <complexType name="FileLayerType">
+    	<attribute name="source" type="anyURI" use="required"></attribute>
+    	<attribute name="layer" type="string"></attribute>
+    	<attribute name="type" type="sector:FileLayerKind" use="optional" default="shapefile"></attribute>
+    </complexType>
+
+    <complexType name="PolygonLayerType">
+    	<sequence>
+    		<element name="polygon" type="sector:PolygonType" minOccurs="1" maxOccurs="unbounded"></element>
+    	</sequence>
+    </complexType>
+
+
+    <simpleType name="FileLayerKind">
+    	<restriction base="string">
+    		<enumeration value="shapefile"></enumeration>
+    	</restriction>
+    </simpleType>
+    <complexType name="TopologyType">
+    	<sequence>
+    		<element name="landmass" type="sector:MapLayerType"></element>
+    		<element name="watermass" type="sector:MapLayerType"></element>
+    		<element name="runways" type="sector:MapLayerType"></element>
+    		<element name="tarmac" type="sector:MapLayerType"></element>
+    	</sequence>
+    </complexType>
+</schema>
