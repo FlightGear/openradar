@@ -1,22 +1,22 @@
 package de.knewcleus.openradar.sector.impl;
 
-import java.net.URI;
+import java.net.URL;
 
 import de.knewcleus.openradar.sector.FileLayer;
 import de.knewcleus.openradar.sector.FileLayerKind;
 
 public class FileLayerImpl implements FileLayer {
-	protected URI source;
+	protected URL source;
 	protected String layer;
 	protected FileLayerKind type;
 	
 	@Override
-	public URI getSource() {
+	public URL getSource() {
 		return source;
 	}
 	
 	@Override
-	public void setSource(URI source) {
+	public void setSource(URL source) {
 		this.source = source;
 	}
 	
@@ -38,5 +38,10 @@ public class FileLayerImpl implements FileLayer {
 	@Override
 	public void setType(FileLayerKind type) {
 		this.type = type;
+	}
+	
+	@Override
+	public String toString() {
+		return "FileLayer[source="+source+", layer="+layer+", type="+type+"]";
 	}
 }

@@ -1,10 +1,10 @@
 package de.knewcleus.openradar.sector;
 
-import java.net.URI;
+import java.net.URL;
 
 public interface FileLayer extends MapLayer{
-	public URI getSource();
-	public void setSource(URI uri);
+	public URL getSource();
+	public void setSource(URL uri);
 	
 	public String getLayer();
 	public void setLayer(String layer);

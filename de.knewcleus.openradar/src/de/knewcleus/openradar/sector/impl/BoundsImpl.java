@@ -47,4 +47,9 @@ public class BoundsImpl implements Bounds {
 	public void setEast(double east) {
 		this.east = east;
 	}
+	
+	@Override
+	public String toString() {
+		return "Bounds[n="+north+", s="+south+", w="+west+", e="+east+"]";
+	}
 }

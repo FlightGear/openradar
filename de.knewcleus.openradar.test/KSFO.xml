@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sector>
+	<name>KSFO</name>
+	<description>San Francisco Intl</description>
+	<bounds>
+		<north>N39D07M08.25S</north>
+		<south>N36D07M08.25S</south>
+		<west>W120D52M29.6S</west>
+		<east>W123D52M29.6S</east>
+	</bounds>
+	<topology>
+		<landmass>
+			<filelayer source="vmap0" layer="v0_landmass" />
+		</landmass>
+		<watermass>
+			<filelayer source="vmap0" layer="v0_lake" />
+			<filelayer source="vmap0" layer="v0_intermittentlake" />
+		</watermass>
+		<runways>
+			<filelayer source="vmap0" layer="apt_runway" />
+		</runways>
+		<tarmac>
+			<filelayer source="vmap0" layer="apt_tarmac" />
+		</tarmac>
+	</topology>
+</sector>
