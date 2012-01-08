@@ -1,0 +1,35 @@
+;; $Id: AviationSimNet-v3.1.fed 29 2009-05-24 20:49:22Z gotthardp $
+(Fed
+  (Federation AviationSimNet)
+  (FedVersion v3.1)
+  (Federate "fed" "Public")
+  (Spaces
+    (Space "Geo"
+      (Dimension X)
+      (Dimension Y)
+      (Dimension Z)
+    )
+  )
+  (Objects
+    (Class ObjectRoot
+      (Attribute privilegeToDelete reliable timestamp)
+      (Class RTIprivate)
+      (Class aircraft
+        (Attribute aircraftType RELIABLE RECEIVE)
+        (Attribute latitude RELIABLE RECEIVE)
+        (Attribute longitude RELIABLE RECEIVE)
+        (Attribute altitudeMSL RELIABLE RECEIVE)
+        (Attribute trueHeading RELIABLE RECEIVE)
+        (Attribute pitch RELIABLE RECEIVE)
+        (Attribute roll RELIABLE RECEIVE)
+        (Attribute landingGear RELIABLE RECEIVE)
+        (Attribute flaps RELIABLE RECEIVE)
+      )
+    )
+  )
+  (Interactions
+    (Class InteractionRoot BEST_EFFORT RECEIVE
+      (Class RTIprivate BEST_EFFORT RECEIVE)
+    )
+  )
+)
