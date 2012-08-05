@@ -11,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -27,10 +29,17 @@ import javax.swing.GroupLayout.Alignment;
 
 import de.knewcleus.fgfs.multiplayer.MultiplayerClient;
 
+
+/**
+ * This Setup Dialog is displayed at startup to define the airport and the multiplayer settings.   
+ * 
+ * Changes:
+ * 20120802 Wolfram: small corrections to improve usability (Browse preselects the existing entry in file chooser)
+ */
 public class SetupDialog extends JDialog implements ActionListener {
 	private static final long serialVersionUID = -2675313456609634813L;
 	
-	protected final JComboBox urlEntryBox=new JComboBox();
+	protected final JComboBox<URL> urlEntryBox=new JComboBox<URL>();
 	protected final JButton fileBrowserButton=new JButton("Browse");
 	
 	protected final JTextField serverHostField=new JTextField();
@@ -96,6 +105,8 @@ public class SetupDialog extends JDialog implements ActionListener {
 		buttonsPanel.add(okButton);
 		buttonsPanel.add(cancelButton);
 		
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
 		urlEntryBox.addActionListener(this);
@@ -122,7 +133,11 @@ public class SetupDialog extends JDialog implements ActionListener {
 				if (knownSectors.contains(recentSector))
 					continue;
 				knownSectors.add(recentSector);
-				urlEntryBox.addItem(recentSector);
+                try {
+                    urlEntryBox.addItem(new URL(recentSector));
+                } catch (MalformedURLException e) {
+                    Logger.getLogger("de.knewcleus.openradar").log(Level.INFO,"Recent sector file could not be parsed as URL, using default",e);
+                }
 			}
 		}
 	}
@@ -155,7 +170,7 @@ public class SetupDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==okButton) {
-			final Object selectedItem=urlEntryBox.getSelectedItem();
+			final URL selectedItem=(URL)urlEntryBox.getSelectedItem();
 			if (urlEntryBox.getSelectedIndex()!=-1) {
 				urlEntryBox.removeItemAt(urlEntryBox.getSelectedIndex());
 			}
@@ -177,6 +192,12 @@ public class SetupDialog extends JDialog implements ActionListener {
 				okButton.setEnabled(false);
 			}
 		} else if (e.getSource()==fileBrowserButton) {
+		    // preselect existing entry for browsing
+            URL existingEntry = (URL)urlEntryBox.getSelectedItem();
+            if(existingEntry!=null) {
+                fileChooser.setCurrentDirectory(new File(existingEntry.getFile()));
+            }
+            // open it
 			if (fileChooser.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
 				final File selectedFile=fileChooser.getSelectedFile();
 				try {
