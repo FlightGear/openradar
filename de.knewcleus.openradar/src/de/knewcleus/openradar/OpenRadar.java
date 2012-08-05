@@ -35,13 +35,6 @@ import de.knewcleus.openradar.vessels.fgmp.FGMPRegistry;
 
 public class OpenRadar {
 	public static void main(String[] args) throws DBParserException, IOException, ClassNotFoundException, MultiplayerException, ParserConfigurationException, SAXException, GeometryConversionException {
-		LookAndFeel refghmiLookAndFeel=new REFGHMILookAndFeel();
-		try {
-			UIManager.setLookAndFeel(refghmiLookAndFeel);
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		Logger rootLogger=Logger.getLogger("de.knewcleus");
 		rootLogger.setUseParentHandlers(false);
@@ -53,6 +46,13 @@ public class OpenRadar {
 		Logger.getLogger("de.knewcleus.fgfs").setLevel(Level.SEVERE);
 		Logger.getLogger("de.knewcleus.openradar").setLevel(Level.SEVERE);
 
+        LookAndFeel refghmiLookAndFeel=new REFGHMILookAndFeel();
+        try {
+            UIManager.setLookAndFeel(refghmiLookAndFeel);
+        } catch (UnsupportedLookAndFeelException e) {
+            Logger.getLogger("de.knewcleus.openradar").log(Level.SEVERE, "Look and Feel could not be initialized", e);
+        }
+		
 		/* Load sector data */
 		SetupDialog sectorSelectionDialog=new SetupDialog();
 		sectorSelectionDialog.setVisible(true);
