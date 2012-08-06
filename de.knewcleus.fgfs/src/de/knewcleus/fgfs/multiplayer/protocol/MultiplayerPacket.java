@@ -9,7 +9,11 @@ public class MultiplayerPacket {
 	public static final int RELAY_MAGIC = 0x53464746;	// "GSGF";
 	public static final int PROTO_VER = 0x00010001; 	// 1.1
 
-	public static final int MAX_PACKET_SIZE=1024;
+	public static final int MAX_PACKET_SIZE=2048; 
+	// wwagner :changed from 1024 because they seem to have grown...
+	// I tried to find valid information from Multiplayer server source, but I found no restriction yet
+	// there is only a max line length, so this constraint seems to exist here only... 
+	// the new value was big enough
 	public static final int MAX_CALLSIGN_LEN=8;
 	public static final int HEADER_SIZE=6*4+MAX_CALLSIGN_LEN;
 
@@ -83,7 +87,7 @@ public class MultiplayerPacket {
 			id=inputStream.readInt();
 			
 			int msgLen=inputStream.readInt();
-			
+            
 			if (msgLen<HEADER_SIZE || msgLen>MAX_PACKET_SIZE) {
 				throw new MultiplayerException("Invalid packet size:"+msgLen);
 			}
