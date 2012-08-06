@@ -26,7 +26,7 @@ public class ScrollableListMenuTest {
 		}
 		
 		final FlightLevelListModel listModel=new FlightLevelListModel(40,245,10);
-		final JList listMenu=new JList(listModel);
+		final JList<String> listMenu=new JList<String>(listModel);
 		listMenu.setDragEnabled(false);
 		VerticalScrollPane verticalScrollPane=new VerticalScrollPane();
 		verticalScrollPane.getViewport().setView(listMenu);

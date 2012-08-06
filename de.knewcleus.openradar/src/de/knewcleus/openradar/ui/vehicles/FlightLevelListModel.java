@@ -3,7 +3,7 @@ package de.knewcleus.openradar.ui.vehicles;
 import javax.swing.AbstractListModel;
 import javax.swing.ListModel;
 
-public class FlightLevelListModel extends AbstractListModel implements ListModel {
+public class FlightLevelListModel extends AbstractListModel<String> implements ListModel<String> {
 	private static final long serialVersionUID = -7225191589275978336L;
 	protected final int lowestLevel;
 	protected final int highestLevel;
@@ -19,7 +19,7 @@ public class FlightLevelListModel extends AbstractListModel implements ListModel
 	}
 
 	@Override
-	public Object getElementAt(int index) {
+	public String getElementAt(int index) {
 		final String levelText=String.format("FL%03d", getLevelForIndex(index));
 		
 		return levelText;
