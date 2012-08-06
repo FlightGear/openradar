@@ -114,7 +114,7 @@ public class RadarPlanViewPanel extends RadarMapPanel implements PropertyChangeL
 					resetAllLabels();
 				}
 			}
-			repaint();
+			invalidate(); // repaint() would disturb painting of whole frame
 		}
 	}
 
