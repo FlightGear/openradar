@@ -12,7 +12,6 @@ public interface IMessage {
 
 	public abstract boolean isRecipient(IEndpoint endpoint);
 
-	@SuppressWarnings("unchecked")
 	public abstract <T> T getProperty(String name);
 
 	public abstract <T> void setProperty(String name, T value);
