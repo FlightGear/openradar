@@ -74,6 +74,8 @@ public class MouseButtonManager extends MouseAdapter {
 		case DRAGGING:
 			sendEvent(MouseInteractionEvent.Type.END_DRAG, point, when);
 			break;
+        default:
+            break;
 		}
 	}
 

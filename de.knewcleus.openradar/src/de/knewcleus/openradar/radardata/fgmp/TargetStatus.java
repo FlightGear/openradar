@@ -28,7 +28,7 @@ public class TargetStatus extends Player {
 	public Position getGeodeticPosition() {
 		return geodeticPosition;
 	}
-
+	
 	public double getGroundSpeed() {
 		return groundSpeed;
 	}

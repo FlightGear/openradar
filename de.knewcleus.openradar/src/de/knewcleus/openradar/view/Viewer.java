@@ -32,4 +32,5 @@ public class Viewer extends JComponent {
 	public ComponentCanvas getCanvas() {
 		return canvas;
 	}
+	
 }

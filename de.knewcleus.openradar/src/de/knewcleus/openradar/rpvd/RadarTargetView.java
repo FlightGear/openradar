@@ -15,7 +15,7 @@ import java.util.List;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
-import de.knewcleus.openradar.Palette;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
@@ -58,9 +58,12 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 	protected Line2D displayHeadingLine = new Line2D.Double();
 	protected Rectangle2D displayExtents = new Rectangle2D.Double();
 	
+	protected RadarContactTextPainter contactTextPainter;
+	
 	public RadarTargetView(IRadarMapViewerAdapter radarMapViewAdapter, TrackDisplayState trackDisplayState) {
 		this.radarMapViewAdapter = radarMapViewAdapter;
 		this.trackDisplayState = trackDisplayState;
+		contactTextPainter = new RadarContactTextPainter(trackDisplayState);
 		radarMapViewAdapter.registerListener(this);
 		trackDisplayState.registerListener(this);
 		trackDisplayState.getTrack().registerListener(this);
@@ -73,6 +76,10 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 			if (shape.contains(devicePoint)) {
 				return true;
 			}
+		}
+		
+		if(contactTextPainter.contains(devicePoint)) {
+		    return true;
 		}
 		
 		/* Check heading line */
@@ -119,7 +126,9 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 	
 	@Override
 	public void paint(Graphics2D g2d) {
-		final Color baseColor = (trackDisplayState.isSelected()?Palette.WHITE:Palette.BLACK);
+        contactTextPainter.paint(g2d); // paint infos into background
+
+        final Color baseColor = (trackDisplayState.isSelected()?Palette.WHITE:Palette.BLACK);
 		Color color = baseColor;
 		final int count = radarMapViewAdapter.getTrackHistoryLength();
 		int i = count;
@@ -208,6 +217,24 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 			displayDotShapes.add(displayDotShape);
 			Rectangle2D.union(displayDotShape.getBounds2D(), displayExtents, displayExtents);
 		}
+		// compose description field for contact
+		Rectangle2D.union(contactTextPainter.getDisplayExtents(currentDevicePosition), displayExtents, displayExtents);
+		
 		repaint();
 	}
+
+    @Override
+    public Point2D getCenterViewCoordinates() {
+        return currentDevicePosition;
+    }
+
+    @Override
+    public double getMilesPerDot() {
+        return radarMapViewAdapter.getLogicalScale()/1600;
+    }
+
+    @Override
+    public int getAirSpeed() {
+        return (int)trackDisplayState.guiContact.getAirSpeed();
+    }
 }

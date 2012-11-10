@@ -12,7 +12,7 @@ public class VORFrequency implements IFrequency {
 	
 	@Override
 	public String toString() {
-		return String.format("%6.1f", freqMHz);
+		return String.format("%05.1f", freqMHz);
 	}
 	
 	@Override

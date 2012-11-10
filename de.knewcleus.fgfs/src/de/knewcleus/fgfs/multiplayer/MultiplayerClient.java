@@ -1,11 +1,11 @@
 package de.knewcleus.fgfs.multiplayer;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
@@ -15,6 +15,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
 	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final InetAddress serverAddress;
 	protected final int serverPort;
+	protected final int localPort;
 	protected final Queue<String> chatQueue=new ArrayDeque<String>();
 	protected String lastChatMessage="";
 	
@@ -22,41 +23,33 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
 	
 	protected final int interPositionUpdateTimeMillis = 1000;
 	
-	public final static String clientPortKey="clientPort";
-	public final static String serverHostKey="serverHost";
-	public final static String serverPortKey="serverPort";
-	
-	public MultiplayerClient(IPlayerRegistry<T> playerRegistry) throws IOException {
-		super(playerRegistry, getStandardClientPort());
-		serverAddress=InetAddress.getByName(getStandardServerHost());
-		serverPort=getStandardServerPort();
+	public MultiplayerClient(IPlayerRegistry<T> playerRegistry, String mpServer, int mpServerPort, int mpLocalPort) throws IOException {
+		super(playerRegistry, mpLocalPort);
+		this.serverAddress=InetAddress.getByName(mpServer);
+		this.serverPort=mpServerPort;
+		this.localPort = mpLocalPort;
 		lastPositionUpdateTimeMillis=System.currentTimeMillis();
-	}
-	
-	public static Preferences getPreferences() {
-		return Preferences.userNodeForPackage(MultiplayerClient.class);
-	}
-	
-	public static String getStandardServerHost() {
-		final Preferences preferences=getPreferences();
-		return preferences.get(serverHostKey, "localhost");
-	}
-	
-	public static int getStandardServerPort() {
-		final Preferences preferences=getPreferences();
-		return preferences.getInt(serverPortKey, MultiplayerServer.STANDARD_PORT);
-	}
-	
-	public static int getStandardClientPort() {
-		final Preferences preferences=getPreferences();
-		return preferences.getInt(clientPortKey, 0);
 	}
 	
 	@Override
 	protected void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException {
 		if (mppacket.getMessage() instanceof PositionMessage) {
 			PositionMessage positionMessage=(PositionMessage)mppacket.getMessage();
+			String chatMessage = positionMessage.getProperty("sim/multiplay/chat");
+			if(chatMessage!=null && !chatMessage.isEmpty()) {
+			    if(!"hello".equalsIgnoreCase(chatMessage)) {
+			        BigDecimal bdFreq = new BigDecimal((String)positionMessage.getProperty("sim/multiplay/transmission-freq-hz"));
+			        bdFreq = bdFreq.divide(new BigDecimal(1000000));
+			        String frequency = bdFreq.toPlainString();
+			        notifyChatListeners(mppacket.getCallsign(), frequency, chatMessage);
+			    }
+			}
+			//System.out.println(positionMessage.getModel());
 			player.updatePosition(System.currentTimeMillis(),positionMessage);
+		} else {
+		    // MP Server messages deprecated
+		    // ChatMessage chatMessage = (ChatMessage)mppacket.getMessage();
+		    // notifyChatListeners(mppacket.getCallsign(), chatMessage.getMessage());
 		}
 	}
 	

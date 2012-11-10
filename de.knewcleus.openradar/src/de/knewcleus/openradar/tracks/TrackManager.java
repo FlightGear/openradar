@@ -24,7 +24,7 @@ public class TrackManager extends Notifier implements ITrackManager, IRadarDataR
 	 * The length of the time in milliseconds to wait between the last signal and
 	 * the retirement of the target.
 	 */
-	protected long trackRetirementTimeoutMsecs = 30 * 60 * 1000;
+	protected long trackRetirementTimeoutMsecs = 15*1000; // 30 * 60 * 1000;
 
 	@Override
 	public void acceptRadarData(IRadarDataProvider provider, IRadarDataPacket radarData) {

@@ -59,6 +59,9 @@ public class FGATCEndpoint extends RadarDataProvider implements Runnable {
 		}
 	}
 	
+	/**
+	 * Receive the FG MP data and parse it
+	 */
 	protected void processPacket() throws IOException {
 		byte[] buf=new byte[receiveBufferLength];
 		final DatagramPacket datagramPacket=new DatagramPacket(buf,buf.length);
@@ -88,7 +91,9 @@ public class FGATCEndpoint extends RadarDataProvider implements Runnable {
 		
 		status.update(newPacket);
 	}
-	
+	/**
+	 * Forward it to the recipients (the screen)
+	 */
 	protected void sendRadarPackets() {
 		for (TargetStatus status: targetMap.values()) {
 			if (status.getLastAntennaRotationTime() + antennaRotationTimeMsecs >= status.getLastPacketTime()) {

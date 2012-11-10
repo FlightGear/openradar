@@ -8,7 +8,7 @@ import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
 
 public class Player {
-	protected final String callsign;
+	protected String callsign;
 	protected InetAddress address;
 	protected int port;
 	protected long lastMessageTime;
@@ -19,6 +19,7 @@ public class Player {
 	protected Quaternion orientation=Quaternion.one;
 	protected Vector3D linearVelocity=new Vector3D();
 	protected String model;
+	protected String frequency="";
 	
 	public Player(String callsign) {
 		this.callsign=callsign;
@@ -40,48 +41,53 @@ public class Player {
 		return port;
 	}
 	
-	public String getCallsign() {
+	public synchronized String getCallsign() {
 		return callsign;
 	}
 	
-	public void setLastMessageTime(long lastMessageTime) {
+    public synchronized void  getCallsign(String callsign) {
+        this.callsign=callsign;
+    }
+
+    public synchronized void setLastMessageTime(long lastMessageTime) {
 		this.lastMessageTime = lastMessageTime;
 	}
 	
-	public long getLastMessageTime() {
+	public synchronized long getLastMessageTime() {
 		return lastMessageTime;
 	}
 	
-	public double getPositionTime() {
+	public synchronized double getPositionTime() {
 		return positionTime;
 	}
 	
-	public Position getCartesianPosition() {
+	public synchronized Position getCartesianPosition() {
 		return cartesianPosition;
 	}
 	
-	public String getModel() {
+	public synchronized String getModel() {
 		return model;
 	}
 	
-	public Vector3D getLinearVelocity() {
+	public synchronized Vector3D getLinearVelocity() {
 		return linearVelocity;
 	}
 	
-	public boolean isLocalPlayer() {
+	public synchronized boolean isLocalPlayer() {
 		return isLocalPlayer;
 	}
 	
-	public void setLocalPlayer(boolean isLocalPlayer) {
+	public synchronized void setLocalPlayer(boolean isLocalPlayer) {
 		this.isLocalPlayer = isLocalPlayer;
 	}
 	
-	public void updatePosition(long t, PositionMessage packet) {
+	public synchronized void updatePosition(long t, PositionMessage packet) {
 		lastPositionLocalTime=t;
 		positionTime=packet.getTime();
 		cartesianPosition=packet.getPosition();
 		orientation=Quaternion.fromAngleAxis(packet.getOrientation());
 		linearVelocity=packet.getLinearVelocity();
 		model=packet.getModel();
+		frequency = packet.getProperty("sim/multiplay/transmission-freq-hz");
 	}
 }

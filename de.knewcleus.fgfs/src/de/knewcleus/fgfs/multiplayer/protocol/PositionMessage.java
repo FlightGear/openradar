@@ -192,6 +192,8 @@ public class PositionMessage implements IMultiplayerMessage {
 				
 				length+=strlen;
 				break;
+            default:
+                break;
 			}
 		}
 
@@ -245,6 +247,8 @@ public class PositionMessage implements IMultiplayerMessage {
 					pad--;
 				}
 				break;
+            default:
+                break;
 			}
 		}
 	}
@@ -255,8 +259,10 @@ public class PositionMessage implements IMultiplayerMessage {
 				int id=inputStream.readInt();
 				PropertyDescriptor descriptor=PropertyRegistry.getInstance().getByID(id);
 				if (descriptor==null) {
-					logger.warning("Unknown property id "+id+", skipping rest of properties");
-					break;
+					//logger.warning("Unknown property id "+id+", skipping rest of properties: "+toString());
+                    //break;
+					inputStream.skip(4);
+					continue;
 				}
 				logger.finer("Reading property "+descriptor.getPropertyID()+", name="+descriptor.getPropertyName());
 
@@ -288,6 +294,8 @@ public class PositionMessage implements IMultiplayerMessage {
 					inputStream.skip(4*((-length)&3));
 					value=new String(bytes,"US-ASCII");
 					break;
+                default:
+                    break;
 				}
 				
 				if (value!=null) {

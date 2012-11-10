@@ -13,7 +13,7 @@ public class LayeredView implements IContainer {
 		this.viewAdapter = mapViewAdapter;
 	}
 
-	public void pushView(IView view) {
+	public synchronized void pushView(IView view) {
 		views.add(view);
 		if (view instanceof IBoundedView) {
 			viewAdapter.getUpdateManager().markRegionDirty(((IBoundedView)view).getDisplayExtents());
@@ -22,7 +22,7 @@ public class LayeredView implements IContainer {
 		}
 	}
 
-	public void removeView(IView view) {
+	public synchronized void removeView(IView view) {
 		if (view instanceof IBoundedView) {
 			viewAdapter.getUpdateManager().markRegionDirty(((IBoundedView)view).getDisplayExtents());
 		} else {
@@ -32,11 +32,11 @@ public class LayeredView implements IContainer {
 	}
 	
 	@Override
-	public boolean isVisible() {
+	public synchronized boolean isVisible() {
 		return visible;
 	}
 	
-	public void setVisible(boolean visible) {
+	public synchronized void setVisible(boolean visible) {
 		if (visible==this.visible) {
 			return;
 		}
@@ -45,20 +45,20 @@ public class LayeredView implements IContainer {
 	}
 	
 	@Override
-	public void accept(IViewVisitor visitor) {
+	public synchronized void accept(IViewVisitor visitor) {
 		visitor.visitContainer(this);
 	}
 	
 	@Override
-	public void traverse(IViewVisitor visitor) {
+	public synchronized void traverse(IViewVisitor visitor) {
 		for (IView view: views) {
 			view.accept(visitor);
 		}
 	}
 	
 	@Override
-	public void validate() {}
+	public synchronized void validate() {}
 
 	@Override
-	public void paint(Graphics2D g2d) {}
+	public synchronized void paint(Graphics2D g2d) {}
 }

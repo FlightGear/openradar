@@ -9,7 +9,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final DatagramSocket datagramSocket;
 	protected final IPlayerRegistry<T> playerRegistry;
+	protected List<IChatListener> chatListeners = new ArrayList<IChatListener>();
 	
 	public AbstractMultiplayerEndpoint(IPlayerRegistry<T> playerRegistry) throws IOException {
 		datagramSocket=new DatagramSocket();
@@ -44,7 +47,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	}
 	
 	protected int getPlayerTimeoutMillis() {
-		return 1000;
+		return 15000;
 	}
 	
 	public InetAddress getAddress() {
@@ -82,7 +85,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		byte[] buffer=new byte[MAX_PACKET_SIZE];
 		final DatagramPacket packet=new DatagramPacket(buffer,MAX_PACKET_SIZE);
 		datagramSocket.receive(packet);
-		
+
 		logger.finer("Received packet from "+packet.getAddress()+":"+packet.getPort()+", length="+packet.getLength());
 		if (logger.isLoggable(Level.FINEST)) {
 			int offset=0;
@@ -115,6 +118,8 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		
 		MultiplayerPacket mppacket=MultiplayerPacket.decode(xdrInputStream);
 		processPacket(packet.getAddress(), packet.getPort(), mppacket);
+		xdrInputStream.close();
+		byteInputStream.close();
 	}
 	
 	protected void sendPacket(InetAddress address, int port, MultiplayerPacket mppacket) throws MultiplayerException {
@@ -140,6 +145,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	protected void processPacket(InetAddress address, int port, MultiplayerPacket mppacket) throws MultiplayerException {
 		T player;
 		final String callsign=mppacket.getCallsign();
+		if(callsign.equals("*FGMS*")) return;
 		synchronized (playerRegistry) {
 			if (playerRegistry.hasPlayer(callsign)) {
 				player=playerRegistry.getPlayer(callsign);
@@ -179,4 +185,16 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	}
 
 	protected abstract void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException;
+	
+	public void addChatListener(IChatListener l) {
+	    chatListeners.add(l);
+	}
+    public void removeChatListener(IChatListener l) {
+        chatListeners.remove(l);
+    }
+    protected void notifyChatListeners(String callSign, String frequency, String message) {
+        for(IChatListener l : chatListeners) {
+            l.newChatMessageReceived(callSign, frequency, message);
+        }
+    }
 }

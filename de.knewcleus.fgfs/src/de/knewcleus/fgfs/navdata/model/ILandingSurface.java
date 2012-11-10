@@ -2,7 +2,9 @@ package de.knewcleus.fgfs.navdata.model;
 
 public interface ILandingSurface {
 
-	public abstract String getAirportID();
+    public IAerodrome getAerodrome();
+    
+    public abstract String getAirportID();
 
 	public abstract SurfaceType getSurfaceType();
 

@@ -14,8 +14,9 @@ import de.knewcleus.openradar.radardata.IRadarDataRecipient;
 public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> implements IRadarDataProvider {
 	protected final static Position linearVelocity=new Position();
 	protected final static Position orientation=new Position();
-	protected final String callsign;
-	protected final Position position;
+	protected volatile String callsign;
+	protected String model;
+	protected volatile Position position;
 	protected long lastAntennaRotationTime;
 	
 	/**
@@ -28,15 +29,16 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 	/**
 	 * Timeout for removal of stale targets in milliseconds.
 	 */
-	protected static final int staleTargetTimeoutMsecs=4 * antennaRotationTimeMsecs;
+	protected static final int staleTargetTimeoutMsecs= 10 * antennaRotationTimeMsecs;
 
 	
 	protected final Set<IRadarDataRecipient> recipients=new HashSet<IRadarDataRecipient>();
 
-	public FGMPClient(IPlayerRegistry<T> playerRegistry, String callsign, Position position) throws IOException {
-		super(playerRegistry);
+	public FGMPClient(IPlayerRegistry<T> playerRegistry, String callsign, String model, Position position, String mpServer, int mpServerPort, int mpLocalPort) throws IOException {
+		super(playerRegistry, mpServer, mpServerPort, mpLocalPort);
 		this.callsign=callsign;
 		this.position=position;
+		this.model=model;
 		lastAntennaRotationTime=System.currentTimeMillis();
 	}
 	
@@ -61,6 +63,12 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 		return callsign;
 	}
 
+	
+    public void setCallsign(String callsign) {
+        this.callsign = callsign;
+    }
+
+
 	@Override
 	public Position getLinearVelocity() {
 		return linearVelocity;
@@ -68,7 +76,7 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 
 	@Override
 	public String getModel() {
-		return "Aircraft/ATC/ATC-set.xml";
+		return model;
 	}
 
 	@Override

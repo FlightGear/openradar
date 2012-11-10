@@ -47,6 +47,9 @@ public class PickVisitor implements IViewVisitor {
 	protected boolean mayBeInside(IView view) {
 		if (view instanceof IBoundedView) {
 			final Rectangle2D extents = ((IBoundedView)view).getDisplayExtents();
+			if(extents==null) {
+			    return false;
+			}
 			return extents.contains(point);
 		}
 		return true;

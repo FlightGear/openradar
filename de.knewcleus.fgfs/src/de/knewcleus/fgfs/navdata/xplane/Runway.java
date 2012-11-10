@@ -9,11 +9,15 @@ import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.fgfs.navdata.model.IRunway;
+import de.knewcleus.fgfs.navdata.model.IRunwayEnd;
 import de.knewcleus.fgfs.navdata.model.SurfaceType;
 
 public class Runway extends LandingSurface implements IRunway {
 	protected final static GeodesicUtils geodesicUtils = new GeodesicUtils(WGS84);
 	protected final RunwayEnd endA, endB;
+	protected volatile IRunwayEnd startSide = null;
+	protected volatile IRunwayEnd landSide = null;
+	
 	
 	public Runway(SurfaceType surfaceType, float length,
 			float width, Point2D geographicCenter, float trueHeading,
@@ -96,4 +100,25 @@ public class Runway extends LandingSurface implements IRunway {
 	public RunwayEnd getEndB() {
 		return endB;
 	}
+
+    @Override
+    public synchronized void setStartSide(IRunwayEnd rwe) {
+        this.startSide=rwe;
+    }
+
+    @Override
+    public synchronized IRunwayEnd getStartSide() {
+        return startSide;
+    }
+
+    @Override
+    public synchronized void setLandSide(IRunwayEnd rwe) {
+        this.landSide=rwe;
+        
+    }
+
+    @Override
+    public synchronized IRunwayEnd getLandSide() {
+        return landSide;
+    }
 }

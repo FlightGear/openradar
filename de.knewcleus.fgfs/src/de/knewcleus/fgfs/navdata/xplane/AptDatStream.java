@@ -120,6 +120,7 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 		consumeLine();
 		
 		final List<LandingSurface> landingSurfaces = new ArrayList<LandingSurface>();
+        final List<RawFrequency> frequencies = new ArrayList<RawFrequency>();
 		while (peekLine()!=null) {
 			final String recordLine = peekLine();
 			final FieldIterator recordIterator = new FieldIterator(recordLine);
@@ -136,10 +137,18 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 				if (surface!=null) {
 					landingSurfaces.add(surface);
 				}
-			}
+			} else if (/*recordCode.equals("50") || recordCode.equals("51") ||*/ recordCode.equals("53") || recordCode.equals("54") || recordCode.equals("55")) {
+                // Radio frequencies
+                final RawFrequency f = parseFrequency(recordIterator);
+                if (f!=null) {
+                    frequencies.add(f);
+                }
+            }
 			consumeLine();
 		}
 		
+		
+			
 		double totalWeight = 0.0;
 		double cogLonWeight = 0.0;
 		double cogLatWeight = 0.0;
@@ -172,10 +181,32 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 			}
 		}
 		
+		aerodrome.setFrequencies(frequencies);
+		
 		return aerodrome;
 	}
 	
-	protected LandingSurface parseLandingSurface(FieldIterator fieldIterator) throws NavDataStreamException {
+	private RawFrequency parseFrequency(FieldIterator recordIterator) throws NavDataStreamException {
+	    
+	    final RawFrequency freq;
+        try {
+            String f = recordIterator.next();
+            StringBuilder code = new StringBuilder();
+            while(recordIterator.hasNext()) {
+                  code.append(recordIterator.next());
+                  code.append(" ");
+            }
+            
+            // todo add type 53 GND 54 TWR 55 APP
+            
+            freq = new RawFrequency(code.toString().trim(),f);
+        } catch (NoSuchElementException e) {
+            throw new NavDataStreamException("Missing field in runway definition",e);
+        }
+        return freq;
+    }
+
+    protected LandingSurface parseLandingSurface(FieldIterator fieldIterator) throws NavDataStreamException {
 		final String latString, lonString, designation, headingString, lengthString;
 		final String thresholdString, stopwayString, widthString;
 		final String surfaceCodeString;

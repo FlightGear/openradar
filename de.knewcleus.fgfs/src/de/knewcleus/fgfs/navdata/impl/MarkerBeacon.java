@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.model.IMarkerBeacon;
+import de.knewcleus.fgfs.navdata.model.IRunwayEnd;
 
 public class MarkerBeacon implements IMarkerBeacon {
 	protected final Point2D geographicPosition;
@@ -11,6 +12,7 @@ public class MarkerBeacon implements IMarkerBeacon {
 	protected final Type type;
 	protected final String airportID;
 	protected final String runwayID;
+	protected volatile IRunwayEnd runwayEnd = null;
 	
 	public MarkerBeacon(Point2D geographicPosition, float elevation, Type type,
 			String airportID, String runwayID)
@@ -57,4 +59,12 @@ public class MarkerBeacon implements IMarkerBeacon {
 				elevation / Units.FT,
 				airportID, runwayID);
 	}
+
+    public void setRunwayEnd(IRunwayEnd runwayEnd) {
+        this.runwayEnd=runwayEnd;
+    }
+
+    public IRunwayEnd getRunwayEnd() {
+        return runwayEnd;
+    }
 }

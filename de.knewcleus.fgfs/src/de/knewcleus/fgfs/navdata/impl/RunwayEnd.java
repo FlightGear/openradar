@@ -15,7 +15,9 @@ public class RunwayEnd implements IRunwayEnd {
 	protected final float displacedThreshold;
 	protected final float tora;
 	protected final float lda;
-	protected IRunwayEnd oppositeEnd;
+
+    protected IRunwayEnd oppositeEnd;
+    private Glideslope glideslope = null;
 	
 	public RunwayEnd(Point2D geographicPosition, IRunway runway,
 			String runwayID, float trueHeading, float stopwayLength,
@@ -92,4 +94,24 @@ public class RunwayEnd implements IRunwayEnd {
 				tora / Units.FT,
 				lda / Units.FT);
 	}
+
+    public boolean isActive() {
+        return getRunway().getStartSide()==getOppositeEnd() || getRunway().getLandSide()==this;
+    }
+
+    public boolean isLandingActive() {
+        return getRunway().getLandSide()==this;
+    }
+
+    public boolean isStartingActive() {
+        return getRunway().getStartSide()==getOppositeEnd();
+    }
+
+    public Glideslope getGlideslope() {
+        return glideslope;
+    }
+
+    public void setGlideslope(Glideslope glideslope) {
+        this.glideslope = glideslope;
+    }
 }

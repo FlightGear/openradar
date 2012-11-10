@@ -1,9 +1,11 @@
 package de.knewcleus.fgfs.navdata.impl;
 
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.model.IAerodrome;
+import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 
 public class Aerodrome implements IAerodrome {
 	protected final Point2D geographicPosition;
@@ -11,6 +13,7 @@ public class Aerodrome implements IAerodrome {
 	protected final String identification;
 	protected final String name;
 	protected final Type type;
+	protected volatile List<RawFrequency> frequencies;
 	
 	public Aerodrome(Point2D geographicPosition, float elevation,
 			String identification, String name, Type type) {
@@ -56,4 +59,13 @@ public class Aerodrome implements IAerodrome {
 				geographicPosition.getX() / Units.DEG,
 				elevation / Units.FT);
 	}
+
+    @Override
+    public void setFrequencies(List<RawFrequency> frequencies) {
+        this.frequencies=frequencies;
+    }
+    @Override
+    public List<RawFrequency> getFrequencies() {
+        return frequencies;
+    }
 }

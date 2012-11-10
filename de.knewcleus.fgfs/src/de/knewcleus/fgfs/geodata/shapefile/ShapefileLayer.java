@@ -20,7 +20,10 @@ public class ShapefileLayer implements IGeodataLayer {
 	protected final FeatureDefinition featureDefinition;
 	protected final int recordCount;
 	protected int nextFeatureID=0;
-	
+	/** 
+	 * not in use anymore, we read from zip archive now 
+	 * @deprecated
+	 */
 	public ShapefileLayer(URL datasource, String layer) throws GeodataException {
 		try {
 			final URL shapeFileURL=new URL(datasource, layer+".shp");

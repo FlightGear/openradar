@@ -30,4 +30,5 @@ public interface IView {
 	 * Accept the view visitor.
 	 */
 	public void accept(IViewVisitor visitor);
+
 }

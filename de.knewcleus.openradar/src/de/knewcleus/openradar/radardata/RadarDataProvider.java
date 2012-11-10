@@ -2,7 +2,14 @@ package de.knewcleus.openradar.radardata;
 
 import java.util.HashSet;
 import java.util.Set;
-
+/**
+ * This class is a the parent of classes that receive the radar data from somewhere.
+ * 
+ * The implementation here forwards the data to its registered listeners, the recipients.
+ * 
+ * @author Ralf Gehrlich
+ *
+ */
 public abstract class RadarDataProvider implements IRadarDataProvider {
 	protected final Set<IRadarDataRecipient> recipients = new HashSet<IRadarDataRecipient>();
 

@@ -9,7 +9,7 @@ public class MultiplayerPacket {
 	public static final int RELAY_MAGIC = 0x53464746;	// "GSGF";
 	public static final int PROTO_VER = 0x00010001; 	// 1.1
 
-	public static final int MAX_PACKET_SIZE=1024;
+	public static final int MAX_PACKET_SIZE=2048;
 	public static final int MAX_CALLSIGN_LEN=8;
 	public static final int HEADER_SIZE=6*4+MAX_CALLSIGN_LEN;
 
