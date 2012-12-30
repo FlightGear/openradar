@@ -1,6 +1,7 @@
 package de.knewcleus.openradar;
 
 import java.awt.EventQueue;
+import java.util.Locale;
 
 import javax.swing.UIManager;
 
@@ -15,6 +16,9 @@ import de.knewcleus.openradar.gui.setup.SetupController;
 public class OpenRadar {
 
     public static void main(String[] args) {
+        
+        Locale.setDefault(Locale.US);
+        
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
             UIManager.put("desktop", Palette.DESKTOP);

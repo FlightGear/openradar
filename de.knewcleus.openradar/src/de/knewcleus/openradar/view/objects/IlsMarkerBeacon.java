@@ -43,11 +43,11 @@ public class IlsMarkerBeacon extends AViewObject {
         float reverseHeading = mb.getRunwayEnd().getTrueHeading()+180;
         
         
-        Point2D startPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading-90, 700d / mapViewerAdapter.getLogicalScale());
-        Point2D endPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading+90, 700d / mapViewerAdapter.getLogicalScale());
+        Point2D startPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading-90, 250d / mapViewerAdapter.getLogicalScale());
+        Point2D endPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading+90, 250d / mapViewerAdapter.getLogicalScale());
 
-        Point2D controlPoint1 = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, 200d / mapViewerAdapter.getLogicalScale());
-        Point2D controlPoint2 = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading+180, 200d / mapViewerAdapter.getLogicalScale());
+        Point2D controlPoint1 = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, 70d / mapViewerAdapter.getLogicalScale());
+        Point2D controlPoint2 = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading+180, 70d / mapViewerAdapter.getLogicalScale());
         
         path = new Path2D.Double();
         path.append(new QuadCurve2D.Double(startPoint.getX(),startPoint.getY(),

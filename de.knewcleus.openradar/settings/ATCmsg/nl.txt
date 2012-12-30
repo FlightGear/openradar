@@ -1,0 +1,37 @@
+Aan alle piloten: 
+%s
+
+%s: Welkom in %s - ben je inkomend op %s ? FGCOM %2.3f
+%s: Welkom in %s - Geef uw vliegplan aan bij de luchtverkeerdleiding, FGCOM %2.3f
+%s: Radar contact op %3.0f nm, QNH %2.2f, verwacht landingsbaan %s, FGCOM %2.3f
+
+%s: U verlaat mijn luchtruim - U mag van frequentie wisselen - Goede reis!
+ATIS op %s, hoogte %2.0f ft, QNH %2.2f, wind uit %3.0f %2.0f kt, actieve baan/banen %s,  FGCOM %2.3f
+
+
+%s: Motoren opstarten toegestaan
+%s: Terug duwen toegestaan
+%s: Permissie om te taxiën naar
+%s: Wacht bij baan:
+
+%s: Taxi in positie en stop, meld gereed voor vertrek
+%s: Houd startbaan richting, en klim naar:
+%s: wind uit %3.0f %2.0f kt, Klaar voor vertrek op baan:
+
+%s: Draai naar links, richting:
+%s: Draai naar rechts, richting:
+%s: Klim en houd hoogte:
+%s: Daal en behoud hoogte:
+%s: Verminder vaart naar:
+
+%s: %3.0f nm van luchthaven, behoud richting totdat ILS indicatie zichtbaar is, u mag ILS volgen naar landingsbaan:
+%s: %3.0f nm van luchthaven, rapporteer landingsbaan in zicht
+%s: %3.0f nm van luchthaven, wind uit %3.0f %2.0f kt, u mag landen op:
+%s: Welkome in %s -- verlaat landingsbaan:
+%s: taxi naar de Gate/Terminal:
+
+Gebruik FGCOM %2.3f alleen indien u met de luchtverkeersleiding spreekt. Gebruik FGCOM NIET tussen piloten!!!
+%s: U verstoord onze ATC (Air Traffic Control, Luchtverkeersleiding) training --> Gebruik alstublieft een andere luchthaven voor ongecontroleerd vliegen!
+%s: Start uw sessie NIET op een actieve baan - maak de baan direct vrij! - Niet opstijgen!!!!
+Zet de startpositie op bijvoorbeeld EHBK in de cmd-line of wizard: --parkpos= B42..48, or A10..25, enz om een start positie op te geven.
+

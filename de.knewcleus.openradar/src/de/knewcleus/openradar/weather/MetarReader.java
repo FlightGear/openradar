@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.knewcleus.openradar.gui.setup.AirportData;
+
 /**
  * This class downloads the METAR information...
  * 
@@ -19,9 +21,10 @@ import java.util.List;
  */
 public class MetarReader implements Runnable {
 
-    private Thread thread = new Thread(this, "OpenRadar Metar Reader");
+    private Thread thread = new Thread(this, "OpenRadar - Metar Reader");
     private String baseUrl = null;
     private volatile String airportCode = null;
+    private AirportData data = null;
     private volatile boolean isRunning = true;
     private volatile MetarData metar;
     private volatile MetarData lastMetar = null;
@@ -37,9 +40,11 @@ public class MetarReader implements Runnable {
         listener.remove(l);
     }
 
-    public MetarReader(String baseUrl, String airportCode) {
-        this.baseUrl = baseUrl;
-        this.airportCode = airportCode;
+    public MetarReader(AirportData data) {
+        this.baseUrl = data.getMetarUrl();
+        this.airportCode = data.getMetarSource();
+        this.data = data;
+        thread.setDaemon(true);
     }
 
     /**
@@ -78,20 +83,22 @@ public class MetarReader implements Runnable {
         int responseCode = con.getResponseCode();
         if (responseCode == 200) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-            while ((line = reader.readLine()) != null) {
+            line = reader.readLine();
+            while ( line != null) {
                 result.append(line).append("\n");
+                line = reader.readLine();
             }
             reader.close();
             lastMetar = metar;
-            metar = new MetarData(result.toString());
+            metar = new MetarData(data, result.toString());
 
             for (IMetarListener l : listener) {
                 l.registerNewMetar(metar);
             }
             System.out.println("Metar received: " + metar.getMetarBaseData());
         } else {
-            throw new IllegalStateException("Got response code " + responseCode + " from " + url.toString());
+            System.out.println("WARNING: No Metar for "+airportCode+"(got response code " + responseCode + " from " + url.toString()+")...");
+            System.out.println("Consider setting metarSource property in data/"+airportCode+"/sector.properties !");
         }
     }
 

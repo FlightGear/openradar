@@ -74,4 +74,21 @@ public class GuiChatMessage {
     public String getFrequency() {
         return frequency;
     }
+    
+    public String toString() {
+        return message;
+    }
+
+    public boolean isNeglectOrInactive() {
+        return (knownRadarContact!=null && knownRadarContact.isNeglect()) || (knownRadarContact!=null && !knownRadarContact.isActive());
+    }
+
+    public boolean messageContainsSelectedContact(GuiMasterController master) {
+        GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
+        if(selectedContact==null) {
+            return false; 
+        } else {
+            return message.contains(selectedContact.getCallSign());
+        }
+    }
 }

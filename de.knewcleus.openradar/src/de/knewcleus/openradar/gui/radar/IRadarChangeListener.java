@@ -8,5 +8,5 @@ import de.knewcleus.openradar.gui.radar.GuiRadarBackend.ZoomLevel;
  */
 public interface IRadarChangeListener {
 
-    public void radarZoomLevelChanged(ZoomLevel formerLevel, ZoomLevel newLevel);
+    public void radarZoomLevelChanged(ZoomLevel formerLevel, String newLevel);
 }

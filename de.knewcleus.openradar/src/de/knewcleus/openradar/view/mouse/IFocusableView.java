@@ -1,5 +1,6 @@
 package de.knewcleus.openradar.view.mouse;
 
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.openradar.view.IPickable;
@@ -18,7 +19,7 @@ public interface IFocusableView extends IPickable, IView {
 	 * The notification is first sent to the previous focus owner,
 	 * and then to the new focus owner.
 	 */
-	public void focusChanged(FocusChangeNotification event);
+	public void focusChanged(FocusChangeNotification event, MouseEvent e);
 
 	/**
 	 * This method exist to deliver position information for Selection To Pointer info

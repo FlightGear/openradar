@@ -2,13 +2,12 @@ package de.knewcleus.openradar.gui.radar;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.radar.GuiRadarBackend.ZoomLevel;
+import de.knewcleus.openradar.view.IRadarViewChangeListener;
 
 /**
  * The controller for the radar map.
@@ -21,58 +20,63 @@ public class RadarManager {
 //    private GuiMasterController master = null;
     private GuiRadarBackend backend = null;
     
-    private List<IRadarChangeListener> changeListener = new ArrayList<IRadarChangeListener>();
-    
     private ZoomMouseListener zoomMouseListener = new ZoomMouseListener();
-        
+    private ObjectFilterMouseListener objectFilterMouseListener = new ObjectFilterMouseListener();
+    
     public RadarManager(GuiMasterController master, GuiRadarBackend backend) {
 //        this.master = master;
         this.backend = backend;
     }
     
-    public void setFilter(ZoomLevel zoomLevel) {
-        ZoomLevel before = backend.getZoomLevel();
+    public void setFilter(String zoomLevel) {
         backend.setZoomLevel(zoomLevel);
-        fireChange(before,zoomLevel);
     }
     
-    // change listener
-    public void addChangeListener(IRadarChangeListener l) {
-        changeListener.add(l);
-    }
-    public void removeChangeListener(IRadarChangeListener l) {
-        changeListener.remove(l);
-    }
-    private void fireChange(ZoomLevel formerLevel, ZoomLevel newLevel) {
-        for(IRadarChangeListener l: changeListener) {
-            l.radarZoomLevelChanged(formerLevel, newLevel);
-        }
-    }
-
     public ZoomMouseListener getZoomMouseListener() { return zoomMouseListener; }
     
     public class ZoomMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
             JLabel lSource = (JLabel)e.getSource();
-            ZoomLevel zl = ZoomLevel.SECTOR;
-            if(lSource.getName().equals("GROUND")) {
-                zl = ZoomLevel.GROUND;
-            } else if(lSource.getName().equals("CLOSE")) {
-                zl = ZoomLevel.CLOSE;
-                
-            } else if(lSource.getName().equals("SECTOR")) {
-                zl = ZoomLevel.SECTOR;
-            } 
-            if(e.getButton()==1) {
-                setFilter(zl);
-            } else if(e.getButton()==2) {
-                backend.defineZoomLevel(zl);
+            String zl;
+            if(lSource.getName().equals("GROUND") || lSource.getName().equals("TOWER") || lSource.getName().equals("APP") || lSource.getName().equals("SECTOR")) {
+                zl = lSource.getName();
+                if(e.getButton()==1) {
+                    setFilter(zl);
+                } else if(e.getButton()==2) {
+                    backend.defineZoomLevel(zl);
+                }
+    
+                RadarPanel parent = (RadarPanel)lSource.getParent().getParent().getParent();
+                parent.resetFilters();
+                parent.selectFilter(lSource);
             }
-
-            RadarPanel parent = (RadarPanel)lSource.getParent().getParent();
-            parent.resetFilters();
-            parent.selectFilter(lSource);
         }
     }
+
+    public MouseListener getObjectFilterListener() {
+        return objectFilterMouseListener;
+    }
+
+    public class ObjectFilterMouseListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JLabel lSource = (JLabel)e.getSource();
+            
+            if(lSource.getName().equals("FIX") || lSource.getName().equals("NDB") || lSource.getName().equals("VOR") || lSource.getName().equals("CIRCLES") 
+                    || lSource.getName().equals("APT") || lSource.getName().equals("PPN")) {
+                String objectName = lSource.getName();
+                if(e.getButton()==1) {
+                    backend.toggleRadarObjectFilter(objectName);
+                }
+                RadarPanel parent = (RadarPanel)lSource.getParent().getParent().getParent();
+                parent.setObjecFilter(lSource, backend.getRadarObjectFilterState(objectName));
+            } 
+        }
+    }
+
+    public void addRadarViewListener(IRadarViewChangeListener  l) {
+        backend.addRadarViewListener(l);
+    }
+
 }

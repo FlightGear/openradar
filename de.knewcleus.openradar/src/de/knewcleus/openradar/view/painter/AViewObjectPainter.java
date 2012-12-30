@@ -17,6 +17,9 @@ import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.Helipad;
+import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.view.groundnet.TaxiSign;
+import de.knewcleus.openradar.view.groundnet.TaxiWaySegment;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.objects.AViewObject;
 
@@ -37,20 +40,26 @@ public abstract class AViewObjectPainter<T> {
     protected volatile Rectangle2D displayExtents = new Rectangle2D.Double(0,0,0,0);
     protected List<AViewObject> viewObjectList = new ArrayList<AViewObject>();
     
-    public static AViewObjectPainter<?> getPainterForNavpoint(IMapViewerAdapter mapViewAdapter, INavPoint navPoint) {
+    public static AViewObjectPainter<?> getPainterForNavpoint(IMapViewerAdapter mapViewAdapter, AirportData data, Object navPoint) {
         AViewObjectPainter<?> viewObjectPainter = null;
         
         // the individual paints are redirected to Painters
-        if(navPoint instanceof Aerodrome) viewObjectPainter = new AirportPainter(mapViewAdapter, (Aerodrome) navPoint);
-        else if(navPoint instanceof RunwayEnd) viewObjectPainter = new RunwayEndPainter(mapViewAdapter, (RunwayEnd) navPoint);
+        if(navPoint instanceof Aerodrome) viewObjectPainter = new AirportPainter(data, mapViewAdapter, (Aerodrome) navPoint);
+        else if(navPoint instanceof RunwayEnd) viewObjectPainter = new RunwayEndPainter(mapViewAdapter, data, (RunwayEnd) navPoint);
         else if(navPoint instanceof Helipad) viewObjectPainter = new HelipadPainter(mapViewAdapter, (Helipad) navPoint);
-        else if(navPoint instanceof NDB) viewObjectPainter = new NDBPainter(mapViewAdapter, (NDB) navPoint);
-        else if(navPoint instanceof VOR) viewObjectPainter = new VORPainter(mapViewAdapter, (VOR) navPoint);
+        else if(navPoint instanceof NDB) viewObjectPainter = new NDBPainter(data, mapViewAdapter, (NDB) navPoint);
+        else if(navPoint instanceof VOR) viewObjectPainter = new VORPainter(data, mapViewAdapter, (VOR) navPoint);
         else if(navPoint instanceof Localizer) viewObjectPainter = new LocalizerPainter(mapViewAdapter, (Localizer) navPoint);
-        else if(navPoint instanceof Glideslope) viewObjectPainter = new DummyPainter(mapViewAdapter,navPoint); // painted by runway end 
+        else if(navPoint instanceof Glideslope) viewObjectPainter = new DummyPainter(mapViewAdapter,(INavPoint)navPoint); // painted by runway end 
         else if(navPoint instanceof MarkerBeacon) viewObjectPainter = new MarkerBeaconPainter(mapViewAdapter, (MarkerBeacon) navPoint);
         else if(navPoint instanceof DME) viewObjectPainter = new DMEPainter(mapViewAdapter, (DME) navPoint);
-        else if(navPoint instanceof Intersection) viewObjectPainter = new IntersectionPainter(mapViewAdapter, (Intersection) navPoint);
+        else if(navPoint instanceof Intersection) viewObjectPainter = new IntersectionPainter(data, mapViewAdapter, (Intersection) navPoint);
+        
+        else if(navPoint instanceof TaxiWaySegment) viewObjectPainter = new TaxiWayPainter(data,mapViewAdapter, (TaxiWaySegment) navPoint);
+        else if(navPoint instanceof TaxiSign) viewObjectPainter = new TaxiSignPainter(mapViewAdapter, (TaxiSign) navPoint);
+
+        else if(navPoint instanceof AirportData) viewObjectPainter = new AtcObjectsPainter(mapViewAdapter, (AirportData) navPoint);
+        
         else {
             throw new IllegalStateException("Unknown object type to paint "+navPoint.getClass()+" ! Please add a painter!");
         }

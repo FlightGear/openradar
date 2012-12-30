@@ -1,0 +1,37 @@
+Do wszystkich pilotow:
+%s
+
+%s: Tu radar %s - Czy ladujesz w %s ? FGCOM %2.3f
+%s: Tu radar %s - prosze o informacje o twoich zamiarach. FGCOM %2.3f
+%s: Kontakt radarowy - %3.0f mil, QNH %2.2f, aktywny pas %s, FGCOM %2.3f
+
+%s: Opuszczasz moja strefe kontroli - milego lotu.
+Informacja ATIS dla %s na %2.0f ft: QNH %2.2f  kierunek wiatru %3.0f z sila %2.0f, aktywny pas: %s  Czestotliwosc FGCOM %2.3f
+
+
+%s: Zgoda na uruchomienie silnikow
+%s: Zgoda na wypychanie
+%s: Zgoda na kolowanie na pas:
+%s: Zajmij punkt przed pasem:
+
+%s: Zajmij pas, zglos gotowosc do startu.
+%s: Utrzymuj kurs, wejdz na wysokosc
+%s: Kierunek wiatru %3.0f z sila %2.0f, Zgoda na start z pasa:
+
+%s: Zmien kurs w lewo na
+%s: Zmien kurs w prawo na
+%s: Wejdz na
+%s: Zejdz na
+%s: Zwolnij do:
+
+%s: Odleglosc %3.0f mil, utrzymuj kurs do przechwycenia sciezki podejscia, zgoda na podejscie ILS na pas
+%s: Odleglosc %3.0f mil, zglos widocznosc pasa.
+%s: Odleglosc %3.0f mil, kierunek wiatru %3.0f z sila %2.0f, zgoda na ladowanie na pasie:
+%s: Mile widziany w %s -- Zwolnij pas skrecajac w
+%s: Koluj do stanowiska
+
+Prosze uzywac FGCOM %2.3f tylko do komunikacji z wieza, nie do rozmow pomiedzy pilotami!
+%s: Przeszkadzasz w naszym treningu Kontroli Ruchu Powietrznego --> prosze uzyj innego lotniska do swobodnego lotu
+%s: Prosze nie rozpoczynaj swojej sesji na aktywnym pasie lub zwolnij go jak najszybciej - nie startuj bezposrednio!
+Ustaw pozycje staryowa np. dla EDDF w cmd-line lub oknie programu: --parkpos=B45 or A10..25, B42..48, etc.
+

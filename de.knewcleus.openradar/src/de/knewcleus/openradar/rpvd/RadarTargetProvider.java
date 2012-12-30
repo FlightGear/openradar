@@ -41,14 +41,17 @@ public class RadarTargetProvider implements INotificationListener {
             switch (lifetimeNotification.getLifetimeState()) {
             case CREATED:
                 final TrackDisplayState displayState = new TrackDisplayState(track);
-                // link gui with graphical object
+                
                 TargetStatus targetStatus = (TargetStatus) ((RadarDataPacket) track.getCurrentState()).getTrackingIdentifier();
-                GuiRadarContact contact = guiInteractionManager.getRadarContactManager().getContactFor(targetStatus.getCallsign());
-                final RadarTargetView newView = new RadarTargetView(radarMapViewAdapter, displayState); // orig
-                displayState.setGuiLink(guiInteractionManager.getRadarContactManager(), contact, newView);
-                // end ww
+                GuiRadarContact guiContact = guiInteractionManager.getRadarContactManager().getContactFor(targetStatus.getCallsign());
+                if(guiContact!=null) {
+                    final RadarTargetView newView = new RadarTargetView(radarMapViewAdapter, displayState);
+                    displayState.setGuiLink(guiInteractionManager, guiContact, newView);
                 viewMap.put(track, newView);
                 radarTargetLayer.pushView(newView);
+                } else {
+                    System.out.println("No contact found for package "+targetStatus.getCallsign());
+                }
                 break;
             case RETIRED:
                 final RadarTargetView oldView = viewMap.get(track);

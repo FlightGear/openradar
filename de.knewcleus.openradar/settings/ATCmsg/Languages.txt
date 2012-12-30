@@ -1,0 +1,8 @@
+de German / Deutsch
+es Spanish / Espania
+fr French
+nl Netherland
+pl Polish
+pt Portuguese
+ru Russian
+-- none/reset

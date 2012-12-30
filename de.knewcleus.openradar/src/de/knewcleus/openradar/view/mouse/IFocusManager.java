@@ -1,5 +1,7 @@
 package de.knewcleus.openradar.view.mouse;
 
+import java.awt.event.MouseEvent;
+
 import de.knewcleus.openradar.notify.INotifier;
 
 /**
@@ -21,5 +23,5 @@ public interface IFocusManager extends INotifier {
 	/**
 	 * Force the focus to be moved to the given view.
 	 */
-	public void forceCurrentFocusOwner(IFocusableView newFocusOwner);
+	public void forceCurrentFocusOwner(IFocusableView newFocusOwner, MouseEvent e);
 }

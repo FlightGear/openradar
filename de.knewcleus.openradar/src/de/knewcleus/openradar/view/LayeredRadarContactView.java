@@ -24,6 +24,24 @@ public class LayeredRadarContactView extends LayeredView {
     @Override
     public synchronized void traverse(IViewVisitor visitor) {
         RadarTargetView selectedView = null;
+        // paint the expired
+        for (IView view: views) {
+            if(view instanceof RadarTargetView) {
+                RadarTargetView radarView = (RadarTargetView)view;
+                if(radarView.getTrackDisplayState().getGuiContact().isExpired()) {
+                    view.accept(visitor);
+                }
+            }
+        }
+        // paint the inactive
+        for (IView view: views) {
+            if(view instanceof RadarTargetView) {
+                RadarTargetView radarView = (RadarTargetView)view;
+                if(!radarView.getTrackDisplayState().getGuiContact().isActive()) {
+                    view.accept(visitor);
+                }
+            }
+        }
         // paint the uncontrolled
         for (IView view: views) {
             if(view instanceof RadarTargetView) {
@@ -31,7 +49,9 @@ public class LayeredRadarContactView extends LayeredView {
                 if(radarView.getTrackDisplayState().getGuiContact().isSelected()) {
                     selectedView = radarView;
                 }
-                if(radarView.getTrackDisplayState().getGuiContact().getState()==State.UNCONTROLLED && !radarView.getTrackDisplayState().getGuiContact().isSelected()) {
+                if(radarView.getTrackDisplayState().getGuiContact().getState()==State.UNCONTROLLED 
+                        && !radarView.getTrackDisplayState().getGuiContact().isSelected()
+                        && radarView.getTrackDisplayState().getGuiContact().isActive()) {
                     view.accept(visitor);
                 }
             }
@@ -40,7 +60,9 @@ public class LayeredRadarContactView extends LayeredView {
         for (IView view: views) {
             if(view instanceof RadarTargetView) {
                 RadarTargetView radarView = (RadarTargetView)view;
-                if(radarView.getTrackDisplayState().getGuiContact().getState()==State.CONTROLLED && !radarView.getTrackDisplayState().getGuiContact().isSelected()) {
+                if(radarView.getTrackDisplayState().getGuiContact().getState()==State.CONTROLLED 
+                        && !radarView.getTrackDisplayState().getGuiContact().isSelected()
+                        && radarView.getTrackDisplayState().getGuiContact().isActive()) {
                     view.accept(visitor);
                 }
             }
@@ -49,7 +71,9 @@ public class LayeredRadarContactView extends LayeredView {
         for (IView view: views) {
             if(view instanceof RadarTargetView) {
                 RadarTargetView radarView = (RadarTargetView)view;
-                if(radarView.getTrackDisplayState().getGuiContact().getState()==State.IMPORTANT && !radarView.getTrackDisplayState().getGuiContact().isSelected()) { 
+                if(radarView.getTrackDisplayState().getGuiContact().getState()==State.IMPORTANT && 
+                        !radarView.getTrackDisplayState().getGuiContact().isSelected()
+                        && radarView.getTrackDisplayState().getGuiContact().isActive()) { 
                     view.accept(visitor);
                 }
             }

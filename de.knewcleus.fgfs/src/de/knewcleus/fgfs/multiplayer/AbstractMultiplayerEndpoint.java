@@ -10,6 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,12 +25,10 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final DatagramSocket datagramSocket;
 	protected final IPlayerRegistry<T> playerRegistry;
-	protected List<IChatListener> chatListeners = new ArrayList<IChatListener>();
+	protected final List<IChatListener> chatListeners = Collections.synchronizedList(new ArrayList<IChatListener>());
 	
 	public AbstractMultiplayerEndpoint(IPlayerRegistry<T> playerRegistry) throws IOException {
-		datagramSocket=new DatagramSocket();
-		datagramSocket.setSoTimeout(getUpdateMillis());
-		this.playerRegistry=playerRegistry;
+		this(playerRegistry,0);
 	}
 	
 	public AbstractMultiplayerEndpoint(IPlayerRegistry<T> playerRegistry, int port) throws IOException {
@@ -38,7 +37,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		} else {
 			datagramSocket=new DatagramSocket(port);
 		}
-		datagramSocket.setSoTimeout(getUpdateMillis());
+		datagramSocket.setSoTimeout(0);//getUpdateMillis());
 		this.playerRegistry=playerRegistry;
 	}
 	
@@ -47,7 +46,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	}
 	
 	protected int getPlayerTimeoutMillis() {
-		return 15000;
+		return 30*60*1000;
 	}
 	
 	public InetAddress getAddress() {

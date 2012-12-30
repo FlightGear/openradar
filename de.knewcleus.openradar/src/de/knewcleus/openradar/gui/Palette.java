@@ -56,15 +56,37 @@ public class Palette {
 	public final static Color WFAWN_RESTRICTION=new Color(0.65f,0.21f,0.20f);
 	public final static Color SHADOW=new Color(0.20f,0.20f,0.20f);
 	public final static Color GREEN=new Color(0.46f,0.88f,0.31f);
+    public final static Color YELLOW=new Color(255,255,0);
+    public final static Color PINK=new Color(255,70,255);
+    public final static Color LIGHTBLUE=new Color(80,255,255);
+
+    
+    public final static Color RADAR_LIGHTBLUE=new Color(80,255,255);
+    public static final Color RADAR_ORANGE = new Color(240,230,0); // new Color(255,240,0);
+    public final static Color RADAR_WHITEBLUE=new Color(205,255,255);
+    public final static Color RADAR_GREEN=new Color(90,255,90);
 	public final static Color TRANSPARENT=new Color(0.0f,0.0f,0.0f,0.0f);
 
+    public static final Color RADAR_SELECTED = RADAR_WHITEBLUE;
+    public static final Color RADAR_CONTROLLED = RADAR_LIGHTBLUE;
+    public static final Color RADAR_IMPORTANT = RADAR_ORANGE;
+    public static final Color RADAR_UNCONTROLLED = RADAR_GREEN;
+    public static final Color RADAR_GHOST = Color.GRAY;
+    
+    public static final Color CHAT_GHOST = Color.GRAY;
+    public static final Color CHAT_SELECTED = RADAR_LIGHTBLUE;
+    public static final Color CHAT_OWN_TO_SELECTED = RADAR_LIGHTBLUE;
+    public static final Color CHAT_OWN = Color.LIGHT_GRAY;
+    public static final Color CHAT_AIRPORT_MENTIONED = Color.WHITE;
+    public static final Color CHAT_TEXT = Color.LIGHT_GRAY;
+    
 	// added  
 	
     public static final Color GLIDESLOPE = Color.blue;
     public static final Color RUNWAYEND_OPEN = Color.green;
     public static final Color RUNWAYEND_FORBIDDEN = Color.red;
 
-    public static final Color DESKTOP_TEXT = Color.LIGHT_GRAY;
+    public static final Color DESKTOP_TEXT = Color.WHITE;
     public static final Color WARNING_REARWIND = Color.RED;
     public static final Color WARNING_GUSTS = Color.ORANGE;
     public static final Color LAKE = new Color(0.39f,0.39f,0.41f);

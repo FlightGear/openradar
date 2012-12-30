@@ -1,10 +1,14 @@
 package de.knewcleus.openradar.gui;
 
 import java.awt.Color;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
+import java.awt.GraphicsDevice.WindowTranslucency;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,7 +22,7 @@ import javax.swing.JTextArea;
  * @author Wolfram Wagner
  *
  */
-public class LogWindow extends JFrame {
+public class LogWindow extends JFrame implements FocusListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,7 +39,15 @@ public class LogWindow extends JFrame {
 
         this.setLocation((int) maxBounds.getWidth() / 2 - 300, (int) maxBounds.getHeight() / 2 - 300);
         this.setSize(600, 600);
-
+        this.setUndecorated(true);
+        // Determine what the default GraphicsDevice can support.
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
+        if(isUniformTranslucencySupported) {
+            this.setOpacity(0.8f);
+        }
+        
         
         this.getContentPane().setLayout(new GridBagLayout());
 
@@ -67,8 +79,8 @@ public class LogWindow extends JFrame {
         String oldText = textArea.getText();
         String newText = oldText+text;
         while(newText.length()>100*1000) {
-            if(newText.contains("\n")) {
-                newText = newText.substring(newText.indexOf("\n"));
+            if(newText.substring(0,100).contains("\n")) {
+                newText = newText.substring(newText.indexOf("\n")+1);
             } else {
                 newText = newText.substring(100);
             }
@@ -76,5 +88,19 @@ public class LogWindow extends JFrame {
         textArea.setText(newText);
         textArea.setForeground(Color.black);
         textArea.invalidate();
+    }
+
+    public synchronized void removeLogs() {
+        map.clear();
+        jTabbedPane.removeAll();        
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        setVisible(false);
     }
 }

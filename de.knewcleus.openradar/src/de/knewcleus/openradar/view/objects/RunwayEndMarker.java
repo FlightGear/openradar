@@ -21,13 +21,13 @@ public class RunwayEndMarker extends AViewObject {
 
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
-        if ( runwayEnd != runwayEnd.getRunway().getLandSide() &&
-             runwayEnd != runwayEnd.getRunway().getStartSide() && 
-             runwayEnd.getOppositeEnd() != runwayEnd.getRunway().getLandSide() ){ // to show red side opposite of land side
-            path=null;
-            return;
-        }
-        color = runwayEnd == runwayEnd.getRunway().getLandSide() ? Palette.RUNWAYEND_OPEN : Palette.RUNWAYEND_FORBIDDEN;
+        if ( !runwayEnd.isActive() && !runwayEnd.getOppositeEnd().isActive()) {
+               path=null;
+               return;
+           }
+        color = runwayEnd == runwayEnd.getRunway().getLandSide() 
+                || runwayEnd.getOppositeEnd() == runwayEnd.getRunway().getStartSide()
+                ? Palette.RUNWAYEND_OPEN : Palette.RUNWAYEND_FORBIDDEN;
         
         path = new Path2D.Double();
         path.append(new Ellipse2D.Double(newDisplayPosition.getX()-2.5d, newDisplayPosition.getY()-2.5d, 5d, 5d), false);

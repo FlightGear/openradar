@@ -1,0 +1,37 @@
+A todos los hombres del aire:
+%s
+
+%s: Bienvenido a %s - ¿  vuela con destino a %s ? FGCOM %2.3f
+%s: Bienvenido a %s - por favor informe al ATC sobre sus intenciones, FGCOM %2.3f
+%s: Contacto Radar a %3.0f mi, QNH %2.2f Hectopascal, espere pista: %s, FGCOM %2.3f
+
+%s: Esta abandonando mi area - Autorizado a cambiar frecuencia - Que tenga buen viaje
+ATIS en %s a %2.0f ft: QNH %2.2f  viento %3.0f Grados a %2.0f Nudos. Pista en uso %s  FGCOM %2.3f
+
+
+%s: Autorizado a Arrancar Motores
+%s: Autorizado a Remolcado
+%s: Autorizado Rodaje a Pista:
+%s: Mantenga Punto de Espera Pista:
+
+%s: Entre en pista Alinie y Mantenga espera, informe cuando este listo para Salir
+%s: mantenga rumbo de pista, ascienda a:
+%s: viento %3.0f Grados a %2.0f Nudos, autorizado despegue pista:
+
+%s: Gire a la Izquierda rumbo:
+%s: Gire a la Derecha rumbo:
+%s: Ascienda y Mantenga:
+%s: Descienda y Mantenga:
+%s: Reduzca la Velocidad a:
+
+%s: esta a %3.0f millas , mantenga rumbo hasta interceptar el localizador, autorizado aproximacion ILS pista:
+%s: se encuentra a %3.0f millas informe con pista a la vista
+%s: esta a %3.0f millas , viento %3.0f Grados a %2.0f Nudos, autorizado a aterrizar pista:
+%s: Bienvenido a %s -- abandone la pista hacia la:
+%s: ruede a punto Terminal:
+
+Por favor usa solo FGCOM %2.3f para hablar con el ATC, los hombres del aire no chatean!
+%s: Sin darte cuenta estas perturbando nuestro entrenamiento ATC (Air Traffic Control) --> por favor usa otro Aeropuerto para vuelos no controlados
+%s: Por favor no inicies tu session en la pista activa.
+Por ejemplo para EDDF fija tu posicion de salida en Linea de comandos CMD o en el asistente: --parkpos=B45 o A10..25, B42..48, etc.
+

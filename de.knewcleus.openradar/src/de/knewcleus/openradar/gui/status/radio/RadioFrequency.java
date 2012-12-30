@@ -7,7 +7,7 @@ package de.knewcleus.openradar.gui.status.radio;
 public class RadioFrequency {
 
     private String code = null;
-    private String frequency = null;
+    private volatile String frequency = null;
     
     public RadioFrequency(String code, String frequency) {
         this.code=code;
@@ -20,10 +20,10 @@ public class RadioFrequency {
     public void setCode(String code) {
         this.code = code;
     }
-    public String getFrequency() {
+    public synchronized String getFrequency() {
         return frequency;
     }
-    public void setFrequency(String frequency) {
+    public synchronized void setFrequency(String frequency) {
         this.frequency = frequency;
     }
 

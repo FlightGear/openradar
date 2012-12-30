@@ -5,7 +5,7 @@ import de.knewcleus.openradar.gui.Palette;
 
 /**
  * This Panel contains the view and input area for ATC notes to radar contacts.
- *
+ *@deprecated
  * @author Wolfram Wagner
  */
 public class DetailPanel extends javax.swing.JPanel {
@@ -20,6 +20,7 @@ public class DetailPanel extends javax.swing.JPanel {
      */
     public DetailPanel(GuiMasterController guiInteractionManager) {
         this.guiInteractionManager=guiInteractionManager;
+//        guiInteractionManager.getStatusManager().setDetailPanel(this);
         initComponents();
     }
 
@@ -33,13 +34,12 @@ public class DetailPanel extends javax.swing.JPanel {
         setForeground(Palette.DESKTOP_TEXT);
         setBackground(Palette.DESKTOP);
         
-        tpDetails.setToolTipText("Details/Notes about selected object");
-        tpDetails.setOpaque(false);
-        tpDetails.setForeground(Palette.DESKTOP_TEXT);
-        tpDetails.setBackground(Palette.DESKTOP);
+        tpDetails.setToolTipText("ATC Notes: RETURN save, STRG+RETURN newline");
+        tpDetails.setOpaque(true);
         spDetails.setViewportView(tpDetails);
         guiInteractionManager.setDetailsArea(tpDetails);
         tpDetails.addFocusListener(guiInteractionManager.getRadarContactManager().getDetailsFocusListener());
+//        tpDetails.addKeyListener(guiInteractionManager.getStatusManager().getDetailsKeyListener());
         
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -50,4 +50,10 @@ public class DetailPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         add(spDetails, gridBagConstraints);
     }
+
+    public void requestFocusForDetailInput() {
+        this.tpDetails.requestFocus();
+    }
+
+    
 }

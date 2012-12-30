@@ -12,6 +12,9 @@ import de.knewcleus.fgfs.navdata.impl.Glideslope;
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.fgfs.navdata.model.IRunway;
 import de.knewcleus.fgfs.navdata.model.IRunwayEnd;
+import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.setup.RunwayData;
+import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.weather.MetarData;
 
 /**
@@ -24,14 +27,17 @@ public class GuiRunway implements ActionListener {
 
     public enum Usabilty {CLOSED, HEAVY_ONLY, WARNING, OPEN}
     
+    private AirportData data;
+    private RunwayData rwData;
     private volatile MetarData metar = null;
     private IRunwayEnd runwayEnd = null;
     private RunwayPanel runwayPanel = null;
     private static DecimalFormat df = new DecimalFormat("0.00");
     
-    public GuiRunway(RunwayEnd runwayEnd) {
+    public GuiRunway(AirportData data, RunwayEnd runwayEnd) {
+        this.data = data;
         this.runwayEnd = runwayEnd;
-        
+        this.rwData = new RunwayData(runwayEnd.getRunwayID());
     }
 
     public void setRunwayPanel(RunwayPanel runwayPanel) {
@@ -50,7 +56,11 @@ public class GuiRunway implements ActionListener {
        return df.format(runwayEnd.getTrueHeading());
    }
     
-    public String getIlsFrequency() {
+   public String getMagneticHeading() {
+       return String.format("%1.0f",runwayEnd.getTrueHeading()-data.getMagneticDeclination());
+   }
+
+   public String getIlsFrequency() {
         if(hasIls()) {
             return String.format("%3.2f",runwayEnd.getGlideslope().getFrequency().getValue()/Units.MHz);
         } else {
@@ -73,10 +83,10 @@ public class GuiRunway implements ActionListener {
      * So 0 is optimal, 90/-90 a shear wind and 180/-180 the wind from behind
      */
     public double getWindDeviation() {
-        double runwayHeading = runwayEnd.getTrueHeading();
+        double runwayHeading = runwayEnd.getTrueHeading() - data.getMagneticDeclination();
         double windDir = metar.getWindDirection();
         
-        double normalizedWindDir = windDir-runwayHeading;
+        double normalizedWindDir = windDir-runwayHeading; // outer angle
         normalizedWindDir = normalizedWindDir<-180 ? normalizedWindDir+360 : normalizedWindDir;
         normalizedWindDir = normalizedWindDir>180 ? normalizedWindDir-360 : normalizedWindDir;
         
@@ -94,7 +104,7 @@ public class GuiRunway implements ActionListener {
     }
 
     /**
-     * Returns the effective wind strength blowing from true runway heading.
+     * Returns the effective wind strength blowing from magnetic runway heading.
      *  
      * @return the strength of the shear component of the wind in knots. 
      */
@@ -133,12 +143,22 @@ public class GuiRunway implements ActionListener {
         return runwayEnd.getRunway().getAerodrome().getElevation();
     }
 
-    public float getWidth() {
+    public float getWidthM() {
         return runwayEnd.getRunway().getWidth();
     }
 
-    public float getLength() {
+    public float getWidthFt() {
+        return runwayEnd.getRunway().getWidth()/Units.FT;
+    }
+
+    public float getLengthM() {
         return runwayEnd.getRunway().getLength();
+    }
+
+    public float getLengthFt() {
+        float length = runwayEnd.getRunway().getLength()/Units.FT;
+        length = Math.round(length/100)*100;
+        return length;                
     }
 
     public Usabilty getUsability() {
@@ -273,5 +293,7 @@ public class GuiRunway implements ActionListener {
         }
    }
 
-
+    public RunwayData getRunwayData() {
+        return rwData;
+    }
 }

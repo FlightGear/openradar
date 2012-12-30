@@ -5,12 +5,18 @@ import java.awt.Font;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.impl.VOR;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class VORName extends AViewObject {
 
-    public VORName(VOR vor, Font font, Color color, int minScaleText, int maxScaleText) {
+    private AirportData data;
+    private String activeText;
+
+    public VORName(AirportData data, VOR vor, Font font, Color color, int minScaleText, int maxScaleText) {
         super(font, color, vor.getIdentification(), minScaleText, maxScaleText);
+        this.data = data;
+        this.activeText = vor.getIdentification();
     }
 
     @Override
@@ -22,5 +28,10 @@ public class VORName extends AViewObject {
         if(scale>15) scale=15;
         
         setTextCoordinates(new Point2D.Double(newDisplayPosition.getX()+scale,newDisplayPosition.getY()+scale));
+        if(data.getRadarObjectFilterState("VOR")) {
+            text = activeText;
+        } else {
+            text = null;
+        }
     }
 }

@@ -1,9 +1,11 @@
 package de.knewcleus.openradar.weather;
 
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.StringTokenizer;
+
+import de.knewcleus.openradar.gui.setup.AirportData;
 
 /**
  * This class parses and delivers the METAR information.
@@ -22,7 +24,8 @@ import java.util.StringTokenizer;
 public class MetarData {
     
     private String metarBaseData = null;
-
+    private AirportData data = null;
+    
     private String airportCode = null;
     private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     private Date observationTime = null;
@@ -34,6 +37,8 @@ public class MetarData {
     private int windDirectionMax = -1;
     private int windSpeed = -1;
     private int windSpeedGusts = -1;
+    private double windFromNorth = -1;
+    private double windFromWest = -1;
     
     // visibility && weather phenomena
     private float visibility;
@@ -59,9 +64,10 @@ public class MetarData {
     private enum Trend { NOSIG, BECMG, TEMPO}
     private Trend trend = null;
     
-    public MetarData(String metar) {
+    public MetarData(AirportData data, String metar) {
         // parse metar data
         this.metarBaseData = metar.substring(metar.indexOf("\n")).trim();
+        this.data=data;
         StringTokenizer st = new StringTokenizer(metar," \n");
 
         try {
@@ -76,6 +82,16 @@ public class MetarData {
         String t = st.nextToken(); // former last update code 141813Z
         
         t = st.nextToken();
+        if(t.matches("AUTO")) {
+            // automatic station
+            t = st.nextToken();
+        }
+
+        if(t.matches("^[A-Z]{3}")) {
+            // correction indicator
+            t = st.nextToken();
+        }
+
         if(t.matches("^.*KT.*$")) {
             parseWind(t);
             t = st.nextToken();
@@ -103,6 +119,11 @@ public class MetarData {
             else if(t.matches("^RMK$")) break; // means "national information follow
             else parsePhenomena(t);
         }
+        
+            double angle = (double)(getWindDirection()-270)/360d*2*Math.PI;
+            windFromNorth = Math.sin(angle)*(double)getWindSpeed();
+            windFromWest = Math.cos(angle)*(double)getWindSpeed();
+            //System.out.println("Wind N: "+windFromNorth+" W: "+windFromWest);
     }
 
     private void parseWind(String t) {
@@ -110,7 +131,8 @@ public class MetarData {
             // variable
             windDirection=-1;
         } else {
-            windDirection=Integer.parseInt(t.substring(0,3));
+            windDirection=(Integer.parseInt(t.substring(0,3)) - (int)data.getMagneticDeclination());
+            windDirection=windDirection<0?windDirection+360:windDirection;
         }
         windSpeed=Integer.parseInt(t.substring(3,5));
         if(t.charAt(5)=='G') {
@@ -119,8 +141,10 @@ public class MetarData {
         }
     }
     private void parseVariations(String t) {
-        windDirectionMin=Integer.parseInt(t.substring(0,3));
-        windDirectionMax=Integer.parseInt(t.substring(4));
+        windDirectionMin=Integer.parseInt(t.substring(0,3)) - (int)data.getMagneticDeclination();
+        windDirectionMin=windDirectionMin<0?windDirectionMin+360:windDirectionMin;
+        windDirectionMax=Integer.parseInt(t.substring(4)) - (int)data.getMagneticDeclination();
+        windDirectionMax=windDirectionMax<0?windDirectionMax+360:windDirectionMax;
     }
     
     private void parseVisibility(String t) {
@@ -202,11 +226,16 @@ public class MetarData {
     }
 
     public String getVisibility() {
-        return String.format("%2.1f", visibility);
+        if("NM".equalsIgnoreCase(getVisibilityUnit())) {
+            return String.format("%2.1f", visibility);
+        } else {
+            // meter
+            return String.format("%2.0f", visibility);
+        }
     }
 
     public String getVisibilityUnit() {
-        return visibilityUnit;
+        return visibilityUnit==null?"NM":visibilityUnit;
     }
 
     public int getTemperature() {
@@ -241,14 +270,12 @@ public class MetarData {
         return trend;
     }
 
-    public int getWindNorthComponent() {
-        double angle = (double)(360-getWindDirection())/360d*2*Math.PI;
-        return Math.round((float)(Math.cos(angle)*(float)getWindSpeed()));
+    public double getWindNorthComponent() {
+        return windFromNorth;
     }
 
-    public int getWindEastComponent() {
-        double angle = (double)(360-getWindDirection())/360d*2*Math.PI;
-        return Math.round((float)(Math.sin(angle)*(float)getWindSpeed()));
+    public double getWindWestComponent() {
+        return windFromWest;
     }
 
 }

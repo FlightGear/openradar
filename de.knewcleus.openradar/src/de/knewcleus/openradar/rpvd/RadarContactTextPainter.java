@@ -11,6 +11,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
 import de.knewcleus.openradar.view.Converter2D;
 /**
  * This class paints the radar contact information into the radar screen.
@@ -24,8 +25,8 @@ public class RadarContactTextPainter {
     private TrackDisplayState trackDisplayState;
     private Point2D currentDevicePosition;
     private Line2D line;
-    private RoundRectangle2D background;
-    private Rectangle2D displayExtents;
+    private volatile RoundRectangle2D background;
+    private volatile Rectangle2D displayExtents;
 
     private final static double LENGTH = 70d;
     private final static double SPACE = 2d;
@@ -37,10 +38,10 @@ public class RadarContactTextPainter {
     private Rectangle2D boundsLine2 = null;
     private Rectangle2D boundsText = null;
     
-    protected Path2D textContainer = new Path2D.Double();
-    protected Point2D textOrigin = new Point2D.Double();
-    protected FontMetrics fontMetrics = null;
-    protected Rectangle2D lastTextDisplayExtents = new Rectangle2D.Double();
+    protected volatile Path2D textContainer = new Path2D.Double();
+    protected volatile Point2D textOrigin = new Point2D.Double();
+    protected volatile FontMetrics fontMetrics = null;
+    protected volatile Rectangle2D lastTextDisplayExtents = new Rectangle2D.Double();
     
     public RadarContactTextPainter(TrackDisplayState trackDisplayState) {
         this.trackDisplayState = trackDisplayState;
@@ -72,8 +73,8 @@ public class RadarContactTextPainter {
 //        g2d.draw(displayExtents);
         // create composite for transparency of background
         
-        String textLine1 = trackDisplayState.guiContact.getCallSign();
-        String textLine2 = String.format("%1s %2s", trackDisplayState.guiContact.getFlightLevel(),trackDisplayState.guiContact.getTrueCourse());
+        String textLine1 = String.format("%s %2s",trackDisplayState.guiContact.getCallSign(),trackDisplayState.guiContact.getMagnCourse());
+        String textLine2 = String.format("%1s %2s %3s", trackDisplayState.guiContact.getFlightLevel(),trackDisplayState.guiContact.getAirSpeed(),trackDisplayState.guiContact.getVerticalSpeedD()>0?"+":"-");
         boundsLine1 = fontMetrics.getStringBounds(textLine1, g2d);
         boundsLine2 = fontMetrics.getStringBounds(textLine2, g2d);
         boundsText = new Rectangle2D.Double(boundsLine1.getX(), boundsLine1.getY()-boundsLine1.getHeight(), Math.max(boundsLine1.getWidth(), boundsLine2.getWidth()), boundsLine1.getHeight()+boundsLine2.getHeight());
@@ -88,7 +89,53 @@ public class RadarContactTextPainter {
 
         ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f);
         g2d.setComposite(ac);
-        g2d.setColor(trackDisplayState.guiContact.isSelected() ? Palette.WHITE : Palette.GREEN);
+
+        if(trackDisplayState.guiContact.isSelected()) {
+            // SELECTED
+            g2d.setColor(Palette.RADAR_SELECTED);
+
+        } else if(!trackDisplayState.guiContact.isActive()) {
+            // INCACTIVE GHOSTS
+            g2d.setColor(Palette.RADAR_GHOST);
+
+        } else if(trackDisplayState.guiContact.isNeglect()) {
+            // BAD GUYS
+            g2d.setColor(Palette.RADAR_GHOST);
+
+        } else if(trackDisplayState.guiContact.getState()==State.IMPORTANT) {
+            // CONTROLLED left column
+            g2d.setColor(Palette.RADAR_CONTROLLED);
+
+        } else if(trackDisplayState.guiContact.getState()==State.CONTROLLED) {
+            // WATCHED middle column
+            g2d.setColor(Palette.RADAR_IMPORTANT);
+
+        } else {
+            // UNCONTROLLED right column
+            g2d.setColor(Palette.RADAR_UNCONTROLLED);
+//            // SELECTED
+//            g2d.setColor(Palette.RADAR_SELECTED);
+//            //g2d.setColor(new Color(205,255,255));
+//            g2d.setColor(Palette.YELLOW);
+//        } else if(!trackDisplayState.guiContact.isActive()) {
+//            // INCACTIVE GHOSTS
+//            g2d.setColor(Color.GRAY);
+//        } else if(trackDisplayState.guiContact.isNeglect()) {
+//            // BAD GUYS
+//            g2d.setColor(Color.GRAY);
+//        } else if(trackDisplayState.guiContact.getState()==State.IMPORTANT) {
+//            // IMPORTANT
+//            g2d.setColor(Palette.GREEN);
+//            g2d.setColor(Palette.LIGHTBLUE);
+//        } else if(trackDisplayState.guiContact.getState()==State.CONTROLLED) {
+//            // CONTROLLED
+//            g2d.setColor(Palette.YELLOW);
+//            g2d.setColor(new Color(90,255,90));
+//        } else {
+//            g2d.setColor(Palette.GREEN);
+//            g2d.setColor(new Color(205,255,255));
+        }
+        
         g2d.drawString(textLine1,(float)(newX+SPACE),(float)(newY+boundsLine1.getHeight()));
         g2d.drawString(textLine2,(float)(newX+SPACE),(float)(newY+boundsText.getHeight()));
         

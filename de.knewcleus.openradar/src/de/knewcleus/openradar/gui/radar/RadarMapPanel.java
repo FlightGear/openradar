@@ -43,6 +43,11 @@ import de.knewcleus.openradar.view.LayeredView;
 import de.knewcleus.openradar.view.MouseZoomListener;
 import de.knewcleus.openradar.view.SwingUpdateManager;
 import de.knewcleus.openradar.view.ViewerCenteringListener;
+import de.knewcleus.openradar.view.groundnet.AtcObjectsView;
+import de.knewcleus.openradar.view.groundnet.GroundnetReader;
+import de.knewcleus.openradar.view.groundnet.GroundnetView;
+import de.knewcleus.openradar.view.groundnet.TaxiSign;
+import de.knewcleus.openradar.view.groundnet.TaxiWaySegment;
 import de.knewcleus.openradar.view.map.GeodataView;
 import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
@@ -72,8 +77,8 @@ public class RadarMapPanel extends JComponent {
     private ZipFile zif=null;
     
     /* Set up the initial display range */
-    protected double width = 3.0 * Units.DEG;
-    protected double height = 3.0 * Units.DEG;
+    protected double width = 6.0 * Units.DEG;
+    protected double height = 6.0 * Units.DEG;
     protected double centerLon;
     protected double centerLat;
     protected Rectangle2D bounds;
@@ -91,7 +96,7 @@ public class RadarMapPanel extends JComponent {
         AirportData data = guiInteractionManager.getDataRegistry();
         this.centerLon = data.getLon();
         this.centerLat = data.getLat();
-        bounds = new Rectangle2D.Double(centerLon - width / 2.0, centerLat - height / 2.0, width, height);
+        bounds = new Rectangle2D.Double(centerLon - width / 2.0d, centerLat - height / 2.0d, width, height);
         center = new Point2D.Double(centerLon, centerLat);
         /* Set up the projection */
         projection = new LocalSphericalProjection(center);
@@ -156,22 +161,21 @@ public class RadarMapPanel extends JComponent {
             final GeodataView landmassView = new GeodataView(radarMapViewAdapter, landmassLayer);
             landmassLayer.closeZipArchive();
             landmassView.setColor(Palette.LANDMASS);
-            landmassView.setFill(true);
+            //landmassView.setFill(true);
             rootView.pushView(landmassView);
     
-    //       ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_lake");
-    //        final GeodataView lakeView = new GeodataView(radarMapViewAdapter, lakeLayer);
-            //lakeLayer.closeZipArchive();
-    //        lakeView.setColor(Palette.LAKE);
-    //        lakeView.setFill(true);
-    //        rootView.pushView(lakeView);
-    //        
-    //        ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_stream");
-    //        final GeodataView streamView = new GeodataView(radarMapViewAdapter, streamLayer);
-            //streamLayer.closeZipArchive();
-    //        streamView.setColor(Palette.STREAM);
-    //        streamView.setFill(false);
-    //        rootView.pushView(streamView);
+           ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_lake");
+            final GeodataView lakeView = new GeodataView(radarMapViewAdapter, lakeLayer);
+            lakeLayer.closeZipArchive();
+            lakeView.setColor(Palette.LAKE);
+            lakeView.setFill(true);
+            rootView.pushView(lakeView);
+//            ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_stream");
+//            final GeodataView streamView = new GeodataView(radarMapViewAdapter, streamLayer);
+//            streamLayer.closeZipArchive();
+//            streamView.setColor(Palette.STREAM);
+//            streamView.setFill(false);
+//            rootView.pushView(streamView);
     
             setupDialog.setStatus(10, "Reading tarmac layer...");
             ZippedShapefileLayer tarmacLayer = new ZippedShapefileLayer(data.getAirportDir(), "apt_tarmac");
@@ -189,25 +193,40 @@ public class RadarMapPanel extends JComponent {
             runwayView.setFill(true);
             rootView.pushView(runwayView);
     
+            final LayeredView layeredGroundnetView = new LayeredView(radarMapViewAdapter);
+            GroundnetReader groundnetReader = new GroundnetReader(data.getAirportCode());
+            for(TaxiWaySegment seg : groundnetReader.getTaxiWaySegments()) {
+                layeredGroundnetView.pushView(new GroundnetView(radarMapViewAdapter,seg,data));
+            }
+            for(TaxiSign sign : groundnetReader.getTaxiSigns()) {
+                layeredGroundnetView.pushView(new GroundnetView(radarMapViewAdapter,sign,data));
+            }
+            rootView.pushView(layeredGroundnetView);
+            
             // initialize symbol layers
             final LayeredView airportView = new LayeredView(radarMapViewAdapter);
-            final NavPointProvider navPointProvider = new NavPointProvider(radarMapViewAdapter, airportView);
+            final NavPointProvider navPointProvider = new NavPointProvider(radarMapViewAdapter, airportView,data);
             navPointProvider.addNavPointListener(guiInteractionManager.getDataRegistry()); 
-            
+
             rootView.pushView(airportView);
             setupDialog.setStatus(30, "Reading airport data...");
             navPointProvider.addViews(airportStream);
             final LayeredView navSymbolView = new LayeredView(radarMapViewAdapter);
-            final NavPointProvider navPointProvider2 = new NavPointProvider(radarMapViewAdapter, navSymbolView);
+            final NavPointProvider navPointProvider2 = new NavPointProvider(radarMapViewAdapter, navSymbolView, data);
             navPointProvider2.addNavPointListener(guiInteractionManager.getDataRegistry()); 
             rootView.pushView(navSymbolView);
-
+            
             setupDialog.setStatus(60, "Reading navaid data...");
             navPointProvider2.addViews(navDataStream);
             
             setupDialog.setStatus(80, "Reading fixes data...");
             navPointProvider2.addViews(fixDataStream);
-    
+
+            final LayeredView layeredAtcObjectsView = new LayeredView(radarMapViewAdapter);
+            layeredAtcObjectsView.pushView(new AtcObjectsView(radarMapViewAdapter,data));
+            rootView.pushView(layeredAtcObjectsView);
+
+            
             ScaleMarkerView southMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.SOUTH, Palette.WINDOW_BLUE);
             rootView.pushView(southMarkerView);
             ScaleMarkerView westMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.WEST, Palette.WINDOW_BLUE);
@@ -234,25 +253,6 @@ public class RadarMapPanel extends JComponent {
     }
 
     public void initRadarData() throws Exception {
-//        AirportData data = guiInteractionManager.getDataRegistry();
-//        
-//        /* Install the radar data provider(s) */
-//        final IPlayerRegistry<TargetStatus> playerRegistry = new FGMPRegistry();
-//        // register GUI contact list, to be updated, whenever a contact appears
-//        // or disappears
-//        playerRegistry.registerListener(guiInteractionManager.getRadarContactManager());
-//
-//        final Position clientPosition = new Position(center.getX(), center.getY(), 0.0);
-//        final GeodToCartTransformation geodToCartTransformation = new GeodToCartTransformation(Ellipsoid.WGS84);
-//        // TODO replace MP name!
-//        FGMPClient<TargetStatus> radarProvider = new FGMPClient<TargetStatus>(playerRegistry, guiInteractionManager.getCurrentATCCallSign(), geodToCartTransformation.forward(clientPosition),
-//                                                               data.getMpServer(),data.getMpServerPort(), data.getMpLocalPort() );
-//        radarProvider.registerRecipient(radarAdapter);
-//        // register MP Chat (send & receive)
-//        radarProvider.addChatListener(guiInteractionManager.getMpChatManager());
-//        guiInteractionManager.getMpChatManager().setMpBackend(radarProvider);
-        
-        // new: 
         master.getRadarProvider().registerRecipient(radarAdapter);
         
         // register view adapter with radar backend for Zooming per buttons and
@@ -262,12 +262,16 @@ public class RadarMapPanel extends JComponent {
     }
 
     protected INavDataStream<INavPoint> openXPlaneAptDat() throws IOException {
-        final File inputFile = new File("sectors/AptNav.zip");
+        // in future : 
+        //final File inputFile = new File("data/AptNav1000.zip");
+        final File inputFile = new File("data/AptNav.zip");
         zif = new ZipFile(inputFile);
         Enumeration<? extends ZipEntry> entries = zif.entries();
         while(entries.hasMoreElements()) {
             ZipEntry zipentry = entries.nextElement();
             if(zipentry.getName().equals("apt.dat")) {
+                // in future : 
+                // return new AptDatStream1000(new InputStreamReader(zif.getInputStream(zipentry)));
                 return new AptDatStream(new InputStreamReader(zif.getInputStream(zipentry)));
             }
         }

@@ -1,0 +1,37 @@
+A todos os pilotos:  
+%s 
+
+%s: Bem-vindo a %s, Estamos a chegar a %s ? FGCOM %2.3f
+%s: Bem-vindo a %s, Por favor informe a ATC das suas intenções, FGCOM %2.3f
+%s: Contacto do radar a %3.0f mi de distância, QNH %2.2f, Está a abandonar a nossa área, FGCOM %2.3f
+
+%s: Pode trocar a frequência - Boa viagem!
+
+
+
+%s: Ordem para ligar os motores
+%s: Ordem para marcha atrás
+%s: Ordem para se deslocar para a pista:
+%s: Aguarde à entrada da pista:
+
+%s: Vá até à posição de arranque e aguarde. Avise quando estiver pronto para partir.
+%s: Mantenha o rumo da pista, para subir:
+%s: Vento de %3.0f com %2.0f, Livre para a pista de descolagem:
+
+%s: Vire à esquerda, novo curso:
+%s: Vire à direita, novo curso:
+%s: Subir e manter:
+%s: Descer e manter:
+%s: Reduza a velocidade para:
+
+%s: %3.0f mi distância, mantenha o seu curso até interceptar o localizador, ordem para abordagem à pista:
+
+%s: %3.0f mi Distância, Vento %3.0f com %2.0f, Ordem para aterrar na pista:
+%s: Boas-vindas in %s -- Abandone a pista para o:
+%s: Vá até à porta e\ou terminal:
+
+Por favor use FGCOM %2.3f apenas para falar com o ATC - NÃO entre pilotos!
+%s: Voce está a interferir com o nosso ATC (Air Traffic Control) Simulação --> Por favor utilize um aeroporto alternativo para o vôo descontrolado!
+%s: Por favor, não iniciar o seus voos em pistas activas.
+Define por exemplo para EDDF na linha de comandos ou assistente a opção: --parkpos=B45 or A10..25, B42..48, etc.
+

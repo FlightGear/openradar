@@ -1,47 +1,233 @@
 package de.knewcleus.openradar.view.objects;
 
 import java.awt.BasicStroke;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.setup.RunwayData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class RunwayEndIlsCone extends AViewObject {
 
-    private RunwayEnd runwayEnd;
+    private final RunwayEnd runwayEnd;
+    private final AirportData data;
+    private RunwayData rwd;
+    private double reverseHeading;
+    
+    private Point2D leftVectoringTextOrigin = null;
+    private double leftVectoringAngle = 0;
+    private double leftVectoringFlyAngle = 0;
+    private Point2D leftBaselegTextOrigin = null;
+    private double leftBaselegAngle = 0;
+    private double leftBaselegFlyAngle = 0;
+    private Point2D rightVectoringTextOrigin = null;
+    private double rightVectoringAngle = 0;
+    private double rightVectoringFlyAngle = 0;
+    private Point2D rightBaselegTextOrigin = null;
+    private double rightBaselegAngle = 0;
+    private double rightBaselegFlyAngle = 0;
 
-    public RunwayEndIlsCone(RunwayEnd runwayEnd) {
+    public RunwayEndIlsCone(AirportData data, RunwayEnd runwayEnd) {
         super(Palette.GLIDESLOPE);
         this.stroke = new BasicStroke(0.3f);
+        this.data = data;
         this.runwayEnd = runwayEnd;
+
+        this.font = new Font("Arial", Font.PLAIN, 9);
     }
 
     @Override
-    public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewerAdapter) {
-        if ( ! runwayEnd.isLandingActive() || runwayEnd.getGlideslope()==null){
+    public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mva) {
+        if ( ! runwayEnd.isLandingActive()) { //  || runwayEnd.getGlideslope()==null){
             path=null;
+            rightVectoringTextOrigin=null;
+            rightBaselegTextOrigin=null;
+            leftVectoringTextOrigin=null;
+            leftBaselegTextOrigin=null;
             return;
         }
+
+        if(rwd==null || rwd.isRepaintNeeded()) {
+            rwd = data.getRunwayData(runwayEnd.getRunwayID());
+            reverseHeading = Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+180);
+
+            rightVectoringAngle =  Math.round(Converter2D.normalizeAngle(reverseHeading-rwd.getRightVectoringAngle())/10)*10;;
+            rightVectoringFlyAngle =  Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()-rwd.getRightVectoringAngle()-data.getMagneticDeclination())/10)*10;
+            rightBaselegAngle = Math.round(Converter2D.normalizeAngle(reverseHeading-90)/10)*10;
+            rightBaselegFlyAngle = Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()-90-data.getMagneticDeclination())/10)*10;
+
+            leftVectoringAngle =  Math.round(Converter2D.normalizeAngle(reverseHeading+rwd.getLeftVectoringAngle())/10)*10;
+            leftVectoringFlyAngle =  Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+rwd.getLeftVectoringAngle()-data.getMagneticDeclination())/10)*10;
+            leftBaselegAngle = Math.round(Converter2D.normalizeAngle(reverseHeading+90)/10)*10;
+            leftBaselegFlyAngle = Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+90-data.getMagneticDeclination())/10)*10;
+            rwd.setRepaintNeeded(false);
+        }
         
-        float reverseHeading = runwayEnd.getTrueHeading()+180;
+        this.font = new Font("Arial", Font.PLAIN, 9);
+        
+
         
         // default values 18 SM +/- 10 degrees
         
-        double length = Converter2D.getFeetToDots(runwayEnd.getGlideslope().getRange(), mapViewerAdapter); // feet!
-        
-        Point2D minorEndPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading-5, length);
-        Point2D middleEndPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, length*0.9);
-        Point2D majorEndPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading+5, length);
+        double referenceLength = Units.NM/Units.FT;// one mile;
+        double offset = ftd((double) rwd.getExtCenterlineStart() *referenceLength,mva);
+        double length = ftd((double) rwd.getExtCenterlineLength() *referenceLength,mva);//runwayEnd.getGlideslope().getRange()/Units.FT, mva); // feet!
         
         path = new Path2D.Double();
-        path.append(new Line2D.Double(newDisplayPosition, minorEndPoint), false);
-        path.append(new Line2D.Double(minorEndPoint, middleEndPoint), true);
-        path.append(new Line2D.Double(middleEndPoint, newDisplayPosition), true);
-        path.append(new Line2D.Double(newDisplayPosition, majorEndPoint), true);
-        path.append(new Line2D.Double(majorEndPoint, middleEndPoint), true);
+        // center line
+        Point2D startPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset); // newDisplayPosition;
+        Point2D endPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, length);
+        path.append(new Line2D.Double(startPoint, endPoint), false);
+        
+        Point2D centerPoint; 
+        
+        // Distance markers
+        
+        // major marker lines
+        double currentDistance = 0;
+        
+        int i=0;
+        do {
+            currentDistance = rwd.getMajorDMStart() + i * rwd.getMajorDMInterval();
+            
+            centerPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, ftd(currentDistance *referenceLength,mva));
+            startPoint = Converter2D.getMapDisplayPoint(centerPoint, reverseHeading-90, ftd(rwd.getMajorDMTickLength()/2*referenceLength,mva));
+            endPoint = Converter2D.getMapDisplayPoint(centerPoint, reverseHeading+90, ftd(rwd.getMajorDMTickLength()/2*referenceLength,mva));
+            path.append(new Line2D.Double(startPoint, endPoint), false);
+            
+            i++;
+        } while(currentDistance<rwd.getMajorDMEnd()); 
+        
+        // minor marker lines
+
+        i=0;
+        do {
+            currentDistance = rwd.getMinorDMStart() + i * rwd.getMinorDMInterval();
+            
+            // ommit, if there is already a major Line
+            if(currentDistance>=rwd.getMajorDMStart() && currentDistance<=rwd.getMajorDMEnd() 
+               && currentDistance%rwd.getMajorDMInterval() == 0 ) {
+                i++;
+                continue;
+            }
+            
+            centerPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, ftd(currentDistance *referenceLength,mva));
+            startPoint = Converter2D.getMapDisplayPoint(centerPoint, reverseHeading-90, ftd(rwd.getMinorDMTickLength()/2*referenceLength,mva));
+            endPoint = Converter2D.getMapDisplayPoint(centerPoint, reverseHeading+90, ftd(rwd.getMinorDMTickLength()/2*referenceLength,mva));
+            path.append(new Line2D.Double(startPoint, endPoint), false);
+            
+            i++;
+        } while(currentDistance<rwd.getMinorDMEnd()); 
+
+        if(rwd.isRightBaseEnabled()) {
+            // sides: right in flight direction
+            
+            // first half of the line
+            centerPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, ftd(rwd.getRightVectoringCLStart()*referenceLength,mva));
+            endPoint = Converter2D.getMapDisplayPoint(centerPoint, rightVectoringAngle, ftd(rwd.getRightVectoringLength()/2*referenceLength,mva)-10);
+            path.append(new Line2D.Double(centerPoint, endPoint), false);
+            
+            rightVectoringTextOrigin = Converter2D.getMapDisplayPoint(centerPoint, rightVectoringAngle, ftd(rwd.getRightVectoringLength()/2*referenceLength,mva));
+
+            // second half
+            startPoint = Converter2D.getMapDisplayPoint(endPoint, rightVectoringAngle, 20);
+            endPoint = Converter2D.getMapDisplayPoint(startPoint, rightVectoringAngle, ftd(rwd.getRightVectoringLength()/2*referenceLength,mva)-10);
+            path.append(new Line2D.Double(startPoint, endPoint), false);
+
+            // base leg
+            // first half
+            startPoint = endPoint;
+            endPoint = Converter2D.getMapDisplayPoint(startPoint, rightBaselegAngle, ftd(rwd.getRightBaselegLength()/2*referenceLength,mva)-10);
+            path.append(new Line2D.Double(startPoint, endPoint), false);
+            
+            rightBaselegTextOrigin = Converter2D.getMapDisplayPoint(startPoint, rightBaselegAngle, ftd(rwd.getRightBaselegLength()/2*referenceLength,mva));
+
+            // second half
+            startPoint = Converter2D.getMapDisplayPoint(endPoint, rightBaselegAngle, 20);
+            endPoint = Converter2D.getMapDisplayPoint(startPoint, rightBaselegAngle, ftd(rwd.getRightBaselegLength()/2*referenceLength,mva)-10);
+            path.append(new Line2D.Double(startPoint, endPoint), false);
+        } else {
+            rightVectoringTextOrigin=null;
+            rightBaselegTextOrigin=null;
+        }
+        
+        if(rwd.isLeftBaseEnabled()) {
+            // sides: left in flight direction
+            
+            // first half of the line
+            centerPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, ftd(rwd.getLeftVectoringCLStart()*referenceLength,mva));
+            endPoint = Converter2D.getMapDisplayPoint(centerPoint, leftVectoringAngle, ftd(rwd.getLeftVectoringLength()/2*referenceLength,mva)-10);
+            path.append(new Line2D.Double(centerPoint, endPoint), false);
+
+            leftVectoringTextOrigin = Converter2D.getMapDisplayPoint(centerPoint, leftVectoringAngle, ftd(rwd.getLeftVectoringLength()/2*referenceLength,mva));
+
+            // second half
+            startPoint = Converter2D.getMapDisplayPoint(endPoint, leftVectoringAngle, 20);
+            endPoint = Converter2D.getMapDisplayPoint(startPoint, leftVectoringAngle, ftd(rwd.getLeftVectoringLength()/2*referenceLength,mva)-10);
+            path.append(new Line2D.Double(startPoint, endPoint), false);
+
+            // base leg
+            
+            // first half
+            startPoint = endPoint;
+            endPoint = Converter2D.getMapDisplayPoint(startPoint, leftBaselegAngle, ftd(rwd.getLeftBaselegLength()/2*referenceLength,mva)-10);
+            path.append(new Line2D.Double(startPoint, endPoint), false);
+            
+            leftBaselegTextOrigin = Converter2D.getMapDisplayPoint(startPoint, reverseHeading+90, ftd(rwd.getLeftBaselegLength()/2*referenceLength,mva));
+
+            // second half
+            startPoint = Converter2D.getMapDisplayPoint(endPoint, leftBaselegAngle, 20);
+            endPoint = Converter2D.getMapDisplayPoint(startPoint, leftBaselegAngle, ftd(rwd.getLeftBaselegLength()/2*referenceLength,mva)-10);
+            path.append(new Line2D.Double(startPoint, endPoint), false);       
+        } else {
+            leftVectoringTextOrigin=null;
+            leftBaselegTextOrigin=null;
+        }
     }
+
+    private double ftd(double feet, IMapViewerAdapter mapViewerAdapter) {
+        return Converter2D.getFeetToDots(feet, mapViewerAdapter);
+    }
+
+    @Override
+    public void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
+        super.paint(g2d, mapViewAdapter);
+        g2d.setColor(color);
+        //double currentScale = mapViewAdapter.getLogicalScale();
+       // if (minScalePath < currentScale && maxScalePath > currentScale) {
+            if (font != null)
+                g2d.setFont(font);
+            
+            if(rightVectoringTextOrigin!=null) {
+                String text = String.format("%3.0f", rightVectoringFlyAngle);
+                Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
+                g2d.drawString(text, (float)(rightVectoringTextOrigin.getX()-b.getWidth()/2), (float) (rightVectoringTextOrigin.getY()+b.getHeight()/2-2));
+            }
+            if(rightBaselegTextOrigin!=null) {
+                String text = String.format("%3.0f", rightBaselegFlyAngle);
+                Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
+                g2d.drawString(text, (float)(rightBaselegTextOrigin.getX()-b.getWidth()/2), (float) (rightBaselegTextOrigin.getY()+b.getHeight()/2-2));
+            }
+            if(leftVectoringTextOrigin!=null) {
+                String text = String.format("%3.0f", leftVectoringFlyAngle);
+                Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
+                g2d.drawString(text, (float)(leftVectoringTextOrigin.getX()-b.getWidth()/2), (float) (leftVectoringTextOrigin.getY()+b.getHeight()/2-2));
+            }
+            if(leftBaselegTextOrigin!=null) {
+                String text = String.format("%3.0f", leftBaselegFlyAngle);
+                Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
+                g2d.drawString(text, (float)(leftBaselegTextOrigin.getX()-b.getWidth()/2), (float) (leftBaselegTextOrigin.getY()+b.getHeight()/2-2));
+            }
+        }
+    //}
+
 }

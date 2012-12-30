@@ -12,13 +12,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
+
 /**
  * This class is the controller for the radio feature.
  * 
@@ -33,7 +37,7 @@ public class RadioController implements Runnable {
     private FgComController fgComController;
     private FrequencyListItemListener frequencyListActionListener = new FrequencyListItemListener();
     private PttButtonListener pttButtonListener = new PttButtonListener();
-
+    private RadioModeMouseListener radioModeMouseListener = new RadioModeMouseListener();
     private final Map<String, Long> mapLastOns = Collections.synchronizedMap(new HashMap<String, Long>());
     private Thread thread = new Thread(this, "OpenRadar - Radio manager (release PTT)");
     private boolean isRunning = true;
@@ -43,24 +47,28 @@ public class RadioController implements Runnable {
     public RadioController(GuiMasterController guiInteractionManager) {
         this.master = guiInteractionManager;
     }
-    
+
     public void init() {
         AirportData data = master.getDataRegistry();
-        fgComController = new FgComController(master, data.getModel(), data.getLon(), data.getLat());
-
-        int i = 0;
-        for (Radio r : data.getRadios().values()) {
-            String device = r.getKey();
-            RadioModel model = new RadioModel(master, device, data.getRadioFrequencies(), i++);
-            models.put(device, model);
-            fgComController.addRadio(data.getFgComPath(), device, data.getFgComServer(), r.getFgComHost(), r.getFgComPort(), model.getSelectedItem().getCode(), model.getSelectedItem());
+        if(data.getFgComMode()!=FgComMode.Off) {
+            fgComController = new FgComController(master, data.getModel(), data.getLon(), data.getLat());
+    
+            int i = 0;
+            for (Radio r : data.getRadios().values()) {
+                String device = r.getKey();
+                RadioModel model = new RadioModel(master, device, data.getRadioFrequencies(), i++);
+                models.put(device, model);
+                fgComController.addRadio(data.getFgComPath(), data.getFgComExec(), device, data.getFgComServer(), r.getFgComHost(), r.getFgComPort(), model
+                        .getSelectedItem().getCode(), model.getSelectedItem());
+            }
+            modelList = new ArrayList<RadioModel>(models.values());
+            fgComController.start();
+    
+            radioPanel.initRadios();
+            initShortCuts();
+            thread.setDaemon(true);
+            thread.start();
         }
-        modelList = new ArrayList<RadioModel>(models.values());
-        fgComController.start();
-
-        radioPanel.initRadios();
-        initShortCuts();
-        thread.start();
     }
 
     void setRadioPanel(RadioPanel radioPanel) {
@@ -90,16 +98,22 @@ public class RadioController implements Runnable {
             if (e.getSource() instanceof JComboBox<?>) {
                 @SuppressWarnings("unchecked")
                 JComboBox<RadioFrequency> cb = ((JComboBox<RadioFrequency>) e.getSource());
-                String radioKey = cb.getName();
+                if (!((JTextField) cb.getEditor().getEditorComponent()).getText().isEmpty()) {
+                    if (cb.isEditable()) {
+                        cb.setEditable(false);
+                    }
+                }
                 RadioFrequency rf = (RadioFrequency) cb.getSelectedItem();
                 if (fgComController != null) {
+                    String radioKey = cb.getName();
                     fgComController.tuneRadio(radioKey, rf.getCode(), rf);
                 }
                 // todo tune other radios with same frequency away
+
+                master.getDataRegistry().storeAirportData(master);
             }
 
         }
-
     }
 
     public MouseListener getPttButtonListener() {
@@ -124,57 +138,103 @@ public class RadioController implements Runnable {
         }
 
         private void managePtt(MouseEvent e, boolean enablePtt) {
-            // if (e.getSource() instanceof JButton) {
+
             JButton btPTT = ((JButton) e.getSource());
             String radioKey = btPTT.getName().substring(4); // prefix but_
             if (fgComController != null) {
                 fgComController.setPttActive(radioKey, enablePtt);
             }
             radioPanel.displayEnabledPTT(radioKey, enablePtt);
+        }
+    }
 
-            // }
+    public MouseListener getRadioModeMouseListener() {
+        return radioModeMouseListener;
+    }
+
+    private class RadioModeMouseListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                if (e.getSource() instanceof JComboBox<?>) {
+                    @SuppressWarnings("unchecked")
+                    JComboBox<RadioFrequency> cb = ((JComboBox<RadioFrequency>) e.getSource());
+                    cb.requestFocus();
+                    cb.setEditable(true);
+                    ((JTextField) cb.getEditor().getEditorComponent()).setText("");
+                }
+            }
         }
     }
 
     private void initShortCuts() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 
+            /*
+             * The following method handles PTT shortcuts for radios. Here we
+             * face a problem: STRG and SHIFT have no auto repeat feature. Real
+             * characters have it. That means. For STRG and SHIFT we can use KEY
+             * RELEASE to turn off sending, for real keys we need a time based
+             * switch off.
+             */
+
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
 
-//                boolean keyPressed = e.getID() == KeyEvent.KEY_PRESSED;
-//                boolean keyReleased = e.getID() == KeyEvent.KEY_RELEASED;
-
+                // boolean keyPressed = e.getID() == KeyEvent.KEY_PRESSED;
+                // boolean keyReleased = e.getID() == KeyEvent.KEY_RELEASED;
                 String radioKey = null;
-                if (fgComController != null && e.getID() == KeyEvent.KEY_PRESSED) {
+                boolean consume = false;
 
-                    if (e.getKeyCode() == 155 && e.getKeyLocation() == 4 && models.size() > 0) {
+                boolean hasAutoRepeat = true;
+
+                if (fgComController != null) {
+
+                    if (e.getKeyCode() == 17 && e.getKeyLocation() == 2 && models.size() > 0) { // RIGHT
+                        hasAutoRepeat = false; // STRG
                         radioKey = modelList.get(0).getRadioKey();
                     }
-                    if (e.getKeyCode() == 35 && e.getKeyLocation() == 4 && models.size() > 1) {
+                    if (e.getKeyCode() == 155 && e.getKeyLocation() == 4 && models.size() > 0) { // NUM0
+                        radioKey = modelList.get(0).getRadioKey();
+                    }
+                    if (e.getKeyCode() == 16 && e.getKeyLocation() == 2 && models.size() > 1) { // right
+                        hasAutoRepeat = false; // SHIFT
                         radioKey = modelList.get(1).getRadioKey();
                     }
-                    if (e.getKeyCode() == 255 && e.getKeyLocation() == 4 && models.size() > 2) {
+                    if (e.getKeyCode() == 35 && e.getKeyLocation() == 4 && models.size() > 1) { // NUM1
+                        radioKey = modelList.get(1).getRadioKey();
+                    }
+                    if (e.getKeyCode() == 225 && e.getKeyLocation() == 4 && models.size() > 2) { // NUM2
                         radioKey = modelList.get(2).getRadioKey();
                     }
-                    if (e.getKeyCode() == 99 && e.getKeyLocation() == 4 && models.size() > 3) {
+                    if (e.getKeyCode() == 34 && e.getKeyLocation() == 4 && models.size() > 3) { // NUM3
                         radioKey = modelList.get(3).getRadioKey();
                     }
                 }
-                boolean consume = false;
                 if (radioKey != null) {
 
-                    if (!fgComController.isPttActive(radioKey)) {
-                        System.out.println("Toggle PTT ON for " + radioKey);
+                    if (e.getID() == KeyEvent.KEY_PRESSED) {
+                        if (!hasAutoRepeat || (hasAutoRepeat && !fgComController.isPttActive(radioKey))) {
+                            System.out.println("Toggle PTT ON for " + radioKey);
 
-                        fgComController.setPttActive(radioKey, true);
-                        radioPanel.displayEnabledPTT(radioKey, true);
+                            fgComController.setPttActive(radioKey, true);
+                            radioPanel.displayEnabledPTT(radioKey, true);
+                        }
                     }
+                    if (!hasAutoRepeat && e.getID() == KeyEvent.KEY_RELEASED) {
+                        // System.out.println("Toggle PTT OFF for " + radioKey);
+
+                        fgComController.setPttActive(radioKey, false);
+                        radioPanel.displayEnabledPTT(radioKey, false);
+                    }
+
                     e.consume();
                     consume = true;
 
                     synchronized (mapLastOns) {
-                        mapLastOns.put(radioKey, e.getWhen());
+                        if (hasAutoRepeat) {
+                            mapLastOns.put(radioKey, e.getWhen());
+                        }
                     }
 
                 }
@@ -192,13 +252,13 @@ public class RadioController implements Runnable {
                     // turn off PTT after PTT key release
                     long lastOn = mapLastOns.get(radioKey);
                     if (lastOn + SEND_OFF_DELAY < System.currentTimeMillis()) {
-                        System.out.println("Toggle PTT OFF for " + radioKey);
+                        //System.out.println("Toggle PTT OFF for " + radioKey);
                         fgComController.setPttActive(radioKey, false);
                         radioPanel.displayEnabledPTT(radioKey, false);
                         mapLastOns.remove(radioKey);
                     }
                 }
-                for(String radioKey : models.keySet()) {
+                for (String radioKey : models.keySet()) {
                     // publish connection status to gui
                     Radio r = fgComController.getRadio(radioKey);
                     radioPanel.setRadioConnectedToServer(radioKey, r.isConnectedToServer());
@@ -210,5 +270,26 @@ public class RadioController implements Runnable {
             }
         }
 
+    }
+
+    // save and load to file
+    
+    public void addSelectedFrequenciesTo(Properties p) {
+        for (RadioModel m : models.values()) {
+            p.setProperty("radio." + m.getRadioKey(), m.getSelectedItem().getFrequency());
+        }
+    }
+
+    public void restoreSelectedFrequenciesFrom(Properties p) {
+        for (RadioModel m : models.values()) {
+            String savedFrequency = p.getProperty("radio." + m.getRadioKey());
+            if (savedFrequency != null) {
+                if (m.containsFrequency(savedFrequency)) {
+                    m.setSelectedItem(m.get(savedFrequency));
+                } else {
+                    m.setUserFrequency(savedFrequency);
+                }
+            }
+        }
     }
 }

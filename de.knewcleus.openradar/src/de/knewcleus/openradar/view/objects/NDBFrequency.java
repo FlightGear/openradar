@@ -5,12 +5,18 @@ import java.awt.Font;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.impl.NDB;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class NDBFrequency extends AViewObject {
 
-    public NDBFrequency(NDB ndb, Font font, Color color, int minScaleText, int maxScaleText) {
+    private AirportData data;
+    private String activeText;
+
+    public NDBFrequency(AirportData data, NDB ndb, Font font, Color color, int minScaleText, int maxScaleText) {
         super(font, color, ndb.getFrequency().toString(), minScaleText, maxScaleText);
+        this.data = data;
+        this.activeText = ndb.getFrequency().toString();
     }
 
     @Override
@@ -23,5 +29,10 @@ public class NDBFrequency extends AViewObject {
         if(scale>15) scale=15;
         
         setTextCoordinates(new Point2D.Double(newDisplayPosition.getX()+scale,newDisplayPosition.getY()+scale+font.getSize()));
+        if(data.getRadarObjectFilterState("NDB")) {
+            text = activeText;
+        } else {
+            text = null;
+        }
     }
 }

@@ -119,6 +119,8 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 		}
 		consumeLine();
 		
+		Point2D towerPosition = null;
+		
 		final List<LandingSurface> landingSurfaces = new ArrayList<LandingSurface>();
         final List<RawFrequency> frequencies = new ArrayList<RawFrequency>();
 		while (peekLine()!=null) {
@@ -137,6 +139,12 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 				if (surface!=null) {
 					landingSurfaces.add(surface);
 				}
+			} else if (recordCode.equals("14")) {
+			    // tower position
+		        double towerLat = Double.parseDouble(recordIterator.next()) * Units.DEG;
+		        double towerLon = Double.parseDouble(recordIterator.next()) * Units.DEG;
+
+		        towerPosition = new Point2D.Double(towerLon,towerLat);
 			} else if (/*recordCode.equals("50") || recordCode.equals("51") ||*/ recordCode.equals("53") || recordCode.equals("54") || recordCode.equals("55")) {
                 // Radio frequencies
                 final RawFrequency f = parseFrequency(recordIterator);
@@ -166,8 +174,9 @@ public class AptDatStream implements INavDataStream<INavPoint> {
 				cogLonWeight / totalWeight,
 				cogLatWeight / totalWeight);
 		
+		towerPosition = towerPosition==null ? geographicPosition : towerPosition;
 		final IAerodrome aerodrome = new Aerodrome(
-				geographicPosition, elevation,
+				geographicPosition, towerPosition, elevation,
 				identification, name,
 				aerodromeType);
 		for (LandingSurface surface: landingSurfaces) {

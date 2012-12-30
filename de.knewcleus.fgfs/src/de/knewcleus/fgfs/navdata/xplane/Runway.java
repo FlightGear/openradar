@@ -46,7 +46,29 @@ public class Runway extends LandingSurface implements IRunway {
 		endB.setOppositeEnd(endA);
 	}
 	
-	public String getOppositeEndDesignation() {
+	/**
+	 *  Contructor for XPlane 10 format 
+	 *  
+	 */
+    public Runway(SurfaceType surfaceType, float length, float width, 
+                  Point2D geographicCenter, Point2D rwEndACenter, Point2D rwEndBCenter, float trueHeading,
+                  String runwayEndNumberA, String runwayEndNumberB,
+                  float endAThresholdLength, float endBThresholdLength) {
+              super(surfaceType, length, width, geographicCenter, trueHeading, runwayEndNumberA);
+              
+              final float oppositeHeading;
+              oppositeHeading = (
+                      trueHeading>180.0f*Units.DEG?
+                      trueHeading-180.0f*Units.DEG:
+                          trueHeading+180.0f*Units.DEG);
+              endA = new RunwayEnd(rwEndACenter, this, runwayEndNumberA, trueHeading, 0, endAThresholdLength, length-endBThresholdLength, length-endAThresholdLength);
+              endB = new RunwayEnd(rwEndBCenter, this, runwayEndNumberB, oppositeHeading, 0, endBThresholdLength, length-endAThresholdLength, length-endBThresholdLength);
+              
+              endA.setOppositeEnd(endB);
+              endB.setOppositeEnd(endA);
+          }
+
+    public String getOppositeEndDesignation() {
 		final String numberString = designation.substring(0,2);
 		final int number = Integer.parseInt(numberString);
 		final int oppositeNumber = (number>18?number-18:number+18);

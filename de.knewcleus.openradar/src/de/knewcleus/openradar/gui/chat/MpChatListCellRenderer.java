@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 /**
  * This class renders the chat messages into the list.
@@ -18,20 +19,18 @@ import de.knewcleus.openradar.gui.Palette;
  * @author Wolfram Wagner
  */
 public class MpChatListCellRenderer extends JComponent implements ListCellRenderer<GuiChatMessage> {
-
+    
     private static final long serialVersionUID = 7792122217254832611L;
+
+    private final GuiMasterController master;
 
     private JLabel lbTimeStamp = null;
     private JLabel lbCallSign = null;
     private JLabel lbMessage = null;
 
-    private Color defaultColor = Palette.DESKTOP_TEXT;
-    private Color defaultBackground = Palette.DESKTOP;
-    private Color selectionColor = Color.BLUE;
-    private Color airportMentionedColor = Color.BLUE;
-    private Color ownMessageColor = Color.BLUE;
-
-    public MpChatListCellRenderer() {
+    public MpChatListCellRenderer(GuiMasterController master) {
+        this.master=master;
+        
         this.setLayout(new GridBagLayout());
         this.setOpaque(false);
         
@@ -48,7 +47,7 @@ public class MpChatListCellRenderer extends JComponent implements ListCellRender
         lbCallSign = new JLabel();
         lbCallSign.setForeground(java.awt.Color.white);
         lbCallSign.setOpaque(false);
-        lbCallSign.setPreferredSize(new Dimension(70,lbCallSign.getFont().getSize()+4));
+        lbCallSign.setPreferredSize(new Dimension(80,lbCallSign.getFont().getSize()+4));
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -76,37 +75,41 @@ public class MpChatListCellRenderer extends JComponent implements ListCellRender
             JList<? extends GuiChatMessage> list, GuiChatMessage value,
             int index, boolean isSelected, boolean cellHasFocus) {
 
-
             lbTimeStamp.setText(value.getTimestamp());
             lbCallSign.setText(value.getCallSign()+":");
             lbMessage.setText(value.getMessage());
-
-            Color background;
             Color foreground;
 
-             if (isSelected) {
-                background = Color.RED;
-                foreground = Color.WHITE;
+            if (value.isNeglectOrInactive()) {
+                // bad guys
+                foreground = Color.GRAY;
+                
              } else if (value.isContactSelected()) {
-                 foreground = selectionColor;
-                 background = defaultBackground;
-             } else if(value.isAirportMentioned()) { 
-                 foreground = airportMentionedColor;
-                 background = defaultBackground;
-             } else if(value.isOwnMessage()) { 
-                 foreground = ownMessageColor;
-                 background = defaultBackground;
+                 // messages of selected contacts
+                 foreground = Palette.CHAT_SELECTED;
+                 
+             } else if (value.isOwnMessage()) {
+                 if(value.messageContainsSelectedContact(master)) {
+                     // own to selected
+                     foreground = Palette.CHAT_OWN_TO_SELECTED;
+                     
+                 } else {
+                     // own to unselected
+                     foreground = Palette.CHAT_OWN;
+
+                 }
+             } else if(value.isAirportMentioned()) {
+                 // airport mentioned in contact message
+                 foreground = Palette.CHAT_AIRPORT_MENTIONED;
+                 
              } else {
-                foreground = defaultColor;
-                background = defaultBackground;
+                 // default
+                foreground = Palette.CHAT_TEXT;
             }
             
             this.lbTimeStamp.setForeground(foreground);
-            this.lbTimeStamp.setBackground(background);
             this.lbCallSign.setForeground(foreground);
-            this.lbCallSign.setBackground(background);
             this.lbMessage.setForeground(foreground);
-            this.lbMessage.setBackground(background);
 
             doLayout();
             

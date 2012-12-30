@@ -62,6 +62,7 @@ public class RadioPanel extends JPanel {
 
             JComboBox<RadioFrequency> cbFrequencies = new JComboBox<RadioFrequency>();
             cbFrequencies.setName(model.getRadioKey());
+            cbFrequencies.setToolTipText("middle button lets you define a frequency");
             cbFrequencies.setModel(model);
             if(model.getSize()>i) model.setSelectedItem(model.getElementAt(i));
             cbFrequencies.setEditable(false);
@@ -74,6 +75,7 @@ public class RadioPanel extends JPanel {
             this.add(cbFrequencies,gridBagConstraints);
 
             cbFrequencies.addActionListener(radioManager.getActionListener());
+            cbFrequencies.addMouseListener(radioManager.getRadioModeMouseListener());
 
             JButton btPTT = new JButton();
             btPTT.setText("PTT");

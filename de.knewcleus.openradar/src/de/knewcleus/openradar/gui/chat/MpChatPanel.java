@@ -16,7 +16,8 @@ public class MpChatPanel extends javax.swing.JPanel {
 
     private GuiMasterController guiInteractionManager;
 
-    private javax.swing.JComboBox<String> cbMPChatInput;
+//    private javax.swing.JTextArea taMPChatInput;
+    private javax.swing.JTextField tfMPChatInput;
     private javax.swing.JLabel lbMpShowAll;
     private javax.swing.JLabel lbMpShowFreq;
     private javax.swing.JLabel lbMpShowSect;
@@ -39,7 +40,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         lbMpShowFreq = new javax.swing.JLabel();
         lbMpShowSect = new javax.swing.JLabel();
         lbMpShowVisible = new javax.swing.JLabel();
-        cbMPChatInput = new javax.swing.JComboBox<String>();
+        tfMPChatInput = new javax.swing.JTextField();
         spMPChatHistory = new javax.swing.JScrollPane();
         liMPChatHistory = new javax.swing.JList<GuiChatMessage>();
 
@@ -59,20 +60,20 @@ public class MpChatPanel extends javax.swing.JPanel {
         add(lbMpShowAll, gridBagConstraints);
 
         lbMpShowAll.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
-        
-        lbMpShowFreq.setFont(Palette.DESKTOP_FONT); // NOI18N
-        lbMpShowFreq.setText("FRQ");
-        lbMpShowFreq.setName("FRQ");
-        lbMpShowFreq.setForeground(Color.white);
-        lbMpShowFreq.setToolTipText("Show only messages of contacts in radar range");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-        add(lbMpShowFreq, gridBagConstraints);
-
-        lbMpShowFreq.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
+        // frequencies are not transmitted
+//        lbMpShowFreq.setFont(Palette.DESKTOP_FONT); // NOI18N
+//        lbMpShowFreq.setText("FRQ");
+//        lbMpShowFreq.setName("FRQ");
+//        lbMpShowFreq.setForeground(Color.white);
+//        lbMpShowFreq.setToolTipText("Show only messages of contacts in radar range");
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 1;
+//        gridBagConstraints.gridy = 0;
+//        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
+//        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+//        add(lbMpShowFreq, gridBagConstraints);
+//
+//        lbMpShowFreq.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
         
 //        lbMpShowSect.setFont(Palette.DESKTOP_FONT); // NOI18N
 //        lbMpShowSect.setText("RNG");
@@ -101,28 +102,26 @@ public class MpChatPanel extends javax.swing.JPanel {
 
         lbMpShowVisible.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
         
-        cbMPChatInput.setEditable(true);
-        cbMPChatInput.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "" }));
-//        cbMPChatInput.getEditor().getEditorComponent().setForeground(Palette.DESKTOP_TEXT);
-//          cbMPChatInput.getEditor().getEditorComponent().setBackground(Palette.DESKTOP);
-//        cbMPChatInput.setForeground(Palette.DESKTOP_TEXT);
-//        cbMPChatInput.setBackground(Palette.DESKTOP);
+        tfMPChatInput.setEditable(true);
+        tfMPChatInput.setColumns(1);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 4);
-        add(cbMPChatInput, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(2, 8, 2, 4);
+        add(tfMPChatInput, gridBagConstraints);
 
-        cbMPChatInput.addActionListener(guiInteractionManager.getMpChatManager());
-        guiInteractionManager.getMpChatManager().setChatMessageBox(cbMPChatInput);
+//        cbMPChatInput.addActionListener(guiInteractionManager.getMpChatManager());
+        tfMPChatInput.addKeyListener(guiInteractionManager.getMpChatManager());
+        guiInteractionManager.getMpChatManager().setChatTextArea(tfMPChatInput);
         
         liMPChatHistory.setModel(guiInteractionManager.getMpChatManager());
-        liMPChatHistory.setCellRenderer(new MpChatListCellRenderer());
-        liMPChatHistory.setBackground(Palette.DESKTOP);
+        liMPChatHistory.setCellRenderer(new MpChatListCellRenderer(guiInteractionManager));
+        liMPChatHistory.setBackground(new Color(30,35,30));
         liMPChatHistory.setForeground(Palette.DESKTOP_TEXT);
+        liMPChatHistory.setDragEnabled(true);
         spMPChatHistory.setViewportView(liMPChatHistory);
         guiInteractionManager.getMpChatManager().setChatHistory(liMPChatHistory);
         
@@ -138,6 +137,8 @@ public class MpChatPanel extends javax.swing.JPanel {
     }
     
     public void resetFilters() {
+        liMPChatHistory.setBackground(new Color(30,35,30));
+        
         lbMpShowAll.setForeground(Color.white);
         lbMpShowFreq.setForeground(Color.white);
         lbMpShowSect.setForeground(Color.white);

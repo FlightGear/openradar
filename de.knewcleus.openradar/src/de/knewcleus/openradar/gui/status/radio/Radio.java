@@ -13,7 +13,7 @@ public class Radio {
     private volatile String callSign;
     private volatile RadioFrequency frequency = null;
     private volatile boolean pttActive = false;
-    private volatile boolean connectedToServer = false;
+    private volatile boolean connectedToServer = true;
 
     public Radio(String key, String fgComHost, int fgComPort) {
         this.key = key;
@@ -49,7 +49,7 @@ public class Radio {
         return (frequency!=null) ? frequency.getFrequency() : null;
     }
 
-    public void tuneTo(String callSign, RadioFrequency frequency) {
+    public synchronized void tuneTo(String callSign, RadioFrequency frequency) {
         this.callSign = callSign;
         this.frequency = frequency;        
     }
@@ -63,6 +63,7 @@ public class Radio {
     }
     
     public synchronized boolean isConnectedToServer() {
+        // System.out.println(this.key+" "+connectedToServer);
         return connectedToServer;
     }
 

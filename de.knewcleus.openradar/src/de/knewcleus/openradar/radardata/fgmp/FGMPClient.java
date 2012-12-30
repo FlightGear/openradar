@@ -15,8 +15,8 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 	protected final static Position linearVelocity=new Position();
 	protected final static Position orientation=new Position();
 	protected volatile String callsign;
-	protected String model;
-	protected volatile Position position;
+	protected final String model;
+	protected final Position position;
 	protected long lastAntennaRotationTime;
 	
 	/**
@@ -42,14 +42,14 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 		lastAntennaRotationTime=System.currentTimeMillis();
 	}
 	
-	@Override
-	protected int getUpdateMillis() {
-		return antennaRotationTimeMsecs;
-	}
+//	@Override
+//	protected int getUpdateMillis() {
+//		return antennaRotationTimeMsecs;
+//	}
 	
 	@Override
 	protected int getPlayerTimeoutMillis() {
-		return staleTargetTimeoutMsecs;
+		return 30*60*1000; // staleTargetTimeoutMsecs;
 	}
 	
 	@Override

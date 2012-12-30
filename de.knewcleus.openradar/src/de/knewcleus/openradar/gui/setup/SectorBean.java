@@ -11,18 +11,22 @@ public class SectorBean {
 
     private String airportCode;
     private String airportDescription;
+    private String metarSource;
     private Point2D position;
+    private double magneticDeclination;
     private boolean sectorDownloaded = false;
     
-    public SectorBean(String airportCode, String airportDescription, boolean sectorDownloaded) {
+    public SectorBean(String airportCode, String airportDescription, String metarSource, boolean sectorDownloaded) {
         this.airportCode=airportCode;
         this.airportDescription= airportDescription;
+        this.metarSource = metarSource;
         this.sectorDownloaded = sectorDownloaded;
     }
     
-    public SectorBean(String airportCode, String airportDescription, Point2D position, boolean sectorDownloaded) {
-        this(airportCode,airportDescription,sectorDownloaded);
+    public SectorBean(String airportCode, String airportDescription, String metarSource, Point2D position, double magneticDeclination, boolean sectorDownloaded) {
+        this(airportCode,airportDescription,metarSource,sectorDownloaded);
         this.position=position;
+        this.magneticDeclination=magneticDeclination;
     }
 
     public Point2D getPosition() {
@@ -44,5 +48,21 @@ public class SectorBean {
     }
     public void setAirportDescription(String airportDescription) {
         this.airportDescription = airportDescription;
+    }
+
+    public String getMetarSource() {
+        return metarSource;
+    }
+
+    public void setMetarSource(String metarSource) {
+        this.metarSource = metarSource;
+    }
+
+    public double getMagneticDeclination() {
+        return magneticDeclination;
+    }
+
+    public void setMagneticDeclination(double magneticDeclination) {
+        this.magneticDeclination = magneticDeclination;
     }
 }

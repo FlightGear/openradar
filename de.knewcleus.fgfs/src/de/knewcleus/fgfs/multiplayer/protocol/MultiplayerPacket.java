@@ -55,7 +55,7 @@ public class MultiplayerPacket {
 			outputStream.writeInt(PROTO_VER);
 			outputStream.writeInt(message.getMessageID());
 			outputStream.writeInt(getLength());
-			outputStream.writeInt(0); 			// replyAddress is obsolete
+			outputStream.writeInt(0); 	// replyAddress is obsolete
 			outputStream.writeInt(0); 	// replyPort is obsolete
 			MPUtils.writeCString(outputStream, callsign, MAX_CALLSIGN_LEN);
 			message.encode(outputStream);

@@ -2,6 +2,7 @@ package de.knewcleus.openradar.view;
 
 import java.awt.geom.Point2D;
 
+import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public abstract class Converter2D {
@@ -36,11 +37,25 @@ public abstract class Converter2D {
     public static double getFeetToDots(double distance, IMapViewerAdapter mapViewerAdapter) {
         double scale = mapViewerAdapter.getLogicalScale();
         scale = scale == 0 ? 1 : scale;
-        return distance / 5280d / scale *3600d;
+        return distance / 6076d / scale * 1900d; // the last number is the global correction factor for distances
     }
     
     public double getDistanceMiles(Point2D geoPoint1, Point2D geoPoint2) {
         return 0d;
+    }
+
+    public static double getMilesPerDot(IMapViewerAdapter mapViewerAdapter) {
+        return 1d/getFeetToDots(Units.NM/Units.FT, mapViewerAdapter);
+    }
+
+    public static double normalizeAngle(double d) {
+        while(d>=360) {
+            d = d-360;
+        }
+        while(d<0) {
+            d = d+360;
+        }
+        return d;
     }
 
 }

@@ -12,6 +12,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.navdata.model.INavPoint;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
@@ -42,11 +43,11 @@ public class NavPointView implements IBoundedView, INotificationListener {
     protected AViewObjectPainter<?> viewObjectPainter;
 //    protected volatile String text = null;
 
-    public NavPointView(IMapViewerAdapter mapViewAdapter, INavPoint navPoint) {
+    public NavPointView(IMapViewerAdapter mapViewAdapter, AirportData data, INavPoint navPoint) {
         this.mapViewAdapter = mapViewAdapter;
         this.navPoint = navPoint;
         // factory method
-        viewObjectPainter = AViewObjectPainter.getPainterForNavpoint(mapViewAdapter, navPoint);
+        viewObjectPainter = AViewObjectPainter.getPainterForNavpoint(mapViewAdapter, data, navPoint);
 
         mapViewAdapter.registerListener(this);
         updateLogicalPosition();
@@ -55,7 +56,6 @@ public class NavPointView implements IBoundedView, INotificationListener {
     @Override
     public Rectangle2D getDisplayExtents() {
         return viewObjectPainter.getDisplayExtents();
-        //return displayExtents;
     }
 
     @Override

@@ -42,26 +42,27 @@ public class MouseFocusManager extends MouseAdapter {
 	}
 	
     @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON2 && e.getClickCount()==2) {
+    public synchronized void mouseClicked(MouseEvent e) {
+        if (e.getClickCount()==2) {
             centerScreen();
             shiftOrigin=null;
         }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public synchronized void mousePressed(MouseEvent e) {
         shiftOrigin = e.getPoint();
     }
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public synchronized void mouseReleased(MouseEvent e) {
 		if ((e.getModifiersEx() & BUTTON_DOWN_MASKS) != 0) {
 			/* Ignore, as long as any button is down */
 			return;
 		}
-		if(e.getButton()==MouseEvent.BUTTON1) {
+		if(shiftOrigin.equals(e.getPoint()) ) {
 		    updateFocus(e);
+		    shiftOrigin=null;
 		}
 	}
 
@@ -75,7 +76,7 @@ public class MouseFocusManager extends MouseAdapter {
 	    radarMapViewerAdapter.centerMap();
     }
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public synchronized void mouseDragged(MouseEvent e) {
         if(shiftOrigin!=null) {
             shiftScreen(shiftOrigin,e.getPoint());
             shiftOrigin = e.getPoint();
@@ -83,7 +84,7 @@ public class MouseFocusManager extends MouseAdapter {
     }
 
     @Override
-	public void mouseMoved(MouseEvent e) {
+	public synchronized void mouseMoved(MouseEvent e) {
 	    // ignore the next line to use clicks
 		//updateFocus(e);
 	    
@@ -91,21 +92,22 @@ public class MouseFocusManager extends MouseAdapter {
 	    
 	    GuiRadarContact contact = guiInteractionManager.getRadarContactManager().getSelectedContact();
 	    if(contact!=null) {
-	        guiInteractionManager.getStatusManager().updateMouseRadarMoved(contact.getMilesPerDot(),contact.getAirSpeed(), contact.getCenterViewCoordinates(),e);
+	        guiInteractionManager.getStatusManager().updateMouseRadarMoved(contact,e);
 	    }
 	}
 
 	protected void updateFocus(MouseEvent e) {
-		final IFocusableView currentFocusOwner = focusManager.getCurrentFocusOwner();
-		if (currentFocusOwner!=null && currentFocusOwner.contains(e.getPoint())) {
-			/* The current focus owner takes precedence, even if it is now obscured */
-			return;
-		}
-		
+//		final IFocusableView currentFocusOwner = focusManager.getCurrentFocusOwner();
+//
+//		if (currentFocusOwner!=null && currentFocusOwner.contains(e.getPoint())) {
+//			/* The current focus owner takes precedence, even if it is now obscured */
+//			return;
+//		}
+
 		final FocuseablePickIterator iterator = new FocuseablePickIterator();
 		final PickVisitor pickVisitor = new PickVisitor(e.getPoint(), iterator);
 		rootView.accept(pickVisitor);
-		focusManager.forceCurrentFocusOwner(iterator.getTopFocusable());
+		focusManager.forceCurrentFocusOwner(iterator.getTopFocusable(),e);
 	}
 	
 	protected class FocuseablePickIterator implements IOutputIterator<IPickable> {

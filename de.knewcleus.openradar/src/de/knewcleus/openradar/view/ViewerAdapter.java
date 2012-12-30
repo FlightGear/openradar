@@ -3,8 +3,11 @@ package de.knewcleus.openradar.view;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.knewcleus.openradar.notify.Notifier;
+import de.knewcleus.openradar.view.IRadarViewChangeListener.Change;
 
 public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	protected final ICanvas canvas;
@@ -16,11 +19,20 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 
+	protected List<IRadarViewChangeListener> listeners = new ArrayList<IRadarViewChangeListener>();
+	
 	public ViewerAdapter(ICanvas canvas, IUpdateManager updateManager) {
 		this.canvas = canvas;
 		this.updateManager = updateManager;
 		updateTransforms();
 	}
+	
+	public void addRadarViewChangeListener(IRadarViewChangeListener l) {
+	    listeners.add(l);
+	}
+    public void removeRadarViewChangeListener(IRadarViewChangeListener l) {
+        listeners.remove(l);
+    }
 	
 	@Override
 	public ICanvas getCanvas() {
@@ -52,12 +64,14 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	public void setDeviceOrigin(double originX, double originY) {
 		deviceOrigin = new Point2D.Double(originX, originY);
 		updateTransforms();
-	}
+	       notifyListeners(Change.CENTER);
+}
 	
 	@Override
 	public void setDeviceOrigin(Point2D origin) {
 		deviceOrigin = origin;
 		updateTransforms();
+        notifyListeners(Change.CENTER);
 	}
 
 	@Override
@@ -69,18 +83,21 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	public void setLogicalScale(double scale) {
 		this.logicalScale = scale;
 		updateTransforms();
+        notifyListeners(Change.ZOOM);
 	}
 
 	@Override
 	public void setLogicalOrigin(double offsetX, double offsetY) {
 		logicalOrigin = new Point2D.Double(offsetX, offsetY);
 		updateTransforms();
+        notifyListeners(Change.CENTER);
 	}
 	
 	@Override
 	public void setLogicalOrigin(Point2D origin) {
 		logicalOrigin = origin;
 		updateTransforms();
+        notifyListeners(Change.CENTER);
 	}
 	
 	@Override
@@ -110,5 +127,11 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 				deviceOrigin.getX() - logicalOrigin.getX()/logicalScale,
 				deviceOrigin.getY() + logicalOrigin.getY()/logicalScale);
 		notify(new CoordinateSystemNotification(this));
+	}
+	
+	public void notifyListeners(Change c) {
+	    for(IRadarViewChangeListener l : listeners) {
+	        l.radarViewChanged(this, c);
+	    }
 	}
 }

@@ -13,10 +13,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class VORSymbol extends AViewObject {
 
+    private AirportData data;
+    
     public enum VORType {
         VOR, VOR_DME, VORTAC
     }
@@ -27,8 +30,9 @@ public class VORSymbol extends AViewObject {
     private static BufferedImage imageVORTAC;
     private Point2D displayPosition;
 
-    public VORSymbol(VORType vorType) {
+    public VORSymbol(AirportData data, VORType vorType) {
         super(Palette.CRD_BACKGROUND);
+        this.data = data;
         this.vorType = vorType;
         try {
             imageVOR = ImageIO.read(new File("res/VOR.png"));
@@ -49,28 +53,31 @@ public class VORSymbol extends AViewObject {
 
     @Override
     public void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
-        // super.paint(g2d, mapViewAdapter);
-        int scale = (int)mapViewAdapter.getLogicalScale();
-        scale = scale==0 ? 1 : scale; 
-        scale = 30 * 10/scale;
-        if(scale<20) scale=20;
-        if(scale>30) scale=30;
         
-        
-        if (displayPosition != null) {
-            Image image=imageVOR; 
-            switch (vorType) {
-            case VOR:
-                image = imageVOR.getScaledInstance(scale, -1, Image.SCALE_SMOOTH);
-                break;
-            case VOR_DME:
-                image = imageVORTME.getScaledInstance(scale, -1, Image.SCALE_SMOOTH);
-                break;
-            case VORTAC:
-                image = imageVORTAC.getScaledInstance(scale, -1, Image.SCALE_SMOOTH);
-                break;
+        if(data.getRadarObjectFilterState("VOR")) {
+            // super.paint(g2d, mapViewAdapter);
+            int scale = (int)mapViewAdapter.getLogicalScale();
+            scale = scale==0 ? 1 : scale; 
+            scale = 30 * 10/scale;
+            if(scale<20) scale=20;
+            if(scale>30) scale=30;
+            
+            
+            if (displayPosition != null) {
+                Image image=imageVOR; 
+                switch (vorType) {
+                case VOR:
+                    image = imageVOR.getScaledInstance(scale, -1, Image.SCALE_SMOOTH);
+                    break;
+                case VOR_DME:
+                    image = imageVORTME.getScaledInstance(scale, -1, Image.SCALE_SMOOTH);
+                    break;
+                case VORTAC:
+                    image = imageVORTAC.getScaledInstance(scale, -1, Image.SCALE_SMOOTH);
+                    break;
+                }
+                g2d.drawImage(image, (int) displayPosition.getX() - scale/2, (int) displayPosition.getY() - scale/2, (ImageObserver) null);
             }
-            g2d.drawImage(image, (int) displayPosition.getX() - scale/2, (int) displayPosition.getY() - scale/2, (ImageObserver) null);
         }
     }
 

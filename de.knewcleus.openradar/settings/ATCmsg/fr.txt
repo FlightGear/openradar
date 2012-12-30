@@ -1,0 +1,40 @@
+ A tous les pilotes:
+%s
+
+%s: Bienvenue a %s - etes-vous en approche de %s ? FGCOM %2.3f
+%s: Bienvenue a %s - SVP avisez le contreleur de vos intentions, FGCOM %2.3f
+%s: Contact radar %3.0f nm, QNH %2.2f,  piste en service %s, FGCOM %2.3f
+
+%s: Vous quittez mon espace aerien - vous pouvez quitter la frequence- bon vol
+ATIS a %s sur %2.0f ft: QNH %2.2f, vent %3.0f a %2.0f kt, piste(s) en service %s,  FGCOM %2.3f
+Contact-ATC-Aide: pour ARRIVEE touche: "-">>"3">>"3">>"3"  pour DEPART touche: "-">>"3">>"6"
+
+%s: Mise en route moteur approuvee
+%s: pushback approuve
+%s: roulez point d'arret piste:
+%s: Maintenez position avant le piste:
+
+%s: roulez point d'arret piste et rappelez pret au depart
+%s: maintenez le cap de la piste, montez a:
+%s: vent %3.0f a %2.0f kt, autorise a decoller piste:
+
+%s: virez a gauche cap:
+%s: virez a droite cap:
+%s: montez et maintenez:
+%s: descendez et maintenez:
+%s: reduisez la vitesse a:
+
+%s: a %3.0f nm, maintenez votre cap jusqu'a l'interception du localizer, autorise pour approche ILS piste:
+%s: %3.0f nm, rapportez la piste en vue
+%s: a %3.0f nm, vent %3.0f a %2.0f kts, autorise a atterrir piste:
+%s: Bienvenue chez %s -- degagez la piste par la:
+%s: roulez vers Porte/Terminal:
+
+SVP utilisez FGCOM %2.3f seulement pour communiquer avec le ATC, et PAS pour parler entre pilotes!
+%s: Vous perturbez notre entrainement ATC (Air Traffic Control) --> SVP pour les vols non contreles, utilisez un autre aeroport
+%s: SVP ne demarrez pas votre session sur un piste active - ou sinon, degagez rapidement - ne decollez pas directement!
+Ajustez votre position de depart ex. pour EDDF -ligne  de commande ou fenetre: --parkpos= B42..48, or A10..25, etc.
+
+
+
+from FGFS-Argon

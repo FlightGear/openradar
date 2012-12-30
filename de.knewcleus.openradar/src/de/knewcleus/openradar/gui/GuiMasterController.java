@@ -26,11 +26,13 @@ import de.knewcleus.openradar.weather.MetarData;
 import de.knewcleus.openradar.weather.MetarReader;
 
 /**
- * This class is the central point where the GUI managers are initialized and coordinated.
+ * This class is the central point where the GUI managers are initialized and
+ * coordinated.
  * 
- * GUI components are usually splitted into a VIEW Part (responsible for displaying the, may include a renderer), 
- * a Model (sometimes the invisible default model of SWING) and a Controller that does more complex operations and 
- * implements the business logic.
+ * GUI components are usually splitted into a VIEW Part (responsible for
+ * displaying the, may include a renderer), a Model (sometimes the invisible
+ * default model of SWING) and a Controller that does more complex operations
+ * and implements the business logic.
  * 
  * @author Wolfram Wagner
  */
@@ -48,56 +50,59 @@ public class GuiMasterController {
     private RadioController radioManager;
     private MainFrame mainFrame = null;
     private JTextPane detailsArea = null;
-    
+
     private final TrackManager trackManager = new TrackManager();
 
     private String airportCode = null;
-    private FGMPClient<TargetStatus> radarProvider;
-    
+    private volatile FGMPClient<TargetStatus> radarProvider;
+
     public GuiMasterController(AirportData data) {
-        this.dataRegistry=data;
+        this.dataRegistry = data;
         // init managers
-        radarBackend = new GuiRadarBackend();
+        radarBackend = new GuiRadarBackend(this);
         radarManager = new RadarManager(this, radarBackend);
         radarContactManager = new RadarContactController(this, radarBackend);
-        mpChatManager = new MpChatManager(this);
-        metarReader = new MetarReader(dataRegistry.getMetarUrl(), dataRegistry.getAirportCode());
+        metarReader = new MetarReader(dataRegistry);
         radioManager = new RadioController(this);
         statusManager = new StatusManager(this);
+        mpChatManager = new MpChatManager(this);
     }
-    
+
     public LogWindow getLogWindow() {
         return logWindow;
     }
-    
+
     public TrackManager getTrackManager() {
         return trackManager;
     }
-    
+
     public MpChatManager getMpChatManager() {
         return mpChatManager;
     }
 
-
-    /** 
-     * This method starts the application 
-     *  
+    /**
+     * This method starts the application
+     * 
      */
     public void start(SetupDialog setupDialog) throws Exception {
         // initialize the front end and load environment data
         mainFrame = new MainFrame(this);
-        mainFrame.getRadarScreen().setup(airportCode,this,setupDialog);
+        mainFrame.getRadarScreen().setup(airportCode, this, setupDialog);
         initMpRadar();
         mainFrame.getRadarScreen().initRadarData();
         metarReader.start();
         radioManager.init();
         statusManager.setSelectedCallSign("");
+        dataRegistry.loadAirportData(this);
+        radarBackend.validateToggles();
+        radarBackend.addRadarViewListener(mpChatManager); // forwards Zoom and center changes to MPChat
+
         initShortCuts();
         // ready, so display it
         mainFrame.setDividerPosition();
         mainFrame.setVisible(true);
     }
-    
+
     private void initMpRadar() throws Exception {
         /* Install the radar data provider(s) */
         final IPlayerRegistry<TargetStatus> playerRegistry = new FGMPRegistry();
@@ -105,18 +110,23 @@ public class GuiMasterController {
         // or disappears
         playerRegistry.registerListener(getRadarContactManager());
 
-        final Position clientPosition = new Position(dataRegistry.getLon(), dataRegistry.getLat(), dataRegistry.getElevation());
+        final Position clientPosition = new Position(dataRegistry.getLon(), dataRegistry.getLat(), dataRegistry.getElevationM());
         final GeodToCartTransformation geodToCartTransformation = new GeodToCartTransformation(Ellipsoid.WGS84);
-        // 
-        radarProvider = new FGMPClient<TargetStatus>(playerRegistry, dataRegistry.getInitialATCCallSign(), "OpenRadar",geodToCartTransformation.forward(clientPosition),
-                                                               dataRegistry.getMpServer(),dataRegistry.getMpServerPort(), dataRegistry.getMpLocalPort() );
-        
+        //
+        radarProvider = new FGMPClient<TargetStatus>(playerRegistry, 
+                                                     dataRegistry.getInitialATCCallSign(), 
+                                                     "OpenRadar",
+                                                     geodToCartTransformation.forward(clientPosition),
+                                                     dataRegistry.getMpServer(),
+                                                     dataRegistry.getMpServerPort(),
+                                                     dataRegistry.getMpLocalPort());
+
         // register MP Chat (send & receive)
         radarProvider.addChatListener(getMpChatManager());
-        getMpChatManager().setMpBackend(radarProvider);  
-        
+        getMpChatManager().setMpBackend(radarProvider);
+
         // initialize reception
-        Thread atcNetworkThread = new Thread(radarProvider,"OpenRadar - AtcNetworkThread");
+        Thread atcNetworkThread = new Thread(radarProvider, "OpenRadar - AtcNetworkThread");
         atcNetworkThread.setDaemon(true);
         atcNetworkThread.start();
         Thread lossChecker = new Thread("OpenRadar - LossChecker") {
@@ -124,12 +134,13 @@ public class GuiMasterController {
             public void run() {
                 while (!Thread.interrupted()) {
                     try {
-                        sleep(500);
+                        sleep(1000);
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     trackManager.checkForLossOrRetirement();
+                    statusManager.updateTime(); // update time display
                 }
             }
         };
@@ -137,7 +148,7 @@ public class GuiMasterController {
         lossChecker.start();
 
     }
-    
+
     private void initShortCuts() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
 
@@ -146,13 +157,23 @@ public class GuiMasterController {
 
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
 
-                    if(e.getKeyCode() ==  76 && e.isAltDown()) { // ALT + l
-                        logWindow.setVisible(!logWindow.isVisible());
+                    if (e.getKeyCode() == 76 && e.isAltDown()) { // ALT + l
+                        logWindow.setVisible(true);
+                        e.consume();
+                        return true;
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        logWindow.setVisible(false);
+                        statusManager.hideRunwayDialog();
+                        radarContactManager.hideDialogs();
+                        mpChatManager.cancelAutoAtcMessage();
+                        mpChatManager.requestFocusForInput();
                         e.consume();
                         return true;
                     }
                 }
-            return false;
+
+                return false;
             }
         });
     }
@@ -162,9 +183,9 @@ public class GuiMasterController {
     }
 
     public void setDetailsArea(JTextPane detailsArea) {
-        this.detailsArea=detailsArea;
+        this.detailsArea = detailsArea;
     }
-    
+
     public RadarManager getRadarManager() {
         return radarManager;
     }
@@ -174,6 +195,8 @@ public class GuiMasterController {
     }
 
     public String getCurrentATCCallSign() {
+        if (radarProvider == null)
+            return "";
         return radarProvider.getCallsign();
     }
 
@@ -204,6 +227,7 @@ public class GuiMasterController {
     public String getDetails() {
         return detailsArea.getText();
     }
+
     public void setDetails(String details) {
         detailsArea.setText(details);
     }
@@ -211,6 +235,7 @@ public class GuiMasterController {
     public MetarReader getMetarReader() {
         return metarReader;
     }
+
     public MetarData getMetar() {
         return metarReader.getMetar();
     }

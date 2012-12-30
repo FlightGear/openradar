@@ -10,13 +10,16 @@ public class LogWriterThread implements Runnable {
     private LogWindow logWindow = null;
     private Process process = null;
     private String tabName = null;
+    private volatile boolean isRunning = true;
     
     public LogWriterThread(LogWindow logWindow, Radio radio, Process process) {
         this.logWindow = logWindow;
         this.process = process;
         this.radio = radio;
         this.tabName=radio.getKey();
-        new Thread(this).start();
+        Thread thread = new Thread(this, "OpenRadar - FGCom Log Writer");
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @Override
@@ -26,24 +29,32 @@ public class LogWriterThread implements Runnable {
         BufferedInputStream bis = new BufferedInputStream(process.getInputStream());
         
         try {
-            while(true) {
-                int len = bis.read(buffer);
-                if(len>0) {
-                    String content = new String(buffer,0,len);
-                    // System.out.println(content);
-                    if(content.contains("rejected") || content.contains("accepted")) {
-                        if(content.contains("rejected")) {
+            while(isRunning) {
+                int len = isRunning ? bis.read(buffer) : 0;
+                synchronized(this) {
+                    if(len>0 && isRunning) {
+                        String content = new String(buffer,0,len);
+                        // System.out.println(content);
+                        if(content.contains("rejected") || content.contains("Hanging up")) {
                             radio.setConnectedToServer(false);
                         } else if(content.contains("accepted")){
                             radio.setConnectedToServer(true);
                         }
+                        logWindow.addText(tabName,content);
                     }
-                    logWindow.addText(tabName,content);
                 }
-                Thread.sleep(200);
+                if(len>0) {
+                    Thread.sleep(200);
+                } else {
+                    Thread.sleep(1000);
+                }
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void stop() {
+        isRunning=false;
     }
 }

@@ -38,7 +38,7 @@ public class SetupController {
     private SetupDialog setupDialog;
     private SetupActionListener setupActionListener = new SetupActionListener();
     private DefaultListModel<SectorBean> searchResultsModel = new DefaultListModel<SectorBean>();
-    private AirportData data = new AirportData();// "LFSB","/home/wolfram/bin/fgcomgui-win32-bundle-01192010/wine fgcom",
+    private AirportData data = new AirportData();
     private SectorListSelectionListener listSelectionListener = new SectorListSelectionListener();
     private SectorListMouseListener sectorListMouseListener = new SectorListMouseListener();
     private Map<String, SectorBean> mapExistingSectors = new TreeMap<String, SectorBean>();
@@ -54,15 +54,17 @@ public class SetupController {
         searchResultsModel.clear();
         mapExistingSectors.clear();
         mapExistingSectors = new TreeMap<String, SectorBean>();
-        File sectorDir = new File("sectors");
-        if(!sectorDir.exists()) sectorDir.mkdir();
-        File[] content = sectorDir.listFiles();
+        File dataDir = new File("data");
+        if(!dataDir.exists()) dataDir.mkdir();
+        File[] content = dataDir.listFiles();
         for (File f : content) {
             if (f.isDirectory() && f.getName().length() == 4) {
                 String airportCode = f.getName();
                 String airportName = "";
+                String metarSource = airportCode;
                 Point2D position = null;
-                File propertyFile = new File("sectors" + File.separator + airportCode + File.separator + "sector.properties");
+                double magneticDeclination = 0d;
+                File propertyFile = new File("data" + File.separator + airportCode + File.separator + "sector.properties");
                 if (propertyFile.exists()) {
                     Properties p = new Properties();
                     try {
@@ -70,13 +72,19 @@ public class SetupController {
                     } catch (IOException e) {
                     }
                     airportName = p.getProperty("airportName", "");
+                    metarSource = p.getProperty("metarSource", airportCode);
                     if(p.getProperty("lat")!=null && p.getProperty("lon")!=null) {
                         double lon = Double.parseDouble(p.getProperty("lon", ""));
                         double lat = Double.parseDouble(p.getProperty("lat", ""));
                         position = new Point2D.Double(lon, lat);
                     }
+                    if(p.getProperty("magneticDeclination")==null) {
+                        System.err.println("Error: Property 'magneticDeclination' not found in "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
+                        System.exit(99);
+                    }
+                    magneticDeclination = Double.parseDouble(p.getProperty("magneticDeclination", "0"));
                 }
-                SectorBean sb = new SectorBean(airportCode, airportName, position, true);
+                SectorBean sb = new SectorBean(airportCode, airportName, metarSource, position, magneticDeclination, true);
                 mapExistingSectors.put(airportCode, sb);
             }
         }
@@ -177,7 +185,7 @@ public class SetupController {
                         name.append(st.nextToken());
                     }
                     if(airportCode.toUpperCase().contains(searchTerm.toUpperCase()) || name.toString().toUpperCase().contains(searchTerm.toUpperCase())) {
-                        SectorBean sb = new SectorBean(airportCode, name.toString(), mapExistingSectors.containsKey(airportCode));
+                        SectorBean sb = new SectorBean(airportCode, name.toString(), airportCode, mapExistingSectors.containsKey(airportCode));
                         mapFindings.put(airportCode, sb);
                     }
                 }
@@ -236,7 +244,7 @@ public class SetupController {
     }
     
     protected InputStreamReader openXPlaneAptDat() throws IOException {
-        final File inputFile = new File("sectors/AptNav.zip");
+        final File inputFile = new File("data/AptNav.zip");
         zif = new ZipFile(inputFile);
         Enumeration<? extends ZipEntry> entries = zif.entries();
         while(entries.hasMoreElements()) {

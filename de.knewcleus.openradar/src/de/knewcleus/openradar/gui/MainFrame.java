@@ -82,7 +82,7 @@ public class MainFrame extends javax.swing.JFrame {
         pnlRightTop = new javax.swing.JPanel();
         radioRunwayPanel = new de.knewcleus.openradar.gui.status.StatusPanel(guiInteractionManager);
         contactsPanel = new de.knewcleus.openradar.gui.contacts.ContactsPanel(guiInteractionManager);
-        detailPanel = new de.knewcleus.openradar.gui.status.DetailPanel(guiInteractionManager);
+        // detailPanel = new de.knewcleus.openradar.gui.status.DetailPanel(guiInteractionManager);
 
         // Left MAIN split pane
         
@@ -113,6 +113,7 @@ public class MainFrame extends javax.swing.JFrame {
         // Right top: Radios, Details of wind and runways
         
         pnlRightTop.setLayout(new java.awt.GridBagLayout());
+        pnlRightTop.setBackground(Palette.DESKTOP);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -121,15 +122,15 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         pnlRightTop.add(radioRunwayPanel, gridBagConstraints);
 
-        detailPanel.setMinimumSize(new java.awt.Dimension(0, 40));
-        detailPanel.setPreferredSize(new java.awt.Dimension(0, 40));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        pnlRightTop.add(detailPanel, gridBagConstraints);
+//        detailPanel.setMinimumSize(new java.awt.Dimension(0, 40));
+//        detailPanel.setPreferredSize(new java.awt.Dimension(0, 40));
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 0;
+//        gridBagConstraints.gridy = 1;
+//        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+//        gridBagConstraints.weightx = 1.0;
+//        gridBagConstraints.weighty = 1.0;
+//        pnlRightTop.add(detailPanel, gridBagConstraints);
 
         vspRight.setTopComponent(pnlRightTop);
         

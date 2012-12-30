@@ -9,15 +9,17 @@ import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 
 public class Aerodrome implements IAerodrome {
 	protected final Point2D geographicPosition;
+	protected final Point2D towerPosition;
 	protected final float elevation;
 	protected final String identification;
 	protected final String name;
 	protected final Type type;
 	protected volatile List<RawFrequency> frequencies;
 	
-	public Aerodrome(Point2D geographicPosition, float elevation,
+	public Aerodrome(Point2D geographicPosition, Point2D towerPosition, float elevation,
 			String identification, String name, Type type) {
 		this.geographicPosition = geographicPosition;
+		this.towerPosition = towerPosition;
 		this.elevation = elevation;
 		this.identification = identification;
 		this.name = name;
@@ -29,7 +31,12 @@ public class Aerodrome implements IAerodrome {
 		return geographicPosition;
 	}
 	
-	@Override
+    @Override
+    public Point2D getTowerPosition() {
+        return towerPosition;
+    }
+
+    @Override
 	public float getElevation() {
 		return elevation;
 	}

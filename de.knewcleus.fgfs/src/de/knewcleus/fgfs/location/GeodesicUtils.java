@@ -17,6 +17,8 @@ import de.knewcleus.fgfs.Units;
  *                 Survey Review Vol. XXIII, No. 176,
  *                 Ministry of Overseas Department, UK, April 1975
  *  
+ *  WARNING indirect delivers wrong length!!! to be fixed!
+ *  
  * @author Ralf Gerlich
  *
  */
