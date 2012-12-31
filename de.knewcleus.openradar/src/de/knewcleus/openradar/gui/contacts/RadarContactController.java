@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -503,6 +502,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     
     public synchronized void selectNShowContactDialog(GuiRadarContact c, MouseEvent e) {
         // show details dialog
+        select(c, true, false);
         contactSettingsDialog.show(c, e);
     }
     
