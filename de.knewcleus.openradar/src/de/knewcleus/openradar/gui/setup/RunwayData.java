@@ -245,32 +245,33 @@ public class RunwayData {
     }
 
     public void setValuesFromProperties(Properties p) {
-        extCenterlineStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".extCenterlineStart"));
-        extCenterlineLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".extCenterlineLength"));
-
-        majorDMStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMStart"));
-        majorDMEnd = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMEnd"));
-        majorDMInterval = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMInterval"));
-        majorDMTickLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMTickLength"));
-
-        minorDMStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMStart"));
-        minorDMEnd = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMEnd"));
-        minorDMInterval = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMInterval"));
-        minorDMTickLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMTickLength"));
-
-        leftVectoringCLStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringCLStart"));
-        leftVectoringAngle = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringAngle"));
-        leftVectoringLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringLength"));
-        leftBaselegLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftBaselegLength"));
-
-        rightVectoringCLStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringCLStart"));
-        rightVectoringAngle = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringAngle"));
-        rightVectoringLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringLength"));
-        rightBaselegLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightBaselegLength"));
-
-        symetric = "true".equals(p.getProperty("rwd." + rwCode + ".symetric"));
-        rightBaseEnabled = "true".equals(p.getProperty("rwd." + rwCode + ".rightBaseEnabled"));
-        leftBaseEnabled = "true".equals(p.getProperty("rwd." + rwCode + ".leftBaseEnabled"));
-        
+        if(p.getProperty("rwd." + rwCode + ".extCenterlineStart")!=null) {
+            extCenterlineStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".extCenterlineStart"));
+            extCenterlineLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".extCenterlineLength"));
+    
+            majorDMStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMStart"));
+            majorDMEnd = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMEnd"));
+            majorDMInterval = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMInterval"));
+            majorDMTickLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMTickLength"));
+    
+            minorDMStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMStart"));
+            minorDMEnd = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMEnd"));
+            minorDMInterval = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMInterval"));
+            minorDMTickLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMTickLength"));
+    
+            leftVectoringCLStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringCLStart"));
+            leftVectoringAngle = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringAngle"));
+            leftVectoringLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringLength"));
+            leftBaselegLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftBaselegLength"));
+    
+            rightVectoringCLStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringCLStart"));
+            rightVectoringAngle = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringAngle"));
+            rightVectoringLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringLength"));
+            rightBaselegLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightBaselegLength"));
+    
+            symetric = "true".equals(p.getProperty("rwd." + rwCode + ".symetric"));
+            rightBaseEnabled = "true".equals(p.getProperty("rwd." + rwCode + ".rightBaseEnabled"));
+            leftBaseEnabled = "true".equals(p.getProperty("rwd." + rwCode + ".leftBaseEnabled"));
+        }        
     }
 }
