@@ -27,8 +27,6 @@ import de.knewcleus.fgfs.multiplayer.IChatListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.chat.auto.AtcMessage;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
-import de.knewcleus.openradar.gui.radar.GuiRadarBackend.ZoomLevel;
-import de.knewcleus.openradar.gui.radar.IRadarChangeListener;
 import de.knewcleus.openradar.radardata.fgmp.FGMPClient;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 import de.knewcleus.openradar.view.IRadarViewChangeListener;
@@ -238,6 +236,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
                         }
                     }
                 }
+                activeMessageList = filteredMessageList;
                 break;
             case FILTER_NONE:
                 activeMessageList = globalList;
@@ -345,6 +344,8 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
                 setFilter(Filter.FILTER_RANGE);
             } else if (lSource.getName().equals("VIS")) {
                 setFilter(Filter.FILTER_VISIBLE);
+            } else if (lSource.getName().equals("SEL")) {
+                setFilter(Filter.FILTER_SELECTED_USER);
             }
             parent.resetFilters();
             parent.selectFilter(lSource);
