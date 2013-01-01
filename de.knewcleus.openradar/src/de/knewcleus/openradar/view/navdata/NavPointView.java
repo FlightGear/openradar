@@ -1,3 +1,36 @@
+/**
+ * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2012 Wolfram Wagner
+ * 
+ * This file is part of OpenRadar.
+ * 
+ * OpenRadar is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Diese Datei ist Teil von OpenRadar.
+ * 
+ * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
+ * General Public License, wie von der Free Software Foundation, Version 3 der
+ * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * weiterverbreiten und/oder modifizieren.
+ * 
+ * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
+ * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
+ * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
+ * Public License für weitere Details.
+ * 
+ * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
+ * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+ */
 package de.knewcleus.openradar.view.navdata;
 
 import static java.lang.Math.PI;
@@ -37,11 +70,7 @@ public class NavPointView implements IBoundedView, INotificationListener {
     protected Path2D displayShape = null;
     protected Rectangle2D displayExtents = new Rectangle2D.Double();
 
-//    protected Path2D rwLandSide = null;
-//    protected Path2D rwStartSide = null;
-    
     protected AViewObjectPainter<?> viewObjectPainter;
-//    protected volatile String text = null;
 
     public NavPointView(IMapViewerAdapter mapViewAdapter, AirportData data, INavPoint navPoint) {
         this.mapViewAdapter = mapViewAdapter;
@@ -111,68 +140,5 @@ public class NavPointView implements IBoundedView, INotificationListener {
         final AffineTransform logical2display = mapViewAdapter.getLogicalToDeviceTransform();
         displayPosition = logical2display.transform(logicalPosition, null);
         viewObjectPainter.updateDisplayPosition(displayPosition);
-        
-//        if (navPoint instanceof Helipad) {
-//            Helipad hp = (Helipad) navPoint;
-//            setText(hp.getDesignation());
-//
-//            /* make sure that our previously occupied region is redrawn */
-//            mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
-//            final AffineTransform logical2display = mapViewAdapter.getLogicalToDeviceTransform();
-//            displayPosition = logical2display.transform(logicalPosition, null);
-//            displayShape = new Path2D.Double();
-//            final double x, y;
-//            x = displayPosition.getX();
-//            y = displayPosition.getY();
-//            displayShape.moveTo(x, y);
-//            displayShape.append(new Ellipse2D.Double(x - 8.0d, y - 8.0d, 16.0d, 16.0d), false);
-//            displayShape.moveTo(x - 3, y - 4);
-//            displayShape.lineTo(x - 3, y + 4);
-//            displayShape.moveTo(x - 3, y);
-//            displayShape.lineTo(x + 3, y);
-//            displayShape.moveTo(x + 3, y - 4);
-//            displayShape.lineTo(x + 3, y + 4);
-//            displayExtents = displayShape.getBounds2D();
-//            mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
-//
-//        } else {
-//
-//            if (navPoint instanceof IAerodrome) {
-//                setText(((IAerodrome) navPoint).getIdentification());
-//            } else if (navPoint instanceof RunwayEnd) {
-//                IRunwayEnd runwayEnd = (IRunwayEnd) navPoint;
-//                setText(runwayEnd.getRunwayID());
-//                
-//                rwStartSide = getRWStartSideShapes(displayShape,runwayEnd);
-//                rwLandSide = getRWLandSideShapes(displayShape,runwayEnd);
-//                
-//            } else {
-//                System.out.println(navPoint.getClass());
-//            }
-//            /* make sure that our previously occupied region is redrawn */
-//            mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
-//            final AffineTransform logical2display = mapViewAdapter.getLogicalToDeviceTransform();
-//            displayPosition = logical2display.transform(logicalPosition, null);
-//            // displayShape = new Path2D.Double();
-//            final double x, y;
-//            x = displayPosition.getX();
-//            y = displayPosition.getY();
-//            // displayShape.moveTo(x, y - triangleHeight / 2.0);
-//            // displayShape.lineTo(x + triangleWidth / 2.0, y + triangleHeight /
-//            // 2.0);
-//            // displayShape.lineTo(x - triangleWidth / 2.0, y + triangleHeight /
-//            // 2.0);
-//            // displayShape.closePath();
-//            displayExtents = new Rectangle2D.Double(x - 50, y - 50, 100, 100);
-//            mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
-//        }
     }
-
-//      public synchronized void setText(String text) {
-//        this.text = text;
-//    }
-//
-//    public synchronized String getText() {
-//        return this.text;
-//    }
 }
