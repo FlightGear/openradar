@@ -1,8 +1,42 @@
+/**
+ * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2012 Wolfram Wagner
+ * 
+ * This file is part of OpenRadar.
+ * 
+ * OpenRadar is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Diese Datei ist Teil von OpenRadar.
+ * 
+ * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
+ * General Public License, wie von der Free Software Foundation, Version 3 der
+ * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * weiterverbreiten und/oder modifizieren.
+ * 
+ * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
+ * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
+ * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
+ * Public License für weitere Details.
+ * 
+ * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
+ * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+ */
 package de.knewcleus.fgfs.multiplayer.protocol;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -24,7 +58,7 @@ public class PositionMessage implements IMultiplayerMessage {
 	protected Position angularVelocity=new Position();
 	protected Position linearAcceleration=new Position();
 	protected Position angularAcceleration=new Position();
-	protected final Map<String, Object> properties=new HashMap<String, Object>();
+	protected final Map<String, Object> properties=Collections.synchronizedMap(new HashMap<String, Object>());
 
 	public PositionMessage() {
 	}
@@ -127,14 +161,17 @@ public class PositionMessage implements IMultiplayerMessage {
 		try {
 			MPUtils.writeCString(outputStream, model, MAX_MODEL_NAME_LEN);
 
-			outputStream.writeDouble(time);
-			outputStream.writeDouble(lag);
-			MPUtils.writeDoublePosition(outputStream,position);
-			MPUtils.writeFloatPosition(outputStream,orientation);
-			MPUtils.writeFloatPosition(outputStream,linearVelocity);
-			MPUtils.writeFloatPosition(outputStream,angularVelocity);
-			MPUtils.writeFloatPosition(outputStream,linearAcceleration);
-			MPUtils.writeFloatPosition(outputStream,angularAcceleration);
+			outputStream.writeDouble(time);  // 8 byte
+			outputStream.writeDouble(lag);  // 8 byte
+			MPUtils.writeDoublePosition(outputStream,position); //96 byte
+			MPUtils.writeFloatPosition(outputStream,orientation); // 1st 4 byte
+			MPUtils.writeFloatPosition(outputStream,linearVelocity); // 2nd 4 byte
+			MPUtils.writeFloatPosition(outputStream,angularVelocity); // 3rd 4 byte
+			MPUtils.writeFloatPosition(outputStream,linearAcceleration); // 4th 4 byte
+			MPUtils.writeFloatPosition(outputStream,angularAcceleration); // 5th 4 byte
+//			// add 4 bytes padding are missing pad them
+//			outputStream.write(new byte[] {0,0,0,0}); // 6th 4 byte
+			// => 200 byte
 			encodeProperties(outputStream);
 		} catch (IOException e) {
 			throw new MultiplayerException(e);
@@ -147,12 +184,14 @@ public class PositionMessage implements IMultiplayerMessage {
 
 			time=inputStream.readDouble();
 			lag=inputStream.readDouble();
+            //System.out.println(time+" "+lag);
 			position=MPUtils.readDoublePosition(inputStream);
 			orientation=MPUtils.readFloatPosition(inputStream);
 			linearVelocity=MPUtils.readFloatPosition(inputStream);
 			angularVelocity=MPUtils.readFloatPosition(inputStream);
 			linearAcceleration=MPUtils.readFloatPosition(inputStream);
 			angularAcceleration=MPUtils.readFloatPosition(inputStream);
+//			inputStream.skipBytes(4); must be conditional, moved into decodeProperties();
 			decodeProperties(inputStream);
 		} catch (IOException e) {
 			throw new MultiplayerException(e);
@@ -191,6 +230,8 @@ public class PositionMessage implements IMultiplayerMessage {
 				
 				length+=strlen;
 				break;
+            default:
+                break;
 			}
 		}
 
@@ -204,7 +245,6 @@ public class PositionMessage implements IMultiplayerMessage {
 				logger.warning("Skipping encoding of property "+entry.getKey());
 				continue;
 			}
-
 			outputStream.writeInt(descriptor.getPropertyID());
 
 			Number num;
@@ -244,6 +284,8 @@ public class PositionMessage implements IMultiplayerMessage {
 					pad--;
 				}
 				break;
+            default:
+                break;
 			}
 		}
 	}
@@ -252,11 +294,15 @@ public class PositionMessage implements IMultiplayerMessage {
 		try {
 			while (true) {
 				int id=inputStream.readInt();
+				if(id==0) continue; // padding
 				PropertyDescriptor descriptor=PropertyRegistry.getInstance().getByID(id);
 				if (descriptor==null) {
-					logger.warning("Unknown property id "+id+", skipping rest of properties");
-					break;
+				//	logger.warning("Unknown property id "+id+", skipping rest of properties: "+toString());
+                    break;
+//					inputStream.skip(4);
+//					continue;
 				}
+				logger.finer("Reading property "+descriptor.getPropertyID()+", name="+descriptor.getPropertyName());
 
 				Object value=null;
 				
@@ -286,6 +332,8 @@ public class PositionMessage implements IMultiplayerMessage {
 					inputStream.skip(4*((-length)&3));
 					value=new String(bytes,"US-ASCII");
 					break;
+                default:
+                    break;
 				}
 				
 				if (value!=null) {

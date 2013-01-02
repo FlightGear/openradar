@@ -1,0 +1,36 @@
+(To All: empty)
+(Target: empty)
+
+Welcome outside
+Welcome on airport
+Radar contact + QNH + RW
+Follow FlightPlan
+Leaving Area
+ATIS
+Help Contact ATC
+
+Start Up Engine
+Push Back
+Taxi To
+Hold Short
+
+Line Up and wait on runway
+Maintain Hdg + Climb
+Take Off
+
+left turn
+right turn
+climb
+descent
+reduce speed
+
+ILS intercept clearance
+RW inSight
+Land
+Exit runway (left/right)
+Cleared to cross
+
+FGCOM only for ATC
+uncontrolled flying 
+do not start on RW
+how to set Startpos EDDF

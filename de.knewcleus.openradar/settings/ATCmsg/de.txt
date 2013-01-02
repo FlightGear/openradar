@@ -1,0 +1,37 @@
+An alle Piloten:  
+%s: 
+
+%s: Willkommen im Gebiet: %s - beabsichtigen Sie in %s zu landen ? FGCOM %2.3f
+%s: Willkommen in %s, bitte informieren Sie ATC ueber Ihre Plaene, FGCOM %2.3f
+%s: Radar-Kontakt in %3.0f mi Entfernung, Hoehenmesser %2.2f, planen Sie mit Landebahn %s, FGCOM %2.3f
+%s: Folgen Sie Ihrem Flugplan - Radar-Ueberwachung bleibt aktiv
+%s: Sie verlassen meine Zone - Sie koennen nun die Frequenz wechseln - RADAR Service wird beendet - Guten Flug!
+
+
+
+%s: Freigabe zum Starten der Motoren, bitte geben Sie Ihr geplantes Ziel an
+%s: Freigabe zum Zuruecksetzen für Richtung:  
+%s: Freigabe zur Landebahn:  
+%s: Halten Sie vor dem Eingang zur Runway:  
+
+%s: Rollen Sie in Startposition, Ausrichten etc. Melden Sie wenn fertig zum Start
+%s: Halten Sie die Richtung der Landebahn und steigen Sie auf:  
+%s: Wind aus %3.0f mit %2.0f kt, Startfreigabe fuer RW:  
+
+%s: Drehen Sie nach links, neuer Kurs:  
+%s: Drehen Sie nach rechts, neuer Kurs:  
+%s: Steigen und halten Sie:  
+%s: Sinken und halten Sie:  
+%s: Verringern Sie Ihre Geschwindigkeit auf:  
+
+%s: %3.0f mi entfernt, halten Sie Ihren Kurs bis zum Einschwenken in den Localizer, Freigabe zum ILS-Anflug fuer RW:  
+%s: %3.0f mi entfernt, melden sie wenn "Landebahn in Sicht"
+%s: %3.0f mi entfernt, Wind aus %3.0f mit %2.0f kt, Freigabe zur Landung auf RW:  
+%s: Willkommen in %s -- Verlassen Sie die Landbahn nach:  
+%s: Rollen Sie zu Gate und/oder Terminal:  
+
+Bitte benutzen Sie FGCOM %2.3f nur fuer Gespräche mit ATC - NICHT zwischen Piloten!
+%s: Sie stoeren unsere ATC Simulation --> bitte benutzen Sie einen anderen Flughafen fuer unkontrolliertes Fliegen!
+%s: Bitte starten Sie Ihre Fluege nicht auf den Landebahnen - zumindest raeumen Sie diese sofort wieder OHNE zu starten!
+Zur Definition der Startpositionen siehe: http://www.emmerich-j.de/HB/DE/3_Intro.html 
+

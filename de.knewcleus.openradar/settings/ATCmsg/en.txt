@@ -1,0 +1,37 @@
+To All Airmen:
+%s
+
+%s: Welcome to the %s area -- are you inbound %s ? FGCOM %2.3f
+%s: Welcome to %s - please advise ATC of your intentions, FGCOM %2.3f
+%s: Radar Contact range %3.0f mi, QNH %2.2f, expect runway %s, FGCOM %2.3f
+%s: Resume your OWN navigation - Radar surveillance is active
+%s: You are leaving my airspace - frequency change approved - radar service terminated
+ATIS at %s on %2.0f ft: QNH %2.2f, wind %3.0f at %2.0f kt, active rwy(s) %s,  FGCOM %2.3f
+ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"3">>"6"
+
+%s: Cleared for engine startup, please indicate planned destination
+%s: Cleared to push back facing:  
+%s: Cleared to taxi to holding-point, runway:  
+%s: Hold short rwy:  
+    
+%s: Line up and wait on runway, report when ready for departure
+%s: Maintain runway heading, climb to:  
+%s: Wind %3.0f at %2.0f kt, clear for takeoff runway:  
+
+%s: Turn left heading:  
+%s: Turn right heading:  
+%s: Climb and maintain:  
+%s: Descend and maintain:  
+%s: Reduce speed to:  
+
+%s: %3.0f mi out, maintain hdg until intercepting localizer, cleared for ILS appr rwy:  
+%s: %3.0f mi out, report when runway in sight
+%s: %3.0f mi out, wind %3.0f at %2.0f kts, cleared to land runway:  
+%s: Welcome in %s -- exit runway to the:  
+%s: Cleared to cross runway:  
+
+Please use FGCOM %2.3f only to talk to ATC, NOT to chat between airmen!
+%s: You are disturbing our ATC training --> please use another airport for uncontrolled flying
+%s: Please do not start your session on an active runway - please get OFF RUNWAY fast
+%s: To define Startpositions see: http://www.emmerich-j.de/HB/EN/Intro  (or /DE/Intro)
+
