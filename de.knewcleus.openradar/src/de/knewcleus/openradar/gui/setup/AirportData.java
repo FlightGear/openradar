@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
 import de.knewcleus.fgfs.navdata.impl.Glideslope;
@@ -66,8 +65,9 @@ import de.knewcleus.openradar.view.navdata.INavPointListener;
  */
 public class AirportData implements INavPointListener {
 
-//    private final static long APPLICATION_START_TIME_MILLIS=System.currentTimeMillis(); 
-    
+    // private final static long
+    // APPLICATION_START_TIME_MILLIS=System.currentTimeMillis();
+
     private String airportCode = null;
     private String name = null;
     private String sectorDir = null;
@@ -80,24 +80,28 @@ public class AirportData implements INavPointListener {
     private Map<String, Radio> radios = new TreeMap<String, Radio>();
     public Map<String, GuiRunway> runways = new TreeMap<String, GuiRunway>();
 
-    public enum FgComMode {Internal,External,Off};
+    public enum FgComMode {
+        Internal, External, Off
+    };
+
     private FgComMode fgComMode = FgComMode.Internal;
     private String fgComPath = ".";
     private String fgComExec = "fgcom";
     private String fgComServer = "delta384.server4you.de";
     private String fgComHost = "localhost";
-    private  List<Integer> fgComPorts = null;
+    private List<Integer> fgComPorts = null;
     private String mpServer = "mpserver01.flightgear.org";
     private int mpServerPort = 5000;
-    private int mpLocalPort = 5001; // should be different from default, because flightgear want to use this port
+    private int mpLocalPort = 5001; // should be different from default, because
+                                    // flightgear want to use this port
     private String metarUrl = "http://weather.noaa.gov/pub/data/observations/metar/stations/";
-    private String metarSource=null;
-    
-    private Map<String, Boolean> toggleObjectsMap = new HashMap<String,Boolean>();
+    private String metarSource = null;
 
-    
-    public AirportData() {}
-    
+    private Map<String, Boolean> toggleObjectsMap = new HashMap<String, Boolean>();
+
+    public AirportData() {
+    }
+
     public String getAirportCode() {
         return airportCode;
     }
@@ -119,9 +123,9 @@ public class AirportData implements INavPointListener {
     }
 
     public void setAirportPosition(Point2D airportPosition) {
-        this.towerPosition=airportPosition;
+        this.towerPosition = airportPosition;
     }
- 
+
     public double getLon() {
         return towerPosition.getX();
     }
@@ -131,13 +135,13 @@ public class AirportData implements INavPointListener {
     }
 
     public void setElevation(double elevation) {
-        this.elevation=elevation;
+        this.elevation = elevation;
     }
-    
+
     public double getElevationFt() {
-        return elevation/Units.FT;
+        return elevation / Units.FT;
     }
-    
+
     public double getElevationM() {
         return elevation;
     }
@@ -158,10 +162,10 @@ public class AirportData implements INavPointListener {
         return radioFrequencies;
     }
 
-    public Map<String,GuiRunway> getRunways() {
+    public Map<String, GuiRunway> getRunways() {
         return runways;
     }
-    
+
     public String getModel() {
         return "OpenRadar";
     }
@@ -175,7 +179,7 @@ public class AirportData implements INavPointListener {
     }
 
     public String getFgComPath() {
-        return fgComPath; 
+        return fgComPath;
     }
 
     public void setFgComPath(String fgComPath) {
@@ -183,7 +187,7 @@ public class AirportData implements INavPointListener {
     }
 
     public String getFgComExec() {
-        return fgComExec; 
+        return fgComExec;
     }
 
     public void setFgComExec(String fgComExec) {
@@ -207,9 +211,10 @@ public class AirportData implements INavPointListener {
     }
 
     public String getFgComPorts() {
-        StringBuilder sFgComPorts = new StringBuilder();  
-        for(int port : fgComPorts) {
-            if(sFgComPorts.length()>0) sFgComPorts.append(",");
+        StringBuilder sFgComPorts = new StringBuilder();
+        for (int port : fgComPorts) {
+            if (sFgComPorts.length() > 0)
+                sFgComPorts.append(",");
             sFgComPorts.append(port);
         }
         return sFgComPorts.toString();
@@ -218,10 +223,10 @@ public class AirportData implements INavPointListener {
     public void setFgComPorts(List<Integer> fgComPorts) {
         this.fgComPorts = fgComPorts;
         radios.clear();
-        int i=0;
-        if(fgComPorts!=null) {
-            for(int fgComPort : fgComPorts) {
-                String code = "COM"+i++;
+        int i = 0;
+        if (fgComPorts != null) {
+            for (int fgComPort : fgComPorts) {
+                String code = "COM" + i++;
                 radios.put(code, new Radio(code, fgComHost, fgComPort));
             }
         }
@@ -258,7 +263,7 @@ public class AirportData implements INavPointListener {
     public void setMetarUrl(String metarUrl) {
         this.metarUrl = metarUrl;
     }
-    
+
     // NavPointListener
 
     public String getMetarSource() {
@@ -270,8 +275,8 @@ public class AirportData implements INavPointListener {
     }
 
     /**
-     * This method is called when the navdata files are read.
-     * We use it to gather additional information
+     * This method is called when the navdata files are read. We use it to
+     * gather additional information
      */
     @Override
     public void navPointAdded(INavPoint point) {
@@ -281,7 +286,7 @@ public class AirportData implements INavPointListener {
                 towerPosition = aerodrome.getTowerPosition();
                 this.elevation = aerodrome.getElevation();
                 this.name = aerodrome.getName();
-                
+
                 for (RawFrequency f : aerodrome.getFrequencies()) {
                     this.radioFrequencies.add(new RadioFrequency(f.getCode(), f.getFrequency()));
                 }
@@ -301,27 +306,27 @@ public class AirportData implements INavPointListener {
             Helipad hp = (Helipad) point;
             if (hp.getAirportID().equals(getAirportCode())) {
                 // runway for this airport
-                //System.out.println(hp);
+                // System.out.println(hp);
                 // runways.put(hp.getRunwayID(),new GuiRunway(hp));
             }
         } else if (point instanceof Glideslope) {
-            Glideslope gs = (Glideslope)point;
+            Glideslope gs = (Glideslope) point;
             if (gs.getAirportID().equals(getAirportCode())) {
                 String runwayNumber = gs.getRunwayID();
-                if(runways.containsKey(runwayNumber)) {
+                if (runways.containsKey(runwayNumber)) {
                     runways.get(runwayNumber).addILS(gs);
                 } else {
-                    System.out.println("Warning found glidescope for non existent runway: "+gs);
+                    System.out.println("Warning found glidescope for non existent runway: " + gs);
                 }
             }
         } else if (point instanceof MarkerBeacon) {
-            MarkerBeacon mb = (MarkerBeacon)point;
+            MarkerBeacon mb = (MarkerBeacon) point;
             if (mb.getAirportID().equals(getAirportCode())) {
                 String runwayNumber = mb.getRunwayID();
-                if(runways.containsKey(runwayNumber)) {
+                if (runways.containsKey(runwayNumber)) {
                     mb.setRunwayEnd(runways.get(runwayNumber).getRunwayEnd());
                 } else {
-                    System.out.println("Warning found glidescope for non existent runway: "+mb);
+                    System.out.println("Warning found glidescope for non existent runway: " + mb);
                 }
             }
         } else {
@@ -331,14 +336,14 @@ public class AirportData implements INavPointListener {
     }
 
     public String getAirportDir() {
-        if(sectorDir==null) {
-            sectorDir = "data"+File.separator+airportCode+File.separator;
+        if (sectorDir == null) {
+            sectorDir = "data" + File.separator + airportCode + File.separator;
         }
         return sectorDir;
     }
 
     public String getInitialATCCallSign() {
-        return getAirportCode()+"_TW";
+        return getAirportCode() + "_TW";
     }
 
     public RunwayData getRunwayData(String runwayCode) {
@@ -346,15 +351,15 @@ public class AirportData implements INavPointListener {
     }
 
     public void setRadarObjectFilter(GuiMasterController master, String objectName) {
-        boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true; 
-        toggleObjectsMap.put(objectName,!oldState);
+        boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
+        toggleObjectsMap.put(objectName, !oldState);
         storeAirportData(master);
     }
 
     public boolean getRadarObjectFilterState(String objectName) {
         return toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
     }
-    
+
     public void loadAirportData(GuiMasterController master) {
         File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
         if (propertyFile.exists()) {
@@ -362,47 +367,48 @@ public class AirportData implements INavPointListener {
             try {
                 p.load(new FileReader(propertyFile));
                 // restore runwaydata
-                for(GuiRunway rw : runways.values()) {
+                for (GuiRunway rw : runways.values()) {
                     rw.getRunwayData().setValuesFromProperties(p);
                 }
                 // restore zoomlevel values
                 master.getRadarBackend().setZoomLevelValuesFromProperties(p);
-                
+
                 // restore toggles
                 Enumeration<?> e = p.propertyNames();
                 while (e.hasMoreElements()) {
                     String pn = (String) e.nextElement();
-                    if(pn.startsWith("toggle.")) {
+                    if (pn.startsWith("toggle.")) {
                         String objKey = pn.substring(7);
                         boolean b = !"false".equals(p.getProperty(pn));
                         toggleObjectsMap.put(objKey, b);
                     }
                 }
-                
+
                 // restore saved selected frequencies
                 master.getRadioManager().restoreSelectedFrequenciesFrom(p);
-                
-            } catch (IOException e) {} 
-        }        
+
+            } catch (IOException e) {
+            }
+        }
     }
-    
+
     public void storeAirportData(GuiMasterController master) {
         Properties p = new Properties();
         // add runway data
-        for(GuiRunway rw : runways.values()) {
+        for (GuiRunway rw : runways.values()) {
             rw.getRunwayData().addValuesToProperties(p);
         }
         // add zoom levels and centers
         master.getRadarBackend().addZoomLevelValuesToProperties(p);
-        
+
         // add toggles
-        for(String objKey : toggleObjectsMap.keySet()) {
-            p.setProperty("toggle."+objKey, (toggleObjectsMap.get(objKey) ? "true" : "false"));
+        for (String objKey : toggleObjectsMap.keySet()) {
+            p.setProperty("toggle." + objKey, (toggleObjectsMap.get(objKey) ? "true" : "false"));
         }
-        
+
         // add selected radio frequencies
         master.getRadioManager().addSelectedFrequenciesTo(p);
-        
+
         File propertiesFile = new File("settings" + File.separator + getAirportCode() + ".properties");
 
         FileWriter writer = null;
