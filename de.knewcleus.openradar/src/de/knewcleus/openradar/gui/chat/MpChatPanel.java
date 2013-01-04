@@ -36,6 +36,7 @@ import java.awt.Color;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.chat.MpChatManager.Filter;
 
 /**
  * This is the panel housing the chat features
@@ -184,7 +185,8 @@ public class MpChatPanel extends javax.swing.JPanel {
         add(spMPChatHistory, gridBagConstraints);
     }
 
-    public void resetFilters() {
+    public void selectFilter(Filter filter) {
+        // reset Filters
         liMPChatHistory.setBackground(new Color(30, 35, 30));
 
         lbMpShowAll.setForeground(Color.white);
@@ -192,9 +194,24 @@ public class MpChatPanel extends javax.swing.JPanel {
         lbMpShowSect.setForeground(Color.white);
         lbMpShowVisible.setForeground(Color.white);
         lbMpShowACT.setForeground(Color.white);
-    }
-
-    public void selectFilter(javax.swing.JLabel l) {
-        l.setForeground(Color.blue);
+        
+        // and set it
+        switch(filter) {
+        case FILTER_NONE:
+           lbMpShowAll.setForeground(Color.blue);
+           break;
+        case FILTER_FREQUENCY:
+            lbMpShowFreq.setForeground(Color.blue);
+            break;
+         case FILTER_RANGE:
+             lbMpShowSect.setForeground(Color.blue);
+             break;
+         case FILTER_VISIBLE:
+             lbMpShowVisible.setForeground(Color.blue);
+             break;
+         case FILTER_SELECTED_USER:
+             lbMpShowACT.setForeground(Color.blue);
+             break;
+        }
     }
 }

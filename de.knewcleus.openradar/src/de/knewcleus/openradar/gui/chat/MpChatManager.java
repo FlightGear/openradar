@@ -139,6 +139,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     public void setSelectedCallSign(String callSign, boolean exclusive) {
         String newPrefix = "";
+        if(filter==Filter.FILTER_SELECTED_USER) setFilter(Filter.FILTER_NONE);
         if(callSign!= null) {
             newPrefix = callSign + ":";
             setFilter(exclusive ? Filter.FILTER_SELECTED_USER : filter);
@@ -158,7 +159,8 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         synchronized(this) {
             if(this.filter!=filter) {
                 // only if needed
-                this.filter = filter; 
+                this.filter = filter;
+                ((MpChatPanel) chatInput.getParent()).selectFilter(filter);
                 requestGuiUpdate();
             }
         }
@@ -379,8 +381,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             } else if (lSource.getName().equals("SEL")) {
                 setFilter(Filter.FILTER_SELECTED_USER);
             }
-            parent.resetFilters();
-            parent.selectFilter(lSource);
+            parent.selectFilter(filter);
         }
     }
 
