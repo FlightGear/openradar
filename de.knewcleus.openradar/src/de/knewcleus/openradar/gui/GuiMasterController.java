@@ -122,7 +122,7 @@ public class GuiMasterController {
         mainFrame.getRadarScreen().setup(airportCode, this, setupDialog);
         initMpRadar();
         mainFrame.getRadarScreen().initRadarData();
-        metarReader.start();
+        metarReader.start(); // loads metar and refreshes the runway panel
         radioManager.init();
         statusManager.setSelectedCallSign("");
         dataRegistry.loadAirportData(this);
