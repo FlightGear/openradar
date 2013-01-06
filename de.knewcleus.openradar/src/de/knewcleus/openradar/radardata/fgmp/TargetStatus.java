@@ -33,8 +33,6 @@
  */
 package de.knewcleus.openradar.radardata.fgmp;
 
-import java.math.BigDecimal;
-
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
@@ -51,7 +49,6 @@ public class TargetStatus extends Player {
 	protected volatile Position geodeticPosition=new Position();
     private volatile Position lastPosition = new Position();
     private volatile Vector3D linearVelocityHF = new Vector3D();
-    private volatile String frequency;
     
 	protected volatile double groundSpeed=0f;
 	protected volatile double trueCourse=0f;
@@ -61,28 +58,28 @@ public class TargetStatus extends Player {
 		super(callsign);
 	}
 	
-	public IRadarDataPacket getRadarDataPacket() {
+	public synchronized IRadarDataPacket getRadarDataPacket() {
 		return new RadarDataPacket(this);
 	}
 	
-	public Position getGeodeticPosition() {
+	public synchronized Position getGeodeticPosition() {
 		return geodeticPosition;
 	}
 	
-	public double getGroundSpeed() {
+	public synchronized double getGroundSpeed() {
 		return groundSpeed;
 	}
 	
-	public double getTrueCourse() {
+	public synchronized double getTrueCourse() {
 		return trueCourse;
 	}
 	
-	public Position getLastPostion() {
+	public synchronized Position getLastPostion() {
 	    return lastPosition;
 	}
 	
 	@Override
-	public void updatePosition(long t, PositionMessage packet) {
+	public synchronized void updatePosition(long t, PositionMessage packet) {
 		super.updatePosition(t, packet);
 		lastPosition = geodeticPosition; 
 		geodeticPosition=geodToCartTransformation.backward(getCartesianPosition());
@@ -103,32 +100,20 @@ public class TargetStatus extends Player {
 		}
 		
         heading = bf2hf.getAngle();
-		
-		String freq = (String)packet.getProperty("sim/multiplay/transmission-freq-hz");
-		if(freq!=null) {
-    		BigDecimal bdFreq = new BigDecimal(freq);
-            bdFreq = bdFreq.divide(new BigDecimal(1000000));
-            frequency = String.format("%1.1f", bdFreq);
-		}
-		// model may change too if you exit and return with same callsign
-		this.model = packet.getModel();
 	}
 	
-	public String getFrequency() {
-	    return frequency;
-	}
 	/**
 	 * Returns he velocity vector aligned with the global coordinates
 	 * 
 	 * @return
 	 */
-	public Vector3D getLinearVelocityGlobal() {
+	public synchronized Vector3D getLinearVelocityGlobal() {
 	    return linearVelocityHF;
 	}
 
-    public double getHeading() {
+    public synchronized double getHeading() {
         return heading;
     }
     
-    public String toString() { return callsign; }
+    public synchronized String toString() { return callsign; }
 }
