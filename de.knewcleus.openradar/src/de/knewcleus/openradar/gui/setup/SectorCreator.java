@@ -37,7 +37,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -115,7 +114,6 @@ public abstract class SectorCreator {
         }
         setupDialog.setStatus(100, "Ready.");
         // Create sector.properties
-        File sectorFile = new File("data" + File.separator + data.getAirportCode() + File.separator + "sector.properties");
         Properties p = new Properties();
         p.put("airportName", data.getAirportName());
         p.put("metarSource", data.getAirportCode());
@@ -123,23 +121,7 @@ public abstract class SectorCreator {
         p.put("lon", Double.toString(data.getLon()));
         p.put("magneticDeclination", Double.toString(loadMagneticDeclination(data)));
 
-        FileWriter userWriter = null;
-        try {
-            if (sectorFile.exists())
-                sectorFile.delete();
-            userWriter = new FileWriter(sectorFile);
-
-            p.store(userWriter, "Open Radar Sector property file");
-        } catch (IOException e) {
-
-        } finally {
-            if (userWriter != null) {
-                try {
-                    userWriter.close();
-                } catch (IOException e) {
-                }
-            }
-        }
+        SetupController.saveSectorProperties(data.getAirportCode(), p);
     }
 
     private static void downloadZip(AirportData data, String layer, Point2D upperLeftCorner, Point2D lowerRightCorner) throws IOException {

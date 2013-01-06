@@ -83,7 +83,7 @@ public abstract class AViewObjectPainter<T> {
         else if(navPoint instanceof VOR) viewObjectPainter = new VORPainter(data, mapViewAdapter, (VOR) navPoint);
         else if(navPoint instanceof Localizer) viewObjectPainter = new LocalizerPainter(mapViewAdapter, (Localizer) navPoint);
         else if(navPoint instanceof Glideslope) viewObjectPainter = new DummyPainter(mapViewAdapter,(INavPoint)navPoint); // painted by runway end 
-        else if(navPoint instanceof MarkerBeacon) viewObjectPainter = new MarkerBeaconPainter(mapViewAdapter, (MarkerBeacon) navPoint);
+        else if(navPoint instanceof MarkerBeacon) viewObjectPainter = new MarkerBeaconPainter(mapViewAdapter, data, (MarkerBeacon) navPoint);
         else if(navPoint instanceof DME) viewObjectPainter = new DMEPainter(mapViewAdapter, (DME) navPoint);
         else if(navPoint instanceof Intersection) viewObjectPainter = new IntersectionPainter(data, mapViewAdapter, (Intersection) navPoint);
         

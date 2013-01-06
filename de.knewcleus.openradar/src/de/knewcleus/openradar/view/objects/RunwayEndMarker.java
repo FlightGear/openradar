@@ -39,24 +39,32 @@ import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.setup.RunwayData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class RunwayEndMarker extends AViewObject {
 
-    private RunwayEnd runwayEnd;
+    private final RunwayEnd runwayEnd;
+    private final AirportData data;
 
-    public RunwayEndMarker(RunwayEnd runwayEnd) {
+    public RunwayEndMarker(RunwayEnd runwayEnd, AirportData data) {
         super(Color.white);
         this.runwayEnd = runwayEnd;
+        this.data = data;
         fillPath=true;
     }
 
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
-        if ( !runwayEnd.isActive() && !runwayEnd.getOppositeEnd().isActive()) {
+        RunwayData rwd = data.getRunwayData(runwayEnd.getRunwayID());
+        boolean enabled = rwd==null || (rwd!=null && rwd.isEnabledAtAll()); 
+
+        if ( !enabled || !runwayEnd.isActive() && !runwayEnd.getOppositeEnd().isActive()) {
                path=null;
                return;
-           }
+        }
+        
         color = runwayEnd == runwayEnd.getRunway().getLandSide() 
                 || runwayEnd.getOppositeEnd() == runwayEnd.getRunway().getStartSide()
                 ? Palette.RUNWAYEND_OPEN : Palette.RUNWAYEND_FORBIDDEN;

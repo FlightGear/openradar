@@ -38,31 +38,40 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
+import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.setup.RunwayData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class RunwayEndNumber extends AViewObject {
 
-    private RunwayEnd runwayEnd;
+    private final RunwayEnd runwayEnd;
+    private final AirportData data;
     private int defaultMinScaleText;
     private int defaultMaxScaleText;
     
-    public RunwayEndNumber(RunwayEnd runwayEnd, Font font, Color color, int minScaleText, int maxScaleText) {
+    public RunwayEndNumber(RunwayEnd runwayEnd, AirportData data, Font font, Color color, int minScaleText, int maxScaleText) {
         super(font, color, runwayEnd.getRunwayID(), minScaleText, maxScaleText);
         this.runwayEnd = runwayEnd;
+        this.data = data;
         this.defaultMinScaleText = minScaleText;
         this.defaultMaxScaleText = maxScaleText;
     }
 
     @Override
     public void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
-        if(runwayEnd.isStartingActive() || runwayEnd.isLandingActive() ) {
-            setMinScaleText(0);
-            setMaxScaleText(Integer.MAX_VALUE);
-        } else {
-            setMinScaleText(defaultMinScaleText);
-            setMaxScaleText(defaultMaxScaleText);
+        RunwayData rwd = data.getRunwayData(runwayEnd.getRunwayID());
+        boolean enabled = rwd==null || (rwd!=null && rwd.isEnabledAtAll()); 
+        
+        if(enabled) {
+            if((runwayEnd.isStartingActive() || runwayEnd.isLandingActive()) ) {
+                setMinScaleText(0);
+                setMaxScaleText(Integer.MAX_VALUE);
+            } else {
+                setMinScaleText(defaultMinScaleText);
+                setMaxScaleText(defaultMaxScaleText);
+            }
+            super.paint(g2d, mapViewAdapter);
         }
-        super.paint(g2d, mapViewAdapter);
     }
     
     @Override

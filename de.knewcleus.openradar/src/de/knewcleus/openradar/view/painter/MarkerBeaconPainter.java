@@ -33,15 +33,16 @@
 package de.knewcleus.openradar.view.painter;
 
 import de.knewcleus.fgfs.navdata.impl.MarkerBeacon;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.objects.IlsMarkerBeacon;
 
 public class MarkerBeaconPainter extends AViewObjectPainter<MarkerBeacon> {
 
-    public MarkerBeaconPainter(IMapViewerAdapter mapViewAdapter, MarkerBeacon markerBeacon) {
+    public MarkerBeaconPainter(IMapViewerAdapter mapViewAdapter, AirportData data, MarkerBeacon markerBeacon) {
         super(mapViewAdapter, markerBeacon);
         
-        IlsMarkerBeacon mb = new IlsMarkerBeacon(markerBeacon);
+        IlsMarkerBeacon mb = new IlsMarkerBeacon(markerBeacon, data);
         viewObjectList.add(mb);
 //
 //      Font font = Palette.BEACON_FONT;

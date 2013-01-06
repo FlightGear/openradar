@@ -89,6 +89,9 @@ public class RunwaySettingsDialog extends JFrame {
     private JTextField tfCLMajorDMInterval;
     private JTextField tfCLMajorDMTickLength;
 
+    private JCheckBox chbRwActiveForStarting;
+    private JCheckBox chbRwActiveForLanding;
+    
     private JCheckBox chbSymmetric;
     private JCheckBox chbDisplayRight;
     private JCheckBox chbDisplayLeft;
@@ -190,6 +193,41 @@ public class RunwaySettingsDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         jPnlContentPane.add(space0, gridBagConstraints);
 
+        // Main switches
+
+        JPanel jPnlMainSwitches = new JPanel();
+        jPnlMainSwitches.setLayout(new GridBagLayout());
+        jPnlMainSwitches.setBorder(new TitledBorder("Main switches"));
+        jPnlMainSwitches.setToolTipText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlContentPane.add(jPnlMainSwitches, gridBagConstraints);
+
+        chbRwActiveForStarting = new JCheckBox("Starting");
+        chbRwActiveForStarting.setToolTipText("Can runway be used for starts?");
+        chbRwActiveForStarting.addActionListener(new RunwayFieldActionListener());
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlMainSwitches.add(chbRwActiveForStarting, gridBagConstraints);
+
+        chbRwActiveForLanding = new JCheckBox("Landing");
+        chbRwActiveForLanding.setToolTipText("Can runway be used for landings?");
+        chbRwActiveForLanding.addActionListener(new RunwayFieldActionListener());
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlMainSwitches.add(chbRwActiveForLanding, gridBagConstraints);
+
         // Extended center line
 
         JPanel jPnlExtCenterLine = new JPanel();
@@ -198,7 +236,7 @@ public class RunwaySettingsDialog extends JFrame {
         jPnlExtCenterLine.setToolTipText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -266,7 +304,7 @@ public class RunwaySettingsDialog extends JFrame {
         jPnlDistanceMarkers.setToolTipText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -443,7 +481,7 @@ public class RunwaySettingsDialog extends JFrame {
         jPnlVectoring.setToolTipText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -664,6 +702,9 @@ public class RunwaySettingsDialog extends JFrame {
 
         lbRWNumber.setText(rwCode);
 
+        chbRwActiveForStarting.setSelected(rwd.isStartingEnabled());
+        chbRwActiveForLanding.setSelected(rwd.isLandingEnabled());
+        
         tfCLStart.setText(format(rwd.getExtCenterlineStart()));
         tfCLEnd.setText(format(rwd.getExtCenterlineLength()));
         tfCLMinorDMStart.setText(format(rwd.getMinorDMStart()));
@@ -702,6 +743,9 @@ public class RunwaySettingsDialog extends JFrame {
 
     public void storeData(boolean permanent) {
         try {
+            rwd.setStartingEnabled(chbRwActiveForStarting.isSelected());
+            rwd.setLandingEnabled(chbRwActiveForLanding.isSelected());
+            
             rwd.setExtCenterlineStart(parse(tfCLStart.getText()));
             rwd.setExtCenterlineLength(parse(tfCLEnd.getText()));
 
@@ -822,6 +866,7 @@ public class RunwaySettingsDialog extends JFrame {
         public void actionPerformed(ActionEvent e) {
             storeData(false);
             showData(lbRWNumber.getText());
+            master.getStatusManager().updateRunways();
         }
     }
 
@@ -830,6 +875,7 @@ public class RunwaySettingsDialog extends JFrame {
         public void focusLost(FocusEvent e) {
             storeData(true); // can be set to false to make less hd saves
             showData(lbRWNumber.getText());
+            master.getStatusManager().updateRunways();
         }
     }
 }

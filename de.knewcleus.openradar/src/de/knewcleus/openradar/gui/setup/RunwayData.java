@@ -40,15 +40,18 @@ public class RunwayData {
 
     private String rwCode;
 
+    private boolean landingEnabled = true;
+    private boolean startingEnabled = true;
+    
     private double extCenterlineStart = 0;
     private double extCenterlineLength = 100;
 
-    private double majorDMStart = 10;
+    private double majorDMStart = 5;
     private double majorDMEnd = 20;
     private double majorDMInterval = 5;
     private double majorDMTickLength = 1;
 
-    private double minorDMStart = 10;
+    private double minorDMStart = 1;
     private double minorDMEnd = 20;
     private double minorDMInterval = 1;
     private double minorDMTickLength = 0.5;
@@ -77,6 +80,22 @@ public class RunwayData {
 
     public void setRepaintNeeded(boolean repaintNeeded) {
         this.repaintNeeded = repaintNeeded;
+    }
+
+    public boolean isLandingEnabled() {
+        return landingEnabled;
+    }
+
+    public void setLandingEnabled(boolean landingEnabled) {
+        this.landingEnabled = landingEnabled;
+    }
+
+    public boolean isStartingEnabled() {
+        return startingEnabled;
+    }
+
+    public void setStartingEnabled(boolean startingEnabled) {
+        this.startingEnabled = startingEnabled;
     }
 
     public double getExtCenterlineStart() {
@@ -248,6 +267,9 @@ public class RunwayData {
     }
 
     public void addValuesToProperties(Properties p) {
+        p.setProperty("rwd." + rwCode + ".landingEnabled", landingEnabled ? "true" : "false");
+        p.setProperty("rwd." + rwCode + ".startingEnabled", startingEnabled ? "true" : "false");
+
         p.setProperty("rwd." + rwCode + ".extCenterlineStart", Double.toString(extCenterlineStart));
         p.setProperty("rwd." + rwCode + ".extCenterlineLength", Double.toString(extCenterlineLength));
 
@@ -278,6 +300,10 @@ public class RunwayData {
 
     public void setValuesFromProperties(Properties p) {
         if(p.getProperty("rwd." + rwCode + ".extCenterlineStart")!=null) {
+            // not existing records default to true!
+            landingEnabled = !"false".equals(p.getProperty("rwd." + rwCode + ".landingEnabled"));
+            startingEnabled = !"false".equals(p.getProperty("rwd." + rwCode + ".startingEnabled"));
+
             extCenterlineStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".extCenterlineStart"));
             extCenterlineLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".extCenterlineLength"));
     
@@ -305,5 +331,9 @@ public class RunwayData {
             rightBaseEnabled = "true".equals(p.getProperty("rwd." + rwCode + ".rightBaseEnabled"));
             leftBaseEnabled = "true".equals(p.getProperty("rwd." + rwCode + ".leftBaseEnabled"));
         }        
+    }
+    /** returns true if the runway is set to be enabled either for landing or starting */
+    public boolean isEnabledAtAll() {
+        return landingEnabled || startingEnabled;
     }
 }

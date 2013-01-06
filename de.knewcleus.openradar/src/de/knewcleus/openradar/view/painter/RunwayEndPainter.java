@@ -44,7 +44,6 @@ import de.knewcleus.openradar.view.objects.RunwayEndNumber;
 
 public class RunwayEndPainter extends AViewObjectPainter<RunwayEnd> {
 
-    
     public RunwayEndPainter(IMapViewerAdapter mapViewAdapter, AirportData data, RunwayEnd runwayEnd) {
         super(mapViewAdapter, runwayEnd);
         
@@ -53,13 +52,13 @@ public class RunwayEndPainter extends AViewObjectPainter<RunwayEnd> {
         RunwayEndIlsCone ils = new RunwayEndIlsCone(data,runwayEnd);
         viewObjectList.add(ils);
         
-        RunwayEndMarker runwayEndMarker = new RunwayEndMarker(runwayEnd);
+        RunwayEndMarker runwayEndMarker = new RunwayEndMarker(runwayEnd,data);
         viewObjectList.add(runwayEndMarker);
 
 //        RunwayEndCenterLine runwayEndCenterLine = new RunwayEndCenterLine(runwayEnd, 100d);
 //        viewObjectList.add(runwayEndCenterLine);
 
-        RunwayEndNumber runwayEndNumber = new RunwayEndNumber(runwayEnd, font, Color.lightGray, 0 , 50);
+        RunwayEndNumber runwayEndNumber = new RunwayEndNumber(runwayEnd, data, font, Color.lightGray, 0 , 50);
         viewObjectList.add(runwayEndNumber);
         
     }

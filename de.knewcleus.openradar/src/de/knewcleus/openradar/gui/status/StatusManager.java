@@ -189,4 +189,8 @@ public class StatusManager implements INavPointListener {
     public void hideRunwayDialog() {
         settingDialog.setVisible(false);
     }
+
+    public void updateRunways() {
+        statusPanel.updateRunways();
+    }
 }

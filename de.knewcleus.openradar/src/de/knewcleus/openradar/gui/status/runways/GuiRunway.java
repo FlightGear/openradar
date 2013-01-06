@@ -281,6 +281,7 @@ public class GuiRunway implements ActionListener {
         } else {
             rw.setStartSide(null);
         }
+        runwayPanel.updateRunways();
     }
     
     public void setLandingActive(boolean landingActive) {

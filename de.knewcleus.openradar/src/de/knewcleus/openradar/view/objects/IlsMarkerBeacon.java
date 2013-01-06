@@ -40,17 +40,21 @@ import java.awt.geom.QuadCurve2D;
 
 import de.knewcleus.fgfs.navdata.impl.MarkerBeacon;
 import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.setup.RunwayData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class IlsMarkerBeacon extends AViewObject {
 
     private MarkerBeacon mb;
+    private final AirportData data;
 
-    public IlsMarkerBeacon(MarkerBeacon mb) {
+    public IlsMarkerBeacon(MarkerBeacon mb, AirportData data) {
         super(Palette.GLIDESLOPE);
         this.stroke = new BasicStroke(0.3f);
         this.mb=mb;
+        this.data = data;
         switch(mb.getType()) {
         case Inner:
             color = Color.white;
@@ -67,7 +71,10 @@ public class IlsMarkerBeacon extends AViewObject {
 
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewerAdapter) {
-        if (mb.getRunwayEnd()==null ||  !mb.getRunwayEnd().isLandingActive() || mb.getRunwayEnd().getGlideslope()==null){
+        RunwayData rwd = mb.getRunwayEnd()==null && mb.getAirportID().equals(data.getAirportCode()) ? data.getRunwayData(mb.getRunwayID()):null;
+        boolean enabled = rwd==null || (rwd!=null && rwd.isLandingEnabled()); 
+        
+        if (!enabled || mb.getRunwayEnd()==null ||  !mb.getRunwayEnd().isLandingActive() || mb.getRunwayEnd().getGlideslope()==null){
             path=null;
             return;
         }

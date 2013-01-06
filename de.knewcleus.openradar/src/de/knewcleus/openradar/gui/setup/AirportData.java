@@ -71,7 +71,7 @@ public class AirportData implements INavPointListener {
     private String airportCode = null;
     private String name = null;
     private String sectorDir = null;
-    private Point2D towerPosition = null;
+    private volatile Point2D towerPosition = null;
     /** given in METER */
     private double elevation = 0f;
     private double magneticDeclination = 0f;
@@ -283,7 +283,8 @@ public class AirportData implements INavPointListener {
         if (point instanceof Aerodrome) {
             Aerodrome aerodrome = (Aerodrome) point;
             if (aerodrome.getIdentification().equals(getAirportCode())) {
-                towerPosition = aerodrome.getTowerPosition();
+
+                checkTowerPosition(aerodrome.getTowerPosition());
                 this.elevation = aerodrome.getElevation();
                 this.name = aerodrome.getName();
 
@@ -335,6 +336,36 @@ public class AirportData implements INavPointListener {
 
     }
 
+    /**
+     * The tower position is initially loaded from xplane files, but saved in
+     * sector.properties file to allow easy correction.
+     * In this method we check if the value is already in sectors.properties file and 
+     * save it if not... 
+     * 
+     * @param towerPosition2
+     */
+    private void checkTowerPosition(Point2D towerPos) {
+        Properties p = SetupController.loadSectorProperties(getAirportCode());
+        try {
+            if(p.getProperty("tower.lat")!=null && p.getProperty("tower.lon")!=null) {
+                double lon = Double.parseDouble(p.getProperty("tower.lon", ""));
+                double lat = Double.parseDouble(p.getProperty("tower.lat", ""));
+                // value found and parsed
+                this.towerPosition = new Point2D.Double(lon, lat);
+            } else {
+                // values not found yet
+                p.put("tower.lon", Double.toString(towerPos.getX()));
+                p.put("tower.lat", Double.toString(towerPos.getY()));
+                SetupController.saveSectorProperties(getAirportCode(), p);
+                this.towerPosition= towerPos; 
+            }
+        } catch(Exception e) {
+            System.err.println("Error: could not parse tower position in file sectors.properties for airport "+airportCode);
+            this.towerPosition= towerPos;
+        }
+
+    }
+
     public String getAirportDir() {
         if (sectorDir == null) {
             sectorDir = "data" + File.separator + airportCode + File.separator;
@@ -347,6 +378,8 @@ public class AirportData implements INavPointListener {
     }
 
     public RunwayData getRunwayData(String runwayCode) {
+        if (runways.get(runwayCode) == null)
+            return null;
         return runways.get(runwayCode).getRunwayData();
     }
 
@@ -370,6 +403,7 @@ public class AirportData implements INavPointListener {
                 for (GuiRunway rw : runways.values()) {
                     rw.getRunwayData().setValuesFromProperties(p);
                 }
+                master.getStatusManager().updateRunways();
                 // restore zoomlevel values
                 master.getRadarBackend().setZoomLevelValuesFromProperties(p);
 

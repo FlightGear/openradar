@@ -97,12 +97,12 @@ public class RunwayPanel extends JPanel {
                 JLabel lbRwCode = new JLabel();
                 lbRwCode.setName("Runway " + rw.getCode());
                 lbRwCode.setText(rw.getCode());
-                lbRwCode.setToolTipText("Right click to show settings");
+                lbRwCode.setToolTipText(rw.getRunwayData().isEnabledAtAll() ? "Right click to show settings" : "Runway disabled by user. Right click to show settings");
                 lbRwCode.addMouseListener(guiInteractionManager.getStatusManager().getRunwayMouseListener());
                 Font f = lbRwCode.getFont();
                 f = f.deriveFont(Font.PLAIN, 20);
                 lbRwCode.setFont(f);
-                lbRwCode.setForeground(Color.white);
+                lbRwCode.setForeground(rw.getRunwayData().isEnabledAtAll() ? Color.white : Color.LIGHT_GRAY);
                 GridBagConstraints gridBagConstraints = new GridBagConstraints();
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = 2 * i;
@@ -113,139 +113,143 @@ public class RunwayPanel extends JPanel {
 
                 f = lbRwCode.getFont();
                 f = f.deriveFont(Font.PLAIN, 10);
-
-                JCheckBox cbStarting = new JCheckBox();
-                cbStarting.setText("Start");
-                cbStarting.setFont(f);
-                cbStarting.setEnabled(true);
-                cbStarting.setName("STARTING");
-                cbStarting.setModel(rw.createStartCbModel());
-                cbStarting.addActionListener(rw);
-                cbStarting.setForeground(Color.white);
-                gridBagConstraints = new GridBagConstraints();
-                gridBagConstraints.gridx = 1;
-                gridBagConstraints.gridy = 2 * i;
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
-                gridBagConstraints.insets = new java.awt.Insets(0, 4, -2, 0);
-                this.add(cbStarting, gridBagConstraints);
-
-                cbList.add(cbStarting);
                 
-                JCheckBox cbLanding = new JCheckBox();
-                cbLanding.setText("Land");
-                cbLanding.setFont(f);
-                cbLanding.setEnabled(true);
-                cbLanding.setName("LANDING");
-                cbLanding.setModel(rw.createLandingCbModel());
-                cbLanding.addActionListener(rw);
-                cbLanding.setForeground(Color.white);
-                gridBagConstraints = new GridBagConstraints();
-                gridBagConstraints.gridx = 1;
-                gridBagConstraints.gridy = 2 * i + 1;
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-                gridBagConstraints.insets = new java.awt.Insets(-2, 4, 0, 0);
-                this.add(cbLanding, gridBagConstraints);
+                if(rw.getRunwayData().isEnabledAtAll()) {
                 
-                cbList.add(cbLanding);
-
-                JLabel lbShearWind = new JLabel();
-                lbShearWind.setText(String.format("%.0fkn / %.0fkn",rw.getHeadWindSpeed(),rw.getCrossWindSpeed()));
-                lbShearWind.setToolTipText("Strength of head and crosswind");
-                lbShearWind.setFont(f);
-                lbShearWind.setForeground(Color.white);
-                if(rw.getHeadWindSpeed()<=-1d ) {
-                    lbShearWind.setForeground(Palette.WARNING_REARWIND);
-                    lbShearWind.setToolTipText("Wind from behind!");
-                }
-                if(metar.getWindSpeedGusts()>0d) {
-                    lbShearWind.setForeground(Palette.WARNING_GUSTS);
-                    lbShearWind.setToolTipText("Wind Gusts: "+metar.getWindSpeedGusts()+"kn!");
-                }
-                gridBagConstraints = new GridBagConstraints();
-                gridBagConstraints.gridx = 2;
-                gridBagConstraints.gridy = 2 * i;
-                gridBagConstraints.gridheight = 1;
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
-                gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
-                this.add(lbShearWind, gridBagConstraints);
-                
-                CrossWindDisplay swd = new CrossWindDisplay(rw);
-                swd.setToolTipText("Strength and direction of shear component of wind");
-                gridBagConstraints = new GridBagConstraints();
-                gridBagConstraints.gridx = 2;
-                gridBagConstraints.gridy = 2 * i + 1;
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-                gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-                this.add(swd, gridBagConstraints);
-
-                JLabel lbHeading = new JLabel();
-                lbHeading.setName("lb" + rw.getCode() + "Heading");
-                lbHeading.setText(String.format("%1s°",rw.getMagneticHeading()));
-                lbHeading.setToolTipText("Magnetic heading of RW");
-                lbHeading.setFont(f);
-                lbHeading.setForeground(Color.white);
-                gridBagConstraints = new GridBagConstraints();
-                gridBagConstraints.gridx = 3;
-                gridBagConstraints.gridy = 2 * i;
-                //gridBagConstraints.gridwidth = 2;
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
-                gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
-                this.add(lbHeading, gridBagConstraints);
-                
-                JLabel lbLength = new JLabel();
-                lbLength.setName("lb" + rw.getCode() + "Length");
-                lbLength.setText(String.format("%1$,3.0f\" x %2$,.0f\"",rw.getLengthFt(), rw.getWidthFt()));
-                lbLength.setToolTipText("Length x Width");
-                lbLength.setFont(f);
-                lbLength.setForeground(Color.white);
-                gridBagConstraints = new GridBagConstraints();
-                gridBagConstraints.gridx = 3;
-                gridBagConstraints.gridy = 2 * i + 1;
-                //gridBagConstraints.gridwidth = 2;
-                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-                gridBagConstraints.insets = new java.awt.Insets(-2, 4, 0, 0);
-                this.add(lbLength, gridBagConstraints);
-
-                
-//                JLabel lbRelativeWindDirection = new JLabel();
-//                lbRelativeWindDirection.setText("rWD:" + df.format(rw.getWindDeviation()) + "°");
-//                lbRelativeWindDirection.setToolTipText("Wind direction relative to runway heading.");
-//                lbRelativeWindDirection.setFont(f);
-//                lbRelativeWindDirection.setForeground(Color.white);
-//                gridBagConstraints = new GridBagConstraints();
-//                gridBagConstraints.gridx = 3;
-//                gridBagConstraints.gridy = 2 * i + 1;
-//                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-//                gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-//                pnlMain.add(lbRelativeWindDirection, gridBagConstraints);
-
-                if(rw.getGlideslope()!=null) {
-                    Glideslope gs = rw.getGlideslope();
-                    
-                    JLabel lbILS = new JLabel();
-                    lbILS.setText(String.format("ILS: %1$s %2$3.2f MHz",gs.getIdentification(),gs.getFrequency().getValue()/Units.MHz));
-                    lbILS.setToolTipText("ID, Frequency of ILS and elevation runway end");
-                    lbILS.setFont(f);
-                    lbILS.setForeground(Color.white);
+                    JCheckBox cbStarting = new JCheckBox();
+                    cbStarting.setText("Start");
+                    cbStarting.setFont(f);
+                    cbStarting.setForeground(rw.getRunwayData().isStartingEnabled() ? Color.white : Color.gray);
+                    cbStarting.setName("STARTING");
+                    cbStarting.setModel(rw.createStartCbModel());
+                    cbStarting.setEnabled(rw.getRunwayData().isStartingEnabled());
+                    cbStarting.addActionListener(rw);
                     gridBagConstraints = new GridBagConstraints();
-                    gridBagConstraints.gridx = 4;
+                    gridBagConstraints.gridx = 1;
                     gridBagConstraints.gridy = 2 * i;
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
-                    gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
-                    this.add(lbILS, gridBagConstraints);
+                    gridBagConstraints.insets = new java.awt.Insets(0, 4, -2, 0);
+                    this.add(cbStarting, gridBagConstraints);
     
-                    JLabel lbILSData = new JLabel();
-                    lbILSData.setText(String.format("GS:%1$1.2f° E:%2$,.0f ft",gs.getGlideslopeAngle(),gs.getElevation()/Units.FT));
-                    lbILSData.setToolTipText(String.format("Range: %1$,.0f ft",gs.getRange()));
-                    lbILSData.setFont(f);
-                    lbILSData.setForeground(Color.white);
+                    cbList.add(cbStarting);
+                    
+                    JCheckBox cbLanding = new JCheckBox();
+                    cbLanding.setText("Land");
+                    cbLanding.setFont(f);
+                    cbLanding.setForeground(rw.getRunwayData().isLandingEnabled() ? Color.white : Color.gray);
+                    cbLanding.setName("LANDING");
+                    cbLanding.setModel(rw.createLandingCbModel());
+                    cbLanding.setEnabled(rw.getRunwayData().isLandingEnabled());
+                    cbLanding.addActionListener(rw);
                     gridBagConstraints = new GridBagConstraints();
-                    gridBagConstraints.gridx = 4;
+                    gridBagConstraints.gridx = 1;
                     gridBagConstraints.gridy = 2 * i + 1;
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+                    gridBagConstraints.insets = new java.awt.Insets(-2, 4, 0, 0);
+                    this.add(cbLanding, gridBagConstraints);
+                    
+                    cbList.add(cbLanding);
+    
+                    JLabel lbShearWind = new JLabel();
+                    lbShearWind.setText(String.format("%.0fkn / %.0fkn",rw.getHeadWindSpeed(),rw.getCrossWindSpeed()));
+                    lbShearWind.setToolTipText("Strength of head and crosswind");
+                    lbShearWind.setFont(f);
+                    lbShearWind.setForeground(Color.white);
+                    if(rw.getHeadWindSpeed()<=-1d ) {
+                        lbShearWind.setForeground(Palette.WARNING_REARWIND);
+                        lbShearWind.setToolTipText("Wind from behind!");
+                    }
+                    if(metar.getWindSpeedGusts()>0d) {
+                        lbShearWind.setForeground(Palette.WARNING_GUSTS);
+                        lbShearWind.setToolTipText("Wind Gusts: "+metar.getWindSpeedGusts()+"kn!");
+                    }
+                    gridBagConstraints = new GridBagConstraints();
+                    gridBagConstraints.gridx = 2;
+                    gridBagConstraints.gridy = 2 * i;
+                    gridBagConstraints.gridheight = 1;
+                    gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
+                    gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
+                    this.add(lbShearWind, gridBagConstraints);
+                    
+                    CrossWindDisplay swd = new CrossWindDisplay(rw);
+                    swd.setToolTipText("Strength and direction of shear component of wind");
+                    gridBagConstraints = new GridBagConstraints();
+                    gridBagConstraints.gridx = 2;
+                    gridBagConstraints.gridy = 2 * i + 1;
+                    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
                     gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-                    this.add(lbILSData, gridBagConstraints);
-                }
+                    this.add(swd, gridBagConstraints);
+    
+                    JLabel lbHeading = new JLabel();
+                    lbHeading.setName("lb" + rw.getCode() + "Heading");
+                    lbHeading.setText(String.format("%1s°",rw.getMagneticHeading()));
+                    lbHeading.setToolTipText("Magnetic heading of RW");
+                    lbHeading.setFont(f);
+                    lbHeading.setForeground(Color.white);
+                    gridBagConstraints = new GridBagConstraints();
+                    gridBagConstraints.gridx = 3;
+                    gridBagConstraints.gridy = 2 * i;
+                    //gridBagConstraints.gridwidth = 2;
+                    gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
+                    gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
+                    this.add(lbHeading, gridBagConstraints);
+                    
+                    JLabel lbLength = new JLabel();
+                    lbLength.setName("lb" + rw.getCode() + "Length");
+                    lbLength.setText(String.format("%1$,3.0f\" x %2$,.0f\"",rw.getLengthFt(), rw.getWidthFt()));
+                    lbLength.setToolTipText("Length x Width");
+                    lbLength.setFont(f);
+                    lbLength.setForeground(Color.white);
+                    gridBagConstraints = new GridBagConstraints();
+                    gridBagConstraints.gridx = 3;
+                    gridBagConstraints.gridy = 2 * i + 1;
+                    //gridBagConstraints.gridwidth = 2;
+                    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+                    gridBagConstraints.insets = new java.awt.Insets(-2, 4, 0, 0);
+                    this.add(lbLength, gridBagConstraints);
+    
+                    
+    //                JLabel lbRelativeWindDirection = new JLabel();
+    //                lbRelativeWindDirection.setText("rWD:" + df.format(rw.getWindDeviation()) + "°");
+    //                lbRelativeWindDirection.setToolTipText("Wind direction relative to runway heading.");
+    //                lbRelativeWindDirection.setFont(f);
+    //                lbRelativeWindDirection.setForeground(Color.white);
+    //                gridBagConstraints = new GridBagConstraints();
+    //                gridBagConstraints.gridx = 3;
+    //                gridBagConstraints.gridy = 2 * i + 1;
+    //                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    //                gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+    //                pnlMain.add(lbRelativeWindDirection, gridBagConstraints);
+    
+                    if(rw.getRunwayData().isLandingEnabled() && rw.getGlideslope()!=null) {
+                        Glideslope gs = rw.getGlideslope();
+                        
+                        JLabel lbILS = new JLabel();
+                        lbILS.setText(String.format("ILS: %1$s %2$3.2f MHz",gs.getIdentification(),gs.getFrequency().getValue()/Units.MHz));
+                        lbILS.setToolTipText("ID, Frequency of ILS and elevation runway end");
+                        lbILS.setFont(f);
+                        lbILS.setForeground(Color.white);
+                        gridBagConstraints = new GridBagConstraints();
+                        gridBagConstraints.gridx = 4;
+                        gridBagConstraints.gridy = 2 * i;
+                        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+                        gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
+                        this.add(lbILS, gridBagConstraints);
+        
+                        JLabel lbILSData = new JLabel();
+                        lbILSData.setText(String.format("GS:%1$1.2f° E:%2$,.0f ft",gs.getGlideslopeAngle(),gs.getElevation()/Units.FT));
+                        lbILSData.setToolTipText(String.format("Range: %1$,.0f ft",gs.getRange()));
+                        lbILSData.setFont(f);
+                        lbILSData.setForeground(Color.white);
+                        gridBagConstraints = new GridBagConstraints();
+                        gridBagConstraints.gridx = 4;
+                        gridBagConstraints.gridy = 2 * i + 1;
+                        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+                        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+                        this.add(lbILSData, gridBagConstraints);
+                    }
+                } // rw is enabled at all
+
                 JPanel space = new JPanel();
                 space.setOpaque(false);
                 gridBagConstraints = new GridBagConstraints();
@@ -255,7 +259,7 @@ public class RunwayPanel extends JPanel {
                 gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
                 gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
                 this.add(space, gridBagConstraints);
-                
+                    
             }
             i++;
         }
@@ -271,7 +275,6 @@ public class RunwayPanel extends JPanel {
         for(JCheckBox cb : cbList) {
             cb.repaint();
         }
-        
         guiInteractionManager.getRadarBackend().repaint();
     }
 

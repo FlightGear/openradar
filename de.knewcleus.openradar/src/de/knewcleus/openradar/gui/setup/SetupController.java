@@ -40,6 +40,7 @@ import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
@@ -98,11 +99,7 @@ public class SetupController {
                 double magneticDeclination = 0d;
                 File propertyFile = new File("data" + File.separator + airportCode + File.separator + "sector.properties");
                 if (propertyFile.exists()) {
-                    Properties p = new Properties();
-                    try {
-                        p.load(new FileReader(propertyFile));
-                    } catch (IOException e) {
-                    }
+                    Properties p = loadSectorProperties(airportCode);
                     airportName = p.getProperty("airportName", "");
                     metarSource = p.getProperty("metarSource", airportCode);
                     if(p.getProperty("lat")!=null && p.getProperty("lon")!=null) {
@@ -286,5 +283,41 @@ public class SetupController {
             }
         }
         throw new IllegalStateException("apt.dat not found in sectors/AtpNav.zip!");
-    }    
+    }
+    
+    public static Properties loadSectorProperties(String airportCode) {
+        Properties p = null;
+        File propertyFile = new File("data" + File.separator + airportCode + File.separator + "sector.properties");
+        if (propertyFile.exists()) {
+            p = new Properties();
+            try {
+                p.load(new FileReader(propertyFile));
+            } catch (IOException e) {
+            }
+        }
+        return p;
+    }
+
+    public static void saveSectorProperties(String airportCode, Properties p) {
+        // Create sector.properties
+        File sectorFile = new File("data" + File.separator + airportCode + File.separator + "sector.properties");
+
+        FileWriter userWriter = null;
+        try {
+            if (sectorFile.exists())
+                sectorFile.delete();
+            userWriter = new FileWriter(sectorFile);
+
+            p.store(userWriter, "Open Radar Sector property file");
+        } catch (IOException e) {
+
+        } finally {
+            if (userWriter != null) {
+                try {
+                    userWriter.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
 }
