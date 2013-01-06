@@ -45,8 +45,8 @@ import de.knewcleus.openradar.radardata.IRadarDataProvider;
 import de.knewcleus.openradar.radardata.IRadarDataRecipient;
 
 public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> implements IRadarDataProvider {
-	protected final static Position linearVelocity=new Position();
-	protected final static Position orientation=new Position();
+	protected final Position linearVelocity=new Position();
+	protected final Position orientation=new Position();
 	protected volatile String callsign;
 	protected final String model;
 	protected final Position position;
@@ -73,6 +73,9 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 		this.position=position;
 		this.model=model;
 		lastAntennaRotationTime=System.currentTimeMillis();
+		
+		// must be last to be sure, everything is initialized!
+		startSending();
 	}
 	
 //	@Override

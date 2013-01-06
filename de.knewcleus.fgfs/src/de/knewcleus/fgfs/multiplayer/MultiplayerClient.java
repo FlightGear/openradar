@@ -63,7 +63,9 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
         this.serverPort = mpServerPort;
         this.localPort = mpLocalPort;
         lastPositionUpdateTimeMillis = System.currentTimeMillis();
+    }
 
+    protected void startSending() {
         Thread chatPositionSender = new Thread("OpenRadar - messageSender") {
             @Override
             public void run() {
@@ -89,9 +91,8 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
         };
         chatPositionSender.setDaemon(true);
         chatPositionSender.start();
-
     }
-
+    
     // public void sendPacket(MultiplayerPacket mppacket) throws
     // MultiplayerException {
     // sendPacket(serverAddress, serverPort, mppacket);
@@ -180,16 +181,14 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
             // System.out.println(player.callsign+": '" +chatMessage+"'");
             // }
             if (chatMessage != null && !chatMessage.isEmpty()) {
-                if (!"hello".equalsIgnoreCase(chatMessage)) {
-                    String frequency = "";
-                    String f = (String) positionMessage.getProperty("sim/multiplay/transmission-freq-hz");
-                    if (f != null) {
-                        BigDecimal bdFreq = new BigDecimal((String) positionMessage.getProperty("sim/multiplay/transmission-freq-hz"));
-                        bdFreq = bdFreq.divide(new BigDecimal(1000000));
-                        frequency = String.format("%1.1f", bdFreq);
-                    }
-                    notifyChatListeners(mppacket.getCallsign(), frequency, chatMessage);
+                String frequency = "";
+                String f = (String) positionMessage.getProperty("sim/multiplay/transmission-freq-hz");
+                if (f != null) {
+                    BigDecimal bdFreq = new BigDecimal((String) positionMessage.getProperty("sim/multiplay/transmission-freq-hz"));
+                    bdFreq = bdFreq.divide(new BigDecimal(1000000));
+                    frequency = String.format("%1.1f", bdFreq);
                 }
+                notifyChatListeners(mppacket.getCallsign(), frequency, chatMessage);
             }
 
             player.updatePosition(System.currentTimeMillis(), positionMessage);
