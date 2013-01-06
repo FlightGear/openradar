@@ -123,19 +123,19 @@ public class MpChatPanel extends javax.swing.JPanel {
         //
         // lbMpShowSect.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
 
-        lbMpShowVisible.setFont(Palette.DESKTOP_FONT); // NOI18N
-        lbMpShowVisible.setText("VIS");
-        lbMpShowVisible.setName("VIS");
-        lbMpShowVisible.setToolTipText("Show only messages of visible contacts");
-        lbMpShowVisible.setForeground(Color.white);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-        add(lbMpShowVisible, gridBagConstraints);
-
-        lbMpShowVisible.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
+//        lbMpShowVisible.setFont(Palette.DESKTOP_FONT); // NOI18N
+//        lbMpShowVisible.setText("VIS");
+//        lbMpShowVisible.setName("VIS");
+//        lbMpShowVisible.setToolTipText("Show only messages of visible contacts");
+//        lbMpShowVisible.setForeground(Color.white);
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 3;
+//        gridBagConstraints.gridy = 0;
+//        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
+//        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+//        add(lbMpShowVisible, gridBagConstraints);
+//
+//        lbMpShowVisible.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
 
         lbMpShowACT.setFont(Palette.DESKTOP_FONT); // NOI18N
         lbMpShowACT.setText("SEL");
