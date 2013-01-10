@@ -39,6 +39,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.TreeMap;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
@@ -67,6 +68,10 @@ public class RunwayEndIlsCone extends AViewObject {
     private Point2D rightBaselegTextOrigin = null;
     private double rightBaselegAngle = 0;
     private double rightBaselegFlyAngle = 0;
+    
+    private float  elevation = 0;
+    private double distancePerHeight = 0;
+    private TreeMap<Integer,Point2D> heightTextPositions = new TreeMap<Integer,Point2D>(); 
 
     public RunwayEndIlsCone(AirportData data, RunwayEnd runwayEnd) {
         super(Palette.GLIDESLOPE);
@@ -85,9 +90,14 @@ public class RunwayEndIlsCone extends AViewObject {
             rightBaselegTextOrigin=null;
             leftVectoringTextOrigin=null;
             leftBaselegTextOrigin=null;
+            heightTextPositions.clear();
             return;
         }
-
+        // adaptive display of glideslope heights
+        int deltaHeight = 1000;
+        if(mva.getLogicalScale()<60) deltaHeight = 500;
+        if(mva.getLogicalScale()>100) deltaHeight = 1500; // because we don't want text at the default vectoring / centerline crossing
+        
         if(rwd==null || rwd.isRepaintNeeded()) {
             rwd = data.getRunwayData(runwayEnd.getRunwayID());
             reverseHeading = Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+180);
@@ -102,11 +112,11 @@ public class RunwayEndIlsCone extends AViewObject {
             leftBaselegAngle = Math.round(Converter2D.normalizeAngle(reverseHeading+90)/10)*10;
             leftBaselegFlyAngle = Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+90-data.getMagneticDeclination())/10)*10;
             rwd.setRepaintNeeded(false);
+            
+            elevation = runwayEnd.getRunway().getAerodrome().getElevation()/Units.FT;
         }
         
         this.font = new Font("Arial", Font.PLAIN, 9);
-        
-
         
         // default values 18 SM +/- 10 degrees
         
@@ -115,18 +125,49 @@ public class RunwayEndIlsCone extends AViewObject {
         double length = ftd((double) rwd.getExtCenterlineLength() *referenceLength,mva);//runwayEnd.getGlideslope().getRange()/Units.FT, mva); // feet!
         
         path = new Path2D.Double();
+
         // center line
-        Point2D startPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset); // newDisplayPosition;
-        Point2D endPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, length);
-        path.append(new Line2D.Double(startPoint, endPoint), false);
+        int textspacing = 10; // the dots that are kept free for better text readability
+
         
-        Point2D centerPoint; 
+        Point2D textPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset);;
+        Point2D startPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset); 
+        Point2D endPoint = startPoint;
+        double distanceToAirport = 0;
+        int currentHeight = (int)elevation;
+        float angle = runwayEnd.getGlideslope()==null ? 3 : runwayEnd.getGlideslope().getGlideslopeAngle();
+        distancePerHeight = deltaHeight / Math.tan(Math.toRadians(angle));
+
+        heightTextPositions.clear();
+        
+        while( distanceToAirport < 25 * referenceLength) {
+            distanceToAirport += distancePerHeight;
+
+            if(distanceToAirport > rwd.getExtCenterlineStart() * referenceLength
+               && distanceToAirport < rwd.getExtCenterlineLength() * referenceLength) {
+                startPoint = Converter2D.getMapDisplayPoint(textPoint, reverseHeading, textspacing); 
+                endPoint = Converter2D.getMapDisplayPoint(textPoint, reverseHeading, ftd((distancePerHeight) ,mva)-textspacing);
+                path.append(new Line2D.Double(startPoint, endPoint), false);
+            }        
+            
+            // text positions: heights above ground
+            currentHeight += deltaHeight;
+            textPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, ftd(distanceToAirport,mva));
+            heightTextPositions.put(currentHeight, textPoint);
+        }
+        // unbroken center line up to max length
+        if(distanceToAirport < rwd.getExtCenterlineLength() *referenceLength) {
+            startPoint = Converter2D.getMapDisplayPoint(textPoint, reverseHeading, textspacing);
+            endPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, ftd((rwd.getExtCenterlineLength() *referenceLength) ,mva)-textspacing);
+            path.append(new Line2D.Double(startPoint, endPoint), false);
+        }
+        
         
         // Distance markers
         
         // major marker lines
         double currentDistance = 0;
-        
+        Point2D centerPoint = currentDisplayPosition;
         int i=0;
         do {
             currentDistance = rwd.getMajorDMStart() + i * rwd.getMajorDMInterval();
@@ -224,6 +265,8 @@ public class RunwayEndIlsCone extends AViewObject {
             leftVectoringTextOrigin=null;
             leftBaselegTextOrigin=null;
         }
+        
+        
     }
 
     private double ftd(double feet, IMapViewerAdapter mapViewerAdapter) {
@@ -258,6 +301,12 @@ public class RunwayEndIlsCone extends AViewObject {
                 String text = String.format("%3.0f", leftBaselegFlyAngle);
                 Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
                 g2d.drawString(text, (float)(leftBaselegTextOrigin.getX()-b.getWidth()/2), (float) (leftBaselegTextOrigin.getY()+b.getHeight()/2-2));
+            }
+            for(int height : heightTextPositions.keySet()) {
+                String text = ""+(height/100)*100;//String.format("%3.0i", height);
+                Point2D point = heightTextPositions.get(height);
+                Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
+                g2d.drawString(text, (float)(point.getX()-b.getWidth()/2), (float) (point.getY()+b.getHeight()/2-2));
             }
         }
     //}
