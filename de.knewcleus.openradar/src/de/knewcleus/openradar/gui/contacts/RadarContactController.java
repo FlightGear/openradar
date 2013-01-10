@@ -331,8 +331,11 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     @Override
     public synchronized void playerRemoved(TargetStatus player) {
         String callSign = player.getCallsign();
-        if (mapCallSignContact.containsKey(player.getCallsign())) {
-            GuiRadarContact c = mapCallSignContact.remove(callSign);
+        GuiRadarContact c = mapCallSignContact.remove(callSign);
+        if(c==null) {
+            c = mapExpiredCallSigns.remove(callSign);
+        }
+        if(c!=null) {
             completeContactList.remove(c);
             activeContactList.remove(c);
             mapCallSignContact.remove(c.getCallSign());
