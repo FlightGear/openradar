@@ -276,10 +276,8 @@ public class GuiRadarContact {
     }
 
     public synchronized String getAircraft() {
-        if(aircraft==null || "".equals(aircraft)) {
-            aircraft = player.getModel();
-            if(aircraft!=null && aircraft.contains(".xml")) aircraft = aircraft.toUpperCase().substring(aircraft.lastIndexOf("/")+1,aircraft.indexOf(".xml"));
-        }
+        aircraft = player.getModel();
+        if(aircraft!=null && aircraft.contains(".xml")) aircraft = aircraft.toUpperCase().substring(aircraft.lastIndexOf("/")+1,aircraft.indexOf(".xml"));
         return aircraft;        
     }
     
@@ -420,5 +418,9 @@ public class GuiRadarContact {
 
     public void setAtcLanguage(String atcLanguage) {
         this.atcLanguage = atcLanguage;
+    }
+
+    public long getLastUpdate() {
+        return player.getLastMessageTime();
     }
 }
