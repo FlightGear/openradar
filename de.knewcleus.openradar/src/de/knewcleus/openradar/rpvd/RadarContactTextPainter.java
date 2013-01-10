@@ -106,7 +106,7 @@ public class RadarContactTextPainter {
         // create composite for transparency of background
         
         String textLine1 = String.format("%s %2s",trackDisplayState.guiContact.getCallSign(),trackDisplayState.guiContact.getMagnCourse());
-        String textLine2 = String.format("%1s %2s %3s", trackDisplayState.guiContact.getFlightLevel(),trackDisplayState.guiContact.getAirSpeed(),trackDisplayState.guiContact.getVerticalSpeedD()>0?"+":"-");
+        String textLine2 = String.format("%1s %2s %3s", trackDisplayState.guiContact.getFlightLevel(),trackDisplayState.guiContact.getAirSpeed(),"");
         boundsLine1 = fontMetrics.getStringBounds(textLine1, g2d);
         boundsLine2 = fontMetrics.getStringBounds(textLine2, g2d);
         boundsText = new Rectangle2D.Double(boundsLine1.getX(), boundsLine1.getY()-boundsLine1.getHeight(), Math.max(boundsLine1.getWidth(), boundsLine2.getWidth()), boundsLine1.getHeight()+boundsLine2.getHeight());
