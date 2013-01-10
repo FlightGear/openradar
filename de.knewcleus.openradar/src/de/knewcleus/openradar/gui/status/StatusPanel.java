@@ -162,34 +162,35 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth=2;
+        gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
         headerPanel.add(lbAirport, gridBagConstraints);
 
-        lbSelection.setForeground(Color.white);
-        lbSelection.setText("");
+        lbSelection.setForeground(Palette.LIGHTBLUE);
+        lbSelection.setText("-nobody-");
         lbSelection.setToolTipText("Callsign of selected contact");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
-        headerPanel.add(lbSelection, gridBagConstraints);
-
-        lbPtS.setForeground(Color.white);
-        lbPtS.setText("StP: (Please select a contact)");
-        lbPtS.setToolTipText("magn., wind compens. direction Selection=>Pointer, back, distance, time needed");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(8, 10, 2, 0);
+        headerPanel.add(lbSelection, gridBagConstraints);
+
+        lbPtS.setForeground(Palette.LIGHTBLUE);
+        lbPtS.setText("StP: (Please select a contact)");
+        lbPtS.setToolTipText("magnetic, wind compensated direction Selection => Pointer, back, distance, time needed");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 //        gridBagConstraints.ipadx = 17;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(6, 10, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(8, 4, 0, 4);
         headerPanel.add(lbPtS, gridBagConstraints);
 
         lbWind.setForeground(Palette.LIGHTBLUE);
@@ -202,7 +203,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 4);
         headerPanel.add(lbWind, gridBagConstraints);
 
-        lbPressure.setForeground(Palette.LIGHTBLUE);
+        lbPressure.setForeground(Color.white);
         lbPressure.setText("");
         lbPressure.setToolTipText("Pressure");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -212,7 +213,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 4);
         headerPanel.add(lbPressure, gridBagConstraints);
 
-        lbVisibility.setForeground(Palette.LIGHTBLUE);
+        lbVisibility.setForeground(Color.white);
         lbVisibility.setText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;

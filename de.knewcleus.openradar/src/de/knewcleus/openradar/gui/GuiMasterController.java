@@ -124,7 +124,7 @@ public class GuiMasterController {
         mainFrame.getRadarScreen().initRadarData();
         metarReader.start(); // loads metar and refreshes the runway panel
         radioManager.init();
-        statusManager.setSelectedCallSign("");
+        statusManager.setSelectedCallSign("-nobody-");
         dataRegistry.loadAirportData(this);
         radarBackend.validateToggles();
         radarBackend.addRadarViewListener(mpChatManager); // forwards Zoom and center changes to MPChat
