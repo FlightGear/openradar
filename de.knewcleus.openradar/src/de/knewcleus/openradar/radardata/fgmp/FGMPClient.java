@@ -85,7 +85,7 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 	
 	@Override
 	protected int getPlayerTimeoutMillis() {
-		return 30*60*1000; // staleTargetTimeoutMsecs;
+		return 10*60*1000; // staleTargetTimeoutMsecs;
 	}
 	
 	@Override
