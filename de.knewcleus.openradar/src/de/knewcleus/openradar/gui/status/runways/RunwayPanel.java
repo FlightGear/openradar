@@ -225,7 +225,7 @@ public class RunwayPanel extends JPanel {
                         Glideslope gs = rw.getGlideslope();
                         
                         JLabel lbILS = new JLabel();
-                        lbILS.setText(String.format("ILS: %1$s %2$3.2f MHz",gs.getIdentification(),gs.getFrequency().getValue()/Units.MHz));
+                        lbILS.setText(String.format("ILS: %1$s %2$3.2f",gs.getIdentification(),gs.getFrequency().getValue()/Units.MHz));
                         lbILS.setToolTipText("ID, Frequency of ILS and elevation runway end");
                         lbILS.setFont(f);
                         lbILS.setForeground(Color.white);
@@ -300,13 +300,13 @@ public class RunwayPanel extends JPanel {
         StringBuilder sb = new StringBuilder();
         for (GuiRunway rw : guiInteractionManager.getDataRegistry().getRunways().values()) {
             if(rw.isLandingActive()) {
-                if(sb.length()>0) sb.append("/");
+                if(sb.length()>0) sb.append(" / ");
                 sb.append(rw.getCode());
-                if(rw.getIlsFrequency()!=null) {
+                if(rw.getIlsFrequency()!=null && !rw.getIlsFrequency().trim().isEmpty()) {
                     sb.append(" ILS: ");
 //                    sb.append(rw.getGlideslope().getIdentification());
 //                    sb.append(" ");
-                    sb.append(rw.getIlsFrequency());
+                    sb.append(rw.getIlsFrequency().trim());
 //                    sb.append(", GS:");
 //                    sb.append(rw.getGlideslope().getGlideslopeAngle());
 //                    sb.append("%");
