@@ -151,17 +151,16 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth=1;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 10, 10, 4);
         headerPanel.add(lbTime, gridBagConstraints);
         
         lbAirport.setForeground(Color.white);
         lbAirport.setText(master.getDataRegistry().getAirportCode() + " " + master.getDataRegistry().getAirportName());
-        lbAirport.setToolTipText("Current call sign");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth=2;
+        gridBagConstraints.gridwidth=3;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
@@ -173,14 +172,12 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 1;
-        gridBagConstraints.weightx = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(8, 10, 2, 0);
         headerPanel.add(lbSelection, gridBagConstraints);
 
         lbPtS.setForeground(Palette.LIGHTBLUE);
-        lbPtS.setText("StP: (Please select a contact)");
+        lbPtS.setText("(Please select a contact)");
         lbPtS.setToolTipText("magnetic, wind compensated direction Selection => Pointer, back, distance, time needed");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -328,7 +325,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbPressure.setText(String.format("P: %2.2f / %4.1f", metar.getPressureInHG(),metar.getPressureHPa()));
         lbWind.setToolTipText(metar.getMetarBaseData());
         lbPressure.setToolTipText(metar.getMetarBaseData());
-        lbVisibility.setText("V: "+metar.getVisibility()+" "+metar.getVisibilityUnit());
+        lbVisibility.setText(metar.isCavok()?"CAVOK":"V: "+metar.getVisibility()+" "+metar.getVisibilityUnit());
         lbVisibility.setToolTipText(metar.getMetarBaseData());
 
         runwayPanel.refreshRunways(metar);
@@ -342,7 +339,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
         String min = timeMinutes==null ? "n/a" : Long.toString(timeMinutes);
         
-        lbPtS.setText("StP: "+dTP+" / "+dTS+"     "+dist+" miles     "+min+" min.");
+        lbPtS.setText(dTP+" / "+dTS+"     "+dist+" miles     "+min+" min.");
     }
 
     public String getActiveRunways() {

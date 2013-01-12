@@ -303,7 +303,7 @@ public class RunwayPanel extends JPanel {
                 if(sb.length()>0) sb.append(" / ");
                 sb.append(rw.getCode());
                 if(rw.getIlsFrequency()!=null && !rw.getIlsFrequency().trim().isEmpty()) {
-                    sb.append(" ILS: ");
+                    sb.append(" ILS ");
 //                    sb.append(rw.getGlideslope().getIdentification());
 //                    sb.append(" ");
                     sb.append(rw.getIlsFrequency().trim());
@@ -311,6 +311,8 @@ public class RunwayPanel extends JPanel {
 //                    sb.append(rw.getGlideslope().getGlideslopeAngle());
 //                    sb.append("%");
                 }
+                sb.append("-");
+                sb.append(rw.getMagneticHeading());
             }
         }
 

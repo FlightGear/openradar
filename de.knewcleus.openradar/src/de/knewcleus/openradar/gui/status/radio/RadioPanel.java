@@ -104,6 +104,8 @@ public class RadioPanel extends JPanel {
             gridBagConstraints.gridy = i;
             gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
             gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+            gridBagConstraints.ipadx = 20;
+            gridBagConstraints.ipady = 2;
             this.add(cbFrequencies,gridBagConstraints);
 
             cbFrequencies.addActionListener(radioManager.getActionListener());

@@ -122,12 +122,11 @@ public class RunwayEndIlsCone extends AViewObject {
         
         double referenceLength = Units.NM/Units.FT;// one mile;
         double offset = ftd((double) rwd.getExtCenterlineStart() *referenceLength,mva);
-        double length = ftd((double) rwd.getExtCenterlineLength() *referenceLength,mva);//runwayEnd.getGlideslope().getRange()/Units.FT, mva); // feet!
         
         path = new Path2D.Double();
 
         // center line
-        int textspacing = 10; // the dots that are kept free for better text readability
+        int textspacing = 15; // the dots that are kept free for better text readability
 
         
         Point2D textPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset);;
