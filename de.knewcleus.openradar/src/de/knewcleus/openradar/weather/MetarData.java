@@ -91,6 +91,7 @@ public class MetarData {
     private float pressureHPa;
     
     // color code (military)
+    boolean cavok = false;    
     
     // trend
     private enum Trend { NOSIG, BECMG, TEMPO}
@@ -217,8 +218,11 @@ public class MetarData {
         dewPoint = Integer.parseInt(t.substring(sep+1));
     }
     private void parsePhenomena(String t) {
-        // TODO Auto-generated method stub
-        
+        if("CAVOK".equals(t)) {
+            cavok=true;
+            visibility=10000;
+            visibilityUnit="m";
+        }
     }
 
     public String getMetarBaseData() {
@@ -310,4 +314,7 @@ public class MetarData {
         return windFromWest;
     }
 
+    public boolean isCavok() {
+        return cavok;
+    }
 }
