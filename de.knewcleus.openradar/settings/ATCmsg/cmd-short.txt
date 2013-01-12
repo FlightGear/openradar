@@ -2,7 +2,7 @@
 (Target: empty)
 
 Welcome outside
-Welcome on airport
+Welcome to the airport
 Radar contact + QNH + RW
 Follow FlightPlan
 Leaving Area

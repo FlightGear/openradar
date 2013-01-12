@@ -6,7 +6,7 @@ To All Airmen:
 %s: Radar Contact range %3.0f mi, QNH %2.2f, expect runway %s, FGCOM %2.3f
 %s: Resume your OWN navigation - Radar surveillance is active
 %s: You are leaving my airspace - frequency change approved - radar service terminated
-ATIS at %s on %2.0f ft: QNH %2.2f, wind %3.0f at %2.0f kt, active rwy(s) %s,  FGCOM %2.3f
+ATIS for %s at %2.0f ft: QNH %2.2f, wind %3.0f at %2.0f kt, active rwy(s) %s,  FGCOM %2.3f
 ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"3">>"6"
 
 %s: Cleared for engine startup, please indicate planned destination
@@ -27,7 +27,7 @@ ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"
 %s: %3.0f mi out, maintain hdg until intercepting localizer, cleared for ILS appr rwy:  
 %s: %3.0f mi out, report when runway in sight
 %s: %3.0f mi out, wind %3.0f at %2.0f kts, cleared to land runway:  
-%s: Welcome in %s -- exit runway to the:  
+%s: Welcome to %s -- exit runway to the:  
 %s: Cleared to cross runway:  
 
 Please use FGCOM %2.3f only to talk to ATC, NOT to chat between airmen!
