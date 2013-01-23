@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -93,6 +93,9 @@ public class RunwayEndIlsCone extends AViewObject {
             heightTextPositions.clear();
             return;
         }
+        
+        boolean showHeights = data.getRadarObjectFilterState("GSH") && mva.getLogicalScale() < 170; 
+        
         // adaptive display of glideslope heights
         int deltaHeight = 1000;
         if(mva.getLogicalScale()<60) deltaHeight = 500;
@@ -126,7 +129,7 @@ public class RunwayEndIlsCone extends AViewObject {
         path = new Path2D.Double();
 
         // center line
-        int textspacing = 15; // the dots that are kept free for better text readability
+        int textspacing = showHeights ? 15 : 0 ; // the dots that are kept free for better text readability
 
         
         Point2D textPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset);;
@@ -148,11 +151,13 @@ public class RunwayEndIlsCone extends AViewObject {
                 endPoint = Converter2D.getMapDisplayPoint(textPoint, reverseHeading, ftd((distancePerHeight) ,mva)-textspacing);
                 path.append(new Line2D.Double(startPoint, endPoint), false);
             }        
-            
+
             // text positions: heights above ground
             currentHeight += deltaHeight;
             textPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, ftd(distanceToAirport,mva));
-            heightTextPositions.put(currentHeight, textPoint);
+            if(showHeights) {
+                heightTextPositions.put(currentHeight, textPoint);
+            }
         }
         // unbroken center line up to max length
         if(distanceToAirport < rwd.getExtCenterlineLength() *referenceLength) {
@@ -254,7 +259,7 @@ public class RunwayEndIlsCone extends AViewObject {
             endPoint = Converter2D.getMapDisplayPoint(startPoint, leftBaselegAngle, ftd(rwd.getLeftBaselegLength()/2*referenceLength,mva)-10);
             path.append(new Line2D.Double(startPoint, endPoint), false);
             
-            leftBaselegTextOrigin = Converter2D.getMapDisplayPoint(startPoint, reverseHeading+90, ftd(rwd.getLeftBaselegLength()/2*referenceLength,mva));
+            leftBaselegTextOrigin = Converter2D.getMapDisplayPoint(startPoint, leftBaselegAngle, ftd(rwd.getLeftBaselegLength()/2*referenceLength,mva));
 
             // second half
             startPoint = Converter2D.getMapDisplayPoint(endPoint, leftBaselegAngle, 20);
@@ -299,7 +304,7 @@ public class RunwayEndIlsCone extends AViewObject {
             if(leftBaselegTextOrigin!=null) {
                 String text = String.format("%3.0f", leftBaselegFlyAngle);
                 Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
-                g2d.drawString(text, (float)(leftBaselegTextOrigin.getX()-b.getWidth()/2), (float) (leftBaselegTextOrigin.getY()+b.getHeight()/2-2));
+                g2d.drawString(text, (float)(leftBaselegTextOrigin.getX()-b.getWidth()/2), (float) (leftBaselegTextOrigin.getY()+(b.getHeight())/2-2));
             }
             for(int height : heightTextPositions.keySet()) {
                 String text = ""+(height/100)*100;//String.format("%3.0i", height);

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -49,6 +49,7 @@ import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -90,8 +91,7 @@ public class RadioController implements Runnable {
                 String device = r.getKey();
                 RadioModel model = new RadioModel(master, device, data.getRadioFrequencies(), i++);
                 models.put(device, model);
-                fgComController.addRadio(data.getFgComPath(), data.getFgComExec(), device, data.getFgComServer(), r.getFgComHost(), r.getFgComPort(), model
-                        .getSelectedItem().getCode(), model.getSelectedItem());
+                fgComController.addRadio(data.getFgComPath(), data.getFgComExec(), device, data.getFgComServer(), r.getFgComHost(), r.getFgComPort(), model.getSelectedItem().getCode(), model.getSelectedItem());
             }
             modelList = new ArrayList<RadioModel>(models.values());
             fgComController.start();
@@ -155,6 +155,15 @@ public class RadioController implements Runnable {
     private class PttButtonListener extends MouseAdapter {
 
         @Override
+        public void mouseClicked(MouseEvent e) {
+            if(e.getSource() instanceof JLabel) {
+                if(((JLabel)e.getSource()).getName().equals("lbRestart")) {
+                    fgComController.restartFgCom();
+                }
+            }
+        }
+        
+        @Override
         public void mousePressed(MouseEvent e) {
             managePtt(e, true);
         }
@@ -170,13 +179,16 @@ public class RadioController implements Runnable {
         }
 
         private void managePtt(MouseEvent e, boolean enablePtt) {
-
-            JButton btPTT = ((JButton) e.getSource());
-            String radioKey = btPTT.getName().substring(4); // prefix but_
-            if (fgComController != null) {
-                fgComController.setPttActive(radioKey, enablePtt);
+            if(e.getSource() instanceof JButton) {
+                JButton btPTT = ((JButton) e.getSource());
+                if(!btPTT.getName().equals("lbRestart"))  {
+                    String radioKey = btPTT.getName().substring(4); // prefix but_
+                    if (fgComController != null) {
+                        fgComController.setPttActive(radioKey, enablePtt);
+                    }
+                    radioPanel.displayEnabledPTT(radioKey, enablePtt);
+                }
             }
-            radioPanel.displayEnabledPTT(radioKey, enablePtt);
         }
     }
 

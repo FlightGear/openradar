@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -45,6 +45,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 
 /**
  * This panel contains the radios in the status panel
@@ -54,14 +56,14 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 public class RadioPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-//    private GuiMasterController master;
+    private GuiMasterController master;
     private RadioController radioManager;
     
     private Map<String,JButton> mapPTTButtons = new HashMap<String,JButton>() ;
     private Map<String,JLabel> mapRadioLabels = new HashMap<String,JLabel>() ;
     
     public RadioPanel(GuiMasterController master, RadioController radioManager) {
-//        this.master=master;
+        this.master=master;
         this.radioManager=radioManager;
         radioManager.setRadioPanel(this);
         initRadios();
@@ -77,8 +79,9 @@ public class RadioPanel extends JPanel {
 
         this.setLayout(new GridBagLayout());
         
+        boolean isFgComInternal = master.getDataRegistry().getFgComMode() == FgComMode.Internal;
+        
         for(RadioModel model : radioManager.getModels().values()) {
-            //JPanel radioPanel = new JPanel();
             
             JLabel lbRadioKey = new JLabel();
             lbRadioKey.setForeground(Color.lightGray);
@@ -94,7 +97,7 @@ public class RadioPanel extends JPanel {
 
             JComboBox<RadioFrequency> cbFrequencies = new JComboBox<RadioFrequency>();
             cbFrequencies.setName(model.getRadioKey());
-            cbFrequencies.setToolTipText("middle button lets you define a frequency");
+            cbFrequencies.setToolTipText("right button lets you define a frequency");
             cbFrequencies.setModel(model);
             if(model.getSize()>i) model.setSelectedItem(model.getElementAt(i));
             cbFrequencies.setEditable(false);
@@ -117,7 +120,7 @@ public class RadioPanel extends JPanel {
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 2;
             gridBagConstraints.gridy = i;
-            gridBagConstraints.weightx = 1;
+            gridBagConstraints.weightx = isFgComInternal ? 0 : 1;
             gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
             gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
             this.add(btPTT,gridBagConstraints);
@@ -128,10 +131,54 @@ public class RadioPanel extends JPanel {
             
             i++;
         }
-        doLayout();
-        if(getParent()!=null) {
-            getParent().invalidate();
-            ((JSplitPane)getParent().getParent().getParent()).invalidate();
+        
+        if(master.getDataRegistry().getFgComMode() != FgComMode.Off) {
+        
+            JPanel pnlRight = new JPanel();
+            pnlRight.setOpaque(false);
+            GridBagConstraints gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 3;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.weightx = 1;
+            gridBagConstraints.gridheight = i;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+            gridBagConstraints.insets = new java.awt.Insets(4, 4, 2, 10);
+            this.add(pnlRight,gridBagConstraints);
+            
+            pnlRight.setLayout(new GridBagLayout());
+           
+            JLabel lbFreq = new JLabel();
+            lbFreq.setForeground(Color.lightGray);
+            lbFreq.setText("910.00 Test FgCom");
+            lbFreq.setFont(lbFreq.getFont().deriveFont(8));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+            gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
+            pnlRight.add(lbFreq,gridBagConstraints);
+            
+            if(isFgComInternal) {
+                JLabel lbReset = new JLabel();
+                lbReset.setName("lbRestart");
+                lbReset.setText("Restart");
+                lbReset.setFont(lbFreq.getFont().deriveFont(8));
+                lbReset.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+                lbReset.setToolTipText("<html><body><b>Restart FgCom</b> if sound is distorted...<br/> Use it of users complain!</body></html>");
+                lbReset.addMouseListener(radioManager.getPttButtonListener());
+                gridBagConstraints = new GridBagConstraints();
+                gridBagConstraints.gridx = 0;
+                gridBagConstraints.gridy = 1;
+                gridBagConstraints.anchor = java.awt.GridBagConstraints.CENTER;
+                gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 0);
+                pnlRight.add(lbReset,gridBagConstraints);
+        
+                doLayout();
+                if(getParent()!=null) {
+                    getParent().invalidate();
+                    ((JSplitPane)getParent().getParent().getParent()).invalidate();
+                }
+            }
         }
     }
 

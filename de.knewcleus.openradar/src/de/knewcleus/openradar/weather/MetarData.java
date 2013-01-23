@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -64,6 +64,7 @@ public class MetarData {
     
     // wind 
     private boolean windDirectionVariates = false;
+    private String windUnit  = "KT";
     private int windDirection = -1;
     private int windDirectionMin = -1;
     private int windDirectionMax = -1;
@@ -126,7 +127,15 @@ public class MetarData {
         }
 
         if(t.matches("^.*KT.*$")) {
-            parseWind(t);
+            parseWind(t,"KT");
+            t = st.nextToken();
+        } 
+        if(t.matches("^.*KMH.*$")) {
+            parseWind(t,"KMH");
+            t = st.nextToken();
+        }
+        if(t.matches("^.*MPS.*$")) {
+            parseWind(t,"MPS");
             t = st.nextToken();
         }
         
@@ -159,7 +168,8 @@ public class MetarData {
             //System.out.println("Wind N: "+windFromNorth+" W: "+windFromWest);
     }
 
-    private void parseWind(String t) {
+    private void parseWind(String t, String unit) {
+        windUnit = unit;
         if(t.startsWith("VRB")) {
             // variable
             windDirection=-1;
@@ -170,7 +180,7 @@ public class MetarData {
         windSpeed=Integer.parseInt(t.substring(3,5));
         if(t.charAt(5)=='G') {
             // gusts
-            windSpeedGusts=Integer.parseInt(t.substring(6,8));
+            windSpeedGusts=Integer.parseInt(t.substring(6,t.indexOf(unit)));
         }
     }
     private void parseVariations(String t) {

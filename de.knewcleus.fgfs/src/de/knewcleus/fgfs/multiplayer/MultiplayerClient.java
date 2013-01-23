@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -34,6 +34,7 @@
 package de.knewcleus.fgfs.multiplayer;
 
 import java.io.IOException;
+import java.lang.invoke.CallSite;
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -106,6 +107,8 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
     // }
 
     protected synchronized void sendPositionUpdate() {
+        if(getCallsign()==null) return;
+        
         PositionMessage positionMessage = new PositionMessage();
         positionMessage.setTime((double) (System.currentTimeMillis() - APPLICATION_START_TIME_MILLIS) / 1000d);
         positionMessage.setLag(0d);

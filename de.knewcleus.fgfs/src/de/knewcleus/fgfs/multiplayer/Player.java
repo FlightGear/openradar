@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -115,8 +115,8 @@ public class Player {
         return frequency;
     }
 
-	
 	public synchronized void updatePosition(long t, PositionMessage packet) {
+	    lastMessageTime = System.currentTimeMillis();
 		lastPositionLocalTime=t;
 		positionTime=packet.getTime();
 		cartesianPosition=packet.getPosition();
@@ -131,6 +131,6 @@ public class Player {
         }
         // model may change too if you exit and return with same callsign
         this.model = packet.getModel();
-
 	}
+	
 }

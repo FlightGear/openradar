@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -32,8 +32,8 @@
  */
 package de.knewcleus.openradar.gui.status;
 
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -119,9 +119,8 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         headerPanel.setLayout(new java.awt.GridBagLayout());
         headerPanel.setOpaque(false);
         
-        lbCurrentCallSign.setForeground(Color.white);
+        lbCurrentCallSign.setForeground(Palette.DESKTOP_TEXT);
         lbCurrentCallSign.setText("Call Sign:");
-        lbCurrentCallSign.setToolTipText("Current ATC call sign");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -132,7 +131,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
         tfCurrentCallSign.setOpaque(false);
         tfCurrentCallSign.setText(master.getDataRegistry().getInitialATCCallSign());
-        tfCurrentCallSign.setToolTipText("Your current airport");
+        tfCurrentCallSign.setToolTipText("Current ATC call sign");
         tfCurrentCallSign.setPreferredSize(new Dimension(80,(int)tfCurrentCallSign.getPreferredSize().getHeight()));
         tfCurrentCallSign.addActionListener(master.getStatusManager().getCallSignActionListener());
         tfCurrentCallSign.addKeyListener(master.getStatusManager().getCallSignKeyListener());
@@ -143,7 +142,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
         headerPanel.add(tfCurrentCallSign, gridBagConstraints);
         
-        lbTime.setForeground(Color.white);
+        lbTime.setForeground(Palette.DESKTOP_TEXT);
         lbTime.setText("");
         lbTime.setToolTipText("time in UTC");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -152,11 +151,12 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridwidth=1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 10, 10, 4);
+        gridBagConstraints.insets = new java.awt.Insets(4, 10, 10, 10);
         headerPanel.add(lbTime, gridBagConstraints);
         
-        lbAirport.setForeground(Color.white);
+        lbAirport.setForeground(Palette.DESKTOP_TEXT);
         lbAirport.setText(master.getDataRegistry().getAirportCode() + " " + master.getDataRegistry().getAirportName());
+        lbAirport.setToolTipText("Your current airport");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -200,7 +200,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 4);
         headerPanel.add(lbWind, gridBagConstraints);
 
-        lbPressure.setForeground(Color.white);
+        lbPressure.setForeground(Palette.DESKTOP_TEXT);
         lbPressure.setText("");
         lbPressure.setToolTipText("Pressure");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -210,7 +210,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 4);
         headerPanel.add(lbPressure, gridBagConstraints);
 
-        lbVisibility.setForeground(Color.white);
+        lbVisibility.setForeground(Palette.DESKTOP_TEXT);
         lbVisibility.setText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -234,6 +234,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);        
         add(radioPanel, gridBagConstraints);
 
@@ -290,6 +291,11 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     
     public String getCurrentCallSign() {
         return tfCurrentCallSign.getText();
+    }
+
+    public void setCurrentCallSign(String callsign) {
+        tfCurrentCallSign.setText(callsign);
+        tfCurrentCallSign.invalidate();
     }
 
     public void setSelectedCallSign(String callsign) {

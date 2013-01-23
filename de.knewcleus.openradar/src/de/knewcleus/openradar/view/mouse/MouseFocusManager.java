@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -34,9 +34,11 @@
 package de.knewcleus.openradar.view.mouse;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.util.IOutputIterator;
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -76,9 +78,12 @@ public class MouseFocusManager extends MouseAdapter {
 	
     @Override
     public synchronized void mouseClicked(MouseEvent e) {
-        if (e.getClickCount()==2) {
+        if (e.getButton()==MouseEvent.BUTTON3 && e.getClickCount()==2) {
             centerScreen();
             shiftOrigin=null;
+        } else
+        if (e.getButton()==MouseEvent.BUTTON1 && e.getClickCount()==2) {
+            centerScreenOn(e.getPoint());
         }
     }
 
@@ -99,10 +104,17 @@ public class MouseFocusManager extends MouseAdapter {
 		}
 	}
 
+	private void centerScreenOn(java.awt.Point point) {
+        Point2D newCenter = radarMapViewerAdapter.getDeviceToLogicalTransform().transform(point, null);
+	    
+	    radarMapViewerAdapter.setLogicalOrigin(newCenter);
+	}
+	
 	private void shiftScreen(java.awt.Point shiftOrigin, java.awt.Point shiftTarget) {
-	    Point2D geoOrigin = radarMapViewerAdapter.getGeoLocationOf(shiftOrigin);
-	    Point2D geoTarget = radarMapViewerAdapter.getGeoLocationOf(shiftTarget);
-	    radarMapViewerAdapter.shiftMap(geoOrigin.getX()-geoTarget.getX(),geoOrigin.getY()-geoTarget.getY());
+	    Point2D logOrigin = radarMapViewerAdapter.getDeviceToLogicalTransform().transform(shiftOrigin, null);
+	    Point2D logTarget = radarMapViewerAdapter.getDeviceToLogicalTransform().transform(shiftTarget, null);
+	    
+	    radarMapViewerAdapter.shiftLogicalOrigin(logOrigin.getX()-logTarget.getX(),logOrigin.getY()-logTarget.getY());
     }
 
 	private void centerScreen() {
@@ -111,9 +123,27 @@ public class MouseFocusManager extends MouseAdapter {
     @Override
     public synchronized void mouseDragged(MouseEvent e) {
         if(shiftOrigin!=null) {
-            shiftScreen(shiftOrigin,e.getPoint());
-            shiftOrigin = e.getPoint();
+            if(e.getModifiersEx()==MouseEvent.BUTTON1_DOWN_MASK) {
+                shiftScreen(shiftOrigin,e.getPoint());
+                shiftOrigin = e.getPoint();
+            } else {
+                adaptZoom(e.getPoint());
+            }
         }
+    }
+
+    private void adaptZoom(Point point) {
+        Rectangle2D radarSize = radarMapViewerAdapter.getViewerExtents();
+        double xDistance = (point.getX() - shiftOrigin.getX()) / radarSize.getWidth();
+        double yDistance = (point.getY() - shiftOrigin.getY()) / radarSize.getHeight();
+        double mouseScale = (Math.abs(xDistance)>Math.abs(yDistance)) ? xDistance : yDistance;
+        
+        double oldScale = radarMapViewerAdapter.getLogicalScale();
+        double newScale = oldScale * 1+mouseScale * 20;
+        newScale = ( newScale<1 ) ? 1 : newScale ;        
+        newScale = ( newScale>10000 ) ? 10000 : newScale ;
+        
+        if(oldScale!=newScale) radarMapViewerAdapter.setLogicalScale( newScale );
     }
 
     @Override

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -202,7 +202,27 @@ public class GuiMasterController {
                         mpChatManager.requestFocusForInput();
                         e.consume();
                         return true;
-                    }
+                    } 
+                    if (e.getKeyCode() == KeyEvent.VK_F1) {
+                        radarManager.setFilter("GROUND");
+                        e.consume();
+                        return true;
+                    }                    
+                    if (e.getKeyCode() == KeyEvent.VK_F2) {
+                        radarBackend.setZoomLevel("TOWER");
+                        e.consume();
+                        return true;
+                    }                    
+                    if (e.getKeyCode() == KeyEvent.VK_F3) {
+                        radarBackend.setZoomLevel("APP");
+                        e.consume();
+                        return true;
+                    }                    
+                    if (e.getKeyCode() == KeyEvent.VK_F4) {
+                        radarBackend.setZoomLevel("SECTOR");
+                        e.consume();
+                        return true;
+                    }                    
                 }
 
                 return false;
@@ -222,8 +242,11 @@ public class GuiMasterController {
         return radarManager;
     }
 
-    public void setCurrentATCCallSign(String callsign) {
+    public void setCurrentATCCallSign(String callsign, boolean save) {
         radarProvider.setCallsign(callsign);
+        if(save) {
+            dataRegistry.storeAirportData(this);
+        }
     }
 
     public String getCurrentATCCallSign() {

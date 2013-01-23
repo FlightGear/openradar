@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -46,11 +46,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
@@ -61,6 +61,7 @@ public class AtcMessageDialog extends JFrame {
     private final GuiMasterController master;
     private final TextManager manager;
     private final JList<AtcMessage> liMessages = new JList<AtcMessage>();
+    private JScrollPane spList;
 
     private JLabel lbCallSign = new JLabel();
     
@@ -97,12 +98,8 @@ public class AtcMessageDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(8, 8, 4, 8);
         jPnlContentPane.add(lbCallSign, gridBagConstraints);
 
-        liMessages.setModel(manager);
-        liMessages.setSelectionForeground(liMessages.getForeground());
-        liMessages.setSelectionBackground(liMessages.getBackground());
-        liMessages.addMouseListener(new TextMouseListener());
-        liMessages.setOpaque(false);
-        liMessages.setSelectionBackground(liMessages.getBackground());
+        spList = new JScrollPane();
+        spList.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -111,21 +108,38 @@ public class AtcMessageDialog extends JFrame {
         gridBagConstraints.weighty = 2;
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 2);
-        jPnlContentPane.add(liMessages, gridBagConstraints);
+        jPnlContentPane.add(spList, gridBagConstraints);
+
+        spList.setViewportView(liMessages);
         
+        liMessages.setModel(manager);
+        liMessages.setSelectionForeground(liMessages.getForeground());
+        liMessages.setSelectionBackground(liMessages.getBackground());
+        liMessages.addMouseListener(new TextMouseListener());
+        liMessages.setOpaque(false);
+        liMessages.setSelectionBackground(liMessages.getBackground());
+        
+        doLayout();
     }
 
     public void setLocation(GuiRadarContact c, MouseEvent e) {
 
         lbCallSign.setText(c.getCallSign());
-        
-        Dimension innerSize = liMessages.getPreferredSize();
-        setSize(new Dimension((int)innerSize.getWidth()+8, (int)innerSize.getHeight()+8));
+
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle maxBounds = env.getMaximumWindowBounds();
+        
+        // size scrollpane
+        Dimension preferredSize = liMessages.getPreferredSize();
+        spList.setPreferredSize(preferredSize.getHeight()>maxBounds.getHeight() ? 
+                new Dimension(liMessages.getPreferredSize().width+30, maxBounds.height-40) : liMessages.getPreferredSize());
 
-        Point2D p = e.getSource() instanceof JList ?
-                ((JComponent) e.getSource()).getLocationOnScreen():
+        // side dialog
+        Dimension innerSize = getContentPane().getPreferredSize();
+        setSize(new Dimension((int)innerSize.getWidth()+8, (int)innerSize.getHeight()+8));
+
+        Point2D p = /*e.getSource() instanceof JList ?
+                ((JComponent) e.getSource()).getLocationOnScreen():*/
                 e.getLocationOnScreen();
         p = new Point2D.Double(p.getX() - this.getWidth() - 10, p.getY());
 

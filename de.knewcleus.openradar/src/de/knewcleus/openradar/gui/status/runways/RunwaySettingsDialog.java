@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -52,6 +52,7 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -77,7 +78,8 @@ public class RunwaySettingsDialog extends JFrame {
     private volatile RunwayData rwd = null;
 
     private JLabel lbRWNumber;
-
+    private JButton btCopySettings;
+    
     private JTextField tfCLStart;
     private JTextField tfCLEnd;
     private JTextField tfCLMinorDMStart;
@@ -182,16 +184,28 @@ public class RunwaySettingsDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlContentPane.add(lbRwNext, gridBagConstraints);
-
-        JPanel space0 = new JPanel();
-        space0.setOpaque(false);
+        
+        btCopySettings = new JButton("Copy to all");
+        btCopySettings.setName("COPY");
+        btCopySettings.setToolTipText("Copy settings to all other runways");
+        btCopySettings.addMouseListener(chooseRunwayMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 1;
         gridBagConstraints.weightx = 1;
-        gridBagConstraints.anchor = GridBagConstraints.WEST;
-        jPnlContentPane.add(space0, gridBagConstraints);
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 8, 2);
+        jPnlContentPane.add(btCopySettings, gridBagConstraints);
+        
+//        JPanel space0 = new JPanel();
+//        space0.setOpaque(false);
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 4;
+//        gridBagConstraints.gridy = 0;
+//        gridBagConstraints.gridheight = 1;
+//        gridBagConstraints.weightx = 1;
+//        gridBagConstraints.anchor = GridBagConstraints.WEST;
+//        jPnlContentPane.add(space0, gridBagConstraints);
 
         // Main switches
 
@@ -794,17 +808,38 @@ public class RunwaySettingsDialog extends JFrame {
     private class ChooseRunwayMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            JLabel label = (JLabel) e.getSource();
-            if ("<<".equals(label.getName())) {
-                storeData(true);
-                String rwCode = getPreviousRw();
-                showData(rwCode);
+            if(e.getSource() instanceof JLabel) {
+                JLabel label = (JLabel) e.getSource();
+                if ("<<".equals(label.getName())) {
+                    storeData(true);
+                    String rwCode = getPreviousRw();
+                    showData(rwCode);
+                } else
+                if (">>".equals(label.getName())) {
+                    storeData(true);
+                    String rwCode = getNextRw();
+                    showData(rwCode);
+                }
+            } else {
+                if ("COPY".equals(((JButton)e.getSource()).getName())) {
+                    storeData(true);
+                    copyToAll(lbRWNumber.getText());
+                }
             }
-            if (">>".equals(label.getName())) {
-                storeData(true);
-                String rwCode = getNextRw();
-                showData(rwCode);
+        }
+
+        private void copyToAll(String sourceCode) {
+            RunwayData SourceRwd = data.getRunwayData(sourceCode);
+            
+            for(GuiRunway rw : data.runways.values()) {
+                if(!rw.getCode().equals(sourceCode)) {
+                    RunwayData rwd = rw.getRunwayData();
+                    rwd.copyDataFrom(SourceRwd);
+                    rwd.setRepaintNeeded(true);
+                }
             }
+            master.getDataRegistry().storeAirportData(master);
+            master.getRadarBackend().repaint();
         }
 
         private String getNextRw() {

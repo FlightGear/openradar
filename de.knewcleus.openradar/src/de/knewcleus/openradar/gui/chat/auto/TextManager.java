@@ -1,8 +1,8 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
- * 
+ *  
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
@@ -33,6 +33,7 @@
 package de.knewcleus.openradar.gui.chat.auto;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.ListModel;
@@ -43,46 +44,46 @@ import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 
 public class TextManager implements ListModel<AtcMessage> {
 
-    private List<String> languages = new ArrayList<String>();
-    private List<AtcMessage> messages = new ArrayList<AtcMessage>();
+    private final List<String> languages = Collections.synchronizedList(new ArrayList<String>());
+    private final List<AtcMessage> messages = Collections.synchronizedList(new ArrayList<AtcMessage>());
 
-    private List<ListDataListener> dataListeners = new ArrayList<ListDataListener>();
+    private final List<ListDataListener> dataListeners = Collections.synchronizedList(new ArrayList<ListDataListener>());
     
     public TextManager() {
         AutoTextReader.loadTexts(languages, messages);
     }
     
-    public void add(AtcMessage msg) {
+    public synchronized void add(AtcMessage msg) {
         messages.add(msg);
     }
     
-    public List<String> generateMessagesFor(GuiMasterController master, GuiRadarContact contact, int index, String additionalLanguage) {
+    public synchronized List<String> generateMessagesFor(GuiMasterController master, GuiRadarContact contact, int index, String additionalLanguage) {
         return messages.get(index).generateMessages(master, contact,additionalLanguage);
     }
     
-    public List<String> getLanguages() {
+    public synchronized List<String> getLanguages() {
         return languages;
     }
     
     // ListModel
     
     @Override
-    public int getSize() {
+    public synchronized int getSize() {
         return messages.size();
     }
 
     @Override
-    public AtcMessage getElementAt(int index) {
+    public synchronized AtcMessage getElementAt(int index) {
         return messages.get(index);
     }
 
     @Override
-    public void addListDataListener(ListDataListener l) {
+    public synchronized void addListDataListener(ListDataListener l) {
         dataListeners.add(l);
     }
 
     @Override
-    public void removeListDataListener(ListDataListener l) {
+    public synchronized void removeListDataListener(ListDataListener l) {
         dataListeners.remove(l);
     }
 

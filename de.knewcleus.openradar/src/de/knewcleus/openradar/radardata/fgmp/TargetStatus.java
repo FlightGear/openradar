@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -35,6 +35,7 @@ package de.knewcleus.openradar.radardata.fgmp;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Ellipsoid;
+import de.knewcleus.fgfs.location.GeoUtil;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Quaternion;
@@ -47,10 +48,12 @@ public class TargetStatus extends Player {
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
 	
 	protected volatile Position geodeticPosition=new Position();
-    private volatile Position lastPosition = new Position();
+    private volatile Position lastPosition = null;
+    private volatile double lastPositionTime = 0;
     private volatile Vector3D linearVelocityHF = new Vector3D();
     
 	protected volatile double groundSpeed=0f;
+    protected volatile double calculatedGroundspeed = 0.0f;
 	protected volatile double trueCourse=0f;
     protected volatile double heading=0f;
 
@@ -69,7 +72,12 @@ public class TargetStatus extends Player {
 	public synchronized double getGroundSpeed() {
 		return groundSpeed;
 	}
-	
+
+	public double getCalculatedGroundspeed() {
+	   return calculatedGroundspeed;
+	}
+
+
 	public synchronized double getTrueCourse() {
 		return trueCourse;
 	}
@@ -81,7 +89,6 @@ public class TargetStatus extends Player {
 	@Override
 	public synchronized void updatePosition(long t, PositionMessage packet) {
 		super.updatePosition(t, packet);
-		lastPosition = geodeticPosition; 
 		geodeticPosition=geodToCartTransformation.backward(getCartesianPosition());
 		
 		groundSpeed=getLinearVelocity().getLength()*Units.MPS;
@@ -100,6 +107,19 @@ public class TargetStatus extends Player {
 		}
 		
         heading = bf2hf.getAngle();
+        
+        // calculate groundspeed
+        double timeSecs = positionTime - lastPositionTime; // this is the time in seconds that the contacts applications runs
+        if(lastPosition!=null && timeSecs>0 && timeSecs<3) {
+            Position pos = getGeodeticPosition();
+            double distance = GeoUtil.getDistance(lastPosition.getX(), lastPosition.getY(), pos.getX(), pos.getY()).length; // meter
+            calculatedGroundspeed = Math.abs(distance/timeSecs); // m/s
+        } else {
+            // aircraft not moved, defective aircraft model, fg paused
+            calculatedGroundspeed = groundSpeed;
+        }
+        lastPosition = getGeodeticPosition(); 
+        lastPositionTime = packet.getTime();
 	}
 	
 	/**

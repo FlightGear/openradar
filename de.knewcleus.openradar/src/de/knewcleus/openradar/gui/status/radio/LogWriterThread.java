@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -42,14 +42,16 @@ public class LogWriterThread implements Runnable {
     private LogWindow logWindow = null;
     private Process process = null;
     private String tabName = null;
+    private BufferedInputStream bis = null;
     private volatile boolean isRunning = true;
+    private Thread thread;
     
     public LogWriterThread(LogWindow logWindow, Radio radio, Process process) {
         this.logWindow = logWindow;
         this.process = process;
         this.radio = radio;
         this.tabName=radio.getKey();
-        Thread thread = new Thread(this, "OpenRadar - FGCom Log Writer");
+        thread = new Thread(this, "OpenRadar - FGCom Log Writer");
         thread.setDaemon(true);
         thread.start();
     }
@@ -58,8 +60,8 @@ public class LogWriterThread implements Runnable {
     public void run() {
         
         byte[] buffer = new byte[1024];
-        BufferedInputStream bis = new BufferedInputStream(process.getInputStream());
-        
+        bis = new BufferedInputStream(process.getInputStream());
+
         try {
             while(isRunning) {
                 int len = isRunning ? bis.read(buffer) : 0;
@@ -75,18 +77,25 @@ public class LogWriterThread implements Runnable {
                         logWindow.addText(tabName,content);
                     }
                 }
-                if(len>0) {
-                    Thread.sleep(200);
-                } else {
-                    Thread.sleep(1000);
+                if(isRunning) {
+                    if(len>0) {
+                        Thread.sleep(200);
+                    } else {
+                        Thread.sleep(1000);
+                    }
                 }
             }
+        } catch(ThreadDeath e) {
+            //e.printStackTrace();
         } catch(Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
-    public void stop() {
+    @SuppressWarnings("deprecation")
+    public synchronized void stop() {
+        radio.setConnectedToServer(false);
         isRunning=false;
+        thread.stop();
     }
 }

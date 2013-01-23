@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -47,7 +47,7 @@ import de.knewcleus.openradar.radardata.IRadarDataRecipient;
 public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> implements IRadarDataProvider {
 	protected final Position linearVelocity=new Position();
 	protected final Position orientation=new Position();
-	protected volatile String callsign;
+	protected volatile String callsign=null;
 	protected final String model;
 	protected final Position position;
 	protected long lastAntennaRotationTime;
@@ -69,7 +69,7 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 
 	public FGMPClient(IPlayerRegistry<T> playerRegistry, String callsign, String model, Position position, String mpServer, int mpServerPort, int mpLocalPort) throws IOException {
 		super(playerRegistry, mpServer, mpServerPort, mpLocalPort);
-		this.callsign=callsign;
+		//this.callsign=callsign;
 		this.position=position;
 		this.model=model;
 		lastAntennaRotationTime=System.currentTimeMillis();
@@ -95,12 +95,12 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 	}
 
 	@Override
-	public String getCallsign() {
+	public synchronized String getCallsign() {
 		return callsign;
 	}
 
 	
-    public void setCallsign(String callsign) {
+    public synchronized void setCallsign(String callsign) {
         this.callsign = callsign;
     }
 

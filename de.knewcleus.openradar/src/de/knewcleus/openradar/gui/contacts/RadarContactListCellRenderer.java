@@ -334,7 +334,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
             }
         }
         lbRadarDistance.setText(value.getRadarContactDistance());
-        lbRadarBearing.setText("@"+value.getRadarContactDirection()+"°");
+        // lbRadarBearing.setText("@"+value.getRadarContactDirection()+"°");
         lbHeading.setText(value.getMagnCourse());
         if(value.isNeglect()) {
             lbAircraft.setText("neglected");

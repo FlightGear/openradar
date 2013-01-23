@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -335,5 +335,37 @@ public class RunwayData {
     /** returns true if the runway is set to be enabled either for landing or starting */
     public boolean isEnabledAtAll() {
         return landingEnabled || startingEnabled;
+    }
+
+    public void copyDataFrom(RunwayData sourceRwd) {
+//        landingEnabled = sourceRwd.isLandingEnabled();
+//        startingEnabled = sourceRwd.isStartingEnabled();
+
+        extCenterlineStart = sourceRwd.getExtCenterlineStart();
+        extCenterlineLength = sourceRwd.getExtCenterlineLength();
+
+        majorDMStart = sourceRwd.getMajorDMStart();
+        majorDMEnd = sourceRwd.getMajorDMEnd();
+        majorDMInterval = sourceRwd.getMajorDMInterval();
+        majorDMTickLength = sourceRwd.getMajorDMTickLength();
+
+        minorDMStart = sourceRwd.getMinorDMStart();
+        minorDMEnd = sourceRwd.getMinorDMEnd();
+        minorDMInterval = sourceRwd.getMinorDMInterval();
+        minorDMTickLength = sourceRwd.getMinorDMTickLength();
+
+        leftVectoringCLStart = sourceRwd.getLeftVectoringCLStart();
+        leftVectoringAngle = sourceRwd.getLeftVectoringAngle();
+        leftVectoringLength = sourceRwd.getLeftVectoringLength();
+        leftBaselegLength = sourceRwd.getLeftBaselegLength();
+
+        rightVectoringCLStart = sourceRwd.getRightVectoringCLStart();
+        rightVectoringAngle = sourceRwd.getRightVectoringAngle();
+        rightVectoringLength = sourceRwd.getRightVectoringLength();
+        rightBaselegLength = sourceRwd.getRightBaselegLength();
+
+//        symetric = sourceRwd.isSymetric();
+//        rightBaseEnabled = sourceRwd.isRightBaseEnabled();
+//        leftBaseEnabled = sourceRwd.isLeftBaseEnabled();
     }
 }

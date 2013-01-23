@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -79,7 +79,7 @@ public class FgComController implements Runnable, IRadioBackend {
     private Map<String, Process> fgComProcesses = Collections.synchronizedMap(new TreeMap<String, Process>());
     private List<LogWriterThread> logWriters = Collections.synchronizedList(new ArrayList<LogWriterThread>());
     
-    private final Map<String, Radio> radios = new TreeMap<String, Radio>();
+    private final Map<String, Radio> radios = Collections.synchronizedMap(new TreeMap<String, Radio>());
 
     private DatagramSocket datagramSocket;
 
@@ -115,9 +115,22 @@ public class FgComController implements Runnable, IRadioBackend {
     }
 
     private void endFgComProcesses() {
+
+        for(LogWriterThread lw : logWriters) {
+            lw.stop(); // marks them to exit
+        }
+        logWriters.clear();
+        
         for (Process p : fgComProcesses.values()) {
             p.destroy();
+            try {
+                p.waitFor();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
+
         if(fgComProcesses.size()>0) {
             // only if we have started FGCOM
             if (System.getProperty("os.name").startsWith("Windows")) {
@@ -142,8 +155,9 @@ public class FgComController implements Runnable, IRadioBackend {
                     Runtime.getRuntime().exec("killall fgcomgui");
                 } catch (IOException e) {}
             }
-        }                
+        }
         fgComProcesses.clear();
+        
     }   
     
     public synchronized void start() {
@@ -206,6 +220,7 @@ public class FgComController implements Runnable, IRadioBackend {
 
     public synchronized void stop() {
         isRunning = false;
+        thread.interrupt();
     }
 
     public void setLocation(float lon, float lat) {
@@ -223,10 +238,7 @@ public class FgComController implements Runnable, IRadioBackend {
     public synchronized void restartFgCom() {
         endFgComProcesses();
         master.getLogWindow().removeLogs();
-        for(LogWriterThread lw : logWriters) {
-            lw.stop();
-        }
-        logWriters.clear();
+        
         AirportData data = master.getDataRegistry();
         for(Radio r : radios.values()) {
             initFgCom(r, data.getFgComPath(), data.getFgComExec(), data.getFgComServer(), r.getFgComPort());

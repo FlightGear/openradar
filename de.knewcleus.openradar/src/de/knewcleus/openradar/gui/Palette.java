@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -56,7 +56,6 @@ public class Palette {
 	public final static Color COORD=new Color(1.00f,0.41f,0.60f);
 	public final static Color CRD_BACKGROUND=new Color(0.48f,0.45f,0.45f);
 	public final static Color CRD_FRAME_HIGHLIGHT=new Color(0.75f,0.75f,0.75f);
-	public final static Color DESKTOP=new Color(0.29f,0.32f,0.29f);
 	public final static Color LANDMASS=new Color(0.36f,0.34f,0.34f);
 	public final static Color WATERMASS=new Color(0.39f,0.39f,0.41f);
 	
@@ -119,11 +118,17 @@ public class Palette {
     public static final Color RUNWAYEND_OPEN = Color.green;
     public static final Color RUNWAYEND_FORBIDDEN = Color.red;
 
-    public static final Color DESKTOP_TEXT = Color.WHITE;
-    public static final Color WARNING_REARWIND = Color.RED;
-    public static final Color WARNING_GUSTS = Color.ORANGE;
+//  public final static Color DESKTOP=new Color(0.29f,0.32f,0.29f);
+    public final static Color DESKTOP=new Color(70,71,70);//new Color(77,90,77);
+ //   public static final Color DESKTOP_TEXT = Color.WHITE;
+    public static final Color DESKTOP_TEXT = new Color(219,255,219);
+    public static final Color DESKTOP_FILTER_SELECTED = new Color(190,190,255);
+    public static final Color WARNING_REARWIND = new Color(255,90,90);
+    public static final Color WARNING_GUSTS = Color.ORANGE;//new Color(255,100,0)
     public static final Color LAKE = new Color(0.39f,0.39f,0.41f);
     public static final Color STREAM = new Color(0.39f,0.39f,0.41f);
+    
+    public static final Color NAVAID_HIGHLIGHT = Color.yellow;
     
 	public static Color getHightlightColor(Color c) {
 		final int r,g,b;

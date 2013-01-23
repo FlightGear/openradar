@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -137,7 +137,7 @@ public class StatusManager implements INavPointListener {
     private class CallSignActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            master.setCurrentATCCallSign(statusPanel.getCurrentCallSign());
+            master.setCurrentATCCallSign(statusPanel.getCurrentCallSign(), true);
         }
     }
 
@@ -182,7 +182,6 @@ public class StatusManager implements INavPointListener {
 //    }
 //
     public String getActiveRunways() {
-        
         return statusPanel.getActiveRunways();
     }
 
@@ -192,5 +191,9 @@ public class StatusManager implements INavPointListener {
 
     public void updateRunways() {
         statusPanel.updateRunways();
+    }
+
+    public void setCurrentCallSign(String callsign) {
+        statusPanel.setCurrentCallSign(callsign);
     }
 }

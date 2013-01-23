@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -33,6 +33,7 @@
  */
 package de.knewcleus.openradar.rpvd;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class RadarTargetProvider implements INotificationListener {
     protected final ITrackManager trackManager;
     protected final GuiMasterController guiInteractionManager;
 
-    protected final Map<ITrack, RadarTargetView> viewMap = new HashMap<ITrack, RadarTargetView>();
+    protected final Map<ITrack, RadarTargetView> viewMap = Collections.synchronizedMap(new HashMap<ITrack, RadarTargetView>());
 
     public RadarTargetProvider(IRadarMapViewerAdapter radarMapViewAdapter, LayeredView radarTargetLayer, ITrackManager trackManager,
             GuiMasterController guiInteractionManager) {

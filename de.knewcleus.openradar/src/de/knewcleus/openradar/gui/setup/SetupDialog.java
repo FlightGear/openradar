@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -711,6 +711,7 @@ public class SetupDialog extends JFrame {
         } else {
             lbMessage.setText(null);
             saveProperties();
+            btStart.setEnabled(true);
             return true;
         }
     }
