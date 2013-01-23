@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -39,13 +40,23 @@ import de.knewcleus.fgfs.navdata.model.IIntersection;
 public class Intersection implements IIntersection {
 	protected final Point2D geographicPosition;
 	protected final String identification;
-	
-	public Intersection(Point2D geographicPosition, String identification) {
+	protected boolean highlighted = false;
+
+    public Intersection(Point2D geographicPosition, String identification) {
 		this.geographicPosition = geographicPosition;
 		this.identification = identification;
 	}
 
-	@Override
+    
+    public synchronized boolean isHighlighted() {
+        return highlighted;
+    }
+
+    public synchronized void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
+    }
+
+    @Override
 	public Point2D getGeographicPosition() {
 		return geographicPosition;
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -44,9 +44,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
 import de.knewcleus.fgfs.navdata.impl.Glideslope;
+import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.MarkerBeacon;
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
@@ -79,7 +81,7 @@ public class AirportData implements INavPointListener {
     private List<RadioFrequency> radioFrequencies = new ArrayList<RadioFrequency>();
     private Map<String, Radio> radios = new TreeMap<String, Radio>();
     public Map<String, GuiRunway> runways = new TreeMap<String, GuiRunway>();
-
+    
     public enum FgComMode {
         Internal, External, Off
     };
@@ -99,6 +101,8 @@ public class AirportData implements INavPointListener {
 
     private Map<String, Boolean> toggleObjectsMap = new HashMap<String, Boolean>();
 
+    private NavaidDB navaidDB = new NavaidDB();
+    
     public AirportData() {
     }
 
@@ -294,6 +298,7 @@ public class AirportData implements INavPointListener {
                 // air to air
                 this.radioFrequencies.add(new RadioFrequency("Air2Air1", "122.75"));
                 this.radioFrequencies.add(new RadioFrequency("Air2Air2", "123.45"));
+                this.radioFrequencies.add(new RadioFrequency("TestFgCom", "910.00"));
             }
 
         } else if (point instanceof RunwayEnd) {
@@ -327,7 +332,7 @@ public class AirportData implements INavPointListener {
                 if (runways.containsKey(runwayNumber)) {
                     mb.setRunwayEnd(runways.get(runwayNumber).getRunwayEnd());
                 } else {
-                    System.out.println("Warning found glidescope for non existent runway: " + mb);
+                    System.out.println("Warning found MarkerBeacon for non existent runway: " + mb);
                 }
             }
         } else {
@@ -399,6 +404,14 @@ public class AirportData implements INavPointListener {
             Properties p = new Properties();
             try {
                 p.load(new FileReader(propertyFile));
+                String lastCallSign = p.getProperty("lastCallsign");
+                if(lastCallSign!=null) { 
+                    master.setCurrentATCCallSign(lastCallSign, false);
+                    master.getStatusManager().setCurrentCallSign(lastCallSign);
+                } else {
+                    master.setCurrentATCCallSign(getInitialATCCallSign(), false);
+                    master.getStatusManager().setCurrentCallSign(getInitialATCCallSign());
+                }
                 // restore runwaydata
                 for (GuiRunway rw : runways.values()) {
                     rw.getRunwayData().setValuesFromProperties(p);
@@ -428,6 +441,9 @@ public class AirportData implements INavPointListener {
 
     public void storeAirportData(GuiMasterController master) {
         Properties p = new Properties();
+        if(master.getCurrentATCCallSign()!=null) {
+            p.setProperty("lastCallsign", master.getCurrentATCCallSign());
+        }
         // add runway data
         for (GuiRunway rw : runways.values()) {
             rw.getRunwayData().addValuesToProperties(p);
@@ -462,5 +478,10 @@ public class AirportData implements INavPointListener {
                 }
             }
         }
+    }
+
+    
+    public NavaidDB getNavaidDB() { 
+        return navaidDB;
     }
 }

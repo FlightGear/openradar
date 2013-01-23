@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -35,11 +35,12 @@ package de.knewcleus.openradar.view;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LayeredView implements IContainer {
 	protected final IViewerAdapter viewAdapter;
-	protected final List<IView> views=new ArrayList<IView>();
+	protected final List<IView> views = Collections.synchronizedList(new ArrayList<IView>());
 	protected boolean visible = true;
 	
 	public LayeredView(IViewerAdapter mapViewAdapter) {

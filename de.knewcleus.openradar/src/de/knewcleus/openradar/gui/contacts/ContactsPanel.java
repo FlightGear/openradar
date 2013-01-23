@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -32,12 +32,18 @@
  */
 package de.knewcleus.openradar.gui.contacts;
 
-import java.awt.Color;
+import java.awt.Font;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.ToolTipManager;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
@@ -84,7 +90,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         setBackground(Palette.DESKTOP);
 
         lbShowAll.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbShowAll.setForeground(java.awt.Color.blue);
+        lbShowAll.setForeground(Palette.DESKTOP_FILTER_SELECTED);
         lbShowAll.setText("AUTO");
         lbShowAll.setName("MODE");
         lbShowAll.setToolTipText("Toggle auto ordering of contacts");
@@ -112,7 +118,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // lbShowGround.setText("GND");
         // lbShowGround.setName("GROUND");
         // lbShowGround.setToolTipText("Show contacts on ground");
-        // lbShowGround.setForeground(java.awt.Color.white);
+        // lbShowGround.setForeground(java.awt.Palette.DESKTOP_TEXT);
         // lbShowGround.addMouseListener(guiInteractionManager.getRadarContactManager().getContactFilterMouseListener());
         // gridBagConstraints = new java.awt.GridBagConstraints();
         // gridBagConstraints.gridx = 1;
@@ -124,7 +130,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // lbShowLanding.setText("LND");
         // lbShowLanding.setName("LANDING");
         // lbShowLanding.setToolTipText("Show landing contacts");
-        // lbShowLanding.setForeground(java.awt.Color.white);
+        // lbShowLanding.setForeground(java.awt.Palette.DESKTOP_TEXT);
         // lbShowLanding.addMouseListener(guiInteractionManager.getRadarContactManager().getContactFilterMouseListener());
         // gridBagConstraints = new java.awt.GridBagConstraints();
         // gridBagConstraints.gridx = 2;
@@ -136,7 +142,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // lbShowStarting.setText("STA");
         // lbShowStarting.setName("STARTING");
         // lbShowStarting.setToolTipText("Show starting contacts");
-        // lbShowStarting.setForeground(java.awt.Color.white);
+        // lbShowStarting.setForeground(java.awt.Palette.DESKTOP_TEXT);
         // lbShowStarting.addMouseListener(guiInteractionManager.getRadarContactManager().getContactFilterMouseListener());
         // gridBagConstraints = new java.awt.GridBagConstraints();
         // gridBagConstraints.gridx = 3;
@@ -148,7 +154,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // lbShowTransits.setText("TRV");
         // lbShowTransits.setName("TRAVEL");
         // lbShowTransits.setToolTipText("Show contacts travelling");
-        // lbShowTransits.setForeground(java.awt.Color.white);
+        // lbShowTransits.setForeground(java.awt.Palette.DESKTOP_TEXT);
         // lbShowTransits.addMouseListener(guiInteractionManager.getRadarContactManager().getContactFilterMouseListener());
         // gridBagConstraints = new java.awt.GridBagConstraints();
         // gridBagConstraints.gridx = 4;
@@ -160,7 +166,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // lbShowUnknown.setText("N/C");
         // lbShowUnknown.setName("UNKNOWN");
         // lbShowUnknown.setToolTipText("No contact/Unknown");
-        // lbShowUnknown.setForeground(java.awt.Color.white);
+        // lbShowUnknown.setForeground(java.awt.Palette.DESKTOP_TEXT);
         // lbShowUnknown.addMouseListener(guiInteractionManager.getRadarContactManager().getContactFilterMouseListener());
         // gridBagConstraints = new java.awt.GridBagConstraints();
         // gridBagConstraints.gridx = 6;
@@ -173,7 +179,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // lbShowEmergencies.setText("EMG");
         // lbShowEmergencies.setName("EMERGENCY");
         // lbShowEmergencies.setToolTipText("Show contacts in transit");
-        // lbShowEmergencies.setForeground(java.awt.Color.white);
+        // lbShowEmergencies.setForeground(java.awt.Palette.DESKTOP_TEXT);
         // lbShowEmergencies.addMouseListener(guiInteractionManager.getRadarContactManager().getContactFilterMouseListener());
         // gridBagConstraints = new java.awt.GridBagConstraints();
         // gridBagConstraints.gridx = 5;
@@ -182,11 +188,26 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
         // add(lbShowEmergencies, gridBagConstraints);
 
+        JLabel lbHelp = new JLabel("?");
+        lbHelp.setName("HELP");
+        lbHelp.setFont(lbHelp.getFont().deriveFont(Font.BOLD)); // NOI18N
+        lbHelp.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbHelp.addMouseListener(new HelpMouseListener());
+        lbHelp.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx=1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 8, 2, 8);
+        add(lbHelp, gridBagConstraints);
+        
+        
         liRadarContacts.setBackground(Palette.DESKTOP);
-        liRadarContacts.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
+//         liRadarContacts.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
         liRadarContacts.setModel(guiInteractionManager.getRadarContactManager());
         liRadarContacts.setCellRenderer(new RadarContactListCellRenderer(guiInteractionManager));
-        liRadarContacts.setForeground(java.awt.Color.white);
+        liRadarContacts.setForeground(Palette.DESKTOP_TEXT);
         guiInteractionManager.getRadarContactManager().setJList(liRadarContacts);
         liRadarContacts.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         liRadarContacts.setDragEnabled(true);
@@ -263,17 +284,37 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
     }
 
     public void resetFilters() {
-        lbShowAll.setForeground(Color.white);
-        lbShowEmergencies.setForeground(Color.white);
-        lbShowGround.setForeground(Color.white);
-        lbShowLanding.setForeground(Color.white);
-        lbShowStarting.setForeground(Color.white);
-        lbShowTransits.setForeground(Color.white);
-        lbShowUnknown.setForeground(Color.white);
+        lbShowAll.setForeground(Palette.DESKTOP_TEXT);
+        lbShowEmergencies.setForeground(Palette.DESKTOP_TEXT);
+        lbShowGround.setForeground(Palette.DESKTOP_TEXT);
+        lbShowLanding.setForeground(Palette.DESKTOP_TEXT);
+        lbShowStarting.setForeground(Palette.DESKTOP_TEXT);
+        lbShowTransits.setForeground(Palette.DESKTOP_TEXT);
+        lbShowUnknown.setForeground(Palette.DESKTOP_TEXT);
     }
 
     public void selectFilter(javax.swing.JLabel l) {
-        l.setForeground(Color.blue);
+        l.setForeground(Palette.DESKTOP_FILTER_SELECTED);
     }
 
+    private class HelpMouseListener extends MouseAdapter {
+        
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            MouseEvent dummyEvent = new MouseEvent(
+                    (JComponent)e.getSource(),
+                    MouseEvent.MOUSE_MOVED,
+                    System.currentTimeMillis(),
+                    0,
+                    0,
+                    0,
+                    0,
+                    false);
+
+           int delay = ToolTipManager.sharedInstance().getInitialDelay();
+           ToolTipManager.sharedInstance().setInitialDelay(0);
+           ToolTipManager.sharedInstance().mouseMoved(dummyEvent);
+           ToolTipManager.sharedInstance().setInitialDelay(delay);
+        }
+    }
 }

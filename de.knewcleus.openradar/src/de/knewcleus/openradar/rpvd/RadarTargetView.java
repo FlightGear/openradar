@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -164,9 +164,10 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
     @Override
     public synchronized void paint(Graphics2D g2d) {
         if (!trackDisplayState.guiContact.isExpired()) {
-            contactTextPainter.paint(g2d); // paint infos into background
+            boolean highlighted = trackDisplayState.guiContact.isHighlighted();
+            contactTextPainter.paint(g2d, highlighted); // paint infos into background
 
-            final Color baseColor = (trackDisplayState.isSelected() ? Palette.RADAR_SELECTED : Palette.BLACK);
+            Color baseColor = (trackDisplayState.isSelected() ? Palette.RADAR_SELECTED : Palette.BLACK);
             Color color = baseColor;
             final int count = radarMapViewAdapter.getTrackHistoryLength();
             int i = count;
@@ -255,8 +256,8 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
                 5d + trackDisplayState.getTrack().getCurrentState().getCalculatedVelocity()/2 );
         displayHeadingLine = new Line2D.Double(currentDevicePosition, headingLineEnd);
         displayExtents = displayHeadingLine.getBounds2D();
-        
 
+        // the dots
         for (Point2D logicalPosition : logicalDotPositions) {
             final Point2D displayPosition = logical2device.transform(logicalPosition, null);
             final Ellipse2D displayDotShape = new Ellipse2D.Double(displayPosition.getX() - targetDotRadius, displayPosition.getY() - targetDotRadius,

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -33,6 +33,7 @@
 package de.knewcleus.openradar.rpvd;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -83,7 +84,7 @@ public class RadarContactTextPainter {
         this.currentDevicePosition = currentDevicePosition;
         if(boundsText==null) {
             // intial case, we don't know about the fontMetricts,so we construct a dummy 
-            background = new RoundRectangle2D.Double(currentDevicePosition.getX()-24d,currentDevicePosition.getY()-24d, 20+8, 20+8,10,10);
+            background = new RoundRectangle2D.Double(currentDevicePosition.getX()-34d,currentDevicePosition.getY()-16d, 60+8, 24+8,10,10);
             line = new Line2D.Double(currentDevicePosition.getX(),currentDevicePosition.getY(),currentDevicePosition.getX()+24d,currentDevicePosition.getY()-24d);
         } else {
             // construct the objects at their new place
@@ -94,7 +95,7 @@ public class RadarContactTextPainter {
         return displayExtents;
     }
 
-    public void paint(Graphics2D g2d) {
+    public void paint(Graphics2D g2d, boolean hightlighted) {
         Font font = new Font("Arial", Font.PLAIN, 10);
         g2d.setFont(font);
         if(fontMetrics==null) {
@@ -113,9 +114,9 @@ public class RadarContactTextPainter {
 
         if(anchor==null) constructBackgroundShapes(currentDevicePosition);
         
-        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.60f);
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,hightlighted ? 1f : 0.60f);
         g2d.setComposite(ac);
-        g2d.setColor(Palette.LANDMASS);
+        g2d.setColor(hightlighted ? Color.white : Palette.LANDMASS);
         g2d.fill(background);
         lastTextDisplayExtents = background.getBounds2D();
 
@@ -168,12 +169,16 @@ public class RadarContactTextPainter {
 //            g2d.setColor(new Color(205,255,255));
         }
         
-        g2d.drawString(textLine1,(float)(newX+SPACE),(float)(newY+boundsLine1.getHeight()));
-        g2d.drawString(textLine2,(float)(newX+SPACE),(float)(newY+boundsText.getHeight()));
         
         line = new Line2D.Double(currentDevicePosition.getX(),currentDevicePosition.getY(),anchor.getX(),anchor.getY());
-        
         g2d.draw(line);
+        
+        if(hightlighted) {
+            // SELECTED
+            g2d.setColor(Color.black);
+        } 
+        g2d.drawString(textLine1,(float)(newX+SPACE),(float)(newY+boundsLine1.getHeight()));
+        g2d.drawString(textLine2,(float)(newX+SPACE),(float)(newY+boundsText.getHeight()));
     }
 
     private void constructBackgroundShapes(Point2D currentDevicePosition) {
@@ -217,7 +222,7 @@ public class RadarContactTextPainter {
     }
 
     public boolean contains(Point2D devicePoint) {
-        return background.contains(devicePoint);
+        return background.contains(devicePoint) || line.contains(devicePoint);
     }
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -36,7 +36,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Point2D;
 
+import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.NDB;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
@@ -44,15 +46,29 @@ public class NDBName extends AViewObject {
     
     private AirportData data;
     private String activeText;
+    private Intersection ndb;
+    private int defaultMaxScale;
+    private Color defaultColor;
     
     public NDBName(AirportData data, NDB ndb, Font font, Color color, int minScaleText, int maxScaleText) {
         super(font, color, ndb.getIdentification(), minScaleText, maxScaleText);
         this.data = data;
+        this.ndb = ndb;
+        this.defaultMaxScale = maxScaleText;
+        this.defaultColor = color;
         this.activeText = ndb.getIdentification();
     }
 
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
+
+        if(ndb.isHighlighted()) {
+            this.maxScaleText=Integer.MAX_VALUE;
+            this.color = Palette.NAVAID_HIGHLIGHT;
+        } else {
+            this.maxScaleText=defaultMaxScale;
+            this.color = defaultColor;
+        }
 
         int scale = (int)mapViewAdapter.getLogicalScale();
         scale = scale==0 ? 1 : scale; 
@@ -61,7 +77,7 @@ public class NDBName extends AViewObject {
         if(scale>15) scale=15;
         
         setTextCoordinates(new Point2D.Double(newDisplayPosition.getX()+scale,newDisplayPosition.getY()+scale));
-        if(data.getRadarObjectFilterState("NDB")) {
+        if(data.getRadarObjectFilterState("NDB") || ndb.isHighlighted()) {
             text = activeText;
         } else {
             text = null;

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -38,10 +38,13 @@ import java.util.List;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.model.IAerodrome;
+import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 
-public class Aerodrome implements IAerodrome {
+public class Aerodrome implements IAerodrome, IIntersection {
 	protected final Point2D geographicPosition;
+    protected boolean highlighted = false;
+
 	protected final Point2D towerPosition;
 	protected final float elevation;
 	protected final String identification;
@@ -58,6 +61,15 @@ public class Aerodrome implements IAerodrome {
 		this.name = name;
 		this.type = type;
 	}
+	
+    public synchronized boolean isHighlighted() {
+        return highlighted;
+    }
+
+    public synchronized void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
+    }
+
 	
 	@Override
 	public Point2D getGeographicPosition() {

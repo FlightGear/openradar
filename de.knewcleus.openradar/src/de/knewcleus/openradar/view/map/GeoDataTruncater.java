@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -30,35 +30,48 @@
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
-package de.knewcleus.openradar.view.painter;
+package de.knewcleus.openradar.view.map;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import de.knewcleus.fgfs.navdata.impl.NDB;
-import de.knewcleus.openradar.gui.Palette;
-import de.knewcleus.openradar.gui.setup.AirportData;
-import de.knewcleus.openradar.view.map.IMapViewerAdapter;
-import de.knewcleus.openradar.view.objects.NDBFrequency;
-import de.knewcleus.openradar.view.objects.NDBName;
-import de.knewcleus.openradar.view.objects.NDBSymbol;
+import de.knewcleus.fgfs.geodata.Feature;
+import de.knewcleus.fgfs.geodata.FeatureDefinition;
+import de.knewcleus.fgfs.geodata.GeodataException;
+import de.knewcleus.fgfs.geodata.IGeodataLayer;
 
-public class NDBPainter extends AViewObjectPainter<NDB> {
+public class GeoDataTruncater  implements IGeodataLayer {
 
+    private final IGeodataLayer original;
+    private List<Feature> resultList = new ArrayList<Feature>();
+    private final Iterator<Feature> resultIterator;
+
+    public GeoDataTruncater(IGeodataLayer original) throws GeodataException {
+        this.original=original;
+        processTruncation();
+        resultIterator = resultList.iterator();
+    }
     
-    public NDBPainter(AirportData data, IMapViewerAdapter mapViewAdapter, NDB ndb) {
-        super(mapViewAdapter, ndb);
-        
-        Font font = Palette.BEACON_FONT;
-        
-        NDBSymbol s = new NDBSymbol(data, ndb, 0 , 200);
-        viewObjectList.add(s);
-
-        NDBName n = new NDBName(data, ndb, font, Color.lightGray, 0 , 200);
-        viewObjectList.add(n);
-
-        NDBFrequency f = new NDBFrequency(data, ndb, font, Color.lightGray, 0 , 200);
-        viewObjectList.add(f);
+    private void processTruncation() throws GeodataException {
+//        Feature f;
+//        while ((f = original.getNextFeature())!=null) {
+//            f.getGeometry().
+//        }
     }
 
+    @Override
+    public int getRecordCount() {
+        return resultList.size();
+    }
+
+    @Override
+    public FeatureDefinition getFeatureDefinition() {
+        return original.getFeatureDefinition();
+    }
+
+    @Override
+    public Feature getNextFeature() throws GeodataException {
+        return resultIterator.next();
+    }
 }

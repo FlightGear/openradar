@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -32,13 +32,21 @@
  */
 package de.knewcleus.openradar.gui.radar;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.StringTokenizer;
 
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
+import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.setup.NavaidDB;
 import de.knewcleus.openradar.view.IRadarViewChangeListener;
 
 /**
@@ -49,14 +57,16 @@ import de.knewcleus.openradar.view.IRadarViewChangeListener;
  */
 public class RadarManager {
 
-//    private GuiMasterController master = null;
+    private GuiMasterController master = null;
     private GuiRadarBackend backend = null;
     
     private ZoomMouseListener zoomMouseListener = new ZoomMouseListener();
     private ObjectFilterMouseListener objectFilterMouseListener = new ObjectFilterMouseListener();
+
+    private NavaidSearchActionListener navaidSearchActionListener = new NavaidSearchActionListener();
     
     public RadarManager(GuiMasterController master, GuiRadarBackend backend) {
-//        this.master = master;
+        this.master = master;
         this.backend = backend;
     }
     
@@ -75,13 +85,12 @@ public class RadarManager {
                 zl = lSource.getName();
                 if(e.getButton()==1) {
                     setFilter(zl);
-                } else if(e.getButton()==2) {
+                } else {
                     backend.defineZoomLevel(zl);
                 }
     
                 RadarPanel parent = (RadarPanel)lSource.getParent().getParent().getParent();
-                parent.resetFilters();
-                parent.selectFilter(lSource);
+                parent.selectFilter(lSource.getName());
             }
         }
     }
@@ -96,7 +105,7 @@ public class RadarManager {
             JLabel lSource = (JLabel)e.getSource();
             
             if(lSource.getName().equals("FIX") || lSource.getName().equals("NDB") || lSource.getName().equals("VOR") || lSource.getName().equals("CIRCLES") 
-                    || lSource.getName().equals("APT") || lSource.getName().equals("PPN")) {
+                    || lSource.getName().equals("APT") || lSource.getName().equals("PPN") || lSource.getName().equals("GSH")) {
                 String objectName = lSource.getName();
                 if(e.getButton()==1) {
                     backend.toggleRadarObjectFilter(objectName);
@@ -111,4 +120,31 @@ public class RadarManager {
         backend.addRadarViewListener(l);
     }
 
+    public ActionListener getNavaidSearchActionListener() {
+        return navaidSearchActionListener;
+    }
+    
+    private class NavaidSearchActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            NavaidDB navaidDB = master.getDataRegistry().getNavaidDB();
+            navaidDB.resetHighlighting();
+            StringTokenizer st = new StringTokenizer(((JTextField)e.getSource()).getText()," ,.-;/");
+            Point2D airportPos = master.getDataRegistry().getAirportPosition();
+            Rectangle2D bounds = new Rectangle2D.Double(airportPos.getX(),airportPos.getY(),0,0);
+            while(st.hasMoreTokens()) {
+                IIntersection inters = navaidDB.highlight(st.nextToken().trim().toUpperCase());
+                // determine bounds for setting center and zoom
+                if(inters!=null) {
+                    Rectangle2D rect = new Rectangle2D.Double(inters.getGeographicPosition().getX(),inters.getGeographicPosition().getY(),0,0);
+                    Rectangle2D.union(bounds, rect, bounds);
+                }                
+            }
+            backend.showGeoRectangle(bounds);
+            
+            backend.repaint();
+        }
+        
+    }
 }

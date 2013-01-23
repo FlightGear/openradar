@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -32,6 +32,7 @@
  */
 package de.knewcleus.openradar.view.objects;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.Path2D;
@@ -44,6 +45,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import de.knewcleus.fgfs.navdata.impl.Intersection;
+import de.knewcleus.fgfs.navdata.impl.NDB;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -52,13 +55,19 @@ public class NDBSymbol extends AViewObject {
 
     private static BufferedImage image;
     private Point2D displayPosition;
-    AirportData data;
+    private AirportData data;
+    private Intersection ndb;
+    private int defaultMaxScale;
+    private Color defaultColor;
     
-    public NDBSymbol(AirportData data, int minScale, int maxScale) {
+    public NDBSymbol(AirportData data, NDB ndb, int minScale, int maxScale) {
         super(Palette.CRD_BACKGROUND);
         this.data = data;
         this.minScalePath=minScale;
         this.maxScalePath=maxScale;
+        this.ndb = ndb;
+        this.defaultMaxScale = maxScale;
+        this.defaultColor = color;
         try {
             image = ImageIO.read(new File("res/NDB.png"));
         } catch (IOException e) {
@@ -69,7 +78,15 @@ public class NDBSymbol extends AViewObject {
     @Override
     protected void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
         this.displayPosition = newDisplayPosition;
-  
+        
+        if(ndb.isHighlighted()) {
+            this.maxScalePath=Integer.MAX_VALUE;
+            this.color = Palette.NAVAID_HIGHLIGHT;
+        } else {
+            this.maxScalePath=defaultMaxScale;
+            this.color = defaultColor;
+        }
+        
         int scale = (int)mapViewAdapter.getLogicalScale();
         scale = scale==0 ? 1 : scale; 
         scale = (int)Math.round(30d * 10d/scale);
@@ -91,7 +108,7 @@ public class NDBSymbol extends AViewObject {
             if(size<20) size=20;
             if(size>30) size=30;
             
-            if(displayPosition!=null && scale>minScalePath && scale<maxScalePath) {
+            if(ndb.isHighlighted() || displayPosition!=null && scale>minScalePath && scale<maxScalePath) {
                 g2d.drawImage(image.getScaledInstance(size, -1, Image.SCALE_SMOOTH), (int)displayPosition.getX()-size/2, (int)displayPosition.getY()-size/2, (ImageObserver) null);
             }
         }

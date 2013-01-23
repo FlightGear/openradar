@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -55,7 +55,7 @@ public class VORPainter extends AViewObjectPainter<VOR> {
         if(vor.getName().contains("DME")) vorType = VORType.VOR_DME;
         else if(vor.getName().contains("TAC")) vorType = VORType.VORTAC;
         
-        VORSymbol s = new VORSymbol(data, vorType);
+        VORSymbol s = new VORSymbol(data, vor, vorType);
         viewObjectList.add(s);
 
         VORName n = new VORName(data, vor, font, Color.lightGray, 0 , Integer.MAX_VALUE);

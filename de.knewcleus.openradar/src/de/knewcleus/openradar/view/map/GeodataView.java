@@ -1,6 +1,7 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *  
  * This file is part of OpenRadar.
  * 
  * OpenRadar is free software: you can redistribute it and/or modify it under
@@ -62,12 +63,19 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	protected Rectangle2D logicalBounds = null;
 	protected List<Shape> logicalShapes = null;
 
-	public GeodataView(IMapViewerAdapter mapViewAdapter, IGeodataLayer geodataLayer) throws GeodataException {
+	public GeodataView(IMapViewerAdapter mapViewAdapter, IGeodataLayer geodataLayer, Rectangle2D bounds) throws GeodataException {
 		this.mapViewAdapter = mapViewAdapter;
 		mapViewAdapter.registerListener(this);
 		Feature feature;
 		while ((feature=geodataLayer.getNextFeature())!=null) {
-			geometries.add(feature.getGeometry());
+//		    Geometry g = feature.getGeometry();
+//		    if(   bounds.getMinX()<g.getXMin() 
+//		       && bounds.getMaxX()>g.getXMax()
+//		       && bounds.getMinY()<g.getYMin() 
+//               && bounds.getMaxY()>g.getYMax()) {
+//		        // only features inside range
+		        geometries.add(feature.getGeometry());
+//		    }
 		}
 		updateLogicalShapes();
 	}

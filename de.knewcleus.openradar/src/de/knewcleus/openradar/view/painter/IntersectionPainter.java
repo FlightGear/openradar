@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -53,7 +53,7 @@ public class IntersectionPainter extends AViewObjectPainter<Intersection> {
             Font font = Palette.BEACON_FONT;
             
             
-            FixSymbol fs = new FixSymbol(data, 0,100);
+            FixSymbol fs = new FixSymbol(data, fix, 0,100);
             viewObjectList.add(fs);
     
             FixName fn = new FixName(data, fix, font, Color.lightGray, 0 , 100);

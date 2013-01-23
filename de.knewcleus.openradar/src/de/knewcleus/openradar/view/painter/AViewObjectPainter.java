@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -76,17 +76,28 @@ public abstract class AViewObjectPainter<T> {
         AViewObjectPainter<?> viewObjectPainter = null;
         
         // the individual paints are redirected to Painters
-        if(navPoint instanceof Aerodrome) viewObjectPainter = new AirportPainter(data, mapViewAdapter, (Aerodrome) navPoint);
+        if(navPoint instanceof Aerodrome) {
+            viewObjectPainter = new AirportPainter(data, mapViewAdapter, (Aerodrome) navPoint);
+            data.getNavaidDB().registerNavaid((Aerodrome) navPoint);
+        }
         else if(navPoint instanceof RunwayEnd) viewObjectPainter = new RunwayEndPainter(mapViewAdapter, data, (RunwayEnd) navPoint);
         else if(navPoint instanceof Helipad) viewObjectPainter = new HelipadPainter(mapViewAdapter, (Helipad) navPoint);
-        else if(navPoint instanceof NDB) viewObjectPainter = new NDBPainter(data, mapViewAdapter, (NDB) navPoint);
-        else if(navPoint instanceof VOR) viewObjectPainter = new VORPainter(data, mapViewAdapter, (VOR) navPoint);
+        else if(navPoint instanceof NDB) {
+            viewObjectPainter = new NDBPainter(data, mapViewAdapter, (NDB) navPoint);
+            data.getNavaidDB().registerNavaid((NDB) navPoint);
+        }
+        else if(navPoint instanceof VOR) {
+            viewObjectPainter = new VORPainter(data, mapViewAdapter, (VOR) navPoint);
+            data.getNavaidDB().registerNavaid((VOR) navPoint);
+        }
         else if(navPoint instanceof Localizer) viewObjectPainter = new LocalizerPainter(mapViewAdapter, (Localizer) navPoint);
         else if(navPoint instanceof Glideslope) viewObjectPainter = new DummyPainter(mapViewAdapter,(INavPoint)navPoint); // painted by runway end 
         else if(navPoint instanceof MarkerBeacon) viewObjectPainter = new MarkerBeaconPainter(mapViewAdapter, data, (MarkerBeacon) navPoint);
         else if(navPoint instanceof DME) viewObjectPainter = new DMEPainter(mapViewAdapter, (DME) navPoint);
-        else if(navPoint instanceof Intersection) viewObjectPainter = new IntersectionPainter(data, mapViewAdapter, (Intersection) navPoint);
-        
+        else if(navPoint instanceof Intersection) {
+            viewObjectPainter = new IntersectionPainter(data, mapViewAdapter, (Intersection) navPoint);
+            data.getNavaidDB().registerNavaid((Intersection) navPoint);
+        }
         else if(navPoint instanceof TaxiWaySegment) viewObjectPainter = new TaxiWayPainter(data,mapViewAdapter, (TaxiWaySegment) navPoint);
         else if(navPoint instanceof TaxiSign) viewObjectPainter = new TaxiSignPainter(mapViewAdapter, (TaxiSign) navPoint);
 

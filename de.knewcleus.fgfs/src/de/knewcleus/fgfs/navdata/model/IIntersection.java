@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -33,5 +34,9 @@
 package de.knewcleus.fgfs.navdata.model;
 
 public interface IIntersection extends INavDatumWithID, INavPoint {
+
+    public boolean isHighlighted();
+
+    public void setHighlighted(boolean highlighted);
 
 }

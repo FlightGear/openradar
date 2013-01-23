@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -61,6 +61,7 @@ public class GuiRadarContact {
     public enum Alignment {LEFT,CENTER,RIGHT}
     private volatile Alignment alignment = Alignment.RIGHT;
     
+    private int hightlightCounter = 0;
     private volatile boolean neglect = false; 
 
     private RadarContactController manager = null;
@@ -96,6 +97,20 @@ public class GuiRadarContact {
     
     public synchronized boolean isExpired() {
         return player.getLastMessageTime() + 1*60*1000 < System.currentTimeMillis();
+    }
+
+    public synchronized boolean isHighlighted() {
+        if(hightlightCounter>0) {
+            hightlightCounter--;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public synchronized void setHighlighted(boolean highlighted) {
+        this.hightlightCounter=2;
     }
 
     public boolean isNeglect() {
@@ -242,11 +257,11 @@ public class GuiRadarContact {
     }
     
     public synchronized String getGroundSpeed() {
-        return String.format("G%03.0f", player.getGroundSpeed()/Units.KNOTS);        
+        return String.format("G%03.0f", player.getCalculatedGroundspeed()/Units.KNOTS);       
     }
     
     public double getGroundSpeedD() {
-        return player.getGroundSpeed()/Units.KNOTS;        
+        return player.getCalculatedGroundspeed()/Units.KNOTS;        
     }
     
     public String getAirSpeed() {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -50,9 +50,8 @@ public class AirportPainter extends AViewObjectPainter<Aerodrome> {
         Font font = new Font("Arial", Font.PLAIN, 9);
         
         String code = aerodrome.getIdentification();
-        airportCode = new AirportCode(data, font, Color.lightGray, code, 32 , Integer.MAX_VALUE);
+        airportCode = new AirportCode(data, aerodrome, font, Color.lightGray, code, 32 , Integer.MAX_VALUE);
         
         viewObjectList.add(airportCode);
     }
-    
 }

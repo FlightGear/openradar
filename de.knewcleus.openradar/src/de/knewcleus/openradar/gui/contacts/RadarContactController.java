@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -203,10 +203,10 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             if (orderMode == OrderMode.AUTO)
                 orderContacts();
             int formerSize = modelList.size();
+
+            checkExpired();
             modelList = new ArrayList<GuiRadarContact>(activeContactList);
             notifyListenersListChange(formerSize);
-    
-            checkExpired();
         }
         if (resetSelectedContact) {
             master.getMpChatManager().setSelectedCallSign(null, false); // lock
@@ -220,6 +220,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 mapExpiredCallSigns.remove(ec.getCallSign());
 
                 completeContactList.add(ec);
+                activeContactList = completeContactList;
                 mapCallSignContact.put(ec.getCallSign(), ec);
             }
         }
@@ -230,6 +231,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 mapCallSignContact.remove(c.getCallSign());
 
                 mapExpiredCallSigns.put(c.getCallSign(), c);
+
+                activeContactList = completeContactList;
             }
         }
     }
@@ -310,6 +313,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     @Override
     public synchronized void playerAdded(TargetStatus player) {
         if (!mapCallSignContact.containsKey(player.getCallsign()) && !mapExpiredCallSigns.containsKey(player.getCallsign())) {
+            if(mapCallSignContact.isEmpty()) Toolkit.getDefaultToolkit().beep();
             // add new player
             GuiRadarContact c = new GuiRadarContact(master, this, player, mapAtcComments.get(player.getCallsign()));
             // c.setOperation(GuiRadarContact.Operation.UNKNOWN);
@@ -406,19 +410,19 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                         } else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
                             // select and move map to it
                             select(c, true, false);
+                            c.setHighlighted(true);
                             master.getRadarBackend().showRadarContact(c);
                             atcMessageDialog.setVisible(false);
-                            // } else if (e.getButton() == MouseEvent.BUTTON1 &&
-                            // e.getClickCount() == 2) {
-                            // select(c, true, false); // normal select
-                            // master.getMpChatManager().requestFocusForInput();
-                            //
-                        } else if (e.getButton() == MouseEvent.BUTTON2 && e.getClickCount() == 1) {
+
+                        } else if( (e.getButton() == MouseEvent.BUTTON2 && e.getClickCount() == 1)
+                                || (e.isAltDown() && e.getButton() == MouseEvent.BUTTON3) ) {
                             // show contact settings dialog
                             selectNShowContactDialog(c, e);
+                        
                         } else if (e.getButton() == MouseEvent.BUTTON3 && e.getClickCount() == 1) {
                          // show ATC message dialog
                             selectNShowAtcMsgDialog(c, e);
+                        
                         }
                         publishData();
                     } else {

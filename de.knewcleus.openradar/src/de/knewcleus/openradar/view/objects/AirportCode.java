@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -36,24 +36,42 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Point2D;
 
+import de.knewcleus.fgfs.navdata.impl.Aerodrome;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class AirportCode extends AViewObject {
     
     private AirportData data;
+    private Aerodrome aerodrome;
+    private Color defaultColor;
+    private int defaultMaxScale;
+
     private String activeText;
 
-    public AirportCode(AirportData data, Font font, Color color, String text, int minScaleText, int maxScaleText) {
+    public AirportCode(AirportData data, Aerodrome aerodrome, Font font, Color color, String text, int minScaleText, int maxScaleText) {
         super(font, color, text, minScaleText, maxScaleText);
         this.data = data;
+        this.aerodrome = aerodrome;
+        this.defaultColor=color;
+        this.defaultMaxScale = maxScaleText;
         this.activeText = text;
     }
 
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
+        if(aerodrome.isHighlighted()) {
+            this.maxScaleText=Integer.MAX_VALUE;
+            this.color = Palette.NAVAID_HIGHLIGHT;
+        } else {
+            this.maxScaleText=defaultMaxScale;
+            this.color = defaultColor;
+        }
+
         setTextCoordinates(newDisplayPosition);
-        if(data.getRadarObjectFilterState("APT")) {
+
+        if(aerodrome.isHighlighted() || data.getRadarObjectFilterState("APT")) {
             text = activeText;
         } else {
             text = null;

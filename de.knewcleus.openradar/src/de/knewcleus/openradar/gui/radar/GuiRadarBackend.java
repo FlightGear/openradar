@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -33,10 +33,13 @@
 package de.knewcleus.openradar.gui.radar;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import de.knewcleus.fgfs.Units;
+import de.knewcleus.fgfs.location.GeoUtil;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
@@ -92,6 +95,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     public void setZoomLevel(String zoomLevelKey) {
         if(zoomLevelMap.containsKey(zoomLevelKey)) {
             this.zoomLevel=zoomLevelMap.get(zoomLevelKey);
+            radarPanel.selectFilter(zoomLevelKey);
             viewerAdapter.setZoom(zoomLevel.getLogicalScale(), zoomLevel.getCenter());
         }
     }
@@ -153,7 +157,14 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     }
     
     public void showRadarContact(GuiRadarContact c) {
-        viewerAdapter.setCenter(c.getCenterGeoCoordinates());
+        Point2D apPos = master.getDataRegistry().getAirportPosition();
+        Point2D plPos = c.getCenterGeoCoordinates();;
+        viewerAdapter.setCenter(new Point2D.Double(apPos.getX()+(plPos.getX()-apPos.getX())/2,apPos.getY()+(plPos.getY()-apPos.getY())/2));
+        
+        double distance = GeoUtil.getDistance(apPos.getX(), apPos.getY(), plPos.getX(), plPos.getY()).length / Units.NM;
+        double scale = distance>0 ? distance * 3.5 : 1;
+        
+        viewerAdapter.setLogicalScale(scale);
     }
 
     public void addZoomLevelValuesToProperties(Properties p) {
@@ -197,6 +208,17 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     public void addRadarViewListener(IRadarViewChangeListener  l) {
         viewerAdapter.addRadarViewChangeListener(l);
+    }
+
+    public void showGeoRectangle(Rectangle2D bounds) {
+        viewerAdapter.setCenter(new Point2D.Double(bounds.getCenterX(),bounds.getCenterY()));
+        
+        double distance = GeoUtil.getDistance(bounds.getMinX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMaxY()).length / Units.NM;
+        if(distance>0) {
+            double scale = distance>0 ? distance * 3.5 : 1;
+            
+            viewerAdapter.setLogicalScale(scale);
+        }
     }
 
 }

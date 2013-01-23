@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -36,16 +36,27 @@ import java.awt.Color;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
+import de.knewcleus.fgfs.navdata.impl.Intersection;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class FixSymbol extends AViewObject {
 
     private AirportData data;
+    private Intersection fix;
+    private int defaultMaxScale;
+    private Color defaultColor;
     
-    public FixSymbol(AirportData data, int minScale, int maxScale) {
+    
+    public FixSymbol(AirportData data, Intersection fix, int minScale, int maxScale) {
         super(Color.lightGray);
         this.data = data;
+        
+        this.fix = fix;
+        this.defaultMaxScale=maxScale;
+        this.defaultColor=Color.lightGray;
+        
         setMinScalePath(minScale);
         setMaxScalePath(maxScale);
     }
@@ -54,8 +65,16 @@ public class FixSymbol extends AViewObject {
     protected void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
         
         path = new Path2D.Double();
+       
+        if(fix.isHighlighted()) {
+            this.maxScalePath=Integer.MAX_VALUE;
+            this.color = Palette.NAVAID_HIGHLIGHT;
+        } else {
+            this.maxScalePath=defaultMaxScale;
+            this.color = defaultColor;
+        }
         
-        if(data.getRadarObjectFilterState("FIX")) {
+        if(data.getRadarObjectFilterState("FIX") || fix.isHighlighted()) {
             final double x, y;
             x = newDisplayPosition.getX();
             y = newDisplayPosition.getY();

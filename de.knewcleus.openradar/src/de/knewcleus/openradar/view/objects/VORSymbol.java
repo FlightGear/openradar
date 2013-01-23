@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -32,6 +32,7 @@
  */
 package de.knewcleus.openradar.view.objects;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.Path2D;
@@ -44,6 +45,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -51,6 +53,8 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 public class VORSymbol extends AViewObject {
 
     private AirportData data;
+    private VOR vor;
+    private Color defaultColor;
     
     public enum VORType {
         VOR, VOR_DME, VORTAC
@@ -62,10 +66,14 @@ public class VORSymbol extends AViewObject {
     private static BufferedImage imageVORTAC;
     private Point2D displayPosition;
 
-    public VORSymbol(AirportData data, VORType vorType) {
+    public VORSymbol(AirportData data, VOR vor, VORType vorType) {
         super(Palette.CRD_BACKGROUND);
         this.data = data;
+        this.vor = vor;
+        this.defaultColor = color;
+        
         this.vorType = vorType;
+        
         try {
             imageVOR = ImageIO.read(new File("res/VOR.png"));
             imageVORTME = ImageIO.read(new File("res/VOR-DME.png"));
@@ -78,6 +86,12 @@ public class VORSymbol extends AViewObject {
     @Override
     protected void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
         this.displayPosition = newDisplayPosition;
+
+        if(vor.isHighlighted()) {
+            this.color = Palette.NAVAID_HIGHLIGHT;
+        } else {
+            this.color = defaultColor;
+        }
 
         path = new Path2D.Double();
         path.append(new Rectangle2D.Double(displayPosition.getX(), displayPosition.getY(), 50d, 50d), false);
@@ -95,7 +109,7 @@ public class VORSymbol extends AViewObject {
             if(scale>30) scale=30;
             
             
-            if (displayPosition != null) {
+            if (vor.isHighlighted() || displayPosition != null) {
                 Image image=imageVOR; 
                 switch (vorType) {
                 case VOR:

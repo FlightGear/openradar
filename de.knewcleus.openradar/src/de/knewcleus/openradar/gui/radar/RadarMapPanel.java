@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -57,7 +57,7 @@ import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavDatum;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
-import de.knewcleus.fgfs.navdata.xplane.AptDatStream;
+import de.knewcleus.fgfs.navdata.xplane.AptDatStream1000;
 import de.knewcleus.fgfs.navdata.xplane.FixDatStream;
 import de.knewcleus.fgfs.navdata.xplane.NavDatStream;
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -190,14 +190,14 @@ public class RadarMapPanel extends JComponent {
     
             setupDialog.setStatus(5, "Reading landmass layer...");
             ZippedShapefileLayer landmassLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_landmass");
-            final GeodataView landmassView = new GeodataView(radarMapViewAdapter, landmassLayer);
+            final GeodataView landmassView = new GeodataView(radarMapViewAdapter, landmassLayer,bounds);
             landmassLayer.closeZipArchive();
             landmassView.setColor(Palette.LANDMASS);
             //landmassView.setFill(true);
             rootView.pushView(landmassView);
     
-           ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_lake");
-            final GeodataView lakeView = new GeodataView(radarMapViewAdapter, lakeLayer);
+            ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_lake");
+            final GeodataView lakeView = new GeodataView(radarMapViewAdapter, lakeLayer,bounds);
             lakeLayer.closeZipArchive();
             lakeView.setColor(Palette.LAKE);
             lakeView.setFill(true);
@@ -211,7 +211,7 @@ public class RadarMapPanel extends JComponent {
     
             setupDialog.setStatus(10, "Reading tarmac layer...");
             ZippedShapefileLayer tarmacLayer = new ZippedShapefileLayer(data.getAirportDir(), "apt_tarmac");
-            final GeodataView tarmacView = new GeodataView(radarMapViewAdapter, tarmacLayer);
+            final GeodataView tarmacView = new GeodataView(radarMapViewAdapter, tarmacLayer, bounds);
             tarmacLayer.closeZipArchive();
             tarmacView.setColor(Palette.TARMAC);
             tarmacView.setFill(true);
@@ -219,7 +219,7 @@ public class RadarMapPanel extends JComponent {
     
             setupDialog.setStatus(20, "Reading runway layer...");
             ZippedShapefileLayer runwayLayer = new ZippedShapefileLayer(data.getAirportDir(), "apt_runway");
-            final GeodataView runwayView = new GeodataView(radarMapViewAdapter, runwayLayer);
+            final GeodataView runwayView = new GeodataView(radarMapViewAdapter, runwayLayer, bounds);
             runwayLayer.closeZipArchive();
             runwayView.setColor(Palette.RUNWAY);
             runwayView.setFill(true);
@@ -277,6 +277,13 @@ public class RadarMapPanel extends JComponent {
             final MouseFocusManager mouseFocusManager = new MouseFocusManager(guiInteractionManager, focusManager, rootView, radarMapViewAdapter);
             mouseFocusManager.install(this);
             this.setBackground(Palette.WATERMASS);
+            
+            // parsing of airport data delivered tower position, move center
+            this.centerLon = data.getLon();
+            this.centerLat = data.getLat();
+            center = new Point2D.Double(centerLon, centerLat);
+            this.radarMapViewAdapter.setCenter(center);
+            
             setupDialog.setStatus(100, "Ready.");
         } finally {
             closeFiles();
@@ -294,17 +301,13 @@ public class RadarMapPanel extends JComponent {
     }
 
     protected INavDataStream<INavPoint> openXPlaneAptDat() throws IOException {
-        // in future : 
-        //final File inputFile = new File("data/AptNav1000.zip");
         final File inputFile = new File("data/AptNav.zip");
         zif = new ZipFile(inputFile);
         Enumeration<? extends ZipEntry> entries = zif.entries();
         while(entries.hasMoreElements()) {
             ZipEntry zipentry = entries.nextElement();
             if(zipentry.getName().equals("apt.dat")) {
-                // in future : 
-                // return new AptDatStream1000(new InputStreamReader(zif.getInputStream(zipentry)));
-                return new AptDatStream(new InputStreamReader(zif.getInputStream(zipentry)));
+                return new AptDatStream1000(new InputStreamReader(zif.getInputStream(zipentry)));
             }
         }
         throw new IllegalStateException("apt.dat not found in sectors/AtpNav.zip!");

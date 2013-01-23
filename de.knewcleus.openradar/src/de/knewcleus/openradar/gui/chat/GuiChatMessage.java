@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -64,7 +64,7 @@ public class GuiChatMessage {
         this.message = message;
         this.frequency = frequency;
         this.airportMentioned = message.contains(master.getDataRegistry().getAirportCode());
-        this.isOwnMessage = callSign.contains(master.getCurrentATCCallSign());
+        this.isOwnMessage = (master.getCurrentATCCallSign()!=null) ? callSign.contains(master.getCurrentATCCallSign()) : false;
     }
     
     public Date getCreated() { 

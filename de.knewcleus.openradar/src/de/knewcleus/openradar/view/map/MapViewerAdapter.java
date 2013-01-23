@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -37,8 +37,8 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.openradar.view.ICanvas;
-import de.knewcleus.openradar.view.IUpdateManager;
 import de.knewcleus.openradar.view.IRadarViewChangeListener.Change;
+import de.knewcleus.openradar.view.IUpdateManager;
 import de.knewcleus.openradar.view.ViewerAdapter;
 
 public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter {
@@ -72,12 +72,6 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
         return result;
     }
 
-    public void shiftMap(double dx, double dy) {
-        currentCenter = new Point2D.Double(currentCenter.getX()+dx,currentCenter.getY()+dy);
-        setProjection(new LocalSphericalProjection(currentCenter));
-        notifyListeners(Change.CENTER);
-    }       
-
     public void setZoom(double scale, Point2D newCenter) {
         currentCenter = newCenter;
         setProjection(new LocalSphericalProjection(newCenter));
@@ -95,6 +89,7 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
     public void centerMap() {
         setProjection(new LocalSphericalProjection(originalCenter));
         currentCenter = originalCenter;
+        setLogicalOrigin(new Point2D.Double());
         notifyListeners(Change.CENTER);
     }
 

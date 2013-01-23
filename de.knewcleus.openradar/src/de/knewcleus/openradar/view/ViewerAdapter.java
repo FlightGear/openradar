@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -97,7 +97,7 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	public void setDeviceOrigin(double originX, double originY) {
 		deviceOrigin = new Point2D.Double(originX, originY);
 		updateTransforms();
-	       notifyListeners(Change.CENTER);
+	    notifyListeners(Change.CENTER);
 }
 	
 	@Override
@@ -119,14 +119,17 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
         notifyListeners(Change.ZOOM);
 	}
 
-	@Override
-	public void setLogicalOrigin(double offsetX, double offsetY) {
-		logicalOrigin = new Point2D.Double(offsetX, offsetY);
-		updateTransforms();
-        notifyListeners(Change.CENTER);
+	public void shiftLogicalOrigin(double offsetX, double offsetY) {
+		setLogicalOrigin(logicalOrigin.getX()+offsetX, logicalOrigin.getY()+offsetY);
 	}
 	
-	@Override
+    public void setLogicalOrigin(double newX, double newY) {
+        logicalOrigin = new Point2D.Double(newX, newY);
+        updateTransforms();
+        notifyListeners(Change.CENTER);
+    }
+
+    @Override
 	public void setLogicalOrigin(Point2D origin) {
 		logicalOrigin = origin;
 		updateTransforms();
