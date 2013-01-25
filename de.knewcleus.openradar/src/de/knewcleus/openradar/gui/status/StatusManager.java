@@ -175,6 +175,22 @@ public class StatusManager implements INavPointListener {
                 }
             }
         }
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            if(e.getSource() instanceof RunwayPanel) {
+                ((RunwayPanel)e.getSource()).setActiveRunwayVisibility(true);
+            }
+        }
+        
+        @Override
+        public void mouseExited(MouseEvent e) {
+            if(e.getSource() instanceof RunwayPanel) {
+                RunwayPanel panel = (RunwayPanel)e.getSource();
+                if(!panel.contains(e.getPoint())) {
+                    panel.setActiveRunwayVisibility(false);
+                }
+            }
+        }
     }
 
 //    public void requestFocusForDetailInput() {

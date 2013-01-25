@@ -156,15 +156,19 @@ public class GuiRadarBackend implements IRadarDataRecipient {
         }
     }
     
-    public void showRadarContact(GuiRadarContact c) {
-        Point2D apPos = master.getDataRegistry().getAirportPosition();
-        Point2D plPos = c.getCenterGeoCoordinates();;
-        viewerAdapter.setCenter(new Point2D.Double(apPos.getX()+(plPos.getX()-apPos.getX())/2,apPos.getY()+(plPos.getY()-apPos.getY())/2));
+    public void showRadarContact(GuiRadarContact c, boolean changeZoom) {
+        if(changeZoom) {
+            Point2D apPos = master.getDataRegistry().getAirportPosition();
+            Point2D plPos = c.getCenterGeoCoordinates();;
+            viewerAdapter.setCenter(new Point2D.Double(apPos.getX()+(plPos.getX()-apPos.getX())/2,apPos.getY()+(plPos.getY()-apPos.getY())/2));
         
-        double distance = GeoUtil.getDistance(apPos.getX(), apPos.getY(), plPos.getX(), plPos.getY()).length / Units.NM;
-        double scale = distance>0 ? distance * 3.5 : 1;
-        
-        viewerAdapter.setLogicalScale(scale);
+            double distance = GeoUtil.getDistance(apPos.getX(), apPos.getY(), plPos.getX(), plPos.getY()).length / Units.NM;
+            double scale = distance>0 ? distance * 2.5 : 1;
+            
+            viewerAdapter.setLogicalScale(scale);
+        } else {
+            viewerAdapter.setCenter(c.getCenterGeoCoordinates());
+        }
     }
 
     public void addZoomLevelValuesToProperties(Properties p) {
@@ -215,7 +219,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
         
         double distance = GeoUtil.getDistance(bounds.getMinX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMaxY()).length / Units.NM;
         if(distance>0) {
-            double scale = distance>0 ? distance * 3.5 : 1;
+            double scale = distance>0 ? distance * 2 : 1;
             
             viewerAdapter.setLogicalScale(scale);
         }

@@ -100,7 +100,7 @@ public class VORSymbol extends AViewObject {
     @Override
     public void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
         
-        if(data.getRadarObjectFilterState("VOR")) {
+        if(vor.isHighlighted() || data.getRadarObjectFilterState("VOR")) {
             // super.paint(g2d, mapViewAdapter);
             int scale = (int)mapViewAdapter.getLogicalScale();
             scale = scale==0 ? 1 : scale; 

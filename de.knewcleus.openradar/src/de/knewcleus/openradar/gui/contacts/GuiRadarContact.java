@@ -53,6 +53,7 @@ import de.knewcleus.openradar.weather.MetarData;
  */
 public class GuiRadarContact {
 
+    public long appeared = System.currentTimeMillis();  
     public enum State {UNCONTROLLED,CONTROLLED,IMPORTANT};
     public enum Operation {
         GROUND, LANDING, STARTING, TRAVEL, EMERGENCY, UNKNOWN
@@ -437,5 +438,13 @@ public class GuiRadarContact {
 
     public long getLastUpdate() {
         return player.getLastMessageTime();
+    }
+    
+    public synchronized void reAppeared() {
+        appeared = System.currentTimeMillis();
+    }
+    
+    public synchronized boolean isNew() {
+        return System.currentTimeMillis() - appeared < 30000;
     }
 }

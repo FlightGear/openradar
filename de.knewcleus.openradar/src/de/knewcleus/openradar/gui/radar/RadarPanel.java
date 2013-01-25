@@ -265,7 +265,7 @@ public class RadarPanel extends JPanel {
         lbZoomGround.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbZoomGround.setText("GROUND");
         lbZoomGround.setName("GROUND");
-        lbZoomGround.setToolTipText("left click to choose, middle click to define");
+        lbZoomGround.setToolTipText("F1, left click to choose, middle click to define");
         lbZoomGround.setForeground(java.awt.Color.white);
         lbZoomGround.addMouseListener(guiInteractionManager.getRadarManager().getZoomMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -276,7 +276,7 @@ public class RadarPanel extends JPanel {
         lbZoomTower.setText("TOWER");
         lbZoomTower.setName("TOWER");
         lbZoomTower.setForeground(java.awt.Color.blue);
-        lbZoomTower.setToolTipText("left click to choose, middle click to define");
+        lbZoomTower.setToolTipText("F2, left click to choose, middle click to define");
         lbZoomTower.addMouseListener(guiInteractionManager.getRadarManager().getZoomMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
@@ -286,7 +286,7 @@ public class RadarPanel extends JPanel {
         lbZoomApp.setText("APP");
         lbZoomApp.setName("APP");
         lbZoomApp.setForeground(java.awt.Color.white);
-        lbZoomApp.setToolTipText("left click to choose, middle click to define");
+        lbZoomApp.setToolTipText("F3, left click to choose, middle click to define");
         lbZoomApp.addMouseListener(guiInteractionManager.getRadarManager().getZoomMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
@@ -295,7 +295,7 @@ public class RadarPanel extends JPanel {
         lbZoomSector.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbZoomSector.setText("SECTOR");
         lbZoomSector.setName("SECTOR");
-        lbZoomSector.setToolTipText("left click to choose, middle/right click to define");
+        lbZoomSector.setToolTipText("F4, left click to choose, middle/right click to define");
         lbZoomSector.setForeground(java.awt.Color.white);
         lbZoomSector.addMouseListener(guiInteractionManager.getRadarManager().getZoomMouseListener());
         zoomPanel.add(lbZoomSector, new java.awt.GridBagConstraints());
@@ -307,7 +307,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx=2;
+        gridBagConstraints.weightx=1;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         radarControlBar.add(space, gridBagConstraints);
 
@@ -316,7 +316,7 @@ public class RadarPanel extends JPanel {
         tfSearchNavaids.setToolTipText("Enter navaids/airport codes to find and highlight");
         //tfSearchNavaids.setForeground(java.awt.Color.white);
         tfSearchNavaids.addActionListener(guiInteractionManager.getRadarManager().getNavaidSearchActionListener());
-        tfSearchNavaids.setPreferredSize(new Dimension(200,tfSearchNavaids.getFont().getSize()+10));
+        tfSearchNavaids.setPreferredSize(new Dimension(400,tfSearchNavaids.getFont().getSize()+10));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;

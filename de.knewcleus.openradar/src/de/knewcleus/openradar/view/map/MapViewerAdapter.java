@@ -73,6 +73,7 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
     }
 
     public void setZoom(double scale, Point2D newCenter) {
+        setLogicalOrigin(new Point2D.Double());
         currentCenter = newCenter;
         setProjection(new LocalSphericalProjection(newCenter));
         setLogicalScale(scale);
@@ -83,6 +84,7 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
     public void setCenter(Point2D newCenter) {
         setProjection(new LocalSphericalProjection(newCenter));
         currentCenter = newCenter;
+        setLogicalOrigin(new Point2D.Double());
         notifyListeners(Change.CENTER);
     }       
 
@@ -93,5 +95,7 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
         notifyListeners(Change.CENTER);
     }
 
-	public Point2D getCenter() { return currentCenter; }
+	public Point2D getCenter() {
+	    return projection.toGeographical(logicalOrigin); 
+	}
 }

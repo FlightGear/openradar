@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -143,9 +143,10 @@ public class ContactSettingsDialog extends JFrame {
 
     public void show(GuiRadarContact contact, MouseEvent e) {
         this.contact = contact;
-        this.tpDetails.setText(contact.getAtcComment());
         
         lbCallSign.setText(contact.getCallSign());
+        this.tpDetails.setText(contact.getAtcComment());
+        cbLanguages.setSelectedItem(contact.getAtcLanguage());
         
         Dimension innerSize = getPreferredSize();
         setSize(new Dimension((int)innerSize.getWidth()+8, (int)innerSize.getHeight()+8));

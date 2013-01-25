@@ -200,11 +200,11 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             }
         }
         synchronized(this) {
+            checkExpired();
             if (orderMode == OrderMode.AUTO)
                 orderContacts();
             int formerSize = modelList.size();
 
-            checkExpired();
             modelList = new ArrayList<GuiRadarContact>(activeContactList);
             notifyListenersListChange(formerSize);
         }
@@ -219,7 +219,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 // revive them
                 mapExpiredCallSigns.remove(ec.getCallSign());
 
-                completeContactList.add(ec);
+                addPlayerBeforeUncontrolled(ec);
+                ec.reAppeared();
                 activeContactList = completeContactList;
                 mapCallSignContact.put(ec.getCallSign(), ec);
             }
@@ -318,18 +319,36 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             GuiRadarContact c = new GuiRadarContact(master, this, player, mapAtcComments.get(player.getCallsign()));
             // c.setOperation(GuiRadarContact.Operation.UNKNOWN);
 
-            completeContactList.add(c);
+            addPlayerBeforeUncontrolled( c );
             mapCallSignContact.put(c.getCallSign(), c);
 
         } else if (mapExpiredCallSigns.containsKey(player.getCallsign())) {
             // re-activate expired player
             GuiRadarContact c = mapExpiredCallSigns.remove(player.getCallsign());
             c.setTargetStatus(player); // link to new player
-            completeContactList.add(c);
+            addPlayerBeforeUncontrolled( c);
             mapCallSignContact.put(c.getCallSign(), c);
         }
 
         applyFilter();
+    }
+
+    private void addPlayerBeforeUncontrolled(GuiRadarContact c) {
+        if(orderMode == OrderMode.AUTO) {
+            // add it in front of the uncontrolled
+            for(int i=0; i<completeContactList.size();i++) {
+                if(completeContactList.get(i).getState() == State.UNCONTROLLED) {
+                    completeContactList.add(i, c);
+                    c=null;
+                    break;
+                }
+            }
+        }
+        if(c!=null) {
+            // add it at the end
+            completeContactList.add(c);
+        }
+        
     }
 
     @Override
@@ -411,7 +430,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                             // select and move map to it
                             select(c, true, false);
                             c.setHighlighted(true);
-                            master.getRadarBackend().showRadarContact(c);
+                            master.getRadarBackend().showRadarContact(c, !e.isShiftDown() );
                             atcMessageDialog.setVisible(false);
 
                         } else if( (e.getButton() == MouseEvent.BUTTON2 && e.getClickCount() == 1)
@@ -586,17 +605,22 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
 
     private synchronized void orderContacts() {
         for (GuiRadarContact c : activeContactList) {
-            if (c.getState() == State.IMPORTANT) {
+            if (c.getState() == State.IMPORTANT && !c.isNeglect()) {
+                orderList.add(c);
+            }
+        }
+        for (GuiRadarContact c : activeContactList ) {
+            if (c.getState() == State.CONTROLLED && !c.isNeglect()) {
                 orderList.add(c);
             }
         }
         for (GuiRadarContact c : activeContactList) {
-            if (c.getState() == State.CONTROLLED) {
+            if (c.getState() == State.UNCONTROLLED && !c.isNeglect()) {
                 orderList.add(c);
             }
         }
         for (GuiRadarContact c : activeContactList) {
-            if (c.getState() == State.UNCONTROLLED) {
+            if (c.isNeglect()) {
                 orderList.add(c);
             }
         }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2013 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -100,6 +100,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
     private Color incativeColor = Color.GRAY;
     private Color selectionColor = Color.BLUE;
     private Color emergencyColor = Color.RED;
+    private Color newContactColor = new Color(0,200,0);
 
     public static int STRIP_WITDH = 250;
 
@@ -366,13 +367,16 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
             
             foreground = defaultColor;
             background = Color.white;
-
+            newContactColor = new Color(0,110,0);
+            
             if (value.isOnEmergency()) {
                 // font = activeFont;
                 foreground = emergencyColor;
             } else if (value.isSelected()) {
                 // font = activeFont;
                 foreground = selectionColor;
+            } else if (value.isNew()) {
+                foreground = newContactColor;
             }
         }
         if(!value.isActive() || value.isNeglect()) {
