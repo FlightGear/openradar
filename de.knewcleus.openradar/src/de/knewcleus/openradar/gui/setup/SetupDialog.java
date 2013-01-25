@@ -128,8 +128,8 @@ public class SetupDialog extends JFrame {
         Rectangle maxBounds = env.getMaximumWindowBounds();
 
         this.setLocation((int) maxBounds.getWidth() / 2 - 200, (int) maxBounds.getHeight() / 2 - 200);
-        this.setSize(400, 550);
-
+        //this.setSize(400,600);
+                
         JPanel jPnlContentPane = new JPanel();
         jPnlContentPane.setLayout(new GridBagLayout());
         setContentPane(jPnlContentPane);
@@ -599,6 +599,9 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(12, 2, 2, 2);
         jPnlSettings.add(btCheckSettings, gridBagConstraints);
 
+        doLayout();
+        
+        this.setSize((int)jPnlContentPane.getPreferredSize().getWidth(), (int)jPnlContentPane.getPreferredSize().getHeight()+30);
         doLayout();
     }
     
