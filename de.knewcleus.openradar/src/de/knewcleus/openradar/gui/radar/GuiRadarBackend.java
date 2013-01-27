@@ -120,6 +120,10 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     }
 
     public void repaint() {
+        viewerAdapter.getUpdateManager().markViewportDirty();
+        //viewerAdapter.setLogicalScale(viewerAdapter.getLogicalScale());
+    }
+    public void forceRepaint() {
         viewerAdapter.setLogicalScale(viewerAdapter.getLogicalScale());
     }
     /**
@@ -199,7 +203,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     public void toggleRadarObjectFilter(String objectName) {
         master.getDataRegistry().setRadarObjectFilter(master, objectName);
-        repaint();
+        forceRepaint();
     }
 
     public boolean getRadarObjectFilterState(String objectName) {

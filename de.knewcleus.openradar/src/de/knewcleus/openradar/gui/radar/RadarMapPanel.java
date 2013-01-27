@@ -75,6 +75,7 @@ import de.knewcleus.openradar.view.LayeredView;
 import de.knewcleus.openradar.view.MouseZoomListener;
 import de.knewcleus.openradar.view.SwingUpdateManager;
 import de.knewcleus.openradar.view.ViewerCenteringListener;
+import de.knewcleus.openradar.view.glasspane.StPView;
 import de.knewcleus.openradar.view.groundnet.AtcObjectsView;
 import de.knewcleus.openradar.view.groundnet.GroundnetReader;
 import de.knewcleus.openradar.view.groundnet.GroundnetView;
@@ -269,6 +270,10 @@ public class RadarMapPanel extends JComponent {
             new RadarTargetProvider(radarMapViewAdapter, targetView, master.getTrackManager(), guiInteractionManager);
             rootView.pushView(targetView);
     
+            LayeredView glassPaneView = new LayeredView(radarMapViewAdapter);
+            glassPaneView.pushView(new StPView(radarMapViewAdapter, guiInteractionManager));
+            rootView.pushView(glassPaneView);
+
             this.addComponentListener(new ViewerCenteringListener(radarMapViewAdapter));
             this.addMouseWheelListener(new MouseZoomListener(radarMapViewAdapter));
             final MouseInteractionManager interactionManager = new MouseInteractionManager(rootView);

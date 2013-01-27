@@ -32,6 +32,7 @@
  */
 package de.knewcleus.openradar.gui.setup;
 
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileReader;
@@ -48,16 +49,17 @@ import java.util.TreeMap;
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
 import de.knewcleus.fgfs.navdata.impl.Glideslope;
-import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.MarkerBeacon;
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.Helipad;
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.status.radio.Radio;
 import de.knewcleus.openradar.gui.status.radio.RadioFrequency;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
+import de.knewcleus.openradar.view.glasspane.StPView;
 import de.knewcleus.openradar.view.navdata.INavPointListener;
 
 /**
@@ -102,10 +104,18 @@ public class AirportData implements INavPointListener {
     private Map<String, Boolean> toggleObjectsMap = new HashMap<String, Boolean>();
 
     private NavaidDB navaidDB = new NavaidDB();
+    private StPView directionMessageView;
     
     public AirportData() {
     }
 
+    public synchronized void setDirectionMessageView(StPView dmv) {
+        this.directionMessageView = dmv;
+    }
+    
+    public synchronized StPView getDriectionMessageView() {
+        return directionMessageView;
+    }
     public String getAirportCode() {
         return airportCode;
     }
@@ -483,5 +493,10 @@ public class AirportData implements INavPointListener {
     
     public NavaidDB getNavaidDB() { 
         return navaidDB;
+    }
+
+    public void updateMouseRadarMoved(GuiRadarContact contact, MouseEvent e) {
+        directionMessageView.updateMouseRadarMoved(contact,e);
+        
     }
 }

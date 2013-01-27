@@ -105,7 +105,7 @@ public class RadarManager {
             JLabel lSource = (JLabel)e.getSource();
             
             if(lSource.getName().equals("FIX") || lSource.getName().equals("NDB") || lSource.getName().equals("VOR") || lSource.getName().equals("CIRCLES") 
-                    || lSource.getName().equals("APT") || lSource.getName().equals("PPN") || lSource.getName().equals("GSH")) {
+                    || lSource.getName().equals("APT") || lSource.getName().equals("PPN") || lSource.getName().equals("GSH") || lSource.getName().equals("STP")) {
                 String objectName = lSource.getName();
                 if(e.getButton()==1) {
                     backend.toggleRadarObjectFilter(objectName);

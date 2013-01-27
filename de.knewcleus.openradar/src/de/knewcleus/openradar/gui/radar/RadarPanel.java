@@ -65,6 +65,7 @@ public class RadarPanel extends JPanel {
     private javax.swing.JLabel lbApt;
     private javax.swing.JLabel lbPPN;
     private javax.swing.JLabel lbGsH;
+    private javax.swing.JLabel lbStP;
     
     private JPanel zoomPanel;
     private javax.swing.JLabel lbZoomGround;
@@ -99,6 +100,7 @@ public class RadarPanel extends JPanel {
         lbApt = new javax.swing.JLabel();
         lbPPN = new javax.swing.JLabel();
         lbGsH = new javax.swing.JLabel();
+        lbStP = new javax.swing.JLabel();
         
         lbZoomGround = new javax.swing.JLabel();
         lbZoomTower = new javax.swing.JLabel();
@@ -164,7 +166,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 3);
         filterPanel.add(lbFIX, gridBagConstraints);
         
         lbNDB.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
@@ -176,7 +178,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
         filterPanel.add(lbNDB, gridBagConstraints);
 
         lbVOR.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
@@ -188,20 +190,8 @@ public class RadarPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
         filterPanel.add(lbVOR, gridBagConstraints);
-        
-        lbCircles.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbCircles.setText("CIRC");
-        lbCircles.setName("CIRCLES");
-        lbCircles.setToolTipText("Toggle display of distance circles around airport");
-        lbCircles.setForeground(java.awt.Color.white);
-        lbCircles.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        filterPanel.add(lbCircles, gridBagConstraints);
         
         lbApt.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbApt.setText("APT");
@@ -210,11 +200,35 @@ public class RadarPanel extends JPanel {
         lbApt.setForeground(java.awt.Color.white);
         lbApt.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
         filterPanel.add(lbApt, gridBagConstraints);
         
+        lbCircles.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
+        lbCircles.setText("CIRC");
+        lbCircles.setName("CIRCLES");
+        lbCircles.setToolTipText("Toggle display of distance circles around airport");
+        lbCircles.setForeground(java.awt.Color.white);
+        lbCircles.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
+        filterPanel.add(lbCircles, gridBagConstraints);
+        
+        lbGsH.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
+        lbGsH.setText("GSH");
+        lbGsH.setName("GSH");
+        lbGsH.setToolTipText("Toggle display of Glide slope heights");
+        lbGsH.setForeground(java.awt.Color.white);
+        lbGsH.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
+        filterPanel.add(lbGsH, gridBagConstraints);
+ 
         lbPPN.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbPPN.setText("PPN");
         lbPPN.setName("PPN");
@@ -222,28 +236,28 @@ public class RadarPanel extends JPanel {
         lbPPN.setForeground(java.awt.Color.white);
         lbPPN.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        filterPanel.add(lbPPN, gridBagConstraints);
- 
-        lbGsH.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbGsH.setText("GsH");
-        lbGsH.setName("GSH");
-        lbGsH.setToolTipText("Toggle display of Glide slope heights");
-        lbGsH.setForeground(java.awt.Color.white);
-        lbGsH.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        filterPanel.add(lbGsH, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
+        filterPanel.add(lbPPN, gridBagConstraints);
  
+        lbStP.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
+        lbStP.setText("StP");
+        lbStP.setName("STP");
+        lbStP.setToolTipText("Toggle display of mouse pointer data");
+        lbStP.setForeground(java.awt.Color.white);
+        lbStP.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
+        filterPanel.add(lbStP, gridBagConstraints);
+
         JPanel filterSpace = new JPanel();
         filterSpace.setLayout(new java.awt.GridBagLayout());
         filterSpace.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx=1;
@@ -362,5 +376,6 @@ public class RadarPanel extends JPanel {
         setObjecFilter(lbApt,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("APT"));
         setObjecFilter(lbPPN,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("PPN"));
         setObjecFilter(lbGsH,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("GSH"));
+        setObjecFilter(lbStP,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STP"));
     }
 }

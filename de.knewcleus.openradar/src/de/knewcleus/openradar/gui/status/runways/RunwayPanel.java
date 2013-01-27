@@ -280,7 +280,7 @@ public class RunwayPanel extends JPanel {
         for(JCheckBox cb : cbList) {
             cb.repaint();
         }
-        guiInteractionManager.getRadarBackend().repaint();
+        guiInteractionManager.getRadarBackend().forceRepaint();
     }
 
     public void toggleActiveRunwayVisibility() {

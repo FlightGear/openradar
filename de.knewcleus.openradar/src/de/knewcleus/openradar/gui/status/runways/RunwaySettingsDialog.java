@@ -795,7 +795,7 @@ public class RunwaySettingsDialog extends JFrame {
             if (permanent)
                 data.storeAirportData(master);
             rwd.setRepaintNeeded(true);
-            master.getRadarBackend().repaint();
+            master.getRadarBackend().forceRepaint();
         } catch (Exception e) {
             this.showData(lbRWNumber.getText());
         }
@@ -839,7 +839,7 @@ public class RunwaySettingsDialog extends JFrame {
                 }
             }
             master.getDataRegistry().storeAirportData(master);
-            master.getRadarBackend().repaint();
+            master.getRadarBackend().forceRepaint();
         }
 
         private String getNextRw() {

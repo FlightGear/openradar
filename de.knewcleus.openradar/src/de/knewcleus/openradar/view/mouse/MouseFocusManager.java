@@ -156,6 +156,7 @@ public class MouseFocusManager extends MouseAdapter {
 	    GuiRadarContact contact = guiInteractionManager.getRadarContactManager().getSelectedContact();
 	    if(contact!=null) {
 	        guiInteractionManager.getStatusManager().updateMouseRadarMoved(contact,e);
+	        guiInteractionManager.getDataRegistry().updateMouseRadarMoved(contact,e);
 	    }
 	}
 
