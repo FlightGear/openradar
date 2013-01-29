@@ -94,7 +94,7 @@ public class NDBSymbol extends AViewObject {
         if(scale>30) scale=30;
         
         path = new Path2D.Double();
-            path.append(new Rectangle2D.Double((int)displayPosition.getX()-scale/2, (int)displayPosition.getY()-scale/2, scale,scale), false);
+        path.append(new Rectangle2D.Double((int)displayPosition.getX()-scale/2, (int)displayPosition.getY()-scale/2, scale,scale), false);
     }
 
     

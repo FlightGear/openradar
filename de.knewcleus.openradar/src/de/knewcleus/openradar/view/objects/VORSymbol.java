@@ -93,8 +93,14 @@ public class VORSymbol extends AViewObject {
             this.color = defaultColor;
         }
 
+        int scale = (int)mapViewAdapter.getLogicalScale();
+        scale = scale==0 ? 1 : scale; 
+        scale = 30 * 10/scale;
+        if(scale<20) scale=20;
+        if(scale>30) scale=30;
+        
         path = new Path2D.Double();
-        path.append(new Rectangle2D.Double(displayPosition.getX(), displayPosition.getY(), 50d, 50d), false);
+        path.append(new Rectangle2D.Double(displayPosition.getX()- scale/2, displayPosition.getY()- scale/2, scale, scale), false);
     }
 
     @Override
