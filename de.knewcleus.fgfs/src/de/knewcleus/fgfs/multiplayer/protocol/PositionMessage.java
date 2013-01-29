@@ -300,7 +300,7 @@ public class PositionMessage implements IMultiplayerMessage {
 				System.out.println(id+" "+(descriptor!=null ? descriptor.getPropertyName()+" ("+descriptor.getType()+")": "unknown"));
 				if (descriptor==null) {
 					//logger.warning("Unknown property id "+id+", skipping rest of properties: "+toString());
-//                    break;
+				    // unknown ID this is mostly an error in protocol. I think
 					//id=inputStream.readInt();System.out.println(id);
 					// inputStream.skip(0);
 					continue;
