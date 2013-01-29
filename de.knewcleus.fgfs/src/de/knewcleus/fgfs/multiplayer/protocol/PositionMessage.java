@@ -36,6 +36,7 @@ package de.knewcleus.fgfs.multiplayer.protocol;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -181,7 +182,7 @@ public class PositionMessage implements IMultiplayerMessage {
 	public void decode(XDRInputStream inputStream) throws MultiplayerException {
 		try {
 			model=MPUtils.readCString(inputStream, MAX_MODEL_NAME_LEN);
-
+			System.out.println(model);
 			time=inputStream.readDouble();
 			lag=inputStream.readDouble();
             //System.out.println(time+" "+lag);
@@ -296,11 +297,14 @@ public class PositionMessage implements IMultiplayerMessage {
 				int id=inputStream.readInt();
 				if(id==0) continue; // padding
 				PropertyDescriptor descriptor=PropertyRegistry.getInstance().getByID(id);
+				System.out.println(id+" "+(descriptor!=null ? descriptor.getPropertyName()+" ("+descriptor.getType()+")": "unknown"));
 				if (descriptor==null) {
-				//	logger.warning("Unknown property id "+id+", skipping rest of properties: "+toString());
-                    break;
-//					inputStream.skip(4);
-//					continue;
+					//logger.warning("Unknown property id "+id+", skipping rest of properties: "+toString());
+//                    break;
+					//id=inputStream.readInt();System.out.println(id);
+					// inputStream.skip(0);
+					continue;
+				    //descriptor = new PropertyDescriptor(id, "unknown", PropertyType.INT);
 				}
 				logger.finer("Reading property "+descriptor.getPropertyID()+", name="+descriptor.getPropertyName());
 
