@@ -345,7 +345,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
         String min = timeMinutes==null ? "n/a" : Long.toString(timeMinutes);
         
-        lbPtS.setText(dTP+" / "+dTS+"     "+dist+" miles     "+min+" min.");
+        lbPtS.setText(dTP+"° / "+dTS+"°     "+dist+" NM     "+min+" min.");
     }
 
     public String getActiveRunways() {
