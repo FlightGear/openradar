@@ -113,7 +113,7 @@ public class AirportData implements INavPointListener {
         this.directionMessageView = dmv;
     }
     
-    public synchronized StPView getDriectionMessageView() {
+    public synchronized StPView getDirectionMessageView() {
         return directionMessageView;
     }
     public String getAirportCode() {
