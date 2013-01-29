@@ -306,7 +306,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     @Override
     public void registerNewMetar(MetarData metar) {
         StringBuilder sb = new StringBuilder();
-        sb.append("W: ");
+        sb.append("Wind: ");
         if(metar.getWindDirection()==-1) {
             sb.append("VRB");
         } else {
@@ -328,10 +328,10 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         }
         
         lbWind.setText(sb.toString());
-        lbPressure.setText(String.format("P: %2.2f / %4.1f", metar.getPressureInHG(),metar.getPressureHPa()));
+        lbPressure.setText(String.format("QNH: %2.2f / %4.1f", metar.getPressureInHG(),metar.getPressureHPa()));
         lbWind.setToolTipText(metar.getMetarBaseData());
         lbPressure.setToolTipText(metar.getMetarBaseData());
-        lbVisibility.setText(metar.isCavok()?"CAVOK":"V: "+metar.getVisibility()+" "+metar.getVisibilityUnit());
+        lbVisibility.setText(metar.isCavok()?"CAVOK":"Vis: "+metar.getVisibility()+" "+metar.getVisibilityUnit());
         lbVisibility.setToolTipText(metar.getMetarBaseData());
 
         runwayPanel.refreshRunways(metar);
@@ -345,7 +345,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
         String min = timeMinutes==null ? "n/a" : Long.toString(timeMinutes);
         
-        lbPtS.setText(dTP+" / "+dTS+"     "+dist+" miles     "+min+" min.");
+        lbPtS.setText(dTP+"° / "+dTS+"°     "+dist+" NM     "+min+" min.");
     }
 
     public String getActiveRunways() {

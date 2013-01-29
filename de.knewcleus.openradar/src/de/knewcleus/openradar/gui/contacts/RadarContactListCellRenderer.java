@@ -57,14 +57,12 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 public class RadarContactListCellRenderer extends JComponent implements ListCellRenderer<GuiRadarContact> {
     private static final long serialVersionUID = 4683696532302543565L;
 
-    private GuiMasterController master;
+//    private GuiMasterController master;
     
     private JPanel spaceLEFT = null;
     private JPanel strip = null;
-    private JLabel lbFrequency = null;
     private JLabel lbCallSign = null;
     private JLabel lbRadarDistance = null;
-    private JLabel lbRadarBearing = null;
     private JLabel lbHeading = null;
     private JLabel lbAircraft = null;
     private JLabel lbFlightLevel= null;
@@ -76,10 +74,8 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
 
     private GridBagConstraints stripConstraints;
     private GridBagConstraints spaceRightConstraints;
-    private GridBagConstraints lbFrequencyConstraints;
     private GridBagConstraints lbCallSignConstraints;
     private GridBagConstraints lbRadarDistanceConstraints;
-    private GridBagConstraints lbRadarBearingConstraints;
     private GridBagConstraints lbHeadingConstraints;
     private GridBagConstraints lbAircraftConstraints;
     private GridBagConstraints lbFlightLevelConstraints;
@@ -106,7 +102,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
 
     
     public RadarContactListCellRenderer(GuiMasterController master) {
-        this.master=master;
+//        this.master=master;
         this.setLayout(new GridBagLayout());
 
         spaceLEFT = new JPanel();
@@ -166,32 +162,19 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         lbAircraftConstraints.insets = new java.awt.Insets(4, 4, 0, 5);
         strip.add(lbAircraft, lbAircraftConstraints);
 
-        lbRadarBearing = new JLabel();
-        lbRadarBearing.setFont(defaultFont);
-        lbRadarBearing.setForeground(java.awt.Color.blue);
-        lbRadarBearing.setPreferredSize(new Dimension(160,defaultFont.getSize()+2));
-        lbRadarBearing.setOpaque(true);
-        lbRadarBearingConstraints = new GridBagConstraints();
-        lbRadarBearingConstraints.gridx = 2;
-        lbRadarBearingConstraints.gridy = 0;
-        lbRadarBearingConstraints.gridwidth = 1;
-        lbRadarBearingConstraints.weightx=0;
-        lbRadarBearingConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        lbRadarBearingConstraints.insets = new java.awt.Insets(4, 4, 0, 5);
-        strip.add(lbRadarBearing, lbRadarBearingConstraints);
+        lbHeading = new JLabel(" ");
+        lbHeading.setFont(boldFont);
+        lbHeading.setForeground(java.awt.Color.blue);
+        lbHeading.setOpaque(true);
+        lbHeadingConstraints = new GridBagConstraints();
+        lbHeadingConstraints.gridx = 4;
+        lbHeadingConstraints.gridy = 0;
+        lbHeadingConstraints.weightx = 1;
+        lbHeadingConstraints.fill = GridBagConstraints.HORIZONTAL;
+        lbHeadingConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        lbHeadingConstraints.insets = new java.awt.Insets(4, 4, 0, 5);
+        strip.add(lbHeading, lbHeadingConstraints);
         
-        lbFrequency = new JLabel();
-        lbFrequency.setFont(defaultFont);
-        lbFrequency.setForeground(java.awt.Color.blue);
-        lbFrequency.setPreferredSize(new Dimension(35,defaultFont.getSize()+2));
-        lbFrequency.setOpaque(true);
-        lbFrequencyConstraints = new GridBagConstraints();
-        lbFrequencyConstraints.gridx = 3;
-        lbFrequencyConstraints.gridy = 0;
-        lbFrequencyConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        lbFrequencyConstraints.insets = new java.awt.Insets(4,0, 0, 5);
-        strip.add(lbFrequency, lbFrequencyConstraints);
-
         // second line
 
         lowerArea = new JPanel();
@@ -222,14 +205,25 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         lbRadarDistanceConstraints.insets = new java.awt.Insets(0, 4, 4, 0);
         lowerArea.add(lbRadarDistance, lbRadarDistanceConstraints);
         
+        lbFlightLevel = new JLabel();
+        lbFlightLevel.setFont(boldFont);
+        lbFlightLevel.setForeground(java.awt.Color.blue);
+        lbFlightLevel.setOpaque(true);
+        lbFlightLevelConstraints = new GridBagConstraints();
+        lbFlightLevelConstraints.gridx = 1;
+        lbFlightLevelConstraints.gridy = 0;
+        lbFlightLevelConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        lbFlightLevelConstraints.insets = new java.awt.Insets(0, 20, 4, 0);
+        lowerArea.add(lbFlightLevel, lbFlightLevelConstraints);
+     
         lbTrueSpeed = new JLabel();
         lbTrueSpeed.setFont(boldFont);
         lbTrueSpeed.setForeground(java.awt.Color.blue);
         lbTrueSpeedConstraints = new GridBagConstraints();
-        lbTrueSpeedConstraints.gridx = 1;
+        lbTrueSpeedConstraints.gridx = 2;
         lbTrueSpeedConstraints.gridy = 0;
         lbTrueSpeedConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        lbTrueSpeedConstraints.insets = new java.awt.Insets(0, 40, 4, 0);
+        lbTrueSpeedConstraints.insets = new java.awt.Insets(0, 20, 4, 0);
         lowerArea.add(lbTrueSpeed, lbTrueSpeedConstraints);
         
         lbGroundSpeed = new JLabel();
@@ -237,39 +231,13 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         lbGroundSpeed.setForeground(java.awt.Color.blue);
         lbGroundSpeed.setOpaque(true);
         lbGroundSpeedConstraints = new GridBagConstraints();
-        lbGroundSpeedConstraints.gridx = 2;
+        lbGroundSpeedConstraints.gridx = 3;
         lbGroundSpeedConstraints.gridy = 0;
-        lbGroundSpeedConstraints.weightx = 0;
+        lbGroundSpeedConstraints.weightx = 1;
+        lbGroundSpeedConstraints.fill = GridBagConstraints.HORIZONTAL;
         lbGroundSpeedConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        lbGroundSpeedConstraints.insets = new java.awt.Insets(0, 8, 4, 0);
+        lbGroundSpeedConstraints.insets = new java.awt.Insets(0, 8, 4, 5);
         lowerArea.add(lbGroundSpeed, lbGroundSpeedConstraints);
-
-        
-        lbFlightLevel = new JLabel();
-        lbFlightLevel.setFont(boldFont);
-        lbFlightLevel.setForeground(java.awt.Color.blue);
-//        lbFlightLevel.setPreferredSize(new Dimension(45,defaultFont.getSize()+2));
-        lbFlightLevel.setOpaque(true);
-        lbFlightLevelConstraints = new GridBagConstraints();
-        lbFlightLevelConstraints.gridx = 3;
-        lbFlightLevelConstraints.gridy = 0;
-        lbFlightLevelConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        lbFlightLevelConstraints.insets = new java.awt.Insets(0, 25, 4, 5);
-        lowerArea.add(lbFlightLevel, lbFlightLevelConstraints);
-
-        lbHeading = new JLabel(" ");
-        lbHeading.setFont(boldFont);
-        lbHeading.setForeground(java.awt.Color.blue);
-        lbHeading.setOpaque(true);
-        lbHeadingConstraints = new GridBagConstraints();
-        lbHeadingConstraints.gridx = 4;
-        lbHeadingConstraints.gridy = 0;
-        lbHeadingConstraints.weightx = 1;
-        lbHeadingConstraints.fill = GridBagConstraints.HORIZONTAL;
-        lbHeadingConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        lbHeadingConstraints.insets = new java.awt.Insets(0, 5, 4, 5);
-        lowerArea.add(lbHeading, lbHeadingConstraints);
-        
 
         // third line
         
@@ -324,17 +292,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
 
         lbCallSign.setText(value.getCallSign());
         lbFlightLevel.setText(value.getFlightLevel());
-        String atcFrequencyList = master.getRadioManager().getActiveFrequencyList();
-        if(value.getFrequency()!=null) {
-            if (atcFrequencyList!=null && atcFrequencyList.contains(value.getFrequency())) {        
-                lbFrequency.setText(value.getFrequency());
-                lbFrequency.setForeground(Color.blue);
-            } else {
-                lbFrequency.setText("");
-                lbFrequency.setForeground(Color.black);
-            }
-        }
-        lbRadarDistance.setText(value.getRadarContactDistance());
+        lbRadarDistance.setText(value.getRadarContactDistance()+" NM");
         // lbRadarBearing.setText("@"+value.getRadarContactDirection()+"°");
         lbHeading.setText(value.getMagnCourse());
         if(value.isNeglect()) {
@@ -392,12 +350,6 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         // this.lbRadarDistance.setFont(font);
         this.lbRadarDistance.setForeground(foreground);
         this.lbRadarDistance.setBackground(background);
-        // this.lbRadarBearing.setFont(font);
-        this.lbRadarBearing.setForeground(foreground);
-        this.lbRadarBearing.setBackground(background);
-        // this.lbOperation.setFont(font);
-        this.lbFrequency.setForeground(foreground);
-        this.lbFrequency.setBackground(background);
         
         // this.lbHeading.setFont(activeFont);
         this.lbHeading.setForeground(foreground);
