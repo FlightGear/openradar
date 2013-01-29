@@ -147,8 +147,8 @@ public class StPView implements IBoundedView, INotificationListener {
             String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
             String min = timeMinutes==null ? "n/a" : Long.toString(timeMinutes);
             
-            String textLine1 = String.format("%s / %2s",dTP,dTS);
-            String textLine2 = String.format("%1s %2s", dist,min);
+            String textLine1 = String.format("%s° / %2s°",dTP,dTS);
+            String textLine2 = String.format("%1s NM,%2s min", dist,min);
             boundsLine1 = fontMetrics.getStringBounds(textLine1, g2d);
             boundsLine2 = fontMetrics.getStringBounds(textLine2, g2d);
             boundsText = new Rectangle2D.Double(boundsLine1.getX(), boundsLine1.getY()-boundsLine1.getHeight(), Math.max(boundsLine1.getWidth(), boundsLine2.getWidth()), boundsLine1.getHeight()+boundsLine2.getHeight());

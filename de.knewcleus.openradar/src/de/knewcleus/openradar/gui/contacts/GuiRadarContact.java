@@ -254,7 +254,7 @@ public class GuiRadarContact {
     }
     
     public String getFlightLevel() {
-        return String.format("%03.0f", getElevationFt()/100);
+        return String.format("FL%03.0f", getElevationFt()/100);
     }
     
     public synchronized String getGroundSpeed() {
