@@ -48,8 +48,7 @@ public class StdRouteEllipse extends AStdRouteElement {
     private final double inboundHeading;
     private final boolean right;
     
-    public StdRouteEllipse(IMapViewerAdapter mapViewAdapter, Point2D geoReferencPoint, double inboundHeading, boolean right, int strikeWidth) {
-        
+    public StdRouteEllipse(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous, String geoReferencPoint, String inboundHeading, String width, String right, String arrows, String minHeight, String maxHeight, String misapHeight, String stroke, String lineWidth)
         super(mapViewAdapter, geoReferencPoint);
         this.inboundHeading = inboundHeading;
         this.right = right;
@@ -77,5 +76,11 @@ public class StdRouteEllipse extends AStdRouteElement {
         path.closePath();
         g2d.draw(path);
         return path.getBounds2D();
+    }
+
+    @Override
+    public Point2D getEndPoint() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

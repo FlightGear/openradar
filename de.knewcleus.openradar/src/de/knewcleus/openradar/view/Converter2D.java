@@ -90,4 +90,20 @@ public abstract class Converter2D {
         return d;
     }
 
+    public static double getDirection (Point2D point1, Point2D point2) {
+        double dx = point1.getX()-point2.getX();
+        double dy = point2.getY()-point1.getY();
+
+        double distance = (double)point2.distance(point1);
+        Long angle = null;
+        if(distance!=0) {
+            if(dx>0 && dy>0) angle = Math.round(Math.asin(dx/distance)/2d/Math.PI*360d); 
+            if(dx>0 && dy<0) angle = 180-Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
+            if(dx<0 && dy<0) angle = 180+-1*Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
+            if(dx<0 && dy>0) angle = 360+Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
+        }
+        long degrees = angle!=null ? ( angle<0 ? angle+360 : angle) : -1;
+        
+        return degrees;
+    }
 }

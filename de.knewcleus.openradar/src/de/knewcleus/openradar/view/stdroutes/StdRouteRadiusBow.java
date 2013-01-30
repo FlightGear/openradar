@@ -33,9 +33,9 @@
 package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.QuadCurve2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.Units;
@@ -47,8 +47,9 @@ public class StdRouteRadiusBow extends AStdRouteElement {
     private final double radius;
     private final double beginAngle;
     private final double endAngle;
+    private Point2D endPoint=null;
     
-    public StdRouteRadiusBow(IMapViewerAdapter mapViewAdapter, Point2D geoReferencPoint, double radius, double beginAngle, double endAngle, int strikeWidth) {
+    public StdRouteRadiusBow(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous, String center, String radius, String beginAngle, String endAngle, String lineWidth, String stroke) {
 
         super(mapViewAdapter, geoReferencPoint);
         this.radius = radius;
@@ -59,14 +60,17 @@ public class StdRouteRadiusBow extends AStdRouteElement {
     @Override
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
+        Point2D center = getDisplayPoint(geoReferencePoint);
         double radiusDots = Converter2D.getFeetToDots(radius * Units.NM / Units.FT, mapViewAdapter);
-
-        Point2D bowStartPoint = Converter2D.getMapDisplayPoint(getDisplayPoint(geoReferencePoint), beginAngle, radiusDots);
-        Point2D bowControlPoint = Converter2D.getMapDisplayPoint(getDisplayPoint(geoReferencePoint), (beginAngle + endAngle) / 2, radiusDots * 1.2);
-        Point2D bowEndPoint = Converter2D.getMapDisplayPoint(getDisplayPoint(geoReferencePoint), endAngle, radiusDots);
-
+        endPoint = mapViewAdapter.getProjection().toGeographical(mapViewAdapter.getDeviceToLogicalTransform().transform(Converter2D.getMapDisplayPoint(center, endAngle, radiusDots),null));
+                
         Path2D path = new Path2D.Double();
-        path.append(new QuadCurve2D.Double(bowStartPoint.getX(),bowStartPoint.getY(),bowControlPoint.getX(),bowControlPoint.getY(),bowEndPoint.getX(),bowEndPoint.getY()),false);
+        path.append(new Arc2D.Double(center.getX(), center.getY(),radiusDots,radiusDots,beginAngle,endAngle-beginAngle,Arc2D.OPEN), false);
         return path.getBounds2D();
+    }
+
+    @Override
+    public Point2D getEndPoint() {
+        return endPoint;
     }
 }

@@ -226,7 +226,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         lbTrueSpeedConstraints.gridx = 2;
         lbTrueSpeedConstraints.gridy = 0;
         lbTrueSpeedConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        lbTrueSpeedConstraints.insets = new java.awt.Insets(0, 30, 4, 0);
+        lbTrueSpeedConstraints.insets = new java.awt.Insets(0, 20, 4, 0);
         lowerArea.add(lbTrueSpeed, lbTrueSpeedConstraints);
         
         lbGroundSpeed = new JLabel();
@@ -238,7 +238,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         lbGroundSpeedConstraints.gridy = 0;
         lbGroundSpeedConstraints.weightx = 0;
         lbGroundSpeedConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        lbGroundSpeedConstraints.insets = new java.awt.Insets(0, 10, 4, 5);
+        lbGroundSpeedConstraints.insets = new java.awt.Insets(0, 8, 4, 5);
         lowerArea.add(lbGroundSpeed, lbGroundSpeedConstraints);
 
         

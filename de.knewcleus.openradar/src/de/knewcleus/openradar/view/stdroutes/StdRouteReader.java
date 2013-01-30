@@ -88,7 +88,7 @@ public class StdRouteReader {
                 String activeStartRunways=null;
                 String navaids=null;
                 AStdRouteElement previous = null;
-                StdRoute route = new StdRoute(name);
+                StdRoute route = new StdRoute(data, name);
                 for (Element element : sublist) {
                     if(element.getName().equalsIgnoreCase("activeLandingRunways")) {
                         route.setActiveLandingRunways(element.getText());
@@ -105,8 +105,8 @@ public class StdRouteReader {
                         String endOffset = element.getAttributeValue("endOffset");
                         String stroke = element.getAttributeValue("stroke");
                         String lineWidth = element.getAttributeValue("lineWidth");
-                        String arrows = element.getAttributeValue("lineWidth");
-                        StdRouteLine line = new StdRouteLine(this,mapViewAdapter,previous,begin,end,angle,length,beginOffset,stroke,lineWidth,arrows);
+                        String arrows = element.getAttributeValue("arrows");
+                        StdRouteLine line = new StdRouteLine(route,mapViewAdapter,previous,begin,end,angle,length,beginOffset,endOffset,stroke,lineWidth,arrows);
                         previous = line;
                         route.addSegment(line);
                      } else if(element.getName().equalsIgnoreCase("bow")) {
@@ -116,7 +116,7 @@ public class StdRouteReader {
                          String endAngle = element.getAttributeValue("endAngle");
                          String stroke = element.getAttributeValue("stroke");
                          String lineWidth = element.getAttributeValue("lineWidth");
-                         StdRouteRadiusBow bow = new StdRouteRadiusBow(this,mapViewAdapter,previous,center,radius,beginAngle,endAngle,stroke,lineWidth);
+                         StdRouteRadiusBow bow = new StdRouteRadiusBow(route,mapViewAdapter,previous,center,radius,beginAngle,endAngle,stroke,lineWidth);
                          previous = bow;
                          route.addSegment(bow);
                      } else if(element.getName().equalsIgnoreCase("curve")) {
@@ -125,7 +125,7 @@ public class StdRouteReader {
                          String controlPoint = element.getAttributeValue("controlPoint");
                          String stroke = element.getAttributeValue("stroke");
                          String lineWidth = element.getAttributeValue("lineWidth");
-                         StdRouteBow bow = new StdRouteBow(this,mapViewAdapter,previous,begin,end,controlPoint,stroke,lineWidth);
+                         StdRouteBow bow = new StdRouteBow(route,mapViewAdapter,previous,begin,end,controlPoint,stroke,lineWidth);
                          previous = bow;
                          route.addSegment(bow);
                      } else if(element.getName().equalsIgnoreCase("loop")) {
@@ -139,9 +139,10 @@ public class StdRouteReader {
                          String misapHeight = element.getAttributeValue("misapHeight");
                          String stroke = element.getAttributeValue("stroke");
                          String lineWidth = element.getAttributeValue("lineWidth");
-                         StdRouteEllipse ellipse = new StdRouteEllipse(this,mapViewAdapter,previous,navpoint,inboundHeading,width,right,arrows,minHeight,maxHeight,misapHeight,stroke,lineWidth);
+                         StdRouteEllipse ellipse = new StdRouteEllipse(route,mapViewAdapter,previous,navpoint,inboundHeading,width,right,arrows,minHeight,maxHeight,misapHeight,stroke,lineWidth);
                          previous = ellipse;
                          route.addSegment(ellipse);
+                         // todo do something with it!
                      } 
                 }
             }

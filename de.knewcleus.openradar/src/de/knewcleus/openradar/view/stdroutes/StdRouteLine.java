@@ -40,6 +40,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.fgfs.Units;
+import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 /**
  * line
@@ -61,7 +63,7 @@ public class StdRouteLine extends AStdRouteElement {
 
     private final Point2D geoStartPoint;
     private final Point2D geoEndPoint;
-    private final Double angle;
+    private Double angle;
     private final Double length;
     private final Double beginOffSet;
     private final Double endOffSet;
@@ -69,7 +71,9 @@ public class StdRouteLine extends AStdRouteElement {
     private final Float lineWidth;
     private final boolean arrows;
     
-    public StdRouteLine(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous, String begin, String end, String angle, String length, String beginOffset, String endOffset, String stroke, String lineWidth, String arrows) {
+    public StdRouteLine(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous, 
+                        String begin, String end, String angle, String length, String beginOffset, String endOffset, 
+                        String stroke, String lineWidth, String arrows) {
         super(mapViewAdapter, route.getPoint(begin,previous));
         
         this.geoStartPoint = route.getPoint(begin,previous);
@@ -111,8 +115,33 @@ public class StdRouteLine extends AStdRouteElement {
 
     @Override
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
-        Shape shape = new Line2D.Double(getDisplayPoint(geoStartPoint), getDisplayPoint(geoEndPoint));
+        
+        Point2D startPoint = getDisplayPoint(geoStartPoint);
+        Point2D endPoint = null;
+        if(geoEndPoint!=null) {
+            endPoint = getDisplayPoint(geoEndPoint);
+        } else {
+            endPoint = Converter2D.getMapDisplayPoint(startPoint, angle, Converter2D.getFeetToDots(length*Units.NM/Units.FT, mapViewAdapter));
+        }
+
+        if(beginOffSet!=null) {
+            angle = angle!=null ? angle : Converter2D.getDirection(startPoint, endPoint); 
+            startPoint = Converter2D.getMapDisplayPoint(startPoint, angle, Converter2D.getFeetToDots(beginOffSet*Units.NM/Units.FT, mapViewAdapter));
+        }
+        
+        if(endOffSet!=null) {
+            angle = angle!=null ? angle : (long)Converter2D.getDirection(startPoint, endPoint); ; 
+            startPoint = Converter2D.getMapDisplayPoint(endPoint, angle-180, Converter2D.getFeetToDots(endOffSet*Units.NM/Units.FT, mapViewAdapter));
+        }
+        
+        Shape shape = new Line2D.Double(startPoint, endPoint);
+        Stroke origStroke = g2d.getStroke();
+        g2d.setStroke(stroke);
         g2d.draw(shape);
+        g2d.setStroke(origStroke);
+        
+        // todo paint arrows
+        
         return shape.getBounds2D();
     }
 

@@ -55,8 +55,8 @@ public class StdRouteBow extends AStdRouteElement {
     private final Point2D geoEndPoint;
     private final Point2D geoControlPoint;
     
-    public StdRouteBow(IMapViewerAdapter mapViewAdapter, Point2D geoStartPoint, Point2D geoEndPoint, Point2D geoControlPoint, int strikeWidth) {
-        
+    public StdRouteBow(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous, String geoStartPoint, String geoEndPoint, String geoControlPoint,String stroke, String lineWidth) {
+                                                                                                
         super(mapViewAdapter, geoStartPoint);
         this.geoEndPoint = geoEndPoint;
         this.geoControlPoint = geoControlPoint;
@@ -74,6 +74,12 @@ public class StdRouteBow extends AStdRouteElement {
         path.append(new QuadCurve2D.Double(bowStartPoint.getX(),bowStartPoint.getY(),bowControlPoint.getX(),bowControlPoint.getY(),bowEndPoint.getX(),bowEndPoint.getY()),false);
         g2d.draw(path);
         return path.getBounds2D();
+    }
+
+    @Override
+    public Point2D getEndPoint() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

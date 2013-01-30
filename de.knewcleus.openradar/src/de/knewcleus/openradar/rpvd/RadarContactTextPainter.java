@@ -105,6 +105,12 @@ public class RadarContactTextPainter {
 //        g2d.setColor(Color.blue);
 //        g2d.draw(displayExtents);
         // create composite for transparency of background
+        double vspeed = trackDisplayState.guiContact.getVerticalSpeedD();
+        String sVspeed = "";
+        if(vspeed<-500) sVspeed = "--";
+        else if(vspeed<-50) sVspeed = "-";
+        else if(vspeed>50) sVspeed = "+"; 
+        else if(vspeed>500) sVspeed = "++";  
         
         String textLine1 = String.format("%s %2s",trackDisplayState.guiContact.getCallSign(),trackDisplayState.guiContact.getMagnCourse());
         String textLine2 = String.format("%1s %2s %3s", trackDisplayState.guiContact.getFlightLevel(),trackDisplayState.guiContact.getAirSpeed(),"");

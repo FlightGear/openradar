@@ -297,11 +297,11 @@ public class GuiRadarContact {
         return aircraft;        
     }
     
-    public double getVerticalSpeedD() {
+    public synchronized double getVerticalSpeedD() {
         double dz = player.getLinearVelocityGlobal().getZ();//player.getGeodeticPosition().getZ() - player.getLastPostion().getZ();
         return getGroundSpeedD()>5 ? dz * 197.9d : 0d;
     }
-    public String getVerticalSpeed() {
+    public synchronized String getVerticalSpeed() {
         return String.format("%+1.0f",getVerticalSpeedD()/100d);
     }
     
@@ -375,20 +375,8 @@ public class GuiRadarContact {
         if(view==null) return -1;
         Point2D apPos = view.convertToDeviceLocation(airportData.getAirportPosition());
         Point2D plPos = getCenterViewCoordinates();
-        double dx = plPos.getX()-apPos.getX();
-        double dy = apPos.getY()-plPos.getY();
-
-        double distance = (double)plPos.distance(apPos);
-        Long angle = null;
-        if(distance!=0) {
-            if(dx>0 && dy>0) angle = Math.round(Math.asin(dx/distance)/2d/Math.PI*360d); 
-            if(dx>0 && dy<0) angle = 180-Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
-            if(dx<0 && dy<0) angle = 180+-1*Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
-            if(dx<0 && dy>0) angle = 360+Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
-        }
-        long degrees = angle!=null ? ( angle<0 ? angle+360 : angle) : -1;
         
-        return degrees;
+        return (long)Converter2D.getDirection(apPos, plPos);
     }
 
     public String getRadarContactDirection() {
