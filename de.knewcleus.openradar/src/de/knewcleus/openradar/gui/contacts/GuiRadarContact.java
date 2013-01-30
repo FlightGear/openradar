@@ -299,7 +299,7 @@ public class GuiRadarContact {
     
     public double getVerticalSpeedD() {
         double dz = player.getLinearVelocityGlobal().getZ();//player.getGeodeticPosition().getZ() - player.getLastPostion().getZ();
-        return getGroundSpeedD()>5 ? dz * 197.9d : 0d;
+        return getGroundSpeedD()>5 ? -1d * dz / Units.FT * 60d : 0d;
     }
     public String getVerticalSpeed() {
         return String.format("%+1.0f",getVerticalSpeedD()/100d);
