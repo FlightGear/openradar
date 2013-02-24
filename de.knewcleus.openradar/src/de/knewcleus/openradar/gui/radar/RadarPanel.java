@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -46,7 +46,7 @@ import de.knewcleus.openradar.gui.Palette;
 
 /**
  * The panel containing the radar components...
- * 
+ *
  * @author Wolfram Wagner
  */
 public class RadarPanel extends JPanel {
@@ -54,27 +54,28 @@ public class RadarPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     private GuiMasterController guiInteractionManager;
-    
+
     private javax.swing.JPanel radarControlBar;
     private RadarMapPanel radarView;
 
     private javax.swing.JLabel lbFIX;
-    private javax.swing.JLabel lbNDB;    
-    private javax.swing.JLabel lbVOR;    
+    private javax.swing.JLabel lbNDB;
+    private javax.swing.JLabel lbVOR;
     private javax.swing.JLabel lbCircles;
     private javax.swing.JLabel lbApt;
     private javax.swing.JLabel lbPPN;
     private javax.swing.JLabel lbGsH;
     private javax.swing.JLabel lbStP;
-    
+    private javax.swing.JLabel lbSTARSID;
+
     private JPanel zoomPanel;
     private javax.swing.JLabel lbZoomGround;
     private javax.swing.JLabel lbZoomTower;
     private javax.swing.JLabel lbZoomApp;
     private javax.swing.JLabel lbZoomSector;
-    
+
     private JTextField tfSearchNavaids;
-    
+
     /**
      * Creates new form RadarPanel
      */
@@ -87,12 +88,12 @@ public class RadarPanel extends JPanel {
     public RadarMapPanel getRadarMapPanel() {
         return radarView;
     }
-    
+
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         radarView = new RadarMapPanel(guiInteractionManager);
-        
+
         lbFIX = new javax.swing.JLabel();
         lbNDB = new javax.swing.JLabel();
         lbVOR = new javax.swing.JLabel();
@@ -101,7 +102,8 @@ public class RadarPanel extends JPanel {
         lbPPN = new javax.swing.JLabel();
         lbGsH = new javax.swing.JLabel();
         lbStP = new javax.swing.JLabel();
-        
+        lbSTARSID = new javax.swing.JLabel();
+
         lbZoomGround = new javax.swing.JLabel();
         lbZoomTower = new javax.swing.JLabel();
         lbZoomApp = new javax.swing.JLabel();
@@ -111,7 +113,7 @@ public class RadarPanel extends JPanel {
         setLayout(new java.awt.GridBagLayout());
         setOpaque(true);
         setBackground(Palette.DESKTOP);
-        
+
         radarView.setBackground(Palette.DESKTOP);
 
         javax.swing.GroupLayout RadarDummyLayout = new javax.swing.GroupLayout(radarView);
@@ -155,8 +157,8 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.weightx=1;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         radarControlBar.add(filterPanel, gridBagConstraints);
-        
-        
+
+
         lbFIX.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbFIX.setText("FIX");
         lbFIX.setName("FIX");
@@ -168,7 +170,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 3);
         filterPanel.add(lbFIX, gridBagConstraints);
-        
+
         lbNDB.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbNDB.setText("NDB");
         lbNDB.setName("NDB");
@@ -192,7 +194,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
         filterPanel.add(lbVOR, gridBagConstraints);
-        
+
         lbApt.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbApt.setText("APT");
         lbApt.setName("APT");
@@ -204,7 +206,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
         filterPanel.add(lbApt, gridBagConstraints);
-        
+
         lbCircles.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbCircles.setText("CIRC");
         lbCircles.setName("CIRCLES");
@@ -216,7 +218,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
         filterPanel.add(lbCircles, gridBagConstraints);
-        
+
         lbGsH.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbGsH.setText("GSH");
         lbGsH.setName("GSH");
@@ -228,7 +230,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
         filterPanel.add(lbGsH, gridBagConstraints);
- 
+
         lbPPN.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbPPN.setText("PPN");
         lbPPN.setName("PPN");
@@ -240,7 +242,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
         filterPanel.add(lbPPN, gridBagConstraints);
- 
+
         lbStP.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbStP.setText("StP");
         lbStP.setName("STP");
@@ -253,19 +255,31 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
         filterPanel.add(lbStP, gridBagConstraints);
 
+        lbSTARSID.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
+        lbSTARSID.setText("STAR/SID");
+        lbSTARSID.setName("STARSID");
+        lbSTARSID.setToolTipText("Toggle display of standard routes");
+        lbSTARSID.setForeground(java.awt.Color.white);
+        lbSTARSID.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
+        filterPanel.add(lbSTARSID, gridBagConstraints);
+
         JPanel filterSpace = new JPanel();
         filterSpace.setLayout(new java.awt.GridBagLayout());
         filterSpace.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
+        gridBagConstraints.gridx = 9;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx=1;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         filterPanel.add(filterSpace, gridBagConstraints);
 
-        
-        
+
+
         zoomPanel = new JPanel();
         zoomPanel.setLayout(new java.awt.GridBagLayout());
         zoomPanel.setOpaque(false);
@@ -344,8 +358,11 @@ public class RadarPanel extends JPanel {
         lbZoomApp.setForeground(Color.white);
         lbZoomSector.setForeground(Color.white);
     }
-    
+
     public void selectFilter(String zoomLevelKey) {
+        if(!guiInteractionManager.getDataRegistry().getNavaidDB().hasRoutes()) {  // show only if there is something to hide
+            lbSTARSID.setVisible(false);
+        }
         // reset
         lbZoomGround.setForeground(Color.white);
         lbZoomTower.setForeground(Color.white);
@@ -355,7 +372,8 @@ public class RadarPanel extends JPanel {
         // set
         for(Component c : zoomPanel.getComponents()) {
             if(zoomLevelKey.equals(c.getName())) {
-              ((JLabel)c).setForeground(Color.blue);
+              ((JLabel)c).setForeground(Palette.DESKTOP_FILTER_SELECTED);
+              ((JLabel)c).setForeground(new Color(100,100,255));
             }
         }
     }
@@ -367,7 +385,7 @@ public class RadarPanel extends JPanel {
             l.setForeground(Color.gray);
         }
     }
-    
+
     public void validateToggles() {
         setObjecFilter(lbFIX,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("FIX"));
         setObjecFilter(lbNDB,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("NDB"));
@@ -377,5 +395,5 @@ public class RadarPanel extends JPanel {
         setObjecFilter(lbPPN,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("PPN"));
         setObjecFilter(lbGsH,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("GSH"));
         setObjecFilter(lbStP,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STP"));
-    }
+        setObjecFilter(lbSTARSID,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STARSID"));    }
 }

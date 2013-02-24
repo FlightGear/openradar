@@ -90,6 +90,9 @@ import de.knewcleus.openradar.view.mouse.MouseFocusManager;
 import de.knewcleus.openradar.view.mouse.MouseInteractionManager;
 import de.knewcleus.openradar.view.navdata.NavPointProvider;
 import de.knewcleus.openradar.view.navdata.SpatialFilter;
+import de.knewcleus.openradar.view.stdroutes.StdRoute;
+import de.knewcleus.openradar.view.stdroutes.StdRouteReader;
+import de.knewcleus.openradar.view.stdroutes.StdRouteView;
 
 /**
  * This class is a prototype for the component showing the radar map.
@@ -244,16 +247,27 @@ public class RadarMapPanel extends JComponent {
             rootView.pushView(airportView);
             setupDialog.setStatus(30, "Reading airport data...");
             navPointProvider.addViews(airportStream);
+
+            final LayeredView routeView = new LayeredView(radarMapViewAdapter);
+            rootView.pushView(routeView);
+            
+            setupDialog.setStatus(60, "Reading navaid data...");
             final LayeredView navSymbolView = new LayeredView(radarMapViewAdapter);
             final NavPointProvider navPointProvider2 = new NavPointProvider(radarMapViewAdapter, navSymbolView, data);
             navPointProvider2.addNavPointListener(guiInteractionManager.getDataRegistry()); 
             rootView.pushView(navSymbolView);
             
-            setupDialog.setStatus(60, "Reading navaid data...");
             navPointProvider2.addViews(navDataStream);
-            
+
             setupDialog.setStatus(80, "Reading fixes data...");
             navPointProvider2.addViews(fixDataStream);
+
+            // read here to have navaid data available
+            StdRouteReader reader = new StdRouteReader(data, radarMapViewAdapter);
+            for(StdRoute route : reader.getStdRoutes()) {
+                routeView.pushView(new StdRouteView(radarMapViewAdapter, route, guiInteractionManager));
+            }
+            
 
             final LayeredView layeredAtcObjectsView = new LayeredView(radarMapViewAdapter);
             layeredAtcObjectsView.pushView(new AtcObjectsView(radarMapViewAdapter,data));

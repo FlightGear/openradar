@@ -172,7 +172,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
 //        lbHeadingConstraints.weightx = 0;
 //        lbHeadingConstraints.fill = GridBagConstraints.HORIZONTAL;
         lbHeadingConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        lbHeadingConstraints.insets = new java.awt.Insets(4, 5, 4, 5);
+        lbHeadingConstraints.insets = new java.awt.Insets(4, 5, 0, 5);
         strip.add(lbHeading, lbHeadingConstraints);
         
         

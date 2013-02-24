@@ -70,7 +70,8 @@ public class StPView implements IBoundedView, INotificationListener {
     private Long degreesToPointer = null;
     private Long degreesToSelection = null;
     private Double distanceMiles = null;
-    private Long timeMinutes = null;
+    private Integer timeMinutes = null;
+    private Integer timeSeconds = null;
     
     protected boolean visible = true;
 
@@ -145,10 +146,10 @@ public class StPView implements IBoundedView, INotificationListener {
             String dTP = degreesToPointer==null ? "n/a" : String.format("%03d",degreesToPointer); 
             String dTS = degreesToSelection==null ? "n/a" : String.format("%03d",degreesToSelection); 
             String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
-            String min = timeMinutes==null ? "n/a" : Long.toString(timeMinutes);
+            String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);;
             
             String textLine1 = String.format("%s° / %2s°",dTP,dTS);
-            String textLine2 = String.format("%1s NM,%2s min", dist,min);
+            String textLine2 = String.format("%1s NM, ETA %2s", dist,min);
             boundsLine1 = fontMetrics.getStringBounds(textLine1, g2d);
             boundsLine2 = fontMetrics.getStringBounds(textLine2, g2d);
             boundsText = new Rectangle2D.Double(boundsLine1.getX(), boundsLine1.getY()-boundsLine1.getHeight(), Math.max(boundsLine1.getWidth(), boundsLine2.getWidth()), boundsLine1.getHeight()+boundsLine2.getHeight());
@@ -222,7 +223,8 @@ public class StPView implements IBoundedView, INotificationListener {
         degreesToSelection = lAngle!=null ? (degreesToPointer<180 ? degreesToPointer+180 : degreesToPointer-180) : null;
         // distances
         distanceMiles = distance*Converter2D.getMilesPerDot(mapViewAdapter);
-        timeMinutes = milesPerHour>10 ? Math.round(60*distanceMiles/(double)milesPerHour) : null;
+        timeMinutes = milesPerHour>10 ? (int)Math.floor(60*distanceMiles/(double)milesPerHour) : null;
+        timeSeconds = milesPerHour>10 ? (int)Math.floor(60*60*distanceMiles/(double)milesPerHour) - timeMinutes * 60 : null;
         
         //    System.out.println("orig "+angle+" vOA: "+vOriginalAngle.getAngleL()+" vW "+vWind.getAngleL()+" result "+lAngle);
         constructBackgroundShapes();

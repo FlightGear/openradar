@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -76,7 +76,7 @@ import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
  * This class manages the radar contacts to be displayed in the front end.
  * Problem here is thread safety: The radar back end updates the contacts
  * frequently and we need to react on users modifications.
- * 
+ *
  * @author Wolfram Wagner
  */
 public class RadarContactController implements ListModel<GuiRadarContact>, ListSelectionListener, IPlayerListener<TargetStatus> {
@@ -87,7 +87,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     private TextManager textManager = new TextManager();
     private AtcMessageDialog atcMessageDialog;
     private ContactSettingsDialog contactSettingsDialog;
-    
+
     // private volatile GuiRadarContact.Operation filterOperation = null;
 
     private volatile GuiRadarContact selectedContact = null;
@@ -282,6 +282,16 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         }
     }
 
+    public void deselectContact() {
+        synchronized (selectedContactLock) {
+            // deselect
+            selectedContact = null;
+            master.getMpChatManager().setSelectedCallSign(null, false);
+            master.getStatusManager().setSelectedCallSign(null);
+            master.setDetails(null);
+        }
+    }
+
     public void select(GuiRadarContact guiRadarContact, boolean force, boolean exlcusive) {
         synchronized (selectedContactLock) {
             if (selectedContact != null) {
@@ -314,7 +324,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     @Override
     public synchronized void playerAdded(TargetStatus player) {
         if (!mapCallSignContact.containsKey(player.getCallsign()) && !mapExpiredCallSigns.containsKey(player.getCallsign())) {
-            if(mapCallSignContact.isEmpty()) Toolkit.getDefaultToolkit().beep();
+            //if(mapCallSignContact.isEmpty())
+                Toolkit.getDefaultToolkit().beep();
             // add new player
             GuiRadarContact c = new GuiRadarContact(master, this, player, mapAtcComments.get(player.getCallsign()));
             // c.setOperation(GuiRadarContact.Operation.UNKNOWN);
@@ -348,7 +359,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             // add it at the end
             completeContactList.add(c);
         }
-        
+
     }
 
     @Override
@@ -419,7 +430,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                     if (clickLocation == ClickLocation.ON_STRIP) {
                         if (e.isControlDown() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
                             // toggle neglect
-                            c.setNeglect(!c.isNeglect()); 
+                            c.setNeglect(!c.isNeglect());
                         } else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
                             // select
                             select(c, true, false);
@@ -437,11 +448,11 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                                 || (e.isAltDown() && e.getButton() == MouseEvent.BUTTON3) ) {
                             // show contact settings dialog
                             selectNShowContactDialog(c, e);
-                        
+
                         } else if (e.getButton() == MouseEvent.BUTTON3 && e.getClickCount() == 1) {
                          // show ATC message dialog
                             selectNShowAtcMsgDialog(c, e);
-                        
+
                         }
                         publishData();
                     } else {
@@ -456,22 +467,22 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 activeDoubleClickContact = c;
                 Integer timerinterval = (Integer) Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
                 doubleClickTimer = new Timer(timerinterval.intValue(), new ActionListener() {
-                    
+
                     @Override
                     public void actionPerformed(ActionEvent evt) {
                         if(activeDoubleClickContact!=null) {
                             executeClick(activeDoubleClickContact, activeDoubleClickContact.getAlignment(), 1);
                         }
-                        
+
                     }
                 });
                 doubleClickTimer.setRepeats(false);
-                doubleClickTimer.start();                
+                doubleClickTimer.start();
             } else {
                 activeDoubleClickContact=null;
                 executeClick(c, alignment, clickCount);
             }
-            
+
         }
 
         private void executeClick(GuiRadarContact c, Alignment alignment, int clickCount) {
@@ -557,13 +568,13 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         master.getMpChatManager().requestFocusForInput();
         if(c.isActive()) atcMessageDialog.setLocation(c,e);
     }
-    
+
     public synchronized void selectNShowContactDialog(GuiRadarContact c, MouseEvent e) {
         // show details dialog
         select(c, true, false);
         contactSettingsDialog.show(c, e);
     }
-    
+
     public ContactFilterMouseListener getContactFilterMouseListener() {
         return contactFilterMouseListener;
     }

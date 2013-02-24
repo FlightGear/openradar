@@ -46,7 +46,7 @@ public class AutoTextReader {
 
         try {
             // load commands.short
-            File fileCmdShort = new File("settings/ATCmsg/cmd-short.txt");
+            File fileCmdShort = new File("data/atcMessages/cmd-short.txt");
             if (!fileCmdShort.exists()) {
                 return;
             }
@@ -60,7 +60,7 @@ public class AutoTextReader {
             br.close();
 
             // load commands.properties
-            File fileCmdProps = new File("settings/ATCmsg/cmd-props.txt");
+            File fileCmdProps = new File("data/atcMessages/cmd-props.txt");
             br = new BufferedReader(new FileReader(fileCmdProps));
             nextLine = br.readLine();
             for (int i=0; i<messages.size()&&nextLine!=null;i++) {
@@ -72,7 +72,7 @@ public class AutoTextReader {
             // load Languages.txt
             languages.add("en");
             
-            File fileLanguages = new File("settings/ATCmsg/Languages.txt");
+            File fileLanguages = new File("data/atcMessages/Languages.txt");
             br = new BufferedReader(new FileReader(fileLanguages));
             nextLine = br.readLine();
             while (nextLine != null) {
@@ -89,7 +89,7 @@ public class AutoTextReader {
             // load translations
 
             for(String code : languages) {
-                File fileTranslation = new File("settings/ATCmsg/"+code+".txt");
+                File fileTranslation = new File("data/atcMessages/"+code+".txt");
                 br = new BufferedReader(new FileReader(fileTranslation));
                 nextLine = br.readLine();
                 for (int i=0; i<messages.size()&&nextLine!=null;i++) {

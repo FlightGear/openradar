@@ -89,7 +89,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         setLayout(new java.awt.GridBagLayout());
         setBackground(Palette.DESKTOP);
 
-        lbShowAll.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
+        lbShowAll.setFont(lbShowAll.getFont().deriveFont(Font.BOLD));  
         lbShowAll.setForeground(Palette.DESKTOP_FILTER_SELECTED);
         lbShowAll.setText("AUTO");
         lbShowAll.setName("MODE");
@@ -188,16 +188,28 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
         // add(lbShowEmergencies, gridBagConstraints);
 
-        JLabel lbHelp = new JLabel("?");
-        lbHelp.setName("HELP");
-        lbHelp.setFont(lbHelp.getFont().deriveFont(Font.BOLD)); // NOI18N
-        lbHelp.setForeground(Palette.DESKTOP_FILTER_SELECTED);
-        lbHelp.addMouseListener(new HelpMouseListener());
-        lbHelp.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
+        JLabel lbDeselect = new JLabel("Deselect");
+        lbDeselect.setName("DESELECT");
+        lbDeselect.setFont(lbDeselect.getFont().deriveFont(Font.BOLD));
+        lbDeselect.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbDeselect.addMouseListener(new HelpMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx=1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
+        add(lbDeselect, gridBagConstraints);
+
+        JLabel lbHelp = new JLabel("?");
+        lbHelp.setName("HELP");
+        lbHelp.setFont(lbHelp.getFont().deriveFont(Font.BOLD));
+        lbHelp.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbHelp.addMouseListener(new HelpMouseListener());
+        lbHelp.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(4, 8, 2, 8);
         add(lbHelp, gridBagConstraints);
@@ -311,10 +323,14 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
                     0,
                     false);
 
-           int delay = ToolTipManager.sharedInstance().getInitialDelay();
-           ToolTipManager.sharedInstance().setInitialDelay(0);
-           ToolTipManager.sharedInstance().mouseMoved(dummyEvent);
-           ToolTipManager.sharedInstance().setInitialDelay(delay);
+            if(((JLabel)e.getSource()).getName().equals("HELP")) {
+               int delay = ToolTipManager.sharedInstance().getInitialDelay();
+               ToolTipManager.sharedInstance().setInitialDelay(0);
+               ToolTipManager.sharedInstance().mouseMoved(dummyEvent);
+               ToolTipManager.sharedInstance().setInitialDelay(delay);
+            } else if(((JLabel)e.getSource()).getName().equals("DESELECT")) {
+                guiInteractionManager.getRadarContactManager().deselectContact();
+            }
         }
     }
 }

@@ -1,32 +1,32 @@
 /**
  * Copyright (C) 2012,2013 Wolfram Wagner
- * 
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -41,28 +41,28 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 /**
  * This class parses and delivers the METAR information.
- * 
+ *
  * KSFO 140705Z 29010KT 10SM BKN002 14/13 A3020 RMK AO2
  * http://de.wikipedia.org/wiki/METAR
- * Airport date time wind:DDDSS  
+ * Airport date time wind:DDDSS
  * A => Airpressure in inHG
  * Q => Airpressure in hectorpascal
- * 
- * 
+ *
+ *
  * 2012/10/14 18:13KSFO 141813Z 32008KT 10SM SCT008 16/12 A3022 RMK AO2
- * 
+ *
  * @author Wolfram Wagner
  */
 public class MetarData {
-    
+
     private String metarBaseData = null;
     private AirportData data = null;
-    
+
     private String airportCode = null;
     private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     private Date observationTime = null;
-    
-    // wind 
+
+    // wind
     private boolean windDirectionVariates = false;
     private String windUnit  = "KT";
     private int windDirection = -1;
@@ -72,32 +72,32 @@ public class MetarData {
     private int windSpeedGusts = -1;
     private double windFromNorth = -1;
     private double windFromWest = -1;
-    
+
     // visibility && weather phenomena
     private float visibility;
     private String visibilityUnit;
     private int temperature;
     private int dewPoint;
-    
-    
+
+
     // clouds
     public enum CloudDensity { CAVOK,CLR,NSC,NCD,FEW,SCT,BKN,OVC}
     private CloudDensity cloudDensity;
     private int cloudBase;
     public enum CloudType { TCU, CB }
     private CloudType cloudType = null;
-    
+
     // air presssure
     private float pressureInHG;
     private float pressureHPa;
-    
+
     // color code (military)
-    boolean cavok = false;    
-    
+    boolean cavok = false;
+
     // trend
     private enum Trend { NOSIG, BECMG, TEMPO}
     private Trend trend = null;
-    
+
     public MetarData(AirportData data, String metar) {
         // parse metar data
         this.metarBaseData = metar.substring(metar.indexOf("\n")).trim();
@@ -110,11 +110,11 @@ public class MetarData {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         airportCode=st.nextToken();
-        
+
         String t = st.nextToken(); // former last update code 141813Z
-        
+
         t = st.nextToken();
         if(t.matches("AUTO")) {
             // automatic station
@@ -129,7 +129,7 @@ public class MetarData {
         if(t.matches("^.*KT.*$")) {
             parseWind(t,"KT");
             t = st.nextToken();
-        } 
+        }
         if(t.matches("^.*KMH.*$")) {
             parseWind(t,"KMH");
             t = st.nextToken();
@@ -138,17 +138,17 @@ public class MetarData {
             parseWind(t,"MPS");
             t = st.nextToken();
         }
-        
+
         if(t.matches("^[\\d]{3}V[\\d]{3}$")) {
             parseVariations(t);
             t = st.nextToken();
         }
-        
+
         if(t.matches("^[\\d]{4}$") || t.matches("^[\\d/]{1,4}SM$")) {
             parseVisibility(t);
             t = st.nextToken();
         }
-        
+
         if(t.matches("^[\\d]{4}.*$")) {
             parseDirectionalVisibility(t);
         }
@@ -161,7 +161,7 @@ public class MetarData {
             else if(t.matches("^RMK$")) break; // means "national information follow
             else parsePhenomena(t);
         }
-        
+
             double angle = (double)(getWindDirection()-270)/360d*2*Math.PI;
             windFromNorth = Math.sin(angle)*(double)getWindSpeed();
             windFromWest = Math.cos(angle)*(double)getWindSpeed();
@@ -189,38 +189,38 @@ public class MetarData {
         windDirectionMax=Integer.parseInt(t.substring(4)) - (int)data.getMagneticDeclination();
         windDirectionMax=windDirectionMax<0?windDirectionMax+360:windDirectionMax;
     }
-    
+
     private void parseVisibility(String t) {
         if(t.matches("^[\\d]{4}$")) {
             visibility=Integer.parseInt(t);
             visibilityUnit="m";
         } else if(t.matches("^[\\d]{1,4}SM$")) {
             visibility=Integer.parseInt(t.substring(0,t.indexOf("S")));
-            visibilityUnit="miles";
+            visibilityUnit="SM";
         } else if(t.matches("^[\\d]{1,4}/[\\d]{1,4}SM$")) {
             visibility=Integer.parseInt(t.substring(0,t.indexOf("/")));
             visibility=visibility/Integer.parseInt(t.substring(t.indexOf("/")+1,t.indexOf("SM")));
-            visibilityUnit="miles";
+            visibilityUnit="SM";
         } else {
             System.out.println("Unparsed visibility: "+t);
         }
-        
+
     }
     private void parseDirectionalVisibility(String t) {
         // TODO Auto-generated method stub
-        
+
     }
     private void parseRunwayVisibility(String t) {
         // TODO Auto-generated method stub
-        
+
     }
     private void parsePressureInHG(String t) {
         pressureInHG = Float.parseFloat(t.substring(1))/100;
-        pressureHPa = 33.86389f * pressureInHG; 
+        pressureHPa = 33.86389f * pressureInHG;
     }
     private void parsePressureHPa(String t) {
         pressureHPa = Float.parseFloat(t.substring(1));
-         pressureInHG = pressureHPa / 33.86389f ; 
+         pressureInHG = pressureHPa / 33.86389f ;
     }
     private void parseTemperatures(String t) {
         int sep = t.indexOf("/");
@@ -272,6 +272,9 @@ public class MetarData {
     }
 
     public String getVisibility() {
+        if(isCavok()) {
+            return ">10";
+        }
         if("NM".equalsIgnoreCase(getVisibilityUnit())) {
             return String.format("%2.1f", visibility);
         } else {
@@ -281,7 +284,10 @@ public class MetarData {
     }
 
     public String getVisibilityUnit() {
-        return visibilityUnit==null?"NM":visibilityUnit;
+        if(isCavok()) {
+            return "km";
+        }
+        return visibilityUnit==null?"SM":visibilityUnit;
     }
 
     public int getTemperature() {
@@ -326,5 +332,29 @@ public class MetarData {
 
     public boolean isCavok() {
         return cavok;
+    }
+
+    public Object getWindDisplayString() {
+        StringBuffer sb = new StringBuffer();
+        if(getWindDirection()==-1) {
+            sb.append("VRB");
+        } else {
+            sb.append(getWindDirection());
+        }
+        if(getWindDirectionMin()>-1) {
+            sb.append("(");
+            sb.append(getWindDirectionMin());
+            sb.append("-");
+            sb.append(getWindDirectionMax());
+            sb.append(")");
+        }
+        sb.append("@");
+        sb.append(getWindSpeed());
+        if(getWindSpeedGusts()>-1) {
+            sb.append("(");
+            sb.append(getWindSpeedGusts());
+            sb.append(")");
+        }
+        return sb.toString();
     }
 }

@@ -113,7 +113,6 @@ public class MainFrame extends javax.swing.JFrame {
         pnlRightTop = new javax.swing.JPanel();
         radioRunwayPanel = new de.knewcleus.openradar.gui.status.StatusPanel(guiInteractionManager);
         contactsPanel = new de.knewcleus.openradar.gui.contacts.ContactsPanel(guiInteractionManager);
-        // detailPanel = new de.knewcleus.openradar.gui.status.DetailPanel(guiInteractionManager);
 
         // Left MAIN split pane
         
@@ -153,16 +152,6 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.weightx = 1.0;
         pnlRightTop.add(radioRunwayPanel, gridBagConstraints);
 
-//        detailPanel.setMinimumSize(new java.awt.Dimension(0, 40));
-//        detailPanel.setPreferredSize(new java.awt.Dimension(0, 40));
-//        gridBagConstraints = new java.awt.GridBagConstraints();
-//        gridBagConstraints.gridx = 0;
-//        gridBagConstraints.gridy = 1;
-//        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-//        gridBagConstraints.weightx = 1.0;
-//        gridBagConstraints.weighty = 1.0;
-//        pnlRightTop.add(detailPanel, gridBagConstraints);
-
         vspRight.setTopComponent(pnlRightTop);
         
         // Right bottom
@@ -172,9 +161,9 @@ public class MainFrame extends javax.swing.JFrame {
     
     public void setDividerPosition() {
         Dimension windowSize = getSize();
-        hspMain.setDividerLocation((int)Math.round(windowSize.getWidth()*0.8));
         Dimension dim = pnlRightTop.getPreferredSize();
-        vspRight.setDividerLocation((int)Math.round(dim.getHeight()));
+        hspMain.setDividerLocation((int)Math.round(windowSize.getWidth()-dim.getWidth()));
         vspLeft.setDividerLocation((int)Math.round(windowSize.getHeight()*0.8));
+        guiInteractionManager.getStatusManager().updateRunways();
     }
 }

@@ -153,6 +153,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             currentText = newPrefix + " " + currentText.trim();
         }
         chatInput.setText(currentText);
+        requestGuiUpdate();
     }
 
     public void setFilter(Filter filter) {

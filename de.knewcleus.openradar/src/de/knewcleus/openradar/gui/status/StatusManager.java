@@ -124,10 +124,12 @@ public class StatusManager implements INavPointListener {
         Long degreesToSelection = lAngle!=null ? (degreesToPointer<180 ? degreesToPointer+180 : degreesToPointer-180) : null;
         // distances
         Double distanceMiles = distance*Converter2D.getMilesPerDot(mapViewerAdapter);
-        Long timeMinutes = milesPerHour>10 ? Math.round(60*distanceMiles/(double)milesPerHour) : null;
+        Integer timeMinutes = milesPerHour>10 ? (int)Math.floor(60*distanceMiles/(double)milesPerHour) : null;
+        Integer timeSeconds = milesPerHour>10 ? (int)Math.floor(60*60*distanceMiles/(double)milesPerHour) - timeMinutes * 60 : null;
+        
         boolean hasChanged = true;
         //System.out.println("orig "+angle+" vOA: "+vOriginalAngle.getAngleL()+" vW "+vWind.getAngleL()+" result "+lAngle);
-        if(hasChanged)statusPanel.setSelectionToPointer(degreesToPointer,degreesToSelection,distanceMiles, timeMinutes);
+        if(hasChanged)statusPanel.setSelectionToPointer(degreesToPointer,degreesToSelection,distanceMiles, timeMinutes,timeSeconds);
     }
  
     public CallSignActionListener getCallSignActionListener() {

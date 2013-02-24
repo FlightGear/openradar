@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -58,7 +58,7 @@ import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 
 /**
  * This class is the controller for the radio feature.
- * 
+ *
  * @author Wolfram Wagner
  */
 public class RadioController implements Runnable {
@@ -85,7 +85,7 @@ public class RadioController implements Runnable {
         AirportData data = master.getDataRegistry();
         if(data.getFgComMode()!=FgComMode.Off) {
             fgComController = new FgComController(master, data.getModel(), data.getLon(), data.getLat());
-    
+
             int i = 0;
             for (Radio r : data.getRadios().values()) {
                 String device = r.getKey();
@@ -95,7 +95,7 @@ public class RadioController implements Runnable {
             }
             modelList = new ArrayList<RadioModel>(models.values());
             fgComController.start();
-    
+
             radioPanel.initRadios();
             initShortCuts();
             thread.setDaemon(true);
@@ -162,7 +162,7 @@ public class RadioController implements Runnable {
                 }
             }
         }
-        
+
         @Override
         public void mousePressed(MouseEvent e) {
             managePtt(e, true);
@@ -259,7 +259,7 @@ public class RadioController implements Runnable {
 
                     if (e.getID() == KeyEvent.KEY_PRESSED) {
                         if (!hasAutoRepeat || (hasAutoRepeat && !fgComController.isPttActive(radioKey))) {
-                            System.out.println("Toggle PTT ON for " + radioKey);
+                            // System.out.println("Toggle PTT ON for " + radioKey);
 
                             fgComController.setPttActive(radioKey, true);
                             radioPanel.displayEnabledPTT(radioKey, true);
@@ -317,7 +317,7 @@ public class RadioController implements Runnable {
     }
 
     // save and load to file
-    
+
     public void addSelectedFrequenciesTo(Properties p) {
         for (RadioModel m : models.values()) {
             p.setProperty("radio." + m.getRadioKey(), m.getSelectedItem().getFrequency());
