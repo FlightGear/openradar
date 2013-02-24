@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the approaches, visible everytime the zoomlevel is above 100 -->
+<routes>
+	<route name="LFSB Wait loops">
+		<navaids>BLM,ALTIK,SEDOR</navaids>
+		<loop navpoint="SEDOR" inboundHeading="192" length="5" arrows="both" minHeight="7000" maxHeight="MAX 12000"/>>
+		<loop navpoint="ALTIK" inboundHeading="94" length="5" arrows="both" minHeight="5500" maxHeight="MAX 11000" misapHeight="MISAP4000"/>
+		<loop navpoint="BALIR" inboundHeading="319" length="5" arrows="both" minHeight="7000" maxHeight="MAX 12000"/>
+	</route>
+
+	<!-- **************************************** -->
+	
+	<route name="LFSB Approaches" zoomMin="100">
+		<navaids>ALTIC,ARPUS,BALIR,BLM,HOC,HOMBO,INTEM,LUMEL,SEDOR</navaids>
+		<!-- SEDOR 8K -->
+		<line start="SEDOR" end="HOMBO" text="229"/>
+		<line start="HOMBO" end="ALTIK" text="252"/>
+		
+		<!-- Strassburg 8K -->
+		<line start="INTEM" end="ALTIK" text="199"/>
+		<!-- ARPUS 8K -->
+		<line start="ARPUS" end="ALTIK" text="094"/>
+		
+		<!-- LUMEL 8K -->
+		<line start="BALIR" end="LUMEL" text="319"/>
+		<line start="LUMEL" end="25NM248@BLM" text="294"/>
+		<bow center="BLM" radius="25" startAngle="248" extentAngle="21" text="D25"/>
+		<curve start="25NM269@BLM" end="23NM274@BLM" controlPoint="25NM274@BLM"/>
+	</route>
+	
+</routes>

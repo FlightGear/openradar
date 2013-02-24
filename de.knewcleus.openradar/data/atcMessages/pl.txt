@@ -6,7 +6,7 @@ Do wszystkich pilotow:
 %s: Kontakt radarowy - %3.0f mil, QNH %2.2f, aktywny pas %s, FGCOM %2.3f
 
 %s: Opuszczasz moja strefe kontroli - milego lotu.
-Informacja ATIS dla %s na %2.0f ft: QNH %2.2f  kierunek wiatru %3.0f z sila %2.0f, aktywny pas: %s  Czestotliwosc FGCOM %2.3f
+Informacja ATIS dla %s na %2.0f ft: QNH %2.2f  wiatru %s, aktywny pas: %s  Czestotliwosc FGCOM %2.3f
 
 
 %s: Zgoda na uruchomienie silnikow

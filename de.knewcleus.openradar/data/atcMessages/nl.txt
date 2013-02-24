@@ -6,7 +6,7 @@ Aan alle piloten:
 %s: Radar contact op %3.0f nm, QNH %2.2f, verwacht landingsbaan %s, FGCOM %2.3f
 
 %s: U verlaat mijn luchtruim - U mag van frequentie wisselen - Goede reis!
-ATIS op %s, hoogte %2.0f ft, QNH %2.2f, wind uit %3.0f %2.0f kt, actieve baan/banen %s,  FGCOM %2.3f
+ATIS op %s, hoogte %2.0f ft, QNH %2.2f, wind %s, actieve baan/banen %s,  FGCOM %2.3f
 
 
 %s: Motoren opstarten toegestaan

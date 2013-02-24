@@ -69,7 +69,7 @@ public abstract class Converter2D {
     public static double getFeetToDots(double distance, IMapViewerAdapter mapViewerAdapter) {
         double scale = mapViewerAdapter.getLogicalScale();
         scale = scale == 0 ? 1 : scale;
-        return distance / 6076d / scale * 1900d; // the last number is the global correction factor for distances
+        return distance / 6076d / scale * 1850d; // the last number is the global correction factor for distances
     }
     
     public double getDistanceMiles(Point2D geoPoint1, Point2D geoPoint2) {
@@ -91,8 +91,8 @@ public abstract class Converter2D {
     }
 
     public static double getDirection (Point2D point1, Point2D point2) {
-        double dx = point1.getX()-point2.getX();
-        double dy = point2.getY()-point1.getY();
+        double dx = point2.getX()-point1.getX();
+        double dy = -1*(point2.getY()-point1.getY());
 
         double distance = (double)point2.distance(point1);
         Long angle = null;

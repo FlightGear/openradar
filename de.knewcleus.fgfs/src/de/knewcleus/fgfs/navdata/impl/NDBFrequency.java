@@ -53,7 +53,7 @@ public class NDBFrequency implements IFrequency {
 	
 	@Override
 	public String toString() {
-		return String.format("%05.1f", freqKHz);
+		return String.format("%06.2f", freqKHz);
 	}
 
 	@Override

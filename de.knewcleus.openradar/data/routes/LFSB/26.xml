@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the STAR and SID of RW 26 -->
+<routes>
+	<route name="RW 26 SID" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activeStartRunways>26</activeStartRunways>
+		<navaids>BASUD,BLM,BS,ELBEG,HOC,HOMBO,LUMEL,WIL</navaids>
+
+		<!-- LUMEL 2S -->
+		<line start="BLM" angle="202" length="4.5" stroke="dashed" lineWidth="1" text="202" />
+		<line start="BLM" angle="226" length="6" stroke="dashed" lineWidth="1" text="226" />
+		<line start="2.79NM165.6@BLM" angle="257" length="4.67"/>
+		<line start="5.4NM226@BLM" end="LUMEL" text="226" />
+
+		<!-- BASUD 2S -->
+		<curve start="6NM226@BLM" end="13.5NM315@BASUD" controlPoint="7.5NM226@BLM"/>
+		<line start="BASUD" angle="315" length="13.5" text="135" />
+		<line start="WIL" end="BASUD" stroke="dashed" lineWidth="1" text="315"/>
+
+		<!-- HOC  -->
+		<curve start="7NM226@BLM" end="9NM278@HOC" controlPoint="10.5NM223@BLM"/>
+		<line start="HOC" angle="278" length="9" text="098" />
+		<curve start="2NM278@HOC" end="2NM013@HOC" controlPoint="HOC"/>
+		<curve start="3NM278@HOC" end="3NM341@HOC" controlPoint="HOC"/>
+
+		<!-- HOC 2X -->
+		<curve start="3.40NM202@BLM" end="4.5NM202@BLM" controlPoint="4.0NM211@BLM"/>
+		<line start="4.5NM202@BLM" end="7NM292@HOC" />
+		<line start="HOC" angle="292" length="7" text="112" />
+		
+		<!-- ELBEG 2V -->
+		<line start="2.5NM230@BLM" end="BLM" />
+		<line start="BLM" end="ELBEG" text="069" />
+
+		<!-- ELBEG 2W -->
+		<line start="HOC" end="ELBEG" startOffset="2" text="013" />
+		<line start="HOC" angle="013" length="2" stroke="dashed" lineWidth="1"/>
+
+		<!-- HOMBO 2W -->
+		<line start="HOC" end="HOMBO" startOffset="3" text="341" />
+		<line start="HOC" angle="341" length="3" stroke="dashed" lineWidth="1"/>
+ 
+		<!-- Strassburg 2W -->
+		<curve start="3.40NM202@BLM" end="2.5NM230@BLM" controlPoint="4NM225@BLM"/>
+		<line start="2.5NM230@BLM" end="1.2NM003@BLM" text="033"/>
+		<line start="BLM" startOffset="1.2" angle="003" length="10" text="003" arrows="end"/>
+	</route>
+</routes>

@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+  <route name="ELLX SID DISKI 2X" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.563304,6.194965" />
+    <line start="49.563304,6.194965" end="49.604168,6.363763" />
+    <line start="49.604168,6.363763" end="49.572222,6.470556" />
+  </route>
+  <route name="ELLX SID DISKI 2Y" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.624411,5.989653" />
+    <line start="49.624411,5.989653" end="49.717836,6.117976" />
+    <line start="49.717836,6.117976" end="49.716701,6.229325" />
+    <line start="49.716701,6.229325" end="49.626103,6.291361" />
+    <line start="49.626103,6.291361" end="49.572222,6.470556" />
+  </route>
+  <route name="ELLX SID GTQ 7Y" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.624411,5.989653" />
+    <line start="49.624411,5.989653" end="49.717836,6.117976" />
+    <line start="49.717836,6.117976" end="49.716701,6.229325" />
+    <line start="49.716701,6.229325" end="49.546389,6.344167" />
+    <line start="49.546389,6.344167" end="49.397145,6.434877" />
+    <line start="49.397145,6.434877" end="49.366742,6.45587" />
+    <line start="49.366742,6.45587" end="48.986389,6.716111" />
+  </route>
+  <route name="ELLX SID GTQ 7X" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.586379,6.116411" />
+    <line start="49.586379,6.116411" end="49.544284,6.122205" />
+    <line start="49.544284,6.122205" end="49.457583,6.371743" />
+    <line start="49.457583,6.371743" end="49.397145,6.434877" />
+    <line start="49.397145,6.434877" end="49.366742,6.45587" />
+    <line start="49.366742,6.45587" end="48.986389,6.716111" />
+  </route>
+  <route name="ELLX SID MMD 7X" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.624019,5.989116" />
+    <line start="49.624019,5.989116" end="49.623851,5.913572" />
+    <line start="49.623851,5.913572" end="49.608333,5.584167" />
+    <line start="49.608333,5.584167" end="49.391111,5.124444" />
+  </route>
+  <route name="ELLX SID RAPOR 4X" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.624019,5.989116" />
+    <line start="49.624019,5.989116" end="49.623851,5.913572" />
+    <line start="49.623851,5.913572" end="49.608333,5.584167" />
+    <line start="49.608333,5.584167" end="49.591389,5.213056" />
+  </route>
+  <route name="ELLX SID DIK 2X" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.624019,5.989116" />
+    <line start="49.624019,5.989116" end="49.861389,6.129722" />
+  </route>
+  <route name="ELLX SID ASMOX 1Z" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.624019,5.989116" />
+    <line start="49.624019,5.989116" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.902778,6.276111" />
+  </route>
+  <route name="ELLX SID ASMOX 1Y" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.517608,6.163688" />
+    <line start="49.517608,6.163688" end="49.639444,6.247222" />
+    <line start="49.639444,6.247222" end="49.902778,6.276111" />
+  </route>
+  <route name="ELLX SID ASMOX 1X" color="120,140,120">
+    <activeStartRunways>24</activeStartRunways>
+    <navaids />
+    <line start="49.612778,6.174444" end="49.578534,6.205403" />
+    <line start="49.578534,6.205403" end="49.639444,6.247222" />
+    <line start="49.639444,6.247222" end="49.902778,6.276111" />
+  </route>
+  <route name="ELLX SID DISKI 2T" color="120,140,120">
+    <activeStartRunways>06</activeStartRunways>
+    <navaids />
+    <line start="49.640278,6.248333" end="49.611232,6.340468" />
+    <line start="49.611232,6.340468" end="49.572222,6.470556" />
+  </route>
+  <route name="ELLX SID DISKI 2U" color="120,140,120">
+    <activeStartRunways>06</activeStartRunways>
+    <navaids />
+    <line start="49.640278,6.248333" end="49.689367,6.381089" />
+    <line start="49.689367,6.381089" end="49.717790,6.409111" />
+    <line start="49.717790,6.409111" end="49.748953,6.389175" />
+    <line start="49.748953,6.389175" end="49.757362,6.347923" />
+    <line start="49.757362,6.347923" end="49.733402,6.300138" />
+    <line start="49.733402,6.300138" end="49.639444,6.247222" />
+    <line start="49.639444,6.247222" end="49.572222,6.470556" />
+  </route>
+  <route name="ELLX SID GTQ 7U" color="120,140,120">
+    <activeStartRunways>06</activeStartRunways>
+    <navaids />
+    <line start="49.640278,6.248333" end="49.689367,6.381089" />
+    <line start="49.689367,6.381089" end="49.717790,6.409111" />
+    <line start="49.717790,6.409111" end="49.748953,6.389175" />
+    <line start="49.748953,6.389175" end="49.757362,6.347923" />
+    <line start="49.757362,6.347923" end="49.733402,6.300138" />
+    <line start="49.733402,6.300138" end="49.667537,6.263021" />
+    <line start="49.667537,6.263021" end="49.546389,6.344167" />
+    <line start="49.546389,6.344167" end="49.397145,6.434877" />
+    <line start="49.397145,6.434877" end="49.366742,6.45587" />
+    <line start="49.366742,6.45587" end="48.986389,6.716111" />
+  </route>
+  <route name="ELLX SID GTQ 7T" color="120,140,120">
+    <activeStartRunways>06</activeStartRunways>
+    <navaids />
+    <line start="49.640278,6.248333" end="49.546389,6.344167" />
+    <line start="49.546389,6.344167" end="49.397145,6.434877" />
+    <line start="49.397145,6.434877" end="49.366742,6.45587" />
+    <line start="49.366742,6.45587" end="48.986389,6.716111" />
+  </route>
+  <route name="ELLX SID RAPOR 4T" color="120,140,120">
+    <activeStartRunways>06</activeStartRunways>
+    <navaids />
+    <line start="49.640278,6.248333" end="49.689367,6.381089" />
+    <line start="49.689367,6.381089" end="49.717790,6.409111" />
+    <line start="49.717790,6.409111" end="49.748953,6.389175" />
+    <line start="49.748953,6.389175" end="49.757362,6.347923" />
+    <line start="49.757362,6.347923" end="49.733402,6.300138" />
+    <line start="49.733402,6.300138" end="49.639444,6.247222" />
+    <line start="49.639444,6.247222" end="49.608333,5.584167" />
+    <line start="49.608333,5.584167" end="49.591389,5.213056" />
+  </route>
+  <route name="ELLX SID MMD 7T" color="120,140,120">
+    <activeStartRunways>06</activeStartRunways>
+    <navaids />
+    <line start="49.640278,6.248333" end="49.689367,6.381089" />
+    <line start="49.689367,6.381089" end="49.717790,6.409111" />
+    <line start="49.717790,6.409111" end="49.748953,6.389175" />
+    <line start="49.748953,6.389175" end="49.757362,6.347923" />
+    <line start="49.757362,6.347923" end="49.733402,6.300138" />
+    <line start="49.733402,6.300138" end="49.639444,6.247222" />
+    <line start="49.639444,6.247222" end="49.608333,5.584167" />
+    <line start="49.608333,5.584167" end="49.391111,5.124444" />
+  </route>
+  <route name="ELLX SID ASMOX 1T" color="120,140,120">
+    <activeStartRunways>06</activeStartRunways>
+    <navaids />
+    <line start="49.640278,6.248333" end="49.689367,6.381089" />
+    <line start="49.689367,6.381089" end="49.717790,6.409111" />
+    <line start="49.717790,6.409111" end="49.748953,6.389175" />
+    <line start="49.748953,6.389175" end="49.757362,6.347923" />
+    <line start="49.757362,6.347923" end="49.763273,6.317007" />
+    <line start="49.763273,6.317007" end="49.791287,6.263670" />
+    <line start="49.791287,6.263670" end="49.902778,6.276111" />
+  </route>
+  <route name="ELLX SID ASMOX 1U" color="120,140,120">
+    <activeStartRunways>06</activeStartRunways>
+    <navaids />
+    <line start="49.640278,6.248333" end="49.689367,6.381089" />
+    <line start="49.689367,6.381089" end="49.717790,6.409111" />
+    <line start="49.717790,6.409111" end="49.748953,6.389175" />
+    <line start="49.748953,6.389175" end="49.757362,6.347923" />
+    <line start="49.757362,6.347923" end="49.763273,6.317007" />
+    <line start="49.763273,6.317007" end="49.840405,6.169890" />
+    <line start="49.840405,6.169890" end="49.874937,6.176974" />
+    <line start="49.874937,6.176974" end="49.902778,6.276111" />
+  </route>
+  <route name="ELLX STAR LNO 3K" color="120,120,140">
+    <activeLandingRunways />
+    <navaids />
+    <line start="50.585833,5.710278" end="50.015833,5.982459" />
+    <line start="50.015833,5.982459" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.861389,6.129722" />
+    <loop navpoint="49.861389,6.129722" inboundHeading="123" length="5" arrows="both" minHeight="4000" />
+  </route>
+  <route name="ELLX STAR REMBA 1K" color="120,120,140">
+    <activeLandingRunways />
+    <navaids />
+    <line start="50.662222,4.914167" end="50.077778,5.806944" />
+    <line start="50.077778,5.806944" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.861389,6.129722" />
+    <loop navpoint="49.861389,6.129722" inboundHeading="123" length="5" arrows="both" minHeight="4000" />
+  </route>
+  <route name="ELLX STAR BETEX 1K" color="120,120,140">
+    <activeLandingRunways />
+    <navaids />
+    <line start="49.815833,6.425278" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.861389,6.129722" />
+    <loop navpoint="49.861389,6.129722" inboundHeading="123" length="5" arrows="both" minHeight="4000" />
+  </route>
+  <route name="ELLX STAR DISKI 2K" color="120,120,140">
+    <activeLandingRunways />
+    <navaids />
+    <line start="49.572222,6.470556" end="49.639444,6.247222" />
+    <line start="49.639444,6.247222" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.861389,6.129722" />
+    <loop navpoint="49.861389,6.129722" inboundHeading="123" length="5" arrows="both" minHeight="4000" />
+  </route>
+  <route name="ELLX STAR AKELU 2K" color="120,120,140">
+    <activeLandingRunways />
+    <navaids />
+    <line start="49.366944,6.463889" end="49.397394,6.443057" />
+    <line start="49.397394,6.443057" end="49.452194,6.405493" />
+    <line start="49.452194,6.405493" end="49.546389,6.344167" />
+    <line start="49.546389,6.344167" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.861389,6.129722" />
+    <loop navpoint="49.861389,6.129722" inboundHeading="123" length="5" arrows="both" minHeight="4000" />
+  </route>
+  <route name="ELLX STAR MMD 3K" color="120,120,140">
+    <activeLandingRunways />
+    <navaids />
+    <line start="49.391111,5.124444" end="49.527997,5.760003" />
+    <line start="49.527997,5.760003" end="49.552778,5.877222" />
+    <line start="49.552778,5.877222" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.861389,6.129722" />
+    <loop navpoint="49.861389,6.129722" inboundHeading="123" length="5" arrows="both" minHeight="4000" />
+  </route>
+  <route name="ELLX STAR LNO 4M" color="120,120,140">
+    <activeLandingRunways>06</activeLandingRunways>
+    <navaids />
+    <line start="50.585833,5.710278" end="50.015833,5.982459" />
+    <line start="50.015833,5.982459" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.795734,6.111788" />
+    <line start="49.795734,6.111788" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.567778,6.054167" />
+    <loop navpoint="49.567778,6.054167" inboundHeading="077" length="5" arrows="both" minHeight="3000" />
+  </route>
+  <route name="ELLX STAR REMBA 1M" color="120,120,140">
+    <activeLandingRunways>06</activeLandingRunways>
+    <navaids />
+    <line start="50.662222,4.914167" end="50.077778,5.806944" />
+    <line start="50.077778,5.806944" end="49.861389,6.129722" />
+    <line start="49.861389,6.129722" end="49.795734,6.111788" />
+    <line start="49.795734,6.111788" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.567778,6.054167" />
+    <loop navpoint="49.567778,6.054167" inboundHeading="077" length="5" arrows="both" minHeight="3000" />
+  </route>
+  <route name="ELLX STAR BETEX 1M" color="120,120,140">
+    <activeLandingRunways>06</activeLandingRunways>
+    <navaids />
+    <line start="49.815833,6.425278" end="49.639444,6.247222" />
+    <line start="49.639444,6.247222" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.567778,6.054167" />
+    <loop navpoint="49.567778,6.054167" inboundHeading="077" length="5" arrows="both" minHeight="3000" />
+  </route>
+  <route name="ELLX STAR DISKI 2M" color="120,120,140">
+    <activeLandingRunways>24</activeLandingRunways>
+    <navaids />
+    <line start="49.572222,6.470556" end="49.639444,6.247222" />
+    <line start="49.639444,6.247222" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.567778,6.054167" />
+    <loop navpoint="49.567778,6.054167" inboundHeading="077" length="5" arrows="both" minHeight="3000" />
+  </route>
+  <route name="ELLX STAR AKELU 2M" color="120,120,140">
+    <activeLandingRunways>06</activeLandingRunways>
+    <navaids />
+    <line start="49.366944,6.463889" end="49.397394,6.443057" />
+    <line start="49.397394,6.443057" end="49.452194,6.405493" />
+    <line start="49.452194,6.405493" end="49.546389,6.344167" />
+    <line start="49.546389,6.344167" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.567778,6.054167" />
+    <loop navpoint="49.567778,6.054167" inboundHeading="077" length="5" arrows="both" minHeight="3000" />
+  </route>
+  <route name="ELLX STAR MMD 3M" color="120,120,140">
+    <activeLandingRunways>06</activeLandingRunways>
+    <navaids />
+    <line start="49.391111,5.124444" end="49.527997,5.760003" />
+    <line start="49.527997,5.760003" end="49.552778,5.877222" />
+    <line start="49.552778,5.877222" end="49.567778,6.054167" />
+    <line start="49.567778,6.054167" end="49.567778,6.054167" />
+    <loop navpoint="49.567778,6.054167" inboundHeading="077" length="5" arrows="both" minHeight="3000" />
+  </route>
+</routes>

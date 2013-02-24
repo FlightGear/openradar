@@ -6,7 +6,7 @@
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target,/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range,/environment/pressure-sea-level-inhg,/sim/atc/activeRW,/instrumentation/comm/frequencies/selected-mhz
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
-/sim/tower/airport-id,/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-APalt,/environment/pressure-sea-level-inhg,/sim/atc/wind-from-display,/environment/wind-speed-kt,/sim/atc/activeRW,/instrumentation/comm/frequencies/selected-mhz
+/sim/tower/airport-id,/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-APalt,/environment/pressure-sea-level-inhg,/openradar/metar/wind,/sim/atc/activeRW,/instrumentation/comm/frequencies/selected-mhz
 
 
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target

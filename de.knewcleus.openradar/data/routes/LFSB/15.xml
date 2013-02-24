@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the STAR and SID of RW 15 -->
+<routes>
+
+	<route name="RW 15 finals" zoomMin="10" zoomMax="100" color="120,120,140" >
+		<activeLandingRunways>15</activeLandingRunways>
+		<navaids>BLM,ALTIK,ROFAC,INTEM,HOMBO,LUMEL,ARPUS</navaids>
+
+		<!-- ALTIK - rw 15 circeling approach -->
+		<line start="ALTIK" end="BLM" endOffset="10" text="094"/>
+		<line start="BLM" angle="274" length="10" stroke="dashed" lineWidth="1" text="094" />
+		<curve start="10NM274@BLM" end="9NM277@BLM" controlPoint="9NM274@BLM"/>
+		<bow center="BLM" radius="9" startAngle="277" extentAngle="50" text="D9"/>
+		<curve start="9NM327@BLM" end="8NM335@BLM" controlPoint="9NM335@BLM"/>
+	</route>
+
+	<route name="RW 15 MISAP" zoomMin="10" zoomMax="100" color="140,120,120" stroke="dashed">
+		<activeLandingRunways>15</activeLandingRunways>
+		<navaids>BLM,ALTIK,BS</navaids>
+
+		<!-- misap -->
+		<curve start="BS" end="7NM190@BLM" controlPoint="8NM155@BLM" />
+		<line start="7NM190@BLM" end="11NM232@BLM" text="277" />
+		<line start="11NM232@BLM" end="13NM232@BLM" text="232" />
+		<line start="BLM" angle="232" length="11" lineWidth="1" stroke="dashed" text="232" />
+		<curve start="13NM232@BLM" end="15NM238@BLM" controlPoint="15NM232@BLM"/>
+		<bow center="BLM" radius="15" startAngle="274" extentAngle="-36" arrows="start" text="D15"/>
+	</route>
+
+	<route name="RW 15 SID" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activeStartRunways>15</activeStartRunways>
+		<navaids>BASUD,BLM,BS,ELBEG,HOC,HOMBO,LUMEL,WIL</navaids>
+
+		<!-- LUMEL 2S -->
+		<curve start="BS" end="4.5NM180@BLM" controlPoint="4.5NM155@BLM"/>
+		<line start="4.5NM180@BLM" end="8NM226@BLM" text="258" />
+		<line start="BLM" angle="226" length="8" stroke="dashed" lineWidth="1" text="226" />
+		<line start="8NM226@BLM" end="LUMEL" text="226" />
+
+		<!-- BASUD 2S -->
+
+		<bow center="8.315NM184@BLM" radius="3.65" startAngle="168" extentAngle="180"/>
+		<line start="BLM" angle="196" length="6" stroke="dashed" lineWidth="1" text="196" />
+		<line start="BLM" angle="190" length="6" stroke="dashed" lineWidth="1" text="190" />
+		<line start="HOC" angle="254" length="6.85" text="074" />
+		<line start="BASUD" angle="315" length="5.7" text="135" />
+		<line start="WIL" end="BASUD" stroke="dashed" lineWidth="1" text="315"/>
+
+		<!-- HOC 2S -->
+		<curve start="7.5NM292@HOC" end="4.72NM190@BLM" controlPoint="6.8NM210@BLM"/>
+		<line start="HOC" angle="292" length="7.5" text="112" />
+
+		<!-- ELBEG 2S -->
+		<line start="HOC" end="ELBEG" text="013" />
+
+		<!-- HOMBO 2S -->
+		<line start="HOC" end="HOMBO" text="341" />
+
+		<!-- Strassburg 2S -->
+		<line start="BLM" angle="003" length="90" text="003" />
+	</route>
+</routes>

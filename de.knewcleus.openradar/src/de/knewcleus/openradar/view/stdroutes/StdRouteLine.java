@@ -1,42 +1,41 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
  * 
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
 package de.knewcleus.openradar.view.stdroutes;
 
-import java.awt.BasicStroke;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -65,18 +64,16 @@ public class StdRouteLine extends AStdRouteElement {
     private final Point2D geoEndPoint;
     private Double angle;
     private final Double length;
-    private final Double beginOffSet;
+    private final Double startOffSet;
     private final Double endOffSet;
-    private final Stroke stroke;
-    private final Float lineWidth;
-    private final boolean arrows;
-    
-    public StdRouteLine(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous, 
-                        String begin, String end, String angle, String length, String beginOffset, String endOffset, 
-                        String stroke, String lineWidth, String arrows) {
-        super(mapViewAdapter, route.getPoint(begin,previous));
-        
-        this.geoStartPoint = route.getPoint(begin,previous);
+    private final String text;
+
+    public StdRouteLine(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+                        String start, String end, String angle, String length, String startOffset, String endOffset,
+                        String stroke, String lineWidth, String arrows, String color, String text) {
+        super(mapViewAdapter, route.getPoint(start,previous),stroke,lineWidth,arrows,color);
+
+        this.geoStartPoint = route.getPoint(start,previous);
         if(end==null) {
             if(angle==null) {
                 throw new IllegalArgumentException("Line: if end is omitted, ANGLE and length must be specified!");
@@ -90,32 +87,14 @@ public class StdRouteLine extends AStdRouteElement {
         }
         this.angle = angle !=null ? Double.parseDouble(angle) : null;
         this.length = length !=null ? Double.parseDouble(length) : null;
-        this.beginOffSet = beginOffset !=null ? Double.parseDouble(beginOffset) : 0 ;
+        this.startOffSet = startOffset !=null ? Double.parseDouble(startOffset) : 0 ;
         this.endOffSet = endOffset !=null ? Double.parseDouble(endOffset) : 0 ;
-        this.lineWidth = lineWidth !=null ? Float.parseFloat(lineWidth) : 1 ;
-        if(stroke!=null) {
-            if("dashed".equalsIgnoreCase(stroke)) {
-                float[] dashPattern = { 10, 10 };
-                this.stroke = new BasicStroke(this.lineWidth, BasicStroke.CAP_BUTT,
-                                              BasicStroke.JOIN_MITER, 10,
-                                              dashPattern, 0);                
-            } else if("dots".equalsIgnoreCase(stroke)) {
-                    float[] dashPattern = { this.lineWidth, 2 * this.lineWidth};
-                    this.stroke = new BasicStroke(this.lineWidth, BasicStroke.CAP_BUTT,
-                                                  BasicStroke.JOIN_MITER, 10,
-                                                  dashPattern, 0);                
-            } else {
-                this.stroke = new BasicStroke(this.lineWidth);
-            }
-        } else {
-            this.stroke = new BasicStroke(this.lineWidth);
-        }
-        this.arrows = "true".equalsIgnoreCase(arrows);
+        this.text=text;
     }
 
     @Override
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
-        
+
         Point2D startPoint = getDisplayPoint(geoStartPoint);
         Point2D endPoint = null;
         if(geoEndPoint!=null) {
@@ -124,30 +103,81 @@ public class StdRouteLine extends AStdRouteElement {
             endPoint = Converter2D.getMapDisplayPoint(startPoint, angle, Converter2D.getFeetToDots(length*Units.NM/Units.FT, mapViewAdapter));
         }
 
-        if(beginOffSet!=null) {
-            angle = angle!=null ? angle : Converter2D.getDirection(startPoint, endPoint); 
-            startPoint = Converter2D.getMapDisplayPoint(startPoint, angle, Converter2D.getFeetToDots(beginOffSet*Units.NM/Units.FT, mapViewAdapter));
+        angle = Converter2D.getDirection(startPoint, endPoint);
+        if(startOffSet!=null) {
+            startPoint = Converter2D.getMapDisplayPoint(startPoint, angle, Converter2D.getFeetToDots(startOffSet*Units.NM/Units.FT, mapViewAdapter));
         }
-        
+
         if(endOffSet!=null) {
-            angle = angle!=null ? angle : (long)Converter2D.getDirection(startPoint, endPoint); ; 
-            startPoint = Converter2D.getMapDisplayPoint(endPoint, angle-180, Converter2D.getFeetToDots(endOffSet*Units.NM/Units.FT, mapViewAdapter));
+            endPoint = Converter2D.getMapDisplayPoint(endPoint, angle-180, Converter2D.getFeetToDots(endOffSet*Units.NM/Units.FT, mapViewAdapter));
         }
-        
-        Shape shape = new Line2D.Double(startPoint, endPoint);
+
+        if(color!=null) {
+            g2d.setColor(color);
+        }
+        Path2D path = new Path2D.Double();
+        if(text==null) {
+            path.append(new Line2D.Double(startPoint, endPoint),false);
+        } else {
+            double length = startPoint.distance(endPoint);
+            g2d.setFont(g2d.getFont().deriveFont(10.0f));
+            Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
+
+            double direction = Converter2D.getDirection(startPoint, endPoint);
+            double dirTopLeftCorner = Converter2D.getDirection(new Point2D.Double(0, 0), new Point2D.Double(bounds.getWidth(), -1* bounds.getHeight()));
+            double gap = 0;
+            if(    direction > 360-dirTopLeftCorner
+               || (direction < 180+dirTopLeftCorner && direction > 180-dirTopLeftCorner)
+               ||  direction <     dirTopLeftCorner) {
+               //  top // bottom
+                gap = Math.abs(bounds.getHeight() / Math.cos(Math.toRadians(direction))) / 2 + 4 ;
+            } else {
+                // left right
+                gap = Math.abs(bounds.getWidth() / Math.sin(Math.toRadians(direction))) / 2 + 4;
+            }
+
+            if(length*0.5 >  gap) {
+                Point2D middlePoint1 = Converter2D.getMapDisplayPoint(startPoint, angle, length*0.5 - gap * Math.signum(length) );
+                Point2D middlePoint2 = Converter2D.getMapDisplayPoint(startPoint, angle, length*0.5 + gap * Math.signum(length) );
+                path.append(new Line2D.Double(startPoint, middlePoint1),false);
+                path.append(new Line2D.Double(middlePoint2, endPoint),false);
+
+               // System.out.println(String.format("%3.0f %4.1f %s",direction,gap,text));
+                Point2D middlePoint = Converter2D.getMapDisplayPoint(startPoint, angle, length*0.5);
+                g2d.drawString(text, (int)(middlePoint.getX()-bounds.getWidth()/2), (int)(middlePoint.getY()+bounds.getHeight()/2-2));
+
+            } else {
+                // skip text, paint line only
+                path.append(new Line2D.Double(startPoint, endPoint),false);
+            }
+        }
         Stroke origStroke = g2d.getStroke();
-        g2d.setStroke(stroke);
-        g2d.draw(shape);
+        if(stroke!=null) {
+            g2d.setStroke(stroke);
+        }
+        g2d.draw(path);
+
+
+        if("both".equalsIgnoreCase(arrows) || "start".equalsIgnoreCase(arrows)) {
+            double heading = angle!=null ? angle-180 : Converter2D.getDirection(startPoint, endPoint);
+            this.paintArrow(g2d, startPoint, heading, arrowSize, false);
+        }
+        if("both".equalsIgnoreCase(arrows) || "end".equalsIgnoreCase(arrows)) {
+            double heading = angle!=null ? angle : Converter2D.getDirection(startPoint,endPoint);
+            this.paintArrow(g2d, endPoint, heading, arrowSize, true);
+        }
         g2d.setStroke(origStroke);
-        
-        // todo paint arrows
-        
-        return shape.getBounds2D();
+
+        return path.getBounds2D();
     }
 
     @Override
     public Point2D getEndPoint() {
-        return null;
+        if(geoEndPoint!=null) {
+            return geoEndPoint;
+        } else {
+            return new IndirectPoint2D(mapViewerAdapter, geoStartPoint, angle, length);
+        }
     }
 
 }

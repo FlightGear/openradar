@@ -6,7 +6,7 @@ A todos los hombres del aire:
 %s: Contacto Radar a %3.0f mi, QNH %2.2f Hectopascal, espere pista: %s, FGCOM %2.3f
 
 %s: Esta abandonando mi area - Autorizado a cambiar frecuencia - Que tenga buen viaje
-ATIS en %s a %2.0f ft: QNH %2.2f  viento %3.0f Grados a %2.0f Nudos. Pista en uso %s  FGCOM %2.3f
+ATIS en %s a %2.0f ft: QNH %2.2f  viento %s. Pista en uso %s  FGCOM %2.3f
 
 
 %s: Autorizado a Arrancar Motores
