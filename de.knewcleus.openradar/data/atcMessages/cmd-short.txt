@@ -1,36 +1,36 @@
 (To All: empty)
 (Target: empty)
 
-Welcome outside
-Welcome to the airport
-Radar contact + QNH + RW
-Follow FlightPlan
-Leaving Area
+<span style="color:rgb(48,97,48);">Welcome outside</span>
+<span style="color:rgb(48,97,48);">Welcome to the airport</span>
+<span style="color:rgb(48,97,48);">Radar contact + QNH + RW</span>
+<span style="color:rgb(117,0,0);">Follow FlightPlan</span>
+<span style="color:rgb(117,0,0);">Leaving Area</span>
 ATIS
 Help Contact ATC
 
-Start Up Engine
-Push Back
-Taxi To
-Hold Short
+<span style="color:rgb(116,69,23);">Start Up Engine</span>
+<span style="color:rgb(116,69,23);">Push Back</span>
+<span style="color:rgb(116,69,23);">Taxi To</span>
+<span style="color:rgb(116,69,23);">Hold Short</span>
 
-Line Up and wait on runway
-Maintain Hdg + Climb
-Take Off
+<span style="color:rgb(48,97,48);">Line Up and wait on runway</span>
+<span style="color:rgb(48,97,48);">Maintain Hdg + Climb</span>
+<span style="color:rgb(48,97,48);">Take Off</span>
 
-left turn
-right turn
-climb
-descent
-reduce speed
+<span style="color:rgb(22,66,88);">left turn</span>
+<span style="color:rgb(22,66,88);">right turn</span>
+<span style="color:rgb(22,66,88);">climb</span>
+<span style="color:rgb(22,66,88);">descent</span>
+<span style="color:rgb(22,66,88);">reduce speed</span>
 
-ILS intercept clearance
-RW inSight
-Land
-Exit runway (left/right)
-Cleared to cross
+<span style="color:rgb(117,0,0);">ILS intercept clearance</span>
+<span style="color:rgb(117,0,0);">RW inSight</span>
+<span style="color:rgb(117,0,0);">Land</span>
+<span style="color:rgb(117,0,0);">Exit runway (left/right)</span>
+<span style="color:rgb(117,0,0);">Cleared to cross</span>
 
 FGCOM only for ATC
-uncontrolled flying 
+uncontrolled flying
 do not start on RW
-how to set Startpos EDDF
+how to set startpos
