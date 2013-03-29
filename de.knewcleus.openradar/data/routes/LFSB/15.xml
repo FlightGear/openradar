@@ -3,6 +3,7 @@
 <routes>
 
 	<route name="RW 15 finals" zoomMin="10" zoomMax="100" color="120,120,140" >
+
 		<activeLandingRunways>15</activeLandingRunways>
 		<navaids>BLM,ALTIK,ROFAC,INTEM,HOMBO,LUMEL,ARPUS</navaids>
 
@@ -24,7 +25,7 @@
 		<line start="11NM232@BLM" end="13NM232@BLM" text="232" />
 		<line start="BLM" angle="232" length="11" lineWidth="1" stroke="dashed" text="232" />
 		<curve start="13NM232@BLM" end="15NM238@BLM" controlPoint="15NM232@BLM"/>
-		<bow center="BLM" radius="15" startAngle="274" extentAngle="-36" arrows="start" text="D15"/>
+		<bow center="BLM" radius="15" startAngle="238" extentAngle="36" arrows="end" text="D15"/>
 	</route>
 
 	<route name="RW 15 SID" zoomMin="10" zoomMax="100" color="120,140,120">
@@ -38,10 +39,9 @@
 		<line start="8NM226@BLM" end="LUMEL" text="226" />
 
 		<!-- BASUD 2S -->
-
-		<bow center="8.315NM184@BLM" radius="3.65" startAngle="168" extentAngle="180"/>
+		<bow center="8.317NM184@BLM" radius="3.65" startAngle="168" extentAngle="180"/>
 		<line start="BLM" angle="196" length="6" stroke="dashed" lineWidth="1" text="196" />
-		<line start="BLM" angle="190" length="6" stroke="dashed" lineWidth="1" text="190" />
+		<line start="3NM190@BLM" angle="190" length="3" stroke="dashed" lineWidth="1" text="190" />
 		<line start="HOC" angle="254" length="6.85" text="074" />
 		<line start="BASUD" angle="315" length="5.7" text="135" />
 		<line start="WIL" end="BASUD" stroke="dashed" lineWidth="1" text="315"/>
@@ -58,5 +58,11 @@
 
 		<!-- Strassburg 2S -->
 		<line start="BLM" angle="003" length="90" text="003" />
+		<curve start="4.42NM175@BLM" end="3NM190@BLM" controlPoint="4.8NM190@BLM" />
+		<line start="BLM" angle="190" length="3" text="190" />
+
+		<!-- BASUD 2Z -->
+		<line start="BLM" end="ELBEG" text="069" arrows="end"/>
+
 	</route>
 </routes>

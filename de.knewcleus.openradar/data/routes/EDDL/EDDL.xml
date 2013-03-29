@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes>
+	<addPoint code="NIKOGC" point="51.4969444,6.94361" />
+	<addPoint code="ORSOVC" point="51.5622222,6.67083" />
+
+	<!-- STARS for IAF RONAD -->
+
+	<route name="STAR TEBRO 1X" color="140,140,180">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<navaids>TEBRO,VALSU,GAPNU,RONAD</navaids>
+		<line start="TEBRO" end="VALSU" text="STAR TEBRO 1X   165° 5000" arrows="end"/>
+		<line start="VALSU" end="GAPNU" text="186° 4000" arrows="end"/>
+		<line start="GAPNU" end="RONAD" text="232° 4000" arrows="end"/>
+	</route>
+	<route name="STAR LMA 9X" color="140,140,180">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<navaids>LMA,IBIKO,GAPNU,RONAD</navaids>
+		<line start="LMA" end="IBIKO" text="STAR LMA 9X   060° 4000" arrows="end"/>
+		<line start="IBIKO" end="GAPNU" text="142° 4000" arrows="end"/>
+		<line start="GAPNU" end="RONAD" text="232° 4000" arrows="end"/>
+	</route>
+	<route name="STAR XAMOD 2X" color="140,140,180">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<navaids>XAMOD,BOMBA,RONAD</navaids>
+		<line start="XAMOD" end="BOMBA" text="STAR XAMOD 2X   186° 4000" arrows="end"/>
+		<line start="BOMBA" end="GAPNU" text="232° 4000" arrows="end"/>
+		<line start="GAPNU" end="RONAD" text="232° 4000" arrows="end"/>
+	</route>
+	<route name="STAR BIKMU 1X" color="140,140,180">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<navaids>BIKMU,RONAD</navaids>
+		<line start="BIKMU" end="RONAD" text="STAR BIKMU 1X   337° 4000" arrows="end"/>
+	</route>
+
+
+	<!-- STARS for IAF LEBTI -->
+
+	<route name="STAR DOMUX 2X" color="140,140,180">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<navaids>DOMUX,DOLAV,LEBTI</navaids>
+		<line start="DOMUX" end="DOLAV" text="STAR DOMUX 2X   270° 5000" arrows="end"/>
+		<line start="DOLAV" end="LEBTI" text="223° 3000" arrows="end"/>
+	</route>
+
+
+	<!-- STARS for IAF BOT -->
+
+	<route name="STAR TEBRO 1G XAMOD 2G" color="140,140,180">
+		<activeLandingRunways>23L,23R</activeLandingRunways>
+		<navaids>TEBRO,AGEDA,XAMOD,BOT</navaids>
+		<line start="TEBRO" end="AGEDA" text="STAR TEBRO 1G   112° 6000" arrows="end"/>
+		<line start="AGEDA" end="XAMOD" text="142° 6000" arrows="end"/>
+		<line start="XAMOD" end="BOT" text="XAMOD 2G   213° 4000" arrows="end"/>
+	</route>
+	<route name="STAR LMA 8G" color="140,140,180">
+		<activeLandingRunways>23L,23R</activeLandingRunways>
+		<navaids>LMA,BOT</navaids>
+		<line start="LMA" end="BOT" text="STAR LMA 8G   060° 4000" arrows="end"/>
+	</route>
+	<route name="STAR BIKMU 1G" color="140,140,180">
+		<activeLandingRunways>23L,23R</activeLandingRunways>
+		<navaids>LMA,BOT</navaids>
+		<line start="BIKMU" end="BOT" text="STAR BIKMU 1G   024° 4000" arrows="end"/>
+	</route>
+
+
+	<!-- STARS for IAF BAM -->
+
+	<route name="STAR DOMUX 2G" color="140,140,180">
+		<activeLandingRunways>23L,23R</activeLandingRunways>
+		<navaids>DOMUX,BAM</navaids>
+		<line start="DOMUX" end="BAM" text="STAR DOMUX 2G   247° 3000" arrows="end"/>
+	</route>
+
+
+	<!-- SID 05 -->
+
+	<route name="SID 05" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<line start="1.6NM54@DUS" end="6NM54@DUS" arrows="end"/>
+	</route>
+
+	<route name="SID MODRU 5 NETEX 2" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<navaids>NIKOGC,ORSOVC,VEBAK,NETEX,MODRU</navaids>
+		<line start="6NM54@DUS" end="NIKOGC" text="009°" arrows="end"/>
+		<line start="NIKOGC" end="ORSOVC" text="290°" arrows="end"/>
+		<line start="ORSOVC" end="VEBAK" text="242°" arrows="end"/>
+	</route>
+
+	<route name="SID MODRU 5J NETEX 2J" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<line start="VEBAK" end="NETEX" text="SID NETEX 2J   200°" arrows="end"/>
+		<line start="NETEX" end="MODRU" text="SID MODRU 5J   200° 5000" arrows="end"/>
+	</route>
+	<route name="SID MODRU 5Z NETEX 2Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<line start="VEBAK" end="NETEX" text="SID NETEX 2Z   200°" arrows="end"/>
+		<line start="NETEX" end="MODRU" text="SID MODRU 5Z   200° 5000" arrows="end"/>
+	</route>
+
+	<route name="SID SONEB 2" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<navaids>NIKOGC,LUSIX,SONEB</navaids>
+		<line start="6NM54@DUS" end="NIKOGC" text="009°" arrows="end"/>
+		<line start="NIKOGC" end="LUSIX" text="349°" arrows="end"/>
+	</route>
+	<route name="SID SONEB 2J" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>LUSIX,SONEB</navaids>
+		<line start="LUSIX" end="SONEB" text="SID SONEB 2J   349° 4000" arrows="end"/>
+	</route>
+	<route name="SID SONEB 2Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>LUSIX,SONEB</navaids>
+		<line start="LUSIX" end="SONEB" text="SID SONEB 2Z   349° 4000" arrows="end"/>
+	</route>
+
+	<route name="SID MEVEL 5" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<navaids>NIKOGC,LUSIX,MEVEL</navaids>
+		<line start="6NM54@DUS" end="NIKOGC" text="009°" arrows="end"/>
+		<line start="NIKOGC" end="LUSIX" text="349°" arrows="end"/>
+	</route>
+	<route name="SID MEVEL 5J" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>LUSIX,MEVEL</navaids>
+		<line start="LUSIX" end="MEVEL" text="SID MEVEL 5J   053° 6000" arrows="end"/>
+	</route>
+	<route name="SID MEVEL 5Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>LUSIX,MEVEL</navaids>
+		<line start="LUSIX" end="MEVEL" text="SID MEVEL 5Z   053° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID LMA 5Y" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>LMA</navaids>
+		<line start="6NM54@DUS" end="LMA" text="SID LMA 5Y   261°" arrows="end"/>
+	</route>
+	<route name="SID LMA 5Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>LMA</navaids>
+		<line start="6NM54@DUS" end="LMA" text="SID LMA 5Z   261°" arrows="end"/>
+	</route>
+
+	<route name="SID NUDGO 2" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<navaids>BAM,MAMIB,KULIX,NUDGO</navaids>
+		<line start="6NM54@DUS" end="BAM" text="098°" arrows="end"/>
+		<line start="BAM" end="6.6NM96@BAM" text="096°"/>
+		<line start="6.6NM96@BAM" end="MAMIB" text="R293°GMH 5000" arrows="end"/>
+		<line start="MAMIB" end="KULIX" text="068° 6000" arrows="end"/>
+	</route>
+	<route name="SID NUDGO 2J" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>KULIX,NUDGO</navaids>
+		<line start="KULIX" end="NUDGO" text="SID NUDGO 2J   062° 6000" arrows="end"/>
+	</route>
+	<route name="SID NUDGO 2Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>KULIX,NUDGO</navaids>
+		<line start="KULIX" end="NUDGO" text="SID NUDGO 2Z   062° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID GMH 6" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<navaids>BAM,MAMIB</navaids>
+		<line start="6NM54@DUS" end="BAM" text="098°" arrows="end"/>
+		<line start="BAM" end="6.6NM96@BAM" text="096°"/>
+		<line start="6.6NM96@BAM" end="MAMIB" text="R293°GMH 5000" arrows="end"/>
+	</route>
+	<route name="SID GMH 6Y" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>MAMIB,GMH</navaids>
+		<line start="MAMIB" end="GMH" text="SID GMH 2Y   113° 6000" arrows="end"/>
+	</route>
+	<route name="SID GMH 3Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>MAMIB,GMH</navaids>
+		<line start="MAMIB" end="GMH" text="SID GMH 3Z   113° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID KUMIK 2" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<navaids>BAM,DEGOM</navaids>
+		<line start="6NM54@DUS" end="BAM" text="098°" arrows="end"/>
+		<line start="BAM" end="6.6NM96@BAM" text="096°"/>
+		<line start="6.6NM96@BAM" end="DEGOM" text="129° 5000" arrows="end"/>
+	</route>
+	<route name="SID KUMIK 2J" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>DEGOM,KUMIK</navaids>
+		<line start="DEGOM" end="KUMIK" text="SID KUMIK 2J   142° 6000" arrows="end"/>
+	</route>
+	<route name="SID KUMIK 2Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>DEGOM,KUMIK</navaids>
+		<line start="DEGOM" end="KUMIK" text="SID KUMIK 2Z   142° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID DODEN 4" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<navaids>BAM,ELBAL,BETZO</navaids>
+		<line start="6NM54@DUS" end="BAM" text="098°" arrows="end"/>
+		<line start="BAM" end="ELBAL" text="135°"/>
+		<line start="ELBAL" end="BETZO" text="135° 5000" arrows="end"/>
+	</route>
+	<route name="SID DODEN 4J" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>BETZO,DODEN</navaids>
+		<line start="BETZO" end="DODEN" text="SID DODEN 4J   147° 6000" arrows="end"/>
+	</route>
+	<route name="SID DODEN 4Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>BETZO,DODEN</navaids>
+		<line start="BETZO" end="DODEN" text="SID DODEN 4Z   147° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID COL 2" color="140,180,140">
+		<activeStartRunways>05L,05R</activeStartRunways>
+		<navaids>BAM,LIPMI,COL</navaids>
+		<line start="6NM54@DUS" end="BAM" text="098°" arrows="end"/>
+		<line start="BAM" end="LIPMI" text="164°"/>
+	</route>
+	<route name="SID COL 2J" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>LIPMI,COL</navaids>
+		<line start="LIPMI" end="COL" text="SID COL 2J   148° 5000"/>
+	</route>
+	<route name="SID COL 2Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>LIPMI,COL</navaids>
+		<line start="LIPMI" end="COL" text="SID COL 2Z   148° 5000"/>
+	</route>
+
+	<route name="SID NOR 7Y" color="140,180,140">
+		<activeStartRunways>05L</activeStartRunways>
+		<navaids>BAM,NOR</navaids>
+		<line start="6NM54@DUS" end="BAM" text="098°" arrows="end"/>
+		<line start="BAM" end="NOR" text="SID NOR 7Y   212°"/>
+	</route>
+	<route name="SID NOR 3Z" color="140,180,140">
+		<activeStartRunways>05R</activeStartRunways>
+		<navaids>BAM,NOR</navaids>
+		<line start="6NM54@DUS" end="BAM" text="098°" arrows="end"/>
+		<line start="BAM" end="NOR" text="SID NOR 3Z   212°"/>
+	</route>
+
+
+	<!-- SID 23 -->
+
+	<route name="SID 23" color="140,180,140">
+		<activeStartRunways>23L,23R</activeStartRunways>
+		<navaids>DY</navaids>
+		<line start="DUS" end="4.5NM233@DUS"/>
+		<line start="4.5NM233@DUS" end="DY" arrows="end"/>
+	</route>
+
+	<route name="SID MODRU 8" color="140,180,140">
+		<activeStartRunways>23L,23R</activeStartRunways>
+		<navaids>UBORO,NETEX</navaids>
+		<line start="4.5NM233@DUS" end="UBORO" text="321°" arrows="end"/>
+		<line start="UBORO" end="NETEX" arrows="end"/>
+	</route>
+	<route name="SID MODRU 8T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>NETEX,MODRU</navaids>
+		<line start="NETEX" end="MODRU" text="SID MODRU 8T   200° 5000" arrows="end"/>
+	</route>
+	<route name="SID MODRU 8L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>NETEX,MODRU</navaids>
+		<line start="NETEX" end="MODRU" text="SID MODRU 8L   200° 5000" arrows="end"/>
+	</route>
+
+	<route name="SID LMA 8T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>LMA</navaids>
+		<line start="DUS" end="LMA" text="SID LMA 8T   297°" arrows="end"/>
+	</route>
+	<route name="SID LMA 4L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>LMA</navaids>
+		<line start="DUS" end="LMA" text="SID LMA 4L   297°" arrows="end"/>
+	</route>
+
+	<route name="SID NETEX 2T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>NETEX</navaids>
+		<line start="LMA" end="NETEX" text="SID NETEX 2T   240°" arrows="end"/>
+	</route>
+	<route name="SID NETEX 2L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>NETEX</navaids>
+		<line start="LMA" end="NETEX" text="SID NETEX 2L   240°" arrows="end"/>
+	</route>
+
+	<route name="SID SONEB 3" color="140,180,140">
+		<activeStartRunways>23L,23R</activeStartRunways>
+		<navaids>ERKUM</navaids>
+		<line start="DUS" end="ERKUM" text="360°" arrows="end"/>
+	</route>
+	<route name="SID SONEB 3T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>ERKUM,SONEB</navaids>
+		<line start="ERKUM" end="SONEB" text="SID SONEB 3T   005° 4000" arrows="end"/>
+	</route>
+	<route name="SID SONEB 3L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>ERKUM,SONEB</navaids>
+		<line start="ERKUM" end="SONEB" text="SID SONEB 3L   005° 4000" arrows="end"/>
+	</route>
+
+	<route name="SID MEVEL 9" color="140,180,140">
+		<activeStartRunways>23L,23R</activeStartRunways>
+		<navaids>ERKUM,LUSIX</navaids>
+		<line start="DUS" end="ERKUM" text="360°" arrows="end"/>
+		<line start="ERKUM" end="LUSIX" text="053° 6000" arrows="end"/>
+	</route>
+	<route name="SID MEVEL 9T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>MEVEL</navaids>
+		<line start="LUSIX" end="MEVEL" text="SID MEVEL 9T   053° 6000" arrows="end"/>
+	</route>
+	<route name="SID MEVEL 8L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>MEVEL</navaids>
+		<line start="LUSIX" end="MEVEL" text="SID MEVEL 8L   053° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID NOR 1T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>NOR</navaids>
+		<line start="DY" end="NOR" text="SID NOR 1T   174°" arrows="end"/>
+	</route>
+	<route name="SID NOR 5U" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>NOR</navaids>
+		<line start="DY" end="NOR" text="SID NOR 5U   174°" arrows="end"/>
+	</route>
+
+	<route name="SID GMH" color="140,180,140">
+		<activeStartRunways>23L,23R</activeStartRunways>
+		<navaids>ELBAL,DEGOM</navaids>
+		<line start="DY" end="20.6NM354@NOR"/>
+		<curve start="20.6NM354@NOR" end="43NM266@GMH" controlPoint="17NM354@NOR"/>
+		<line start="43NM266@GMH" end="32NM266@GMH" text="086° R266 GMH"/>
+		<line start="32NM266@GMH" end="ELBAL" text="086° R266 GMH" arrows="end"/>
+		<line start="ELBAL" end="DEGOM" text="086° R266 GMH 6000" arrows="end"/>
+	</route>
+	<route name="SID GMH 6T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>GMH</navaids>
+		<line start="DEGOM" end="GMH" text="SID GMH 6T 086° 6000" arrows="end"/>
+	</route>
+	<route name="SID GMH 6L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>GMH</navaids>
+		<line start="DEGOM" end="GMH" text="SID GMH 6L 086° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID COL" color="140,180,140">
+		<activeStartRunways>23L,23R</activeStartRunways>
+		<navaids>LIPMI</navaids>
+		<line start="32NM266@GMH" end="LIPMI" text="103°" arrows="end"/>
+	</route>
+	<route name="SID COL 2T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>LIPMI,COL</navaids>
+		<line start="LIPMI" end="COL" text="SID COL 2T   148° 5000" arrows="end"/>
+	</route>
+	<route name="SID COL 2L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>LIPMI,COL</navaids>
+		<line start="LIPMI" end="COL" text="SID COL 2L   148° 5000" arrows="end"/>
+	</route>
+
+	<route name="SID DODEN" color="140,180,140">
+		<activeStartRunways>23L,23R</activeStartRunways>
+		<navaids>BETZO</navaids>
+		<line start="ELBAL" end="BETZO" text="135° 5000" arrows="end"/>
+	</route>
+	<route name="SID DODEN 4T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>DODEN</navaids>
+		<line start="BETZO" end="DODEN" text="SID DODEN 4T   147° 6000" arrows="end"/>
+	</route>
+	<route name="SID DODEN 4L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>DODEN</navaids>
+		<line start="BETZO" end="DODEN" text="SID DODEN 4L   147° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID KUMIK 3T" color="140,180,140">
+		<activeStartRunways>23L</activeStartRunways>
+		<navaids>KUMIK</navaids>
+		<line start="DEGOM" end="KUMIK" text="SID KUMIK 3T   142° 6000" arrows="end"/>
+	</route>
+	<route name="SID KUMIK 3L" color="140,180,140">
+		<activeStartRunways>23R</activeStartRunways>
+		<navaids>KUMIK</navaids>
+		<line start="DEGOM" end="KUMIK" text="SID KUMIK 3L   142° 6000" arrows="end"/>
+	</route>
+
+	<route name="SID NUDGO" color="140,180,140">
+		<activeStartRunways>23L,23R</activeStartRunways>
+		<navaids>MAMIB,KULIX</navaids>
+		<line start="ELBAL" end="MAMIB" text="068°" arrows="end"/>
+		<line start="MAMIB" end="KULIX" text="068° 6000" arrows="end"/>
+		<line start="KULIX" end="NUDGO" text="SID NUDGO   068° 6000" arrows="end"/>
+	</route>
+
+
+	<!-- LOOPS -->
+
+	<route name="05 loops" color="140,140,180">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<loop navpoint="LEBTI" inboundHeading="234" arrows="both" minHeight="3000" length="4"/>
+	</route>
+	<route name="23 loops" color="140,140,180">
+		<activeLandingRunways>23L,23R</activeLandingRunways>
+		<loop navpoint="BOT" inboundHeading="238" arrows="both" minHeight="4000" right="false" length="4"/>
+		<loop navpoint="BAM" inboundHeading="251" arrows="both" minHeight="3000" right="false" length="4"/>
+	</route>
+	<route name="05/23 loops" color="140,140,180">
+		<activeLandingRunways>05L,05R,23L,23R</activeLandingRunways>
+		<loop navpoint="LMA" inboundHeading="240" arrows="both" minHeight="4000" length="4"/>
+	</route>
+
+
+	<!-- Final approaches 05 -->
+
+	<route name="Approach LMA 05" color="20,20,140">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<line start="RONAD" end="MHV" text="217° 4000" arrows="end"/>
+		<line start="MHV" end="0.6NM206@MHV"/>
+		<curve start="0.6NM206@MHV" end="8.9NM233@DUS" controlPoint="13NM233@DUS" arrows="end"/>
+	</route>
+	<route name="Approach LEBTI 05" color="20,20,140">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<line start="LEBTI" end="25NM235@BAM" text="235° 3000" arrows="end"/>
+		<curve start="25NM235@BAM" end="8.9NM233@DUS" controlPoint="16NM220@DUS" arrows="end"/>
+	</route>
+	<route name="Abort 05">
+		<activeLandingRunways>05L,05R</activeLandingRunways>
+		<line start="DUS" end="3NM53@DUS" stroke="dashed"/>
+		<curve start="3NM53@DUS" end="13NM87@LMA" controlPoint="51.367279,6.911430" stroke="dashed" arrows="end"/>
+		<line start="13NM87@LMA" end="LMA" stroke="dashed" text="267°" arrows="end"/>
+	</route>
+
+
+	<!-- Final approaches 23 -->
+
+	<route name="Approach BOT 23" color="20,20,140">
+		<activeLandingRunways>23L,23R</activeLandingRunways>
+		<line start="BOT" end="7NM173@BOT" text="173° 3000"/>
+		<curve start="7NM173@BOT" end="13NM53@DUS" controlPoint="14NM53@DUS" arrows="end"/>
+	</route>
+	<route name="Approach BAM 23" color="20,20,140">
+		<activeLandingRunways>23L,23R</activeLandingRunways>
+		<line start="BAM" end="5.8NM321@BAM" text="321° 3000"/>
+		<curve start="5.8NM321@BAM" end="13NM53@DUS" controlPoint="14NM53@DUS" arrows="end"/>
+	</route>
+	<route name="Abort 23">
+		<activeLandingRunways>23L,23R</activeLandingRunways>
+		<line start="DUS" end="2NM233@DUS" stroke="dashed"/>
+		<curve start="2NM233@DUS" end="22NM219@BOT" controlPoint="6NM243@DUS" stroke="dashed" arrows="end"/>
+		<line start="22NM219@BOT" end="BOT" stroke="dashed" arrows="end"/>
+	</route>
+
+</routes>
+

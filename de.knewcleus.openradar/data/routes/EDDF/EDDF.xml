@@ -2,394 +2,370 @@
 
 <routes>
 
-	<route name="EDDF Holding Patterns">
-		<navaids>RID,CHA,PSA,GED,MTR,TAU,WUR,ELLX,GIK,EDDK,COLA,EDDS,LUB</navaids>
-		<loop navpoint="RID" inboundHeading="246" width="5" arrows="both"
-			minHeight="5000" maxHeight="MAX 10000" />
-		>
-		<loop navpoint="CHA" inboundHeading="285" width="5" arrows="both"
-			minHeight="5000" maxHeight="MAX 10000" />
-		<loop navpoint="PSA" inboundHeading="290" width="5" arrows="both"
-			minHeight="5000" maxHeight="MAX 10000" />
-		<loop navpoint="GED" inboundHeading="181" width="5" arrows="both"
-			minHeight="6000" maxHeight="MAX 12000" />
-		>
-		<loop navpoint="MTR" inboundHeading="208" width="5" arrows="both"
-			minHeight="5000" maxHeight="MAX 11000" />
-		<loop navpoint="TAU" inboundHeading="227" width="5" arrows="both"
-			minHeight="5000" maxHeight="MAX 12000" />
+	<addPoint code="AGOLO" point="50.200000,9.676111"/>
+ 	<addPoint code="BIBTI" point="50.966667,7.108611"/>
+ 	<addPoint code="ESUPI" point="50.058333,8.121111"/>
+ 	<addPoint code="FRD"   point="50.030556,8.566944"/>
+ 	<addPoint code="IBVIL" point="50.434444,7.369167"/>
+ 	<addPoint code="KERAX" point="50.475000,9.581944"/>
+ 	<addPoint code="MANUV" point="50.295556,7.458889"/>
+ 	<addPoint code="MAROB" point="50.294167,8.542778"/>
+ 	<addPoint code="OBOKA" point="50.745000,7.338056"/>
+ 	<addPoint code="OKTUM" point="50.199722,10.010556"/>
+ 	<addPoint code="UNOKO" point="50.454722,7.227222"/>
+ 	<addPoint code="RAMOB" point="50.111389,7.683889"/>
+ 	<addPoint code="ROXAP" point="49.915278,8.364167"/>
+ 	<addPoint code="TUKRU" point="49.940000,8.721111"/>
+ 	<addPoint code="VFM"   point="49.961944,8.471389"/>
+
+	<route  name="EDDF Holding Patterns">
+		<navaids>RID,CHA,(VOR)MTR,PSA,GED,TAU,FRD,VFM,WUR</navaids>
+		<loop navpoint="RID" inboundHeading="246" width="3.1" arrows="end" minHeight="5000" maxHeight="MAX 10000"/>>
+		<loop navpoint="CHA" inboundHeading="285" width="3.1" arrows="end" minHeight="5000" maxHeight="MAX 10000"/>
+		<loop navpoint="PSA" inboundHeading="290" width="3.1" arrows="end" minHeight="5000" maxHeight="MAX 10000"/>
+		<loop navpoint="GED" inboundHeading="181" width="3.1" arrows="end" minHeight="6000" maxHeight="MAX 12000"/>>
+		<loop navpoint="(VOR)MTR" inboundHeading="208" width="3.1" arrows="end" minHeight="5000" maxHeight="MAX 11000"/>
+		<loop navpoint="TAU" inboundHeading="227" width="3.1" arrows="end" minHeight="5000" maxHeight="MAX 12000"/>
 	</route>
 
-	<route name="Hazardous Areas" color="118,74,96">
-		<!-- 5000 links Morbach -->
-		<text position="49.740000,7.130000" font="Arial" fontSize="16"
-			angle="-45" text="5000" />
-		<multiPointLine lineWidth="1">
-			<point>49.608040,7.035370</point>
-			<point>49.712937,6.979065</point>
-			<point>49.898173,7.286682</point>
-			<point>49.797223,7.332001</point>
-			<point>49.608040,7.035370</point>
-		</multiPointLine>
-		<!-- 5000 mitte Argerthal -->
-		<text position="49.920283,7.630005" font="Arial" fontSize="16"
-			angle="-45" text="5000" />
-		<multiPointLine lineWidth="1">
-			<point>49.889326,7.461090</point>
-			<point>49.993615,7.672577</point>
-			<point>49.930008,7.739868</point>
-			<point>49.835325,7.564087</point>
-			<point>49.889326,7.461090</point>
-		</multiPointLine>
-		<!-- 5000 rechts Feldberg -->
-		<text position="50.211186,8.459473" font="Arial" fontSize="16"
-			angle="-30" text="5000" />
-		<multiPointLine lineWidth="1">
-			<point>50.159305,8.400421</point>
-			<point>50.236665,8.383942</point>
-			<point>50.287584,8.577576</point>
-			<point>50.225245,8.588562</point>
-			<point>50.159305,8.400421</point>
-		</multiPointLine>
-		<!-- 4000 Anschluss rechts -->
-		<text position="50.311269,8.658600" font="Arial" fontSize="16"
-			angle="-45" text="4000" />
-		<multiPointLine lineWidth="1">
-			<point>50.287584,8.577576</point>
-			<point>50.367365,8.691559</point>
-			<point>50.317408,8.725891</point>
-			<point>50.225245,8.588562</point>
-		</multiPointLine>
-		<!-- 4000 Verbindung mitte/rechts -->
-		<text position="50.062429,8.037872" font="Arial" fontSize="16"
-			angle="-30" text="4000" lineWidth="1" />
-		<line start="49.993615,7.672577" end="50.236665,8.383942"
-			lineWidth="1" />
-		<line start="49.930008,7.739868" end="50.159305,8.400421"
-			lineWidth="1" />
+	<route name="Hazardous Areas" color="216,42,58">
+		<!-- 5000 links Morbach		-->
+			<text position="49.740000,7.130000" font="Arial" fontSize="14" angle="-45" text="5000" />
+			<multiPointLine >
+				<point>49.608040,7.035370</point>
+				<point>49.712937,6.979065</point>
+				<point>49.898173,7.286682</point>
+				<point>49.797223,7.332001</point>
+				<point>49.608040,7.035370</point>
+			</multiPointLine>
+		<!-- 5000 mitte Argerthal	-->rext
+			<text position="49.920283,7.630005" font="Arial" fontSize="14" angle="-45" text="5000" />
+			<multiPointLine >
+				<point>49.889326,7.461090</point>
+				<point>49.993615,7.672577</point>
+				<point>49.930008,7.739868</point>
+				<point>49.835325,7.564087</point>
+				<point>49.889326,7.461090</point>
+			</multiPointLine>
+		<!-- 5000 rechts Feldberg	-->
+			<text position="50.211186,8.459473" font="Arial" fontSize="14" angle="-30" text="5000" />
+			<multiPointLine >
+				<point>50.159305,8.400421</point>
+				<point>50.236665,8.383942</point>
+				<point>50.287584,8.577576</point>
+				<point>50.225245,8.588562</point>
+				<point>50.159305,8.400421</point>
+			</multiPointLine>
+		<!-- 4000 Anschluss rechts	-->
+			<text position="50.311269,8.658600" font="Arial" fontSize="14" angle="-45" text="4000" />
+			<multiPointLine >
+				<point>50.287584,8.577576</point>
+				<point>50.367365,8.691559</point>
+				<point>50.317408,8.725891</point>
+				<point>50.225245,8.588562</point>
+			</multiPointLine>
+		<!-- 4000 Verbindung mitte/rechts	-->
+			<text position="50.062429,8.037872" font="Arial" fontSize="14" angle="-30" text="4000"  />
+			<line start="49.993615,7.672577" end="50.236665,8.383942" />
+			<line start="49.930008,7.739868" end="50.159305,8.400421" />
 	</route>
 
-
-	<!-- ****** EDDF Final's ****** -->
-	<route name="rw 07L,07C,07R final" color="152,124,138" zoomMin="5"
-		zoomMax="100" arrows="end,20">
-		<activeLandingRunways>07L,07C,07R</activeLandingRunways>
-		<navaids>LOMPO,FFM</navaids>
+	<!-- **************************** -->
+	<!-- ******  EDDF Final's  ****** -->
+	<!-- **************************** -->
+	<route name="rw 07L,07C,07R final" color="152,124,138" zoomMax="150">
+		<activeLandingRunways>07L 07C 07R</activeLandingRunways>
+		<navaids>LOMPO,(VOR)FFM</navaids>
 		<!-- 07 TAU -->
-		<line start="TAU" end="DF270" text="182" arrows="end,20" />
-		<line start="DF270" end="3.1NM340@DF272" stroke="dots" arrows="end,20" />
-		<curve start="3.1NM340@DF272" end="LOMPO" controlPoint="DF272" stroke="dots" arrows="end,20" />
+		<line start="TAU"   end="DF270" text="R182-TAU" stroke="dots" arrows="end,10"/>
+  	<line start="DF270" end="3.1NM340@DF272" stroke="dots" arrows="end,10"/>
+	  <curve start="3.1NM340@DF272" end="LOMPO" controlPoint="DF272" stroke="dots" arrows="end,10"/>
 		<!-- 07 RID -->
-		<line start="RID" end="DF271" text="292" arrows="end,20" />
-		<line start="DF271" end="3.1NM160@DF272" stroke="dots" arrows="end,20" />
-		<curve start="3.1NM160@DF272" end="LOMPO" controlPoint="DF272" stroke="dots" arrows="end,20" />
-		<!-- 07 missed Approach -->
-		<line start="FFM" end="8NM068@FFM" stroke="dashed,2" arrows="end,20" />
-		<curve start="8NM068@FFM" end="12NM100@TAU" controlPoint="15NM068@FFM" stroke="dashed" arrows="end,20" />
+		<line start="RID"   end="DF271" text="R292-RID" stroke="dots" arrows="end,10"/>
+  	<line start="DF271" end="3.1NM160@DF272" stroke="dots" arrows="end,10"/>
+	  <curve start="3.1NM160@DF272" end="LOMPO" controlPoint="DF272" stroke="dots" arrows="end,10"/>
 	</route>
-	<route name="rw 25L,25C,25R final" color="152,124,138" zoomMin="10"
-		zoomMax="100">
+		<!-- 07 missed Approach -->
+	<route name="rw 07L,07C Missed" color="152,124,138" zoomMax="150">
+		<activeLandingRunways>07L,07C</activeLandingRunways>
+		<navaids>FR</navaids>
+		<line start="FR" end="10NM068@FRD" stroke="dots,2" arrows="end,10"/>
+		<curve start="10NM068@FRD" end="12NM95@TAU" controlPoint="15NM045@(VOR)FFM" stroke="dots" arrows="end,20"/>
+	</route>
+	<route name="rw 07R Missed" color="152,124,138" zoomMin="10" zoomMax="150" stroke="dots" arrows="end,10">
+		<activeLandingRunways>07R</activeLandingRunways>
+		<navaids>(VOR)FFM</navaids>
+		<line start="(VOR)FFM" end="8NM088@(VOR)FFM" stroke="dots,2" arrows="end,10"/>
+		<curve start="8NM088@(VOR)FFM" end="12NM045@RID" controlPoint="15NM088@(VOR)FFM" stroke="dots" arrows="end,20"/>
+	</route>
+	<route name="rw 25L,25C,25R final" color="152,124,138" zoomMin="10" zoomMax="150">
 		<activeLandingRunways>25L,25C,25R</activeLandingRunways>
 		<navaids>REDGO,FW</navaids>
-		<!-- 25 MTR -->
-		<line start="MTR" end="6.4NM159@MTR" text="160" />
-		<curve start="REDGO" end="6.4NM159@MTR" controlPoint="DF281"
-			stroke="dots" />
+		<!-- 25 (VOR)MTR -->
+		<line start="(VOR)MTR" end="3.1NM341@DF281" text="R159-MTR" stroke="dots" arrows="end,10"/>
+	  <curve start="3.1NM341@DF281" end="REDGO" controlPoint="DF281" stroke="dots" arrows="end,10"/>
 		<!-- 25 CHA -->
-		<line start="CHA" end="9.9NM339@CHA" text="340" />
-		<curve start="REDGO" end="9.9NM339@CHA" controlPoint="DF281"
-			stroke="dots" />
-		<!-- 25 missed Approach -->
-		<line start="FW" end="DF282" stroke="dashed" />
-		<line start="TAU" end="3.5NM247@DF282" stroke="dashed"
-			startOffset="3.1" endOffset="3.1" />
-		<bow center="3.1NM340@DF282" radius="3.1" startAngle="247"
-			extentAngle="-95" stroke="dashed" arrows="start" />
-		<line start="TAU" end="10NM085@TAU" stroke="dashed" startOffset="3.1" />
-		<curve start="3.1NM085@TAU" end="3.1NM168@TAU" controlPoint="TAU"
-			stroke="dashed" arrows="end" />
+		<line start="CHA" end="3.1NM159@DF281" text="R339-CHA" arrows="end,10"/>
+	  <curve start="3.1NM159@DF281" end="REDGO" controlPoint="DF281" stroke="dots" arrows="end,10"/>
+	</route>
+		<!-- 25 missed Approach  -->
+  <route name="rw 25R,25C Missed" color="152,124,138" zoomMin="10" zoomMax="150"  stroke="dots" arrows="end,10">
+		<activeLandingRunways>25C,25R</activeLandingRunways>
+		<navaids>REDGO</navaids>
+		<line start="FW" end="DF282" stroke="dots" arrows="end,10"/>
+		<line start="3.5NM247@DF282" end="TAU" startOffset="3.1" endOffset="3.1" stroke="dots" arrows="end,10"/>
+		<bow center="3.1NM340@DF282" radius="3.1" startAngle="247" extentAngle="-95" stroke="dots" arrows="end,10"/>
+		<line start="TAU" end="10NM085@TAU" startOffset="3.1" stroke="dots" arrows="end,20"/>
+	  <curve start="3.1NM168@TAU" end="3.1NM085@TAU" controlPoint="TAU" stroke="dotd" arrows="end,10"/>
+	</route>
+	<route name="rw 25L Missed" color="152,124,138" zoomMin="10" zoomMax="150">
+		<activeLandingRunways>25L</activeLandingRunways>
+		<navaids>FW</navaids>
+		<line start="FW" end="8NM242@FW" text="R242-FFM" stroke="dots" arrows="end,10"/>
+	  <curve start="8NM242@FW" end="30NM265@CHA" controlPoint="33.2NM268@CHA" stroke="dots" arrows="end,10"/>
+		<line start="30NM265@CHA" end="10NM265@CHA" stroke="dots" arrows="end,20"/>
 	</route>
 
 
-	<!-- ****** EDDF STAR's ****** -->
-	<route name="rw 07L,07R,07C STAR's" color="152,124,138" zoomMin="10">
+	<!-- ******************************************************* -->
+	<!-- ******  EDDF STAR's (STAR RNAV (GPS) RWY 07/25)  ****** -->
+	<!-- ******************************************************* -->
+	<route name="rw 07L,07R,07C STAR's" color="152,124,138" zoomMin="10" arrows="end">
 		<activeLandingRunways>07L,07R,07C</activeLandingRunways>
-		<navaids>UNOKO,ROLIS,KERAX,PSA,ROKIM,ROLIS</navaids>
-		<!-- UNOKO 1H 1M -->
-		<line start="UNOKO" end="IBVIL" text="101" arrows="end"
-			lineWidth="1" />
-		<line start="IBVIL" end="MANUV" text="156" arrows="end"
-			lineWidth="1" />
-		<line start="MANUV" end="RAMOB" text="140" arrows="end"
-			lineWidth="1" />
-		<line start="RAMOB" end="TAU" text="113" arrows="end" lineWidth="1" />
-		<line start="RAMOB" end="RID" arrows="end" lineWidth="1" />
+		<navaids>KERAX,PSA,ROLIS,UNOKO,IBVIL,MANUV,RAMOB</navaids>
+		<!-- KERAX 1G 1R -->
+		<text position="17NM196@KERAX"	font="Arial" angle="284" text="13°  -  193°"/>
+    <line start="KERAX" end="GED"   text="252" arrows="end"/>
+  	<line start="GED"   end="TAU"   text="256" arrows="end,15"/>
+    <line start="KERAX" end="PSA"   					 arrows="end"/>
+    <line start="PSA"   end="CHA"   text="296" arrows="end"/>
+    <line start="CHA"   end="RID"   text="247" arrows="end,15"/>
+		<!-- PSA (siehe KERAX) -->
+    <line start="PSA" end="KERAX"   					 arrows="end"/>
 		<!-- ROLIS 1H 1M -->
-		<line start="ROLIS" end="FFM" text="125" arrows="end" lineWidth="1" />
-		<line start="FFM" end="RID" text="191" arrows="end" lineWidth="1" />
-		<line start="ROLIS" end="TAU" text="129" arrows="end" lineWidth="1" />
-		<!-- KERAX 1H 1M -->
-		<line start="KERAX" end="GED" text="252" arrows="end" lineWidth="1" />
-		<line start="GED" end="MTR" text="241" arrows="end" lineWidth="1" />
-		<line start="KERAX" end="PSA" text="129" arrows="end" lineWidth="1" />
-		<line start="PSA" end="RID" text="121" arrows="end" lineWidth="1" />
-		<!-- PSA -->
-		<line start="PSA" end="CHA" text="252" arrows="end" lineWidth="1" />
-		<line start="CHA" end="RID" text="241" arrows="end" lineWidth="1" />
-		<line start="PSA" end="KERAX" text="129" arrows="end" lineWidth="1" />
+    <line start="ROLIS" end="RID"   text="145" arrows="end,15"/>
+    <line start="ROLIS" end="TAU"   text="129" arrows="end,15"/>
+		<!-- UNOKO 1H 1M -->
+    <line start="UNOKO" end="IBVIL" text="101" arrows="end"/>
+  	<line start="IBVIL" end="MANUV" text="156" arrows="end"/>
+  	<line start="MANUV" end="RAMOB" text="140" arrows="end"/>
+		<line start="RAMOB" end="RID"		text="122" arrows="both,15"/>
+		<line start="RAMOB" end="TAU"   text="064" arrows="both,15"/>
 	</route>
 
 	<route name="rw 25R,25C,25L STAR's" color="152,124,138" zoomMin="10">
 		<activeLandingRunways>25R,25C,25L</activeLandingRunways>
-		<navaids>UNOKO,ROLIS,KERAX,PSA,ROKIM,ROLIS</navaids>
-		<!-- UNOKO 1B 1L -->
-		<line start="UNOKO" end="IBVIL" text="101" arrows="end"
-			lineWidth="1" />
-		<line start="IBVIL" end="MANUV" text="156" arrows="end"
-			lineWidth="1" />
-		<line start="MANUV" end="RAMOB" text="140" arrows="end"
-			lineWidth="1" />
-		<line start="RAMOB" end="ROKIM" text="113" arrows="end"
-			lineWidth="1" />
-		<line start="ROKIM" end="TAU" text="113" arrows="end" lineWidth="1" />
-		<line start="RAMOB" end="MTR" arrows="end" lineWidth="1" />
-		<!-- ROLIS 1B 1L (OSPUL on straight line - not used) -->
-		<line start="ROLIS" end="TAU" text="125" arrows="end" lineWidth="1" />
-		<line start="TAU" end="MTR" text="191" arrows="end" lineWidth="1" />
-		<line start="ROLIS" end="RID" text="129" arrows="end" lineWidth="1" />
+		<navaids>KERAX,PSA,ROLIS,UNOKO,IBVIL,MANUV,RAMOB,ROKIM</navaids>
 		<!-- KERAX 1B 1L -->
-		<line start="KERAX" end="GED" text="252" arrows="end" lineWidth="1" />
-		<line start="GED" end="MTR" text="241" arrows="end" lineWidth="1" />
-		<line start="KERAX" end="PSA" text="129" arrows="end" lineWidth="1" />
-		<line start="PSA" end="MTR" text="121" arrows="end" lineWidth="1" />
-		<!-- PSA 1B 1L -->
-		<line start="PSA" end="CHA" text="252" arrows="end" lineWidth="1" />
-		<line start="CHA" end="MTR" text="" arrows="end" lineWidth="1" />
+		<text position="17NM196@KERAX"	font="Arial" angle="284" text="13°  -  193°"/>
+    <line start="KERAX" end="GED"   text="252" arrows="end" />
+  	<line start="GED"   end="(VOR)MTR"   text="241" arrows="end,15" />
+    <line start="KERAX" end="PSA"              arrows="end" />
+  	<line start="PSA"   end="CHA"   text="285" arrows="end,15" />
+		<!-- PSA 1B 1L (siehe KERAX) -->
+    <line start="PSA" end="KERAX"   					 arrows="end" />
+		<!-- ROLIS 1B 1L    (OSPUL on straight line - not used) -->
+    <line start="ROLIS" end="TAU"   text="129" arrows="end" />
+  	<line start="TAU"   end="(VOR)MTR"   text="088" arrows="end,15" />
+    <line start="ROLIS" end="RID"   text="144" arrows="end" />
+    <line start="RID" 	end="CHA"   text="065" arrows="end,15" />
+		<!-- UNOKO 1B 1L -->
+    <line start="UNOKO" end="IBVIL" text="101" arrows="end" />
+  	<line start="IBVIL" end="MANUV" text="156" arrows="end" />
+  	<line start="MANUV" end="RAMOB" text="140" arrows="end" />
+		<line start="RAMOB" end="ROKIM"	text="113" arrows="both" />
+		<line start="ROKIM" end="CHA"		text="095" arrows="end,15" />
+		<line start="ROKIM" end="(VOR)MTR"   text="060" arrows="both,15" />
 	</route>
 
 
-	<!-- ****** EDDF SID (DELTA) ****** -->
+	<!-- ******************************** -->
+	<!-- ******  EDDF SID (DELTA)  ****** -->
+	<!-- ******************************** -->
 	<route name="rw 07R,07C SID DELTA" color="122,150,108" zoomMin="10">
 		<activeStartRunways>07R,07C</activeStartRunways>
-		<navaids>BIBTI,MARUN,TOBAK,KOMIB,SOBRA,ANEKI,RATIM,DKB,NOMBO</navaids>
-		<!-- BIBIT -->
-		<line start="FFM" end="MTR" text="022" arrows="end" lineWidth="1" />
-		<line start="MTR" end="ODAGA" text="351" arrows="end" lineWidth="1" />
-		<line start="ODAGA" end="KUSOM" text="326" arrows="end"
-			lineWidth="1" />
-		<line start="KUSOM" end="GUBAX" text="326" arrows="end"
-			lineWidth="1" />
-		<line start="GUBAX" end="RAVKI" text="022" arrows="end"
-			lineWidth="1" />
-		<line start="RAVKI" end="DITAM" text="351" arrows="end"
-			lineWidth="1" />
-		<line start="DITAM" end="OBOKA" text="326" arrows="end"
-			lineWidth="1" />
-		<line start="OBOKA" end="BIBTI" text="326" arrows="end"
-			lineWidth="1" />
-		<!-- MARUN -->
-		<line start="FFM" end="MTR" text="022" arrows="end" lineWidth="1" />
-		<line start="MTR" end="TOBAK" text="351" arrows="end" lineWidth="1" />
-		<line start="TOBAK" end="APROX" text="343" arrows="end"
-			lineWidth="1" />
-		<line start="APROX" end="MARUN" text="343" arrows="end"
-			lineWidth="1" />
-		<!-- KOMIB -->
-		<line start="FFM" end="24.0NM099@FFM" text="099" arrows="end"
-			lineWidth="1" />
-		<line start="24.0NM099@FFM" end="AGOLO" text="060" arrows="end"
-			lineWidth="1" />
-		<line start="AGOLO" end="OKTUM" text="089" arrows="end"
-			lineWidth="1" />
-		<line start="OKTUM" end="KOMIB" text="129" arrows="end"
-			lineWidth="1" />
-		<!-- SOBRA -->
-		<line start="FFM" end="RID" text="192" arrows="end" lineWidth="1" />
-		<line start="RID" end="ROSIG" text="262" arrows="end" lineWidth="1" />
-		<line start="ROSIG" end="DONAB" text="283" arrows="end"
-			lineWidth="1" />
-		<line start="DONAB" end="SOBRA" text="283" arrows="end"
-			lineWidth="1" />
+		<navaids>ANEKI,FR,KNG,HAREM,LAMPU,GEBNO,NOMBO,ROSIG,DONAB,SOBRA,ODAGA,KUSOM,GUBAX,RAVKI,DITAM,OBOKA,BIBTI,TOBAK,APROX,MARUN,AGOLO,OKTUM,KOMIB</navaids>
 		<!-- ANEKI -->
-		<line start="FFM" end="10.8NM192@FFM" text="192" arrows="end"
-			lineWidth="1" />
-		<line start="10.8NM192@FFM" end="ANEKI" text="193" arrows="end"
-			lineWidth="1" />
-		-->
+		<curve start="FR" end="15NM192@(VOR)MTR" controlPoint="4NM068@FR" arrows="end,10"/>
+ 		<line start="(VOR)MTR" end="15NM192@(VOR)MTR" startOffset="15" arrows="end"/>
+ 		<line start="15NM192@(VOR)MTR" 		end="24.4NM192@(VOR)MTR" text="R192-MTR" arrows="end"/>		<!-- 10.8 DME FFM -->
+ 		<line start="24.4NM192@(VOR)MTR" 	end="28.8NM192@(VOR)MTR" text="192" arrows="end"/>	<!-- 15.0 DME FFM -->
+ 		<line start="28.8NM192@(VOR)MTR" 	end="ANEKI" text="193" arrows="end,15"/>
 		<!-- RATIM -->
-		<line start="10.8NM192@FFM" end="KNG" text="105" arrows="end"
-			lineWidth="1" />
-		-->
-		<line start="KNG" end="RATIM" text="102" arrows="end" lineWidth="1" />
+		<curve start="24.4NM192@(VOR)MTR"	end="KNG" controlPoint="27.5NM192@(VOR)MTR"/>
+  	<line start="KNG"   			end="RATIM" text="102" arrows="end,15"/>
 		<!-- DKB -->
-		<line start="KNG" end="HAREM" text="130" arrows="end" lineWidth="1" />
-		<line start="HAREM" end="DKB" text="022" arrows="end" lineWidth="1" />
+  	<line start="4NM105@KNG"	end="HAREM" text="102"	arrows="end"/>
+  	<line start="HAREM" 			end="DKB"		text="130"	arrows="end,15"/>
 		<!-- NOMBO -->
-		<line start="HAREM" end="LAMPU" text="148" arrows="end"
-			lineWidth="1" />
-		<line start="LAMPU" end="GEBNO" text="134" arrows="end"
-			lineWidth="1" />
-		<line start="GEBNO" end="NOMBO" text="134" arrows="end"
-			lineWidth="1" />
+ 		<line start="HAREM" end="LAMPU" text="148" arrows="end"/>
+  	<line start="LAMPU" end="GEBNO" text="134" arrows="end"/>
+    <line start="GEBNO" end="NOMBO" text="134" arrows="end,15"/>
+		<!-- SOBRA -->
+		<curve start="28.8NM192@(VOR)MTR"	end="RID" controlPoint="30.1NM192@(VOR)MTR"/>
+  	<line start="RID"   end="ROSIG" text="262" arrows="end"/>
+    <line start="ROSIG" end="DONAB" text="283" arrows="end"/>
+  	<line start="DONAB" end="SOBRA" text="283" arrows="end,15"/>
+
+		<!-- BIBIT -->
+		<curve start="FR" end="12NM202@(VOR)MTR"  controlPoint="1.4NM068@FR" arrows="end"/>
+ 		<line	 start="12NM202@(VOR)MTR"	end="3.1NM202@(VOR)MTR" arrows="end" text="R022-MTR"/>
+  	<curve start="3.1NM202@(VOR)MTR" end="3.1NM287@(VOR)MTR" controlPoint="(VOR)MTR" arrows="end"/>
+ 		<line  start="3.1NM287@(VOR)MTR"	end="ODAGA"		 arrows="end" text="287"/>
+    <line start="ODAGA" end="KUSOM" text="287" arrows="end"/>
+  	<line start="KUSOM" end="GUBAX" text="251" arrows="end"/>
+  	<line start="GUBAX" end="RAVKI" text="293" arrows="end"/>
+  	<line start="RAVKI" end="DITAM" text="335" arrows="end"/>
+    <line start="DITAM" end="OBOKA" text="326" arrows="end"/>
+    <line start="OBOKA" end="BIBTI" text="326" arrows="end,15"/>
+		<!-- MARUN -->
+    <line start="3.1NM202@(VOR)MTR" end="(VOR)MTR"/>
+  	<line start="(VOR)MTR"		end="TOBAK" text="351" arrows="end"/>
+    <line start="TOBAK" end="APROX" text="343" arrows="end"/>
+  	<line start="APROX" end="MARUN" text="343" arrows="end,15"/>
+		<!-- KOMIB -->
+  	<line start="FR" end="1.5NM068@FR" arrows="end"/>
+		<curve start="1.5NM068@FR"	end="24NM099@(VOR)FFM" controlPoint="5NM068@FR" arrows="end"/>
+		<text position="12NM087@(VOR)FFM"	font="Arial" angle="15" text="R087-FFM"/>
+  	<line start="24.0NM099@(VOR)FFM" end="AGOLO" text="060" arrows="end"/>
+    <line start="AGOLO" end="OKTUM" text="089" arrows="end"/>
+  	<line start="OKTUM" end="KOMIB" text="129" arrows="end,15"/>
 	</route>
 
 	<route name="rw 25L,25C SID DELTA" color="122,150,108" zoomMin="10">
 		<activeStartRunways>25L,25C</activeStartRunways>
-		<navaids>FRD,BIBTI,MARUN,TOBAK,SOBRA,ANEKI,RATIM,SULUS,DKB,NOMBO</navaids>
-		<!-- BIBTI -->
-		<line start="VFM" end="MASIR" text="318" arrows="end" lineWidth="1" />
-		<line start="MASIR" end="RAVKI" text="335" arrows="end"
-			lineWidth="1" />
-		<line start="RAVKI" end="DITAM" text="335" arrows="end"
-			lineWidth="1" />
-		<line start="DITAM" end="OBOKA" text="326" arrows="end"
-			lineWidth="1" />
-		<line start="OBOKA" end="BIBTI" text="326" arrows="end"
-			lineWidth="1" />
-		<!-- MARUN -->
-		<line start="VFM" end="ROXAP" arrows="end" lineWidth="1" />
-		<line start="ROXAP" end="TABUM" text="018" arrows="end"
-			lineWidth="1" />
-		<line start="TABUM" end="LIKSI" text="018" arrows="end"
-			lineWidth="1" />
-		<line start="LIKSI" end="LORPA" text="016" arrows="end"
-			lineWidth="1" />
-		<line start="LORPA" end="MARUN" text="016" arrows="end"
-			lineWidth="1" />
-		<!-- TOBAK -->
-		<line start="TABUM" end="TESGA" text="040" arrows="end"
-			lineWidth="1" />
-		<line start="TESGA" end="TOBAK" text="038" arrows="end"
-			lineWidth="1" />
-		<!-- SOBRA -->
-		<line start="VFM" end="ROXAP" text="238" arrows="end" lineWidth="1" />
-		<line start="ROXAP" end="DONAB" text="238" arrows="end"
-			lineWidth="1" />
-		<line start="DONAB" end="SOBRA" text="283" arrows="end"
-			lineWidth="1" />
+<navaids>VFM,DONAB,SOBRA,ESUPI,MASIR,RAVKI,DITAM,OBOKA,BIBTI,TABUM,LIKSI,LORPA,MARUN,TESGA,TOBAK,ANEKI, NOMBO,DKB,GIBSA,AKONI,SULUS</navaids>
 		<!-- ANEKI -->
-		<line start="VFM" end="RID" text="176" arrows="end" lineWidth="1" />
-		<line start="RID" end="ANEKI" text="183" arrows="end" lineWidth="1" />
+  	<line start="VFM"   end="RID"   text="176" arrows="end" />
+  	<line start="RID"   end="ANEKI" text="183" arrows="end,15" />
+		<!-- BIBTI 4N -->
+		<curve start="14NM223@(VOR)FFM"	end="16NM301@RID" controlPoint="15NM223@(VOR)FFM"/>
+		<line start="16NM301@RID"		end="MASIR" text="318" arrows="end"/>
+    <line start="MASIR" end="RAVKI" text="335" arrows="end" />
+  	<line start="RAVKI" end="DITAM" text="335" arrows="end" />
+    <line start="DITAM" end="OBOKA" text="326" arrows="end" />
+    <line start="OBOKA" end="BIBTI" text="326" arrows="end,15" />
+		<!-- BIBTI 3F/3G -->
+		<curve start="5NM250@(VOR)FFM"	end="13NM258@(VOR)FFM" controlPoint="10NM250@(VOR)FFM"/>
+		<line start="13NM258@(VOR)FFM"	end="ESUPI"/>
+		<line start="ESUPI"	end="MASIR" text="318" arrows="end,15"/>
+		<!-- MARUN N -->
+		<curve start="16NM301@RID" end="TABUM" controlPoint="17NM301@RID" arrows="end"/>
+  	<line start="TABUM" end="LIKSI" text="018" arrows="end" />
+    <line start="LIKSI" end="LORPA" text="016" arrows="end" />
+  	<line start="LORPA" end="MARUN" text="017" arrows="end,15" />
+		<!-- MARUN F/J -->
+		<curve start="5NM250@(VOR)FFM" end="8.4NM267@(VOR)FFM" controlPoint="6NM250@(VOR)FFM" arrows="end"/>
+		<line start="8.4NM267@(VOR)FFM" end="11.4NM141@TAU" text="321" arrows="end"/>
+		<curve start="11.4NM141@TAU"	end="TABUM"	controlPoint="10NM141@TAU" arrows="end,15"/>
+		<!-- TOBAK -->
+  	<line start="TABUM" end="TESGA" text="040" arrows="end" />
+  	<line start="TESGA" end="TOBAK" text="038" arrows="end,15" />
 		<!-- RATIM -->
-		<line start="VFM" end="KNG" text="118" arrows="end" lineWidth="1" />
-		<line start="KNG" end="AKONI" text="114" arrows="end" lineWidth="1" />
-		<line start="AKONI" end="RATIM" text="102" arrows="end"
-			lineWidth="1" />
+  	<line start="VFM"   end="KNG"   text="118" arrows="end" />
+  	<line start="KNG"   end="AKONI" text="114" arrows="end" />
+  	<line start="AKONI" end="RATIM" text="102" arrows="end,15" />
+		<!-- SOBRA 5N -->
+		<curve start="5NM250@(VOR)FFM"	end="2.5NM5@VFM" controlPoint="3NM5@VFM"/>
+    <line start="2.5NM5@VFM"		end="VFM"	text="184"	arrows="end" />
+    <line start="VFM" end="14NM223@(VOR)FFM"	text="214"	arrows="end" />
+    <line start="14NM223@(VOR)FFM" end="20.6NM223@(VOR)FFM"	text="223" arrows="end" />
+    <line start="20.6NM223@(VOR)FFM" end="DONAB" text="283" arrows="end" />
+  	<line start="DONAB" end="SOBRA" text="283" arrows="end,15" />
 		<!-- SULUS -->
-		<line start="RATIM" end="GIBSA" text="118" arrows="end"
-			lineWidth="1" />
-		<line start="GIBSA" end="WUR" text="114" arrows="end" lineWidth="1" />
-		<line start="WUR" end="SULUS" text="102" arrows="end" lineWidth="1" />
+  	<line start="RATIM" end="GIBSA" text="118" arrows="end" />
+  	<line start="GIBSA" end="WUR"   text="114" arrows="end" />
+  	<line start="WUR"   end="SULUS" text="102" arrows="end,15" />
 		<!-- DKB -->
-		<line start="AKONI" end="HAREM" text="034" arrows="end"
-			lineWidth="1" />
-		<line start="HAREM" end="DKB" text="034" arrows="end" lineWidth="1" />
+  	<line start="AKONI" end="HAREM" text="034" arrows="end" />
+  	<line start="HAREM" end="DKB"   text="034" arrows="end,15" />
 		<!-- NOMBO -->
-		<line start="HAREM" end="LAMPU" text="148" arrows="end"
-			lineWidth="1" />
-		<line start="LAMPU" end="GEBNO" text="134" arrows="end"
-			lineWidth="1" />
-		<line start="GEBNO" end="NOMBO" text="134" arrows="end"
-			lineWidth="1" />
+  	<line start="HAREM" end="LAMPU" text="148" arrows="end" />
+  	<line start="LAMPU" end="GEBNO" text="134" arrows="end" />
+    <line start="GEBNO" end="NOMBO" text="134" arrows="end,15" />
 	</route>
 
+<!-- ========================================================== -->
 	<route name="rw 18x SID DELTA" color="122,150,108" zoomMin="10">
 		<activeStartRunways>18</activeStartRunways>
-		<navaids>BIBTI,MARUN,TOBAK,SOBRA,ULKIG,ANEKI,RATIM,SULUS,DKB,NOMBO</navaids>
+		<navaids>ANEKI,BIBTI,DITAM,DKB,MARUN,MASIR,NOMBO,OBOKA,RATIM,RAVKI,SOBRA,SULUS,TOBAK,ULKIG,XAMUB,
+AKONI,APROX,DONAB,GEBNO,GIBSA,GISNO,GUBAX,HAREM,KNG,KUSUM,LAMPU,LIKSI,LORPA,PIPIX,RATIM,ROSIG,ROTEN, SOBRA,TABUM,TUKRU,ULKIG,WUR,SULUS</navaids>
 		<!-- BIBTI -->
-		<line start="6.4NM356@RID" end="XAMUB" text="238" arrows="end"
-			lineWidth="1" />
-		<line start="XAMUB" end="MASIR" text="319" arrows="end"
-			lineWidth="1" />
-		<line start="MASIR" end="RAVKI" text="335" arrows="end"
-			lineWidth="1" />
-		<line start="RAVKI" end="DITAM" text="335" arrows="end"
-			lineWidth="1" />
-		<line start="DITAM" end="OBOKA" text="326" arrows="end"
-			lineWidth="1" />
-		<line start="OBOKA" end="BIBTI" text="326" arrows="end"
-			lineWidth="1" />
-		<line start="MTR" end="KUSOM" text="287" arrows="end" lineWidth="1" />
-		<line start="KUSOM" end="GUBAX" text="251" arrows="end"
-			lineWidth="1" />
-		<line start="GUBAX" end="RAVKI" text="293" arrows="end"
-			lineWidth="1" />
-		<!-- MARUN -->
-		<line start="12NM356@RID" end="14NM223@FFM" text="223" arrows="end"
-			lineWidth="1" />
-		<line start="14NM223@FFM" end="16NM301@RID" text="301" arrows="end"
-			lineWidth="1" />
-		<line start="16NM301@RID" end="TABUM" text="023" arrows="end"
-			lineWidth="1" />
-		<line start="TABUM" end="LIKSI" text="018" arrows="end"
-			lineWidth="1" />
-		<line start="LIKSI" end="LORPA" text="016" arrows="end"
-			lineWidth="1" />
-		<line start="LORPA" end="MARUN" text="016" arrows="end"
-			lineWidth="1" />
-		<line start="TOBAK" end="APROX" text="342" arrows="end"
-			lineWidth="1" />
-		<line start="APROX" end="MARUN" text="342" arrows="end"
-			lineWidth="1" />
-		<!-- TOBAK -->
-		<line start="12NM356@RID" end="TUKRU" text="088" arrows="end"
-			lineWidth="1" />
-		<line start="TUKRU" end="MTR" text="012" arrows="end" lineWidth="1" />
-		<line start="MTR" end="TOBAK" text="351" arrows="end" lineWidth="1" />
-		<line start="TABUM" end="TESGA" text="040" arrows="end"
-			lineWidth="1" />
-		<line start="TESGA" end="TOBAK" text="038" arrows="end"
-			lineWidth="1" />
+    <line start="12NM358@RID" end="6.4NM358@RID" text="176" arrows="end" />
+  	<curve start="6.4NM358@RID" end="-1.5NM238@XAMUB"  controlPoint="5.4NM358@RID" arrows="end" />
+    <line start="1.5NM319@XAMUB" end="MASIR" text="319" arrows="end" />
+		<curve start="-1.5NM238@XAMUB" end="1.5NM319@XAMUB" controlPoint="XAMUB"/>
+    <line start="MASIR" end="RAVKI" text="335" arrows="end" />
+  	<line start="RAVKI" end="DITAM" text="335" arrows="end" />
+    <line start="DITAM" end="OBOKA" text="326" arrows="end" />
+    <line start="OBOKA" end="BIBTI" text="326" arrows="end" />
+    <line start="(VOR)MTR"   end="KUSOM" text="287" arrows="end" />
+    <line start="KUSOM" end="GUBAX" text="251" arrows="end" />
+  	<line start="GUBAX" end="RAVKI" text="293" arrows="end,15" />
 		<!-- SOBRA -->
-		<line start="6.4NM356@RID" end="17.3NM199@FFM" text="199" arrows="end"
-			lineWidth="1" />
-		<line start="17.3NM199@FFM" end="ROSIG" text="283" arrows="end"
-			lineWidth="1" />
-		<line start="ROSIG" end="DONAB" text="283" arrows="end"
-			lineWidth="1" />
-		<line start="DONAB" end="SOBRA" text="283" arrows="end"
-			lineWidth="1" />
+  	<line start="6.4NM358@RID" end="17.3NM199@(VOR)FFM" text="199" arrows="end" />
+  	<curve start="17.3NM199@(VOR)FFM" end="ROSIG" controlPoint="18.4NM199@(VOR)FFM" text="283" arrows="end" />
+  	<line start="ROSIG" end="DONAB" text="283" arrows="end" />
+  	<line start="DONAB" end="SOBRA" text="283" arrows="end,15" />
 		<!-- ULKIG -->
-		<line start="17.3NM199@FFM" end="19.4NM199@FFM" text="199"
-			arrows="end" lineWidth="1" />
-		<line start="19.4NM199@FFM" end="PIPIX" text="114" arrows="end"
-			lineWidth="1" />
-		<line start="PIPIX" end="GISNO" text="102" arrows="end"
-			lineWidth="1" />
-		<line start="GISNO" end="ULKIG" text="102" arrows="end"
-			lineWidth="1" />
+  	<line start="17.3NM199@(VOR)FFM" end="19.4NM199@(VOR)FFM" text="199" arrows="end" />
+  	<curve start="19.4NM199@(VOR)FFM" end="PIPIX" controlPoint="21NM199@(VOR)FFM" text="264" arrows="end" />
+  	<line start="PIPIX" end="GISNO" text="102" arrows="end" />
+  	<line start="GISNO" end="ULKIG" text="102" arrows="end,15" />
+  	<line start="SOBRA" end="ULKIG" text="102" arrows="end,15" />
+		<!-- MARUN 4S -->
+		<curve start="12NM358@RID" end="14NM223@(VOR)FFM" controlPoint="11NM358@RID" arrows="end" />
+		<curve start="14NM223@(VOR)FFM" end="16NM301@RID" controlPoint="15.5NM223@(VOR)FFM" text="301" arrows="end" />
+		<curve start="16NM301@RID" end="TABUM" controlPoint="18NM301@RID" arrows="end" />
+		<line start="TABUM" end="LIKSI" text="018" arrows="end" />
+		<line start="LIKSI" end="LORPA" text="016" arrows="end" />
+		<line start="LORPA" end="MARUN" text="016" arrows="end" />
+		<line start="TOBAK" end="APROX" text="342" arrows="end" />
+  	<line start="APROX" end="MARUN" text="342" arrows="end,15" />
+		<!-- TOBAK 2R + BIBTI 2R-->
+		<curve start="12NM358@RID"	 end="2NM-088@TUKRU" controlPoint="11NM358@RID" arrows="end" />
+		<curve start="2NM-088@TUKRU" end="(VOR)MTR"   controlPoint="TUKRU" text="012" arrows="end" />
+		<line start="(VOR)MTR"   end="TOBAK" text="351" arrows="end" />
+		<line start="TABUM" end="TESGA" text="040" arrows="end" />
+  	<line start="TESGA" end="TOBAK" text="038" arrows="end,15" />
 		<!-- ANEKI -->
-		<line start="12NM356@RID" end="RID" text="176" arrows="end"
-			lineWidth="1" />
-		<line start="RID" end="ANEKI" text="183" arrows="end" lineWidth="1" />
+  	<line start="12NM358@RID"   end="RID"   text="176" arrows="end" />
+  	<line start="RID"   end="ANEKI" text="183" arrows="end,15" />
+
 		<!-- RATIM -->
-		<line start="3NM356@RID" end="KNG" text="092" arrows="end"
-			lineWidth="1" />
-		<line start="KNG" end="AKONI" text="114" arrows="end" lineWidth="1" />
-		<line start="AKONI" end="RATIM" text="102" arrows="end"
-			lineWidth="1" />
+  	<curve start="12NM358@RID" end="KNG" controlPoint="10NM358@RID" text="118" arrows="end" />
+  	<curve start="3NM358@RID" end="KNG" controlPoint="RID"   text="092" arrows="end" />
+  	<line start="KNG"   end="AKONI" text="114" arrows="end" />
+  	<line start="AKONI" end="RATIM" text="102" arrows="end,15" /> -->
 		<!-- SULUS -->
-		<line start="RATIM" end="GIBSA" text="118" arrows="end"
-			lineWidth="1" />
-		<line start="GIBSA" end="WUR" text="114" arrows="end" lineWidth="1" />
-		<line start="WUR" end="SULUS" text="102" arrows="end" lineWidth="1" />
+  	<line start="RATIM" end="GIBSA" text="118" arrows="end" />
+  	<line start="GIBSA" end="WUR"   text="114" arrows="end" />
+  	<line start="WUR"   end="SULUS" text="102" arrows="end,15" />
 		<!-- DKB -->
-		<line start="AKONI" end="HAREM" text="034" arrows="end"
-			lineWidth="1" />
-		<line start="HAREM" end="DKB" text="034" arrows="end" lineWidth="1" />
+  	<line start="AKONI" end="HAREM" text="034" arrows="end" />
+  	<line start="HAREM" end="DKB"   text="034" arrows="end,15" />
 		<!-- NOMBO -->
-		<line start="HAREM" end="LAMPU" text="148" arrows="end"
-			lineWidth="1" />
-		<line start="LAMPU" end="GEBNO" text="134" arrows="end"
-			lineWidth="1" />
-		<line start="GEBNO" end="NOMBO" text="134" arrows="end"
-			lineWidth="1" />
+  	<line start="HAREM" end="LAMPU" text="148" arrows="end" />
+  	<line start="LAMPU" end="GEBNO" text="134" arrows="end" />
+    <line start="GEBNO" end="NOMBO" text="134" arrows="end,15" />
 	</route>
 </routes>
-<!-- The following List must be inserted into: OpenRadar2/data/AptNav.zip/earth_nav.dat
-	Best you just insert the following lines into the end of the file (befor
-	the "99"): 50.200000 009.676111 AGOLO 50.966667 007.108611 BIBTI 50.030556
-	008.566944 FRD 50.434444 007.369167 IBVIL 50.475000 009.581944 KERAX 50.295556
-	007.458889 MANUV 50.294167 008.542778 MAROB 50.745000 007.338056 OBOKA 50.199722
-	010.010556 OKTUM 50.454722 007.227222 UNOKO 50.111389 007.683889 RAMOB 49.915278
-	008.364167 ROXAP 49.940000 008.721111 TUKRU 49.961944 008.471389 VFM -->
+<!-- The following List must be inserted into:
+			OpenRadar2/data/AptNav.zip/earth_nav.dat
+	Best you just insert the following lines into the end of the file (befor the "99"):
+ 50.200000  009.676111 AGOLO
+ 50.966667  007.108611 BIBTI
+ 50.058333  008.121111 ESUPI
+ 50.030556  008.566944 FRD
+ 50.434444  007.369167 IBVIL
+ 50.475000  009.581944 KERAX
+ 50.295556  007.458889 MANUV
+ 50.294167  008.542778 MAROB
+ 50.745000  007.338056 OBOKA
+ 50.199722  010.010556 OKTUM
+ 50.454722  007.227222 UNOKO
+ 50.111389  007.683889 RAMOB
+ 49.915278  008.364167 ROXAP
+ 49.940000  008.721111 TUKRU
+ 49.961944  008.471389 VFM
+-->
