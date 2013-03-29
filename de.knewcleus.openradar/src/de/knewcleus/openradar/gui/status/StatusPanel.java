@@ -35,7 +35,9 @@ package de.knewcleus.openradar.gui.status;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -73,12 +75,15 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     private javax.swing.JLabel lbPtS;
     private javax.swing.JLabel lbSelection;
     private javax.swing.JLabel lbWind;
+    private javax.swing.JLabel lbWeatherPhaenomena;
     private javax.swing.JSeparator sep1;
     private javax.swing.JSeparator sep2;
 //    private javax.swing.JSeparator sep3;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    private MetarData currentMetar = null;
 
+    private MouseListener metarMouseListener = new MetarMouseListener();
 
     /**
      * Creates new form WeatherRadioRunwayPanel
@@ -112,6 +117,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbPressure = new javax.swing.JLabel();
         lbVisibility = new javax.swing.JLabel();
         lbWind = new javax.swing.JLabel();
+        lbWeatherPhaenomena = new javax.swing.JLabel();
         lbPtS = new javax.swing.JLabel();
         sep1 = new javax.swing.JSeparator();
         sep2 = new javax.swing.JSeparator();
@@ -132,7 +138,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
         headerPanel.add(lbCurrentCallSign, gridBagConstraints);
 
-        tfCurrentCallSign.setOpaque(false);
+        tfCurrentCallSign.setOpaque(true);
         tfCurrentCallSign.setText(master.getDataRegistry().getInitialATCCallSign());
         tfCurrentCallSign.setToolTipText("Current ATC call sign");
         tfCurrentCallSign.setMinimumSize(new Dimension(80,(int)tfCurrentCallSign.getPreferredSize().getHeight()));
@@ -177,7 +183,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(8, 10, 2, 0);
+        gridBagConstraints.insets = new java.awt.Insets(8, 10, 5, 0);
         headerPanel.add(lbSelection, gridBagConstraints);
 
         lbPtS.setForeground(Palette.LIGHTBLUE);
@@ -191,12 +197,13 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 //        gridBagConstraints.ipadx = 17;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(8, 4, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(8, 4, 5, 4);
         headerPanel.add(lbPtS, gridBagConstraints);
 
         JPanel weatherPanel = new JPanel();
         weatherPanel.setLayout(new GridBagLayout());
         weatherPanel.setOpaque(false);
+        weatherPanel.addMouseListener(metarMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -210,6 +217,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbWind.setForeground(Palette.LIGHTBLUE);
         lbWind.setText("W:");
         lbWind.setToolTipText("Wind: knods@Direction");
+        lbWind.addMouseListener(metarMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -219,6 +227,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
         lbPressure.setForeground(Palette.DESKTOP_TEXT);
         lbPressure.setText("");
+        lbPressure.addMouseListener(metarMouseListener);
         lbPressure.setToolTipText("Pressure");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -229,6 +238,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
         lbVisibility.setForeground(Palette.DESKTOP_TEXT);
         lbVisibility.setText("");
+        lbVisibility.addMouseListener(metarMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -237,6 +247,17 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 4);
         weatherPanel.add(lbVisibility, gridBagConstraints);
 
+        lbWeatherPhaenomena.setForeground(Palette.DESKTOP_TEXT);
+        lbWeatherPhaenomena.setText("");
+        lbWeatherPhaenomena.addMouseListener(metarMouseListener);
+        //lbWeatherPhaenomena.setToolTipText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 20, 0, 4);
+        weatherPanel.add(lbWeatherPhaenomena, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -301,6 +322,13 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
     public void updateTime() {
         lbTime.setText("UTC: "+sdf.format(new Date()));
+        if(currentMetar!=null && currentMetar.isNew()) {
+            lbWind.setText("NEW! Wind:");
+        } else {
+            if(currentMetar!=null) {
+                lbWind.setText("Wind:"+" "+currentMetar.getWindDisplayString());
+            }
+        }
         revalidate();
     }
 
@@ -324,8 +352,10 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
     @Override
     public void registerNewMetar(MetarData metar) {
+        currentMetar = metar;
+
         StringBuilder sb = new StringBuilder();
-        sb.append("Wind: ");
+        sb.append("NEW: Wind: ");
         sb.append(metar.getWindDisplayString());
         lbWind.setText(sb.toString());
         lbPressure.setText(String.format("QNH: %2.2f / %4.1f", metar.getPressureInHG(),metar.getPressureHPa()));
@@ -333,6 +363,8 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbPressure.setToolTipText(metar.getMetarBaseData());
         lbVisibility.setText(metar.isCavok()?"CAVOK":"Vis: "+metar.getVisibility()+" "+metar.getVisibilityUnit());
         lbVisibility.setToolTipText(metar.getMetarBaseData());
+        lbWeatherPhaenomena.setText("("+ metar.getWeatherPhaenomena()+")");
+        lbWeatherPhaenomena.setToolTipText(metar.getweatherPhaenomenaForHumans());
 
         runwayPanel.refreshRunways(metar);
         doLayout();
@@ -353,5 +385,19 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     }
     public void updateRunways() {
         runwayPanel.refreshRunways(master.getMetar());
+    }
+
+    private class MetarMouseListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(e.getClickCount()==2) {
+                // send ATIS
+                if(e.getSource()==lbWeatherPhaenomena) {
+                    master.getMpChatManager().sendMessages(master.getMetar().createATIS(master,false)); // long
+                } else {
+                    master.getMpChatManager().sendMessages(master.getMetar().createATIS(master,true)); // short
+                }
+            }
+        }
     }
 }
