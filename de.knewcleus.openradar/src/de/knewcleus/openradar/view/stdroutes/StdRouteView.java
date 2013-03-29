@@ -53,7 +53,6 @@ import de.knewcleus.openradar.view.map.ProjectionNotification;
 public class StdRouteView implements IBoundedView, INotificationListener {
     protected final IMapViewerAdapter mapViewAdapter;
     protected final GuiMasterController master;
-    protected StdRouteReader groundnetReader;
     protected final StdRoute route;
 
     protected boolean visible = true;

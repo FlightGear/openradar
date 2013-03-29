@@ -61,7 +61,7 @@ public class NDBFrequency extends AViewObject {
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,ndb.getIdentification());
+        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,ndb);
 
         if(highLightColor!=null) {
             this.maxScaleText=Integer.MAX_VALUE;
@@ -78,7 +78,7 @@ public class NDBFrequency extends AViewObject {
         if(scale>15) scale=15;
 
         setTextCoordinates(new Point2D.Double(newDisplayPosition.getX()+scale,newDisplayPosition.getY()+scale+font.getSize()));
-        if(data.getRadarObjectFilterState("NDB") || ndb.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, ndb.getIdentification())) {
+        if(data.getRadarObjectFilterState("NDB") || ndb.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, ndb)) {
             text = activeText;
         } else {
             text = null;

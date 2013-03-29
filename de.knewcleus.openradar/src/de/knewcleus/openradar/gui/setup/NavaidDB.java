@@ -37,27 +37,92 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
+import de.knewcleus.fgfs.navdata.impl.Aerodrome;
+import de.knewcleus.fgfs.navdata.impl.Intersection;
+import de.knewcleus.fgfs.navdata.impl.NDB;
+import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.view.stdroutes.StdRoute;
-
+/**
+ * This class is holds references to all navaids in range and the standard routes. It is used to know if a navaid
+ * is part of a route, if it should be highlighted and in which color.
+ *
+ * @author Wolfram Wagner
+ *
+ */
 public class NavaidDB {
     private volatile IIntersection selectedNavaid = null;
-    private final Map<String, IIntersection> navaidMap = new TreeMap<String, IIntersection>();
+    private final Map<String, List<IIntersection>> navaidMap = new TreeMap<String, List<IIntersection>>();
     private List<StdRoute> stdRoutes = new ArrayList<StdRoute>();
 
+    private final static Logger log = Logger.getLogger(NavaidDB.class.toString());
+
     public synchronized void registerNavaid(IIntersection navPoint) {
-        navaidMap.put(navPoint.getIdentification().toUpperCase(), navPoint);
+        List<IIntersection> list = navaidMap.get(navPoint.getIdentification());
+        if(list==null) {
+            list = new ArrayList<IIntersection>();
+            navaidMap.put(navPoint.getIdentification(), list);
+        }
+        list.add(navPoint);
     }
 
+    /**
+     * Navaids can share names (for instance MTR near EDDF) So it is possible to add (FIX), (NDB) or (VOR) in front to specify the type of the navaid...
+     *
+     * @param id
+     * @return
+     */
     public synchronized IIntersection getNavaid(String id) {
-        return navaidMap.get(id);
+        String type = null;
+        if(id.contains("(") && id.contains("(")) {
+            try {
+                type = id.substring(id.indexOf("(")+1, id.indexOf(")")).trim();
+                id = id.substring(id.indexOf(")")+1).trim();
+            } catch(Exception e) {
+                log.severe("Skipping navpoint highlighting! Cannot parse: "+id);
+            }
+        }
+        List<IIntersection> list = navaidMap.get(id);
+        if(list!=null && !list.isEmpty()) {
+            if(list.size()==1) {
+                return list.get(0);
+            } else {
+                if(type==null) {
+                    log.severe("Navpoint highlighting: ID "+id+" exists multiple times. Taking first! Try to add (FIX),(NDB) or (VOR) in front of it!");
+                    return list.get(0);
+                } else {
+                    for(IIntersection navPoint : list) {
+                        if(type.equals("ADD") && navPoint instanceof AdditionalFix) {
+                            return navPoint;
+                        }
+                        if(type.equals("FIX") && navPoint instanceof Intersection || navPoint instanceof AdditionalFix) {
+                            return navPoint;
+                        }
+                        if(type.equals("NDB") && navPoint instanceof NDB) {
+                            return navPoint;
+                        }
+                        if(type.equals("VOR") && navPoint instanceof VOR) {
+                            return navPoint;
+                        }
+                        if(type.equals("APT") && navPoint instanceof Aerodrome) {
+                            return navPoint;
+                        }
+                    }
+                    log.warning("Navpoint highlighting: ID "+id+" of type "+type+" not found!");
+                    return null;
+                }
+            }
+        } else {
+            return null;
+        }
     }
 
     // highlighting
     public synchronized IIntersection highlight(String id) {
-        IIntersection navPoint = navaidMap.get(id);
+        IIntersection navPoint = getNavaid(id);
         if(navPoint!=null) {
             navPoint.setHighlighted(true);
         }
@@ -65,16 +130,18 @@ public class NavaidDB {
     }
 
     public synchronized void resetHighlighting() {
-        for(IIntersection navPoint : navaidMap.values()) {
-            navPoint.setHighlighted(false);
+        for(List<IIntersection> navPointList : navaidMap.values()) {
+            for(IIntersection navPoint : navPointList) {
+                navPoint.setHighlighted(false);
+            }
         }
     }
 
 
     // navaid selection
 
-    public synchronized boolean isNavaidSelected(String id) {
-        return selectedNavaid!=null && selectedNavaid.getIdentification().equalsIgnoreCase(id);
+    public synchronized boolean isNavaidSelected(IIntersection navPoint) {
+        return selectedNavaid!=null && selectedNavaid==navPoint;
     }
 
     public synchronized List<StdRoute> getStdRoutes() {
@@ -86,16 +153,16 @@ public class NavaidDB {
         this.stdRoutes = stdRoutes;
     }
 
-    public synchronized void selectNavaid(String id) {
-        selectedNavaid=navaidMap.get(id);
+    public synchronized void selectNavaid(IIntersection navPoint) {
+        selectedNavaid=navPoint;
     }
 
-    public synchronized boolean isPartOfRoute(AirportData data, String id) {
-        IIntersection navPoint = getNavaid(id);
+    public synchronized boolean isPartOfRoute(AirportData data, IIntersection navPoint) {
+//        IIntersection navPoint = getNavaid(id);
         if(navPoint==null) return false;
         for(StdRoute route : stdRoutes) {
             if(route.isVisible(data)) {
-                if(route.containsNavaid(id)) {
+                if(route.containsNavaid(navPoint)) {
                     return true;
                 }
             }
@@ -103,20 +170,22 @@ public class NavaidDB {
         return false;
     }
 
-    public synchronized Color getNavaidHighlightColor(AirportData data, String id) {
-        if(isNavaidSelected(id)) {
+    public synchronized Color getNavaidHighlightColor(AirportData data,  IIntersection navPoint) {
+        if(navPoint==null) return null;
+
+        if(isNavaidSelected(navPoint)) {
             return Palette.NAVAID_HIGHLIGHT;
         }
 
-        IIntersection navPoint = getNavaid(id);
-        if(navPoint==null) return null;
         if(navPoint.isHighlighted()) {
             return Palette.NAVAID_HIGHLIGHT;
         }
 
+
         for(StdRoute route : stdRoutes) {
             if(route.isVisible(data)) {
-                if(route.containsNavaid(id)) {                    if(route.getActiveLandingRunways()!=null || route.getActiveStartingRunways()!=null) {
+                if(route.containsNavaid(navPoint)) {
+                    if(route.getActiveLandingRunways()!=null || route.getActiveStartingRunways()!=null) {
                         return route.getNavaidColor();
                     } else {
                         return Palette.NAVAID_HIGHLIGHT;
@@ -130,4 +199,10 @@ public class NavaidDB {
     public boolean hasRoutes() {
         return !stdRoutes.isEmpty();
     }
+
+    public void addPoint(String code, String point) {
+        registerNavaid(new AdditionalFix(code, point));
+    }
+
+
 }

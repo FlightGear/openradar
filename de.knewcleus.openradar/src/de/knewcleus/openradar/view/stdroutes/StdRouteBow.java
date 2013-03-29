@@ -107,7 +107,7 @@ public class StdRouteBow extends AStdRouteElement {
             this.paintArrow(g2d, Converter2D.getMapDisplayPoint(center, 90-startAngle, Converter2D.getFeetToDots(radius*Units.NM/Units.FT,mapViewAdapter)), heading, arrowSize, false);
         }
         if("both".equalsIgnoreCase(arrows) || "end".equalsIgnoreCase(arrows)) {
-            double heading = 90 - startAngle+extentAngle + 90 * Math.signum(extentAngle);
+            double heading = 90 - (startAngle + extentAngle) - 90 * Math.signum(extentAngle);
             this.paintArrow(g2d, Converter2D.getMapDisplayPoint(center, 90-startAngle-extentAngle, Converter2D.getFeetToDots(radius*Units.NM/Units.FT,mapViewAdapter)), heading, arrowSize, true);
         }
 

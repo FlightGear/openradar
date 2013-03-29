@@ -94,7 +94,14 @@ public class StdRouteReader {
                     convertProcedureDbFile(orFilename, rootNode);
                 } else {
                     // read or file
-                    List<Element> list = rootNode.getChildren("route");
+                    List<Element> list = rootNode.getChildren("addPoint");
+                    for (Element eAddPoint : list) {
+                        String code = eAddPoint.getAttributeValue("code");
+                        String point = eAddPoint.getAttributeValue("point");
+                        data.getNavaidDB().addPoint(code,point);
+                    }
+                    // routes
+                    list = rootNode.getChildren("route");
                     for (Element eRoute : list) {
                         String name = eRoute.getAttributeValue("name");
                         String zoomMin = eRoute.getAttributeValue("zoomMin");
@@ -160,6 +167,7 @@ public class StdRouteReader {
                                     String navpoint = element.getAttributeValue("navpoint");
                                     String inboundHeading = element.getAttributeValue("inboundHeading");
                                     String length = element.getAttributeValue("length");
+                                    String width = element.getAttributeValue("width");
                                     String right = element.getAttributeValue("right");
                                     String arrows = element.getAttributeValue("arrows");
                                     String minHeight = element.getAttributeValue("minHeight");
@@ -168,7 +176,7 @@ public class StdRouteReader {
                                     stroke = element.getAttributeValue("stroke");
                                     lineWidth = element.getAttributeValue("lineWidth");
                                     color = element.getAttributeValue("color");
-                                    StdRouteLoop ellipse = new StdRouteLoop(route, mapViewAdapter, previous, navpoint, inboundHeading, length, right, arrows,
+                                    StdRouteLoop ellipse = new StdRouteLoop(route, mapViewAdapter, previous, navpoint, inboundHeading, length, width, right, arrows,
                                             minHeight, maxHeight, misapHeight, stroke, lineWidth, color);
                                     previous = ellipse;
                                     route.addElement(ellipse);
@@ -196,10 +204,19 @@ public class StdRouteReader {
                                     StdRouteText text = new StdRouteText(route, mapViewAdapter, previous, position, angle, font, fontSize, color, sText);
                                     previous = text;
                                     route.addElement(text);
+                                } else if (element.getName().equalsIgnoreCase("minAlt")) {
+                                    String position = element.getAttributeValue("position");
+                                    String value = element.getAttributeValue("value");
+                                    String font = element.getAttributeValue("font");
+                                    String fontSize = element.getAttributeValue("fontSize");
+                                    color = element.getAttributeValue("color");
+                                    StdRouteMinAltitude minAlt = new StdRouteMinAltitude(route, mapViewAdapter, previous, position, value, font, fontSize, color);
+                                    previous = minAlt;
+                                    route.addElement(minAlt);
                                 }
 
                             } catch (Exception e) {
-                                System.err.println("Problem to parse file " + file.getAbsolutePath() + ", Route: " + route.getName() + ", Error:"
+                                log.severe("Problem to parse file " + file.getAbsolutePath() + ", Route: " + route.getName() + ", Error:"
                                         + e.getMessage());
                                 e.printStackTrace();
                                 break;
@@ -210,7 +227,7 @@ public class StdRouteReader {
                 }
 
             } catch (Exception e) {
-                System.err.println("Problem to parse file " + file.getAbsolutePath() + ", Error:" + e.getMessage());
+                log.severe("Problem to parse file " + file.getAbsolutePath() + ", Error:" + e.getMessage());
 
             } finally {
                 if (xmlInputStream != null) {

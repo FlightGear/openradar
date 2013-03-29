@@ -60,7 +60,7 @@ public class FixName extends AViewObject {
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,fix.getIdentification());
+        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,fix);
 
         if(highLightColor!=null) {
             this.maxScaleText=Integer.MAX_VALUE;

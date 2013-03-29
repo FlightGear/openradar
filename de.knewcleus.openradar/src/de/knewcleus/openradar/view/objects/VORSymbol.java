@@ -87,7 +87,7 @@ public class VORSymbol extends AViewObject {
     protected void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
         this.displayPosition = newDisplayPosition;
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,vor.getIdentification());
+        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,vor);
 
         if(highLightColor!=null) {
             this.color = highLightColor;
@@ -97,8 +97,8 @@ public class VORSymbol extends AViewObject {
 
         int scale = (int)mapViewAdapter.getLogicalScale();
         scale = scale==0 ? 1 : scale;
-        scale = 30 * 10/scale;
-        if(scale<20) scale=20;
+        scale = 20 * 10/scale;
+        if(scale<15) scale=15;
         if(scale>30) scale=30;
 
         path = new Path2D.Double();
@@ -108,16 +108,16 @@ public class VORSymbol extends AViewObject {
     @Override
     public void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
-        if(vor.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, vor.getIdentification()) || data.getRadarObjectFilterState("VOR")) {
+        if(vor.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, vor) || data.getRadarObjectFilterState("VOR")) {
             // super.paint(g2d, mapViewAdapter);
             int scale = (int)mapViewAdapter.getLogicalScale();
             scale = scale==0 ? 1 : scale;
-            scale = 30 * 10/scale;
-            if(scale<20) scale=20;
+            scale = 20 * 10/scale;
+            if(scale<15) scale=15;
             if(scale>30) scale=30;
 
 
-            if (vor.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, vor.getIdentification()) || displayPosition != null) {
+            if (vor.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, vor) || displayPosition != null) {
                 Image image=imageVOR;
                 switch (vorType) {
                 case VOR:

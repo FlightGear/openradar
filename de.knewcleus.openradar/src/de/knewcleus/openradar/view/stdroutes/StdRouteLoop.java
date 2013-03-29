@@ -2,7 +2,7 @@
  * Copyright (C) 2013 Wolfram Wagner
  *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
@@ -49,6 +49,7 @@ public class StdRouteLoop extends AStdRouteElement {
 
     private final double inboundHeading;
     private Double length = null;
+    private Double width = null;
     private final boolean right;
     private final String arrows;
     private String minHeight = null;
@@ -56,12 +57,13 @@ public class StdRouteLoop extends AStdRouteElement {
     private String misapHeight = null;
 
     public StdRouteLoop(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
-                           String geoReferencPoint, String inboundHeading, String length, String right, String arrows,
+                           String geoReferencPoint, String inboundHeading, String length, String width, String right, String arrows,
                            String minHeight, String maxHeight, String misapHeight, String stroke, String lineWidth, String color) {
         super(mapViewAdapter, route.getPoint(geoReferencPoint,previous),stroke,lineWidth,arrows,color);
 
         this.inboundHeading = Double.parseDouble(inboundHeading);
         this.length = length !=null ? Double.parseDouble(length) : null;
+        this.width = width !=null ? Double.parseDouble(width) : null;
         this.right = !"false".equalsIgnoreCase(right);
         this.arrows = arrows;
         this.minHeight = minHeight;
@@ -72,8 +74,8 @@ public class StdRouteLoop extends AStdRouteElement {
     @Override
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
-        double currentWidth =  length !=null ? Converter2D.getFeetToDots(length * Units.NM / Units.FT,mapViewAdapter) : Converter2D.getFeetToDots(2*220/60*Units.NM/Units.FT, mapViewAdapter); // 2min * 220 mph/60h/min
-        double height = currentWidth * 0.92 ;
+        double currentLength =  length !=null ? Converter2D.getFeetToDots(length * Units.NM / Units.FT,mapViewAdapter) : Converter2D.getFeetToDots(2*220/60*Units.NM/Units.FT, mapViewAdapter); // 2min * 220 mph/60h/min
+        double currentWidth = width!=null ? Converter2D.getFeetToDots(width * Units.NM / Units.FT,mapViewAdapter) : currentLength * 0.92 ;
 
         g2d.setFont(g2d.getFont().deriveFont(10f));
         String sInboundHeading = String.format("%03.0f",Converter2D.normalizeAngle(inboundHeading));
@@ -81,24 +83,24 @@ public class StdRouteLoop extends AStdRouteElement {
         Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(sInboundHeading, g2d);
 
         Point2D line1EndPoint = getDisplayPoint(geoReferencePoint);
-        Point2D line1StartPoint = Converter2D.getMapDisplayPoint(line1EndPoint, inboundHeading+180, currentWidth);
-        Point2D line1MiddlePoint2 = Converter2D.getMapDisplayPoint(line1EndPoint, inboundHeading+180, (currentWidth-bounds.getWidth()-4)/2);
-        Point2D line1MiddlePoint1 = Converter2D.getMapDisplayPoint(line1EndPoint, inboundHeading+180, (currentWidth+bounds.getWidth()+4)/2);
-        Point2D line1TextPoint = Converter2D.getMapDisplayPoint(line1EndPoint, inboundHeading+180, currentWidth/2);
-        Point2D line2StartPoint = Converter2D.getMapDisplayPoint(line1EndPoint, right ?inboundHeading+90:inboundHeading-90, height);;
-        Point2D line2EndPoint = Converter2D.getMapDisplayPoint(line2StartPoint, inboundHeading+180, currentWidth);
-        Point2D line2MiddlePoint1 = Converter2D.getMapDisplayPoint(line2StartPoint, inboundHeading+180, (currentWidth-bounds.getWidth()-4)/2);
-        Point2D line2MiddlePoint2 = Converter2D.getMapDisplayPoint(line2StartPoint, inboundHeading+180, (currentWidth+bounds.getWidth()+4)/2);
-        Point2D line2TextPoint = Converter2D.getMapDisplayPoint(line2StartPoint, inboundHeading+180, currentWidth/2);
+        Point2D line1StartPoint = Converter2D.getMapDisplayPoint(line1EndPoint, inboundHeading+180, currentLength);
+        Point2D line1MiddlePoint2 = Converter2D.getMapDisplayPoint(line1EndPoint, inboundHeading+180, (currentLength-bounds.getWidth()-4)/2);
+        Point2D line1MiddlePoint1 = Converter2D.getMapDisplayPoint(line1EndPoint, inboundHeading+180, (currentLength+bounds.getWidth()+4)/2);
+        Point2D line1TextPoint = Converter2D.getMapDisplayPoint(line1EndPoint, inboundHeading+180, currentLength/2);
+        Point2D line2StartPoint = Converter2D.getMapDisplayPoint(line1EndPoint, right ?inboundHeading+90:inboundHeading-90, currentWidth);;
+        Point2D line2EndPoint = Converter2D.getMapDisplayPoint(line2StartPoint, inboundHeading+180, currentLength);
+        Point2D line2MiddlePoint1 = Converter2D.getMapDisplayPoint(line2StartPoint, inboundHeading+180, (currentLength-bounds.getWidth()-4)/2);
+        Point2D line2MiddlePoint2 = Converter2D.getMapDisplayPoint(line2StartPoint, inboundHeading+180, (currentLength+bounds.getWidth()+4)/2);
+        Point2D line2TextPoint = Converter2D.getMapDisplayPoint(line2StartPoint, inboundHeading+180, currentLength/2);
 
-        Point2D centerBow1 = Converter2D.getMapDisplayPoint(line1EndPoint, right ?inboundHeading+90:inboundHeading-90, height/2);
-        Point2D centerBow2 = Converter2D.getMapDisplayPoint(line1StartPoint, right ?inboundHeading+90:inboundHeading-90, height/2);
+        Point2D centerBow1 = Converter2D.getMapDisplayPoint(line1EndPoint, right ?inboundHeading+90:inboundHeading-90, currentWidth/2);
+        Point2D centerBow2 = Converter2D.getMapDisplayPoint(line1StartPoint, right ?inboundHeading+90:inboundHeading-90, currentWidth/2);
 
         Path2D path = new Path2D.Double();
-        path.append(new Arc2D.Double(centerBow1.getX()-height/2,centerBow1.getY()-height/2,height,height,90-inboundHeading+90,-180,Arc2D.OPEN), false);
+        path.append(new Arc2D.Double(centerBow1.getX()-currentWidth/2,centerBow1.getY()-currentWidth/2,currentWidth,currentWidth,90-inboundHeading+90,-180,Arc2D.OPEN), false);
         path.append(new Line2D.Double(line2StartPoint,line2MiddlePoint1),true);
         path.append(new Line2D.Double(line2MiddlePoint2,line2EndPoint),false);
-        path.append(new Arc2D.Double(centerBow2.getX()-height/2,centerBow2.getY()-height/2,height,height,90-inboundHeading-90,-180,Arc2D.OPEN), true);
+        path.append(new Arc2D.Double(centerBow2.getX()-currentWidth/2,centerBow2.getY()-currentWidth/2,currentWidth,currentWidth,90-inboundHeading-90,-180,Arc2D.OPEN), true);
         path.append(new Line2D.Double(line1StartPoint,line1MiddlePoint1),true);
         path.append(new Line2D.Double(line1MiddlePoint2,line1EndPoint),false);
         path.closePath();
@@ -121,7 +123,7 @@ public class StdRouteLoop extends AStdRouteElement {
             double x = (line1StartPoint.getX()+line1EndPoint.getX()+line2StartPoint.getX()+line2EndPoint.getX())/4;
             double y = (line1StartPoint.getY()+line1EndPoint.getY()+line2StartPoint.getY()+line2EndPoint.getY())/4;
 
-            g2d.setFont(g2d.getFont().deriveFont((float)(height/3f*0.4)));
+            g2d.setFont(g2d.getFont().deriveFont((float)(currentWidth/3f*0.4)));
             int textlines = misapHeight!=null ? 1 : 0;
             textlines = minHeight!=null ? textlines+1 : textlines;
             textlines = maxHeight!=null ? textlines+1 : textlines;

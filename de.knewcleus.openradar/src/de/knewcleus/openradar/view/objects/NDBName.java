@@ -61,7 +61,7 @@ public class NDBName extends AViewObject {
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,ndb.getIdentification());
+        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,ndb);
 
         if(highLightColor!=null) {
             this.maxScaleText=Integer.MAX_VALUE;

@@ -60,7 +60,7 @@ public class VORName extends AViewObject {
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,vor.getIdentification());
+        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,vor);
 
         if(highLightColor!=null) {
             this.maxScaleText=Integer.MAX_VALUE;

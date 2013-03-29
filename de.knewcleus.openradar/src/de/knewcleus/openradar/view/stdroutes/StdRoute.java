@@ -38,6 +38,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import de.knewcleus.fgfs.navdata.impl.Intersection;
+import de.knewcleus.fgfs.navdata.impl.NDB;
+import de.knewcleus.fgfs.navdata.impl.VOR;
+import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -151,7 +155,21 @@ public class StdRoute {
         this.activeStartingRunways = activeStartingRunways;
     }
 
-    public synchronized boolean containsNavaid(String id) {
+    public synchronized boolean containsNavaid(IIntersection navPoint) {
+        String id = navPoint.getIdentification().toUpperCase();
+        if(navaids.contains(id)) {
+            return true;
+        } else {
+            if(navPoint instanceof Intersection && navaids.contains("(FIX)"+id)) {
+                return true;
+            }
+            if(navPoint instanceof NDB && navaids.contains("(NDB)"+id)) {
+                return true;
+            }
+            if(navPoint instanceof VOR && navaids.contains("(VOR)"+id)) {
+                return true;
+            }
+        }
         return navaids.contains(id.toUpperCase());
     }
 
@@ -201,6 +219,20 @@ public class StdRoute {
     }
 
     public Point2D getPoint(String pointDescr, AStdRouteElement previous) {
+        if (pointDescr.matches("[A-Z0-9]*-RW[A-Z0-9]*")) {
+            String airportCode = pointDescr.substring(0,pointDescr.indexOf("-"));
+            if (!data.getAirportCode().equals(airportCode)) {
+                throw new IllegalArgumentException("Wrong airport referenced in "+pointDescr+"!");
+            }
+
+            String runwayCode = pointDescr.substring(pointDescr.indexOf("-")+1+2); // +2 is for the prefix 'RW' in front of the number
+            GuiRunway rw = data.getRunways().get(runwayCode);
+            if (rw==null) {
+                throw new IllegalArgumentException("Runway end for definition "+pointDescr+" not found!");
+            }
+            Point2D point = rw.getRunwayEnd().getGeographicPosition();
+            return point;
+        }
         if (pointDescr.contains("@")) {
             if (!pointDescr.contains("NM"))
                 throw new IllegalArgumentException("Wrong point definition: " + pointDescr);

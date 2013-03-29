@@ -79,7 +79,7 @@ public class NDBSymbol extends AViewObject {
     protected void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
         this.displayPosition = newDisplayPosition;
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,ndb.getIdentification());
+        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,ndb);
 
         if(highLightColor!=null) {
             this.maxScalePath=Integer.MAX_VALUE;
@@ -91,8 +91,8 @@ public class NDBSymbol extends AViewObject {
 
         int scale = (int)mapViewAdapter.getLogicalScale();
         scale = scale==0 ? 1 : scale;
-        scale = (int)Math.round(30d * 10d/scale);
-        if(scale<20) scale=20;
+        scale = (int)Math.round(20d * 10d/scale);
+        if(scale<15) scale=15;
         if(scale>30) scale=30;
 
         path = new Path2D.Double();
@@ -106,11 +106,11 @@ public class NDBSymbol extends AViewObject {
 
         int scale = (int)mapViewAdapter.getLogicalScale();
         scale = scale==0 ? 1 : scale;
-        int size = (int) Math.round(30d * 10d/scale);
-        if(size<20) size=20;
+        int size = (int) Math.round(20d * 10d/scale);
+        if(size<15) size=15;
         if(size>30) size=30;
 
-        if( (ndb.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, ndb.getIdentification())) || (data.getRadarObjectFilterState("NDB") && (scale>minScalePath && scale<maxScalePath))) {
+        if( (ndb.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, ndb)) || (data.getRadarObjectFilterState("NDB") && (scale>minScalePath && scale<maxScalePath))) {
             g2d.drawImage(image.getScaledInstance(size, -1, Image.SCALE_SMOOTH), (int)displayPosition.getX()-size/2, (int)displayPosition.getY()-size/2, (ImageObserver) null);
         }
 }

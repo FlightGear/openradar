@@ -65,7 +65,7 @@ public class FixSymbol extends AViewObject {
 
         path = new Path2D.Double();
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,fix.getIdentification());
+        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,fix);
 
         if(highLightColor!=null) {
             this.maxScalePath=Integer.MAX_VALUE;
