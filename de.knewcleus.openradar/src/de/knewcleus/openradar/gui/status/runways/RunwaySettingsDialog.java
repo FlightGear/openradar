@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -68,7 +68,7 @@ import de.knewcleus.openradar.gui.setup.RunwayData;
 public class RunwaySettingsDialog extends JFrame {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
@@ -79,7 +79,7 @@ public class RunwaySettingsDialog extends JFrame {
 
     private JLabel lbRWNumber;
     private JButton btCopySettings;
-    
+
     private JTextField tfCLStart;
     private JTextField tfCLEnd;
     private JTextField tfCLMinorDMStart;
@@ -93,7 +93,7 @@ public class RunwaySettingsDialog extends JFrame {
 
     private JCheckBox chbRwActiveForStarting;
     private JCheckBox chbRwActiveForLanding;
-    
+
     private JCheckBox chbSymmetric;
     private JCheckBox chbDisplayRight;
     private JCheckBox chbDisplayLeft;
@@ -137,14 +137,14 @@ public class RunwaySettingsDialog extends JFrame {
         setUndecorated(true);
         this.addWindowListener(new DialogCloseListener());
 
-        
+
         // Determine what the default GraphicsDevice can support.
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if(isUniformTranslucencySupported) {
             this.setOpacity(0.8f);
-        } 
+        }
 
         JPanel jPnlContentPane = new JPanel();
         jPnlContentPane.setLayout(new GridBagLayout());
@@ -184,7 +184,7 @@ public class RunwaySettingsDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlContentPane.add(lbRwNext, gridBagConstraints);
-        
+
         btCopySettings = new JButton("Copy to all");
         btCopySettings.setName("COPY");
         btCopySettings.setToolTipText("Copy settings to all other runways");
@@ -196,7 +196,7 @@ public class RunwaySettingsDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 8, 2);
         jPnlContentPane.add(btCopySettings, gridBagConstraints);
-        
+
 //        JPanel space0 = new JPanel();
 //        space0.setOpaque(false);
 //        gridBagConstraints = new java.awt.GridBagConstraints();
@@ -268,7 +268,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLStart = new JTextField();
         tfCLStart.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLStart.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLStart.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLStart.addFocusListener(fieldFocusLostListener);
         tfCLStart.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -289,7 +289,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLEnd = new JTextField();
         tfCLEnd.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLEnd.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLEnd.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLEnd.addFocusListener(fieldFocusLostListener);
         tfCLEnd.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -351,7 +351,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLMinorDMStart = new JTextField();
         tfCLMinorDMStart.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLMinorDMStart.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLMinorDMStart.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLMinorDMStart.addFocusListener(fieldFocusLostListener);
         tfCLMinorDMStart.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -364,7 +364,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLMajorDMStart = new JTextField();
         tfCLMajorDMStart.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLMajorDMStart.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLMajorDMStart.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLMajorDMStart.addFocusListener(fieldFocusLostListener);
         tfCLMajorDMStart.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -385,7 +385,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLMinorDMEnd = new JTextField();
         tfCLMinorDMEnd.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLMinorDMEnd.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLMinorDMEnd.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLMinorDMEnd.addFocusListener(fieldFocusLostListener);
         tfCLMinorDMEnd.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -398,7 +398,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLMajorDMEnd = new JTextField();
         tfCLMajorDMEnd.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLMajorDMEnd.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLMajorDMEnd.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLMajorDMEnd.addFocusListener(fieldFocusLostListener);
         tfCLMajorDMEnd.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -419,7 +419,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLMinorDMInterval = new JTextField();
         tfCLMinorDMInterval.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLMinorDMInterval.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLMinorDMInterval.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLMinorDMInterval.addFocusListener(fieldFocusLostListener);
         tfCLMinorDMInterval.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -432,7 +432,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLMajorDMInterval = new JTextField();
         tfCLMajorDMInterval.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLMajorDMInterval.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLMajorDMInterval.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLMajorDMInterval.addFocusListener(fieldFocusLostListener);
         tfCLMajorDMInterval.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -453,7 +453,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLMinorDMTickLength = new JTextField();
         tfCLMinorDMTickLength.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLMinorDMTickLength.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLMinorDMTickLength.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLMinorDMTickLength.addFocusListener(fieldFocusLostListener);
         tfCLMinorDMTickLength.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -466,7 +466,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfCLMajorDMTickLength = new JTextField();
         tfCLMajorDMTickLength.setHorizontalAlignment(JTextField.RIGHT);
-        tfCLMajorDMTickLength.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfCLMajorDMTickLength.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfCLMajorDMTickLength.addFocusListener(fieldFocusLostListener);
         tfCLMajorDMTickLength.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -566,7 +566,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfVectStartLeft = new JTextField();
         tfVectStartLeft.setHorizontalAlignment(JTextField.RIGHT);
-        tfVectStartLeft.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfVectStartLeft.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfVectStartLeft.addFocusListener(fieldFocusLostListener);
         tfVectStartLeft.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -579,7 +579,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfVectStartRight = new JTextField();
         tfVectStartRight.setHorizontalAlignment(JTextField.RIGHT);
-        tfVectStartRight.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfVectStartRight.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfVectStartRight.addFocusListener(fieldFocusLostListener);
         tfVectStartRight.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -601,7 +601,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfVectAngleLeft = new JTextField();
         tfVectAngleLeft.setHorizontalAlignment(JTextField.RIGHT);
-        tfVectAngleLeft.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfVectAngleLeft.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfVectAngleLeft.addFocusListener(fieldFocusLostListener);
         tfVectAngleLeft.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -615,7 +615,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfVectAngleRight = new JTextField();
         tfVectAngleRight.setHorizontalAlignment(JTextField.RIGHT);
-        tfVectAngleRight.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfVectAngleRight.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfVectAngleRight.addFocusListener(fieldFocusLostListener);
         tfVectAngleRight.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -636,7 +636,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfVectLengthLeft = new JTextField();
         tfVectLengthLeft.setHorizontalAlignment(JTextField.RIGHT);
-        tfVectLengthLeft.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfVectLengthLeft.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfVectLengthLeft.addFocusListener(fieldFocusLostListener);
         tfVectLengthLeft.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -649,7 +649,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfVectLengthRight = new JTextField();
         tfVectLengthRight.setHorizontalAlignment(JTextField.RIGHT);
-        tfVectLengthRight.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfVectLengthRight.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfVectLengthRight.addFocusListener(fieldFocusLostListener);
         tfVectLengthRight.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -670,7 +670,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         tfBaselegLengthLeft = new JTextField();
         tfBaselegLengthLeft.setHorizontalAlignment(JTextField.RIGHT);
-        tfBaselegLengthLeft.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfBaselegLengthLeft.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfBaselegLengthLeft.addFocusListener(fieldFocusLostListener);
         tfBaselegLengthLeft.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -684,7 +684,7 @@ public class RunwaySettingsDialog extends JFrame {
         tfBaselegLengthRight = new JTextField();
         tfBaselegLengthRight.setHorizontalAlignment(JTextField.RIGHT);
         tfBaselegLengthRight.addFocusListener(fieldFocusLostListener);
-        tfBaselegLengthRight.setPreferredSize(new Dimension(60, boldFont.getSize() + 8));
+        tfBaselegLengthRight.setPreferredSize(new Dimension(60, boldFont.getSize() + 12));
         tfBaselegLengthRight.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -718,7 +718,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         chbRwActiveForStarting.setSelected(rwd.isStartingEnabled());
         chbRwActiveForLanding.setSelected(rwd.isLandingEnabled());
-        
+
         tfCLStart.setText(format(rwd.getExtCenterlineStart()));
         tfCLEnd.setText(format(rwd.getExtCenterlineLength()));
         tfCLMinorDMStart.setText(format(rwd.getMinorDMStart()));
@@ -759,7 +759,7 @@ public class RunwaySettingsDialog extends JFrame {
         try {
             rwd.setStartingEnabled(chbRwActiveForStarting.isSelected());
             rwd.setLandingEnabled(chbRwActiveForLanding.isSelected());
-            
+
             rwd.setExtCenterlineStart(parse(tfCLStart.getText()));
             rwd.setExtCenterlineLength(parse(tfCLEnd.getText()));
 
@@ -830,7 +830,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         private void copyToAll(String sourceCode) {
             RunwayData SourceRwd = data.getRunwayData(sourceCode);
-            
+
             for(GuiRunway rw : data.runways.values()) {
                 if(!rw.getCode().equals(sourceCode)) {
                     RunwayData rwd = rw.getRunwayData();
@@ -892,9 +892,9 @@ public class RunwaySettingsDialog extends JFrame {
 
     /**
      * Refreshes the display to handle actions on 'symmetric' check box
-     * 
+     *
      * @author wolfram
-     * 
+     *
      */
     private class RunwayFieldActionListener implements ActionListener {
         @Override

@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -52,7 +52,7 @@ import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.weather.MetarData;
 /**
  * This panel contains the runways
- * 
+ *
  * @author Wolfram Wagner
  */
 public class RunwayPanel extends JPanel {
@@ -60,15 +60,13 @@ public class RunwayPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private GuiMasterController guiInteractionManager;
     private volatile boolean showOnlyActiveRunways = false;
-    
+
     private List<JCheckBox> cbList = new ArrayList<JCheckBox>();
-    
+
     public RunwayPanel(GuiMasterController guiInteractionManager) {
         this.guiInteractionManager = guiInteractionManager;
         this.setLayout(new java.awt.GridBagLayout());
         this.addMouseListener(guiInteractionManager.getStatusManager().getRunwayMouseListener());
-        this.setToolTipText("double click toggles collapsing to active runways only");
-
     }
 
     public synchronized void refreshRunways(MetarData metar) {
@@ -77,7 +75,7 @@ public class RunwayPanel extends JPanel {
 
         this.removeAll();
         cbList.clear();
-        
+
         int i = 0;
         boolean noRWSelected = true;
         // check if at least one is active
@@ -87,7 +85,7 @@ public class RunwayPanel extends JPanel {
                 break;
             }
         }
-        
+
         for (GuiRunway rw : guiInteractionManager.getDataRegistry().getRunways().values()) {
             rw.setRunwayPanel(this);
             rw.setMetar(metar);
@@ -113,13 +111,14 @@ public class RunwayPanel extends JPanel {
 
                 f = lbRwCode.getFont();
                 f = f.deriveFont(Font.PLAIN, 10);
-                
+
                 if(rw.getRunwayData().isEnabledAtAll()) {
                     if(rw.getRunwayData().isStartingEnabled()) {
                         JCheckBox cbStarting = new JCheckBox();
                         cbStarting.setText("Start");
                         cbStarting.setFont(f);
                         cbStarting.setForeground(rw.getRunwayData().isStartingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
+                        cbStarting.setRolloverEnabled(false);
                         cbStarting.setOpaque(false);
                         cbStarting.setName("STARTING");
                         cbStarting.setModel(rw.createStartCbModel());
@@ -131,15 +130,16 @@ public class RunwayPanel extends JPanel {
                         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
                         gridBagConstraints.insets = new java.awt.Insets(0, 4, -2, 0);
                         this.add(cbStarting, gridBagConstraints);
-        
+
                         cbList.add(cbStarting);
                     }
-                    
+
                     if(rw.getRunwayData().isLandingEnabled()) {
                         JCheckBox cbLanding = new JCheckBox();
                         cbLanding.setText("Land");
                         cbLanding.setFont(f);
                         cbLanding.setForeground(rw.getRunwayData().isLandingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
+                        cbLanding.setRolloverEnabled(false);
                         cbLanding.setOpaque(false);
                         cbLanding.setName("LANDING");
                         cbLanding.setModel(rw.createLandingCbModel());
@@ -151,9 +151,9 @@ public class RunwayPanel extends JPanel {
                         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
                         gridBagConstraints.insets = new java.awt.Insets(-2, 4, 0, 0);
                         this.add(cbLanding, gridBagConstraints);
-                        
+
                         cbList.add(cbLanding);
-                    }    
+                    }
                     JLabel lbShearWind = new JLabel();
                     lbShearWind.setText(String.format("%.0fkn / %.0fkn",rw.getHeadWindSpeed(),rw.getCrossWindSpeed()));
                     lbShearWind.setToolTipText("Strength of head and crosswind");
@@ -174,7 +174,7 @@ public class RunwayPanel extends JPanel {
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
                     gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
                     this.add(lbShearWind, gridBagConstraints);
-                    
+
                     CrossWindDisplay swd = new CrossWindDisplay(rw);
                     swd.setToolTipText("Strength and direction of shear component of wind");
                     gridBagConstraints = new GridBagConstraints();
@@ -183,7 +183,7 @@ public class RunwayPanel extends JPanel {
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
                     gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
                     this.add(swd, gridBagConstraints);
-    
+
                     JLabel lbHeading = new JLabel();
                     lbHeading.setName("lb" + rw.getCode() + "Heading");
                     lbHeading.setText(String.format("%1s°",rw.getMagneticHeading()));
@@ -197,7 +197,7 @@ public class RunwayPanel extends JPanel {
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
                     gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
                     this.add(lbHeading, gridBagConstraints);
-                    
+
                     JLabel lbLength = new JLabel();
                     lbLength.setName("lb" + rw.getCode() + "Length");
                     lbLength.setText(String.format("%1$,3.0f\" x %2$,.0f\"",rw.getLengthFt(), rw.getWidthFt()));
@@ -211,8 +211,8 @@ public class RunwayPanel extends JPanel {
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
                     gridBagConstraints.insets = new java.awt.Insets(-2, 4, 0, 0);
                     this.add(lbLength, gridBagConstraints);
-    
-                    
+
+
     //                JLabel lbRelativeWindDirection = new JLabel();
     //                lbRelativeWindDirection.setText("rWD:" + df.format(rw.getWindDeviation()) + "°");
     //                lbRelativeWindDirection.setToolTipText("Wind direction relative to runway heading.");
@@ -224,10 +224,10 @@ public class RunwayPanel extends JPanel {
     //                gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     //                gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
     //                pnlMain.add(lbRelativeWindDirection, gridBagConstraints);
-    
+
                     if(rw.getRunwayData().isLandingEnabled() && rw.getGlideslope()!=null) {
                         Glideslope gs = rw.getGlideslope();
-                        
+
                         JLabel lbILS = new JLabel();
                         lbILS.setText(String.format("ILS: %1$s %2$3.2f",gs.getIdentification(),gs.getFrequency().getValue()/Units.MHz));
                         lbILS.setToolTipText("ID, Frequency of ILS and elevation runway end");
@@ -239,7 +239,7 @@ public class RunwayPanel extends JPanel {
                         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
                         gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
                         this.add(lbILS, gridBagConstraints);
-        
+
                         JLabel lbILSData = new JLabel();
                         lbILSData.setText(String.format("GS:%1$1.2f° E:%2$,.0f ft",gs.getGlideslopeAngle(),gs.getElevation()/Units.FT));
                         lbILSData.setToolTipText(String.format("Range: %1$,.0f ft",gs.getRange()));
@@ -263,7 +263,7 @@ public class RunwayPanel extends JPanel {
                 gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
                 gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
                 this.add(space, gridBagConstraints);
-                    
+
             }
             i++;
         }
@@ -296,7 +296,7 @@ public class RunwayPanel extends JPanel {
         revalidate();
         ((JSplitPane)getParent().getParent().getParent()).setDividerLocation((int)getParent().getParent().getPreferredSize().getHeight());
     }
-    
+
     public String getRunwayNumber(Point clickPoint) {
         Component c = getComponentAt(clickPoint);
         if(c instanceof JLabel) {
