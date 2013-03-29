@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
- * 
+ * Copyright (C) 2012 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -43,10 +43,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
@@ -55,15 +62,12 @@ import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
+import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 import de.knewcleus.openradar.gui.GuiMasterController;
 
 /**
  * The GUI controller for the setup dialog.
- * 
+ *
  * @author Wolfram Wagner
  */
 public class SetupController {
@@ -77,7 +81,10 @@ public class SetupController {
     private Map<String, SectorBean> mapExistingSectors = new TreeMap<String, SectorBean>();
 
     private ZipFile zif = null;;
-    
+    private static ZipFile zifPhonebook = null;;
+
+    private final static Logger log = Logger.getLogger(SetupController.class.toString());
+
     public SetupController() {
         parseSectorDir(); // fills existing airport list
         showDialog();
@@ -108,7 +115,7 @@ public class SetupController {
                         position = new Point2D.Double(lon, lat);
                     }
                     if(p.getProperty("magneticDeclination")==null) {
-                        System.err.println("Error: Property 'magneticDeclination' not found in "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
+                        log.severe("Error: Property 'magneticDeclination' not found in "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
                         System.exit(99);
                     }
                     magneticDeclination = Double.parseDouble(p.getProperty("magneticDeclination", "0"));
@@ -142,10 +149,10 @@ public class SetupController {
             JComponent jSource = (JComponent) e.getSource();
             if (jSource.getName().equals("SearchButton") || jSource.getName().equals("SearchBox")) {
                 searchAirport(setupDialog.getSearchTerm());
-            } else 
+            } else
             if (jSource.getName().equals("ShowExistingButton")) {
                 parseSectorDir();
-            } else          
+            } else
             if (jSource.getName().equals("DownloadButton")) {
                 downloadSector(setupDialog.getSelectedSector());
             } else
@@ -162,7 +169,7 @@ public class SetupController {
     public SectorListSelectionListener getSectorListSelectionListener() {
         return listSelectionListener;
     }
-        
+
     private class SectorListSelectionListener implements ListSelectionListener {
 
         @Override
@@ -172,11 +179,11 @@ public class SetupController {
             }
         }
     }
-    
+
     public SectorListMouseListener getSectorListMouseListener() {
         return sectorListMouseListener;
     }
-    
+
     private class SectorListMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -192,11 +199,11 @@ public class SetupController {
             }
         }
     }
-    
+
     private void searchAirport(String searchTerm) {
         Map<String,SectorBean> mapFindings = new TreeMap<String, SectorBean>();
         BufferedReader ir = null;
-        
+
         try {
             ir = new BufferedReader(openXPlaneAptDat());
             String line = ir.readLine();
@@ -204,13 +211,13 @@ public class SetupController {
                 if(line.startsWith("1 ")) {
                     StringTokenizer st = new StringTokenizer(line," \t");
                     st.nextElement(); // code "1"
-                    st.nextElement(); // 
-                    st.nextElement(); // 
-                    st.nextElement(); // 
+                    st.nextElement(); //
+                    st.nextElement(); //
+                    st.nextElement(); //
                     String airportCode = st.nextToken();
                     StringBuilder name = new StringBuilder();
                     while(st.hasMoreElements()) {
-                        if(name.length()>0) name.append(" "); 
+                        if(name.length()>0) name.append(" ");
                         name.append(st.nextToken());
                     }
                     if(airportCode.toUpperCase().contains(searchTerm.toUpperCase()) || name.toString().toUpperCase().contains(searchTerm.toUpperCase())) {
@@ -224,7 +231,7 @@ public class SetupController {
             for (SectorBean sb : mapFindings.values()) {
                 searchResultsModel.addElement(sb);
             }
-            
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -271,7 +278,7 @@ public class SetupController {
             }
         }
     }
-    
+
     protected InputStreamReader openXPlaneAptDat() throws IOException {
         final File inputFile = new File("data/AptNav.zip");
         zif = new ZipFile(inputFile);
@@ -284,7 +291,7 @@ public class SetupController {
         }
         throw new IllegalStateException("apt.dat not found in sectors/AtpNav.zip!");
     }
-    
+
     public static Properties loadSectorProperties(String airportCode) {
         Properties p = null;
         File propertyFile = new File("data" + File.separator + airportCode + File.separator + "sector.properties");
@@ -319,5 +326,65 @@ public class SetupController {
                 }
             }
         }
+    }
+    /**
+     * Loads the radio frequencies from fgcoms phonebook file.
+     *
+     * @param airportCode
+     * @return
+     */
+    public static List<RawFrequency> loadRadioFrequencies(String airportCode) {
+        List<RawFrequency> radioFrequencies = new ArrayList<RawFrequency>();
+        BufferedReader ir = null;
+
+        try {
+            ir = new BufferedReader(openPhoneBookZip());
+            // the header
+            ir.readLine();
+            ir.readLine();
+            // now search the airport
+            String line = ir.readLine();
+            while(line!=null) {
+                if(line.trim().length()>35) {
+                    String ac = line.substring(0,4).trim();
+                    if(airportCode.equals(ac)) {
+                        String code = line.substring(6,26).trim();
+                        if(!code.contains("ATIS")) {
+                            String freq = line.substring(28,35).trim();
+                            radioFrequencies.add(new RawFrequency(code, freq));
+                        }
+                    }
+                }
+                line = ir.readLine();
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            if(zifPhonebook!=null) {
+                try {
+                    zifPhonebook.close();
+                } catch (IOException e) { }
+            }
+            if(ir!=null) {
+                try {
+                    ir.close();
+                } catch (IOException e) {}
+            }
+        }
+        return radioFrequencies;
+    }
+
+    private static Reader openPhoneBookZip() throws IOException {
+        final File inputFile = new File("data/phonebook.zip");
+        zifPhonebook = new ZipFile(inputFile);
+        Enumeration<? extends ZipEntry> entries = zifPhonebook.entries();
+        while(entries.hasMoreElements()) {
+            ZipEntry zipentry = entries.nextElement();
+            if(zipentry.getName().equals("phonebook.txt")) {
+                return new InputStreamReader(zifPhonebook.getInputStream(zipentry));
+            }
+        }
+        throw new IllegalStateException("apt.dat not found in sectors/AtpNav.zip!");
     }
 }

@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
- * 
+ * Copyright (C) 2012 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -66,14 +66,14 @@ import de.knewcleus.openradar.view.ViewerAdapter;
 
 /**
  * This class is a doing the jobs around the MP part of the GUI:
- * 
+ *
  * It is the MODEL and CONTROLLER, providing the data for display and it manages
  * the filtering (Filters: Show all, Show messages of selected user, Show
  * messages of users in range and show messages of users which are currently
  * displayed.
- * 
+ *
  * @author Wolfram Wagner
- * 
+ *
  */
 
 public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionListener, IChatListener, KeyListener, IRadarViewChangeListener {
@@ -88,10 +88,10 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     };
 
     private volatile Filter filter = Filter.FILTER_NONE;
-    /** 
-     * used to flag, that the list needs to be repainted 
+    /**
+     * used to flag, that the list needs to be repainted
      * if true, the model is updating the active list, before it returns the size.
-     */    
+     */
     private volatile boolean dirty = true;
     /* The container of all chat messages */
     private volatile List<GuiChatMessage> globalList = new ArrayList<GuiChatMessage>();
@@ -113,7 +113,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     private GuiUpdater guiUpdater = new GuiUpdater();
 
     private volatile AtcMessage autoAtcMessage = null;
-    
+
     public MpChatManager(GuiMasterController master) {
         this.master = master;
 
@@ -168,7 +168,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
     /**
      * Registers a new message to the global list
-     *  
+     *
      * @param msg
      */
     public synchronized void addMessage(GuiChatMessage msg) {
@@ -209,13 +209,13 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
     /**
      * DONT call directly! Use requestGuiUpdate()!!!
-     * 
+     *
      * This method is called by the model when "getSize" is called and dirty is true. It updates the activeList using the filter settings.
      */
     private void applyChanges() {
         if(!dirty) return;
         dirty=false; // must be here to avoid an endless loop
-        
+
         List<GuiChatMessage> filteredMessageList = new ArrayList<GuiChatMessage>();
         GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact(); // to avoid thread locks
 
@@ -223,13 +223,13 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             List<GuiChatMessage> formerList = new ArrayList<GuiChatMessage>(activeMessageList);
             String ownCallSign = master.getCurrentATCCallSign();
             Set<String> allCallSigns = new HashSet<String>(mapCallSignMsgList.keySet());
-    
+
             switch (filter) {
             case FILTER_RANGE:
             case FILTER_VISIBLE:
                 // filter global list
                 Set<String> callSignsInFilter = new HashSet<String>();
-    
+
                 for (String currentCallSign : mapCallSignMsgList.keySet()) {
                     if (filter == Filter.FILTER_RANGE) {
                         if (master.getRadarContactManager().isCallSignInRange(currentCallSign)) {
@@ -263,10 +263,10 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
                 if(selectedContact!=null) {
                 String selectedCallSign = selectedContact.getCallSign();
                     for (GuiChatMessage m : globalList) {
-                        if (selectedCallSign.equals(m.getCallSign()) 
+                        if (selectedCallSign.equals(m.getCallSign())
                             || (m.getMessage().contains(selectedCallSign) && ownCallSign.equals(m.getCallSign()))
                             || ( !messageContainsCallSigns(m.getMessage(),allCallSigns) && ownCallSign.equals(m.getCallSign())) ) {
-                                
+
                             filteredMessageList.add(m);
                         }
                     }
@@ -276,7 +276,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             case FILTER_NONE:
                 activeMessageList = globalList;
             }
-    
+
             if (formerList != activeMessageList) {
                 notifyListenersListChange(formerList);
             }
@@ -414,8 +414,8 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         dirty = true;
         chatHistory.repaint();
     }
-    
-    
+
+
     public void setAutoAtcMessage(AtcMessage msg) {
         autoAtcMessage = msg;
         GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
@@ -429,7 +429,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         if(autoAtcMessage!=null) {
             sendFollowUpAtcMessages(message);
         } else {
-            processOutGoingMessage(message);
+            processOutGoingMessage(message, true);
         }
     }
 
@@ -438,50 +438,52 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
             if(c!=null) {
                 List<String> messages = autoAtcMessage.generateMessages(master, c, c.getAtcLanguage());
-                
+
                 String englishText = messages.get(0);
-                
+
                 if(chatInputText.contains(englishText)) {
                     // retrieve appended text
                     String appendix = chatInputText.substring(chatInputText.indexOf(englishText)+englishText.length());
                     // send the message and the messages in other languages
-                    processOutGoingMessage(englishText+appendix);
+                    processOutGoingMessage(englishText+appendix, true);
                     for(int i=1;i<messages.size();i++) {
-                        processOutGoingMessage(messages.get(i)+appendix);
+                        processOutGoingMessage(messages.get(i)+appendix, true);
                     }
-                    
+
                 } else {
                     // atcMessagesText is not contained!!!
-                    processOutGoingMessage(chatInputText); // send it normally
+                    processOutGoingMessage(chatInputText, true); // send it normally
                 }
             } else {
                 // to all airmen
-                processOutGoingMessage(chatInputText); // send it normally
+                processOutGoingMessage(chatInputText, true); // send it normally
             }
-            
-        } 
+
+        }
         autoAtcMessage = null;
     }
 
-    private void processOutGoingMessage(String message) {
-        String ownFrequency = master.getRadioManager().getModels().size()>0 ? master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency() : ""; 
+    private void processOutGoingMessage(String message, boolean resetChatField) {
+        String ownFrequency = master.getRadioManager().getModels().size()>0 ? master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency() : "";
         mpBackend.sendChatMessage(ownFrequency, message); // send to MP Server
         // add to own chat history
         addMessage(new GuiChatMessage(master, new Date(), master.getCurrentATCCallSign(), ownFrequency , message));
-        
-        GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
-        if (c != null) {
-            setSelectedCallSign(c.getCallSign(), filter == Filter.FILTER_SELECTED_USER);
+
+        if(resetChatField) {
+            GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
+            if (c != null) {
+                setSelectedCallSign(c.getCallSign(), filter == Filter.FILTER_SELECTED_USER);
+            }
+            resetChatField();
         }
-        resetChatField();
     }
-    
-    
+
+
     public void cancelAutoAtcMessage() {
         autoAtcMessage=null;
         resetChatField();
     }
-    
+
     public void resetChatField() {
         GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
         if(selectedContact!=null) {
@@ -492,7 +494,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
 
     public ComboBoxModel<String> getAutoAtcLanguages() {
-        
+
         return null;
     }
 
@@ -500,6 +502,12 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     public void radarViewChanged(ViewerAdapter v, Change c) {
         requestGuiUpdate();
     }
-    
+
+    public void sendMessages(List<String> textList) {
+        for(String txt : textList) {
+            processOutGoingMessage(txt, false);
+        }
+    }
+
 
 }

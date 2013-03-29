@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -50,7 +50,7 @@ import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 
 /**
  * This panel contains the radios in the status panel
- * 
+ *
  * @author Wolfram Wagner
  */
 public class RadioPanel extends JPanel {
@@ -58,10 +58,10 @@ public class RadioPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private GuiMasterController master;
     private RadioController radioManager;
-    
+
     private Map<String,JButton> mapPTTButtons = new HashMap<String,JButton>() ;
     private Map<String,JLabel> mapRadioLabels = new HashMap<String,JLabel>() ;
-    
+
     public RadioPanel(GuiMasterController master, RadioController radioManager) {
         this.master=master;
         this.radioManager=radioManager;
@@ -74,15 +74,15 @@ public class RadioPanel extends JPanel {
     public void initRadios() {
         this.removeAll();
         this.setLayout(new GridBagLayout());
-        
+
         int i=0;
 
         this.setLayout(new GridBagLayout());
-        
+
         boolean isFgComInternal = master.getDataRegistry().getFgComMode() == FgComMode.Internal;
-        
+
         for(RadioModel model : radioManager.getModels().values()) {
-            
+
             JLabel lbRadioKey = new JLabel();
             lbRadioKey.setForeground(Color.lightGray);
             lbRadioKey.setName("lb"+model.getRadioKey());
@@ -108,7 +108,7 @@ public class RadioPanel extends JPanel {
             gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
             gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
             gridBagConstraints.ipadx = 20;
-            gridBagConstraints.ipady = 2;
+            gridBagConstraints.ipady = 4;
             this.add(cbFrequencies,gridBagConstraints);
 
             cbFrequencies.addActionListener(radioManager.getActionListener());
@@ -126,14 +126,14 @@ public class RadioPanel extends JPanel {
             this.add(btPTT,gridBagConstraints);
 
             mapPTTButtons.put(model.getRadioKey(),btPTT);
-            
+
             btPTT.addMouseListener(radioManager.getPttButtonListener());
-            
+
             i++;
         }
-        
+
         if(master.getDataRegistry().getFgComMode() != FgComMode.Off) {
-        
+
             JPanel pnlRight = new JPanel();
             pnlRight.setOpaque(false);
             GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -144,12 +144,12 @@ public class RadioPanel extends JPanel {
             gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
             gridBagConstraints.insets = new java.awt.Insets(4, 4, 2, 10);
             this.add(pnlRight,gridBagConstraints);
-            
+
             pnlRight.setLayout(new GridBagLayout());
-           
+
             JLabel lbFreq = new JLabel();
             lbFreq.setForeground(Color.lightGray);
-            lbFreq.setText("910.00 Test FgCom");
+            lbFreq.setText("");//"910.00 Test FgCom"
             lbFreq.setFont(lbFreq.getFont().deriveFont(8));
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 0;
@@ -157,7 +157,7 @@ public class RadioPanel extends JPanel {
             gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
             gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
             pnlRight.add(lbFreq,gridBagConstraints);
-            
+
             if(isFgComInternal) {
                 JLabel lbReset = new JLabel();
                 lbReset.setName("lbRestart");
@@ -172,7 +172,7 @@ public class RadioPanel extends JPanel {
                 gridBagConstraints.anchor = java.awt.GridBagConstraints.CENTER;
                 gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 0);
                 pnlRight.add(lbReset,gridBagConstraints);
-        
+
                 doLayout();
                 if(getParent()!=null) {
                     getParent().invalidate();

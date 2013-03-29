@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -60,12 +60,12 @@ import de.knewcleus.openradar.weather.MetarReader;
 /**
  * This class is the central point where the GUI managers are initialized and
  * coordinated.
- * 
+ *
  * GUI components are usually splitted into a VIEW Part (responsible for
  * displaying the, may include a renderer), a Model (sometimes the invisible
  * default model of SWING) and a Controller that does more complex operations
  * and implements the business logic.
- * 
+ *
  * @author Wolfram Wagner
  */
 
@@ -114,7 +114,7 @@ public class GuiMasterController {
 
     /**
      * This method starts the application
-     * 
+     *
      */
     public void start(SetupDialog setupDialog) throws Exception {
         // initialize the front end and load environment data
@@ -145,8 +145,8 @@ public class GuiMasterController {
         final Position clientPosition = new Position(dataRegistry.getLon(), dataRegistry.getLat(), dataRegistry.getElevationM());
         final GeodToCartTransformation geodToCartTransformation = new GeodToCartTransformation(Ellipsoid.WGS84);
         //
-        radarProvider = new FGMPClient<TargetStatus>(playerRegistry, 
-                                                     dataRegistry.getInitialATCCallSign(), 
+        radarProvider = new FGMPClient<TargetStatus>(playerRegistry,
+                                                     dataRegistry.getInitialATCCallSign(),
                                                      "OpenRadar",
                                                      geodToCartTransformation.forward(clientPosition),
                                                      dataRegistry.getMpServer(),
@@ -202,27 +202,32 @@ public class GuiMasterController {
                         mpChatManager.requestFocusForInput();
                         e.consume();
                         return true;
-                    } 
+                    }
                     if (e.getKeyCode() == KeyEvent.VK_F1) {
                         radarManager.setFilter("GROUND");
                         e.consume();
                         return true;
-                    }                    
+                    }
                     if (e.getKeyCode() == KeyEvent.VK_F2) {
                         radarBackend.setZoomLevel("TOWER");
                         e.consume();
                         return true;
-                    }                    
+                    }
                     if (e.getKeyCode() == KeyEvent.VK_F3) {
                         radarBackend.setZoomLevel("APP");
                         e.consume();
                         return true;
-                    }                    
+                    }
                     if (e.getKeyCode() == KeyEvent.VK_F4) {
                         radarBackend.setZoomLevel("SECTOR");
                         e.consume();
                         return true;
-                    }                    
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_F12 && e.isShiftDown()) {
+                        radarBackend.reloadStandardRoutes();
+                        e.consume();
+                        return true;
+                    }
                 }
 
                 return false;

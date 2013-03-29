@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
@@ -64,7 +66,7 @@ import de.knewcleus.openradar.view.navdata.INavPointListener;
 
 /**
  * This class stores information about Navaids, Runways for use in frontend
- * 
+ *
  * @author Wolfram Wagner
  */
 public class AirportData implements INavPointListener {
@@ -83,7 +85,7 @@ public class AirportData implements INavPointListener {
     private List<RadioFrequency> radioFrequencies = new ArrayList<RadioFrequency>();
     private Map<String, Radio> radios = new TreeMap<String, Radio>();
     public Map<String, GuiRunway> runways = new TreeMap<String, GuiRunway>();
-    
+
     public enum FgComMode {
         Internal, External, Off
     };
@@ -102,17 +104,20 @@ public class AirportData implements INavPointListener {
     private String metarSource = null;
 
     private Map<String, Boolean> toggleObjectsMap = new HashMap<String, Boolean>();
+    private Map<String, Boolean> visibleLayerMap;
 
     private NavaidDB navaidDB = new NavaidDB();
     private StPView directionMessageView;
-    
+
+    private final static Logger log = Logger.getLogger(AirportData.class.toString());
+
     public AirportData() {
     }
 
     public synchronized void setDirectionMessageView(StPView dmv) {
         this.directionMessageView = dmv;
     }
-    
+
     public synchronized StPView getDirectionMessageView() {
         return directionMessageView;
     }
@@ -302,7 +307,9 @@ public class AirportData implements INavPointListener {
                 this.elevation = aerodrome.getElevation();
                 this.name = aerodrome.getName();
 
-                for (RawFrequency f : aerodrome.getFrequencies()) {
+                // load fgcom phonebook
+                List<RawFrequency> frequencies = SetupController.loadRadioFrequencies(getAirportCode());
+                for (RawFrequency f : frequencies) {
                     this.radioFrequencies.add(new RadioFrequency(f.getCode(), f.getFrequency()));
                 }
                 // air to air
@@ -354,9 +361,9 @@ public class AirportData implements INavPointListener {
     /**
      * The tower position is initially loaded from xplane files, but saved in
      * sector.properties file to allow easy correction.
-     * In this method we check if the value is already in sectors.properties file and 
-     * save it if not... 
-     * 
+     * In this method we check if the value is already in sectors.properties file and
+     * save it if not...
+     *
      * @param towerPosition2
      */
     private void checkTowerPosition(Point2D towerPos) {
@@ -372,10 +379,10 @@ public class AirportData implements INavPointListener {
                 p.put("tower.lon", Double.toString(towerPos.getX()));
                 p.put("tower.lat", Double.toString(towerPos.getY()));
                 SetupController.saveSectorProperties(getAirportCode(), p);
-                this.towerPosition= towerPos; 
+                this.towerPosition= towerPos;
             }
         } catch(Exception e) {
-            System.err.println("Error: could not parse tower position in file sectors.properties for airport "+airportCode);
+            log.log(Level.SEVERE, "Error: could not parse tower position in file sectors.properties for airport "+airportCode);
             this.towerPosition= towerPos;
         }
 
@@ -408,6 +415,14 @@ public class AirportData implements INavPointListener {
         return toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
     }
 
+    public void setVisibleLayerMap(Map<String, Boolean> visibleLayerMap) {
+        this.visibleLayerMap=visibleLayerMap;
+    }
+
+    public boolean isLayerVisible(String name) {
+        return visibleLayerMap.get(name) != null ? visibleLayerMap.get(name) : false;
+    }
+
     public void loadAirportData(GuiMasterController master) {
         File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
         if (propertyFile.exists()) {
@@ -415,7 +430,7 @@ public class AirportData implements INavPointListener {
             try {
                 p.load(new FileReader(propertyFile));
                 String lastCallSign = p.getProperty("lastCallsign");
-                if(lastCallSign!=null) { 
+                if(lastCallSign!=null) {
                     master.setCurrentATCCallSign(lastCallSign, false);
                     master.getStatusManager().setCurrentCallSign(lastCallSign);
                 } else {
@@ -433,10 +448,10 @@ public class AirportData implements INavPointListener {
                 // restore toggles
                 Enumeration<?> e = p.propertyNames();
                 while (e.hasMoreElements()) {
-                    String pn = (String) e.nextElement();
-                    if (pn.startsWith("toggle.")) {
-                        String objKey = pn.substring(7);
-                        boolean b = !"false".equals(p.getProperty(pn));
+                    String name = (String) e.nextElement();
+                    if (name.startsWith("toggle.")) {
+                        String objKey = name.substring(7);
+                        boolean b = !"false".equals(p.getProperty(name));
                         toggleObjectsMap.put(objKey, b);
                     }
                 }
@@ -490,13 +505,13 @@ public class AirportData implements INavPointListener {
         }
     }
 
-    
-    public NavaidDB getNavaidDB() { 
+
+    public NavaidDB getNavaidDB() {
         return navaidDB;
     }
 
     public void updateMouseRadarMoved(GuiRadarContact contact, MouseEvent e) {
         directionMessageView.updateMouseRadarMoved(contact,e);
-        
+
     }
 }

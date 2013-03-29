@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -36,6 +36,7 @@ import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,11 +50,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -69,7 +74,7 @@ import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 
 /**
  * The setup dialog...
- * 
+ *
  * @author Wolfram Wagner
  */
 public class SetupDialog extends JFrame {
@@ -109,11 +114,23 @@ public class SetupDialog extends JFrame {
     private JProgressBar jProgressBar;
     private StatusMessageComboboxModel cbStatusModel;
 
+    private JCheckBox cbLandmass;
+    private JCheckBox cbUrban;
+    private JCheckBox cbLake;
+    private JCheckBox cbStream;
+    private JCheckBox cbTarmac;
+    private JCheckBox cbGroundnet;
+
     private FgComMode fgComMode = FgComMode.Internal;
     private String[] modeModel = new String[]{"Internal: Started and controlled by OpenRadar","External: Control external instance", "OFF: No FgCom support"};
-    
+
     public SetupDialog(SetupController setupManager) {
         this.setupManager = setupManager;
+
+//        List<Image> icons = new ArrayList<Image>();
+//        icons.add(new ImageIcon("res/icon.svg").getImage());
+//        icons.add(new ImageIcon("res/icon48.png").getImage());
+//        setIconImages(icons);
 
         initComponents();
 
@@ -129,11 +146,11 @@ public class SetupDialog extends JFrame {
 
         this.setLocation((int) maxBounds.getWidth() / 2 - 200, (int) maxBounds.getHeight() / 2 - 200);
         //this.setSize(400,600);
-                
+
         JPanel jPnlContentPane = new JPanel();
         jPnlContentPane.setLayout(new GridBagLayout());
         setContentPane(jPnlContentPane);
-        
+
         JTabbedPane jtpMain = new JTabbedPane();
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -143,7 +160,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.fill=GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0,0, 0, 0);
         jPnlContentPane.add(jtpMain, gridBagConstraints);
-        
+
         cbStatusMessages = new JComboBox<String>();
         cbStatusModel = new StatusMessageComboboxModel();
         cbStatusMessages.setEditable(false);
@@ -157,8 +174,8 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.weighty=0;
         gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(0,0, 0, 0);
-        jPnlContentPane.add(cbStatusMessages, gridBagConstraints);        
-        
+        jPnlContentPane.add(cbStatusMessages, gridBagConstraints);
+
         jProgressBar = new JProgressBar();
         jProgressBar.setMinimum(0);
         jProgressBar.setMaximum(100);
@@ -238,7 +255,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(8, 8, 0, 8);
         jPnlSelectAirport.add(jsPane, gridBagConstraints);
-        
+
         liSearchResults = new JList<SectorBean>();
         liSearchResults.setModel(setupManager.getSearchResultsModel());
         liSearchResults.setName("SearchResultList");
@@ -247,7 +264,7 @@ public class SetupDialog extends JFrame {
         liSearchResults.addListSelectionListener(setupManager.getSectorListSelectionListener());
         liSearchResults.addMouseListener(setupManager.getSectorListMouseListener());
         jsPane.getViewport().add(liSearchResults);
-        
+
         lbMessage = new JLabel();
         lbMessage.setForeground(Color.red);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -324,7 +341,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlFgCom.add(lbFgComMode, gridBagConstraints);
-        
+
         cbFgComMode = new JComboBox<String>(modeModel);
         cbFgComMode.setEditable(false);
         cbFgComMode.addActionListener(new FgComModeActionListener());
@@ -335,7 +352,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlFgCom.add(cbFgComMode, gridBagConstraints);
-        
+
         // executable
 
         lbfgComPath = new JLabel();
@@ -599,12 +616,93 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(12, 2, 2, 2);
         jPnlSettings.add(btCheckSettings, gridBagConstraints);
 
+
+        // TAB Layers
+
+        JPanel jPnlTweaks = new JPanel();
+        jtpMain.add("Tweaks", jPnlTweaks);
+        jPnlTweaks.setLayout(new GridBagLayout());
+
+        JPanel jPnlLayerInput = new JPanel();
+        jPnlLayerInput.setLayout(new GridBagLayout());
+        jPnlLayerInput.setBorder(new TitledBorder("Visible background layers"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
+        jPnlTweaks.add(jPnlLayerInput, gridBagConstraints);
+
+        cbLandmass = new JCheckBox();
+        cbLandmass.setText("landmass (coast lines)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLayerInput.add(cbLandmass, gridBagConstraints);
+
+        cbUrban = new JCheckBox();
+        cbUrban.setText("urban areas");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLayerInput.add(cbUrban, gridBagConstraints);
+
+        cbLake = new JCheckBox();
+        cbLake.setText("lakes, water body");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLayerInput.add(cbLake, gridBagConstraints);
+
+        cbStream = new JCheckBox();
+        cbStream.setText("streams");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLayerInput.add(cbStream, gridBagConstraints);
+
+        cbTarmac = new JCheckBox();
+        cbTarmac.setText("tarmac");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLayerInput.add(cbTarmac, gridBagConstraints);
+
+        cbGroundnet = new JCheckBox();
+        cbGroundnet.setText("ground net / parkings");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLayerInput.add(cbGroundnet, gridBagConstraints);
+
         doLayout();
-        
+
         this.setSize((int)jPnlContentPane.getPreferredSize().getWidth(), (int)jPnlContentPane.getPreferredSize().getHeight()+30);
         doLayout();
     }
-    
+
     public String getSearchTerm() {
         return tfSearchBox.getText();
     }
@@ -617,13 +715,13 @@ public class SetupDialog extends JFrame {
         btCheckSettings.setText("Checking...");
         btCheckSettings.setEnabled(false);
         btCheckSettings.setForeground(Color.gray);
-        
+
         boolean dataOk = true;
 
         data.setFgComMode(fgComMode);
-        
+
         List<Integer> list = null;
-        
+
         if (fgComMode!=FgComMode.Internal ||
                 checkPath(tfFgComPath.getText())) {
             lbfgComPath.setForeground(Color.black);
@@ -632,9 +730,9 @@ public class SetupDialog extends JFrame {
             lbfgComPath.setForeground(Color.red);
             dataOk = false;
         }
-        
+
         if (fgComMode!=FgComMode.Internal ||
-                (!tfFgComExec.getText().trim().isEmpty() && 
+                (!tfFgComExec.getText().trim().isEmpty() &&
                 checkPath(tfFgComPath.getText()+File.separator+tfFgComExec.getText()))) {
             lbfgComExec.setForeground(Color.black);
             data.setFgComExec(tfFgComExec.getText());
@@ -651,7 +749,7 @@ public class SetupDialog extends JFrame {
             lbFgComHost.setForeground(Color.red);
             dataOk = false;
         }
-        
+
         if (fgComMode==FgComMode.Off ||
                 ((list = checkPorts(tfFgComPorts.getText())).size() > 0 &&
                  (list = checkPorts(tfFgComPorts.getText())).size() < 5)) {
@@ -707,6 +805,15 @@ public class SetupDialog extends JFrame {
         btCheckSettings.setText("Check Settings");
         btCheckSettings.setEnabled(true);
         btCheckSettings.setForeground(Color.black);
+
+        Map<String, Boolean> visibleLayerMap = new HashMap<String, Boolean>();
+        visibleLayerMap.put("landmass", cbLandmass.isSelected());
+        visibleLayerMap.put("urban", cbUrban.isSelected());
+        visibleLayerMap.put("lake", cbLake.isSelected());
+        visibleLayerMap.put("stream", cbStream.isSelected());
+        visibleLayerMap.put("tarmac", cbTarmac.isSelected());
+        visibleLayerMap.put("groundnet", cbGroundnet.isSelected());
+        data.setVisibleLayerMap(visibleLayerMap);
 
         if (!dataOk) {
             lbMessage.setText("Please verify your settings!");
@@ -797,7 +904,7 @@ public class SetupDialog extends JFrame {
                 if(fgComMode == FgComMode.Internal) cbFgComMode.setSelectedIndex(0);
                 if(fgComMode == FgComMode.External) cbFgComMode.setSelectedIndex(1);
                 if(fgComMode == FgComMode.Off) cbFgComMode.setSelectedIndex(2);
-                
+
                 tfFgComPath.setText(p.getProperty("fgCom.path", ""));
                 tfFgComPath.setText(p.getProperty("fgCom.path", ""));
                 tfFgComExec.setText(p.getProperty("fgCom.exec", ""));
@@ -808,6 +915,13 @@ public class SetupDialog extends JFrame {
                 tfMpPort.setText(p.getProperty("mp.serverPort", "5000"));
                 tfMpLocalPort.setText(p.getProperty("mp.clientPort", "5001"));
                 tfMetarUrl.setText(p.getProperty("metar.url", "http://weather.noaa.gov/pub/data/observations/metar/stations/"));
+
+                cbLandmass.setSelected(!"false".equals(p.getProperty("layer.landmass")));
+                cbUrban.setSelected(!"false".equals(p.getProperty("layer.urban")));
+                cbLake.setSelected(!"false".equals(p.getProperty("layer.lake")));
+                cbStream.setSelected(!"false".equals(p.getProperty("layer.stream")));
+                cbTarmac.setSelected(!"false".equals(p.getProperty("layer.tarmac")));
+                cbGroundnet.setSelected(!"false".equals(p.getProperty("layer.groundnet")));
             }
 
         }
@@ -826,6 +940,13 @@ public class SetupDialog extends JFrame {
         p.put("mp.serverPort", tfMpPort.getText());
         p.put("mp.clientPort", tfMpLocalPort.getText());
         p.put("metar.url", tfMetarUrl.getText());
+
+        p.put("layer.landmass", ""+cbLandmass.isSelected());
+        p.put("layer.urban", ""+cbUrban.isSelected());
+        p.put("layer.lake", ""+cbLake.isSelected());
+        p.put("layer.stream", ""+cbStream.isSelected());
+        p.put("layer.tarmac", ""+cbTarmac.isSelected());
+        p.put("layer.groundnet", ""+cbGroundnet.isSelected());
 
         FileWriter userWriter = null;
         try {
@@ -846,7 +967,7 @@ public class SetupDialog extends JFrame {
     }
 
     public void sectorSelected(AirportData data) {
-        SectorBean sb = liSearchResults.getSelectedValue(); 
+        SectorBean sb = liSearchResults.getSelectedValue();
         if(sb!=null) {
             if(sb.isSectorDownloaded()) {
                 data.setAirportCode(sb.getAirportCode());
@@ -872,19 +993,19 @@ public class SetupDialog extends JFrame {
     public void setStatus(int progress, String message) {
         jProgressBar.setValue(progress);
         jProgressBar.setString(""+progress+"%");
-        Rectangle rect = jProgressBar.getBounds();  
-        rect.x = 0;  
-        rect.y = 0;  
+        Rectangle rect = jProgressBar.getBounds();
+        rect.x = 0;
+        rect.y = 0;
         jProgressBar.paintImmediately( rect );
         cbStatusModel.addNewStatusMessage(message);
         cbStatusMessages.setSelectedItem(message);
-        rect = cbStatusMessages.getBounds();  
-        rect.x = 0;  
-        rect.y = 0;  
-        cbStatusMessages.paintImmediately( rect );  
+        rect = cbStatusMessages.getBounds();
+        rect.x = 0;
+        rect.y = 0;
+        cbStatusMessages.paintImmediately( rect );
 
     }
-    
+
     private class FgComModeActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -917,7 +1038,7 @@ public class SetupDialog extends JFrame {
                 tfFgComServer.setEnabled(false);
             }
 
-            
+
         }
     }
 }

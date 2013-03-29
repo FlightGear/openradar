@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
- * 
+ * Copyright (C) 2012 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -51,14 +51,14 @@ import java.util.StringTokenizer;
 /**
  * This class bundles the code to find an airport location and download
  * airports.
- * 
+ *
  * @author Wolfram Wagner
  */
 public abstract class SectorCreator {
 
     // "http://mapserver.flightgear.org/dlaction?layer=<layername>&xmin=<degree>&xmax=<degree>&ymin=<degree>&ymax=<degree>";
     private static String address = "http://mapserver.flightgear.org/dlaction?";
-    private static String[] layers = { "v0_landmass", "v0_lake", "v0_stream", "apt_airfield", "apt_runway", "apt_tarmac" };
+    private static String[] layers = { "v0_landmass", "v0_urban", "v0_lake", "v0_stream", "apt_airfield", "apt_runway", "apt_tarmac" };
     private static double mapWidth = 10; // degrees
     private static double mapHeight = 10; // degrees
 
@@ -108,7 +108,7 @@ public abstract class SectorCreator {
             dir.mkdirs();
 
         for (int i = 0; i < layers.length; i++) {
-            setupDialog.setStatus((i - 1) * 100 / layers.length, "Downloading " + layers[i] + "...");
+            setupDialog.setStatus((i) * 100 / layers.length, "Downloading " + layers[i] + "...");
             downloadZip(data, layers[i], upperLeftCorner, lowerRightCorner);
             setupDialog.setStatus((i + 1) * 100 / layers.length, "..." + layers[i] + " downloaded");
         }
@@ -166,23 +166,23 @@ public abstract class SectorCreator {
     }
 
     /**
-     * 
+     *
      * URL:
      * http://www.ngdc.noaa.gov/geomag-web/calculators/calculateDeclination?
      * startYear
      * =2012&startMonth=11&startDay=15&resultFormat=csv&lon1Hemisphere=W
      * &lon1=122.220624012373
      * &lat1Hemisphere=N&lat1=37.7214006137091&browserRequest=true
-     * 
+     *
      * ################################################## # Declination Values
      * ################################################## # 5 Fields: # (1) Date
      * in decimal years # (2) Latitude in decimal degrees # (3) Longitude in
      * decimal degrees # (4) Declination in decimal degrees # (5) Change in
      * declination in decimal minutes / year # # Magnetic Model: IGRF #
      * Elevation: 0.00000 km ##################################################
-     * 
+     *
      * 2012.87158,37.72140,-122.22060,13.98877,-6.17181
-     * 
+     *
      * @param data
      * @return
      */
