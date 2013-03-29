@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -51,7 +51,7 @@ import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
 
 /**
  * The Panel showing the Radar Contacts in three columns
- * 
+ *
  * @author Wolfram Wagner
  */
 public class ContactsPanel extends javax.swing.JPanel implements DropTargetListener {
@@ -89,7 +89,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         setLayout(new java.awt.GridBagLayout());
         setBackground(Palette.DESKTOP);
 
-        lbShowAll.setFont(lbShowAll.getFont().deriveFont(Font.BOLD));  
+        lbShowAll.setFont(lbShowAll.getFont().deriveFont(Font.BOLD));
         lbShowAll.setForeground(Palette.DESKTOP_FILTER_SELECTED);
         lbShowAll.setText("AUTO");
         lbShowAll.setName("MODE");
@@ -201,6 +201,19 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
         add(lbDeselect, gridBagConstraints);
 
+        JLabel lbNeglect = new JLabel("Neglect");
+        lbNeglect.setName("NEGLECT");
+        lbNeglect.setFont(lbNeglect.getFont().deriveFont(Font.BOLD));
+        lbNeglect.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbNeglect.addMouseListener(new HelpMouseListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx=0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
+        add(lbNeglect, gridBagConstraints);
+
         JLabel lbHelp = new JLabel("?");
         lbHelp.setName("HELP");
         lbHelp.setFont(lbHelp.getFont().deriveFont(Font.BOLD));
@@ -208,13 +221,13 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         lbHelp.addMouseListener(new HelpMouseListener());
         lbHelp.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(4, 8, 2, 8);
         add(lbHelp, gridBagConstraints);
-        
-        
+
+
         liRadarContacts.setBackground(Palette.DESKTOP);
 //         liRadarContacts.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
         liRadarContacts.setModel(guiInteractionManager.getRadarContactManager());
@@ -310,7 +323,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
     }
 
     private class HelpMouseListener extends MouseAdapter {
-        
+
         @Override
         public void mouseClicked(MouseEvent e) {
             MouseEvent dummyEvent = new MouseEvent(
@@ -330,6 +343,8 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
                ToolTipManager.sharedInstance().setInitialDelay(delay);
             } else if(((JLabel)e.getSource()).getName().equals("DESELECT")) {
                 guiInteractionManager.getRadarContactManager().deselectContact();
+            } else if(((JLabel)e.getSource()).getName().equals("NEGLECT")) {
+                guiInteractionManager.getRadarContactManager().neglectContact();
             }
         }
     }

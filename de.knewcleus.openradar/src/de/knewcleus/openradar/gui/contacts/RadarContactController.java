@@ -292,6 +292,15 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         }
     }
 
+    public void neglectContact() {
+        synchronized (selectedContactLock) {
+            // deselect
+            if(selectedContact != null) {
+                selectedContact.setNeglect(!selectedContact.isNeglect());
+            }
+        }
+    }
+
     public void select(GuiRadarContact guiRadarContact, boolean force, boolean exlcusive) {
         synchronized (selectedContactLock) {
             if (selectedContact != null) {
@@ -325,7 +334,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     public synchronized void playerAdded(TargetStatus player) {
         if (!mapCallSignContact.containsKey(player.getCallsign()) && !mapExpiredCallSigns.containsKey(player.getCallsign())) {
             //if(mapCallSignContact.isEmpty())
-                Toolkit.getDefaultToolkit().beep();
+            //   Toolkit.getDefaultToolkit().beep();
             // add new player
             GuiRadarContact c = new GuiRadarContact(master, this, player, mapAtcComments.get(player.getCallsign()));
             // c.setOperation(GuiRadarContact.Operation.UNKNOWN);
@@ -428,10 +437,11 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                     analyseClickPoint(c, guiList, e);
 
                     if (clickLocation == ClickLocation.ON_STRIP) {
-                        if (e.isControlDown() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
-                            // toggle neglect
-                            c.setNeglect(!c.isNeglect());
-                        } else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
+//                        if (e.isControlDown() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
+//                            // toggle neglect
+//                            c.setNeglect(!c.isNeglect());
+//                        } else
+                        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
                             // select
                             select(c, true, false);
                             if(c.isSelected()) {
