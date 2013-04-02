@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the STAR and SID of RW 10 LSZH -->
+<routes>
+	<route name="RW 10 SID" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activeStartRunways>10</activeStartRunways>
+		<navaids>KLO,ALBIX</navaids>
+		<!-- ALBIX 1D -->
+		<line start="1.1NM092@KLO" end="2.1NM094@KLO"/>
+		<bow center="3NM044@KLO" radius="2.305" startAngle="310" extentAngle="230" text="max 210kt"/>
+		<line start="3.66NM005@KLO" end="4NM255@KLO" text="ALBIX 1D"/>
+		<line start="4NM255@KLO" end="ZH553" text="255°"/>
+		<bow center="8.7NM240@KLO" radius="2.4" startAngle="225" extentAngle="127" text="max 210kt"/>
+		<line start="11.04NM237@KLO" end="31.3NM109@HOC" text="150°"/>
+		<line start="31.3NM109@HOC" end="ALBIX" text="at or above 9000ft"/>
+		<line start="KLO" angle="360" length="5" stroke="dashed" lineWidth="1" text="360°"/>
+		<line start="25.2NM109@HOC" angle="109" length="6" stroke="dashed" lineWidth="1" text="HOC 109°"/>
+		<line start="KLO" angle="255" length="4" stroke="dashed" lineWidth="1" text="255°"/>
+		<!-- ALBIX 1C -->
+		<line start="3.25NM087@KLO" end="ZH502" text="ALBIX 1C"/>
+		<bow center="9NM099@KLO" radius="2.404" startAngle="003" extentAngle="130" text="max 210kt"/>
+		<line start="11.07NM106@KLO" end="BARIG" text="ALBIX 1C"/>
+		<line start="BARIG" end="ALBIX"/>
+		<line start="KLO" angle="087" length="3.5" stroke="dashed" lineWidth="1" text="087°"/>
+		<line start="20.5NM169@TRA" angle="169" length="5" stroke="dashed" lineWidth="1" text="TRA 169°"/>
+	</route>
+</routes>

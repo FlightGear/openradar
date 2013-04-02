@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the STAR and SID of RW 14 LSZH -->
+<routes>
+	<route name="RW 14 finals" zoomMin="10" zoomMax="100" color="120,120,140" >
+		<activeLandingRunways>14</activeLandingRunways>
+		<navaids>KLO,RILAX,TRA,OSNEM,ZUE,AMIKI,GIPOL</navaids>
+		<!-- AMIKI - rw 14 circeling approach -->
+		<line start="AMIKI" end="ZUE" text="277°"/>
+		<line start="ZUE" end="ZH701" text="6000ft"/>
+		<line start="ZH701" end="TRA" text="290° - 5000ft"/>
+		<line start="TRA" end="GIPOL" endOffset="14.3" text="235° - 4000ft"/>
+		<line start="GIPOL" end="TRA" endOffset="5.6" text="055° - 4000ft"/>
+	</route>
+	<route name="RW 14 MISAP" zoomMin="10" zoomMax="100" color="140,120,120" stroke="dashed">
+		<activeLandingRunways>14</activeLandingRunways>
+		<navaids>KLO,ZUE,AMIKI</navaids>
+		<!-- Missed Approach rw 14 -->
+		<line start="1NM090@KLO" angle="136" length="3.4" text="136°"/>
+		<bow center="4.25NM115@KLO" radius="0.8" startAngle="090" extentAngle="125"/>
+		<line start="7.8NM234@ZUE" angle="181" length="5.3" text="360°"/> <!-- there is a bug when drawing a line with an angle of 180 or 360 -->
+		<line start="7.8NM234@ZUE" end="ZUE" text="054°"/>
+		<line start="0.2NM054@ZUE" end="0.2NM054@AMIKI" text="097°"/>
+	</route>
+	<route name="RW 14 SID" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activeStartRunways>14</activeStartRunways>
+		<navaids>KLO,ALBIX</navaids>
+		<!-- ALBIX 2A -->
+		<bow center="3NM044@KLO" radius="2.305" startAngle="310" extentAngle="260" text="max 210kt"/>
+		<line start="3.66NM005@KLO" end="4NM255@KLO" text="ALBIX 2A"/>
+		<line start="4NM255@KLO" end="ZH553" text="255°"/>
+		<bow center="8.7NM240@KLO" radius="2.4" startAngle="225" extentAngle="127" text="max 210kt"/>
+		<line start="11.04NM237@KLO" end="31.3NM109@HOC" text="150°"/>
+		<line start="31.3NM109@HOC" end="ALBIX" text="at or above 9000ft"/>
+		<line start="KLO" angle="360" length="5" stroke="dashed" lineWidth="1" text="360°"/>
+		<line start="25.2NM109@HOC" angle="109" length="6" stroke="dashed" lineWidth="1" text="HOC 109°"/>
+		<line start="KLO" angle="255" length="4" stroke="dashed" lineWidth="1" text="255°"/>
+	</route>
+</routes>

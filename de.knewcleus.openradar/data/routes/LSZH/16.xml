@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the STAR and SID of RW 16 LSZH -->
+<routes>
+	<route name="RW 16 SID" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activeStartRunways>16</activeStartRunways>
+		<navaids>KLO,ALBIX</navaids>
+		<!-- ALBIX 1R -->
+		<bow center="2.2NM094@KLO" radius="1.8" startAngle="320" extentAngle="287" text="max 210kt"/>
+		<line start="1.6NM040@KLO" end="1NM255@KLO" text="ALBIX 1R"/>
+		<line start="1NM255@KLO" end="ZH553" text="255°"/>
+		<bow center="8.7NM240@KLO" radius="2.4" startAngle="225" extentAngle="127" text="max 210kt"/>
+		<line start="11.04NM237@KLO" end="31.3NM109@HOC" text="150°"/>
+		<line start="31.3NM109@HOC" end="ALBIX" text="at or above 9000ft"/>
+		<line start="KLO" angle="255" length="1" stroke="dashed" lineWidth="1" text="255°"/>
+		<line start="25.2NM109@HOC" angle="109" length="6" stroke="dashed" lineWidth="1" text="HOC 109°"/>
+	</route>
+</routes>

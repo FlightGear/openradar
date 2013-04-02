@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the approaches, visible everytime the zoomlevel is above 100 -->
+<routes>
+	<route name="LSZH Wait loops">
+		<navaids>GIPOL,RILAX,AMIKI,BERSU,MOSIT,URNAS,RAVED</navaids>
+		<loop navpoint="GIPOL" inboundHeading="080" length="5" arrows="both" minHeight="7000" misapHeight="MISAP7000"/>
+		<loop navpoint="RILAX" inboundHeading="191" length="5" arrows="both" minHeight="7000" maxHeight="MAX FL240"/>
+		<loop navpoint="AMIKI" inboundHeading="277" length="5" arrows="both" minHeight="7000" misapHeight="MISAP7000"/>
+		<loop navpoint="BERSU" inboundHeading="051" length="5" arrows="both" minHeight="FL100" maxHeight="MAX FL200"/>
+		<loop navpoint="MOSIT" inboundHeading="353" length="5" arrows="both" minHeight="14000" maxHeight="MAX FL200"/>
+		<loop navpoint="URNAS" inboundHeading="348" length="5" arrows="both" minHeight="14000" maxHeight="MAX FL160"/>
+		<loop navpoint="RAVED" inboundHeading="267" length="5" arrows="both" minHeight="FL120" maxHeight="MAX FL240"/>
+	</route>
+	<route name="LSZH Approaches" zoomMin="100">
+		<navaids>ARPUS,BLM,GIPOL,HOC,BERSU,TADOB,ERMUS,HOC,KELIP,MOSIT,KLO,LAMAX,AMIKI,RAVED,ETOXU,NEGRA,MATIV,TRA,ZUE,WIL,URNAS,ALBIX</navaids>
+		<!-- BLM 2G -->
+		<line start="ARPUS" end="BLM" text="093°"/>
+		<line start="BLM" end="ZH677" text="108°"/>
+		<line start="ZH677" end="GIPOL" text="108°"/>
+		
+		<!-- BERSU 1G -->
+		<!-- NOT WORKING DUE TO OUTDATED NAVDATA BY X-PLANE!1!!
+		<line start="BERSU" end="TADOB" text="064°"/>
+		<line start="TADOB" end="ERMUS" text="064°"/>
+		<line start="ERMUS" end="GIPOL" text="332°"/>
+		-->
+		<!-- DOPIL 1G -->
+		<!-- NOT WORKING DUE TO OUTDATED NAVDATA BY X-PLANE!1!!
+		<line start="DOPIL" end="NOLKA" text="043°"/>
+		<line start="NOLKA" end="ERMUS" text="043°"/>
+		<line start="ERMUS" end="GIPOL" text="332°"/>
+		-->
+		<!-- HOC 1G -->
+		<line start="HOC" end="GIPOL" text="080°"/>
+		<!-- KELIP 1G -->
+		<line start="KELIP" end="MOSIT" text="353°"/>
+		<line start="MOSIT" end="ZH626" text="KELIP 1G"/>
+		<line start="ZH626" end="ZH625" text="352°"/>
+		<line start="ZH625" end="KLO" text="319°"/>
+		<line start="KLO" end="GIPOL" text="277°"/>
+		<!-- RILAX 1A -->
+		<line start="RILAX" end="LAMAX" text="140°"/>
+		<line start="LAMAX" end="AMIKI" text="116°"/>
+		<!-- NEGRA 1A -->
+		<line start="RAVED" end="ETOXU" text="267°"/>
+		<line start="ETOXU" end="NEGRA" text="267°"/>
+		<line start="NEGRA" end="MATIV" text="230°"/>
+		<line start="MATIV" end="AMIKI" text="259°"/>
+		<!-- BLM 2Z -->
+		<!-- same route as BLM 2G
+		<line start="ARPUS" end="BLM" text="093°"/>
+		<line start="BLM" end="ZH677" text="108°"/>
+		<line start="ZH677" end="GIPOL" text="108°"/>
+		-->
+		<!-- HOC 2Z -->
+		<!-- same route as HOC 1G
+		<line start="HOC" end="GIPOL" text="080°"/>
+		-->
+		<!-- WIL 2Z -->
+		<line start="WIL" end="GIPOL" text="015°"/>
+		<!-- URNAS 2Z -->
+		<line start="URNAS" end="ALBIX" text="348°"/>
+		<line start="ALBIX" end="ZH650" text="URNAS 2Z"/>
+		<line start="ZH650" end="ZH676" text="348°"/>
+		<line start="ZH676" end="GIPOL" text="277°"/>
+		<!-- TRA 1Z -->
+		<line start="TRA" end="AMIKI" text="106°"/>
+		<!-- NEGRA 1Z -->
+		<!-- same route as NEGRA 1A
+		<line start="RAVED" end="ETOXU" text="267°"/>
+		<line start="ETOXU" end="NEGRA" text="267°"/>
+		<line start="NEGRA" end="MATIV" text="230°"/>
+		<line start="MATIV" end="AMIKI" text="277°"/>
+		-->
+	</route>
+</routes>
