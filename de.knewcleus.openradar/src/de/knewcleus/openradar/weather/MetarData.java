@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.weather;
 
-import java.awt.SystemColor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -238,7 +237,7 @@ public class MetarData {
     }
 
     public boolean isNew() {
-        return System.currentTimeMillis()-created < 120 * 1000;
+        return System.currentTimeMillis()-created < 60 * 1000;
     }
 
     private void parseWind(String t, String unit) {
@@ -475,5 +474,11 @@ public class MetarData {
         list.add(String.format(AtcMessage.replaceVariables("ATIS for %s at %2.0f ft: QNH %2.2f, wind %s, active rwy(s) %s,  FGCOM %2.3f", master, null, atisVariables)));
         if(!shortMsg) list.add("(ATIS) vis:"+getVisibility()+", "+getVisibilityUnit()+" "+getweatherPhaenomenaForHumans());
         return list;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof MetarData)) return false;
+        return metarBaseData.equals(((MetarData)obj).metarBaseData);
     }
 }

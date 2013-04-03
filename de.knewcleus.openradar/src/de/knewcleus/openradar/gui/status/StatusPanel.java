@@ -44,6 +44,7 @@ import java.util.TimeZone;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
@@ -79,6 +80,8 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     private javax.swing.JSeparator sep1;
     private javax.swing.JSeparator sep2;
 //    private javax.swing.JSeparator sep3;
+    private JPanel weatherPanel;
+    private LineBorder border = new LineBorder(Palette.LIGHTBLUE, 1);
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
     private MetarData currentMetar = null;
@@ -128,44 +131,31 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         headerPanel.setLayout(new java.awt.GridBagLayout());
         headerPanel.setOpaque(false);
 
-        lbCurrentCallSign.setForeground(Palette.DESKTOP_TEXT);
-        lbCurrentCallSign.setText("Call Sign:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth=1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
-        headerPanel.add(lbCurrentCallSign, gridBagConstraints);
-
-        tfCurrentCallSign.setOpaque(true);
-        tfCurrentCallSign.setText(master.getDataRegistry().getInitialATCCallSign());
-        tfCurrentCallSign.setToolTipText("Current ATC call sign");
-        tfCurrentCallSign.setMinimumSize(new Dimension(80,(int)tfCurrentCallSign.getPreferredSize().getHeight()));
-        tfCurrentCallSign.setPreferredSize(new Dimension(80,(int)tfCurrentCallSign.getPreferredSize().getHeight()));
-        tfCurrentCallSign.addActionListener(master.getStatusManager().getCallSignActionListener());
-        tfCurrentCallSign.addKeyListener(master.getStatusManager().getCallSignKeyListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
-        headerPanel.add(tfCurrentCallSign, gridBagConstraints);
+//        lbCurrentCallSign.setForeground(Palette.DESKTOP_TEXT);
+//        lbCurrentCallSign.setText("Call Sign:");
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 0;
+//        gridBagConstraints.gridy = 0;
+//        gridBagConstraints.gridwidth=1;
+//        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+//        gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
+//        headerPanel.add(lbCurrentCallSign, gridBagConstraints);
+//
 
         lbTime.setForeground(Palette.DESKTOP_TEXT);
         lbTime.setText("");
         lbTime.setToolTipText("time in UTC");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth=1;
+        gridBagConstraints.gridwidth=2;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 10, 10, 10);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
         headerPanel.add(lbTime, gridBagConstraints);
 
         lbAirport.setForeground(Palette.DESKTOP_TEXT);
-        lbAirport.setText(master.getDataRegistry().getAirportCode() + " " + master.getDataRegistry().getAirportName());
+        lbAirport.setText(master.getDataRegistry().getAirportCode() + " " + master.getDataRegistry().getAirportName().toUpperCase());
         lbAirport.setToolTipText("Your current airport");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -175,6 +165,21 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
         headerPanel.add(lbAirport, gridBagConstraints);
+
+        tfCurrentCallSign.setOpaque(true);
+        tfCurrentCallSign.setText(master.getDataRegistry().getInitialATCCallSign());
+        tfCurrentCallSign.setToolTipText("Current ATC call sign");
+        tfCurrentCallSign.setMinimumSize(new Dimension(80,(int)tfCurrentCallSign.getPreferredSize().getHeight()));
+        tfCurrentCallSign.setPreferredSize(new Dimension(80,(int)tfCurrentCallSign.getPreferredSize().getHeight()));
+        tfCurrentCallSign.addActionListener(master.getStatusManager().getCallSignActionListener());
+        tfCurrentCallSign.addKeyListener(master.getStatusManager().getCallSignKeyListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight=2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 10);
+        headerPanel.add(tfCurrentCallSign, gridBagConstraints);
 
         lbSelection.setForeground(Palette.LIGHTBLUE);
         lbSelection.setText("-nobody-");
@@ -200,7 +205,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(8, 4, 5, 4);
         headerPanel.add(lbPtS, gridBagConstraints);
 
-        JPanel weatherPanel = new JPanel();
+        weatherPanel = new JPanel();
         weatherPanel.setLayout(new GridBagLayout());
         weatherPanel.setOpaque(false);
         weatherPanel.addMouseListener(metarMouseListener);
@@ -211,7 +216,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 4);
         headerPanel.add(weatherPanel, gridBagConstraints);
 
         lbWind.setForeground(Palette.LIGHTBLUE);
@@ -222,7 +227,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 4);
         weatherPanel.add(lbWind, gridBagConstraints);
 
         lbPressure.setForeground(Palette.DESKTOP_TEXT);
@@ -244,7 +249,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 4);
         weatherPanel.add(lbVisibility, gridBagConstraints);
 
         lbWeatherPhaenomena.setForeground(Palette.DESKTOP_TEXT);
@@ -256,7 +261,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 20, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(2, 20, 2, 4);
         weatherPanel.add(lbWeatherPhaenomena, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -321,14 +326,14 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     }
 
     public void updateTime() {
-        lbTime.setText("UTC: "+sdf.format(new Date()));
-        if(currentMetar!=null && currentMetar.isNew()) {
-            lbWind.setText("NEW! Wind:");
-        } else {
-            if(currentMetar!=null) {
-                lbWind.setText("Wind:"+" "+currentMetar.getWindDisplayString());
-            }
+        lbTime.setText(sdf.format(new Date())+" ZULU");
+        if(currentMetar!=null && weatherPanel.getBorder()!=border && currentMetar.isNew()) {
+            weatherPanel.setBorder(border);
         }
+        if(currentMetar!=null && weatherPanel.getBorder()==border  && !currentMetar.isNew()) {
+            weatherPanel.setBorder(null);
+        }
+
         revalidate();
     }
 
@@ -355,7 +360,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         currentMetar = metar;
 
         StringBuilder sb = new StringBuilder();
-        sb.append("NEW: Wind: ");
+        sb.append("Wind: ");
         sb.append(metar.getWindDisplayString());
         lbWind.setText(sb.toString());
         lbPressure.setText(String.format("QNH: %2.2f / %4.1f", metar.getPressureInHG(),metar.getPressureHPa()));

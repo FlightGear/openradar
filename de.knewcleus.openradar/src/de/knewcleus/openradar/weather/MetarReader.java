@@ -1,32 +1,32 @@
 /**
  * Copyright (C) 2012 Wolfram Wagner
- * 
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -45,11 +45,11 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 /**
  * This class downloads the METAR information...
- * 
+ *
  * http://weather.noaa.gov/pub/data/observations/metar/stations/KSFO.TXT
- * 
+ *
  * @author wolfram
- * 
+ *
  */
 public class MetarReader implements Runnable {
 
@@ -80,16 +80,16 @@ public class MetarReader implements Runnable {
     }
 
     /**
-     * Starts the metar loader after the first metar was loaded. This should prevent problems with 
+     * Starts the metar loader after the first metar was loaded. This should prevent problems with
      * arriving metar in initial screen setup.
-     * So this method returns after Metar is loaded. 
+     * So this method returns after Metar is loaded.
      */
     public void start() {
         try {
             loadMetar();
         } catch (IOException e) {
             e.printStackTrace();
-        } 
+        }
         thread.start();
     }
 
@@ -121,13 +121,16 @@ public class MetarReader implements Runnable {
                 line = reader.readLine();
             }
             reader.close();
-            lastMetar = metar;
-            metar = new MetarData(data, result.toString());
 
-            for (IMetarListener l : listener) {
-                l.registerNewMetar(metar);
+            metar = new MetarData(data, result.toString());
+            if(lastMetar==null || !lastMetar.equals(metar)) {
+
+                lastMetar = metar;
+                for (IMetarListener l : listener) {
+                    l.registerNewMetar(metar);
+                }
+                System.out.println("Metar received: " + metar.getMetarBaseData());
             }
-            System.out.println("Metar received: " + metar.getMetarBaseData());
         } else {
             System.out.println("WARNING: No Metar for "+airportCode+"(got response code " + responseCode + " from " + url.toString()+")...");
             System.out.println("Consider setting metarSource property in data/"+airportCode+"/sector.properties !");
