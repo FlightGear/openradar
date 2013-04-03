@@ -2,7 +2,7 @@
  * Copyright (C) 2013 Wolfram Wagner
  *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
@@ -99,11 +99,11 @@ public class StdRouteLine extends AStdRouteElement {
         Point2D endPoint = null;
         if(geoEndPoint!=null) {
             endPoint = getDisplayPoint(geoEndPoint);
+            angle = Converter2D.getDirection(startPoint, endPoint);
         } else {
             endPoint = Converter2D.getMapDisplayPoint(startPoint, angle, Converter2D.getFeetToDots(length*Units.NM/Units.FT, mapViewAdapter));
         }
 
-        angle = Converter2D.getDirection(startPoint, endPoint);
         if(startOffSet!=null) {
             startPoint = Converter2D.getMapDisplayPoint(startPoint, angle, Converter2D.getFeetToDots(startOffSet*Units.NM/Units.FT, mapViewAdapter));
         }
@@ -126,7 +126,7 @@ public class StdRouteLine extends AStdRouteElement {
             double direction = Converter2D.getDirection(startPoint, endPoint);
             double dirTopLeftCorner = Converter2D.getDirection(new Point2D.Double(0, 0), new Point2D.Double(bounds.getWidth(), -1* bounds.getHeight()));
             double gap = 0;
-            if(    direction > 360-dirTopLeftCorner
+            if(    direction >  360-dirTopLeftCorner
                || (direction < 180+dirTopLeftCorner && direction > 180-dirTopLeftCorner)
                ||  direction <     dirTopLeftCorner) {
                //  top // bottom
