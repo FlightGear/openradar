@@ -15,9 +15,9 @@
 		<activeLandingRunways>14</activeLandingRunways>
 		<navaids>KLO,ZUE,AMIKI</navaids>
 		<!-- Missed Approach rw 14 -->
-		<line start="1NM090@KLO" angle="136" length="3.4" text="136°"/>
-		<bow center="4.25NM115@KLO" radius="0.8" startAngle="090" extentAngle="125"/>
-		<line start="7.8NM234@ZUE" angle="181" length="5.3" text="360°"/> <!-- there is a bug when drawing a line with an angle of 180 or 360 -->
+		<line start="1NM090@KLO" angle="136" length="3.42" text="136°"/>
+		<bow center="4.29NM115@KLO" radius="0.845" startAngle="091" extentAngle="126"/>
+		<line start="7.8NM234@ZUE" angle="180" length="5.32" text="360°"/>
 		<line start="7.8NM234@ZUE" end="ZUE" text="054°"/>
 		<line start="0.2NM054@ZUE" end="0.2NM054@AMIKI" text="097°"/>
 	</route>
