@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner 
- * 
+ * Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -40,9 +40,10 @@ public class RunwayData {
 
     private String rwCode;
 
+    private boolean biDirectional = false;
     private boolean landingEnabled = true;
     private boolean startingEnabled = true;
-    
+
     private double extCenterlineStart = 0;
     private double extCenterlineLength = 100;
 
@@ -80,6 +81,14 @@ public class RunwayData {
 
     public void setRepaintNeeded(boolean repaintNeeded) {
         this.repaintNeeded = repaintNeeded;
+    }
+
+    public synchronized boolean isBiDirectional() {
+        return biDirectional;
+    }
+
+    public synchronized void setBiDirectional(boolean biDirectional) {
+        this.biDirectional = biDirectional;
     }
 
     public boolean isLandingEnabled() {
@@ -267,6 +276,7 @@ public class RunwayData {
     }
 
     public void addValuesToProperties(Properties p) {
+        p.setProperty("rwd." + rwCode + ".biDirectional", biDirectional ? "true" : "false");
         p.setProperty("rwd." + rwCode + ".landingEnabled", landingEnabled ? "true" : "false");
         p.setProperty("rwd." + rwCode + ".startingEnabled", startingEnabled ? "true" : "false");
 
@@ -300,37 +310,39 @@ public class RunwayData {
 
     public void setValuesFromProperties(Properties p) {
         if(p.getProperty("rwd." + rwCode + ".extCenterlineStart")!=null) {
+            // not existing records default to false
+            biDirectional = "true".equals(p.getProperty("rwd." + rwCode + ".biDirectional"));
             // not existing records default to true!
             landingEnabled = !"false".equals(p.getProperty("rwd." + rwCode + ".landingEnabled"));
             startingEnabled = !"false".equals(p.getProperty("rwd." + rwCode + ".startingEnabled"));
 
             extCenterlineStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".extCenterlineStart"));
             extCenterlineLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".extCenterlineLength"));
-    
+
             majorDMStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMStart"));
             majorDMEnd = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMEnd"));
             majorDMInterval = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMInterval"));
             majorDMTickLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".majorDMTickLength"));
-    
+
             minorDMStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMStart"));
             minorDMEnd = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMEnd"));
             minorDMInterval = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMInterval"));
             minorDMTickLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".minorDMTickLength"));
-    
+
             leftVectoringCLStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringCLStart"));
             leftVectoringAngle = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringAngle"));
             leftVectoringLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftVectoringLength"));
             leftBaselegLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".leftBaselegLength"));
-    
+
             rightVectoringCLStart = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringCLStart"));
             rightVectoringAngle = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringAngle"));
             rightVectoringLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightVectoringLength"));
             rightBaselegLength = Double.parseDouble(p.getProperty("rwd." + rwCode + ".rightBaselegLength"));
-    
+
             symetric = "true".equals(p.getProperty("rwd." + rwCode + ".symetric"));
             rightBaseEnabled = "true".equals(p.getProperty("rwd." + rwCode + ".rightBaseEnabled"));
             leftBaseEnabled = "true".equals(p.getProperty("rwd." + rwCode + ".leftBaseEnabled"));
-        }        
+        }
     }
     /** returns true if the runway is set to be enabled either for landing or starting */
     public boolean isEnabledAtAll() {
@@ -338,6 +350,7 @@ public class RunwayData {
     }
 
     public void copyDataFrom(RunwayData sourceRwd) {
+//        biDirectional = sourceRwd.isBiDirectional();
 //        landingEnabled = sourceRwd.isLandingEnabled();
 //        startingEnabled = sourceRwd.isStartingEnabled();
 

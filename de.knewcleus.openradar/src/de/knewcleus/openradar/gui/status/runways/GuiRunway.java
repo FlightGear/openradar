@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
- * 
+ * Copyright (C) 2012 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -50,21 +50,21 @@ import de.knewcleus.openradar.weather.MetarData;
 
 /**
  * This class provides the runway data for the frontend.
- * 
+ *
  * @author Wolfram Wagner
  *
  */
 public class GuiRunway implements ActionListener {
 
     public enum Usabilty {CLOSED, HEAVY_ONLY, WARNING, OPEN}
-    
+
     private AirportData data;
     private RunwayData rwData;
     private volatile MetarData metar = null;
     private IRunwayEnd runwayEnd = null;
     private RunwayPanel runwayPanel = null;
     private static DecimalFormat df = new DecimalFormat("0.00");
-    
+
     public GuiRunway(AirportData data, RunwayEnd runwayEnd) {
         this.data = data;
         this.runwayEnd = runwayEnd;
@@ -78,7 +78,7 @@ public class GuiRunway implements ActionListener {
     public void setMetar(MetarData metar) {
         this.metar=metar;
     }
-    
+
     public String getCode() {
         return runwayEnd.getRunwayID();
     }
@@ -86,7 +86,7 @@ public class GuiRunway implements ActionListener {
    public String getTrueHeading() {
        return df.format(runwayEnd.getTrueHeading());
    }
-    
+
    public String getMagneticHeading() {
        return String.format("%1.0f",runwayEnd.getTrueHeading()-data.getMagneticDeclination());
    }
@@ -98,36 +98,36 @@ public class GuiRunway implements ActionListener {
             return "";
         }
     }
-    
+
     public boolean hasIls() {
         return runwayEnd.getGlideslope()!=null;
-    }    
-    
-    public int getWindDirection() {
+    }
+
+    public String getWindDirection() {
         return metar.getWindDirection();
     }
 
     /**
      * Returns the number in degrees how much the wind differs from optimal
      * direction (directly from front)
-     * 
+     *
      * So 0 is optimal, 90/-90 a shear wind and 180/-180 the wind from behind
      */
     public double getWindDeviation() {
         double runwayHeading = runwayEnd.getTrueHeading() - data.getMagneticDeclination();
-        double windDir = metar.getWindDirection();
-        
+        double windDir = metar.getWindDirectionI();
+
         double normalizedWindDir = windDir-runwayHeading; // outer angle
         normalizedWindDir = normalizedWindDir<-180 ? normalizedWindDir+360 : normalizedWindDir;
         normalizedWindDir = normalizedWindDir>180 ? normalizedWindDir-360 : normalizedWindDir;
-        
+
         return normalizedWindDir;
     }
 
     /**
      * Returns the effective wind strength in shear direction (90 degrees).
-     *  
-     * @return the strength of the shear component of the wind in knots. 
+     *
+     * @return the strength of the shear component of the wind in knots.
      */
     public double getCrossWindSpeed() {
         double angle = getWindDeviation()/360*2*Math.PI;//
@@ -136,18 +136,18 @@ public class GuiRunway implements ActionListener {
 
     /**
      * Returns the effective wind strength blowing from magnetic runway heading.
-     *  
-     * @return the strength of the shear component of the wind in knots. 
+     *
+     * @return the strength of the shear component of the wind in knots.
      */
     public double getHeadWindSpeed() {
         double angle = getWindDeviation()/360*2*Math.PI;//
         return Math.cos(angle)*getWindSpeed();
     }
-    
+
     /**
      * Returns the effective wind strength in cross direction (90 degrees).
-     *  
-     * @return the strength of the shear component of the wind in knots. 
+     *
+     * @return the strength of the shear component of the wind in knots.
      */
     public double getCrossWindGusts() {
         if(metar.getWindSpeedGusts()==-1) return -1;
@@ -157,8 +157,8 @@ public class GuiRunway implements ActionListener {
 
     /**
      * Returns the effective wind strength in cross direction (90 degrees).
-     *  
-     * @return the strength of the shear component of the wind in knots. 
+     *
+     * @return the strength of the shear component of the wind in knots.
      */
     public double getHeadWindGusts() {
         if(metar.getWindSpeedGusts()==-1) return -1;
@@ -189,7 +189,7 @@ public class GuiRunway implements ActionListener {
     public float getLengthFt() {
         float length = runwayEnd.getRunway().getLength()/Units.FT;
         length = Math.round(length/100)*100;
-        return length;                
+        return length;
     }
 
     public Usabilty getUsability() {
@@ -204,7 +204,7 @@ public class GuiRunway implements ActionListener {
 
         return Usabilty.OPEN;
     }
-    
+
     public String getUseability() {
         switch(getUsability()) {
         case CLOSED:
@@ -219,7 +219,7 @@ public class GuiRunway implements ActionListener {
             return "";
         }
     }
-    
+
     public String getFormatedDetails() {
         StringBuilder sb = new StringBuilder();
         sb.append("Runway: ").append(getCode()).append(" (").append(getTrueHeading()).append("!)\n");
@@ -250,18 +250,18 @@ public class GuiRunway implements ActionListener {
     public void addILS(Glideslope gs) {
         runwayEnd.setGlideslope(gs);
     }
-    
+
     public Glideslope getGlideslope() {
         return runwayEnd.getGlideslope();
     }
-    
+
     // ActionListener
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         JCheckBox cb = ((JCheckBox)e.getSource());
         String name = cb.getName();
-        
+
         if("STARTING".equals(name) && e.getID()==ActionEvent.ACTION_PERFORMED   ) {
             setStartingActive(!isStartingActive());
         } else if("LANDING".equals(name) && e.getID()==ActionEvent.ACTION_PERFORMED ) {
@@ -276,21 +276,27 @@ public class GuiRunway implements ActionListener {
             rw.setStartSide(runwayEnd.getOppositeEnd());
             if(rw.getLandSide()==runwayEnd.getOppositeEnd()) {
                 // this means a direction change
-                rw.setLandSide(null);
+                if(!rwData.isBiDirectional()) { // some airports land and start on the same side
+                    // disable the other side
+                    rw.setLandSide(null);
+                }
             }
         } else {
             rw.setStartSide(null);
         }
         runwayPanel.updateRunways();
     }
-    
+
     public void setLandingActive(boolean landingActive) {
         IRunway rw = (IRunway) runwayEnd.getRunway();
         if(landingActive) {
             rw.setLandSide(runwayEnd);
             if(rw.getStartSide()==runwayEnd) {
                 // this means a direction change
-                rw.setStartSide(null);
+                if(!rwData.isBiDirectional()) { // some airports land and start on the same side
+                 // disable the other side
+                    rw.setStartSide(null);
+                }
             }
         } else {
             rw.setLandSide(null);
@@ -311,12 +317,12 @@ public class GuiRunway implements ActionListener {
         private static final long serialVersionUID = 1L;
         private GuiRunway rw = null;
         private boolean landingMode = false;
-        
+
         public CbModel(GuiRunway rw, boolean landingMode) {
             this.rw = rw;
             this.landingMode=landingMode;
         }
-        
+
 
         @Override
         public boolean isSelected() {

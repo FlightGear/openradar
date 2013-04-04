@@ -61,6 +61,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.setup.RunwayData;
@@ -91,6 +94,7 @@ public class RunwaySettingsDialog extends JFrame {
     private JTextField tfCLMajorDMInterval;
     private JTextField tfCLMajorDMTickLength;
 
+    private JCheckBox chbRwBiDirectional;
     private JCheckBox chbRwActiveForStarting;
     private JCheckBox chbRwActiveForLanding;
 
@@ -222,11 +226,21 @@ public class RunwaySettingsDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlContentPane.add(jPnlMainSwitches, gridBagConstraints);
 
+        chbRwBiDirectional = new JCheckBox("Bi-directional");
+        chbRwBiDirectional.setToolTipText("Same runway end for landings and starts");
+        chbRwBiDirectional.addActionListener(new RunwayFieldActionListener());
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlMainSwitches.add(chbRwBiDirectional, gridBagConstraints);
+
         chbRwActiveForStarting = new JCheckBox("Starting");
         chbRwActiveForStarting.setToolTipText("Can runway be used for starts?");
         chbRwActiveForStarting.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
@@ -236,7 +250,7 @@ public class RunwaySettingsDialog extends JFrame {
         chbRwActiveForLanding.setToolTipText("Can runway be used for landings?");
         chbRwActiveForLanding.addActionListener(new RunwayFieldActionListener());
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
@@ -716,6 +730,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         lbRWNumber.setText(rwCode);
 
+        chbRwBiDirectional.setSelected(rwd.isBiDirectional());
         chbRwActiveForStarting.setSelected(rwd.isStartingEnabled());
         chbRwActiveForLanding.setSelected(rwd.isLandingEnabled());
 
@@ -757,6 +772,17 @@ public class RunwaySettingsDialog extends JFrame {
 
     public void storeData(boolean permanent) {
         try {
+            rwd.setBiDirectional(chbRwBiDirectional.isSelected());
+            // store at opposite runway direction
+            try {
+                int rwNumber = Integer.parseInt(lbRWNumber.getText());
+                int otherNumber = rwNumber <= 18 ? rwNumber +18 : rwNumber-18;
+                String sOtherRwNumber = otherNumber<10 ? "0"+otherNumber: ""+otherNumber;
+                RunwayData otherEndRwd = data.getRunwayData( sOtherRwNumber );
+                otherEndRwd.setBiDirectional(chbRwBiDirectional.isSelected());
+            } catch(Exception e) {
+                Logger.getLogger(RunwaySettingsDialog.class.getName()).log(Level.SEVERE,"Problem to set other runway end of "+data.getAirportCode()+"."+lbRWNumber.getText()+" to be bi-idrectional",e);
+            }
             rwd.setStartingEnabled(chbRwActiveForStarting.isSelected());
             rwd.setLandingEnabled(chbRwActiveForLanding.isSelected());
 
