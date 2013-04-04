@@ -69,9 +69,10 @@ public class MetarData {
     // wind
     private boolean windDirectionVariates = false;
     private String windUnit  = "KT";
-    private int windDirection = -1;
-    private int windDirectionMin = -1;
-    private int windDirectionMax = -1;
+    private String windDirection = null;
+    private int windDirectionI = -1;
+    private String windDirectionMin = null;
+    private String windDirectionMax = null;
     private int windSpeed = -1;
     private int windSpeedGusts = -1;
     private double windFromNorth = -1;
@@ -184,7 +185,7 @@ public class MetarData {
             t = st.nextToken();
         } while(st.hasMoreElements());
 
-            double angle = (double)(getWindDirection()-270)/360d*2*Math.PI;
+            double angle = (double)(getWindDirectionI()-270)/360d*2*Math.PI;
             windFromNorth = Math.sin(angle)*(double)getWindSpeed();
             windFromWest = Math.cos(angle)*(double)getWindSpeed();
             //System.out.println("Wind N: "+windFromNorth+" W: "+windFromWest);
@@ -242,12 +243,16 @@ public class MetarData {
 
     private void parseWind(String t, String unit) {
         windUnit = unit;
+        int wd = -1;
         if(t.startsWith("VRB")) {
             // variable
-            windDirection=-1;
+            windDirection="VRB";
+            windDirectionI=0;
         } else {
-            windDirection=(Integer.parseInt(t.substring(0,3)) - (int)data.getMagneticDeclination());
-            windDirection=windDirection<0?windDirection+360:windDirection;
+            wd=(Integer.parseInt(t.substring(0,3)) - (int)data.getMagneticDeclination());
+            wd=wd<0?wd+360:wd;
+            windDirection = String.format("%03d", wd);
+            windDirectionI = wd;
         }
         windSpeed=Integer.parseInt(t.substring(3,5));
         if(t.charAt(5)=='G') {
@@ -256,10 +261,12 @@ public class MetarData {
         }
     }
     private void parseVariations(String t) {
-        windDirectionMin=Integer.parseInt(t.substring(0,3)) - (int)data.getMagneticDeclination();
-        windDirectionMin=windDirectionMin<0?windDirectionMin+360:windDirectionMin;
-        windDirectionMax=Integer.parseInt(t.substring(4)) - (int)data.getMagneticDeclination();
-        windDirectionMax=windDirectionMax<0?windDirectionMax+360:windDirectionMax;
+        int wdMin = Integer.parseInt(t.substring(0,3)) - (int)data.getMagneticDeclination();
+        wdMin=wdMin<0?wdMin+360:wdMin;
+        windDirectionMin = String.format("%03d", wdMin);
+        int wdMax=Integer.parseInt(t.substring(4)) - (int)data.getMagneticDeclination();
+        wdMax=wdMax<0?wdMax+360:wdMax;
+        windDirectionMax = String.format("%03d", wdMax);
     }
 
     private void parseVisibility(String t) {
@@ -336,15 +343,19 @@ public class MetarData {
         return windDirectionVariates;
     }
 
-    public int getWindDirection() {
+    public String getWindDirection() {
         return windDirection;
     }
 
-    public int getWindDirectionMin() {
+    public int getWindDirectionI() {
+        return windDirectionI;
+    }
+
+    public String getWindDirectionMin() {
         return windDirectionMin;
     }
 
-    public int getWindDirectionMax() {
+    public String getWindDirectionMax() {
         return windDirectionMax;
     }
 
@@ -432,14 +443,10 @@ public class MetarData {
         return weatherPhaenomenaHuman;
     }
 
-    public Object getWindDisplayString() {
+    public String getWindDisplayString() {
         StringBuffer sb = new StringBuffer();
-        if(getWindDirection()==-1) {
-            sb.append("VRB");
-        } else {
-            sb.append(getWindDirection());
-        }
-        if(getWindDirectionMin()>-1) {
+        sb.append(getWindDirection());
+        if(getWindDirectionMin()!=null) {
             sb.append("(");
             sb.append(getWindDirectionMin());
             sb.append("-");

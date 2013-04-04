@@ -1,32 +1,32 @@
 /**
  * Copyright (C) 2013 Wolfram Wagner
- * 
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -57,13 +57,13 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 /**
  * This class is a top layer on the radar screen and is used to display textual information
- * on the screen. 
- * 
+ * on the screen.
+ *
  * @author wolfram
  */
 
 public class StPView implements IBoundedView, INotificationListener {
-    
+
     protected final IMapViewerAdapter mapViewAdapter;
     private final GuiMasterController master;
 
@@ -72,7 +72,7 @@ public class StPView implements IBoundedView, INotificationListener {
     private Double distanceMiles = null;
     private Integer timeMinutes = null;
     private Integer timeSeconds = null;
-    
+
     protected boolean visible = true;
 
     protected Point2D logicalPosition = new Point2D.Double();
@@ -91,7 +91,7 @@ public class StPView implements IBoundedView, INotificationListener {
     private Rectangle2D boundsLine1 = null;
     private Rectangle2D boundsLine2 = null;
     private Rectangle2D boundsText = null;
-    
+
     protected volatile Path2D textContainer = new Path2D.Double();
     protected volatile Point2D textOrigin = new Point2D.Double();
     protected volatile FontMetrics fontMetrics = null;
@@ -131,42 +131,42 @@ public class StPView implements IBoundedView, INotificationListener {
 
     @Override
     public void paint(Graphics2D g2d) {
-        
+
         // construct the objects at their new place
         constructBackgroundShapes();
         displayExtents = background.getBounds2D();
-        
+
         if(master.getDataRegistry().getRadarObjectFilterState("STP")) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setFont(new Font("Arial", Font.PLAIN, 10));
             if(fontMetrics==null) {
                 fontMetrics = g2d.getFontMetrics();
             }
-    
-            String dTP = degreesToPointer==null ? "n/a" : String.format("%03d",degreesToPointer); 
-            String dTS = degreesToSelection==null ? "n/a" : String.format("%03d",degreesToSelection); 
+
+            String dTP = degreesToPointer==null ? "n/a" : String.format("%03d",degreesToPointer);
+            String dTS = degreesToSelection==null ? "n/a" : String.format("%03d",degreesToSelection);
             String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
             String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);;
-            
+
             String textLine1 = String.format("%s° / %2s°",dTP,dTS);
             String textLine2 = String.format("%1s NM, ETA %2s", dist,min);
             boundsLine1 = fontMetrics.getStringBounds(textLine1, g2d);
             boundsLine2 = fontMetrics.getStringBounds(textLine2, g2d);
             boundsText = new Rectangle2D.Double(boundsLine1.getX(), boundsLine1.getY()-boundsLine1.getHeight(), Math.max(boundsLine1.getWidth(), boundsLine2.getWidth()), boundsLine1.getHeight()+boundsLine2.getHeight());
-    
+
             if(anchor==null) constructBackgroundShapes();
-            
+
             AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.60f);
             g2d.setComposite(ac);
             g2d.setColor(Palette.LANDMASS);
             g2d.fill(background);
             lastTextDisplayExtents = background.getBounds2D();
-    
+
             ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f);
             g2d.setComposite(ac);
-    
+
             g2d.setColor(Color.white);
-            
+
             g2d.drawString(textLine1,(float)(newX+SPACE),(float)(newY+boundsLine1.getHeight()));
             g2d.drawString(textLine2,(float)(newX+SPACE),(float)(newY+boundsText.getHeight()));
         }
@@ -174,18 +174,18 @@ public class StPView implements IBoundedView, INotificationListener {
 
     private void constructBackgroundShapes() {
         if(boundsText==null) {
-            // intial case, we don't know about the fontMetricts,so we construct a dummy 
+            // intial case, we don't know about the fontMetricts,so we construct a dummy
             background = new RoundRectangle2D.Double(currentPosition.getX()-34d,currentPosition.getY()-16d, 60+8, 24+8,10,10);
         } else {
             // construct the objects at their new place
             // first text line will start at (dx, dy)
             newX = currentPosition.getX()+SPACE;
             newY = currentPosition.getY()+boundsText.getHeight()-2*SPACE;
-            
+
             background = new RoundRectangle2D.Double(newX-SPACE,newY-SPACE, boundsText.getWidth()+4*SPACE, boundsText.getHeight()+4*SPACE,10d,10d);
         }
     }
-    
+
     @Override
     public void validate() {
     }
@@ -197,12 +197,12 @@ public class StPView implements IBoundedView, INotificationListener {
     public synchronized void updateMouseRadarMoved(GuiRadarContact contact, MouseEvent e) {
         currentPosition = e.getPoint();
         if(displayExtents.equals(new Rectangle2D.Double())) {
-            // initially we need to paint everything 
+            // initially we need to paint everything
             displayExtents = mapViewAdapter.getViewerExtents();
         }
         //displayExtents = mapViewAdapter.getViewerExtents();
-        
-        double milesPerHour = contact.getAirSpeedD(); 
+
+        double milesPerHour = contact.getAirSpeedD();
         Point2D currSelectionPoint = contact.getCenterViewCoordinates();
 
         double dx = e.getX()-currSelectionPoint.getX();
@@ -215,17 +215,17 @@ public class StPView implements IBoundedView, INotificationListener {
         angle = angle + Math.round(master.getDataRegistry().getMagneticDeclination());
         // 2. wind
         Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD());
-        Vector2D vWind = Vector2D.createVector2D((double)90-master.getMetar().getWindDirection(),master.getMetar().getWindSpeed());
+        Vector2D vWind = Vector2D.createVector2D((double)90-master.getMetar().getWindDirectionI(),master.getMetar().getWindSpeed());
         Vector2D vResult = contact.getAirSpeedD()>1 ? vOriginalAngle.add(vWind) : vOriginalAngle;
         Long lAngle = vResult.getAngleL();
-        
+
         degreesToPointer = lAngle!=null ? ( lAngle<0 ? lAngle+360 : lAngle) : null;
         degreesToSelection = lAngle!=null ? (degreesToPointer<180 ? degreesToPointer+180 : degreesToPointer-180) : null;
         // distances
         distanceMiles = distance*Converter2D.getMilesPerDot(mapViewAdapter);
         timeMinutes = milesPerHour>10 ? (int)Math.floor(60*distanceMiles/(double)milesPerHour) : null;
         timeSeconds = milesPerHour>10 ? (int)Math.floor(60*60*distanceMiles/(double)milesPerHour) - timeMinutes * 60 : null;
-        
+
         //    System.out.println("orig "+angle+" vOA: "+vOriginalAngle.getAngleL()+" vW "+vWind.getAngleL()+" result "+lAngle);
         constructBackgroundShapes();
         Rectangle2D.union(displayExtents,background.getBounds2D(),displayExtents); // old and new position need to be painted

@@ -117,7 +117,7 @@ public class AtcMessage {
             } else if("/sim/atc/activeRW".equals(varName)) {
                 values.add(master.getStatusManager().getActiveRunways());
             } else if("/sim/atc/wind-from-display".equals(varName)) {
-                values.add((float)metar.getWindDirection());
+                values.add((float)metar.getWindDirectionI());
             } else if("/openradar/metar/wind".equals(varName)) {
                 values.add(metar.getWindDisplayString());
             } else if("/openradar/metar/visibility".equals(varName)) {
