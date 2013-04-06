@@ -68,7 +68,7 @@ public class StdRouteText extends AStdRouteElement {
         super(mapViewAdapter, route.getPoint(position,previous),null,null,null,color);
 
         this.angle = angle !=null ? Double.parseDouble(angle) : 0;
-        this.font = font;
+        this.font = font!=null ? font : "Arial";
         this.fontSize = fontSize !=null ? Float.parseFloat(fontSize) : 10;
         this.text=text;
     }
@@ -79,6 +79,7 @@ public class StdRouteText extends AStdRouteElement {
         if(color!=null) {
             g2d.setColor(color);
         }
+        Font origFont = g2d.getFont();
         if(font != null) {
             g2d.setFont(new Font(font,Font.PLAIN,Math.round(fontSize)));
         }
@@ -92,6 +93,7 @@ public class StdRouteText extends AStdRouteElement {
         Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
         g2d.drawString(text, (int)(displayPoint.getX()-bounds.getWidth()/2), (int)(displayPoint.getY()+bounds.getHeight()/2-2));
 
+        g2d.setFont(origFont);
         g2d.setTransform(oldTransform);
 
         bounds.setRect(displayPoint.getX(), displayPoint.getY(),bounds.getWidth(),bounds.getHeight());

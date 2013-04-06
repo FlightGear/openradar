@@ -78,6 +78,8 @@ public class StdRouteReader {
 
         File[] files = dir.listFiles();
 
+        data.getNavaidDB().clearAddPoints();
+
         for (File file : files) {
             try {
                 if (!file.getName().endsWith(".xml"))
@@ -99,6 +101,7 @@ public class StdRouteReader {
                         String code = eAddPoint.getAttributeValue("code");
                         String point = eAddPoint.getAttributeValue("point");
                         data.getNavaidDB().addPoint(code,point);
+                        // todo add FIX
                     }
                     // routes
                     list = rootNode.getChildren("route");

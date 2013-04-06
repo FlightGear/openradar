@@ -109,6 +109,7 @@ public class StdRouteView implements IBoundedView, INotificationListener {
 
             displayExtents = null;
             Stroke origStroke = g2d.getStroke();
+            Font origFont = g2d.getFont();
             for(AStdRouteElement e : route.getElements()) {
                 g2d.setStroke(route.getStroke());
                 g2d.setColor(route.getColor());
@@ -118,6 +119,7 @@ public class StdRouteView implements IBoundedView, INotificationListener {
                     Rectangle2D.union(displayExtents, e.paint(g2d, mapViewAdapter), displayExtents);
                 }
             }
+            g2d.setFont(origFont);
             g2d.setStroke(origStroke);
         }
     }

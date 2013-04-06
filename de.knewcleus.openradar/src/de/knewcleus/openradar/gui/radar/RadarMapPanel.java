@@ -127,7 +127,8 @@ public class RadarMapPanel extends JComponent {
     protected IProjection projection;
     protected RadarMapViewerAdapter radarMapViewAdapter;
     protected LayeredView routeView;
-
+    // this view will contain the Fixes defined inline in the standard routes
+    protected LayeredView addNavSymbolView;
 
     public RadarMapPanel(GuiMasterController guiInteractionManager) {
         this.master = guiInteractionManager;
@@ -286,8 +287,13 @@ public class RadarMapPanel extends JComponent {
             setupDialog.setStatus(80, "Reading fixes data...");
             navPointProvider2.addViews(fixDataStream);
 
+            // this view will contain the Fixes defined inline in the standard routes
+            addNavSymbolView = new LayeredView(radarMapViewAdapter);
+            rootView.pushView(addNavSymbolView);
+
             // read here to have navaid data available
             readStandardRouteData(guiInteractionManager);
+
 
             final LayeredView layeredAtcObjectsView = new LayeredView(radarMapViewAdapter);
             layeredAtcObjectsView.pushView(new AtcObjectsView(radarMapViewAdapter,data));
@@ -378,6 +384,7 @@ public class RadarMapPanel extends JComponent {
 
     public void reReadStandardRoutes(GuiMasterController master) {
         routeView.clear();
+        addNavSymbolView.clear();
         readStandardRouteData(master);
     }
 
@@ -386,6 +393,8 @@ public class RadarMapPanel extends JComponent {
         for(StdRoute route : reader.getStdRoutes()) {
             routeView.pushView(new StdRouteView(radarMapViewAdapter, route, master));
         }
+        final NavPointProvider navPointProvider = new NavPointProvider(radarMapViewAdapter, addNavSymbolView, master.getDataRegistry());
+        navPointProvider.addViews(master.getDataRegistry().getNavaidDB().getManualNavpoints());
     }
 
 }

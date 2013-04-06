@@ -44,6 +44,7 @@ import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.NDB;
 import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.fgfs.navdata.model.IIntersection;
+import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.view.stdroutes.StdRoute;
 /**
@@ -57,6 +58,7 @@ public class NavaidDB {
     private volatile IIntersection selectedNavaid = null;
     private final Map<String, List<IIntersection>> navaidMap = new TreeMap<String, List<IIntersection>>();
     private List<StdRoute> stdRoutes = new ArrayList<StdRoute>();
+    private ArrayList<IIntersection> addNavpointList = new ArrayList<IIntersection>();
 
     private final static Logger log = Logger.getLogger(NavaidDB.class.toString());
 
@@ -201,8 +203,28 @@ public class NavaidDB {
     }
 
     public void addPoint(String code, String point) {
-        registerNavaid(new AdditionalFix(code, point));
+        AdditionalFix fix = new AdditionalFix(code, point);
+        addNavpointList.add(fix);
+        registerNavaid(fix);
     }
 
+    public void clearAddPoints() {
+        addNavpointList.clear();
+//        for(List<IIntersection> navPointList : navaidMap.values()) {
+//            for(IIntersection navPoint : new ArrayList<IIntersection>(navPointList)) {
+//                if(navPoint instanceof AdditionalFix) {
+//                    navPointList.remove(navPoint);
+//                }
+//            }
+//        }
+    }
+
+    public ArrayList<INavPoint> getManualNavpoints() {
+        ArrayList<INavPoint> result = new ArrayList<INavPoint>();
+        for(IIntersection point : addNavpointList) {
+            result.add(new Intersection(point.getGeographicPosition(),point.getIdentification()));
+        }
+        return result;
+    }
 
 }
