@@ -336,4 +336,21 @@ public class RadioController implements Runnable {
             }
         }
     }
+
+    public String getActiveFrequenciesForDisplay() {
+        StringBuffer result = new StringBuffer();
+        for(RadioModel model : modelList) {
+            if(result.length()>0) {
+                result.append(", ");
+            }
+            String frequency = model.getSelectedItem().getFrequency();
+            String code = model.getSelectedItem().getCode();
+            result.append(frequency);
+            result.append("(");
+            result.append(code);
+            result.append(")");
+        }
+
+        return result.toString();
+    }
 }

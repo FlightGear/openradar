@@ -369,7 +369,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbVisibility.setText(metar.isCavok()?"CAVOK":"Vis: "+metar.getVisibility()+" "+metar.getVisibilityUnit());
         lbVisibility.setToolTipText(metar.getMetarBaseData());
         lbWeatherPhaenomena.setText("("+ metar.getWeatherPhaenomena()+")");
-        lbWeatherPhaenomena.setToolTipText(metar.getweatherPhaenomenaForHumans());
+        lbWeatherPhaenomena.setToolTipText(metar.getWeatherPhaenomenaForHumans());
 
         runwayPanel.refreshRunways(metar);
         doLayout();

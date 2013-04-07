@@ -102,34 +102,52 @@ public class AtcMessage {
          * /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range
          *
          */
+        GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
+
         ArrayList<Object> values = new ArrayList<Object>();
         for(String varName : variables) {
-            if("/environment/pressure-sea-level-inhg".equals(varName)) {
-                values.add(metar.getPressureInHG());
-            } else if("/environment/wind-speed-kt".equals(varName)) {
-                values.add((float)metar.getWindSpeed()); // todo add gusts
+            if("/openradar/metar/pressure-sea-level".equals(varName)) {
+                values.add(metar.getPressureDisplayString());
+
             } else if("/instrumentation/comm/frequencies/selected-mhz".equals(varName)) {
                 if(master.getRadioManager().getModels().isEmpty()) {
                     values.add(new Double("0"));
                 } else {
                     values.add(Double.parseDouble(master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency())); // todo multiple frequencies?
                 }
+            } else if("/openradar/comm/frequencies".equals(varName)) {
+                if(master.getRadioManager().getModels().isEmpty()) {
+                    values.add("");
+                } else {
+                    values.add(master.getRadioManager().getActiveFrequenciesForDisplay());
+                }
             } else if("/sim/atc/activeRW".equals(varName)) {
                 values.add(master.getStatusManager().getActiveRunways());
+
             } else if("/sim/atc/wind-from-display".equals(varName)) {
                 values.add((float)metar.getWindDirectionI());
+
+            } else if("/environment/wind-speed-kt".equals(varName)) {
+                values.add((float)metar.getWindSpeed()); // todo add gusts
+
             } else if("/openradar/metar/wind".equals(varName)) {
                 values.add(metar.getWindDisplayString());
+
             } else if("/openradar/metar/visibility".equals(varName)) {
                 values.add(metar.getVisibility()+" "+metar.getVisibilityUnit());
+
             } else if("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-APalt".equals(varName)) {
                 values.add(data.getElevationFt());
+
             } else if("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-APname".equals(varName)) {
                 values.add(data.getAirportName());
+
             } else if("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target".equals(varName)) {
-                values.add(master.getRadarContactManager().getSelectedContact().getCallSign());
+                values.add(selectedContact!=null ? selectedContact.getCallSign() : "");
+
             } else if("/sim/tower/airport-id".equals(varName)) {
                 values.add(data.getAirportCode());
+
             } else if("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range".equals(varName)) {
                 values.add(contact.getRadarContactDistanceD());
             }

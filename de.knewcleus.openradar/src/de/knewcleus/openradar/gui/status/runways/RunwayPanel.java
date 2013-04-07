@@ -323,8 +323,9 @@ public class RunwayPanel extends JPanel {
 //                    sb.append(rw.getGlideslope().getGlideslopeAngle());
 //                    sb.append("%");
                 }
-                sb.append("-");
-                sb.append(rw.getMagneticHeading());
+                sb.append(" (");
+                sb.append( rw.getMagneticHeading() );
+                sb.append(")");
             }
         }
 

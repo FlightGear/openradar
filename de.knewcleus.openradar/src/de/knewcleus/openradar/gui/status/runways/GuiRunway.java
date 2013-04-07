@@ -34,7 +34,6 @@ package de.knewcleus.openradar.gui.status.runways;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
 
 import javax.swing.DefaultButtonModel;
 import javax.swing.JCheckBox;
@@ -63,7 +62,6 @@ public class GuiRunway implements ActionListener {
     private volatile MetarData metar = null;
     private IRunwayEnd runwayEnd = null;
     private RunwayPanel runwayPanel = null;
-    private static DecimalFormat df = new DecimalFormat("0.00");
 
     public GuiRunway(AirportData data, RunwayEnd runwayEnd) {
         this.data = data;
@@ -84,11 +82,11 @@ public class GuiRunway implements ActionListener {
     }
 
    public String getTrueHeading() {
-       return df.format(runwayEnd.getTrueHeading());
+       return String.format("%01.2",runwayEnd.getTrueHeading());
    }
 
    public String getMagneticHeading() {
-       return String.format("%1.0f",runwayEnd.getTrueHeading()-data.getMagneticDeclination());
+       return String.format("%03.0f",runwayEnd.getTrueHeading()-data.getMagneticDeclination());
    }
 
    public String getIlsFrequency() {

@@ -439,7 +439,7 @@ public class MetarData {
         return weatherPhaenomena;
     }
 
-    public synchronized String getweatherPhaenomenaForHumans() {
+    public synchronized String getWeatherPhaenomenaForHumans() {
         return weatherPhaenomenaHuman;
     }
 
@@ -465,21 +465,25 @@ public class MetarData {
         return sb.toString();
     }
 
+    public Object getPressureDisplayString() {
+        return String.format("%2.2f/%4.1f", pressureInHG, pressureHPa);
+    }
+
     public List<String> createATIS(GuiMasterController master, boolean shortMsg) {
         if(atisVariables==null) {
             atisVariables = new ArrayList<String>();
             atisVariables.add("/sim/tower/airport-id");
             atisVariables.add("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-APalt");
-            atisVariables.add("/environment/pressure-sea-level-inhg");
+            atisVariables.add("/openradar/metar/pressure-sea-level");
             atisVariables.add("/openradar/metar/wind");
 //            atisVariables.add("/openradar/metar/visibility");
             atisVariables.add("/sim/atc/activeRW");
-            atisVariables.add("/instrumentation/comm/frequencies/selected-mhz");
+            atisVariables.add("/openradar/comm/frequencies");
         }
 
         ArrayList<String> list = new ArrayList<String>();
-        list.add(String.format(AtcMessage.replaceVariables("ATIS for %s at %2.0f ft: QNH %2.2f, wind %s, active rwy(s) %s,  FGCOM %2.3f", master, null, atisVariables)));
-        if(!shortMsg) list.add("(ATIS) vis:"+getVisibility()+", "+getVisibilityUnit()+" "+getweatherPhaenomenaForHumans());
+        list.add(String.format(AtcMessage.replaceVariables("ATIS for %s at %2.0f ft: QNH %s, wind %s, active rwy(s) %s,  FGCOM %s", master, null, atisVariables)));
+        if(!shortMsg) list.add("(ATIS) vis:"+getVisibility()+", "+getVisibilityUnit()+" "+getWeatherPhaenomenaForHumans());
         return list;
     }
 
@@ -488,4 +492,5 @@ public class MetarData {
         if(!(obj instanceof MetarData)) return false;
         return metarBaseData.equals(((MetarData)obj).metarBaseData);
     }
+
 }
