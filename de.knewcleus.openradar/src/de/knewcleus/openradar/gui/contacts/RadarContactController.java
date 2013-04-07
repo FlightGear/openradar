@@ -336,8 +336,10 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             //if(mapCallSignContact.isEmpty())
             //   Toolkit.getDefaultToolkit().beep();
             // add new player
-            GuiRadarContact c = new GuiRadarContact(master, this, player, mapAtcComments.get(player.getCallsign()));
-            // c.setOperation(GuiRadarContact.Operation.UNKNOWN);
+            String atcNote = mapAtcComments.containsKey(player.getCallsign()) ? mapAtcComments.get(player.getCallsign()) : mapAtcComments.get(player.getCallsign()+".atcNote");
+            // ^^^^ for backward compatibility: until 20130406 the atc note was saved directly under the callsign, now it is saved under callsign+".atcNote"
+            GuiRadarContact c = new GuiRadarContact(master, this, player, atcNote);
+            c.setFgComSupport("true".equals( mapAtcComments.get(player.getCallsign()+".fgComSupport")));
 
             addPlayerBeforeUncontrolled( c );
             mapCallSignContact.put(c.getCallSign(), c);
@@ -437,10 +439,6 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                     analyseClickPoint(c, guiList, e);
 
                     if (clickLocation == ClickLocation.ON_STRIP) {
-//                        if (e.isControlDown() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
-//                            // toggle neglect
-//                            c.setNeglect(!c.isNeglect());
-//                        } else
                         if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
                             // select
                             select(c, true, false);
@@ -704,13 +702,15 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     public synchronized void saveAtcNotes() {
         for (GuiRadarContact c : mapCallSignContact.values()) {
             if (c.getAtcComment() != null && !c.getAtcComment().isEmpty()) {
-                mapAtcComments.put(c.getCallSign(), c.getAtcComment());
+                mapAtcComments.put(c.getCallSign()+".atcNote", c.getAtcComment());
             }
+            mapAtcComments.put(c.getCallSign()+".fgComSupport", ""+c.hasFgComSupport());
         }
         for (GuiRadarContact c : mapExpiredCallSigns.values()) {
             if (c.getAtcComment() != null && !c.getAtcComment().isEmpty()) {
-                mapAtcComments.put(c.getCallSign(), c.getAtcComment());
+                mapAtcComments.put(c.getCallSign()+".atcNote", c.getAtcComment());
             }
+            mapAtcComments.put(c.getCallSign()+".fgComSupport", ""+c.hasFgComSupport());
         }
 
         File atcCommentFile = new File("settings" + File.separator + "atcComments.xml");

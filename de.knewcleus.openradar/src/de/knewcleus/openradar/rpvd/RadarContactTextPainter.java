@@ -37,6 +37,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -186,6 +188,9 @@ public class RadarContactTextPainter {
         g2d.drawString(textLine2,(float)(newX+SPACE),(float)(newY+boundsText.getHeight()));
 
         drawArrow(g2d,vspeed, newX-SPACE+boundsLine2.getWidth(),newY+boundsText.getHeight()+2,boundsLine2.getHeight());
+        if(trackDisplayState.guiContact.hasFgComSupport()) {
+            drawFgComAntenna(g2d, newX + boundsLine1.getWidth() + 4, newY +2);
+        }
     }
 
     private void constructBackgroundShapes(Point2D currentDevicePosition) {
@@ -237,20 +242,38 @@ public class RadarContactTextPainter {
 
         if(Math.abs(vSpeed)>100) {
 
-            Point2D tipPoint = new Point2D.Double(x+xOffset, (vSpeed<0 ? y : y-length));
-            Point2D otherPoint = new Point2D.Double(x+xOffset, (vSpeed<0 ? y-length:y));
+            Point2D tipPoint = new Point2D.Double(Math.round(x+xOffset), Math.round(vSpeed<0 ? y : y-length));
+            Point2D otherPoint = new Point2D.Double(Math.round(x+xOffset), Math.round(vSpeed<0 ? y-length:y));
             double heading = vSpeed>0 ? 0 : 180;
-            Point2D point1 = Converter2D.getMapDisplayPoint(tipPoint, heading-180+25, 8);
-            Point2D point2 = Converter2D.getMapDisplayPoint(tipPoint, heading-180-25, 8);
+            Point2D point1 = Converter2D.getMapDisplayPoint(tipPoint, heading-180+25, 6);
+            Point2D point2 = Converter2D.getMapDisplayPoint(tipPoint, heading-180-25, 6);
 
             g2d.draw(new Line2D.Double(otherPoint, tipPoint));
 
             Path2D path = new Path2D.Double();
             path.append(new Line2D.Double(tipPoint, point1),false);
             path.append(new Line2D.Double(point1, point2),true);
-            path.closePath();
-
+            path.append(new Line2D.Double(point2, tipPoint),true);
+//            path.closePath();
+            g2d.draw(path);
             g2d.fill(path);
         }
+    }
+
+    public void drawFgComAntenna(Graphics2D g2d, double x, double y) {
+        // antenna
+        Point2D tipPoint = new Point2D.Double(Math.round(x),Math.round(y));
+//        Point2D point1 = Converter2D.getMapDisplayPoint(tipPoint, 180+8, 9);
+//            g2d.draw(new Line2D.Double(tipPoint, point1));
+//            g2d.fill(new Ellipse2D.Double(tipPoint.getX()-1, tipPoint.getY()-1,3,3));
+
+        // headset
+        Point2D center = new Point2D.Double(Math.round(x+4),Math.round(y+5));
+        Point2D point2 = Converter2D.getMapDisplayPoint(center, 90, 3);
+        Point2D point3 = Converter2D.getMapDisplayPoint(center, 270, 3);
+
+        g2d.draw(new Arc2D.Double(tipPoint.getX(), tipPoint.getY(),8,10,0,270,Arc2D.OPEN));
+        g2d.fill(new Ellipse2D.Double(point2.getX()-1, point2.getY()-1,3,3));
+        g2d.fill(new Ellipse2D.Double(point3.getX()-1, point3.getY()-1,3,3));
     }
 }
