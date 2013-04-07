@@ -124,17 +124,32 @@ public class SetupDialog extends JFrame {
     private FgComMode fgComMode = FgComMode.Internal;
     private String[] modeModel = new String[]{"Internal: Started and controlled by OpenRadar","External: Control external instance", "OFF: No FgCom support"};
 
+    private List<Image> icons = new ArrayList<Image>();
+
     public SetupDialog(SetupController setupManager) {
         this.setupManager = setupManager;
 
-//        List<Image> icons = new ArrayList<Image>();
-//        icons.add(new ImageIcon("res/icon.svg").getImage());
-//        icons.add(new ImageIcon("res/icon48.png").getImage());
-//        setIconImages(icons);
+        File iconDir = new File("res/icons");
+        if(iconDir.exists()) {
+            File[] files = iconDir.listFiles();
+            for(File f : files) {
+                if(f.getName().matches("OpenRadar.*\\.ico") || f.getName().matches("OpenRadar.*\\.png")
+                  || f.getName().matches("OpenRadar.*\\.gif") || f.getName().matches("OpenRadar.*\\.jpg")) {
+                    icons.add(new ImageIcon(f.getAbsolutePath()).getImage());
+                }
+            }
+            if(!icons.isEmpty()) {
+                setIconImages(icons);
+            }
+        }
 
         initComponents();
 
         this.loadProperties();
+    }
+
+    public synchronized List<Image> getIcons() {
+        return icons;
     }
 
     private void initComponents() {

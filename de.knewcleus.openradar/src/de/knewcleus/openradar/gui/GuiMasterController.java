@@ -119,6 +119,11 @@ public class GuiMasterController {
     public void start(SetupDialog setupDialog) throws Exception {
         // initialize the front end and load environment data
         mainFrame = new MainFrame(this);
+
+        if(!setupDialog.getIcons().isEmpty()) {
+            mainFrame.setIconImages(setupDialog.getIcons());
+        }
+
         mainFrame.getRadarScreen().setup(airportCode, this, setupDialog);
         initMpRadar();
         mainFrame.getRadarScreen().initRadarData();
