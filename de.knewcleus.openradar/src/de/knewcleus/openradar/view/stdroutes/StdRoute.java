@@ -248,9 +248,7 @@ public class StdRoute {
             Point2D point = new IndirectPoint2D(mapViewerAdapter, navaidPoint, angle, distance);
             return point;
         } else if (pointDescr.contains(",")) {
-            String lat = pointDescr.substring(0, pointDescr.indexOf(","));
-            String lon = pointDescr.substring(pointDescr.indexOf(",") + 1);
-            Point2D geoPoint = new Point2D.Double(Double.parseDouble(lon), Double.parseDouble(lat));
+            Point2D geoPoint = parsePoint(pointDescr);
             return geoPoint;
             // } else if ("last".equalsIgnoreCase(pointDescr)) {
             // if(previous==null) {
@@ -264,6 +262,61 @@ public class StdRoute {
             }
             return data.getNavaidDB().getNavaid(pointDescr).getGeographicPosition();
         }
+    }
+
+    /**
+     * This method can read the point coordinates ("lat,lon") directly as decimals as well as in degree, minute and seconds format.
+     *
+     * @param pointDescr
+     * @return
+     */
+    private Point2D parsePoint(String pointDescr) {
+        String lat = pointDescr.substring(0, pointDescr.indexOf(","));
+        double latD = 0;
+        if(lat.contains("°") && lat.contains("'") && lat.contains("''")) {
+            // N47°54'26
+            int sign = lat.substring(0,1).equalsIgnoreCase("N") ? 1 : -1;
+            Double degrees = Double.parseDouble(lat.substring(1,lat.indexOf("°")).trim()) ;
+            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("°")+1,lat.indexOf("'")).trim()) ;
+            Double seconds = Double.parseDouble(lat.substring(lat.indexOf("'")+1,lat.indexOf("''")).trim()) ;
+            latD = (degrees + minutes / 60d + seconds / 3600d) * sign;
+
+        } else if(lat.contains("°") && lat.contains("'")) {
+            // N47°54.26
+            int sign = lat.substring(0,1).equalsIgnoreCase("N") ? 1 : -1;
+            Double degrees = Double.parseDouble(lat.substring(1,lat.indexOf("°")).trim()) ;
+            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("°")+1,lat.indexOf("'")).trim()) ;
+            latD = (degrees + minutes / 60) * sign;
+
+        } else {
+            latD = Double.parseDouble(lat);
+        }
+
+
+        String lon = pointDescr.substring(pointDescr.indexOf(",") + 1);
+        double lonD = 0;
+        if(lon.contains("°") && lon.contains("'") && lon.contains("''")) {
+            // E7°54'15
+            int sign = lon.substring(0,1).equalsIgnoreCase("E") ? 1 : -1;
+            Double degrees = Double.parseDouble(lon.substring(1,lon.indexOf("°")).trim()) ;
+            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("°")+1,lon.indexOf("'")).trim()) ;
+            Double seconds = Double.parseDouble(lon.substring(lon.indexOf("'")+1,lon.indexOf("''")).trim()) ;
+
+            lonD = (degrees + minutes / 60d + seconds / 3600d) * sign;
+
+        } else if(lon.contains("°") && lon.contains("'")) {
+            // E7°54.15
+            int sign = lon.substring(0,1).equalsIgnoreCase("E") ? 1 : -1;
+            Double degrees = Double.parseDouble(lon.substring(1,lon.indexOf("°")).trim()) ;
+            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("°")+1,lon.indexOf("'")).trim()) ;
+
+            lonD = (degrees + minutes / 60) * sign;
+        } else {
+            lonD = Double.parseDouble(lon);
+        }
+
+        Point2D geoPoint = new Point2D.Double(lonD, latD);
+        return geoPoint;
     }
 
     public int getSize() {

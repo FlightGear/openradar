@@ -86,11 +86,13 @@ public class StdRouteMinAltitude extends AStdRouteElement {
 
         g2d.setFont(new Font(font,Font.BOLD,Math.round(fontSize)));
         Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(major+" "+minor, g2d);
+        Rectangle2D majorBounds = g2d.getFontMetrics().getStringBounds(major, g2d);
+        int globalX = (int)(displayPoint.getX()-bounds.getWidth()/2);
 
-        g2d.drawString(major, (int)(displayPoint.getX()-bounds.getWidth()/2), (int)(displayPoint.getY()+bounds.getHeight()/2-2));
+        g2d.drawString(major, globalX, (int)(displayPoint.getY()+bounds.getHeight()/2-2));
 
         g2d.setFont(new Font(font,Font.BOLD,Math.round(fontSize*0.6f)));
-        g2d.drawString(minor, (int)(displayPoint.getX()), (int)(displayPoint.getY()+bounds.getHeight()/2 - fontSize*0.4));
+        g2d.drawString(minor, (int)(globalX+majorBounds.getWidth()+2), (int)(displayPoint.getY()+bounds.getHeight()/2 - fontSize*0.4));
 
         bounds.setRect(displayPoint.getX(), displayPoint.getY(),bounds.getWidth(),bounds.getHeight());
         return bounds;
