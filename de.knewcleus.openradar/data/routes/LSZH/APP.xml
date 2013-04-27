@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- This file contains the approaches, visible everytime the zoomlevel is above 100 -->
 <routes>
+	<!-- DEFINITION OF MISSING WAYPOINTS DUE TO OUTDATED NAVIGATION DATA!1!!-->
+	<addPoint code="BERSU" point="47.135528,7.941306"/>
+	<addPoint code="TADOB" point="47.183056,8.089722"/>
+	<addPoint code="ERMUS" point="47.232222,8.244722"/>
+	<addPoint code="DOPIL" point="47.070000,8.016667"/>
+	<addPoint code="NOLKA" point="47.148056,8.126111"/>
 	<route name="LSZH Wait loops">
 		<navaids>GIPOL,RILAX,AMIKI,BERSU,MOSIT,URNAS,RAVED</navaids>
 		<loop navpoint="GIPOL" inboundHeading="080" length="5" arrows="both" minHeight="7000" misapHeight="MISAP7000"/>
@@ -12,24 +18,22 @@
 		<loop navpoint="RAVED" inboundHeading="267" length="5" arrows="both" minHeight="FL120" maxHeight="MAX FL240"/>
 	</route>
 	<route name="LSZH Approaches" zoomMin="100">
-		<navaids>ARPUS,BLM,GIPOL,HOC,BERSU,TADOB,ERMUS,HOC,KELIP,MOSIT,KLO,LAMAX,AMIKI,RAVED,ETOXU,NEGRA,MATIV,TRA,ZUE,WIL,URNAS,ALBIX</navaids>
+		<addPoint code="BERSU" point="47.135528,7.941306"/>
+		<addPoint code="TADOB" point="47.183056,8.089722"/>
+		<addPoint code="ERMUS" point="47.232222,8.244722"/>
+		<navaids>ARPUS,BLM,GIPOL,HOC,BERSU,TADOB,ERMUS,HOC,KELIP,MOSIT,KLO,LAMAX,AMIKI,RAVED,ETOXU,NEGRA,MATIV,TRA,ZUE,WIL,URNAS,ALBIX,TADOB,ERMUS,DOPIL,NOLKA</navaids>
 		<!-- BLM 2G -->
 		<line start="ARPUS" end="BLM" text="093°"/>
 		<line start="BLM" end="ZH677" text="108°"/>
 		<line start="ZH677" end="GIPOL" text="108°"/>
-		
 		<!-- BERSU 1G -->
-		<!-- NOT WORKING DUE TO OUTDATED NAVDATA BY X-PLANE!1!!
 		<line start="BERSU" end="TADOB" text="064°"/>
 		<line start="TADOB" end="ERMUS" text="064°"/>
 		<line start="ERMUS" end="GIPOL" text="332°"/>
-		-->
 		<!-- DOPIL 1G -->
-		<!-- NOT WORKING DUE TO OUTDATED NAVDATA BY X-PLANE!1!!
 		<line start="DOPIL" end="NOLKA" text="043°"/>
 		<line start="NOLKA" end="ERMUS" text="043°"/>
 		<line start="ERMUS" end="GIPOL" text="332°"/>
-		-->
 		<!-- HOC 1G -->
 		<line start="HOC" end="GIPOL" text="080°"/>
 		<!-- KELIP 1G -->
