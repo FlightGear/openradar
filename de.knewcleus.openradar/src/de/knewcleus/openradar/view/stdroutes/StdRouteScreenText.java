@@ -40,52 +40,30 @@ import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 /**
- * line
- * .begin "last"(previous end point), Navaid code or geo coordinates ("lat,lon")
- * .end (optional if angle and length is given) Navaid code or geo coordinates ("lat,lon")
- * .angle (displayed and used for calculation if .end has been omitted
- * .length (used for calculation if angle is given and .end has been omitted)
- * .beginOffset
- * .endOffset (if end is given)
- * .stroke (optional if differs from normal line) alternatives: "dashed","dots"
- * .lineWidth (optional)
- * .arrows (optional) "none","start","end","both"
- *
+ * A text that appears on top of the map, but does not pan, nor zoom with it.
  *
  * @author Wolfram Wagner
  *
  */
-public class StdRouteText extends AStdRouteElement {
+public class StdRouteScreenText extends AStdRouteElement {
 
+    private String screenPos;
     private Double angle;
     private final String font;
     private final Float fontSize;
     private final String text;
 
-    public StdRouteText(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
-                        String position, String angle, String alignHeading, String font, String fontSize,
+    public StdRouteScreenText(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+                        String screenPos, String angle, String font, String fontSize,
                         String color, String text) {
-        super(mapViewAdapter, route.getPoint(position,previous),null,null,null,color);
+        super(mapViewAdapter, new Point2D.Double(0,0),null,null,null,color);
 
-        if(alignHeading!=null) {
-            this.angle = adaptAngle(Double.parseDouble(alignHeading));
-        } else {
-            this.angle = angle !=null ? Double.parseDouble(angle) : 0;
-        }
+        this.screenPos = screenPos;
+
+        this.angle = angle !=null ? Double.parseDouble(angle) : 0;
         this.font = font!=null ? font : "Arial";
         this.fontSize = fontSize !=null ? Float.parseFloat(fontSize) : 10;
         this.text=text;
-    }
-
-    public static Double adaptAngle(double angle) {
-        angle = Line.normalizeLineAngle180(angle-90);
-        while(angle>90) {
-            angle = angle - 180;
-        }
-        while(angle<-90) {
-            angle = angle + 180;
-        }
-        return angle;
     }
 
     @Override
@@ -99,14 +77,14 @@ public class StdRouteText extends AStdRouteElement {
             g2d.setFont(new Font(font,Font.PLAIN,Math.round(fontSize)));
         }
 
-        Point2D displayPoint = getDisplayPoint(geoReferencePoint);
+        Point2D displayPoint = getDisplayPoint(mapViewAdapter, screenPos);
         AffineTransform oldTransform = g2d.getTransform();
         AffineTransform newTransform = new AffineTransform();
         newTransform.setToRotation(Math.toRadians(angle), displayPoint.getX(), displayPoint.getY());
         g2d.transform(newTransform);
 
         Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
-        g2d.drawString(text, (int)(displayPoint.getX()-bounds.getWidth()/2), (int)(displayPoint.getY()-2));
+        g2d.drawString(text, (int)(displayPoint.getX()-bounds.getWidth()/2), (int)(displayPoint.getY()+bounds.getHeight()/2-2));
 
         g2d.setFont(origFont);
         g2d.setTransform(oldTransform);
@@ -114,10 +92,44 @@ public class StdRouteText extends AStdRouteElement {
         bounds.setRect(displayPoint.getX(), displayPoint.getY(),bounds.getWidth(),bounds.getHeight());
         return bounds;
     }
+    /**
+     * This method exists to move negative values to the other side of the screen
+     */
+    protected Point2D getDisplayPoint(IMapViewerAdapter mapViewAdapter, String screenPos) {
+
+        Rectangle2D maxBounds = mapViewAdapter.getViewerExtents();
+
+        String sX = screenPos.substring(0,screenPos.indexOf(","));
+        String sY = screenPos.substring(screenPos.indexOf(",")+1);
+
+        final double x,y;
+
+        if(sX.equalsIgnoreCase("center")) {
+            x = maxBounds.getCenterX();
+        } else {
+            x = Double.parseDouble(sX);
+
+        }
+        if(sY.equalsIgnoreCase("center")) {
+            y = maxBounds.getCenterY();
+        } else {
+            y = Double.parseDouble(sY);
+
+        }
+        Point2D p = new Point2D.Double(x,y);
+
+        if(p.getX()<0) {
+            p = new Point2D.Double(maxBounds.getWidth()+p.getX(),p.getY());
+        }
+        if(p.getY()<0) {
+            p = new Point2D.Double(p.getX(),maxBounds.getHeight()+p.getY());
+        }
+        return p;
+    }
 
     @Override
     public Point2D getEndPoint() {
-        return geoReferencePoint;
+        return null;
     }
 
 }

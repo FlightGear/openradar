@@ -105,13 +105,12 @@ public class StdRouteLoop extends AStdRouteElement {
         path.append(new Line2D.Double(line1MiddlePoint2,line1EndPoint),false);
         path.closePath();
 
-        g2d.drawString(sInboundHeading, (int)(line1TextPoint.getX()-bounds.getWidth()/2), (int)(line1TextPoint.getY()+(bounds.getHeight()/2-2)));
-        g2d.drawString(sOtherHeading, (int)(line2TextPoint.getX()-bounds.getWidth()/2), (int)(line2TextPoint.getY()+(bounds.getHeight()/2-2)));
-
-        // todo arrows and texts
         if(color!=null) {
             g2d.setColor(color);
         }
+        g2d.drawString(sInboundHeading, (int)(line1TextPoint.getX()-bounds.getWidth()/2), (int)(line1TextPoint.getY()+(bounds.getHeight()/2-2)));
+        g2d.drawString(sOtherHeading, (int)(line2TextPoint.getX()-bounds.getWidth()/2), (int)(line2TextPoint.getY()+(bounds.getHeight()/2-2)));
+
         Stroke origStroke = g2d.getStroke();
         if(stroke!=null) {
             g2d.setStroke(stroke);

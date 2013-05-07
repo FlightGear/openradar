@@ -102,8 +102,8 @@ public class StdRouteView implements IBoundedView, INotificationListener {
     @Override
     public void paint(Graphics2D g2d) {
 
-        boolean isVisible = route.isVisible(master.getDataRegistry()) && master.getDataRegistry().getRadarObjectFilterState("STARSID")==true;
-        if(isVisible && mapViewAdapter.getLogicalScale()>10) {
+        boolean isVisible = route.isVisible(master.getDataRegistry());
+        if(isVisible) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setFont(new Font("Arial", Font.PLAIN, 4));
 

@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
- * 
+ * Copyright (C) 2012 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -48,11 +48,11 @@ import de.knewcleus.openradar.gui.GuiMasterController;
  * This class encapsulates the management of one radio and its display in
  * the JList. The backend is interfaced via IRadioBackend to be able to add more
  * backends later.
- * 
+ *
  * To add: * modes: active, listen, off (silent) * possibility set radio volume
- * 
+ *
  * @author Wolfram Waner
- * 
+ *
  */
 
 public class RadioModel extends AbstractListModel<RadioFrequency> implements ComboBoxModel<RadioFrequency> {
@@ -65,14 +65,25 @@ public class RadioModel extends AbstractListModel<RadioFrequency> implements Com
     private volatile Map<String,RadioFrequency> mapFrequencies = Collections.synchronizedMap(new HashMap<String,RadioFrequency>());
     private volatile RadioFrequency selectedFrequency = null;
 
-    public RadioModel(GuiMasterController master, String radioKey, List<RadioFrequency> frequencies, int preselectedIndex) {
+    public RadioModel(GuiMasterController master, String radioKey, List<RadioFrequency> frequencies, String restoredFrequency, int preselectedIndex) {
         this.radioKey = radioKey;
         this.frequencyList = new ArrayList<RadioFrequency>(frequencies);
         for(RadioFrequency f : frequencyList) {
             mapFrequencies.put(f.getFrequency(), f);
         }
-        if (preselectedIndex > -1 && preselectedIndex < frequencyList.size())
-            setSelectedItem(frequencyList.get(preselectedIndex));
+        if(restoredFrequency!=null) {
+            // restore last settings
+            if(mapFrequencies.containsKey(restoredFrequency)) {
+                selectedFrequency = mapFrequencies.get(restoredFrequency);
+            } else {
+                selectedFrequency = setUserFrequency(restoredFrequency);
+            }
+        } else {
+            // automatic pre-selection
+            if (preselectedIndex > -1 && preselectedIndex < frequencyList.size()) {
+                setSelectedItem(frequencyList.get(preselectedIndex));
+            }
+        }
     }
 
     public String getRadioKey() {
@@ -104,7 +115,7 @@ public class RadioModel extends AbstractListModel<RadioFrequency> implements Com
             if(anItem instanceof String) {
                 this.selectedFrequency=setUserFrequency((String)anItem);
                 fireContentsChanged(this, -1, -1);
-            } else        
+            } else
             if ((selectedFrequency != null && !selectedFrequency.equals(anItem)) || selectedFrequency == null && anItem != null) {
                 this.selectedFrequency = (RadioFrequency) anItem;
                 fireContentsChanged(this, -1, -1);
@@ -126,8 +137,8 @@ public class RadioModel extends AbstractListModel<RadioFrequency> implements Com
         } catch(Exception e) {
             newFrequency = "123.45";
         }
-        
-        
+
+
         RadioFrequency f = frequencyList.get(frequencyList.size()-1);
         if(f.getCode().equalsIgnoreCase("Manual")) {
             frequencyList.remove(f);
@@ -135,7 +146,7 @@ public class RadioModel extends AbstractListModel<RadioFrequency> implements Com
         f = new RadioFrequency("Manual", newFrequency);
         frequencyList.add(f);
         f.setFrequency(newFrequency);
-        
+
         return f;
     }
 
@@ -146,6 +157,6 @@ public class RadioModel extends AbstractListModel<RadioFrequency> implements Com
     public RadioFrequency get(String frequency) {
         return mapFrequencies.get(frequency);
     }
-    
-    
+
+
 }

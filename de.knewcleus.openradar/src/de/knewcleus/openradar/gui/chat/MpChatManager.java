@@ -32,6 +32,7 @@
  */
 package de.knewcleus.openradar.gui.chat;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -48,7 +49,6 @@ import java.util.TreeMap;
 import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -57,6 +57,7 @@ import javax.swing.event.ListSelectionListener;
 
 import de.knewcleus.fgfs.multiplayer.IChatListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.chat.auto.AtcMessage;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.radardata.fgmp.FGMPClient;
@@ -104,7 +105,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     private static int MAX_MSG_COUNT = 1000;
 
-    private JTextField chatInput = null;
+    private MpChatPanel chatPanel = null;
     private JList<GuiChatMessage> chatHistory = null;
 
     private ChatFilterMouseListener filterMouseListener = new ChatFilterMouseListener();
@@ -118,6 +119,9 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         this.master = master;
 
         guiUpdater.setDaemon(true);
+    }
+
+    public void start() {
         guiUpdater.start();
     }
 
@@ -129,8 +133,8 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         this.mpBackend = mpBackend;
     }
 
-    public void setChatTextArea(JTextField chatTextArea) {
-        this.chatInput = chatTextArea;
+    public void setChatPanel(MpChatPanel chatPanel) {
+        this.chatPanel = chatPanel;
     }
 
     public void setChatHistory(JList<GuiChatMessage> chatHistory) {
@@ -144,15 +148,18 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             newPrefix = callSign + ":";
             setFilter(exclusive ? Filter.FILTER_SELECTED_USER : filter);
         }
-        String currentText = (String) chatInput.getText();
-        if (currentText.isEmpty()) {
-            currentText = newPrefix + " ";
-        } else if (currentText.contains(":")) {
-            currentText = currentText.replaceFirst(".*:", newPrefix);
-        } else {
-            currentText = newPrefix + " " + currentText.trim();
+        synchronized(chatPanel.getChatMessageLock()) {
+            String currentText = (String) chatPanel.getChatMessage();
+            if (currentText.isEmpty()) {
+                currentText = newPrefix + " ";
+            } else if (currentText.contains(":")) {
+                currentText = currentText.replaceFirst(".*:", newPrefix);
+            } else {
+                currentText = newPrefix + " " + currentText.trim();
+            }
+            chatPanel.setChatMessage(currentText);
+            validateTextLength(currentText);
         }
-        chatInput.setText(currentText);
         requestGuiUpdate();
     }
 
@@ -161,7 +168,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             if(this.filter!=filter) {
                 // only if needed
                 this.filter = filter;
-                ((MpChatPanel) chatInput.getParent()).selectFilter(filter);
+                chatPanel.selectFilter(filter);
                 requestGuiUpdate();
             }
         }
@@ -206,6 +213,11 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             }
         }
         requestGuiUpdate();
+        if( !msg.getCallSign().equals(master.getCurrentATCCallSign())
+            && msg.isAirportMentioned()
+            && !msg.isNeglectOrInactive()) {
+            SoundManager.playChatSound();
+        }
     }
     /**
      * DONT call directly! Use requestGuiUpdate()!!!
@@ -344,9 +356,26 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (!e.isConsumed() && e.getKeyChar() == KeyEvent.VK_ENTER) {
-            sendChatMessage();
-            e.consume();
+        synchronized(chatPanel.getChatMessageLock()) {
+            String inputText = chatPanel.getChatMessage();
+            validateTextLength(inputText);
+            if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                if(inputText.length()<129) {
+                    sendChatMessage();
+                    chatPanel.setChatMsgColor(Color.black);
+                }
+                e.consume();
+            }
+        }
+    }
+
+    public void validateTextLength(String msg) {
+        if(msg.length()>128) {
+            chatPanel.setChatMsgColor(Color.red);
+        } else if(msg.length()>120) {
+            chatPanel.setChatMsgColor(Color.blue);
+        } else {
+            chatPanel.setChatMsgColor(Color.black);
         }
     }
 
@@ -387,7 +416,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
 
     public void requestFocusForInput() {
-        chatInput.requestFocus();
+        chatPanel.requestFocusForInput();
     }
 
     /**
@@ -420,12 +449,12 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         autoAtcMessage = msg;
         GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
         List<String> messages = msg.generateMessages(master, c, null);
-        chatInput.setText(messages.get(0)); // English text
+        chatPanel.setChatMessage(messages.get(0)); // English text
         requestFocusForInput();
     }
 
     private void sendChatMessage() {
-        String message = (String) chatInput.getText();
+        String message = (String) chatPanel.getChatMessage();
         if(autoAtcMessage!=null) {
             sendFollowUpAtcMessages(message);
         } else {
@@ -487,9 +516,9 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     public void resetChatField() {
         GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
         if(selectedContact!=null) {
-            chatInput.setText(selectedContact.getCallSign()+": ");
+            chatPanel.setChatMessage(selectedContact.getCallSign()+": ");
         } else {
-            chatInput.setText("");
+            chatPanel.setChatMessage("");
         }
     }
 
@@ -509,5 +538,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         }
     }
 
-
+    public void setChatMsgColor(Color color) {
+        chatPanel.setChatMsgColor(color);
+    }
 }

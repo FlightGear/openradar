@@ -36,19 +36,19 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Point2D;
 
-import de.knewcleus.fgfs.navdata.impl.Intersection;
+import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class FixName extends AViewObject {
 
     private AirportData data;
-    private Intersection fix;
+    private IIntersection fix;
     private String activeText;
     private int defaultMaxScale;
     private Color defaultColor;
 
-    public FixName(AirportData data, Intersection fix, Font font, Color color, int minScaleText, int maxScaleText) {
+    public FixName(AirportData data, IIntersection fix, Font font, Color color, int minScaleText, int maxScaleText) {
         super(font, color, fix.getIdentification(), minScaleText, maxScaleText);
         this.data=data;
         this.fix = fix;

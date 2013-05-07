@@ -32,6 +32,10 @@
  */
 package de.knewcleus.openradar.gui.radar;
 
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
@@ -80,7 +84,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     public void setViewerAdapter(RadarMapViewerAdapter viewerAdapter) {
         this.viewerAdapter=viewerAdapter;
 
-        setZoomLevel("TOWER");
+        setZoomLevel("SECTOR");
     }
 
     public void acceptRadarData(IRadarDataProvider provider, IRadarDataPacket radarData) {
@@ -173,6 +177,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
         } else {
             viewerAdapter.setCenter(c.getCenterGeoCoordinates());
         }
+        setZoomLevel("SECTOR");
     }
 
     public void addZoomLevelValuesToProperties(Properties p) {
@@ -231,6 +236,23 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     public void reloadStandardRoutes() {
         radarPanel.getRadarMapPanel().reReadStandardRoutes(master);
+    }
+
+    public void copyMouseLocationToClipboard() {
+        Point p = radarPanel.getMousePosition();
+        if(p!=null) {
+            Point2D geoPoint = viewerAdapter.getGeoLocationOf(p);
+            StringSelection selection = new StringSelection(String.format("%1.6f,%1.6f",geoPoint.getY(),geoPoint.getX()));
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(selection, selection);
+        }
+
+    }
+
+    public void copyZoomLevelToClipboard() {
+        StringSelection selection = new StringSelection(String.format("%1.1f",viewerAdapter.getLogicalScale()));
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, selection);
     }
 
 }

@@ -89,7 +89,7 @@ public class RadioController implements Runnable {
             int i = 0;
             for (Radio r : data.getRadios().values()) {
                 String device = r.getKey();
-                RadioModel model = new RadioModel(master, device, data.getRadioFrequencies(), i++);
+                RadioModel model = new RadioModel(master, device, data.getRadioFrequencies(), r.getRestoredFrequency() ,i++);
                 models.put(device, model);
                 fgComController.addRadio(data.getFgComPath(), data.getFgComExec(), device, data.getFgComServer(), r.getFgComHost(), r.getFgComPort(), model.getSelectedItem().getCode(), model.getSelectedItem());
             }
@@ -346,11 +346,20 @@ public class RadioController implements Runnable {
             String frequency = model.getSelectedItem().getFrequency();
             String code = model.getSelectedItem().getCode();
             result.append(frequency);
-            result.append("(");
-            result.append(code);
-            result.append(")");
+         // until mpchat supports more characters
+//            result.append("(");
+//            result.append(replaceFunctions(code));
+//            result.append(")");
+            break; // until mpchat supports more characters
         }
 
         return result.toString();
+    }
+
+    private Object replaceFunctions(String code) {
+        if(code.contains("GND")) return "GND";
+        if(code.contains("TWR")) return "TWR";
+        if(code.contains("APP")) return "APP";
+        return code;
     }
 }

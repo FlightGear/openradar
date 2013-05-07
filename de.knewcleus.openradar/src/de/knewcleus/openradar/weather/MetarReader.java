@@ -41,6 +41,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.setup.AirportData;
 
 /**
@@ -130,6 +131,8 @@ public class MetarReader implements Runnable {
                     l.registerNewMetar(metar);
                 }
                 System.out.println("Metar received: " + metar.getMetarBaseData());
+
+                SoundManager.playWeather();
             }
         } else {
             System.out.println("WARNING: No Metar for "+airportCode+"(got response code " + responseCode + " from " + url.toString()+")...");

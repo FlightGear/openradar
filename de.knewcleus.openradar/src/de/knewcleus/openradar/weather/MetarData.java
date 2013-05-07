@@ -39,6 +39,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import com.sun.istack.internal.logging.Logger;
+
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.chat.auto.AtcMessage;
 import de.knewcleus.openradar.gui.setup.AirportData;
@@ -124,116 +126,124 @@ public class MetarData {
 
         airportCode=st.nextToken();
 
-        String t = st.nextToken(); // former last update code 141813Z
+        try {
+            String t = st.nextToken(); // former last update code 141813Z
 
-        t = st.nextToken();
-        if(t.matches("AUTO")) {
-            // automatic station
             t = st.nextToken();
+            if(t.matches("AUTO")) {
+                // automatic station
+                t = st.nextToken();
+            }
+
+            if(t.matches("^[A-Z]{3}")) {
+                // correction indicator
+                t = st.nextToken();
+            }
+
+            if(t.matches("^[VRB0-9G]{5,8}KT.*$")) {
+                parseWind(t,"KT");
+                t = st.nextToken();
+
+            } else if(t.matches("^[VRB0-9G]{5,8}KMH.*$")) {
+                parseWind(t,"KMH");
+                t = st.nextToken();
+
+            } else if(t.matches("^[VRB0-9G]MPS.*$")) {
+                parseWind(t,"MPS");
+                t = st.nextToken();
+
+            } else {
+                t = st.nextToken(); // ignore it
+            }
+
+            if(t.matches("^[\\d]{3}V[\\d]{3}$")) {
+                parseVariations(t);
+                t = st.nextToken();
+            }
+
+            if(t.matches("^[\\d]{4}$") || t.matches("^[\\d/]{1,4}SM$")) {
+                parseVisibility(t);
+                t = st.nextToken();
+            }
+
+            weatherPhaenomena = metar.substring(metar.indexOf(t));
+            weatherPhaenomena = weatherPhaenomena.replaceAll("A[\\d]{4}", "");
+            weatherPhaenomena = weatherPhaenomena.replaceAll("Q[\\d]{4}", "");
+            weatherPhaenomena = weatherPhaenomena.replaceAll("[\\d]{2}/[\\d]{2}", "");
+            weatherPhaenomena = weatherPhaenomena.replaceAll("CAVOK", "");
+            if(weatherPhaenomena.contains("RMK")) {
+                weatherPhaenomena = weatherPhaenomena.substring(0,weatherPhaenomena.indexOf("RMK")).trim();
+            }
+            weatherPhaenomena = weatherPhaenomena.replaceAll("  ", " ");
+            weatherPhaenomena = weatherPhaenomena.replaceAll("\n", "");
+
+            if(t.matches("^[\\d]{4}.*$")) {
+                parseDirectionalVisibility(t);
+            }
+            do {
+                if(t.matches("^CAVOK$")) parseCavok(t);
+                else if(t.matches("^R.*/.*$")) parseRunwayVisibility(t);
+                else if(t.matches("^A[\\d]{4}$")) parsePressureInHG(t);
+                else if(t.matches("^Q[\\d]{4}$")) parsePressureHPa(t);
+                else if(t.matches("[M]{0,1}^[\\d]{2}/[M]{0,1}[\\d]{2}$")) parseTemperatures(t); // todo M1/M4
+                else if(t.matches("^RMK$")) break; // means "national information follow
+                else parsePhenomena(t);
+                t = st.nextToken();
+            } while(st.hasMoreElements());
+
+                double angle = (double)(getWindDirectionI()-270)/360d*2*Math.PI;
+                windFromNorth = Math.sin(angle)*(double)getWindSpeed();
+                windFromWest = Math.cos(angle)*(double)getWindSpeed();
+                //System.out.println("Wind N: "+windFromNorth+" W: "+windFromWest);
+
+                weatherPhaenomenaHuman = weatherPhaenomena.replaceAll("SKC","sky clear ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("FEW","few clouds ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SCT","scattered ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BKN","broken ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("OVC","overcast ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("TCU","towering cumulus ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("CB","Cumulonimbus ");
+
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("CLR","clear ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("NSC","Nil significant clouds ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("CAVOK","clouds+vis OK");
+
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("NOSIG","(stable)");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BECMG","(will change)");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("TEMPO","(is changing)");
+
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("-","light ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("\\+","heavy ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("RA","rain");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("DZ","drizzle");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SN","snow");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("PE","ice pellets");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("GR","hail");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("GS","snow pellets");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("IC","ice crystals");
+
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("MI","shallow ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BC","patches ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("PR","partial ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("DR","drifting ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BL","blowing ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SH","showers ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("TS","thunder storm ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("FR","freezing ");
+
+
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BR","mist,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("FG","fog,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SA","sand,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("VA","vulcano ash,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("FU","smoke,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("HZ","haze,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SU","dust,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SS","sand storm,");
+        } catch(Exception e) {
+            Logger.getLogger(MetarData.class).warning("Failed to parse Metar: "+metar,e);
+            weatherPhaenomena="";
         }
-
-        if(t.matches("^[A-Z]{3}")) {
-            // correction indicator
-            t = st.nextToken();
-        }
-
-        if(t.matches("^.*KT.*$")) {
-            parseWind(t,"KT");
-            t = st.nextToken();
-        }
-        if(t.matches("^.*KMH.*$")) {
-            parseWind(t,"KMH");
-            t = st.nextToken();
-        }
-        if(t.matches("^.*MPS.*$")) {
-            parseWind(t,"MPS");
-            t = st.nextToken();
-        }
-
-        if(t.matches("^[\\d]{3}V[\\d]{3}$")) {
-            parseVariations(t);
-            t = st.nextToken();
-        }
-
-        if(t.matches("^[\\d]{4}$") || t.matches("^[\\d/]{1,4}SM$")) {
-            parseVisibility(t);
-            t = st.nextToken();
-        }
-
-        weatherPhaenomena = metar.substring(metar.indexOf(t));
-        weatherPhaenomena = weatherPhaenomena.replaceAll("A[\\d]{4}", "");
-        weatherPhaenomena = weatherPhaenomena.replaceAll("Q[\\d]{4}", "");
-        weatherPhaenomena = weatherPhaenomena.replaceAll("[\\d]{2}/[\\d]{2}", "");
-        weatherPhaenomena = weatherPhaenomena.replaceAll("CAVOK", "");
-        if(weatherPhaenomena.contains("RMK")) {
-            weatherPhaenomena = weatherPhaenomena.substring(0,weatherPhaenomena.indexOf("RMK")).trim();
-        }
-        weatherPhaenomena = weatherPhaenomena.replaceAll("  ", " ");
-        weatherPhaenomena = weatherPhaenomena.replaceAll("\n", "");
-
-        if(t.matches("^[\\d]{4}.*$")) {
-            parseDirectionalVisibility(t);
-        }
-        do {
-            if(t.matches("^CAVOK$")) parseCavok(t);
-            else if(t.matches("^R.*/.*$")) parseRunwayVisibility(t);
-            else if(t.matches("^A[\\d]{4}$")) parsePressureInHG(t);
-            else if(t.matches("^Q[\\d]{4}$")) parsePressureHPa(t);
-            else if(t.matches("[M]{0,1}^[\\d]{2}/[M]{0,1}[\\d]{2}$")) parseTemperatures(t); // todo M1/M4
-            else if(t.matches("^RMK$")) break; // means "national information follow
-            else parsePhenomena(t);
-            t = st.nextToken();
-        } while(st.hasMoreElements());
-
-            double angle = (double)(getWindDirectionI()-270)/360d*2*Math.PI;
-            windFromNorth = Math.sin(angle)*(double)getWindSpeed();
-            windFromWest = Math.cos(angle)*(double)getWindSpeed();
-            //System.out.println("Wind N: "+windFromNorth+" W: "+windFromWest);
-
-            weatherPhaenomenaHuman = weatherPhaenomena.replaceAll("SKC","sky clear ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("FEW","few clouds ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SCT","scattered ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BKN","broken ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("OVC","overcast ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("TCU","towering cumulus ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("CB","Cumulonimbus ");
-
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("CLR","clear ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("NSC","Nil significant clouds ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("CAVOK","clouds+vis OK");
-
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("NOSIG","(stable)");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BECMG","(will change)");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("TEMPO","(is changing)");
-
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("-","light ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("\\+","heavy ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("RA","rain");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("DZ","drizzle");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SN","snow");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("PE","ice pellets");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("GR","hail");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("GS","snow pellets");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("IC","ice crystals");
-
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("MI","shallow ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BC","patches ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("PR","partial ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("DR","drifting ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BL","blowing ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SH","showers ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("TS","thunder storm ");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("FR","freezing ");
-
-
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("BR","mist,");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("FG","fog,");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SA","sand,");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("VA","vulcano ash,");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("FU","smoke,");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("HZ","haze,");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SU","dust,");
-            weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SS","sand storm,");
 
     }
 
@@ -482,7 +492,7 @@ public class MetarData {
         }
 
         ArrayList<String> list = new ArrayList<String>();
-        list.add(String.format(AtcMessage.replaceVariables("ATIS for %s at %2.0f ft: QNH %s, wind %s, active rwy(s) %s,  FGCOM %s", master, null, atisVariables)));
+        list.add(String.format(AtcMessage.replaceVariables("ATIS for %s at %2.0f ft: QNH %s wind %s active rwy(s) %s FGCOM %s", master, null, atisVariables)).trim());
         if(!shortMsg) list.add("(ATIS) vis:"+getVisibility()+", "+getVisibilityUnit()+" "+getWeatherPhaenomenaForHumans());
         return list;
     }

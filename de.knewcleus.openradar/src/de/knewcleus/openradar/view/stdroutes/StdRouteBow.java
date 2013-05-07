@@ -71,6 +71,9 @@ public class StdRouteBow extends AStdRouteElement {
         double radiusDots = Converter2D.getFeetToDots(radius * Units.NM / Units.FT, mapViewAdapter);
         endPoint = mapViewAdapter.getProjection().toGeographical(mapViewAdapter.getDeviceToLogicalTransform().transform(Converter2D.getMapDisplayPoint(center, startAngle+extentAngle, radiusDots),null));
 
+        if(color!=null) {
+            g2d.setColor(color);
+        }
         Path2D path = new Path2D.Double();
         if(text==null) {
             path.append(new Arc2D.Double(center.getX()-radiusDots, center.getY()-radiusDots,radiusDots*2,radiusDots*2,startAngle,extentAngle,Arc2D.OPEN), false);
@@ -93,9 +96,6 @@ public class StdRouteBow extends AStdRouteElement {
             }
         }
 
-        if(color!=null) {
-            g2d.setColor(color);
-        }
         Stroke origStroke = g2d.getStroke();
         if(stroke!=null) {
             g2d.setStroke(stroke);

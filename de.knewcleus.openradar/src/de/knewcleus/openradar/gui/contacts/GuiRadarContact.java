@@ -409,4 +409,8 @@ public class GuiRadarContact {
     public synchronized boolean isNew() {
         return System.currentTimeMillis() - appeared < 30000;
     }
+
+    public synchronized String getAddressPort() {
+        return player.getAddressPort();
+    }
 }

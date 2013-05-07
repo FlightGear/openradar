@@ -35,10 +35,17 @@ package de.knewcleus.openradar.gui.radar;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -58,15 +65,24 @@ public class RadarPanel extends JPanel {
     private javax.swing.JPanel radarControlBar;
     private RadarMapPanel radarView;
 
-    private javax.swing.JLabel lbFIX;
-    private javax.swing.JLabel lbNDB;
-    private javax.swing.JLabel lbVOR;
-    private javax.swing.JLabel lbCircles;
-    private javax.swing.JLabel lbApt;
-    private javax.swing.JLabel lbPPN;
-    private javax.swing.JLabel lbGsH;
-    private javax.swing.JLabel lbStP;
-    private javax.swing.JLabel lbSTARSID;
+    private JCheckBoxMenuItem mItemFIX;
+    private JCheckBoxMenuItem mItemNDB;
+    private JCheckBoxMenuItem mItemVOR;
+    private JCheckBoxMenuItem mItemCircles;
+    private JCheckBoxMenuItem mItemApt;
+    private JCheckBoxMenuItem mItemPPN;
+    private JLabel mItemPPN2;
+    private JCheckBoxMenuItem mItemGSH;
+    private JCheckBoxMenuItem mItemSTP;
+    private JLabel mItemSTP2;
+    private JCheckBoxMenuItem mItemSTARSID;
+    private JLabel mItemSTARSID2;
+
+    private JCheckBoxMenuItem mItemSoundMute;
+    private JCheckBoxMenuItem mItemSoundChat;
+    private JCheckBoxMenuItem mItemSoundContact;
+    private JCheckBoxMenuItem mItemSoundMetar;
+
 
     private JPanel zoomPanel;
     private javax.swing.JLabel lbZoomGround;
@@ -93,16 +109,6 @@ public class RadarPanel extends JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         radarView = new RadarMapPanel(guiInteractionManager);
-
-        lbFIX = new javax.swing.JLabel();
-        lbNDB = new javax.swing.JLabel();
-        lbVOR = new javax.swing.JLabel();
-        lbCircles = new javax.swing.JLabel();
-        lbApt = new javax.swing.JLabel();
-        lbPPN = new javax.swing.JLabel();
-        lbGsH = new javax.swing.JLabel();
-        lbStP = new javax.swing.JLabel();
-        lbSTARSID = new javax.swing.JLabel();
 
         lbZoomGround = new javax.swing.JLabel();
         lbZoomTower = new javax.swing.JLabel();
@@ -142,6 +148,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor=GridBagConstraints.WEST;
         gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx=1;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
@@ -153,138 +160,201 @@ public class RadarPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx=1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         radarControlBar.add(filterPanel, gridBagConstraints);
 
-
-        lbFIX.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbFIX.setText("FIX");
-        lbFIX.setName("FIX");
-        lbFIX.setToolTipText("Toggle display of FIX");
-        lbFIX.setForeground(java.awt.Color.white);
-        lbFIX.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        JMenuBar menuBar = new JBackgroundMenuBar();
+        menuBar.setOpaque(false);
+        menuBar.setBackground(Palette.DESKTOP);
+        menuBar.setForeground(Color.white);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 3);
-        filterPanel.add(lbFIX, gridBagConstraints);
+//        gridBagConstraints.anchor=GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        filterPanel.add(menuBar,gridBagConstraints);
 
-        lbNDB.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbNDB.setText("NDB");
-        lbNDB.setName("NDB");
-        lbNDB.setToolTipText("Toggle display of NDB");
-        lbNDB.setForeground(java.awt.Color.white);
-        lbNDB.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        guiInteractionManager.getRadarManager().getObjectFilterListener().setMenuParent(this);
+        guiInteractionManager.getRadarManager().getSoundMuteActionListener().setMenuParent(this);
+
+        // menu map
+
+        JMenu menuMap = new JMenu("map");
+        menuMap.setFont(menuMap.getFont().deriveFont(Font.BOLD));
+        menuMap.setBackground(Palette.DESKTOP);
+        menuMap.setForeground(Palette.DESKTOP_TEXT);
+        menuBar.add(menuMap);
+
+        mItemSTP = new JCheckBoxMenuItem();
+        mItemSTP.setText("STP: Mousetip measuring");
+        mItemSTP.setName("STP");
+        mItemSTP.setToolTipText("Toggle display of distance data near mousetip");
+        mItemSTP.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemSTP);
+
+        mItemSTARSID = new JCheckBoxMenuItem();
+        mItemSTARSID.setText("STAR/SID");
+        mItemSTARSID.setName("STARSID");
+        mItemSTARSID.setToolTipText("Toggle display of parking/gate names");
+        mItemSTARSID.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemSTARSID);
+
+        mItemPPN = new JCheckBoxMenuItem();
+        mItemPPN.setText("PPN: Parking/Gate Names");
+        mItemPPN.setName("PPN");
+        mItemPPN.setToolTipText("Toggle display of parking/gate names");
+        mItemPPN.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemPPN);
+
+        menuMap.add(new JSeparator());
+
+        mItemFIX = new JCheckBoxMenuItem();
+        mItemFIX.setText("FIX");
+        mItemFIX.setName("FIX");
+        mItemFIX.setToolTipText("Toggle display of FIX");
+        mItemFIX.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemFIX);
+
+        mItemNDB = new JCheckBoxMenuItem();
+        mItemNDB.setText("NDB");
+        mItemNDB.setName("NDB");
+        mItemNDB.setToolTipText("Toggle display of NDB");
+        mItemNDB.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemNDB);
+
+        mItemVOR = new JCheckBoxMenuItem();
+        mItemVOR.setText("VOR");
+        mItemVOR.setName("VOR");
+        mItemVOR.setToolTipText("Toggle display of VOR");
+        mItemVOR.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemVOR);
+
+        mItemApt = new JCheckBoxMenuItem();
+        mItemApt.setText("Airports");
+        mItemApt.setName("APT");
+        mItemApt.setToolTipText("Toggle display of airport codes");
+        mItemApt.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemApt);
+
+        menuMap.add(new JSeparator());
+
+        mItemCircles = new JCheckBoxMenuItem();
+        mItemCircles.setText("Circles");
+        mItemCircles.setName("CIRCLES");
+        mItemCircles.setToolTipText("Toggle display of distance circles");
+        mItemCircles.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemCircles);
+
+
+        mItemGSH = new JCheckBoxMenuItem();
+        mItemGSH.setText("GS Heights");
+        mItemGSH.setName("GSH");
+        mItemGSH.setToolTipText("Toggle display of heights of glideslope");
+        mItemGSH.addActionListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemGSH);
+
+        // menu sounds
+
+        JMenu menuSound = new JMenu("sounds");
+        menuSound.setBackground(Palette.DESKTOP);
+        menuSound.setForeground(Palette.DESKTOP_TEXT);
+        menuSound.setFont(menuSound.getFont().deriveFont(Font.BOLD));
+        menuBar.add(menuSound);
+
+        mItemSoundMute = new JCheckBoxMenuItem();
+        mItemSoundMute.setText("- mute -");
+        mItemSoundMute.setName("MUTE");
+        mItemSoundMute.setToolTipText("Mute all sounds");
+        mItemSoundMute.addActionListener(guiInteractionManager.getRadarManager().getSoundMuteActionListener());
+        menuSound.add(mItemSoundMute);
+
+        menuSound.add(new JSeparator());
+
+        mItemSoundChat = new JCheckBoxMenuItem();
+        mItemSoundChat.setText("mute Chat message sound");
+        mItemSoundChat.setName("CHAT");
+        mItemSoundChat.setToolTipText("Mute chat messages for me");
+        mItemSoundChat.addActionListener(guiInteractionManager.getRadarManager().getSoundMuteActionListener());
+        menuSound.add(mItemSoundChat);
+
+        mItemSoundContact = new JCheckBoxMenuItem();
+        mItemSoundContact.setText("mute New Contact sound");
+        mItemSoundContact.setName("CONTACT");
+        mItemSoundContact.setToolTipText("New contact arrives");
+        mItemSoundContact.addActionListener(guiInteractionManager.getRadarManager().getSoundMuteActionListener());
+        menuSound.add(mItemSoundContact);
+
+        mItemSoundMetar = new JCheckBoxMenuItem();
+        mItemSoundMetar.setText("mute Metar change sound");
+        mItemSoundMetar.setName("METAR");
+        mItemSoundMetar.setToolTipText("Metar has changed");
+        mItemSoundMetar.addActionListener(guiInteractionManager.getRadarManager().getSoundMuteActionListener());
+        menuSound.add(mItemSoundMetar);
+        // top level items
+
+        mItemSTP2 = new JLabel("STP");
+        //mItemSTP2.setText("STP");
+        mItemSTP2.setName("STP");
+        mItemSTP2.setForeground(Palette.DESKTOP_TEXT);
+        mItemSTP2.setToolTipText("Toggle display of distance data near mousetip");
+        mItemSTP2.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-        filterPanel.add(lbNDB, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        filterPanel.add(mItemSTP2, gridBagConstraints);
 
-        lbVOR.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbVOR.setText("VOR");
-        lbVOR.setName("VOR");
-        lbVOR.setToolTipText("Toggle display of VORs");
-        lbVOR.setForeground(java.awt.Color.white);
-        lbVOR.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        mItemSTARSID2 = new JLabel();
+        mItemSTARSID2.setText("STAR/SID");
+        mItemSTARSID2.setName("STARSID");
+        mItemSTARSID2.setForeground(Palette.DESKTOP_TEXT);
+        mItemSTARSID2.setToolTipText("Toggle display of parking/gate names");
+        mItemSTARSID2.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        filterPanel.add(lbVOR, gridBagConstraints);
+        gridBagConstraints.anchor=GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        filterPanel.add(mItemSTARSID2, gridBagConstraints);
 
-        lbApt.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbApt.setText("APT");
-        lbApt.setName("APT");
-        lbApt.setToolTipText("Toggle display of airport codes");
-        lbApt.setForeground(java.awt.Color.white);
-        lbApt.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
+        mItemPPN2 = new JLabel();
+        mItemPPN2.setText("PPN");
+        mItemPPN2.setName("PPN");
+        mItemPPN2.setForeground(Palette.DESKTOP_TEXT);
+        mItemPPN2.setToolTipText("Toggle display of parking/gate names");
+        mItemPPN2.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-        filterPanel.add(lbApt, gridBagConstraints);
-
-        lbCircles.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbCircles.setText("CIRC");
-        lbCircles.setName("CIRCLES");
-        lbCircles.setToolTipText("Toggle display of distance circles around airport");
-        lbCircles.setForeground(java.awt.Color.white);
-        lbCircles.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-        filterPanel.add(lbCircles, gridBagConstraints);
-
-        lbGsH.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbGsH.setText("GSH");
-        lbGsH.setName("GSH");
-        lbGsH.setToolTipText("Toggle display of Glide slope heights");
-        lbGsH.setForeground(java.awt.Color.white);
-        lbGsH.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-        filterPanel.add(lbGsH, gridBagConstraints);
-
-        lbPPN.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbPPN.setText("PPN");
-        lbPPN.setName("PPN");
-        lbPPN.setToolTipText("Toggle display of numbers for park positions");
-        lbPPN.setForeground(java.awt.Color.white);
-        lbPPN.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        filterPanel.add(lbPPN, gridBagConstraints);
-
-        lbStP.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbStP.setText("StP");
-        lbStP.setName("STP");
-        lbStP.setToolTipText("Toggle display of mouse pointer data");
-        lbStP.setForeground(java.awt.Color.white);
-        lbStP.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-        filterPanel.add(lbStP, gridBagConstraints);
-
-        lbSTARSID.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
-        lbSTARSID.setText("STAR/SID");
-        lbSTARSID.setName("STARSID");
-        lbSTARSID.setToolTipText("Toggle display of standard routes");
-        lbSTARSID.setForeground(java.awt.Color.white);
-        lbSTARSID.addMouseListener(guiInteractionManager.getRadarManager().getObjectFilterListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 8;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-        filterPanel.add(lbSTARSID, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        filterPanel.add(mItemPPN2, gridBagConstraints);
 
         JPanel filterSpace = new JPanel();
         filterSpace.setLayout(new java.awt.GridBagLayout());
         filterSpace.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 9;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx=1;
+        gridBagConstraints.weightx=10;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         filterPanel.add(filterSpace, gridBagConstraints);
 
-
+        JPanel space1 = new JPanel();
+        space1.setLayout(new java.awt.GridBagLayout());
+        space1.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx=2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
+        radarControlBar.add(space1, gridBagConstraints);
 
         zoomPanel = new JPanel();
         zoomPanel.setLayout(new java.awt.GridBagLayout());
         zoomPanel.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx=0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
@@ -332,7 +402,7 @@ public class RadarPanel extends JPanel {
         space.setLayout(new java.awt.GridBagLayout());
         space.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx=1;
@@ -346,10 +416,12 @@ public class RadarPanel extends JPanel {
         tfSearchNavaids.addActionListener(guiInteractionManager.getRadarManager().getNavaidSearchActionListener());
         tfSearchNavaids.setPreferredSize(new Dimension(400,tfSearchNavaids.getFont().getSize()+10));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 4);
         radarControlBar.add(tfSearchNavaids, gridBagConstraints);
+
+        doLayout();
     }
 
     public void resetFilters() {
@@ -361,7 +433,7 @@ public class RadarPanel extends JPanel {
 
     public void selectFilter(String zoomLevelKey) {
         if(!guiInteractionManager.getDataRegistry().getNavaidDB().hasRoutes()) {  // show only if there is something to hide
-            lbSTARSID.setVisible(false);
+            mItemSTARSID.setVisible(false);
         }
         // reset
         lbZoomGround.setForeground(Color.white);
@@ -372,28 +444,55 @@ public class RadarPanel extends JPanel {
         // set
         for(Component c : zoomPanel.getComponents()) {
             if(zoomLevelKey.equals(c.getName())) {
-              ((JLabel)c).setForeground(Palette.DESKTOP_FILTER_SELECTED);
-              ((JLabel)c).setForeground(new Color(100,100,255));
+              ((JComponent)c).setForeground(Palette.DESKTOP_FILTER_SELECTED);
+              ((JComponent)c).setForeground(new Color(100,100,255));
             }
         }
     }
 
-    public void setObjecFilter(javax.swing.JLabel l, boolean state) {
-        if(state) {
-            l.setForeground(Color.white);
-        } else {
-            l.setForeground(Color.gray);
+    public void setObjectFilter(JComponent l, boolean state) {
+        if(l instanceof JMenuItem) ((JMenuItem)l).setSelected(state);
+        if(l.getName().equals("STP")) {
+            mItemSTP.setSelected(state);
+            if(state) {
+                mItemSTP2.setForeground(Color.white);
+            } else {
+                mItemSTP2.setForeground(Color.gray);
+            }
+        } else if(l.getName().equals("PPN")) {
+            mItemPPN.setSelected(state);
+            if(state) {
+                mItemPPN2.setForeground(Color.white);
+            } else {
+                mItemPPN2.setForeground(Color.gray);
+            }
+        } else if(l.getName().equals("STARSID")) {
+            mItemSTARSID.setSelected(state);
+            if(state) {
+                mItemSTARSID2.setForeground(Color.white);
+            } else {
+                mItemSTARSID2.setForeground(Color.gray);
+            }
         }
+
     }
 
     public void validateToggles() {
-        setObjecFilter(lbFIX,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("FIX"));
-        setObjecFilter(lbNDB,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("NDB"));
-        setObjecFilter(lbVOR,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("VOR"));
-        setObjecFilter(lbCircles,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("CIRCLES"));
-        setObjecFilter(lbApt,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("APT"));
-        setObjecFilter(lbPPN,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("PPN"));
-        setObjecFilter(lbGsH,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("GSH"));
-        setObjecFilter(lbStP,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STP"));
-        setObjecFilter(lbSTARSID,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STARSID"));    }
+        setObjectFilter(mItemFIX,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("FIX"));
+        setObjectFilter(mItemNDB,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("NDB"));
+        setObjectFilter(mItemVOR,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("VOR"));
+        setObjectFilter(mItemCircles,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("CIRCLES"));
+        setObjectFilter(mItemApt,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("APT"));
+        setObjectFilter(mItemPPN,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("PPN"));
+        setObjectFilter(mItemPPN2,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("PPN"));
+        setObjectFilter(mItemGSH,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("GSH"));
+        setObjectFilter(mItemSTP,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STP"));
+        setObjectFilter(mItemSTP2,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STP"));
+        setObjectFilter(mItemSTARSID,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STARSID"));
+        setObjectFilter(mItemSTARSID2,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("STARSID"));
+        setObjectFilter(mItemSoundMute,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("MUTE"));
+        setObjectFilter(mItemSoundChat,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("CHAT"));
+        setObjectFilter(mItemSoundContact,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("CONTACT"));
+        setObjectFilter(mItemSoundMetar,guiInteractionManager.getDataRegistry().getRadarObjectFilterState("METAR"));
+    }
 }

@@ -32,6 +32,7 @@
  */
 package de.knewcleus.openradar.gui.contacts;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -46,11 +47,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JLabel;
@@ -64,6 +68,7 @@ import javax.swing.event.ListSelectionListener;
 
 import de.knewcleus.fgfs.multiplayer.IPlayerListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.chat.auto.AtcMessageDialog;
 import de.knewcleus.openradar.gui.chat.auto.TextManager;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
@@ -99,6 +104,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     private final Map<String, GuiRadarContact> mapCallSignContact = Collections.synchronizedMap(new TreeMap<String, GuiRadarContact>());
     private final Map<String, GuiRadarContact> mapExpiredCallSigns = Collections.synchronizedMap(new TreeMap<String, GuiRadarContact>());
 
+    private volatile Set<String> neglectedAddressesList = new HashSet<String>();
+
     private volatile List<GuiRadarContact> modelList = new ArrayList<GuiRadarContact>();
 
     private List<ListDataListener> dataListeners = new ArrayList<ListDataListener>();
@@ -127,10 +134,13 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         this.master = master;
         this.radarBackend = radarBackend;
         guiUpdater.setDaemon(true);
-        guiUpdater.start();
         loadAtcNotes();
         atcMessageDialog = new AtcMessageDialog(master, textManager);
         contactSettingsDialog = new ContactSettingsDialog(master, this);
+    }
+
+    public void start() {
+        guiUpdater.start();
     }
 
     public GuiMasterController getMaster() {
@@ -192,11 +202,12 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     }
 
     private void publishData() {
-        boolean resetSelectedContact = false;
+        boolean displayChatAsEnabled = true;
+        boolean displayChatAsDisabled = false;
         synchronized (selectedContactLock) {
-            if (null != selectedContact && !selectedContact.isActive()) {
-                selectedContact = null;
-                resetSelectedContact = true; // to avoid lock because of incapsulated synchronizes
+            if (null != selectedContact) {
+                displayChatAsEnabled = selectedContact.isActive(); // to avoid lock because of incapsulated synchronizes
+                displayChatAsDisabled = !displayChatAsEnabled;
             }
         }
         synchronized(this) {
@@ -208,8 +219,12 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             modelList = new ArrayList<GuiRadarContact>(activeContactList);
             notifyListenersListChange(formerSize);
         }
-        if (resetSelectedContact) {
-            master.getMpChatManager().setSelectedCallSign(null, false); // lock
+        if (displayChatAsEnabled) {
+            master.getMpChatManager().setChatMsgColor(Color.black);
+        }
+        if (displayChatAsDisabled) {
+            //master.getMpChatManager().setSelectedCallSign(null, false); // lock
+            master.getMpChatManager().setChatMsgColor(Color.gray);
         }
     }
 
@@ -296,7 +311,13 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         synchronized (selectedContactLock) {
             // deselect
             if(selectedContact != null) {
-                selectedContact.setNeglect(!selectedContact.isNeglect());
+                if(!selectedContact.isNeglect()) {
+                    selectedContact.setNeglect(true);
+                    neglectedAddressesList.add(selectedContact.getAddressPort());
+                } else {
+                    selectedContact.setNeglect(false);
+                    neglectedAddressesList.remove(selectedContact.getAddressPort());
+                }
             }
         }
     }
@@ -344,6 +365,9 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             addPlayerBeforeUncontrolled( c );
             mapCallSignContact.put(c.getCallSign(), c);
 
+            if(neglectedAddressesList.contains(player.getAddressPort())) {
+                c.setNeglect(true); // player has changed his name
+            }
         } else if (mapExpiredCallSigns.containsKey(player.getCallsign())) {
             // re-activate expired player
             GuiRadarContact c = mapExpiredCallSigns.remove(player.getCallsign());
@@ -351,6 +375,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             addPlayerBeforeUncontrolled( c);
             mapCallSignContact.put(c.getCallSign(), c);
         }
+
+        SoundManager.playContactSound();
 
         applyFilter();
     }

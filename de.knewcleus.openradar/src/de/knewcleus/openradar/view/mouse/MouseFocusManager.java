@@ -149,8 +149,15 @@ public class MouseFocusManager extends MouseAdapter {
 
     @Override
 	public synchronized void mouseMoved(MouseEvent e) {
-	    // ignore the next line to use clicks
-		//updateFocus(e);
+        // preparations for tooltip text in map
+//        final FocuseablePickIterator iterator = new FocuseablePickIterator();
+//        final PickVisitor pickVisitor = new PickVisitor(e.getPoint(), iterator);
+//        rootView.accept(pickVisitor);
+//        IFocusableView view = iterator.getTopFocusable();
+//
+//        if(view!=null) {
+//            System.out.println(view.getAirSpeed());
+//        }
 
 	    // update StP
 

@@ -110,11 +110,11 @@ public abstract class AStdRouteElement {
                 this.arrowSize = Integer.parseInt(arrows.substring(sep+1));
             } else {
                 this.arrows = arrows;
-                this.arrowSize = 10;
+                this.arrowSize = 15;
             }
         } else {
             this.arrows = null;
-            this.arrowSize = 10;
+            this.arrowSize = 15;
         }
 
         if(color != null) {
@@ -147,8 +147,8 @@ public abstract class AStdRouteElement {
         if(!tip) {
             // the arrow is at the end side / where the feather normally is
 
-            // the tip point is not not at the end
-            heading = heading+180;
+            // the tip point is not at the end
+            //heading = heading+180;
             tipPoint = Converter2D.getMapDisplayPoint(tipPoint, heading, size);
             // and the heading to paint it is at the other side
         }

@@ -1,32 +1,32 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
- * 
+ * Copyright (C) 2012 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -40,7 +40,7 @@ import de.knewcleus.openradar.gui.chat.MpChatManager.Filter;
 
 /**
  * This is the panel housing the chat features
- * 
+ *
  * @author Wolfram Wagner
  */
 public class MpChatPanel extends javax.swing.JPanel {
@@ -51,6 +51,8 @@ public class MpChatPanel extends javax.swing.JPanel {
 
     // private javax.swing.JTextArea taMPChatInput;
     private javax.swing.JTextField tfMPChatInput;
+    private final static Object chatMessageLock = new Object();
+
     private javax.swing.JLabel lbMpShowAll;
     private javax.swing.JLabel lbMpShowFreq;
     private javax.swing.JLabel lbMpShowSect;
@@ -148,7 +150,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         add(lbMpShowACT, gridBagConstraints);
-        
+
         lbMpShowACT.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
 
         tfMPChatInput.setEditable(true);
@@ -164,7 +166,7 @@ public class MpChatPanel extends javax.swing.JPanel {
 
         // cbMPChatInput.addActionListener(guiInteractionManager.getMpChatManager());
         tfMPChatInput.addKeyListener(guiInteractionManager.getMpChatManager());
-        guiInteractionManager.getMpChatManager().setChatTextArea(tfMPChatInput);
+        guiInteractionManager.getMpChatManager().setChatPanel(this);
 
         liMPChatHistory.setModel(guiInteractionManager.getMpChatManager());
         liMPChatHistory.setCellRenderer(new MpChatListCellRenderer(guiInteractionManager));
@@ -185,6 +187,35 @@ public class MpChatPanel extends javax.swing.JPanel {
         add(spMPChatHistory, gridBagConstraints);
     }
 
+    public String getChatMessage() {
+        synchronized(chatMessageLock) {
+            return tfMPChatInput.getText();
+        }
+    }
+
+    public void setChatMessage(String text) {
+        synchronized(chatMessageLock) {
+            tfMPChatInput.setText(text);
+        }
+    }
+
+    public Object getChatMessageLock() {
+        return chatMessageLock;
+    }
+
+    public void setChatMsgColor(Color color) {
+        synchronized(chatMessageLock) {
+            if(!tfMPChatInput.getForeground().equals(color)) {
+                tfMPChatInput.setForeground(color);
+            }
+        }
+    }
+
+    public void requestFocusForInput() {
+        tfMPChatInput.requestFocus();
+    }
+
+
     public void selectFilter(Filter filter) {
         // reset Filters
         liMPChatHistory.setBackground(new Color(30, 35, 30));
@@ -194,7 +225,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         lbMpShowSect.setForeground(Color.white);
         lbMpShowVisible.setForeground(Color.white);
         lbMpShowACT.setForeground(Color.white);
-        
+
         // and set it
         switch(filter) {
         case FILTER_NONE:

@@ -81,6 +81,11 @@ public class GuiMasterController {
     private MetarReader metarReader;
     private RadioController radioManager;
     private MainFrame mainFrame = null;
+    private final SoundManager soundManager = new SoundManager() ;
+    public synchronized SoundManager getSoundManager() {
+        return soundManager;
+    }
+
     private JTextPane detailsArea = null;
 
     private final TrackManager trackManager = new TrackManager();
@@ -117,24 +122,29 @@ public class GuiMasterController {
      *
      */
     public void start(SetupDialog setupDialog) throws Exception {
+
         // initialize the front end and load environment data
         mainFrame = new MainFrame(this);
+        dataRegistry.loadAirportData(this);
 
         if(!setupDialog.getIcons().isEmpty()) {
             mainFrame.setIconImages(setupDialog.getIcons());
         }
-
         mainFrame.getRadarScreen().setup(airportCode, this, setupDialog);
         initMpRadar();
+
+
         mainFrame.getRadarScreen().initRadarData();
         metarReader.start(); // loads metar and refreshes the runway panel
         radioManager.init();
-        statusManager.setSelectedCallSign("-nobody-");
-        dataRegistry.loadAirportData(this);
+        statusManager.start();
         radarBackend.validateToggles();
         radarBackend.addRadarViewListener(mpChatManager); // forwards Zoom and center changes to MPChat
-
+        radarContactManager.start(); // GUI updater
+        mpChatManager.start(); // GUI Updater
         initShortCuts();
+        SoundManager.init(dataRegistry);
+
         // ready, so display it
         mainFrame.setDividerPosition();
         mainFrame.setVisible(true);
@@ -151,13 +161,15 @@ public class GuiMasterController {
         final GeodToCartTransformation geodToCartTransformation = new GeodToCartTransformation(Ellipsoid.WGS84);
         //
         radarProvider = new FGMPClient<TargetStatus>(playerRegistry,
-                                                     dataRegistry.getInitialATCCallSign(),
+                                                     dataRegistry.getCallSign(),
                                                      "OpenRadar",
                                                      geodToCartTransformation.forward(clientPosition),
                                                      dataRegistry.getMpServer(),
                                                      dataRegistry.getMpServerPort(),
                                                      dataRegistry.getMpLocalPort());
 
+
+        radarProvider.setCallsign(dataRegistry.getCallSign());
         // register MP Chat (send & receive)
         radarProvider.addChatListener(getMpChatManager());
         getMpChatManager().setMpBackend(radarProvider);
@@ -228,6 +240,23 @@ public class GuiMasterController {
                         e.consume();
                         return true;
                     }
+                    if (e.getKeyCode() == KeyEvent.VK_F11) {
+                        SoundManager.playChatSound();
+                        SoundManager.playContactSound();
+                        SoundManager.playWeather();
+                        e.consume();
+                        return true;
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_F12 && !e.isShiftDown() && !e.isControlDown()) {
+                        radarBackend.copyMouseLocationToClipboard();
+                        e.consume();
+                        return true;
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_F12 && !e.isShiftDown() && e.isControlDown()) {
+                        radarBackend.copyZoomLevelToClipboard();
+                        e.consume();
+                        return true;
+                    }
                     if (e.getKeyCode() == KeyEvent.VK_F12 && e.isShiftDown()) {
                         radarBackend.reloadStandardRoutes();
                         e.consume();
@@ -254,15 +283,14 @@ public class GuiMasterController {
 
     public void setCurrentATCCallSign(String callsign, boolean save) {
         radarProvider.setCallsign(callsign);
+        dataRegistry.setCallSign(callsign);
         if(save) {
             dataRegistry.storeAirportData(this);
         }
     }
 
     public String getCurrentATCCallSign() {
-        if (radarProvider == null)
-            return "";
-        return radarProvider.getCallsign();
+        return dataRegistry.getCallSign();
     }
 
     public GuiRadarBackend getRadarBackend() {
@@ -308,5 +336,6 @@ public class GuiMasterController {
     public RadioController getRadioManager() {
         return radioManager;
     }
+
 
 }

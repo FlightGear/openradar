@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import com.sun.istack.internal.logging.Logger;
+
 import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.NDB;
 import de.knewcleus.fgfs.navdata.impl.VOR;
@@ -48,9 +50,12 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class StdRoute {
 
+    public enum DisplayMode { always, optional, star, sid, runway }
+
     private final IMapViewerAdapter mapViewerAdapter;
 
     private final String name;
+    private DisplayMode displayMode;
     private final AirportData data;
     private final float zoomMin;
     private final float zoomMax;
@@ -59,18 +64,30 @@ public class StdRoute {
 
     private String activeLandingRunways = null;
     private String activeStartingRunways = null;
-    private final Set<String> navaids = new HashSet<String>();
-    private Color navaidColor = null;
+
+//    private final Set<String> navaids = new HashSet<String>();
+//    private Color navaidColor = null;
+
+    private final Set<NavaidList> navaids = new HashSet<NavaidList>();
 
     private final List<AStdRouteElement> elements = new ArrayList<AStdRouteElement>();
 
-    public StdRoute(AirportData data, IMapViewerAdapter mapViewerAdapter, String name, String zoomMin, String zoomMax, String stroke, String sLineWidth,
+    public StdRoute(AirportData data, IMapViewerAdapter mapViewerAdapter, String name, String displayMode, String zoomMin, String zoomMax, String stroke, String sLineWidth,
             String color) {
         this.mapViewerAdapter = mapViewerAdapter;
 
         this.name = name;
+
+        try {
+            this.displayMode = DisplayMode.valueOf(displayMode);
+        } catch(Exception e) {
+            if(displayMode!=null) {
+                Logger.getLogger(this.getClass()).info("Unrecognized display mode "+displayMode);
+            }
+            this.displayMode = DisplayMode.runway;
+        }
         this.data = data;
-        this.zoomMin = zoomMin != null ? Float.parseFloat(zoomMin) : 30;
+        this.zoomMin = zoomMin != null ? Float.parseFloat(zoomMin) : 0;
         this.zoomMax = zoomMax != null ? Float.parseFloat(zoomMax) : Integer.MAX_VALUE;
 
         Float lineWidth = sLineWidth != null ? Float.parseFloat(sLineWidth) : 2;
@@ -127,6 +144,10 @@ public class StdRoute {
         return name;
     }
 
+    public DisplayMode getDisplayMode() {
+        return displayMode;
+    }
+
     public AirportData getAirportData() {
         return data;
     }
@@ -156,47 +177,64 @@ public class StdRoute {
     }
 
     public synchronized boolean containsNavaid(IIntersection navPoint) {
-        String id = navPoint.getIdentification().toUpperCase();
-        if(navaids.contains(id)) {
-            return true;
-        } else {
-            if(navPoint instanceof Intersection && navaids.contains("(FIX)"+id)) {
-                return true;
-            }
-            if(navPoint instanceof NDB && navaids.contains("(NDB)"+id)) {
-                return true;
-            }
-            if(navPoint instanceof VOR && navaids.contains("(VOR)"+id)) {
+        for(NavaidList nl : navaids) {
+            if(nl.containsNavaid(navPoint)) {
                 return true;
             }
         }
-        return navaids.contains(id.toUpperCase());
+        return false;
     }
 
     public synchronized void setNavaids(String navaids, String navaidColor) {
-        StringTokenizer st = new StringTokenizer(navaids, ",");
-        while (st.hasMoreElements()) {
-            this.navaids.add(st.nextToken().toUpperCase());
-        }
+        Color color;
         if (navaidColor != null) {
             StringTokenizer rgb = new StringTokenizer(navaidColor, ",");
             int r = Integer.parseInt(rgb.nextToken());
             int g = Integer.parseInt(rgb.nextToken());
             int b = Integer.parseInt(rgb.nextToken());
-            this.navaidColor = new Color(r, g, b);
+            color = new Color(r, g, b);
+        } else {
+            color = this.getColor();
+        }
+        NavaidList nlist = new NavaidList(color);
+        this.navaids.add(nlist);
+        StringTokenizer st = new StringTokenizer(navaids, ",");
+        while (st.hasMoreElements()) {
+            nlist.addNavaid(st.nextToken().toUpperCase());
         }
     }
 
-    public synchronized Color getNavaidColor() {
-        return navaidColor!=null ? navaidColor : color;
+    public synchronized Color getNavaidColor(IIntersection navPoint) {
+
+        for(NavaidList nList : navaids) {
+            if(nList.containsNavaid(navPoint)) {
+                return nList.getColor();
+            }
+        }
+        return getColor();
     }
 
     public boolean isVisible(AirportData data) {
+
         if (mapViewerAdapter.getLogicalScale() < zoomMin || mapViewerAdapter.getLogicalScale() > zoomMax) {
             return false;
         }
 
+
+        if(displayMode.equals(DisplayMode.always)
+           || ( displayMode.equals(DisplayMode.optional) && data.getRadarObjectFilterState("STARSID")==true)) {
+            return true;
+        }
+
+        // display mode runway
+
+        // main switch
+        if(data.getRadarObjectFilterState("STARSID")!=true) {
+            return false;
+        }
+
         if (activeLandingRunways == null && activeStartingRunways == null) {
+            // no runways defined
             return true;
         }
         for (GuiRunway rw : data.getRunways().values()) {
@@ -230,7 +268,7 @@ public class StdRoute {
             if (rw==null) {
                 throw new IllegalArgumentException("Runway end for definition "+pointDescr+" not found!");
             }
-            Point2D point = rw.getRunwayEnd().getGeographicPosition();
+            Point2D point = rw.getRunwayEnd().getOppositeEnd().getGeographicPosition();
             return point;
         }
         if (pointDescr.contains("@")) {

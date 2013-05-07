@@ -78,6 +78,13 @@ public class StatusManager implements INavPointListener {
         this.settingDialog = new RunwaySettingsDialog(master);
     }
 
+    public void start() {
+        setSelectedCallSign("-nobody-");
+        String callsign = master.getDataRegistry().getCallSign()==null? master.getDataRegistry().getInitialATCCallSign() : master.getDataRegistry().getCallSign();
+        setCurrentCallSign(callsign);
+        updateRunways();
+    }
+
     public void setStatusPanel(StatusPanel statusPanel) {
         this.statusPanel=statusPanel;
     }

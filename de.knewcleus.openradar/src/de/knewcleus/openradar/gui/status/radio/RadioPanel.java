@@ -99,7 +99,7 @@ public class RadioPanel extends JPanel {
             cbFrequencies.setName(model.getRadioKey());
             cbFrequencies.setToolTipText("right button lets you define a frequency");
             cbFrequencies.setModel(model);
-            if(model.getSize()>i) model.setSelectedItem(model.getElementAt(i));
+            if(model.getSelectedItem()==null && model.getSize()>i) model.setSelectedItem(model.getElementAt(i));
             cbFrequencies.setEditable(false);
             cbFrequencies.setRenderer(new RadioFrequencyListCellRenderer());
             gridBagConstraints = new GridBagConstraints();

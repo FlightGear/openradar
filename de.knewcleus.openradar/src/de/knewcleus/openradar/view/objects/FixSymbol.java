@@ -36,19 +36,19 @@ import java.awt.Color;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
-import de.knewcleus.fgfs.navdata.impl.Intersection;
+import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class FixSymbol extends AViewObject {
 
     private AirportData data;
-    private Intersection fix;
+    private IIntersection fix;
     private int defaultMaxScale;
     private Color defaultColor;
 
 
-    public FixSymbol(AirportData data, Intersection fix, int minScale, int maxScale) {
+    public FixSymbol(AirportData data, IIntersection fix, int minScale, int maxScale) {
         super(Color.lightGray);
         this.data = data;
 

@@ -1,33 +1,33 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
  * Copyright (C) 2012 Wolfram Wagner
- * 
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -59,11 +59,11 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 	protected final DatagramSocket datagramSocket;
 	protected final IPlayerRegistry<T> playerRegistry;
 	protected final List<IChatListener> chatListeners = Collections.synchronizedList(new ArrayList<IChatListener>());
-	
+
 	public AbstractMultiplayerEndpoint(IPlayerRegistry<T> playerRegistry) throws IOException {
 		this(playerRegistry,0);
 	}
-	
+
 	public AbstractMultiplayerEndpoint(IPlayerRegistry<T> playerRegistry, int port) throws IOException {
 		if (port==0) {
 			datagramSocket=new DatagramSocket();
@@ -73,23 +73,23 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		datagramSocket.setSoTimeout(0);//getUpdateMillis());
 		this.playerRegistry=playerRegistry;
 	}
-	
+
 	protected int getUpdateMillis() {
 		return getPlayerTimeoutMillis();
 	}
-	
+
 	protected int getPlayerTimeoutMillis() {
 		return 30*60*1000;
 	}
-	
+
 	public InetAddress getAddress() {
 		return datagramSocket.getLocalAddress();
 	}
-	
+
 	public int getPort() {
 		return datagramSocket.getPort();
 	}
-	
+
 	@Override
 	public void run() {
 		Thread myThread=Thread.currentThread();
@@ -108,11 +108,11 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 			update();
 		}
 	}
-	
+
 	protected void update() {
 		expirePlayers();
 	}
-	
+
 	protected void receivePacket() throws IOException, MultiplayerException {
 		byte[] buffer=new byte[MAX_PACKET_SIZE];
 		final DatagramPacket packet=new DatagramPacket(buffer,MAX_PACKET_SIZE);
@@ -147,13 +147,13 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		XDRInputStream xdrInputStream;
 		byteInputStream=new ByteArrayInputStream(packet.getData(),packet.getOffset(),packet.getLength());
 		xdrInputStream=new XDRInputStream(byteInputStream);
-		
+
 		MultiplayerPacket mppacket=MultiplayerPacket.decode(xdrInputStream);
 		processPacket(packet.getAddress(), packet.getPort(), mppacket);
 		xdrInputStream.close();
 		byteInputStream.close();
 	}
-	
+
 	protected void sendPacket(InetAddress address, int port, MultiplayerPacket mppacket) throws MultiplayerException {
 		ByteArrayOutputStream byteOutputStream=new ByteArrayOutputStream(MAX_PACKET_SIZE);
 		XDROutputStream xdrOutputStream=new XDROutputStream(byteOutputStream);
@@ -162,14 +162,14 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
 		packet.setAddress(address);
 		packet.setPort(port);
-		
+
 		try {
 			datagramSocket.send(packet);
 		} catch (IOException e) {
 			throw new MultiplayerException(e);
 		}
 	}
-	
+
 	protected void sendPacket(Player player, MultiplayerPacket mppacket) throws MultiplayerException {
 		sendPacket(player.getAddress(), player.getPort(), mppacket);
 	}
@@ -181,18 +181,20 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		synchronized (playerRegistry) {
 			if (playerRegistry.hasPlayer(callsign)) {
 				player=playerRegistry.getPlayer(callsign);
+		        player.setAddress(address);
+		        player.setPort(port);
 			} else {
 				player=playerRegistry.createNewPlayer(mppacket.getCallsign());
+		        player.setAddress(address);
+		        player.setPort(port);
 				playerRegistry.registerPlayer(player);
 				newPlayerLogon(player);
 			}
 		}
 		player.setLastMessageTime(System.currentTimeMillis());
-		player.setAddress(address);
-		player.setPort(port);
 		processPacket(player,mppacket);
 	}
-	
+
 	protected void expirePlayers() {
 		synchronized (playerRegistry) {
 			Set<T> expiredPlayers=new HashSet<T>();
@@ -202,22 +204,22 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 					expiredPlayers.add(player);
 				}
 			}
-			
+
 			for (T player: expiredPlayers) {
 				playerRegistry.unregisterPlayer(player);
 			}
 		}
 	}
-	
+
 	public IPlayerRegistry<T> getPlayerRegistry() {
 		return playerRegistry;
 	}
-	
+
 	protected void newPlayerLogon(T player) throws MultiplayerException {
 	}
 
 	protected abstract void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException;
-	
+
 	public void addChatListener(IChatListener l) {
 	    chatListeners.add(l);
 	}

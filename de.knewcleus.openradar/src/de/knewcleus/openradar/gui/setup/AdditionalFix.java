@@ -41,4 +41,10 @@ public class AdditionalFix implements IIntersection{
          this.hightlighted=highlighted;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof AdditionalFix) || obj ==null) return false;
+        AdditionalFix otherOne = (AdditionalFix)obj;
+        return this.id.equals(otherOne.id);
+    }
 }

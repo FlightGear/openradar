@@ -66,12 +66,12 @@ public class RadarContactTextPainter {
     private final static double LENGTH = 70d;
     private final static double SPACE = 2d;
 
-    private Point2D anchor = null;
-    private double newX ;
-    private double newY ;
-    private Rectangle2D boundsLine1 = null;
-    private Rectangle2D boundsLine2 = null;
-    private Rectangle2D boundsText = null;
+    private volatile Point2D anchor = null;
+    private volatile double newX ;
+    private volatile double newY ;
+    private volatile Rectangle2D boundsLine1 = null;
+    private volatile Rectangle2D boundsLine2 = null;
+    private volatile Rectangle2D boundsText = null;
 
     protected volatile Path2D textContainer = new Path2D.Double();
     protected volatile Point2D textOrigin = new Point2D.Double();
@@ -82,7 +82,7 @@ public class RadarContactTextPainter {
         this.trackDisplayState = trackDisplayState;
     }
 
-    public Rectangle2D getDisplayExtents(Point2D currentDevicePosition) {
+    public synchronized Rectangle2D getDisplayExtents(Point2D currentDevicePosition) {
         this.currentDevicePosition = currentDevicePosition;
         if(boundsText==null) {
             // intial case, we don't know about the fontMetricts,so we construct a dummy
@@ -97,7 +97,7 @@ public class RadarContactTextPainter {
         return displayExtents;
     }
 
-    public void paint(Graphics2D g2d, boolean hightlighted) {
+    public synchronized void paint(Graphics2D g2d, boolean hightlighted) {
         Font font = new Font("Arial", Font.PLAIN, 10);
         g2d.setFont(font);
         if(fontMetrics==null) {
@@ -233,11 +233,11 @@ public class RadarContactTextPainter {
         return Case.BOTTOM_LEFT;
     }
 
-    public boolean contains(Point2D devicePoint) {
+    public synchronized boolean contains(Point2D devicePoint) {
         return background.contains(devicePoint) || line.contains(devicePoint);
     }
 
-    public void drawArrow(Graphics2D g2d, double vSpeed, double x, double y, double length) {
+    private void drawArrow(Graphics2D g2d, double vSpeed, double x, double y, double length) {
         int xOffset = 0;
 
         if(Math.abs(vSpeed)>100) {
@@ -260,7 +260,7 @@ public class RadarContactTextPainter {
         }
     }
 
-    public void drawFgComAntenna(Graphics2D g2d, double x, double y) {
+    private void drawFgComAntenna(Graphics2D g2d, double x, double y) {
         // antenna
         Point2D tipPoint = new Point2D.Double(Math.round(x),Math.round(y));
 //        Point2D point1 = Converter2D.getMapDisplayPoint(tipPoint, 180+8, 9);

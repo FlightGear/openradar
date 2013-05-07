@@ -312,7 +312,7 @@ public class RunwayPanel extends JPanel {
         StringBuilder sb = new StringBuilder();
         for (GuiRunway rw : guiInteractionManager.getDataRegistry().getRunways().values()) {
             if(rw.isLandingActive()) {
-                if(sb.length()>0) sb.append(" / ");
+                if(sb.length()>0) sb.append(", ");
                 sb.append(rw.getCode());
                 if(rw.getIlsFrequency()!=null && !rw.getIlsFrequency().trim().isEmpty()) {
                     sb.append(" ILS ");

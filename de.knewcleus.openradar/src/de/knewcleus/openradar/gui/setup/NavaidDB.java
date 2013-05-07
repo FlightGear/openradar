@@ -34,6 +34,7 @@ package de.knewcleus.openradar.gui.setup;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -56,19 +57,22 @@ import de.knewcleus.openradar.view.stdroutes.StdRoute;
  */
 public class NavaidDB {
     private volatile IIntersection selectedNavaid = null;
-    private final Map<String, List<IIntersection>> navaidMap = new TreeMap<String, List<IIntersection>>();
-    private List<StdRoute> stdRoutes = new ArrayList<StdRoute>();
-    private ArrayList<IIntersection> addNavpointList = new ArrayList<IIntersection>();
+    private final Map<String, List<IIntersection>> navaidMap = Collections.synchronizedMap(new TreeMap<String, List<IIntersection>>());
+    private List<StdRoute> stdRoutes = Collections.synchronizedList(new ArrayList<StdRoute>());
+    private List<IIntersection> addNavpointList = Collections.synchronizedList(new ArrayList<IIntersection>());
 
     private final static Logger log = Logger.getLogger(NavaidDB.class.toString());
 
     public synchronized void registerNavaid(IIntersection navPoint) {
         List<IIntersection> list = navaidMap.get(navPoint.getIdentification());
         if(list==null) {
-            list = new ArrayList<IIntersection>();
+            list = Collections.synchronizedList(new ArrayList<IIntersection>());
             navaidMap.put(navPoint.getIdentification(), list);
+            list.add(navPoint);
+        } else {
+            list.add(navPoint);
         }
-        list.add(navPoint);
+        //list.add(navPoint);
     }
 
     /**
@@ -92,7 +96,7 @@ public class NavaidDB {
             if(list.size()==1) {
                 return list.get(0);
             } else {
-                if(type==null) {
+                if(list.size()>1 && type==null) {
                     log.severe("Navpoint highlighting: ID "+id+" exists multiple times. Taking first! Try to add (FIX),(NDB) or (VOR) in front of it!");
                     return list.get(0);
                 } else {
@@ -160,7 +164,7 @@ public class NavaidDB {
     }
 
     public synchronized boolean isPartOfRoute(AirportData data, IIntersection navPoint) {
-//        IIntersection navPoint = getNavaid(id);
+
         if(navPoint==null) return false;
         for(StdRoute route : stdRoutes) {
             if(route.isVisible(data)) {
@@ -183,46 +187,41 @@ public class NavaidDB {
             return Palette.NAVAID_HIGHLIGHT;
         }
 
-
         for(StdRoute route : stdRoutes) {
-            if(route.isVisible(data)) {
-                if(route.containsNavaid(navPoint)) {
-                    if(route.getActiveLandingRunways()!=null || route.getActiveStartingRunways()!=null) {
-                        return route.getNavaidColor();
-                    } else {
-                        return Palette.NAVAID_HIGHLIGHT;
-                    }
-                }
+            if(route.isVisible(data) && route.containsNavaid(navPoint)) {
+
+                return route.getNavaidColor(navPoint);
             }
         }
+
         return null;
     }
 
-    public boolean hasRoutes() {
+    public synchronized boolean hasRoutes() {
         return !stdRoutes.isEmpty();
     }
 
-    public void addPoint(String code, String point) {
+    public synchronized void addPoint(String code, String point) {
         AdditionalFix fix = new AdditionalFix(code, point);
         addNavpointList.add(fix);
         registerNavaid(fix);
     }
 
-    public void clearAddPoints() {
+    public synchronized void clearAddPoints() {
         addNavpointList.clear();
-//        for(List<IIntersection> navPointList : navaidMap.values()) {
-//            for(IIntersection navPoint : new ArrayList<IIntersection>(navPointList)) {
-//                if(navPoint instanceof AdditionalFix) {
-//                    navPointList.remove(navPoint);
-//                }
-//            }
-//        }
+        for(List<IIntersection> navPointList : navaidMap.values()) {
+            for(IIntersection navPoint : new ArrayList<IIntersection>(navPointList)) {
+                if(navPoint instanceof AdditionalFix) {
+                    navPointList.remove(navPoint);
+                }
+            }
+        }
     }
 
-    public ArrayList<INavPoint> getManualNavpoints() {
+    public synchronized ArrayList<INavPoint> getManualNavpoints() {
         ArrayList<INavPoint> result = new ArrayList<INavPoint>();
         for(IIntersection point : addNavpointList) {
-            result.add(new Intersection(point.getGeographicPosition(),point.getIdentification()));
+            result.add(point);//point.getGeographicPosition(),point.getIdentification()));
         }
         return result;
     }

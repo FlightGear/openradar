@@ -159,8 +159,8 @@ public class StdRouteLine extends AStdRouteElement {
 
 
         if("both".equalsIgnoreCase(arrows) || "start".equalsIgnoreCase(arrows)) {
-            double heading = angle!=null ? angle-180 : Converter2D.getDirection(startPoint, endPoint);
-            this.paintArrow(g2d, startPoint, heading, arrowSize, false);
+            double heading = angle!=null ? angle : Converter2D.getDirection(startPoint, endPoint);
+            this.paintArrow(g2d, startPoint, heading, arrowSize, false); // start is not the tip
         }
         if("both".equalsIgnoreCase(arrows) || "end".equalsIgnoreCase(arrows)) {
             double heading = angle!=null ? angle : Converter2D.getDirection(startPoint,endPoint);

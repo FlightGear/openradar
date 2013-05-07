@@ -103,6 +103,8 @@ public class AirportData implements INavPointListener {
     private String metarUrl = "http://weather.noaa.gov/pub/data/observations/metar/stations/";
     private String metarSource = null;
 
+    private volatile String callSign = null;
+
     private Map<String, Boolean> toggleObjectsMap = new HashMap<String, Boolean>();
     private Map<String, Boolean> visibleLayerMap;
 
@@ -171,6 +173,14 @@ public class AirportData implements INavPointListener {
 
     public void setMagneticDeclination(double magneticDeclination) {
         this.magneticDeclination = magneticDeclination;
+    }
+
+    public synchronized String getCallSign() {
+        return callSign;
+    }
+
+    public synchronized void setCallSign(String callSign) {
+        this.callSign = callSign;
     }
 
     public Map<String, Radio> getRadios() {
@@ -310,7 +320,8 @@ public class AirportData implements INavPointListener {
                 // load fgcom phonebook
                 List<RawFrequency> frequencies = SetupController.loadRadioFrequencies(getAirportCode());
                 for (RawFrequency f : frequencies) {
-                    this.radioFrequencies.add(new RadioFrequency(f.getCode(), f.getFrequency()));
+                    RadioFrequency rf = new RadioFrequency(f.getCode(), f.getFrequency());
+                    this.radioFrequencies.add(rf);
                 }
                 // air to air
                 this.radioFrequencies.add(new RadioFrequency("Air2Air1", "122.75"));
@@ -411,8 +422,18 @@ public class AirportData implements INavPointListener {
         storeAirportData(master);
     }
 
+    public void changeToggle(GuiMasterController master, String objectName, boolean defaultValue) {
+        boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : defaultValue;
+        toggleObjectsMap.put(objectName, !oldState);
+        storeAirportData(master);
+    }
+
     public boolean getRadarObjectFilterState(String objectName) {
         return toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
+    }
+
+    public boolean getToggleState(String objectName, boolean defaultValue) {
+        return toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : defaultValue;
     }
 
     public void setVisibleLayerMap(Map<String, Boolean> visibleLayerMap) {
@@ -429,19 +450,14 @@ public class AirportData implements INavPointListener {
             Properties p = new Properties();
             try {
                 p.load(new FileReader(propertyFile));
-                String lastCallSign = p.getProperty("lastCallsign");
-                if(lastCallSign!=null) {
-                    master.setCurrentATCCallSign(lastCallSign, false);
-                    master.getStatusManager().setCurrentCallSign(lastCallSign);
-                } else {
-                    master.setCurrentATCCallSign(getInitialATCCallSign(), false);
-                    master.getStatusManager().setCurrentCallSign(getInitialATCCallSign());
+                callSign = p.getProperty("lastCallsign");
+                if(callSign==null) {
+                    callSign = getInitialATCCallSign();
                 }
                 // restore runwaydata
                 for (GuiRunway rw : runways.values()) {
                     rw.getRunwayData().setValuesFromProperties(p);
                 }
-                master.getStatusManager().updateRunways();
                 // restore zoomlevel values
                 master.getRadarBackend().setZoomLevelValuesFromProperties(p);
 
@@ -457,7 +473,14 @@ public class AirportData implements INavPointListener {
                 }
 
                 // restore saved selected frequencies
-                master.getRadioManager().restoreSelectedFrequenciesFrom(p);
+
+                for (Radio r : radios.values()) {
+                    String savedFrequency = p.getProperty("radio." + r.getKey());
+                    // check if frequency is known
+                    if (savedFrequency != null) {
+                        r.setRestoredFrequency(savedFrequency);
+                    }
+                }
 
             } catch (IOException e) {
             }

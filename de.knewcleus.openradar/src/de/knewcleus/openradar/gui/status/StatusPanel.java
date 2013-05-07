@@ -67,7 +67,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     private RunwayPanel runwayPanel;
 
     private javax.swing.JPanel headerPanel;
-    private javax.swing.JLabel lbCurrentCallSign;
+//    private javax.swing.JLabel lbCurrentCallSign;
     private JTextField tfCurrentCallSign;
     private javax.swing.JLabel lbTime;
     private javax.swing.JLabel lbAirport;
@@ -112,7 +112,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         java.awt.GridBagConstraints gridBagConstraints;
 // todo nice up!
         headerPanel = new javax.swing.JPanel();
-        lbCurrentCallSign = new javax.swing.JLabel();
+//        lbCurrentCallSign = new javax.swing.JLabel();
         tfCurrentCallSign = new JTextField();
         lbTime = new javax.swing.JLabel();
         lbAirport = new javax.swing.JLabel();
@@ -261,7 +261,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 20, 2, 4);
+        gridBagConstraints.insets = new java.awt.Insets(2, 6, 2, 4);
         weatherPanel.add(lbWeatherPhaenomena, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -326,7 +326,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     }
 
     public void updateTime() {
-        lbTime.setText(sdf.format(new Date())+" ZULU");
+        lbTime.setText(sdf.format(new Date())+" UTC");
         if(currentMetar!=null && weatherPanel.getBorder()!=border && currentMetar.isNew()) {
             weatherPanel.setBorder(border);
         }
@@ -368,7 +368,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbPressure.setToolTipText(metar.getMetarBaseData());
         lbVisibility.setText(metar.isCavok()?"CAVOK":"Vis: "+metar.getVisibility()+" "+metar.getVisibilityUnit());
         lbVisibility.setToolTipText(metar.getMetarBaseData());
-        lbWeatherPhaenomena.setText("("+ metar.getWeatherPhaenomena()+")");
+        lbWeatherPhaenomena.setText("("+ metar.getWeatherPhaenomena().trim()+")");
         lbWeatherPhaenomena.setToolTipText(metar.getWeatherPhaenomenaForHumans());
 
         runwayPanel.refreshRunways(metar);

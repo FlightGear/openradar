@@ -122,9 +122,9 @@ public class AtcMessageDialog extends JFrame {
             gridBagConstraints.insets = new java.awt.Insets(2, 4, 2, 2);
 
             String msg = manager.getElementAt(i).getDisplayMessage();
+            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.weightx = 1.0;
             if(msg.isEmpty()) {
-                gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-                gridBagConstraints.weightx = 1.0;
                 pnlMessages.add(new JSeparator(), gridBagConstraints);
             } else {
                 JLabel lb = new JLabel("<html>"+msg+"</html>");
