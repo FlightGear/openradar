@@ -98,10 +98,10 @@ public class StdRouteLoop extends AStdRouteElement {
 
         Path2D path = new Path2D.Double();
         path.append(new Arc2D.Double(centerBow1.getX()-currentWidth/2,centerBow1.getY()-currentWidth/2,currentWidth,currentWidth,90-inboundHeading+90,-180,Arc2D.OPEN), false);
-        path.append(new Line2D.Double(line2StartPoint,line2MiddlePoint1),true);
+        path.append(new Line2D.Double(line2StartPoint,line2MiddlePoint1),false);
         path.append(new Line2D.Double(line2MiddlePoint2,line2EndPoint),false);
-        path.append(new Arc2D.Double(centerBow2.getX()-currentWidth/2,centerBow2.getY()-currentWidth/2,currentWidth,currentWidth,90-inboundHeading-90,-180,Arc2D.OPEN), true);
-        path.append(new Line2D.Double(line1StartPoint,line1MiddlePoint1),true);
+        path.append(new Arc2D.Double(centerBow2.getX()-currentWidth/2,centerBow2.getY()-currentWidth/2,currentWidth,currentWidth,90-inboundHeading-90,-180,Arc2D.OPEN), false);
+        path.append(new Line2D.Double(line1StartPoint,line1MiddlePoint1),false);
         path.append(new Line2D.Double(line1MiddlePoint2,line1EndPoint),false);
         path.closePath();
 
