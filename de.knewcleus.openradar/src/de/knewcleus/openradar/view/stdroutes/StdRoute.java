@@ -238,10 +238,10 @@ public class StdRoute {
             return true;
         }
         for (GuiRunway rw : data.getRunways().values()) {
-            if (activeLandingRunways != null && rw.isLandingActive() && activeLandingRunways.contains(rw.getCode())) {
+            if (activeLandingRunways != null && rw.isLandingActive() && activeLandingRunways.contains(rw.getCode()) && rw.isLandingRouteEnabled()) {
                 return true;
             }
-            if (activeStartingRunways != null && rw.isStartingActive() && activeStartingRunways.contains(rw.getCode())) {
+            if (activeStartingRunways != null && rw.isStartingActive() && activeStartingRunways.contains(rw.getCode()) && rw.isStartRouteEnabled()) {
                 return true;
             }
         }

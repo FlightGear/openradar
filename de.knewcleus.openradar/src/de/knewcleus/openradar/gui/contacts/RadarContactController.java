@@ -47,14 +47,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JLabel;
@@ -69,6 +68,7 @@ import javax.swing.event.ListSelectionListener;
 import de.knewcleus.fgfs.multiplayer.IPlayerListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.SoundManager;
+import de.knewcleus.openradar.gui.chat.GuiChatMessage;
 import de.knewcleus.openradar.gui.chat.auto.AtcMessageDialog;
 import de.knewcleus.openradar.gui.chat.auto.TextManager;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
@@ -104,7 +104,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     private final Map<String, GuiRadarContact> mapCallSignContact = Collections.synchronizedMap(new TreeMap<String, GuiRadarContact>());
     private final Map<String, GuiRadarContact> mapExpiredCallSigns = Collections.synchronizedMap(new TreeMap<String, GuiRadarContact>());
 
-    private volatile Set<String> neglectedAddressesList = new HashSet<String>();
+    private volatile Map<String,String> neglectedAddressesList = Collections.synchronizedMap(new HashMap<String,String>());
 
     private volatile List<GuiRadarContact> modelList = new ArrayList<GuiRadarContact>();
 
@@ -313,7 +313,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             if(selectedContact != null) {
                 if(!selectedContact.isNeglect()) {
                     selectedContact.setNeglect(true);
-                    neglectedAddressesList.add(selectedContact.getAddressPort());
+                    neglectedAddressesList.put(selectedContact.getAddressPort(),selectedContact.getCallSign());
                 } else {
                     selectedContact.setNeglect(false);
                     neglectedAddressesList.remove(selectedContact.getAddressPort());
@@ -353,29 +353,39 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
 
     @Override
     public synchronized void playerAdded(TargetStatus player) {
+        GuiRadarContact c=null;
         if (!mapCallSignContact.containsKey(player.getCallsign()) && !mapExpiredCallSigns.containsKey(player.getCallsign())) {
-            //if(mapCallSignContact.isEmpty())
-            //   Toolkit.getDefaultToolkit().beep();
             // add new player
             String atcNote = mapAtcComments.containsKey(player.getCallsign()) ? mapAtcComments.get(player.getCallsign()) : mapAtcComments.get(player.getCallsign()+".atcNote");
             // ^^^^ for backward compatibility: until 20130406 the atc note was saved directly under the callsign, now it is saved under callsign+".atcNote"
-            GuiRadarContact c = new GuiRadarContact(master, this, player, atcNote);
+            c = new GuiRadarContact(master, this, player, atcNote);
             c.setFgComSupport("true".equals( mapAtcComments.get(player.getCallsign()+".fgComSupport")));
 
             addPlayerBeforeUncontrolled( c );
             mapCallSignContact.put(c.getCallSign(), c);
 
-            if(neglectedAddressesList.contains(player.getAddressPort())) {
-                c.setNeglect(true); // player has changed his name
-            }
         } else if (mapExpiredCallSigns.containsKey(player.getCallsign())) {
             // re-activate expired player
-            GuiRadarContact c = mapExpiredCallSigns.remove(player.getCallsign());
+            c = mapExpiredCallSigns.remove(player.getCallsign());
             c.setTargetStatus(player); // link to new player
             addPlayerBeforeUncontrolled( c);
             mapCallSignContact.put(c.getCallSign(), c);
+        } else {
+            // this should never happen
+            master.getMpChatManager().addMessage(new GuiChatMessage(master, new Date(), "(System)", "", ">> Duplicate contact found, this should not happen..."));
         }
 
+        if(c!=null && neglectedAddressesList.containsKey(player.getAddressPort())) {
+            // player has changed his name
+            String formerName = neglectedAddressesList.remove(player.getAddressPort());
+            neglectedAddressesList.put(player.getAddressPort(),player.getCallsign());
+            if(!formerName.equals(player.getCallsign())) {
+                master.getMpChatManager().addMessage(new GuiChatMessage(master, new Date(), "(System)", "", ">> Neglected user '"+formerName+"' came back under new callsign '"+player.getCallsign()+"'! Neglected again."));
+            } else {
+                master.getMpChatManager().addMessage(new GuiChatMessage(master, new Date(), "(System)", "", ">> Neglected user '"+formerName+"' came back..."));
+            }
+            c.setNeglect(true);
+        }
         SoundManager.playContactSound();
 
         applyFilter();

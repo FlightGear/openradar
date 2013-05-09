@@ -63,6 +63,9 @@ public class GuiRunway implements ActionListener {
     private IRunwayEnd runwayEnd = null;
     private RunwayPanel runwayPanel = null;
 
+    private boolean startRouteEnabled = false;
+    private boolean landingRouteEnabled = false;
+
     public GuiRunway(AirportData data, RunwayEnd runwayEnd) {
         this.data = data;
         this.runwayEnd = runwayEnd;
@@ -245,6 +248,22 @@ public class GuiRunway implements ActionListener {
         return runwayEnd.getRunway().getLandSide()==runwayEnd;
     }
 
+    public synchronized boolean isStartRouteEnabled() {
+        return startRouteEnabled;
+    }
+
+    public synchronized void setStartRouteEnabled(boolean startRouteEnabled) {
+        this.startRouteEnabled = startRouteEnabled;
+    }
+
+    public synchronized boolean isLandingRouteEnabled() {
+        return landingRouteEnabled;
+    }
+
+    public synchronized void setLandingRouteEnabled(boolean landingRouteEnabled) {
+        this.landingRouteEnabled = landingRouteEnabled;
+    }
+
     public void addILS(Glideslope gs) {
         runwayEnd.setGlideslope(gs);
     }
@@ -262,8 +281,15 @@ public class GuiRunway implements ActionListener {
 
         if("STARTING".equals(name) && e.getID()==ActionEvent.ACTION_PERFORMED   ) {
             setStartingActive(!isStartingActive());
+
+        } else if("STARTROUTE".equals(name) && e.getID()==ActionEvent.ACTION_PERFORMED   ) {
+            setStartRouteEnabled(!isStartRouteEnabled());
+
         } else if("LANDING".equals(name) && e.getID()==ActionEvent.ACTION_PERFORMED ) {
             setLandingActive(!isLandingActive());
+
+        } else if("LANDINGROUTE".equals(name) && e.getID()==ActionEvent.ACTION_PERFORMED ) {
+            setLandingRouteEnabled(!isLandingRouteEnabled());
         }
         runwayPanel.updateRunways();
     }
@@ -332,4 +358,5 @@ public class GuiRunway implements ActionListener {
     public RunwayData getRunwayData() {
         return rwData;
     }
+
 }

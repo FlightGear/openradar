@@ -115,7 +115,7 @@ public class RunwayPanel extends JPanel {
                 if(rw.getRunwayData().isEnabledAtAll()) {
                     if(rw.getRunwayData().isStartingEnabled()) {
                         JCheckBox cbStarting = new JCheckBox();
-                        cbStarting.setText("Start");
+//                        cbStarting.setText("Start");
                         cbStarting.setFont(f);
                         cbStarting.setForeground(rw.getRunwayData().isStartingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
                         cbStarting.setRolloverEnabled(false);
@@ -130,13 +130,32 @@ public class RunwayPanel extends JPanel {
                         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
                         gridBagConstraints.insets = new java.awt.Insets(0, 4, -2, 0);
                         this.add(cbStarting, gridBagConstraints);
-
                         cbList.add(cbStarting);
+
+                        JCheckBox cbSID = new JCheckBox();
+                        cbSID.setText("Start,SID");
+                        cbSID.setToolTipText("Toggles route display");
+                        cbSID.setFont(f);
+                        cbSID.setForeground(rw.getRunwayData().isStartingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
+                        cbSID.setRolloverEnabled(false);
+                        cbSID.setOpaque(false);
+                        cbSID.setName("STARTROUTE");
+                        cbSID.setSelected(rw.isStartRouteEnabled());
+                        cbSID.setEnabled(rw.getRunwayData().isStartingEnabled());
+                        cbSID.addActionListener(rw);
+                        gridBagConstraints = new GridBagConstraints();
+                        gridBagConstraints.gridx = 2;
+                        gridBagConstraints.gridy = 2 * i;
+                        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+                        gridBagConstraints.insets = new java.awt.Insets(0, -2, -2, 0);
+                        this.add(cbSID, gridBagConstraints);
+
+                        cbList.add(cbSID);
                     }
 
                     if(rw.getRunwayData().isLandingEnabled()) {
                         JCheckBox cbLanding = new JCheckBox();
-                        cbLanding.setText("Land");
+//                        cbLanding.setText("Land");
                         cbLanding.setFont(f);
                         cbLanding.setForeground(rw.getRunwayData().isLandingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
                         cbLanding.setRolloverEnabled(false);
@@ -151,8 +170,25 @@ public class RunwayPanel extends JPanel {
                         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
                         gridBagConstraints.insets = new java.awt.Insets(-2, 4, 0, 0);
                         this.add(cbLanding, gridBagConstraints);
-
                         cbList.add(cbLanding);
+
+                        JCheckBox cbSTAR = new JCheckBox();
+                        cbSTAR.setText("Land,STAR");
+                        cbSTAR.setFont(f);
+                        cbSTAR.setForeground(rw.getRunwayData().isLandingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
+                        cbSTAR.setRolloverEnabled(false);
+                        cbSTAR.setOpaque(false);
+                        cbSTAR.setName("LANDINGROUTE");
+                        cbSTAR.setSelected(rw.isLandingRouteEnabled());
+                        cbSTAR.setEnabled(rw.getRunwayData().isLandingEnabled());
+                        cbSTAR.addActionListener(rw);
+                        gridBagConstraints = new GridBagConstraints();
+                        gridBagConstraints.gridx = 2;
+                        gridBagConstraints.gridy = 2 * i + 1;
+                        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+                        gridBagConstraints.insets = new java.awt.Insets(-2, -2, 0, 0);
+                        this.add(cbSTAR, gridBagConstraints);
+                        cbList.add(cbSTAR);
                     }
                     JLabel lbShearWind = new JLabel();
                     lbShearWind.setText(String.format("%.0fkn / %.0fkn",rw.getHeadWindSpeed(),rw.getCrossWindSpeed()));
@@ -168,7 +204,7 @@ public class RunwayPanel extends JPanel {
                         lbShearWind.setToolTipText("Wind Gusts: "+metar.getWindSpeedGusts()+"kn!");
                     }
                     gridBagConstraints = new GridBagConstraints();
-                    gridBagConstraints.gridx = 2;
+                    gridBagConstraints.gridx = 3;
                     gridBagConstraints.gridy = 2 * i;
                     gridBagConstraints.gridheight = 1;
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
@@ -178,7 +214,7 @@ public class RunwayPanel extends JPanel {
                     CrossWindDisplay swd = new CrossWindDisplay(rw);
                     swd.setToolTipText("Strength and direction of shear component of wind");
                     gridBagConstraints = new GridBagConstraints();
-                    gridBagConstraints.gridx = 2;
+                    gridBagConstraints.gridx = 3;
                     gridBagConstraints.gridy = 2 * i + 1;
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
                     gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
@@ -191,7 +227,7 @@ public class RunwayPanel extends JPanel {
                     lbHeading.setFont(f);
                     lbHeading.setForeground(Palette.DESKTOP_TEXT);
                     gridBagConstraints = new GridBagConstraints();
-                    gridBagConstraints.gridx = 3;
+                    gridBagConstraints.gridx = 4;
                     gridBagConstraints.gridy = 2 * i;
                     //gridBagConstraints.gridwidth = 2;
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
@@ -205,7 +241,7 @@ public class RunwayPanel extends JPanel {
                     lbLength.setFont(f);
                     lbLength.setForeground(Palette.DESKTOP_TEXT);
                     gridBagConstraints = new GridBagConstraints();
-                    gridBagConstraints.gridx = 3;
+                    gridBagConstraints.gridx = 4;
                     gridBagConstraints.gridy = 2 * i + 1;
                     //gridBagConstraints.gridwidth = 2;
                     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
@@ -234,7 +270,7 @@ public class RunwayPanel extends JPanel {
                         lbILS.setFont(f);
                         lbILS.setForeground(Palette.DESKTOP_TEXT);
                         gridBagConstraints = new GridBagConstraints();
-                        gridBagConstraints.gridx = 4;
+                        gridBagConstraints.gridx = 5;
                         gridBagConstraints.gridy = 2 * i;
                         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
                         gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
@@ -246,7 +282,7 @@ public class RunwayPanel extends JPanel {
                         lbILSData.setFont(f);
                         lbILSData.setForeground(Palette.DESKTOP_TEXT);
                         gridBagConstraints = new GridBagConstraints();
-                        gridBagConstraints.gridx = 4;
+                        gridBagConstraints.gridx = 5;
                         gridBagConstraints.gridy = 2 * i + 1;
                         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
                         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
@@ -257,7 +293,7 @@ public class RunwayPanel extends JPanel {
                 JPanel space = new JPanel();
                 space.setOpaque(false);
                 gridBagConstraints = new GridBagConstraints();
-                gridBagConstraints.gridx = 5;
+                gridBagConstraints.gridx = 6;
                 gridBagConstraints.gridy = 2 * i;
                 gridBagConstraints.weightx = 1;
                 gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
