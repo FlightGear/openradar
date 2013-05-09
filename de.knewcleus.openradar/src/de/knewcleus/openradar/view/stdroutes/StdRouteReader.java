@@ -171,8 +171,9 @@ public class StdRouteReader {
                                     route.addElement(bow);
                                 } else if (element.getName().equalsIgnoreCase("intercept")) {
                                     String start = element.getAttributeValue("start");
+                                    String startOffset = element.getAttributeValue("startOffset");
                                     String startHeading = element.getAttributeValue("startHeading");
-                                    String startBow = element.getAttributeValue("startBow");
+                                    String startTurn = element.getAttributeValue("startTurn");
                                     String radius = element.getAttributeValue("radius");
                                     String speed = element.getAttributeValue("speed");
                                     String end = element.getAttributeValue("end");
@@ -185,7 +186,7 @@ public class StdRouteReader {
                                     lineWidth = element.getAttributeValue("lineWidth");
                                     String arrows = element.getAttributeValue("arrows");
                                     color = element.getAttributeValue("color");
-                                    StdRouteIntercept intercept = new StdRouteIntercept(route, mapViewAdapter, previous, start, startHeading, startBow, radius,speed,
+                                    StdRouteIntercept intercept = new StdRouteIntercept(route, mapViewAdapter, previous, start, startOffset, startHeading, startTurn, radius,speed,
                                                                         end, radial, endHeading, direction, endOffset, stroke, lineWidth, arrows, color, text);
                                     previous = intercept;
                                     route.addElement(intercept);

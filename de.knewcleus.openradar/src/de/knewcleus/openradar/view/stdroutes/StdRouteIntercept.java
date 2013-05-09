@@ -58,6 +58,7 @@ public class StdRouteIntercept extends AStdRouteElement {
     private final Double radius;
     private final Double radial;
     private final Double endHeading;
+    private final Double startOffSet;
     private final Double endOffSet;
     private final String text;
     private final String direction;
@@ -65,7 +66,7 @@ public class StdRouteIntercept extends AStdRouteElement {
     private final Double turnAngle;
 
     public StdRouteIntercept(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
-                        String start, String startHeading, String startBow, String radius, String speed, String end, String radial, String endHeading, String direction, String endOffset,
+                        String start, String startOffset, String startHeading, String startBow, String radius, String speed, String end, String radial, String endHeading, String direction, String endOffset,
                         String stroke, String lineWidth, String arrows, String color, String text) {
         super(mapViewAdapter, route.getPoint(start,previous),stroke,lineWidth,arrows,color);
 
@@ -74,6 +75,7 @@ public class StdRouteIntercept extends AStdRouteElement {
         if(geoStartPoint!=null && geoStartBowPoint!=null) {
             Logger.getLogger(this.getClass()).warning("start and startBow is given, do not check if first line is a tangent to the bow");
         }
+        this.startOffSet = startOffset !=null ? Double.parseDouble(startOffset) : 0 ;
         this.startHeading = Line.normalizeLineAngle180(90-Double.parseDouble(startHeading)); // magnetic to screen angles
         if(speed==null) {
             this.radius = radius !=null ? Double.parseDouble(radius) : 2.4d ;
@@ -110,6 +112,10 @@ public class StdRouteIntercept extends AStdRouteElement {
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
         Point2D firstLineStartPoint = geoStartPoint!=null ? getDisplayPoint(geoStartPoint) : null;
+        if(startOffSet!=null) {
+            double length = Converter2D.getFeetToDots(startOffSet*Units.NM/Units.FT, mapViewAdapter);
+            firstLineStartPoint = Converter2D.getMapDisplayPoint(firstLineStartPoint, 90 - radial, length);
+        }
         Point2D bowStartPoint = geoStartBowPoint!=null ? getDisplayPoint(geoStartBowPoint) : null;
         Point2D secondLineEndPoint = getDisplayPoint(geoEndPoint);
 
