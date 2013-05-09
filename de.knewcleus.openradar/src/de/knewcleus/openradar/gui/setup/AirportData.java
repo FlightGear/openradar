@@ -312,8 +312,12 @@ public class AirportData implements INavPointListener {
         if (point instanceof Aerodrome) {
             Aerodrome aerodrome = (Aerodrome) point;
             if (aerodrome.getIdentification().equals(getAirportCode())) {
-
-                checkTowerPosition(aerodrome.getTowerPosition());
+                if(aerodrome.getTowerPosition()!=null) {
+                    checkTowerPosition(aerodrome.getTowerPosition());
+                } else {
+                    // some airports have no specified tower position
+                    checkTowerPosition(aerodrome.getGeographicPosition());
+                }
                 this.elevation = aerodrome.getElevation();
                 this.name = aerodrome.getName();
 
