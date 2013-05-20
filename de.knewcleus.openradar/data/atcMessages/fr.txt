@@ -1,40 +1,36 @@
- A tous les pilotes:
+A tous les pilotes:
 %s
 
-%s: Bienvenue a %s - etes-vous en approche de %s ? FGCOM %s
-%s: Bienvenue a %s - SVP avisez le contreleur de vos intentions, FGCOM %s
-%s: Contact radar %3.0f nm, QNH %s,  piste en service %s, FGCOM %s
+%s: Bienvenue dans la region de %s - etes-vous en approche de %s ? FGCOM %s
+%s: Bienvenue a %s - Merci d'informez le controleur de vos intentions, FGCOM %s
+%s: Contact radar %3.0f nm, QNH %s, piste en service %s, FGCOM %s
 
-%s: Vous quittez mon espace aerien - vous pouvez quitter la frequence- bon vol
-ATIS a %s sur %2.0f ft: QNH %s, vent %s, piste(s) en service %s,  FGCOM %s
+%s: Vous quittez mon espace aerien - vous pouvez quitter la frequence - bon vol
+ATIS de %s sur %2.0f ft: QNH %s, vent %s, piste(s) en service %s,  FGCOM %s
 Contact-ATC-Aide: pour ARRIVEE touche: "-">>"3">>"3">>"3"  pour DEPART touche: "-">>"3">>"6"
 
 %s: Mise en route moteur approuvee
-%s: pushback approuve
-%s: roulez point d'arret piste:
-%s: Maintenez position avant le piste:
+%s: Repoussage approuve
+%s: Roulez jusqu'au point d'arret piste :
+%s: Maintenez votre position avant la piste :
 
-%s: roulez point d'arret piste et rappelez pret au depart
-%s: maintenez le cap de la piste, montez a:
-%s: vent %03.0f a %2.0f kt, autorise a decoller piste:
+%s: Roulez au point d'arret piste et rappelez quand pret au depart
+%s: Maintenez le cap de la piste, montez a:
+%s: Vent %03.0f a %2.0f kt, autorise a decoller piste:
 
-%s: virez a gauche cap:
-%s: virez a droite cap:
-%s: montez et maintenez:
-%s: descendez et maintenez:
-%s: reduisez la vitesse a:
+%s: Virez a gauche cap:
+%s: Virez a droite cap:
+%s: Montez et maintenez:
+%s: Descendez et maintenez:
+%s: Reduisez la vitesse a:
 
-%s: a %3.0f nm, maintenez votre cap jusqu'a l'interception du localizer, autorise pour approche ILS piste:
-%s: %3.0f nm, rapportez la piste en vue
-%s: a %3.0f nm, vent %03.0f a %2.0f kts, autorise a atterrir piste:
-%s: Bienvenue chez %s -- degagez la piste par la:
-%s: roulez vers Porte/Terminal:
+%s: A %3.0f nm, maintenez le cap jusqu'a interception du localizer, autorise ILS piste:
+%s: %3.0f nm, rappelez quand la piste est en vue
+%s: A %3.0f nm, vent %03.0f a %2.0f kts, autorise a atterrir piste:
+%s: Bienvenue a %s -- degagez la piste par la:
+%s: Roulez vers Porte/Terminal:
 
-SVP utilisez FGCOM %s seulement pour communiquer avec le ATC, et PAS pour parler entre pilotes!
-%s: Vous perturbez notre entrainement ATC (Air Traffic Control) --> SVP pour les vols non contreles, utilisez un autre aeroport
-%s: SVP ne demarrez pas votre session sur un piste active - ou sinon, degagez rapidement - ne decollez pas directement!
+SVP utilisez FGCOM %s seulement pour communiquer avec l'ATC, et PAS pour discuter entre pilotes!
+%s: Vous perturbez l'entrainement ATC (Air Traffic Control) --> SVP pour les vols non controles, utilisez un autre aeroport
+%s: SVP ne demarrez pas votre session sur une piste active - sinon, degagez rapidement - et ne decollez pas directement!
 Ajustez votre position de depart ex. pour EDDF -ligne  de commande ou fenetre: --parkpos= B42..48, or A10..25, etc.
-
-
-
-from FGFS-Argon
