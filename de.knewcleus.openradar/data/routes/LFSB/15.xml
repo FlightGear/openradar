@@ -21,10 +21,10 @@
 
 		<!-- misap -->
 		<curve start="BS" end="7NM190@BLM" controlPoint="8NM155@BLM" />
-		<line start="7NM190@BLM" end="11NM232@BLM" text="277" />
-		<line start="11NM232@BLM" end="13NM232@BLM" text="232" />
-		<line start="BLM" angle="232" length="11" lineWidth="1" stroke="dashed" text="232" />
-		<curve start="13NM232@BLM" end="15NM238@BLM" controlPoint="15NM232@BLM"/>
+		<line start="7NM190@BLM" end="11NM231@BLM" text="276" />
+		<line start="11NM231@BLM" end="13NM231@BLM" text="231" />
+		<line start="BLM" angle="231" length="11" lineWidth="1" stroke="dashed" text="232" />
+		<curve start="13NM231@BLM" end="15NM238@BLM" controlPoint="15NM232@BLM"/>
 		<bow center="BLM" radius="15" startAngle="238" extentAngle="36" arrows="end" text="D15"/>
 	</route>
 
