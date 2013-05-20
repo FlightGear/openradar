@@ -64,6 +64,7 @@ import javax.swing.event.ListSelectionListener;
 
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.rpvd.contact.DatablockLayoutManager;
 
 /**
  * The GUI controller for the setup dialog.
@@ -88,6 +89,10 @@ public class SetupController {
     public SetupController() {
         parseSectorDir(); // fills existing airport list
         showDialog();
+    }
+
+    public DatablockLayoutManager getDatablockLayoutManager() {
+        return data.getDatablockLayoutManager();
     }
 
     private void parseSectorDir() {
@@ -387,4 +392,5 @@ public class SetupController {
         }
         throw new IllegalStateException("apt.dat not found in sectors/AtpNav.zip!");
     }
+
 }

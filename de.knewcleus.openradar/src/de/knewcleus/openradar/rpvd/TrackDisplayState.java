@@ -77,14 +77,16 @@ public class TrackDisplayState extends Notifier {
 		return track;
 	}
 
-    public void setGuiLink(GuiMasterController master, GuiRadarContact guiContact, RadarTargetView view) {
+    public synchronized void setGuiLink(GuiMasterController master, GuiRadarContact guiContact) {
         this.master = master;
         this.guiContact=guiContact;
+    }
+    public synchronized void setView(RadarTargetView view) {
         this.view = view;
         guiContact.setView(view);
     }
 
-    public GuiRadarContact getGuiContact() {
+    public synchronized GuiRadarContact getGuiContact() {
         return guiContact;
     }
 }

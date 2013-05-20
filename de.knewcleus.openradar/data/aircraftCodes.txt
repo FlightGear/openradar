@@ -1,0 +1,17 @@
+# This file is used to shorten aircraft model names to their ICAO code
+# It has to contain comma separated, regex and icao code
+# e.g. A330-200,A332
+OpenRadar.*,OpenRadar
+ATC.*,ATC
+A330-200.*,A332
+A330-300.*,A333
+A340-200.*,A342
+A330-300.*,A343
+A340-500.*,A345
+A460-600.*,A346
+727-100.*,B721
+727-200.*,B721
+737-100.*,B731
+737-200.*,B732
+777-200.*,B772
+777-300.*,B773

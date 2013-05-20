@@ -70,6 +70,9 @@ public abstract class AViewObjectPainter<T> {
 
     protected IMapViewerAdapter mapViewAdapter;
     protected T dataObject;
+    private boolean pickable = false;
+
+
     protected volatile Rectangle2D displayExtents = new Rectangle2D.Double(0,0,0,0);
     protected List<AViewObject> viewObjectList = new ArrayList<AViewObject>();
 
@@ -145,5 +148,26 @@ public abstract class AViewObjectPainter<T> {
 
     public synchronized Rectangle2D getDisplayExtents() {
         return displayExtents;
+    }
+
+    public synchronized void setPickable(boolean b) {
+        this.pickable=b;
+    }
+
+    public synchronized boolean isPickable() {
+        return pickable;
+    }
+
+    public String getTooltipText(Point2D p) {
+        for(AViewObject vo : viewObjectList) {
+            if(vo.contains(p)) {
+                return getTooltipText();
+            }
+        }
+        return null;
+    }
+
+    public String getTooltipText() {
+        return null;
     }
 }

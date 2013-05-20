@@ -6,7 +6,7 @@ To All Airmen:
 %s: Radar Contact range %3.0f mi, QNH %s, expect runway %s, FGCOM %s
 %s: Resume your OWN navigation - Radar surveillance is active
 %s: You are leaving my airspace - frequency change approved - radar service terminated
-ATIS for %s at %2.0f ft: QNH %s, wind %s, active rwy(s) %s,  FGCOM %s
+ATIS for %s at %2.0f ft: QNH %s wind %s active rwy(s) %s FGCOM %s
 ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"3">>"6"
 
 %s: Cleared for engine startup, please indicate planned destination

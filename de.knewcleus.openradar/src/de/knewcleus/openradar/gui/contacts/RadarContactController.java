@@ -50,7 +50,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -92,6 +91,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     private TextManager textManager = new TextManager();
     private AtcMessageDialog atcMessageDialog;
     private ContactSettingsDialog contactSettingsDialog;
+    private TransponderSettingsDialog transponderSettingsDialog;
 
     // private volatile GuiRadarContact.Operation filterOperation = null;
 
@@ -103,8 +103,6 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
 
     private final Map<String, GuiRadarContact> mapCallSignContact = Collections.synchronizedMap(new TreeMap<String, GuiRadarContact>());
     private final Map<String, GuiRadarContact> mapExpiredCallSigns = Collections.synchronizedMap(new TreeMap<String, GuiRadarContact>());
-
-    private volatile Map<String,String> neglectedAddressesList = Collections.synchronizedMap(new HashMap<String,String>());
 
     private volatile List<GuiRadarContact> modelList = new ArrayList<GuiRadarContact>();
 
@@ -137,6 +135,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         loadAtcNotes();
         atcMessageDialog = new AtcMessageDialog(master, textManager);
         contactSettingsDialog = new ContactSettingsDialog(master, this);
+        transponderSettingsDialog = new TransponderSettingsDialog(master,this);
     }
 
     public void start() {
@@ -313,10 +312,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             if(selectedContact != null) {
                 if(!selectedContact.isNeglect()) {
                     selectedContact.setNeglect(true);
-                    neglectedAddressesList.put(selectedContact.getAddressPort(),selectedContact.getCallSign());
                 } else {
                     selectedContact.setNeglect(false);
-                    neglectedAddressesList.remove(selectedContact.getAddressPort());
                 }
             }
         }
@@ -375,19 +372,9 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             master.getMpChatManager().addMessage(new GuiChatMessage(master, new Date(), "(System)", "", ">> Duplicate contact found, this should not happen..."));
         }
 
-        if(c!=null && neglectedAddressesList.containsKey(player.getAddressPort())) {
-            // player has changed his name
-            String formerName = neglectedAddressesList.remove(player.getAddressPort());
-            neglectedAddressesList.put(player.getAddressPort(),player.getCallsign());
-            if(!formerName.equals(player.getCallsign())) {
-                master.getMpChatManager().addMessage(new GuiChatMessage(master, new Date(), "(System)", "", ">> Neglected user '"+formerName+"' came back under new callsign '"+player.getCallsign()+"'! Neglected again."));
-            } else {
-                master.getMpChatManager().addMessage(new GuiChatMessage(master, new Date(), "(System)", "", ">> Neglected user '"+formerName+"' came back..."));
-            }
-            c.setNeglect(true);
-        }
         SoundManager.playContactSound();
 
+        master.getDataRegistry().getSquawkCodeManager().updateUsedSquawkCodes(completeContactList);
         applyFilter();
     }
 
@@ -422,6 +409,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             mapCallSignContact.remove(c.getCallSign());
             mapExpiredCallSigns.remove(c.getCallSign());
         }
+        master.getDataRegistry().getSquawkCodeManager().updateUsedSquawkCodes(completeContactList);
     }
 
     @Override
@@ -484,7 +472,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                         } else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
                             // select and move map to it
                             select(c, true, false);
-                            c.setHighlighted(true);
+                            c.setHighlighted();
                             master.getRadarBackend().showRadarContact(c, !e.isShiftDown() );
                             atcMessageDialog.setVisible(false);
 
@@ -780,9 +768,14 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
 
     }
 
+    public TransponderSettingsDialog getTransponderSettingsDialog() {
+        return transponderSettingsDialog;
+    }
+
     public void hideDialogs() {
         atcMessageDialog.setVisible(false);
         contactSettingsDialog.closeDialog();
+        transponderSettingsDialog.closeDialog();
     }
 
     public String[] getAutoAtcLanguages() {
@@ -794,5 +787,32 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
 
     public String getAutoAtcLanguages(int index) {
         return textManager.getLanguages().get(index);
+    }
+
+    public void assignSquawkCode() {
+        String name = null;
+        int newSquawkCode = -1;
+        synchronized (selectedContactLock) {
+            if (selectedContact != null) {
+                newSquawkCode = master.getDataRegistry().getSquawkCodeManager().getNextSquawkCode(selectedContact.getAssignedSquawk());
+                selectedContact.setAssignedSquawk(newSquawkCode);
+                name = selectedContact.getCallSign();
+            }
+        }
+        if(name != null) {
+            // auto chat message
+            List<String> msgList = new ArrayList<String>();
+            msgList.add(name + " squawk "+newSquawkCode);
+            master.getMpChatManager().sendMessages(msgList);
+        }
+    }
+
+    public void revokeSquawkCode() {
+        synchronized (selectedContactLock) {
+            if (selectedContact != null) {
+                master.getDataRegistry().getSquawkCodeManager().revokeSquawkCode(selectedContact.getAssignedSquawk());
+                selectedContact.setAssignedSquawk(null);
+            }
+        }
     }
 }

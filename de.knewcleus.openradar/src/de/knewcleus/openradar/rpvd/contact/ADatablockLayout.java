@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2013 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -30,42 +30,33 @@
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
-package de.knewcleus.openradar.view.painter;
+package de.knewcleus.openradar.rpvd.contact;
 
 import java.awt.Color;
 import java.awt.Font;
 
-import de.knewcleus.fgfs.navdata.impl.NDB;
-import de.knewcleus.openradar.gui.Palette;
-import de.knewcleus.openradar.gui.setup.AirportData;
-import de.knewcleus.openradar.view.map.IMapViewerAdapter;
-import de.knewcleus.openradar.view.objects.NDBFrequency;
-import de.knewcleus.openradar.view.objects.NDBName;
-import de.knewcleus.openradar.view.objects.NDBSymbol;
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 
-public class NDBPainter extends AViewObjectPainter<NDB> {
+public abstract class ADatablockLayout {
+    /**
+     * Returns a name of the layout that can be used as a key to store and load properties
+     * or identify menu items
+     */
+    public abstract String getName();
+    /** Returns the text that should be displayed in menu */
+    public abstract String getMenuText();
 
-    private final NDB ndb;
+    public abstract Color getBackgroundColor(GuiRadarContact contact, boolean highlighted);
 
-    public NDBPainter(AirportData data, IMapViewerAdapter mapViewAdapter, NDB ndb) {
-        super(mapViewAdapter, ndb);
-        this.ndb=ndb;
-        setPickable(false); // enable tooltips
+    public abstract Color getColor(GuiRadarContact contact);
+    /** Returns the text that will be displayed in data block. Lines separated by newline...*/
+    public abstract String getDataBlockText(GuiRadarContact contact);
 
-        Font font = Palette.BEACON_FONT;
-
-        NDBSymbol s = new NDBSymbol(data, ndb, 0 , 200);
-        viewObjectList.add(s);
-
-        NDBName n = new NDBName(data, ndb, font, Color.lightGray, 0 , 200);
-        viewObjectList.add(n);
-
-        NDBFrequency f = new NDBFrequency(data, ndb, font, Color.lightGray, 0 , 200);
-        viewObjectList.add(f);
-    }
-
+    public abstract Font getFont();
+    /** Returns the contact shape matching to the current layout mode and contact state... */
+    public abstract void modify(ContactShape shape, GuiRadarContact c);
     @Override
-    public String getTooltipText() {
-        return "<html><body>"+ndb.getName()+"<br>"+ndb.getIdentification()+" "+ndb.getFrequency()+" MHz</body></html>";
+    public String toString() {
+        return getMenuText();
     }
 }

@@ -118,11 +118,20 @@ public class RadarManager {
 
         private void handleEvent(Object source) {
             JComponent itemSource = (JComponent) source;
+            String objectName = itemSource.getName();
 
             if (itemSource.getName().equals("FIX") || itemSource.getName().equals("NDB") || itemSource.getName().equals("VOR")
                     || itemSource.getName().equals("CIRCLES") || itemSource.getName().equals("APT") || itemSource.getName().equals("PPN")
                     || itemSource.getName().equals("GSH") || itemSource.getName().equals("STP") || itemSource.getName().equals("STARSID")) {
-                String objectName = itemSource.getName();
+
+                backend.toggleRadarObjectFilter(objectName);
+
+                parent.setObjectFilter(itemSource, backend.getRadarObjectFilterState(objectName));
+            }
+
+            if (itemSource.getName().equals("LANDMASS") || itemSource.getName().equals("URBAN") || itemSource.getName().equals("LAKE")
+                    || itemSource.getName().equals("STREAM") || itemSource.getName().equals("TARMAC")) {
+
                 backend.toggleRadarObjectFilter(objectName);
 
                 parent.setObjectFilter(itemSource, backend.getRadarObjectFilterState(objectName));

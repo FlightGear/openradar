@@ -228,24 +228,25 @@ public class StdRoute {
 
         // display mode runway
 
-        // main switch
+        if (activeLandingRunways != null || activeStartingRunways != null) {
+            for (GuiRunway rw : data.getRunways().values()) {
+                if (activeLandingRunways != null && rw.isLandingActive() && activeLandingRunways.contains(rw.getCode()) && rw.isLandingRouteEnabled()) {
+                    return true;
+                }
+                if (activeStartingRunways != null && rw.isStartingActive() && activeStartingRunways.contains(rw.getCode()) && rw.isStartRouteEnabled()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // main switch off
         if(data.getRadarObjectFilterState("STARSID")!=true) {
             return false;
         }
 
-        if (activeLandingRunways == null && activeStartingRunways == null) {
-            // no runways defined
-            return true;
-        }
-        for (GuiRunway rw : data.getRunways().values()) {
-            if (activeLandingRunways != null && rw.isLandingActive() && activeLandingRunways.contains(rw.getCode()) && rw.isLandingRouteEnabled()) {
-                return true;
-            }
-            if (activeStartingRunways != null && rw.isStartingActive() && activeStartingRunways.contains(rw.getCode()) && rw.isStartRouteEnabled()) {
-                return true;
-            }
-        }
-        return false;
+        // no runways defined + main switch is on
+        return true;
     }
 
     public void addElement(AStdRouteElement e) {

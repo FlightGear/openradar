@@ -190,6 +190,17 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
                     bdFreq = bdFreq.divide(new BigDecimal(1000000));
                     frequency = String.format("%1.1f", bdFreq);
                 }
+                // transponder data
+                Integer transponderSquawkCode = (Integer) positionMessage.getProperty("instrumentation/transponder/id-code");
+//                transponderSquawkCode=1235;
+                player.setTranspSquawkCode(transponderSquawkCode);
+                Integer transponderAltitude = (Integer) positionMessage.getProperty("instrumentation/transponder/altitude");
+//                transponderAltitude=null;
+                player.setTranspAltitude(transponderAltitude);
+                Boolean b = positionMessage.getProperty("instrumentation/transponder/ident");
+                if(b!=null && b==true) {
+                    player.startTranspIdent();
+                }
                 notifyChatListeners(mppacket.getCallsign(), frequency, chatMessage);
             }
 

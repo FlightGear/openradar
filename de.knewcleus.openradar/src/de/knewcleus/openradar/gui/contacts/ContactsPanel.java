@@ -188,6 +188,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
         // add(lbShowEmergencies, gridBagConstraints);
 
+
         JLabel lbDeselect = new JLabel("Deselect");
         lbDeselect.setName("DESELECT");
         lbDeselect.setFont(lbDeselect.getFont().deriveFont(Font.BOLD));
@@ -201,13 +202,39 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
         add(lbDeselect, gridBagConstraints);
 
+        JLabel lbAssignSquawk = new JLabel("AssSqw");
+        lbAssignSquawk.setToolTipText("Assigns a new squawk code from range");
+        lbAssignSquawk.setName("ASSIGN_SQUAWK");
+        lbAssignSquawk.setFont(lbAssignSquawk.getFont().deriveFont(Font.BOLD));
+        lbAssignSquawk.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbAssignSquawk.addMouseListener(new HelpMouseListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
+        add(lbAssignSquawk, gridBagConstraints);
+
+        JLabel lbRevokeSquawk = new JLabel("RevSqw");
+        lbRevokeSquawk.setToolTipText("Revoke the assigned Squawk code");
+        lbRevokeSquawk.setName("REVOKE_SQUAWK");
+        lbRevokeSquawk.setFont(lbAssignSquawk.getFont().deriveFont(Font.BOLD));
+        lbRevokeSquawk.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbRevokeSquawk.addMouseListener(new HelpMouseListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
+        add(lbRevokeSquawk, gridBagConstraints);
+
         JLabel lbNeglect = new JLabel("Neglect");
         lbNeglect.setName("NEGLECT");
         lbNeglect.setFont(lbNeglect.getFont().deriveFont(Font.BOLD));
         lbNeglect.setForeground(Palette.DESKTOP_FILTER_SELECTED);
         lbNeglect.addMouseListener(new HelpMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx=0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
@@ -221,7 +248,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         lbHelp.addMouseListener(new HelpMouseListener());
         lbHelp.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(4, 8, 2, 8);
@@ -336,7 +363,23 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
                     0,
                     false);
 
-            if(((JLabel)e.getSource()).getName().equals("HELP")) {
+            if(((JLabel)e.getSource()).getName().equals("ASSIGN_SQUAWK")) {
+                if(e.getButton()==MouseEvent.BUTTON1) {
+                    // assign
+                    guiInteractionManager.getRadarContactManager().assignSquawkCode();
+                } else if(e.getButton()==MouseEvent.BUTTON3) {
+                    // open dialog
+                    guiInteractionManager.getRadarContactManager().getTransponderSettingsDialog().show(e);
+                }
+            } else if(((JLabel)e.getSource()).getName().equals("REVOKE_SQUAWK")) {
+                if(e.getButton()==MouseEvent.BUTTON1) {
+                    // assign
+                    guiInteractionManager.getRadarContactManager().revokeSquawkCode();
+                } else if(e.getButton()==MouseEvent.BUTTON3) {
+                    // open dialog
+                    guiInteractionManager.getRadarContactManager().getTransponderSettingsDialog().show(e);
+                }
+            } else if(((JLabel)e.getSource()).getName().equals("HELP")) {
                int delay = ToolTipManager.sharedInstance().getInitialDelay();
                ToolTipManager.sharedInstance().setInitialDelay(0);
                ToolTipManager.sharedInstance().mouseMoved(dummyEvent);

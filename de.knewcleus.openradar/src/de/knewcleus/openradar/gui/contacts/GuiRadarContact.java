@@ -75,6 +75,7 @@ public class GuiRadarContact {
     private volatile FlightState currentFlightState;
 
     private String aircraft = "";
+    private String formerModel = "";
     private String flightPlan = "";
     private volatile String atcComment = null;
     protected volatile RadarTargetView view;
@@ -83,6 +84,7 @@ public class GuiRadarContact {
     protected volatile double lastHeading=-1;
     protected volatile String atcLanguage = "en";
     private volatile boolean fgComSupport = false;
+    protected volatile Integer assignedSquawk = null;
 
     public GuiRadarContact(GuiMasterController master, RadarContactController manager, TargetStatus player, String atcComment) {
         this.manager=manager;
@@ -125,7 +127,7 @@ public class GuiRadarContact {
         }
     }
 
-    public synchronized void setHighlighted(boolean highlighted) {
+    public synchronized void setHighlighted() {
         this.hightlightCounter=2;
     }
 
@@ -227,6 +229,10 @@ public class GuiRadarContact {
         return elev/100;
     }
 
+    public double getAltitude() {
+        return getElevationFt();
+    }
+
     public String getFlightLevel() {
         return String.format("FL%03.0f", getElevationFt()/100);
     }
@@ -266,8 +272,20 @@ public class GuiRadarContact {
     }
 
     public synchronized String getAircraft() {
-        aircraft = player.getModel();
-        if(aircraft!=null && aircraft.contains(".xml")) aircraft = aircraft.toUpperCase().substring(aircraft.lastIndexOf("/")+1,aircraft.indexOf(".xml"));
+
+        String model = player.getModel();
+        if(model!=null && !model.equals(formerModel)) {
+            boolean checkForAutoAtcNeglect = formerModel.equals("");
+            formerModel=model;
+            if(model.contains(".xml")) {
+                model = model.toUpperCase().substring(model.lastIndexOf("/")+1,model.indexOf(".xml"));
+            }
+            aircraft = airportData.getAircraftCodeConverter().convert(model);
+
+            if(checkForAutoAtcNeglect && isAtc()) {
+                this.setNeglect(true); // auto neglect for ATCs
+            }
+        }
         return aircraft;
     }
 
@@ -402,6 +420,26 @@ public class GuiRadarContact {
         return player.getLastMessageTime();
     }
 
+    public Integer getTranspSquawkCode() {
+        return player.getTranspSquawkCode();
+    }
+
+    public Integer getTranspAltitude() {
+        return player.getTranspAltitude();
+    }
+
+    public boolean isIdentActive() {
+        return player.isIdentActive();
+    }
+
+    public synchronized Integer getAssignedSquawk() {
+        return assignedSquawk;
+    }
+
+    public synchronized void setAssignedSquawk(Integer assignedSquawk) {
+        this.assignedSquawk = assignedSquawk;
+    }
+
     public synchronized void reAppeared() {
         appeared = System.currentTimeMillis();
     }
@@ -410,7 +448,12 @@ public class GuiRadarContact {
         return System.currentTimeMillis() - appeared < 30000;
     }
 
-    public synchronized String getAddressPort() {
-        return player.getAddressPort();
+    public boolean isAtc() {
+        String acrft = getAircraft().toUpperCase();
+        return acrft.startsWith("ATC") || acrft.startsWith("OPENRA");
+    }
+
+    public String getAtcLetter() {
+        return null;
     }
 }

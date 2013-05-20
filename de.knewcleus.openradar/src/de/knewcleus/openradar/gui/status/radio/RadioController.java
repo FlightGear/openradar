@@ -344,7 +344,7 @@ public class RadioController implements Runnable {
                 result.append(", ");
             }
             String frequency = model.getSelectedItem().getFrequency();
-            String code = model.getSelectedItem().getCode();
+//            String code = model.getSelectedItem().getCode();
             result.append(frequency);
          // until mpchat supports more characters
 //            result.append("(");
@@ -356,10 +356,10 @@ public class RadioController implements Runnable {
         return result.toString();
     }
 
-    private Object replaceFunctions(String code) {
-        if(code.contains("GND")) return "GND";
-        if(code.contains("TWR")) return "TWR";
-        if(code.contains("APP")) return "APP";
-        return code;
-    }
+//    private Object replaceFunctions(String code) {
+//        if(code.contains("GND")) return "GND";
+//        if(code.contains("TWR")) return "TWR";
+//        if(code.contains("APP")) return "APP";
+//        return code;
+//    }
 }

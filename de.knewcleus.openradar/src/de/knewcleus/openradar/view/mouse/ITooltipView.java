@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Coypright (C) 2012 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -30,42 +31,20 @@
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
-package de.knewcleus.openradar.view.painter;
+package de.knewcleus.openradar.view.mouse;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.geom.Point2D;
 
-import de.knewcleus.fgfs.navdata.impl.NDB;
-import de.knewcleus.openradar.gui.Palette;
-import de.knewcleus.openradar.gui.setup.AirportData;
-import de.knewcleus.openradar.view.map.IMapViewerAdapter;
-import de.knewcleus.openradar.view.objects.NDBFrequency;
-import de.knewcleus.openradar.view.objects.NDBName;
-import de.knewcleus.openradar.view.objects.NDBSymbol;
+import de.knewcleus.openradar.view.IPickable;
+import de.knewcleus.openradar.view.IView;
 
-public class NDBPainter extends AViewObjectPainter<NDB> {
+/**
+ * A focusable view is a view which can gain the mouse focus.
+ *
+ * @author Ralf Gerlich
+ *
+ */
+public interface ITooltipView extends IPickable, IView {
 
-    private final NDB ndb;
-
-    public NDBPainter(AirportData data, IMapViewerAdapter mapViewAdapter, NDB ndb) {
-        super(mapViewAdapter, ndb);
-        this.ndb=ndb;
-        setPickable(false); // enable tooltips
-
-        Font font = Palette.BEACON_FONT;
-
-        NDBSymbol s = new NDBSymbol(data, ndb, 0 , 200);
-        viewObjectList.add(s);
-
-        NDBName n = new NDBName(data, ndb, font, Color.lightGray, 0 , 200);
-        viewObjectList.add(n);
-
-        NDBFrequency f = new NDBFrequency(data, ndb, font, Color.lightGray, 0 , 200);
-        viewObjectList.add(f);
-    }
-
-    @Override
-    public String getTooltipText() {
-        return "<html><body>"+ndb.getName()+"<br>"+ndb.getIdentification()+" "+ndb.getFrequency()+" MHz</body></html>";
-    }
+    public String getTooltipText(Point2D point);
 }

@@ -78,17 +78,17 @@ public class StdRouteIntercept extends AStdRouteElement {
         this.startOffSet = startOffset !=null ? Double.parseDouble(startOffset) : 0 ;
         this.startHeading = Line.normalizeLineAngle180(90-Double.parseDouble(startHeading)); // magnetic to screen angles
         if(speed==null) {
-            this.radius = radius !=null ? Double.parseDouble(radius) : 2.4d ;
+            this.radius = radius !=null ? Double.parseDouble(radius) : 1.16d ;
         } else {
             if(radius!=null) {
                 Logger.getLogger(this.getClass()).warning("radius and speed is given to define intercept turn rate. Ignoring radius...");
             }
             double dSpeed = Double.parseDouble(speed) / 60; // miles per minute
             double circumference = dSpeed * 2;
-            this.radius = circumference / 2*Math.PI;
+            this.radius = circumference / 2 / Math.PI;
         }
         if(geoStartPoint!=null && geoStartBowPoint==null && radius==null) {
-            Logger.getLogger(this.getClass()).warning("start given but no radius nor startBow, assuming radius of 1 NM");
+            Logger.getLogger(this.getClass()).warning("start given but no radius nor startBow, assuming radius of 1.16 NM");
         }
         this.geoEndPoint = route.getPoint(end,previous);
         if(endHeading!=null) {

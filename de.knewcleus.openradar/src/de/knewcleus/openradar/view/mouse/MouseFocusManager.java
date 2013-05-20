@@ -99,7 +99,7 @@ public class MouseFocusManager extends MouseAdapter {
 			/* Ignore, as long as any button is down */
 			return;
 		}
-		if(shiftOrigin.equals(e.getPoint()) ) {
+		if(shiftOrigin.distance(e.getPoint())<5 ) {
 		    updateFocus(e);
 		    shiftOrigin=null;
 		}
@@ -124,39 +124,40 @@ public class MouseFocusManager extends MouseAdapter {
     @Override
     public synchronized void mouseDragged(MouseEvent e) {
         if(shiftOrigin!=null) {
-            if(e.getModifiersEx()==MouseEvent.BUTTON1_DOWN_MASK) {
+// 130519 ww zoom by shifting deactivated
+//            if(e.getModifiersEx()==MouseEvent.BUTTON1_DOWN_MASK) {
                 shiftScreen(shiftOrigin,e.getPoint());
                 shiftOrigin = e.getPoint();
-            } else {
-                adaptZoom(e.getPoint());
-            }
+//            } else {
+//                adaptZoom(e.getPoint());
+//            }
         }
     }
 
-    private void adaptZoom(Point point) {
-        Rectangle2D radarSize = radarMapViewerAdapter.getViewerExtents();
-        double xDistance = (point.getX() - shiftOrigin.getX()) / radarSize.getWidth();
-        double yDistance = (point.getY() - shiftOrigin.getY()) / radarSize.getHeight();
-        double mouseScale = (Math.abs(xDistance)>Math.abs(yDistance)) ? xDistance : yDistance;
-
-        double oldScale = radarMapViewerAdapter.getLogicalScale();
-        double newScale = oldScale * 1+mouseScale * 20;
-        newScale = ( newScale<1 ) ? 1 : newScale ;
-        newScale = ( newScale>10000 ) ? 10000 : newScale ;
-
-        if(oldScale!=newScale) radarMapViewerAdapter.setLogicalScale( newScale );
-    }
+//    private void adaptZoom(Point point) {
+//        Rectangle2D radarSize = radarMapViewerAdapter.getViewerExtents();
+//        double xDistance = (point.getX() - shiftOrigin.getX()) / radarSize.getWidth();
+//        double yDistance = (point.getY() - shiftOrigin.getY()) / radarSize.getHeight();
+//        double mouseScale = (Math.abs(xDistance)>Math.abs(yDistance)) ? xDistance : yDistance;
+//
+//        double oldScale = radarMapViewerAdapter.getLogicalScale();
+//        double newScale = oldScale * 1+mouseScale * 20;
+//        newScale = ( newScale<1 ) ? 1 : newScale ;
+//        newScale = ( newScale>10000 ) ? 10000 : newScale ;
+//
+//        if(oldScale!=newScale) radarMapViewerAdapter.setLogicalScale( newScale );
+//    }
 
     @Override
 	public synchronized void mouseMoved(MouseEvent e) {
-        // preparations for tooltip text in map
-//        final FocuseablePickIterator iterator = new FocuseablePickIterator();
+//        // preparations for tooltip text in map
+//        final TooltipPickIterator iterator = new TooltipPickIterator();
 //        final PickVisitor pickVisitor = new PickVisitor(e.getPoint(), iterator);
 //        rootView.accept(pickVisitor);
-//        IFocusableView view = iterator.getTopFocusable();
+//        ITooltipView view = iterator.getTopFocusable();
 //
 //        if(view!=null) {
-//            System.out.println(view.getAirSpeed());
+//            System.out.println(view.getTooltipText(e.getPoint()));
 //        }
 
 	    // update StP
@@ -201,4 +202,5 @@ public class MouseFocusManager extends MouseAdapter {
 			return topFocusable;
 		}
 	}
+
 }

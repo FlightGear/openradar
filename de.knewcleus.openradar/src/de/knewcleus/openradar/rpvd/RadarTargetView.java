@@ -1,43 +1,37 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012,2013 Wolfram Wagner
- * 
+ * Copyright (C) 2008-2009 Ralf Gerlich Copyright (C) 2012,2013 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
- * 
- * OpenRadar is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
+ *
+ * OpenRadar is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
- * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
+ * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with OpenRadar. If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
- * General Public License, wie von der Free Software Foundation, Version 3 der
- * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ *
+ * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU General Public License, wie von der Free
+ * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
- * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
- * Public License für weitere Details.
- * 
- * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
- * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+ *
+ * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne
+ * die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
+ * License für weitere Details.
+ *
+ * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
+ * <http://www.gnu.org/licenses/>.
  */
 package de.knewcleus.openradar.rpvd;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Shape;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -49,10 +43,13 @@ import java.util.List;
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
+import de.knewcleus.openradar.rpvd.contact.ContactShape;
+import de.knewcleus.openradar.rpvd.contact.RadarContactTextPainter;
 import de.knewcleus.openradar.tracks.TrackUpdateNotification;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
@@ -67,11 +64,10 @@ import de.knewcleus.openradar.view.mouse.IMouseTargetView;
 import de.knewcleus.openradar.view.mouse.MouseInteractionEvent;
 
 /**
- * The radar target view displays the symbols for a radar target, the radar
- * trail and the heading line.
- * 
+ * The radar target view displays the symbols for a radar target, the radar trail and the heading line.
+ *
  * @author Ralf Gerlich
- * 
+ *
  */
 public class RadarTargetView implements IBoundedView, INotificationListener, IFocusableView, IMouseTargetView, ITrackDisplay {
     protected final static double targetDotRadius = 3.0;
@@ -80,11 +76,12 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 
     protected static final double headingLineVicinity = 3.0;
 
+    protected final GuiMasterController master;
     protected final IRadarMapViewerAdapter radarMapViewAdapter;
     protected final TrackDisplayState trackDisplayState;
 
-    protected final List<Point2D> logicalDotPositions = Collections.synchronizedList(new ArrayList<Point2D>());
-    protected final List<Shape> displayDotShapes = Collections.synchronizedList(new ArrayList<Shape>());
+    private final List<Point2D> logicalDotPositions = Collections.synchronizedList(new ArrayList<Point2D>());
+    private final List<ContactShape> displayDotShapes = Collections.synchronizedList(new ArrayList<ContactShape>());
     protected volatile Point2D currentGeoPosition = new Point2D.Double();
     protected volatile Point2D futureGeoPosition = new Point2D.Double();
     protected volatile Point2D currentLogicalPosition = new Point2D.Double();
@@ -96,10 +93,11 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 
     protected RadarContactTextPainter contactTextPainter;
 
-    public RadarTargetView(IRadarMapViewerAdapter radarMapViewAdapter, TrackDisplayState trackDisplayState) {
+    public RadarTargetView(GuiMasterController master, IRadarMapViewerAdapter radarMapViewAdapter, TrackDisplayState trackDisplayState) {
+        this.master = master;
         this.radarMapViewAdapter = radarMapViewAdapter;
         this.trackDisplayState = trackDisplayState;
-        contactTextPainter = new RadarContactTextPainter(trackDisplayState);
+        contactTextPainter = new RadarContactTextPainter(master, trackDisplayState);
         radarMapViewAdapter.registerListener(this);
         trackDisplayState.registerListener(this);
         trackDisplayState.getTrack().registerListener(this);
@@ -108,7 +106,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
 
     @Override
     public synchronized boolean contains(Point2D devicePoint) {
-        for (Shape shape : displayDotShapes) {
+        for (ContactShape shape : displayDotShapes) {
             if (shape.contains(devicePoint)) {
                 return true;
             }
@@ -164,24 +162,33 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
     @Override
     public synchronized void paint(Graphics2D g2d) {
         if (!trackDisplayState.guiContact.isExpired()) {
+            // the text block
             boolean highlighted = trackDisplayState.guiContact.isHighlighted();
             contactTextPainter.paint(g2d, highlighted); // paint infos into background
-
-            Color baseColor = (trackDisplayState.isSelected() ? Palette.RADAR_SELECTED : Palette.BLACK);
+            // the position shape
+            Color baseColor = (trackDisplayState.isSelected() ? Palette.RADAR_SELECTED : contactTextPainter.getColor(trackDisplayState.getGuiContact()));
             Color color = baseColor;
-            final int count = radarMapViewAdapter.getTrackHistoryLength();
+            int count = displayDotShapes.size();
             int i = count;
-            for (Shape displayDotShape : displayDotShapes) {
+            for (ContactShape displayDotShape : displayDotShapes) {
                 color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255 * i / count);
                 g2d.setColor(color);
-                g2d.fill(displayDotShape);
+
+                if (displayDotShapes.indexOf(displayDotShape) == 0 || displayDotShape.isTailVisible()) {
+                    displayDotShape.paintShape(g2d);
+                }
                 --i;
             }
             g2d.setColor(baseColor);
-            if (trackDisplayState.guiContact.isActive()) {
+            // heading line
+            if (!contactTextPainter.isTextEmpty() && trackDisplayState.guiContact.isActive()) {
                 g2d.draw(displayHeadingLine);
             }
         }
+    }
+
+    protected synchronized void repaint() {
+        radarMapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
     }
 
     @Override
@@ -200,10 +207,6 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
         } else if (notification instanceof CoordinateSystemNotification) {
             updateDisplayPositions();
         }
-    }
-
-    protected synchronized void repaint() {
-        radarMapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
     }
 
     protected synchronized void updateGeographicPositions() {
@@ -227,13 +230,12 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
         final Iterator<IRadarDataPacket> radarDataIterator = trackDisplayState.getTrack().iterator();
         final int trackHistoryLength = radarMapViewAdapter.getTrackHistoryLength();
 
-        for (int i = 0; i <= trackHistoryLength && radarDataIterator.hasNext(); ++i) {
+        for (int i = 0; i < trackHistoryLength && radarDataIterator.hasNext(); ++i) {
             final IRadarDataPacket radarDataPacket = radarDataIterator.next();
             final Point2D geographicalPosition = radarDataPacket.getPosition();
             final Point2D logicalPosition = projection.toLogical(geographicalPosition);
             logicalDotPositions.add(logicalPosition);
         }
-
         updateDisplayPositions();
     }
 
@@ -242,28 +244,31 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
         radarMapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
 
         final AffineTransform logical2device = radarMapViewAdapter.getLogicalToDeviceTransform();
-        displayDotShapes.clear();
         logical2device.transform(currentLogicalPosition, currentDevicePosition);
-        // logical2device.transform(futureLogicalPosition,
-        // futureDevicePosition);
-        // displayHeadingLine = new Line2D.Double(currentDevicePosition,
-        // futureDevicePosition);
-        
-        //double trueCourse = trackDisplayState.getTrack().getCurrentState().getCalculatedTrueCourse();
-        double trueCourse = (trackDisplayState.guiContact!=null) ? trackDisplayState.guiContact.getHeadingD() : 0; 
-                
-        Point2D headingLineEnd = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 
-                5d + trackDisplayState.getTrack().getCurrentState().getCalculatedVelocity()/2 );
-        displayHeadingLine = new Line2D.Double(currentDevicePosition, headingLineEnd);
+
+        double trueCourse = (trackDisplayState.guiContact != null) ? trackDisplayState.guiContact.getHeadingD() : 0;
+
+        Point2D headingLineStart = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 4d);
+        Point2D headingLineEnd = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 7d + trackDisplayState.getTrack().getCurrentState()
+                .getCalculatedVelocity() / 2);
+        displayHeadingLine = new Line2D.Double(headingLineStart, headingLineEnd);
         displayExtents = displayHeadingLine.getBounds2D();
 
         // the dots
+        int i = 0;
+        // shift all shapes backwards and reuse the last as first
+        final int maxCount = radarMapViewAdapter.getTrackHistoryLength();
+        ContactShape displayDotShape = displayDotShapes.size() == maxCount ? displayDotShapes.remove(maxCount - 1) : new ContactShape();
+        master.getDataRegistry().getDatablockLayoutManager().getActiveLayout().modify(displayDotShape, trackDisplayState.getGuiContact());
+        // assign contact and current status
+        displayDotShapes.add(0, displayDotShape);
+
+        // update data
         for (Point2D logicalPosition : logicalDotPositions) {
             final Point2D displayPosition = logical2device.transform(logicalPosition, null);
-            final Ellipse2D displayDotShape = new Ellipse2D.Double(displayPosition.getX() - targetDotRadius, displayPosition.getY() - targetDotRadius,
-                    2.0 * targetDotRadius, 2.0 * targetDotRadius);
-            displayDotShapes.add(displayDotShape);
-            Rectangle2D.union(displayDotShape.getBounds2D(), displayExtents, displayExtents);
+            displayDotShapes.get(i).setCenter(displayPosition);
+            Rectangle2D.union(displayDotShapes.get(i).getBounds2D(), displayExtents, displayExtents);
+            i++;
         }
         // compose description field for contact
         Rectangle2D.union(contactTextPainter.getDisplayExtents(currentDevicePosition), displayExtents, displayExtents);
@@ -298,4 +303,14 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
     public IMapViewerAdapter getMapViewAdapter() {
         return radarMapViewAdapter;
     }
+
+    public String getTooltipText(Point p) {
+        return null; // displayExtents.contains(p) ? getTooltipText() : null;
+    }
+
+    // private String getTooltipText() {
+    // GuiRadarContact c = trackDisplayState.getGuiContact();
+    // return
+    // "<html><body>"+c.getCallSign()+"<br>"+c.getAircraft()+"  "+c.getRadarContactDistance()+" NM"+(c.getAtcComment()!=null?"<br>"+c.getAtcComment():"")+"</body></html>";
+    // }
 }

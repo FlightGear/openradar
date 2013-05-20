@@ -64,7 +64,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
     private FgComSupportSymbol fgComSupportSymbol = new FgComSupportSymbol();
     private JLabel lbCallSign = null;
     private JLabel lbRadarDistance = null;
-    private JLabel lbHeading = null;
+    private JLabel lbSquawkCode = null;
     private JLabel lbAircraft = null;
     private JLabel lbFlightLevel= null;
     private JLabel lbTrueSpeed = null;
@@ -173,10 +173,10 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         lbAircraftConstraints.insets = new java.awt.Insets(4, 4, 0, 5);
         strip.add(lbAircraft, lbAircraftConstraints);
 
-        lbHeading = new JLabel(" ");
-        lbHeading.setFont(boldFont);
-        lbHeading.setForeground(java.awt.Color.blue);
-        lbHeading.setOpaque(true);
+        lbSquawkCode = new JLabel(" ");
+        lbSquawkCode.setFont(boldFont);
+        lbSquawkCode.setForeground(java.awt.Color.blue);
+        lbSquawkCode.setOpaque(true);
         lbHeadingConstraints = new GridBagConstraints();
         lbHeadingConstraints.gridx = 3;
         lbHeadingConstraints.gridy = 0;
@@ -184,7 +184,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
 //        lbHeadingConstraints.fill = GridBagConstraints.HORIZONTAL;
         lbHeadingConstraints.anchor = java.awt.GridBagConstraints.EAST;
         lbHeadingConstraints.insets = new java.awt.Insets(4, 5, 0, 5);
-        strip.add(lbHeading, lbHeadingConstraints);
+        strip.add(lbSquawkCode, lbHeadingConstraints);
 
 
         // second line
@@ -304,25 +304,49 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
             break;
         }
 
-        fgComSupportSymbol.setActive(value.hasFgComSupport());
-        lbCallSign.setText(value.getCallSign());
-        lbFlightLevel.setText(value.getFlightLevel());
-        lbRadarDistance.setText(value.getRadarContactDistance()+" NM");
-        // lbRadarBearing.setText("@"+value.getRadarContactDirection()+"°");
-        lbHeading.setText(value.getMagnCourse());
-        if(value.isNeglect()) {
-            lbAircraft.setText("neglected");
-        } else if(!value.isActive()) {
-            long seconds = (System.currentTimeMillis()-value.getLastUpdate())/1000;
-            lbAircraft.setText("inact.: "+seconds+" sec");
+        if(!value.isAtc()) {
+            fgComSupportSymbol.setActive(value.hasFgComSupport());
+            lbCallSign.setText(value.getCallSign());
+            lbFlightLevel.setText(value.getFlightLevel());
+            lbRadarDistance.setText(value.getRadarContactDistance()+" NM");
+            // lbRadarBearing.setText("@"+value.getRadarContactDirection()+"°");
+            lbSquawkCode.setText(getSquawkDisplay(value));
+            if(value.isNeglect()) {
+                lbAircraft.setText("neglected");
+            } else if(!value.isActive()) {
+                long seconds = (System.currentTimeMillis()-value.getLastUpdate())/1000;
+                lbAircraft.setText("inact.: "+seconds+" sec");
+            } else {
+                lbAircraft.setText(value.getAircraft());
+            }
+
+            taAtcComment.setText(value.getAtcComment());
+            lbTrueSpeed.setText(value.getAirSpeed());
+            lbGroundSpeed.setText(value.getGroundSpeed());
+            //lbVerticalSpeed.setText("V:"+value.getVerticalSpeed());
         } else {
-            lbAircraft.setText(value.getAircraft());
+            // ATC
+            fgComSupportSymbol.setActive(value.hasFgComSupport());
+            lbCallSign.setText(value.getCallSign());
+            lbFlightLevel.setText("");
+            lbRadarDistance.setText("");
+            // lbRadarBearing.setText("@"+value.getRadarContactDirection()+"°");
+            lbSquawkCode.setText("");
+            if(value.isNeglect()) {
+                lbAircraft.setText("neglected");
+            } else if(!value.isActive()) {
+                long seconds = (System.currentTimeMillis()-value.getLastUpdate())/1000;
+                lbAircraft.setText("inact.: "+seconds+" sec");
+            } else {
+                lbAircraft.setText(value.getAircraft());
+            }
+
+            taAtcComment.setText(value.getAtcComment());
+            lbTrueSpeed.setText("");
+            lbGroundSpeed.setText("");
+            //lbVerticalSpeed.setText("");
         }
 
-        taAtcComment.setText(value.getAtcComment());
-        lbTrueSpeed.setText(value.getAirSpeed());
-        lbGroundSpeed.setText(value.getGroundSpeed());
-        //lbVerticalSpeed.setText("V:"+value.getVerticalSpeed());
 
         Color background;
         Color foreground;
@@ -368,8 +392,8 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         this.lbRadarDistance.setBackground(background);
 
         // this.lbHeading.setFont(activeFont);
-        this.lbHeading.setForeground(foreground);
-        this.lbHeading.setBackground(background);
+        this.lbSquawkCode.setForeground(foreground);
+        this.lbSquawkCode.setBackground(background);
         // this.lbAircraft.setFont(activeFont);
         this.lbAircraft.setForeground(foreground);
         this.lbAircraft.setBackground(background);
@@ -387,12 +411,20 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
 
         boolean isAtcCommentEmpty = taAtcComment.getText().trim().isEmpty();
 
-        int taNormalHeight = (int)lbCallSign.getPreferredSize().getHeight() + (int)lbTrueSpeed.getPreferredSize().getHeight() + 8;
+        int taNormalHeight = (int)lbCallSign.getPreferredSize().getHeight();
+        taNormalHeight = value.isAtc() ? taNormalHeight +8 : taNormalHeight + (int)lbTrueSpeed.getPreferredSize().getHeight() + 8;
         int taCommentHeight = isAtcCommentEmpty ? taNormalHeight : taNormalHeight + (int)taAtcComment.getPreferredSize().getHeight() + 8 ;
         strip.setPreferredSize(new Dimension(250,Math.max(taNormalHeight, taCommentHeight)));
         strip.setBackground(background);
         strip.setOpaque(true);
 
         return this;
+    }
+
+    private String getSquawkDisplay(GuiRadarContact c) {
+        if(c.getTranspSquawkCode()==null) return "";
+        if(c.getAssignedSquawk()==null) return ""+c.getTranspSquawkCode();
+        if(c.getAssignedSquawk().equals(c.getTranspSquawkCode())) return ""+c.getTranspSquawkCode();
+        return c.getAssignedSquawk()+"("+c.getTranspSquawkCode()+")";
     }
 }

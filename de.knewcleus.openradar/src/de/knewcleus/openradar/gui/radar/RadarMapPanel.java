@@ -35,6 +35,7 @@ package de.knewcleus.openradar.gui.radar;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -45,6 +46,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.swing.JComponent;
+import javax.swing.ToolTipManager;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
@@ -61,6 +63,7 @@ import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.AptDatStream1000;
 import de.knewcleus.fgfs.navdata.xplane.FixDatStream;
 import de.knewcleus.fgfs.navdata.xplane.NavDatStream;
+import de.knewcleus.fgfs.util.IOutputIterator;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
@@ -71,6 +74,7 @@ import de.knewcleus.openradar.rpvd.RadarTargetProvider;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView;
 import de.knewcleus.openradar.rpvd.ScaleMarkerView.Side;
 import de.knewcleus.openradar.view.ComponentCanvas;
+import de.knewcleus.openradar.view.IPickable;
 import de.knewcleus.openradar.view.LayeredRadarContactView;
 import de.knewcleus.openradar.view.LayeredView;
 import de.knewcleus.openradar.view.MouseZoomListener;
@@ -87,6 +91,7 @@ import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.LocalSphericalProjection;
 import de.knewcleus.openradar.view.mouse.FocusManager;
 import de.knewcleus.openradar.view.mouse.IFocusManager;
+import de.knewcleus.openradar.view.mouse.ITooltipView;
 import de.knewcleus.openradar.view.mouse.MouseFocusManager;
 import de.knewcleus.openradar.view.mouse.MouseInteractionManager;
 import de.knewcleus.openradar.view.navdata.NavPointProvider;
@@ -124,6 +129,8 @@ public class RadarMapPanel extends JComponent {
 
     private final SwingRadarDataAdapter radarAdapter = new SwingRadarDataAdapter();
 
+
+    private volatile LayeredView rootView;
     protected IProjection projection;
     protected RadarMapViewerAdapter radarMapViewAdapter;
     protected LayeredView routeView;
@@ -194,13 +201,13 @@ public class RadarMapPanel extends JComponent {
             navDataStream = new FilteredNavDataStream<INavPoint>(openXPlaneNavDat(),filter);
 
             /* Set up the views */
-            LayeredView rootView = new LayeredView(radarMapViewAdapter);
+            rootView = new LayeredView(radarMapViewAdapter);
             radarMapViewAdapter.getUpdateManager().setRootView(rootView);
 
             if(master.getDataRegistry().isLayerVisible("landmass")) {
                 setupDialog.setStatus(5, "Reading landmass layer...");
                 ZippedShapefileLayer landmassLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_landmass");
-                final GeodataView landmassView = new GeodataView(radarMapViewAdapter, landmassLayer,bounds);
+                final GeodataView landmassView = new GeodataView(master, radarMapViewAdapter, landmassLayer,"LANDMASS",bounds);
                 landmassLayer.closeZipArchive();
                 landmassView.setColor(Palette.LANDMASS);
                 //landmassView.setFill(false);
@@ -213,7 +220,7 @@ public class RadarMapPanel extends JComponent {
             if(master.getDataRegistry().isLayerVisible("urban")) {
                 setupDialog.setStatus(5, "Reading urban layer...");
                 ZippedShapefileLayer urbanLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_urban");
-                final GeodataView urbanView = new GeodataView(radarMapViewAdapter, urbanLayer,bounds);
+                final GeodataView urbanView = new GeodataView(master, radarMapViewAdapter, urbanLayer,"URBAN",bounds);
                 urbanLayer.closeZipArchive();
                 urbanView.setColor(new Color(80,80,80));
                 //landmassView.setFill(false);
@@ -221,7 +228,7 @@ public class RadarMapPanel extends JComponent {
             }
             if(master.getDataRegistry().isLayerVisible("lake")) {
                 ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_lake");
-                final GeodataView lakeView = new GeodataView(radarMapViewAdapter, lakeLayer,bounds);
+                final GeodataView lakeView = new GeodataView(master, radarMapViewAdapter, lakeLayer,"LAKE",bounds);
                 lakeLayer.closeZipArchive();
                 lakeView.setColor(Palette.LAKE);
                 lakeView.setFill(true);
@@ -229,7 +236,7 @@ public class RadarMapPanel extends JComponent {
             }
             if(master.getDataRegistry().isLayerVisible("stream")) {
                 ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_stream");
-                final GeodataView streamView = new GeodataView(radarMapViewAdapter, streamLayer, bounds);
+                final GeodataView streamView = new GeodataView(master, radarMapViewAdapter, streamLayer,"STREAM", bounds);
                 streamLayer.closeZipArchive();
                 streamView.setColor(Palette.STREAM);
                 streamView.setFill(false);
@@ -238,7 +245,7 @@ public class RadarMapPanel extends JComponent {
             if(master.getDataRegistry().isLayerVisible("tarmac")) {
                 setupDialog.setStatus(10, "Reading tarmac layer...");
                 ZippedShapefileLayer tarmacLayer = new ZippedShapefileLayer(data.getAirportDir(), "apt_tarmac");
-                final GeodataView tarmacView = new GeodataView(radarMapViewAdapter, tarmacLayer, bounds);
+                final GeodataView tarmacView = new GeodataView(master, radarMapViewAdapter, tarmacLayer,"TARMAC", bounds);
                 tarmacLayer.closeZipArchive();
                 tarmacView.setColor(Palette.TARMAC);
                 tarmacView.setFill(true);
@@ -247,7 +254,7 @@ public class RadarMapPanel extends JComponent {
 
             setupDialog.setStatus(20, "Reading runway layer...");
             ZippedShapefileLayer runwayLayer = new ZippedShapefileLayer(data.getAirportDir(), "apt_runway");
-            final GeodataView runwayView = new GeodataView(radarMapViewAdapter, runwayLayer, bounds);
+            final GeodataView runwayView = new GeodataView(master, radarMapViewAdapter, runwayLayer, null, bounds);
             runwayLayer.closeZipArchive();
             runwayView.setColor(Palette.RUNWAY);
             runwayView.setFill(true);
@@ -329,6 +336,10 @@ public class RadarMapPanel extends JComponent {
             this.radarMapViewAdapter.setCenter(center);
 
             setupDialog.setStatus(100, "Ready.");
+
+            ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
+            toolTipManager.registerComponent(this);
+
         } finally {
             closeFiles();
         }
@@ -397,4 +408,32 @@ public class RadarMapPanel extends JComponent {
         navPointProvider.addViews(master.getDataRegistry().getNavaidDB().getManualNavpoints());
     }
 
+    @Override
+    public String getToolTipText() {
+        Point p = getMousePosition();
+        if(p==null) return null;
+        String text = rootView.getTooltipText(p);
+        return text;
+    }
+
+    protected class TooltipPickIterator implements IOutputIterator<IPickable> {
+
+        protected ITooltipView topTooltipView = null;
+
+        @Override
+        public void next(IPickable v) {
+            if (v instanceof ITooltipView) {
+                topTooltipView = (ITooltipView)v;
+            }
+        }
+
+        @Override
+        public boolean wantsNext() {
+            return true;
+        }
+
+        public ITooltipView getTopFocusable() {
+            return topTooltipView;
+        }
+    }
 }

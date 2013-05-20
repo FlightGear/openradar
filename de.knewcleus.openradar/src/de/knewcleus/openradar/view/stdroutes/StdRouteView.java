@@ -34,6 +34,7 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
@@ -145,5 +146,10 @@ public class StdRouteView implements IBoundedView, INotificationListener {
     protected void updateDisplayPosition() {
         final AffineTransform logical2display = mapViewAdapter.getLogicalToDeviceTransform();
         displayPosition = logical2display.transform(logicalPosition, null);
+    }
+
+    @Override
+    public String getTooltipText(Point p) {
+        return null;
     }
 }

@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -71,6 +72,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
+import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
 
 /**
  * The setup dialog...
@@ -113,6 +115,8 @@ public class SetupDialog extends JFrame {
     private JComboBox<String> cbStatusMessages;
     private JProgressBar jProgressBar;
     private StatusMessageComboboxModel cbStatusModel;
+
+    private JComboBox<ADatablockLayout> cbDataboxLayout;
 
     private JCheckBox cbLandmass;
     private JCheckBox cbUrban;
@@ -638,15 +642,39 @@ public class SetupDialog extends JFrame {
         jtpMain.add("Tweaks", jPnlTweaks);
         jPnlTweaks.setLayout(new GridBagLayout());
 
-        JPanel jPnlLayerInput = new JPanel();
-        jPnlLayerInput.setLayout(new GridBagLayout());
-        jPnlLayerInput.setBorder(new TitledBorder("Visible background layers"));
+        JPanel jPnlDataBlockLayout = new JPanel();
+        jPnlDataBlockLayout.setLayout(new GridBagLayout());
+        jPnlDataBlockLayout.setBorder(new TitledBorder("Radar Data Block Layout"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1;
-        gridBagConstraints.weighty = 1;
+        gridBagConstraints.weighty = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
+        jPnlTweaks.add(jPnlDataBlockLayout, gridBagConstraints);
+
+        cbDataboxLayout = new JComboBox<ADatablockLayout>(new Vector<ADatablockLayout>(setupManager.getDatablockLayoutManager().getLayoutModes()));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        jPnlDataBlockLayout.add(cbDataboxLayout, gridBagConstraints);
+
+        JPanel jPnlLayerInput = new JPanel();
+        jPnlLayerInput.setLayout(new GridBagLayout());
+        jPnlLayerInput.setBorder(new TitledBorder("Visible background layers"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 0;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
         jPnlTweaks.add(jPnlLayerInput, gridBagConstraints);
@@ -711,6 +739,19 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlLayerInput.add(cbGroundnet, gridBagConstraints);
+
+        JPanel jpnlSpace = new JPanel();
+        jpnlSpace.setOpaque(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 1;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
+        jPnlTweaks.add(jpnlSpace, gridBagConstraints);
+
 
         doLayout();
 
@@ -817,10 +858,6 @@ public class SetupDialog extends JFrame {
             dataOk = false;
         }
 
-        btCheckSettings.setText("Check Settings");
-        btCheckSettings.setEnabled(true);
-        btCheckSettings.setForeground(Color.black);
-
         Map<String, Boolean> visibleLayerMap = new HashMap<String, Boolean>();
         visibleLayerMap.put("landmass", cbLandmass.isSelected());
         visibleLayerMap.put("urban", cbUrban.isSelected());
@@ -829,6 +866,10 @@ public class SetupDialog extends JFrame {
         visibleLayerMap.put("tarmac", cbTarmac.isSelected());
         visibleLayerMap.put("groundnet", cbGroundnet.isSelected());
         data.setVisibleLayerMap(visibleLayerMap);
+
+        btCheckSettings.setText("Check Settings");
+        btCheckSettings.setEnabled(true);
+        btCheckSettings.setForeground(Color.black);
 
         if (!dataOk) {
             lbMessage.setText("Please verify your settings!");
@@ -931,6 +972,16 @@ public class SetupDialog extends JFrame {
                 tfMpLocalPort.setText(p.getProperty("mp.clientPort", "5001"));
                 tfMetarUrl.setText(p.getProperty("metar.url", "http://weather.noaa.gov/pub/data/observations/metar/stations/"));
 
+                cbDataboxLayout.setSelectedIndex(setupManager.getDatablockLayoutManager().getIndexOfActiveLayout());
+
+                {
+                    String name = p.getProperty("radar.datablockLayout");
+                    if(name!=null) {
+                        setupManager.getDatablockLayoutManager().setActiveLayout(null, name);
+                        cbDataboxLayout.setSelectedItem(setupManager.getDatablockLayoutManager().getActiveLayout());
+                    }
+                }
+
                 cbLandmass.setSelected(!"false".equals(p.getProperty("layer.landmass")));
                 cbUrban.setSelected(!"false".equals(p.getProperty("layer.urban")));
                 cbLake.setSelected(!"false".equals(p.getProperty("layer.lake")));
@@ -955,6 +1006,8 @@ public class SetupDialog extends JFrame {
         p.put("mp.serverPort", tfMpPort.getText());
         p.put("mp.clientPort", tfMpLocalPort.getText());
         p.put("metar.url", tfMetarUrl.getText());
+
+        p.put("radar.datablockLayout", ((ADatablockLayout)cbDataboxLayout.getSelectedItem()).getName());
 
         p.put("layer.landmass", ""+cbLandmass.isSelected());
         p.put("layer.urban", ""+cbUrban.isSelected());

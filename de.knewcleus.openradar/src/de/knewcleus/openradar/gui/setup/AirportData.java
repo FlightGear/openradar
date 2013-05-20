@@ -56,11 +56,13 @@ import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.Helipad;
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
+import de.knewcleus.openradar.flightplan.SquawkCodeManager;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.status.radio.Radio;
 import de.knewcleus.openradar.gui.status.radio.RadioFrequency;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
+import de.knewcleus.openradar.rpvd.contact.DatablockLayoutManager;
 import de.knewcleus.openradar.view.glasspane.StPView;
 import de.knewcleus.openradar.view.navdata.INavPointListener;
 
@@ -110,6 +112,12 @@ public class AirportData implements INavPointListener {
 
     private NavaidDB navaidDB = new NavaidDB();
     private StPView directionMessageView;
+
+    private final AircraftCodeConverter aircraftCodeConverter = new AircraftCodeConverter();
+
+    private final DatablockLayoutManager datablockLayoutManager = new DatablockLayoutManager(this);
+
+    private final SquawkCodeManager squawkCodeManager = new SquawkCodeManager(this);
 
     private final static Logger log = Logger.getLogger(AirportData.class.toString());
 
@@ -464,7 +472,10 @@ public class AirportData implements INavPointListener {
                 }
                 // restore zoomlevel values
                 master.getRadarBackend().setZoomLevelValuesFromProperties(p);
+                // restore layout
+                datablockLayoutManager.restoreSelectedLayoutFrom(master, p);
 
+                squawkCodeManager.restoreSquawkRangeFrom(p);
                 // restore toggles
                 Enumeration<?> e = p.propertyNames();
                 while (e.hasMoreElements()) {
@@ -511,6 +522,11 @@ public class AirportData implements INavPointListener {
         // add selected radio frequencies
         master.getRadioManager().addSelectedFrequenciesTo(p);
 
+        // add layout
+        datablockLayoutManager.addSelectedLayoutTo(p);
+
+        squawkCodeManager.addSquawkRangeTo(p);
+
         File propertiesFile = new File("settings" + File.separator + getAirportCode() + ".properties");
 
         FileWriter writer = null;
@@ -540,5 +556,17 @@ public class AirportData implements INavPointListener {
     public void updateMouseRadarMoved(GuiRadarContact contact, MouseEvent e) {
         directionMessageView.updateMouseRadarMoved(contact,e);
 
+    }
+
+    public synchronized AircraftCodeConverter getAircraftCodeConverter() {
+        return aircraftCodeConverter;
+    }
+
+    public DatablockLayoutManager getDatablockLayoutManager() {
+        return datablockLayoutManager;
+    }
+
+    public synchronized SquawkCodeManager getSquawkCodeManager() {
+        return squawkCodeManager;
     }
 }

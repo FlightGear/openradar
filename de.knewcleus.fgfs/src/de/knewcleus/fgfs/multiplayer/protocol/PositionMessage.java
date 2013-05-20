@@ -1,33 +1,33 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
  * Copyright (C) 2012 Wolfram Wagner
- * 
+ *
  * This file is part of OpenRadar.
- * 
+ *
  * OpenRadar is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -36,7 +36,6 @@ package de.knewcleus.fgfs.multiplayer.protocol;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -206,7 +205,7 @@ public class PositionMessage implements IMultiplayerMessage {
 			if (descriptor==null) {
 				continue;
 			}
-			
+
 			length+=4;
 
 			switch (descriptor.getType()) {
@@ -228,7 +227,7 @@ public class PositionMessage implements IMultiplayerMessage {
 				}
 				int pad=(-bytes.length)&3;
 				int strlen=4+4*(bytes.length+pad);
-				
+
 				length+=strlen;
 				break;
             default:
@@ -309,7 +308,7 @@ public class PositionMessage implements IMultiplayerMessage {
 				logger.finer("Reading property "+descriptor.getPropertyID()+", name="+descriptor.getPropertyName());
 
 				Object value=null;
-				
+
 				switch (descriptor.getType()) {
 				case INT:
 					value=new Integer(inputStream.readInt());
@@ -339,10 +338,10 @@ public class PositionMessage implements IMultiplayerMessage {
                 default:
                     break;
 				}
-				
+
 				if (value!=null) {
 					properties.put(descriptor.getPropertyName(), value);
-					
+
 				}
 			}
 		} catch (EOFException e) {

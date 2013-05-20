@@ -34,6 +34,7 @@
 package de.knewcleus.openradar.view;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,4 +102,12 @@ public class LayeredView implements IContainer {
 
 	@Override
 	public synchronized void paint(Graphics2D g2d) {}
+
+    public String getTooltipText(Point p) {
+        for (IView view: views) {
+            String text = view.getTooltipText(p);
+            if(text!=null) return text;
+        }
+        return null;
+    }
 }
