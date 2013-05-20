@@ -53,13 +53,13 @@
 		<line start="SEDOR" end="HOMBO" text="229"/>
 		<line start="HOMBO" end="ALTIK" text="252"/>
 		<!-- GTQ 8K -->
-		<line start="GTQ" end="INTEM" text="159" text="FL090"/>
+		<line start="GTQ" end="INTEM" text="159 - FL090"/>
 		<line start="INTEM" end="ALTIK" text="198"/>
 		<!-- STR 8K -->
-		<line start="STR" end="INTEM" text="198" text="FL090"/>
+		<line start="STR" end="INTEM" text="198 - FL090"/>
 		<line start="INTEM" end="ALTIK" text="198"/>
 		<!-- ARPUS 8K -->
-		<line start="LUL" end="ARPUS" text="093" text="250 kt"/>
+		<line start="LUL" end="ARPUS" text="093 - 250 kt"/>
 		<line start="ARPUS" end="ALTIK" text="093"/>
 		<!-- LUMEL 8K -->
 		<line start="BALIR" end="LUMEL" text="319"/>
