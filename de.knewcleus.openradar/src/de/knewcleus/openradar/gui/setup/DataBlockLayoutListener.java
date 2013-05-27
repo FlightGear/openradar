@@ -30,38 +30,12 @@
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
-package de.knewcleus.openradar.rpvd.contact;
+package de.knewcleus.openradar.gui.setup;
 
-import java.awt.Color;
-import java.awt.Font;
+import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
 
-import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+public interface DataBlockLayoutListener {
 
-public abstract class ADatablockLayout {
-    /**
-     * Returns a name of the layout that can be used as a key to store and load properties
-     * or identify menu items
-     */
-    public abstract String getName();
+    public void datablockLayoutChanged(ADatablockLayout newLayout);
 
-    public boolean supportsSquawk() {
-        return true;
-    }
-
-    /** Returns the text that should be displayed in menu */
-    public abstract String getMenuText();
-
-    public abstract Color getBackgroundColor(GuiRadarContact contact, boolean highlighted);
-
-    public abstract Color getColor(GuiRadarContact contact);
-    /** Returns the text that will be displayed in data block. Lines separated by newline...*/
-    public abstract String getDataBlockText(GuiRadarContact contact);
-
-    public abstract Font getFont();
-    /** Returns the contact shape matching to the current layout mode and contact state... */
-    public abstract void modify(ContactShape shape, GuiRadarContact c);
-    @Override
-    public String toString() {
-        return getMenuText();
-    }
 }

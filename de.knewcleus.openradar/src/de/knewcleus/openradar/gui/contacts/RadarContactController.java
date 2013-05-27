@@ -791,7 +791,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
 
     public void assignSquawkCode() {
         String name = null;
-        int newSquawkCode = -1;
+        Integer newSquawkCode = -1;
         synchronized (selectedContactLock) {
             if (selectedContact != null) {
                 newSquawkCode = master.getDataRegistry().getSquawkCodeManager().getNextSquawkCode(selectedContact.getAssignedSquawk());
@@ -799,7 +799,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 name = selectedContact.getCallSign();
             }
         }
-        if(name != null) {
+        if(name != null && newSquawkCode!=null) {
             // auto chat message
             List<String> msgList = new ArrayList<String>();
             msgList.add(name + " squawk "+newSquawkCode);

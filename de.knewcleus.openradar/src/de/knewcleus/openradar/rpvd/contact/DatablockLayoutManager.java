@@ -44,6 +44,7 @@ import javax.swing.JMenuItem;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.setup.DataBlockLayoutListener;
 /**
  * This class encapsulates the different ways a layout of the data block can be done.
  * The available data layouts appear in the map menu and can be selected anytime at runtime.
@@ -59,6 +60,7 @@ public class DatablockLayoutManager {
     private List<ADatablockLayout> layoutList = new ArrayList<ADatablockLayout>();
     private Map<String,ADatablockLayout> layoutModes = new TreeMap<String,ADatablockLayout>();
     private volatile MenuActionListener menuActionListener;
+    private final List<DataBlockLayoutListener> dbLayoutListener = new ArrayList<DataBlockLayoutListener>();
 
     public DatablockLayoutManager(AirportData data) {
         this.data=data;
@@ -76,6 +78,20 @@ public class DatablockLayoutManager {
         layoutList.add(l);
         layoutModes.put(l.getName(),l);
 
+    }
+
+    public synchronized void addDataBlockLayoutListener(DataBlockLayoutListener l) {
+        dbLayoutListener.add(l);
+    }
+
+    public synchronized void removeDataBlockLayoutListener(DataBlockLayoutListener l) {
+        dbLayoutListener.remove(l);
+    }
+
+    private synchronized void notifyListeners() {
+        for(DataBlockLayoutListener l :dbLayoutListener) {
+            l.datablockLayoutChanged(activeLayout);
+        }
     }
 
     public synchronized void setData(AirportData data) {
@@ -106,6 +122,7 @@ public class DatablockLayoutManager {
     public synchronized void setActiveLayout(GuiMasterController master, ADatablockLayout activeLayout) {
         if(this.activeLayout!=activeLayout) {
             this.activeLayout = activeLayout;
+            notifyListeners();
             if(master!=null) {
                 data.storeAirportData(master);
             }
@@ -118,14 +135,6 @@ public class DatablockLayoutManager {
             setActiveLayout(master, l);
         }
     }
-//    public synchronized void setActiveLayoutByMenuText(GuiMasterController master, String menuText) {
-//        for(ADatablockLayout l : layoutList) {
-//            if(l.getMenuText().equals(menuText)) {
-//                setActiveLayout(master, l);
-//            }
-//        }
-//    }
-//
 
     public synchronized ActionListener getActionListener(GuiMasterController master) {
         if(menuActionListener==null) {

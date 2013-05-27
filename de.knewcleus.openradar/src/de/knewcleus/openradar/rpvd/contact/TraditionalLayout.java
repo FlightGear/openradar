@@ -68,6 +68,11 @@ public class TraditionalLayout extends ADatablockLayout {
     }
 
     @Override
+    public boolean supportsSquawk() {
+        return false;
+    }
+
+    @Override
     public Font getFont() {
         return font;
     }

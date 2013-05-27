@@ -48,13 +48,15 @@ import javax.swing.ToolTipManager;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
+import de.knewcleus.openradar.gui.setup.DataBlockLayoutListener;
+import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
 
 /**
  * The Panel showing the Radar Contacts in three columns
  *
  * @author Wolfram Wagner
  */
-public class ContactsPanel extends javax.swing.JPanel implements DropTargetListener {
+public class ContactsPanel extends javax.swing.JPanel implements DropTargetListener, DataBlockLayoutListener {
 
     private static final long serialVersionUID = 1251028249377116215L;
     private GuiMasterController guiInteractionManager;
@@ -65,12 +67,17 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
     private javax.swing.JLabel lbShowStarting;
     private javax.swing.JLabel lbShowTransits;
     private javax.swing.JLabel lbShowUnknown;
+    private JLabel lbAssignSquawk;
+    private JLabel lbRevokeSquawk;
     private javax.swing.JList<GuiRadarContact> liRadarContacts;
     private javax.swing.JScrollPane spRadarContacs;
 
     public ContactsPanel(GuiMasterController guiInteractionManager) {
         this.guiInteractionManager = guiInteractionManager;
         initComponents();
+
+        datablockLayoutChanged(guiInteractionManager.getDataRegistry().getDatablockLayoutManager().getActiveLayout());
+        guiInteractionManager.getDataRegistry().getDatablockLayoutManager().addDataBlockLayoutListener(this);
     }
 
     private void initComponents() {
@@ -202,7 +209,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
         add(lbDeselect, gridBagConstraints);
 
-        JLabel lbAssignSquawk = new JLabel("AssSqw");
+        lbAssignSquawk = new JLabel("AssSqw");
         lbAssignSquawk.setToolTipText("Assigns a new squawk code from range");
         lbAssignSquawk.setName("ASSIGN_SQUAWK");
         lbAssignSquawk.setFont(lbAssignSquawk.getFont().deriveFont(Font.BOLD));
@@ -215,7 +222,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
         add(lbAssignSquawk, gridBagConstraints);
 
-        JLabel lbRevokeSquawk = new JLabel("RevSqw");
+        lbRevokeSquawk = new JLabel("RevSqw");
         lbRevokeSquawk.setToolTipText("Revoke the assigned Squawk code");
         lbRevokeSquawk.setName("REVOKE_SQUAWK");
         lbRevokeSquawk.setFont(lbAssignSquawk.getFont().deriveFont(Font.BOLD));
@@ -390,5 +397,11 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
                 guiInteractionManager.getRadarContactManager().neglectContact();
             }
         }
+    }
+
+    @Override
+    public void datablockLayoutChanged(ADatablockLayout newLayout) {
+        lbAssignSquawk.setVisible(newLayout.supportsSquawk());
+        lbRevokeSquawk.setVisible(newLayout.supportsSquawk());
     }
 }

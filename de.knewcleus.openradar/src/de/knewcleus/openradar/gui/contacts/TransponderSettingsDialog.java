@@ -32,6 +32,7 @@
  */
 package de.knewcleus.openradar.gui.contacts;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsDevice.WindowTranslucency;
@@ -166,8 +167,10 @@ public class TransponderSettingsDialog extends JFrame {
         if(isVisible()) {
             int squawkFrom = Integer.parseInt(tfSquawkFrom.getText());
             int squawkTo = Integer.parseInt(tfSquawkTo.getText());
-            squawkCodeManager.setSquawkRange(squawkFrom,squawkTo);
-            master.getDataRegistry().storeAirportData(master); // save it!
+            if( squawkFrom<squawkTo ) {
+                squawkCodeManager.setSquawkRange(squawkFrom,squawkTo);
+                master.getDataRegistry().storeAirportData(master); // save it!
+            }
             setVisible(false);
         }
     }
@@ -175,20 +178,49 @@ public class TransponderSettingsDialog extends JFrame {
     private class SquawkCodeListener extends KeyAdapter {
         @Override
         public void keyTyped(KeyEvent e) {
+
             if(e.getKeyChar()==KeyEvent.VK_ENTER) {
                 if(tfSquawkFrom.equals(e.getSource())) {
                     tfSquawkTo.requestFocus();
                 }
-                else if(tfSquawkTo.equals(e.getSource())) {
+                else if(tfSquawkTo.equals(e.getSource())
+                        && verifyRange(e.getKeyChar())) {
                     closeDialog();
                 }
             } else if(e.getKeyChar()==KeyEvent.VK_ESCAPE) {
-                    closeDialog();
-            } else  if(!Character.isDigit(e.getKeyChar())) {
+                closeDialog();
+            } else if(!Character.isDigit(e.getKeyChar())) {
                 // don't accept characters
                 e.consume();
             }
+
+            if(Character.isDigit(e.getKeyChar())) {
+                verifyRange(e.getKeyChar());
+            }
+
         }
     }
 
+    private boolean verifyRange(char key) {
+        if(!Character.isDigit(key)) return true;
+
+        int squawkFrom;
+        int squawkTo;
+        if(tfSquawkFrom.hasFocus()) {
+            squawkFrom = Integer.parseInt(tfSquawkFrom.getText()+key);
+            squawkTo = Integer.parseInt(tfSquawkTo.getText());
+        } else {
+            squawkFrom = Integer.parseInt(tfSquawkFrom.getText());
+            squawkTo = Integer.parseInt(tfSquawkTo.getText()+key);
+        }
+        if(squawkFrom<squawkTo) {
+            tfSquawkFrom.setForeground(Color.black);
+            tfSquawkTo.setForeground(Color.black);
+            return true;
+        } else {
+            tfSquawkFrom.setForeground(Color.red);
+            tfSquawkTo.setForeground(Color.red);
+            return false;
+        }
+    }
 }

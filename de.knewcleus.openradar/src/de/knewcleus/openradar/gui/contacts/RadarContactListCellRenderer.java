@@ -369,15 +369,17 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
             if (value.isOnEmergency()) {
                 // font = activeFont;
                 foreground = emergencyColor;
+
             } else if (value.isSelected()) {
                 // font = activeFont;
                 foreground = selectionColor;
+
             } else if (value.isNew()) {
                 foreground = newContactColor;
+
+            } else if(!value.isActive() || value.isNeglect()) {
+                foreground=incativeColor;
             }
-        }
-        if(!value.isActive() || value.isNeglect()) {
-            foreground=incativeColor;
         }
 
         // this.lbCallSign.setFont(activeFont);
