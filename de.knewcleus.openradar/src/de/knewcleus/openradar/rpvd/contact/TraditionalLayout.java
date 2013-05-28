@@ -119,12 +119,12 @@ public class TraditionalLayout extends ADatablockLayout {
     @Override
     public String getDataBlockText(GuiRadarContact c) {
         if(c.isAtc()) {
-            return String.format("%s\n%s",c.getCallSign(),c.getAircraft());
+            return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode());
 
         }
 
         return  String.format("%s %2s",c.getCallSign(),c.getMagnCourse())  +"\n"+
-                c.getAircraft()+"\n"+
+                c.getModel()+"\n"+
                 String.format("%1s %2s", c.getFlightLevel(),c.getAirSpeed());
     }
 

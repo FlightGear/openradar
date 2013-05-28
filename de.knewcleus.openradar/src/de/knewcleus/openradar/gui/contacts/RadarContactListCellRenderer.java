@@ -317,7 +317,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
                 long seconds = (System.currentTimeMillis()-value.getLastUpdate())/1000;
                 lbAircraft.setText("inact.: "+seconds+" sec");
             } else {
-                lbAircraft.setText(value.getAircraft());
+                lbAircraft.setText(value.getModel());
             }
 
             taAtcComment.setText(value.getAtcComment());
@@ -338,7 +338,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
                 long seconds = (System.currentTimeMillis()-value.getLastUpdate())/1000;
                 lbAircraft.setText("inact.: "+seconds+" sec");
             } else {
-                lbAircraft.setText(value.getAircraft());
+                lbAircraft.setText(value.getAircraftCode());
             }
 
             taAtcComment.setText(value.getAtcComment());

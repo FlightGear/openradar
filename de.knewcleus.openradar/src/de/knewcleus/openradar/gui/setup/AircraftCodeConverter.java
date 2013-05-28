@@ -77,8 +77,11 @@ public class AircraftCodeConverter {
                 return ad.icao;
             }
         }
-        // todo log warning
-        return modelName.length()>10 ? modelName.substring(0,10):modelName;
+        return checkLength(modelName, 10) ;
+    }
+
+    public static String checkLength(String source, int length) {
+        return source.length()>length ? source.substring(0,length):source;
     }
 
     private class AircraftDefinition {

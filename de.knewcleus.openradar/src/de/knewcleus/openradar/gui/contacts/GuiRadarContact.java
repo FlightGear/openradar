@@ -40,6 +40,7 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.setup.AircraftCodeConverter;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 import de.knewcleus.openradar.rpvd.RadarTargetView;
@@ -75,6 +76,7 @@ public class GuiRadarContact {
     private volatile FlightState currentFlightState;
 
     private String aircraft = "";
+    private String activeModel = "";
     private String formerModel = "";
     private String flightPlan = "";
     private volatile String atcComment = null;
@@ -270,9 +272,23 @@ public class GuiRadarContact {
         }
         return lastHeading;
     }
+    /**
+     * Returns the model name that the contact uses.
+     *
+     * @return
+     */
+    public synchronized String getModel() {
+        checkModel();
+        return activeModel;
+    }
 
-    public synchronized String getAircraft() {
+    public synchronized String getAircraftCode() {
+        checkModel();
+        return aircraft;
+    }
 
+    /** common code for getModel() and getAircraftCode()*/
+    private void checkModel() {
         String model = player.getModel();
         if(model!=null && !model.equals(formerModel)) {
             boolean checkForAutoAtcNeglect = formerModel.equals("");
@@ -280,13 +296,13 @@ public class GuiRadarContact {
             if(model.contains(".xml")) {
                 model = model.toUpperCase().substring(model.lastIndexOf("/")+1,model.indexOf(".xml"));
             }
+            activeModel = AircraftCodeConverter.checkLength(model,10);
             aircraft = airportData.getAircraftCodeConverter().convert(model);
 
             if(checkForAutoAtcNeglect && isAtc()) {
                 this.setNeglect(true); // auto neglect for ATCs
             }
         }
-        return aircraft;
     }
 
     public synchronized double getVerticalSpeedD() {
@@ -449,7 +465,7 @@ public class GuiRadarContact {
     }
 
     public boolean isAtc() {
-        String acrft = getAircraft().toUpperCase();
+        String acrft = getModel().toUpperCase();
         return acrft.startsWith("ATC") || acrft.startsWith("OPENRA");
     }
 

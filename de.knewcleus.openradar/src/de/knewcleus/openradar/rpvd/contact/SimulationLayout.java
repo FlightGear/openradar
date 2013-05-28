@@ -125,7 +125,7 @@ public class SimulationLayout extends ADatablockLayout {
     @Override
     public String getDataBlockText(GuiRadarContact c) {
         if(c.isAtc()) {
-            return String.format("%s\n%s",c.getCallSign(),c.getAircraft());
+            return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode());
 
         }
 
@@ -154,7 +154,7 @@ public class SimulationLayout extends ADatablockLayout {
             } else {
                 // squawk codes match
                 sb.append(c.getCallSign()).append("\n");
-                sb.append(c.getAircraft()).append("\n");
+                sb.append(c.getAircraftCode()).append("\n");
                 if(c.getTranspAltitude()!=null) {
                     sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
                 } else {
@@ -165,7 +165,7 @@ public class SimulationLayout extends ADatablockLayout {
             }
             return sb.toString();
         } else {
-            return String.format("%s\n%s",c.getCallSign(),c.getAircraft())+"\n"+
+            return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode())+"\n"+
                     String.format("%03.0f*%02.0f",c.getAltitude()/100,c.getGroundSpeedD()/10);
         }
     }

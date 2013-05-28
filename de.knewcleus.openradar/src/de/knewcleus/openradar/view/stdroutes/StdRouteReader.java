@@ -28,6 +28,7 @@
  */
 package de.knewcleus.openradar.view.stdroutes;
 
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -97,8 +98,13 @@ public class StdRouteReader {
                     List<Element> list = rootNode.getChildren("addPoint");
                     for (Element eAddPoint : list) {
                         String code = eAddPoint.getAttributeValue("code");
-                        String point = eAddPoint.getAttributeValue("point");
-                        data.getNavaidDB().addPoint(code, point);
+                        String sPoint = eAddPoint.getAttributeValue("point");
+                        try {
+                            Point2D point = StdRoute.getPoint(data, mapViewAdapter, sPoint ,null);
+                            data.getNavaidDB().addPoint(code, point);
+                        } catch (Exception e) {
+                            log.severe("Problem to parse file " + file.getAbsolutePath() + ", addPoint: " + code + ": " + sPoint+ ", Error:" + e.getMessage());
+                        }
                     }
                     List<Element> includeList = rootNode.getChildren("include");
                     for (Element eInclude : includeList) {

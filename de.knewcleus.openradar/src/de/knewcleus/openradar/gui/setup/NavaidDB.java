@@ -33,6 +33,7 @@
 package de.knewcleus.openradar.gui.setup;
 
 import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -201,7 +202,7 @@ public class NavaidDB {
         return !stdRoutes.isEmpty();
     }
 
-    public synchronized void addPoint(String code, String point) {
+    public synchronized void addPoint(String code, Point2D point) {
         AdditionalFix fix = new AdditionalFix(code, point);
         addNavpointList.add(fix);
         registerNavaid(fix);

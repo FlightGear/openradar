@@ -120,7 +120,7 @@ public class PureSimulationLayout extends ADatablockLayout {
     @Override
     public String getDataBlockText(GuiRadarContact c) {
         if(c.isAtc()) {
-            return String.format("%s\n%s",c.getCallSign(),c.getAircraft());
+            return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode());
 
         }
 
@@ -156,7 +156,7 @@ public class PureSimulationLayout extends ADatablockLayout {
                     sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");
                 }
                 sb.append(String.format("%02.0f",c.getGroundSpeedD()/10)).append("\n");
-                sb.append(c.getAircraft());
+                sb.append(c.getAircraftCode());
             }
             return sb.toString();
         } else {

@@ -40,9 +40,6 @@ import java.util.StringTokenizer;
 
 import com.sun.istack.internal.logging.Logger;
 
-import de.knewcleus.fgfs.navdata.impl.Intersection;
-import de.knewcleus.fgfs.navdata.impl.NDB;
-import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
@@ -258,6 +255,11 @@ public class StdRoute {
     }
 
     public Point2D getPoint(String pointDescr, AStdRouteElement previous) {
+        return getPoint(data,mapViewerAdapter,pointDescr,previous);
+    }
+
+    public static Point2D getPoint(AirportData data, IMapViewerAdapter mapViewerAdapter, String pointDescr, AStdRouteElement previous) {
+
         if (pointDescr.matches("[A-Z0-9]*-RW[A-Z0-9]*")) {
             String airportCode = pointDescr.substring(0,pointDescr.indexOf("-"));
             if (!data.getAirportCode().equals(airportCode)) {
@@ -309,7 +311,7 @@ public class StdRoute {
      * @param pointDescr
      * @return
      */
-    private Point2D parsePoint(String pointDescr) {
+    private static Point2D parsePoint(String pointDescr) {
         String lat = pointDescr.substring(0, pointDescr.indexOf(","));
         double latD = 0;
         if(lat.contains("°") && lat.contains("'") && lat.contains("''")) {
