@@ -71,7 +71,8 @@ public class FixName extends AViewObject {
         }
 
         setTextCoordinates(new Point2D.Double(newDisplayPosition.getX()+12,newDisplayPosition.getY()));
-        if(data.getRadarObjectFilterState("FIX") || highLightColor!=null) {
+        String fixType = fix.getIdentification().matches("[\\w]{4}[\\d]{1}")?"FIX_NUM":"FIX";
+        if(showNavaid(data, fixType, highLightColor, fix.getIdentification())) {
             text = activeText;
         } else {
             text = null;

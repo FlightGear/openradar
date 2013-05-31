@@ -75,7 +75,8 @@ public class FixSymbol extends AViewObject {
             this.color = defaultColor;
         }
 
-        if(data.getRadarObjectFilterState("FIX") || highLightColor!=null) {
+        String fixType = fix.getIdentification().matches("[\\w]{4}[\\d]{1}")?"FIX_NUM":"FIX";
+        if(showNavaid(data, fixType, highLightColor, fix.getIdentification())) {
             final double x, y;
             x = newDisplayPosition.getX();
             y = newDisplayPosition.getY();

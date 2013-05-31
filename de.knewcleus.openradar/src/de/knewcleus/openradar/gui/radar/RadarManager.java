@@ -120,7 +120,7 @@ public class RadarManager {
             JComponent itemSource = (JComponent) source;
             String objectName = itemSource.getName();
 
-            if (itemSource.getName().equals("FIX") || itemSource.getName().equals("NDB") || itemSource.getName().equals("VOR")
+            if (itemSource.getName().equals("FIX") || itemSource.getName().equals("FIX_NUM") || itemSource.getName().equals("NDB") || itemSource.getName().equals("VOR")
                     || itemSource.getName().equals("CIRCLES") || itemSource.getName().equals("APT") || itemSource.getName().equals("PPN")
                     || itemSource.getName().equals("GSH") || itemSource.getName().equals("STP") || itemSource.getName().equals("STARSID")) {
 

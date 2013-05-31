@@ -176,15 +176,17 @@ public class SimulationLayout extends ADatablockLayout {
         if(c.getTranspSquawkCode()!=null && ( 1200==c.getTranspSquawkCode() || 7000==c.getTranspSquawkCode())) {
             // Squawking VFR
             shape.modify(Type.EmptySquare, c, 6);
-        } else if(c.getAtcLetter()==null) {
+        } else if(c.getTranspSquawkCode()!=null && c.getAtcLetter()==null) {
             // untracked
             shape.modify(Type.Asterix, c, 6);
         } else  if(c.getTranspSquawkCode()==null) {
             // no squawk or standby
             shape.modify(Type.FilledDiamond, c, 8);
+        } else if(c.getTranspSquawkCode()!=null && c.getAtcLetter()!=null) {
+            // controlled
+            shape.modify(Type.Letter, c, 8);
         } else {
             shape.modify(Type.FilledDot, c, 6);
-            // shape = new ContactShape(Type.Letter, c);
         }
     }
 }

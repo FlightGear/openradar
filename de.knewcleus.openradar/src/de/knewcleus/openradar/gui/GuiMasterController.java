@@ -138,8 +138,7 @@ public class GuiMasterController {
         metarReader.start(); // loads metar and refreshes the runway panel
         radioManager.init();
         statusManager.start();
-        radarBackend.validateToggles();
-        radarBackend.addRadarViewListener(mpChatManager); // forwards Zoom and center changes to MPChat
+        radarBackend.start(); // forwards Zoom and center changes to MPChat
         radarContactManager.start(); // GUI updater
         mpChatManager.start(); // GUI Updater
         initShortCuts();

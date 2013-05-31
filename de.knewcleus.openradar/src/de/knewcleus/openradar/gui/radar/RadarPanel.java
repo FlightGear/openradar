@@ -69,6 +69,7 @@ public class RadarPanel extends JPanel {
     private RadarMapPanel radarView;
 
     private JCheckBoxMenuItem mItemFIX;
+    private JCheckBoxMenuItem mItemFIX_NUM;
     private JCheckBoxMenuItem mItemNDB;
     private JCheckBoxMenuItem mItemVOR;
     private JCheckBoxMenuItem mItemCircles;
@@ -224,6 +225,13 @@ public class RadarPanel extends JPanel {
         mItemFIX.setToolTipText("Toggle display of FIX");
         mItemFIX.addActionListener(master.getRadarManager().getObjectFilterListener());
         menuMap.add(mItemFIX);
+
+        mItemFIX_NUM = new JCheckBoxMenuItem();
+        mItemFIX_NUM.setText("RW-FIX (name includes numbers)");
+        mItemFIX_NUM.setName("FIX_NUM");
+        mItemFIX_NUM.setToolTipText("Toggle display of runway FIX");
+        mItemFIX_NUM.addActionListener(master.getRadarManager().getObjectFilterListener());
+        menuMap.add(mItemFIX_NUM);
 
         mItemNDB = new JCheckBoxMenuItem();
         mItemNDB.setText("NDB");
@@ -562,6 +570,7 @@ public class RadarPanel extends JPanel {
 
     public void validateToggles() {
         setObjectFilter(mItemFIX,master.getDataRegistry().getRadarObjectFilterState("FIX"));
+        setObjectFilter(mItemFIX_NUM,master.getDataRegistry().getToggleState("FIX_NUM", false));
         setObjectFilter(mItemNDB,master.getDataRegistry().getRadarObjectFilterState("NDB"));
         setObjectFilter(mItemVOR,master.getDataRegistry().getRadarObjectFilterState("VOR"));
         setObjectFilter(mItemCircles,master.getDataRegistry().getRadarObjectFilterState("CIRCLES"));
@@ -573,12 +582,12 @@ public class RadarPanel extends JPanel {
         setObjectFilter(mItemSTP2,master.getDataRegistry().getRadarObjectFilterState("STP"));
         setObjectFilter(mItemSTARSID,master.getDataRegistry().getRadarObjectFilterState("STARSID"));
         setObjectFilter(mItemSTARSID2,master.getDataRegistry().getRadarObjectFilterState("STARSID"));
-        
+
         setObjectFilter(mItemSoundMute,master.getDataRegistry().getRadarObjectFilterState("MUTE"));
         setObjectFilter(mItemSoundChat,master.getDataRegistry().getRadarObjectFilterState("CHAT"));
         setObjectFilter(mItemSoundContact,master.getDataRegistry().getRadarObjectFilterState("CONTACT"));
         setObjectFilter(mItemSoundMetar,master.getDataRegistry().getRadarObjectFilterState("METAR"));
-        
+
         setObjectFilter(mItemLANDMASS,master.getDataRegistry().getRadarObjectFilterState("LANDMASS"));
         setObjectFilter(mItemURBAN,master.getDataRegistry().getRadarObjectFilterState("URBAN"));
         setObjectFilter(mItemLAKE,master.getDataRegistry().getRadarObjectFilterState("LAKE"));

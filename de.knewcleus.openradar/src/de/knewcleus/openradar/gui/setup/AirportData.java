@@ -445,7 +445,12 @@ public class AirportData implements INavPointListener {
     }
 
     public boolean getToggleState(String objectName, boolean defaultValue) {
-        return toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : defaultValue;
+        if(toggleObjectsMap.get(objectName) != null) {
+            return toggleObjectsMap.get(objectName);
+        } else {
+            toggleObjectsMap.put(objectName, defaultValue);
+            return defaultValue;
+        }
     }
 
     public void setVisibleLayerMap(Map<String, Boolean> visibleLayerMap) {

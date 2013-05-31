@@ -50,9 +50,9 @@ public class AircraftCodeConverter {
 
         try {
             ir = new BufferedReader(new FileReader("data/aircraftCodes.txt"));
-            String line = ir.readLine().trim();
+            String line = removeComment(ir.readLine().trim());
             while(line!=null) {
-                if(!line.startsWith("#")) {
+                if(!line.isEmpty()) {
                     StringTokenizer st = new StringTokenizer(line,",");
                     String regex = st.nextToken();
                     String icao = st.nextToken();
@@ -69,6 +69,13 @@ public class AircraftCodeConverter {
                 } catch (IOException e) {}
             }
         }
+    }
+
+    private String removeComment(String line) {
+        if(line.contains("#")) {
+            line = line.substring(0,line.indexOf("#"));
+        }
+        return line.trim();
     }
 
     public String convert(String modelName) {

@@ -41,6 +41,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 /**
@@ -178,4 +179,21 @@ public abstract class AViewObject {
 
     protected abstract void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter);
 
+    protected boolean showNavaid(AirportData data, String globalToggleKey, Color highlightColor, String name) {
+        boolean global = data.getRadarObjectFilterState(globalToggleKey); // e.g. FIX
+        boolean highlighted = highlightColor!=null;
+        boolean isFix = "FIX".equalsIgnoreCase(globalToggleKey);
+        boolean runwayFix = isFix && name.matches("[\\w]{4}[\\d]{1}");
+
+        if(!global && !highlighted) {
+            // globally disabled and not hightlighted
+            return false;
+        }
+        // globally enabled or at least highlighted
+        if(runwayFix && !highlighted) {
+            // hide non highlighted runwayFixes
+            return false;
+        }
+        return true;
+    }
 }

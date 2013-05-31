@@ -87,6 +87,11 @@ public class GuiRadarBackend implements IRadarDataRecipient {
         setZoomLevel("SECTOR");
     }
 
+    public void start() {
+        validateToggles();
+        addRadarViewListener(master.getMpChatManager()); // forwards Zoom and center changes to MPChat
+    }
+
     public void acceptRadarData(IRadarDataProvider provider, IRadarDataPacket radarData) {
         // TODO Auto-generated method stub
 
@@ -213,6 +218,10 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     public boolean getRadarObjectFilterState(String objectName) {
         return master.getDataRegistry().getRadarObjectFilterState(objectName);
+    }
+
+    public boolean getRadarObjectFilterState(String objectName, boolean defaultValue) {
+        return master.getDataRegistry().getToggleState(objectName,defaultValue);
     }
 
     public void validateToggles() {

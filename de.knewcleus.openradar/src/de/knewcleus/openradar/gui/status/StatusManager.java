@@ -80,7 +80,12 @@ public class StatusManager implements INavPointListener {
 
     public void start() {
         setSelectedCallSign("-nobody-");
-        String callsign = master.getDataRegistry().getCallSign()==null? master.getDataRegistry().getInitialATCCallSign() : master.getDataRegistry().getCallSign();
+        String callsign = master.getDataRegistry().getCallSign();
+        if(callsign==null) {
+            // initialize call sign
+            callsign = master.getDataRegistry().getInitialATCCallSign();
+            master.getDataRegistry().setCallSign(callsign);
+        }
         setCurrentCallSign(callsign);
         updateRunways();
     }

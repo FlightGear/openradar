@@ -47,18 +47,13 @@ public class IntersectionPainter extends AViewObjectPainter<IIntersection> {
     public IntersectionPainter(AirportData data, IMapViewerAdapter mapViewAdapter, IIntersection fix) {
         super(mapViewAdapter, fix);
 
-
-
-        if(!fix.getIdentification().matches("[\\w]{4}[\\d]{1}")) { // hide runway fixes
             Font font = Palette.BEACON_FONT;
-
 
             FixSymbol fs = new FixSymbol(data, fix, 0,100);
             viewObjectList.add(fs);
 
             FixName fn = new FixName(data, fix, font, Color.lightGray, 0 , 100);
             viewObjectList.add(fn);
-        }
     }
 
 }

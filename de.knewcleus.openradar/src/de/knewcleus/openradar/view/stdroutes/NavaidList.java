@@ -8,6 +8,7 @@ import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.NDB;
 import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.fgfs.navdata.model.IIntersection;
+import de.knewcleus.openradar.gui.setup.AdditionalFix;
 
 public class NavaidList {
 
@@ -30,6 +31,9 @@ public class NavaidList {
         if(navaids.contains(id)) {
             return true;
         } else {
+            if(navPoint instanceof AdditionalFix && navaids.contains("(FIX)"+id)) {
+                return true;
+            }
             if(navPoint instanceof Intersection && navaids.contains("(FIX)"+id)) {
                 return true;
             }
