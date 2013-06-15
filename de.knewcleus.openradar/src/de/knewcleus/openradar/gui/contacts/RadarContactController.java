@@ -68,12 +68,14 @@ import de.knewcleus.fgfs.multiplayer.IPlayerListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.chat.GuiChatMessage;
+import de.knewcleus.openradar.gui.chat.auto.AtcMessage;
 import de.knewcleus.openradar.gui.chat.auto.AtcMessageDialog;
 import de.knewcleus.openradar.gui.chat.auto.TextManager;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Operation;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
 import de.knewcleus.openradar.gui.radar.GuiRadarBackend;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 
 /**
@@ -801,9 +803,10 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         }
         if(name != null && newSquawkCode!=null) {
             // auto chat message
-            List<String> msgList = new ArrayList<String>();
-            msgList.add(name + " squawk "+newSquawkCode);
-            master.getMpChatManager().sendMessages(msgList);
+            AtcMessage msg = new AtcMessage("Assign squawk");
+            msg.addTranslation("en", "%s: squawk "+newSquawkCode);
+            msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
+            master.getMpChatManager().setAutoAtcMessage(msg);
         }
     }
 
@@ -814,5 +817,9 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 selectedContact.setAssignedSquawk(null);
             }
         }
+    }
+
+    public AirportData getAirportData() {
+        return master.getDataRegistry();
     }
 }

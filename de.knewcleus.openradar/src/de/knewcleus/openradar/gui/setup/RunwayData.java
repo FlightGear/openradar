@@ -75,11 +75,11 @@ public class RunwayData {
         this.rwCode = rwCode;
     }
 
-    public boolean isRepaintNeeded() {
+    public synchronized boolean isRepaintNeeded() {
         return repaintNeeded;
     }
 
-    public void setRepaintNeeded(boolean repaintNeeded) {
+    public synchronized void setRepaintNeeded(boolean repaintNeeded) {
         this.repaintNeeded = repaintNeeded;
     }
 
@@ -91,19 +91,19 @@ public class RunwayData {
         this.biDirectional = biDirectional;
     }
 
-    public boolean isLandingEnabled() {
+    public synchronized boolean isLandingEnabled() {
         return landingEnabled;
     }
 
-    public void setLandingEnabled(boolean landingEnabled) {
+    public synchronized void setLandingEnabled(boolean landingEnabled) {
         this.landingEnabled = landingEnabled;
     }
 
-    public boolean isStartingEnabled() {
+    public synchronized boolean isStartingEnabled() {
         return startingEnabled;
     }
 
-    public void setStartingEnabled(boolean startingEnabled) {
+    public synchronized void setStartingEnabled(boolean startingEnabled) {
         this.startingEnabled = startingEnabled;
     }
 

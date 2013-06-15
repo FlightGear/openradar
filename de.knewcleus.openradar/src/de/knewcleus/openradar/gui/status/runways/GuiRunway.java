@@ -72,11 +72,11 @@ public class GuiRunway implements ActionListener {
         this.rwData = new RunwayData(runwayEnd.getRunwayID());
     }
 
-    public void setRunwayPanel(RunwayPanel runwayPanel) {
+    public synchronized void setRunwayPanel(RunwayPanel runwayPanel) {
         this.runwayPanel = runwayPanel;
     }
 
-    public void setMetar(MetarData metar) {
+    public synchronized void setMetar(MetarData metar) {
         this.metar=metar;
     }
 

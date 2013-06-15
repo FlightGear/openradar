@@ -55,6 +55,7 @@ import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.IBoundedView;
 import de.knewcleus.openradar.view.IViewVisitor;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
+import de.knewcleus.openradar.weather.MetarData;
 
 /**
  * This class is a top layer on the radar screen and is used to display textual information
@@ -215,8 +216,9 @@ public class StPView implements IBoundedView, INotificationListener {
         // 1. magnetic
         angle = angle + Math.round(master.getDataRegistry().getMagneticDeclination());
         // 2. wind
+        MetarData metar = master.getAirportMetar();
         Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD());
-        Vector2D vWind = Vector2D.createVector2D((double)90-master.getMetar().getWindDirectionI(),master.getMetar().getWindSpeed());
+        Vector2D vWind = Vector2D.createVector2D((double)90-metar.getWindDirectionI(),metar.getWindSpeed());
         Vector2D vResult = contact.getAirSpeedD()>1 ? vOriginalAngle.add(vWind) : vOriginalAngle;
         Long lAngle = vResult.getAngleL();
 

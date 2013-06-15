@@ -142,15 +142,17 @@ public class PureSimulationLayout extends ADatablockLayout {
 
             if(!assignedSquawkTunedIn) {
                 // squawk codes do not match
-                sb.append(c.getTranspSquawkCode()).append("\n");
-                if(c.getTranspAltitude()!=null) {
+                sb.append(String.format("%s %2s",""+c.getTranspSquawkCode(),c.getMagnCourse())).append("\n");
+                if(!"-9999".equals(c.getTranspAltitude())) {
                     sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
+                } else {
+                    sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");
                 }
                 sb.append(String.format("%02.0f",c.getGroundSpeedD()/10));
             } else {
                 // squawk codes match
-                sb.append(c.getCallSign()).append("\n");
-                if(c.getTranspAltitude()!=null) {
+                sb.append(String.format("%s %2s",c.getCallSign(),c.getMagnCourse())).append("\n");
+                if(!"-9999".equals(c.getTranspAltitude())) {
                     sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
                 } else {
                     sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");

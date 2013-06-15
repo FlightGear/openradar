@@ -61,6 +61,8 @@ import de.knewcleus.openradar.gui.setup.AirportData;
  */
 public class MetarData {
 
+    private final boolean exists;
+
     private String metarBaseData = null;
     private AirportData data = null;
 
@@ -112,6 +114,8 @@ public class MetarData {
     private long created = System.currentTimeMillis();
 
     public MetarData(AirportData data, String metar) {
+        exists=true;
+
         // parse metar data
         this.metarBaseData = metar.substring(metar.indexOf("\n")).trim();
         this.data=data;
@@ -180,7 +184,7 @@ public class MetarData {
             if(t.matches("^[\\d]{4}.*$")) {
                 parseDirectionalVisibility(t);
             }
-            do {
+            while(true) {
                 if(t.matches("^CAVOK$")) parseCavok(t);
                 else if(t.matches("^R.*/.*$")) parseRunwayVisibility(t);
                 else if(t.matches("^A[\\d]{4}$")) parsePressureInHG(t);
@@ -188,8 +192,12 @@ public class MetarData {
                 else if(t.matches("[M]{0,1}^[\\d]{2}/[M]{0,1}[\\d]{2}$")) parseTemperatures(t); // todo M1/M4
                 else if(t.matches("^RMK$")) break; // means "national information follow
                 else parsePhenomena(t);
-                t = st.nextToken();
-            } while(st.hasMoreElements());
+                if(st.hasMoreElements()) {
+                    t = st.nextToken();
+                } else {
+                    break;
+                }
+            }
 
                 double angle = (double)(getWindDirectionI()-270)/360d*2*Math.PI;
                 windFromNorth = Math.sin(angle)*(double)getWindSpeed();
@@ -240,11 +248,24 @@ public class MetarData {
                 weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("HZ","haze,");
                 weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SU","dust,");
                 weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("SS","sand storm,");
+
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("REDZ","drizzle");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("RERA","rain,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("RESN","snow");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("REASN","snow");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("REFZRA","frozen rain,");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("RESH","showers ");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("REGR","hail");
+                weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("RETS","thunderstorm");
         } catch(Exception e) {
             Logger.getLogger(MetarData.class).warning("Failed to parse Metar: "+metar,e);
             weatherPhaenomena="";
         }
 
+    }
+
+    public MetarData() {
+        exists=false;
     }
 
     public boolean isNew() {
@@ -501,6 +522,19 @@ public class MetarData {
     public boolean equals(Object obj) {
         if(!(obj instanceof MetarData)) return false;
         return metarBaseData.equals(((MetarData)obj).metarBaseData);
+    }
+
+    public static MetarData createNotFoundMetar(String code) {
+        MetarData metar = new MetarData();
+        metar.airportCode=code;
+        metar.metarBaseData = "Metar for "+code+" not found, define alternative Metar via the dialog please!";
+        metar.weatherPhaenomena="Metar for "+code+" not found. (RightClick!)";
+
+        return metar;
+    }
+
+    public boolean exists() {
+        return exists;
     }
 
 }

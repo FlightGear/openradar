@@ -40,6 +40,7 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.setup.AircraftCodeConverter;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
@@ -78,7 +79,7 @@ public class GuiRadarContact {
     private String aircraft = "";
     private String activeModel = "";
     private String formerModel = "";
-    private String flightPlan = "";
+    private FlightPlanData flightPlan;
     private volatile String atcComment = null;
     protected volatile RadarTargetView view;
     protected final double airportElevationFt;
@@ -105,6 +106,8 @@ public class GuiRadarContact {
         flightStates.add(new FlightState("TWR","LANDING","LNDNG","Landing"));
         flightStates.add(new FlightState("GND","TAXI_TO_GATE","TXGT","Taxi to Gate/Parking"));
         currentFlightState=flightStates.get(0);
+
+        flightPlan = new FlightPlanData(master.getDataRegistry(), this);
     }
 
     public synchronized void setTargetStatus(TargetStatus player) {
@@ -187,12 +190,12 @@ public class GuiRadarContact {
         this.alignment = alignment;
     }
 
-    public String getFlightPlan() {
+    public synchronized FlightPlanData getFlightPlan() {
         return flightPlan;
     }
 
 
-    public void setFlightPlan(String flightPlan) {
+    public synchronized  void setFlightPlan(FlightPlanData  flightPlan) {
         this.flightPlan = flightPlan;
     }
 
@@ -333,9 +336,9 @@ public class GuiRadarContact {
     }
 
     public double getAirSpeedD() {
-        if(manager.getMaster().getMetar()==null) return -1;
+        MetarData metar = manager.getMaster().getAirportMetar();
+        if(metar==null) return -1;
 
-        MetarData metar = manager.getMaster().getMetar();
 
         if(airportElevationFt+50<getElevationFt()) {
             // in air
@@ -432,19 +435,19 @@ public class GuiRadarContact {
         this.atcLanguage = atcLanguage;
     }
 
-    public long getLastUpdate() {
+    public synchronized long getLastUpdate() {
         return player.getLastMessageTime();
     }
 
-    public Integer getTranspSquawkCode() {
+    public synchronized Integer getTranspSquawkCode() {
         return player.getTranspSquawkCode();
     }
 
-    public Integer getTranspAltitude() {
+    public synchronized Integer getTranspAltitude() {
         return player.getTranspAltitude();
     }
 
-    public boolean isIdentActive() {
+    public synchronized boolean isIdentActive() {
         return player.isIdentActive();
     }
 
@@ -464,7 +467,7 @@ public class GuiRadarContact {
         return System.currentTimeMillis() - appeared < 30000;
     }
 
-    public boolean isAtc() {
+    public synchronized boolean isAtc() {
         String acrft = getModel().toUpperCase();
         return acrft.startsWith("ATC") || acrft.startsWith("OPENRA");
     }

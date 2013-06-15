@@ -73,6 +73,9 @@ import de.knewcleus.openradar.rpvd.contact.DatablockLayoutManager;
  */
 public class SetupController {
 
+    private String propertiesFilename, autoStartAirport;
+    private SectorBean preselectedAirport = null;
+
     private SetupDialog setupDialog;
     private SetupActionListener setupActionListener = new SetupActionListener();
     private DefaultListModel<SectorBean> searchResultsModel = new DefaultListModel<SectorBean>();
@@ -86,7 +89,9 @@ public class SetupController {
 
     private final static Logger log = Logger.getLogger(SetupController.class.toString());
 
-    public SetupController() {
+    public SetupController(String propertiesFile, String autoStartAirport) {
+        this.propertiesFilename=propertiesFile;
+        this.autoStartAirport=autoStartAirport;
         parseSectorDir(); // fills existing airport list
         showDialog();
     }
@@ -106,14 +111,12 @@ public class SetupController {
             if (f.isDirectory() && f.getName().length() == 4) {
                 String airportCode = f.getName();
                 String airportName = "";
-                String metarSource = airportCode;
                 Point2D position = null;
                 double magneticDeclination = 0d;
                 File propertyFile = new File("data" + File.separator + airportCode + File.separator + "sector.properties");
                 if (propertyFile.exists()) {
                     Properties p = loadSectorProperties(airportCode);
                     airportName = p.getProperty("airportName", "");
-                    metarSource = p.getProperty("metarSource", airportCode);
                     if(p.getProperty("lat")!=null && p.getProperty("lon")!=null) {
                         double lon = Double.parseDouble(p.getProperty("lon", ""));
                         double lat = Double.parseDouble(p.getProperty("lat", ""));
@@ -125,8 +128,11 @@ public class SetupController {
                     }
                     magneticDeclination = Double.parseDouble(p.getProperty("magneticDeclination", "0"));
                 }
-                SectorBean sb = new SectorBean(airportCode, airportName, metarSource, position, magneticDeclination, true);
+                SectorBean sb = new SectorBean(airportCode, airportName, position, magneticDeclination, true);
                 mapExistingSectors.put(airportCode, sb);
+                if(sb.getAirportCode().equalsIgnoreCase(autoStartAirport)) {
+                    preselectedAirport=sb;
+                }
             }
         }
         for (SectorBean sb : mapExistingSectors.values()) {
@@ -136,7 +142,9 @@ public class SetupController {
 
     private void showDialog() {
         setupDialog = new SetupDialog(this);
+
         setupDialog.setVisible(true);
+        setupDialog.preselectAirport(autoStartAirport, preselectedAirport);
     }
 
     public ActionListener getActionListener() {
@@ -226,7 +234,7 @@ public class SetupController {
                         name.append(st.nextToken());
                     }
                     if(airportCode.toUpperCase().contains(searchTerm.toUpperCase()) || name.toString().toUpperCase().contains(searchTerm.toUpperCase())) {
-                        SectorBean sb = new SectorBean(airportCode, name.toString(), airportCode, mapExistingSectors.containsKey(airportCode));
+                        SectorBean sb = new SectorBean(airportCode, name.toString(), mapExistingSectors.containsKey(airportCode));
                         mapFindings.put(airportCode, sb);
                     }
                 }
@@ -391,6 +399,14 @@ public class SetupController {
             }
         }
         throw new IllegalStateException("apt.dat not found in sectors/AtpNav.zip!");
+    }
+
+    public String getPropertiesFile() {
+        if(propertiesFilename==null) {
+            propertiesFilename = "user.properties";
+        }
+
+        return propertiesFilename;
     }
 
 }

@@ -84,6 +84,9 @@ public class RadioModel extends AbstractListModel<RadioFrequency> implements Com
                 setSelectedItem(frequencyList.get(preselectedIndex));
             }
         }
+        if(radioKey.equals("COM0")) {
+            master.getMpChatManager().getMpBackend().setFrequency(selectedFrequency.getFrequency());
+        }
     }
 
     public String getRadioKey() {

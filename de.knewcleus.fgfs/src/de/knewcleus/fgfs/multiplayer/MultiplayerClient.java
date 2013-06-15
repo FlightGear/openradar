@@ -127,9 +127,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
             activeChatMessage = chatQueue.remove(0);
             activeChatMessage.firstSendTime = System.currentTimeMillis();
         }
-        // todo activate when all users have updated
-        // positionMessage.putProperty("sim/multiplay/transmission-freq-hz",
-        // this.frequency);
+        positionMessage.putProperty("sim/multiplay/transmission-freq-hz", this.frequency);
         // send it
         if (activeChatMessage != null) {
             positionMessage.putProperty("sim/multiplay/chat", activeChatMessage.message);
@@ -158,9 +156,13 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
      *
      * @param message
      */
-    public void sendChatMessage(String f, String message) {
+    public synchronized void sendChatMessage(String f, String message) {
         // chatQueue is synchronized itself
         chatQueue.add(new OutgoingMessage(message));
+        setFrequency(f);
+    }
+
+    public synchronized void setFrequency(String f) {
         if (!"".equals(f.trim())) {
             f = f.replaceAll(",", ".");
             BigDecimal bd = new BigDecimal(f).multiply(new BigDecimal(1000000));
@@ -188,7 +190,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
                 if (f != null) {
                     BigDecimal bdFreq = new BigDecimal((String) positionMessage.getProperty("sim/multiplay/transmission-freq-hz"));
                     bdFreq = bdFreq.divide(new BigDecimal(1000000));
-                    frequency = String.format("%1.1f", bdFreq);
+                    frequency = String.format("%1.3f", bdFreq);
                 }
                 // transponder data
                 Integer transponderSquawkCode = (Integer) positionMessage.getProperty("instrumentation/transponder/id-code");

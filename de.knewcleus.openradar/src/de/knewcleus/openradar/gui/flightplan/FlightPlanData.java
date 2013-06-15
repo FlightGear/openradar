@@ -44,12 +44,15 @@ public class FlightPlanData {
 
     private final GuiRadarContact contact;
 
+    private String assignedAltitude;
+    private String assignedRoute;
+    private String assignedRunway;
+
     private String flightCode;
     private String callSign;
     private String owner;
     private String handover;
     private String squawk;
-    private String assignedAltitude;
     private String fpStatus;
     private String type;
     private String aircraft;
@@ -69,16 +72,19 @@ public class FlightPlanData {
 
     public FlightPlanData(AirportData airportData, GuiRadarContact contact) {
 
+        this.assignedAltitude = null;
+        this.assignedRoute = null;
+        this.assignedRunway = null;
+
         this.contact = contact;
         this.callSign = contact.getCallSign();
         this.owner = airportData.getCallSign();
         this.handover = null;
         this.squawk = ""+contact.getAssignedSquawk();
-        this.assignedAltitude = null;
         this.fpStatus = FlightPlanStatus.FILED.toString();
         this.type = FlightType.IFR.toString();
         this.aircraft = contact.getAircraftCode();
-        this.departureAirport = airportData.getAirportCode();
+        this.departureAirport = (contact.getRadarContactDistanceD()<10 && contact.getGroundSpeedD()<5) ? airportData.getAirportCode() : "";
         this.departureTime = FpTimeUtil.getUTCTimeString4Digits(new Date());
         this.cruisingAltitude = null;
         this.route = null;
@@ -96,13 +102,16 @@ public class FlightPlanData {
             String destinationAirport, String alternativeDestinationAirports, String estimatedFlightTime, String estimatedFuelTime, String pilotName,
             int soulsOnBoard, String remarks) {
 
+        this.assignedAltitude = null;
+        this.assignedRoute = null;
+        this.assignedRunway = null;
+
         this.contact = contact;
         this.flightCode = flightCode;
         this.callSign = callSign;
         this.owner = owner;
         this.handover = handover;
         this.squawk = squawk;
-        this.assignedAltitude = assignedAltitude;
         this.fpStatus = fpStatus;
         this.type = type;
         this.aircraft = aircraft;
@@ -158,6 +167,22 @@ public class FlightPlanData {
     public synchronized void setAssignedAltitude(String assignedAltitude) {
         this.assignedAltitude = assignedAltitude;
     }
+    public String getAssignedRoute() {
+        return assignedRoute;
+    }
+
+    public void setAssignedRoute(String assignedRoute) {
+        this.assignedRoute = assignedRoute;
+    }
+
+    public String getAssignedRunway() {
+        return assignedRunway;
+    }
+
+    public void setAssignedRunway(String assignedRunway) {
+        this.assignedRunway = assignedRunway;
+    }
+
     public synchronized String getFpStatus() {
         return fpStatus;
     }

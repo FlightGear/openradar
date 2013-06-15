@@ -54,6 +54,7 @@ import de.knewcleus.openradar.gui.status.runways.RunwaySettingsDialog;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.navdata.INavPointListener;
+import de.knewcleus.openradar.weather.MetarData;
 
 /**
  * The controller for the status info panel
@@ -127,8 +128,9 @@ public class StatusManager implements INavPointListener {
         // 1. magnetic
         angle = angle + Math.round(master.getDataRegistry().getMagneticDeclination());
         // 2. wind
+        MetarData metar = master.getAirportMetar();
         Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD());
-        Vector2D vWind = Vector2D.createVector2D((double)90-master.getMetar().getWindDirectionI(),master.getMetar().getWindSpeed());
+        Vector2D vWind = Vector2D.createVector2D((double)90-metar.getWindDirectionI(),metar.getWindSpeed());
         Vector2D vResult = vOriginalAngle.add(vWind);
         Long lAngle = vResult.getAngleL();
 
@@ -178,9 +180,16 @@ public class StatusManager implements INavPointListener {
     private class RunwayMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
+            // runway number
+            if(e.getButton()==MouseEvent.BUTTON1 && e.getClickCount()==2 && e.getSource() instanceof JLabel) {
+                String runwayID = ((JLabel)e.getSource()).getName();
+                ((RunwayPanel)((JLabel)e.getSource()).getParent()).sendRunwayMessage(runwayID);
+            }
+            // runway panel
             if(e.getButton()==MouseEvent.BUTTON1 && e.getClickCount()==2 && e.getSource() instanceof RunwayPanel) {
                 ((RunwayPanel)e.getSource()).toggleActiveRunwayVisibility();
             }
+            // dialog
             if(e.getButton()==MouseEvent.BUTTON3 && e.getClickCount()==1 && e.getSource() instanceof JLabel) {
                 String rwCode = ((JLabel)e.getSource()).getText();
                 if(rwCode!=null) {
@@ -188,12 +197,12 @@ public class StatusManager implements INavPointListener {
                     settingDialog.showData(rwCode);
                 }
             }
-        }
-        @Override
-        public void mouseEntered(MouseEvent e) {
             if(e.getSource() instanceof RunwayPanel) {
                 ((RunwayPanel)e.getSource()).setActiveRunwayVisibility(true);
             }
+        }
+        @Override
+        public void mouseEntered(MouseEvent e) {
         }
 
         @Override
@@ -213,6 +222,9 @@ public class StatusManager implements INavPointListener {
 //
     public String getActiveRunways() {
         return statusPanel.getActiveRunways();
+    }
+    public String getActiveLandingRunways() {
+        return statusPanel.getActiveLandingRunways();
     }
 
     public void hideRunwayDialog() {

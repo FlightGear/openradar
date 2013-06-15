@@ -335,6 +335,9 @@ public class RadarMapPanel extends JComponent {
             center = new Point2D.Double(centerLon, centerLat);
             this.radarMapViewAdapter.setCenter(center);
 
+            // check which airports in range have a metar
+            master.getMetarReader().retrieveWeatherStations(master.getDataRegistry().getNavaidDB().getAerodromes());
+
             setupDialog.setStatus(100, "Ready.");
 
             ToolTipManager toolTipManager = ToolTipManager.sharedInstance();

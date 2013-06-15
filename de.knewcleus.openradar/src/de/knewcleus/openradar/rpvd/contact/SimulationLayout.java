@@ -38,6 +38,7 @@ import java.awt.Font;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.rpvd.contact.ContactShape.Type;
 /**
  * This data block layout aims to be closer on the reality.
@@ -146,16 +147,23 @@ public class SimulationLayout extends ADatablockLayout {
 
             if(!assignedSquawkTunedIn) {
                 // squawk codes do not match
-                sb.append(c.getTranspSquawkCode()).append("\n");
-                if(c.getTranspAltitude()!=null) {
+                sb.append(String.format("%s %s",""+c.getTranspSquawkCode(),c.getMagnCourse())).append("\n");
+                if(!"-9999".equals(c.getTranspAltitude())) {
                     sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
+                } else {
+                    sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");
                 }
                 sb.append(String.format("%02.0f",c.getGroundSpeedD()/10));
             } else {
                 // squawk codes match
-                sb.append(c.getCallSign()).append("\n");
-                sb.append(c.getAircraftCode()).append("\n");
-                if(c.getTranspAltitude()!=null) {
+                sb.append(String.format("%s %s",c.getCallSign(),c.getMagnCourse())).append("\n");
+                sb.append(c.getAircraftCode());
+                String addData = getAddData(c);
+                if(addData.isEmpty()) {
+                    sb.append(" ").append(addData);
+                }
+                sb.append("\n");
+                if(!"-9999".equals(c.getTranspAltitude())) {
                     sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
                 } else {
                     sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");
@@ -165,9 +173,26 @@ public class SimulationLayout extends ADatablockLayout {
             }
             return sb.toString();
         } else {
-            return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode())+"\n"+
-                    String.format("%03.0f*%02.0f",c.getAltitude()/100,c.getGroundSpeedD()/10);
+            String addData = getAddData(c);
+            return String.format("%s %s\n",c.getCallSign(),c.getMagnCourse()) +
+            	   String.format("%s %s\n",c.getAircraftCode(),addData)+
+                   String.format("%03.0f*%02.0f",c.getAltitude()/100,c.getGroundSpeedD()/10);
         }
+    }
+
+    private String getAddData(GuiRadarContact c) {
+        FlightPlanData fp = c.getFlightPlan();
+        if(fp.getAssignedRoute()!=null && !fp.getAssignedRoute().isEmpty()) {
+            return fp.getAssignedRoute();
+        }
+        if(fp.getAssignedRunway()!=null && !fp.getAssignedRunway().isEmpty()) {
+            return "rw"+fp.getAssignedRunway();
+        }
+        if(fp.getDestinationAirport()!=null && !fp.getDestinationAirport().isEmpty()) {
+            return fp.getDestinationAirport();
+        }
+
+        return "";
     }
 
     @Override

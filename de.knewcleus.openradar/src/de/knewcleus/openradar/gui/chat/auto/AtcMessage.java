@@ -86,7 +86,7 @@ public class AtcMessage {
 
     public static String replaceVariables(String text, GuiMasterController master, GuiRadarContact contact, List<String> variables ) {
         AirportData data = master.getDataRegistry();
-        MetarData metar = master.getMetarReader().getMetar();
+        MetarData metar = master.getMetarReader().getMetar(data.getMetarSource());
 
         /*
          *
@@ -123,6 +123,9 @@ public class AtcMessage {
                 }
             } else if("/sim/atc/activeRW".equals(varName)) {
                 values.add(master.getStatusManager().getActiveRunways());
+
+            } else if("/openradar/activeLandingRW".equals(varName)) {
+                values.add(master.getStatusManager().getActiveLandingRunways());
 
             } else if("/sim/atc/wind-from-display".equals(varName)) {
                 values.add((float)metar.getWindDirectionI());

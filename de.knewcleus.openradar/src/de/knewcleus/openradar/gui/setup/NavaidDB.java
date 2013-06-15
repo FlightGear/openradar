@@ -61,6 +61,7 @@ public class NavaidDB {
     private final Map<String, List<IIntersection>> navaidMap = Collections.synchronizedMap(new TreeMap<String, List<IIntersection>>());
     private List<StdRoute> stdRoutes = Collections.synchronizedList(new ArrayList<StdRoute>());
     private List<IIntersection> addNavpointList = Collections.synchronizedList(new ArrayList<IIntersection>());
+    private List<Aerodrome> aerodromeList = Collections.synchronizedList(new ArrayList<Aerodrome>());
 
     private final static Logger log = Logger.getLogger(NavaidDB.class.toString());
 
@@ -74,6 +75,11 @@ public class NavaidDB {
             list.add(navPoint);
         }
         //list.add(navPoint);
+
+        if(navPoint instanceof Aerodrome) {
+            aerodromeList.add((Aerodrome)navPoint);
+        }
+
     }
 
     /**
@@ -227,4 +233,7 @@ public class NavaidDB {
         return result;
     }
 
+    public synchronized List<Aerodrome> getAerodromes() {
+        return aerodromeList;
+    }
 }

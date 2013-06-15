@@ -331,7 +331,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
             lbFlightLevel.setText("");
             lbRadarDistance.setText("");
             // lbRadarBearing.setText("@"+value.getRadarContactDirection()+"°");
-            lbSquawkCode.setText("");
+            lbSquawkCode.setText(value.getFrequency());
             if(value.isNeglect()) {
                 lbAircraft.setText("neglected");
             } else if(!value.isActive()) {
@@ -424,8 +424,9 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
     }
 
     private String getSquawkDisplay(GuiRadarContact c) {
-        if(c.getTranspSquawkCode()==null) return "";
-        if(c.getAssignedSquawk()==null) return ""+c.getTranspSquawkCode();
+        if(c.getAssignedSquawk()==null && c.getTranspSquawkCode()==null) return "";
+        if(c.getAssignedSquawk()!=null && c.getTranspSquawkCode()==null) return ""+c.getAssignedSquawk()+"(standby)";
+        if(c.getAssignedSquawk()==null) return "("+c.getTranspSquawkCode()+")";
         if(c.getAssignedSquawk().equals(c.getTranspSquawkCode())) return ""+c.getTranspSquawkCode();
         return c.getAssignedSquawk()+"("+c.getTranspSquawkCode()+")";
     }

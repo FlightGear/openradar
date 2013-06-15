@@ -759,6 +759,15 @@ public class SetupDialog extends JFrame {
         doLayout();
     }
 
+    void preselectAirport(String code, SectorBean autostartAirport) {
+        if(autostartAirport!=null) {
+            liSearchResults.setSelectedValue(autostartAirport, true);
+            btStart.requestFocus();
+        } else if(code!=null) {
+            tfSearchBox.setText(code.trim().toUpperCase());
+        }
+    }
+
     public String getSearchTerm() {
         return tfSearchBox.getText();
     }
@@ -927,8 +936,9 @@ public class SetupDialog extends JFrame {
     }
 
     private void loadProperties() {
+        String filename = setupManager.getPropertiesFile();
         File defaultsFile = new File("settings" + File.separator + "defaults.properties");
-        File userFile = new File("settings" + File.separator + "user.properties");
+        File userFile = new File("settings" + File.separator + filename);
         FileReader defReader = null;
         FileReader userReader = null;
         if (defaultsFile.exists()) {
@@ -994,7 +1004,8 @@ public class SetupDialog extends JFrame {
     }
 
     private void saveProperties() {
-        File userFile = new File("settings" + File.separator + "user.properties");
+        String filename = setupManager.getPropertiesFile();
+        File userFile = new File("settings" + File.separator + filename);
         Properties p = new Properties();
         p.put("fgCom.mode", fgComMode.toString());
         p.put("fgCom.path", tfFgComPath.getText());
@@ -1041,7 +1052,6 @@ public class SetupDialog extends JFrame {
                 data.setAirportCode(sb.getAirportCode());
                 data.setAirportPosition(sb.getPosition());
                 data.setAirportName(sb.getAirportName());
-                data.setMetarSource(sb.getMetarSource());
                 data.setMagneticDeclination(sb.getMagneticDeclination());
                 btStart.setEnabled(readInputs(data));
                 btCreateSector.setEnabled(false);

@@ -154,7 +154,7 @@ public class Player {
         if(freq!=null) {
             BigDecimal bdFreq = new BigDecimal(freq);
             bdFreq = bdFreq.divide(new BigDecimal(1000000));
-            frequency = String.format("%1.1f", bdFreq);
+            frequency = String.format("%1.3f", bdFreq);
         }
         // model may change too if you exit and return with same callsign
         this.model = packet.getModel();

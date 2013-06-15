@@ -56,15 +56,16 @@ import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.Helipad;
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
-import de.knewcleus.openradar.flightplan.SquawkCodeManager;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+import de.knewcleus.openradar.gui.flightplan.SquawkCodeManager;
 import de.knewcleus.openradar.gui.status.radio.Radio;
 import de.knewcleus.openradar.gui.status.radio.RadioFrequency;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
 import de.knewcleus.openradar.rpvd.contact.DatablockLayoutManager;
 import de.knewcleus.openradar.view.glasspane.StPView;
 import de.knewcleus.openradar.view.navdata.INavPointListener;
+import de.knewcleus.openradar.weather.MetarReader;
 
 /**
  * This class stores information about Navaids, Runways for use in frontend
@@ -104,6 +105,7 @@ public class AirportData implements INavPointListener {
                                     // flightgear want to use this port
     private String metarUrl = "http://weather.noaa.gov/pub/data/observations/metar/stations/";
     private String metarSource = null;
+    private String addMetarSources = null;
 
     private volatile String callSign = null;
 
@@ -293,22 +295,30 @@ public class AirportData implements INavPointListener {
         this.mpLocalPort = mpLocalPort;
     }
 
-    public String getMetarUrl() {
+    public synchronized String getMetarUrl() {
         return metarUrl;
     }
 
-    public void setMetarUrl(String metarUrl) {
+    public synchronized void setMetarUrl(String metarUrl) {
         this.metarUrl = metarUrl;
     }
 
     // NavPointListener
 
-    public String getMetarSource() {
+    public synchronized String getMetarSource() {
         return metarSource;
     }
 
-    public void setMetarSource(String metarSource) {
+    public synchronized void setMetarSource(String metarSource) {
         this.metarSource = metarSource;
+    }
+
+    public synchronized String getAddMetarSources() {
+        return addMetarSources;
+    }
+
+    public synchronized void setAddMetarSources(String addMetarSources) {
+        this.addMetarSources = addMetarSources;
     }
 
     /**
@@ -316,7 +326,7 @@ public class AirportData implements INavPointListener {
      * gather additional information
      */
     @Override
-    public void navPointAdded(INavPoint point) {
+    public synchronized void navPointAdded(INavPoint point) {
         if (point instanceof Aerodrome) {
             Aerodrome aerodrome = (Aerodrome) point;
             if (aerodrome.getIdentification().equals(getAirportCode())) {
@@ -411,40 +421,40 @@ public class AirportData implements INavPointListener {
 
     }
 
-    public String getAirportDir() {
+    public synchronized String getAirportDir() {
         if (sectorDir == null) {
             sectorDir = "data" + File.separator + airportCode + File.separator;
         }
         return sectorDir;
     }
 
-    public String getInitialATCCallSign() {
+    public synchronized String getInitialATCCallSign() {
         return getAirportCode() + "_TW";
     }
 
-    public RunwayData getRunwayData(String runwayCode) {
+    public synchronized RunwayData getRunwayData(String runwayCode) {
         if (runways.get(runwayCode) == null)
             return null;
         return runways.get(runwayCode).getRunwayData();
     }
 
-    public void setRadarObjectFilter(GuiMasterController master, String objectName) {
+    public synchronized void setRadarObjectFilter(GuiMasterController master, String objectName) {
         boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
         toggleObjectsMap.put(objectName, !oldState);
         storeAirportData(master);
     }
 
-    public void changeToggle(GuiMasterController master, String objectName, boolean defaultValue) {
+    public synchronized void changeToggle(GuiMasterController master, String objectName, boolean defaultValue) {
         boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : defaultValue;
         toggleObjectsMap.put(objectName, !oldState);
         storeAirportData(master);
     }
 
-    public boolean getRadarObjectFilterState(String objectName) {
+    public synchronized boolean getRadarObjectFilterState(String objectName) {
         return toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
     }
 
-    public boolean getToggleState(String objectName, boolean defaultValue) {
+    public synchronized boolean getToggleState(String objectName, boolean defaultValue) {
         if(toggleObjectsMap.get(objectName) != null) {
             return toggleObjectsMap.get(objectName);
         } else {
@@ -453,15 +463,15 @@ public class AirportData implements INavPointListener {
         }
     }
 
-    public void setVisibleLayerMap(Map<String, Boolean> visibleLayerMap) {
+    public synchronized void setVisibleLayerMap(Map<String, Boolean> visibleLayerMap) {
         this.visibleLayerMap=visibleLayerMap;
     }
 
-    public boolean isLayerVisible(String name) {
+    public synchronized boolean isLayerVisible(String name) {
         return visibleLayerMap.get(name) != null ? visibleLayerMap.get(name) : false;
     }
 
-    public void loadAirportData(GuiMasterController master) {
+    public synchronized void loadAirportData(GuiMasterController master) {
         File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
         if (propertyFile.exists()) {
             Properties p = new Properties();
@@ -471,6 +481,15 @@ public class AirportData implements INavPointListener {
                 if(callSign==null) {
                     callSign = getInitialATCCallSign();
                 }
+                // metar
+                MetarReader metarReader = master.getMetarReader();
+                metarSource = p.getProperty("metarSource");
+                if(metarSource==null) {
+                    metarSource = "_"+getAirportCode(); // The underscore marks it as initial setting
+                }
+                addMetarSources = p.getProperty("addMetarSources");
+                metarReader.changeMetarSources(metarSource, addMetarSources);
+
                 // restore runwaydata
                 for (GuiRunway rw : runways.values()) {
                     rw.getRunwayData().setValuesFromProperties(p);
@@ -507,10 +526,16 @@ public class AirportData implements INavPointListener {
         }
     }
 
-    public void storeAirportData(GuiMasterController master) {
+    public synchronized void storeAirportData(GuiMasterController master) {
         Properties p = new Properties();
         if(master.getCurrentATCCallSign()!=null) {
             p.setProperty("lastCallsign", master.getCurrentATCCallSign());
+        }
+        if(metarSource!=null) {
+            p.setProperty("metarSource",metarSource);
+        }
+        if(addMetarSources !=null) {
+            p.setProperty("addMetarSources",addMetarSources);
         }
         // add runway data
         for (GuiRunway rw : runways.values()) {
@@ -567,7 +592,7 @@ public class AirportData implements INavPointListener {
         return aircraftCodeConverter;
     }
 
-    public DatablockLayoutManager getDatablockLayoutManager() {
+    public synchronized DatablockLayoutManager getDatablockLayoutManager() {
         return datablockLayoutManager;
     }
 

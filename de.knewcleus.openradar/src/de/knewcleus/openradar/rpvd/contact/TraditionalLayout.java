@@ -38,6 +38,7 @@ import java.awt.Font;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.rpvd.contact.ContactShape.Type;
 
 /**
@@ -122,10 +123,25 @@ public class TraditionalLayout extends ADatablockLayout {
             return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode());
 
         }
-
+        String addData = getAddData(c);
         return  String.format("%s %2s",c.getCallSign(),c.getMagnCourse())  +"\n"+
-                c.getModel()+"\n"+
+                c.getModel()+" "+addData+"\n"+
                 String.format("%1s %2s", c.getFlightLevel(),c.getAirSpeed());
+    }
+
+    private String getAddData(GuiRadarContact c) {
+        FlightPlanData fp = c.getFlightPlan();
+        if(fp.getAssignedRoute()!=null && !fp.getAssignedRoute().isEmpty()) {
+            return fp.getAssignedRoute();
+        }
+        if(fp.getAssignedRunway()!=null && !fp.getAssignedRunway().isEmpty()) {
+            return "rw"+fp.getAssignedRunway();
+        }
+        if(fp.getDestinationAirport()!=null && !fp.getDestinationAirport().isEmpty()) {
+            return fp.getDestinationAirport();
+        }
+
+        return "";
     }
 
     @Override

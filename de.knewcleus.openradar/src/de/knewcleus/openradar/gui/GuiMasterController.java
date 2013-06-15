@@ -78,10 +78,11 @@ public class GuiMasterController {
     private RadarContactController radarContactManager;
     private MpChatManager mpChatManager;
     private StatusManager statusManager;
-    private MetarReader metarReader;
+    private final MetarReader metarReader;
     private RadioController radioManager;
     private MainFrame mainFrame = null;
     private final SoundManager soundManager = new SoundManager() ;
+
     public synchronized SoundManager getSoundManager() {
         return soundManager;
     }
@@ -95,11 +96,12 @@ public class GuiMasterController {
 
     public GuiMasterController(AirportData data) {
         this.dataRegistry = data;
+
         // init managers
         radarBackend = new GuiRadarBackend(this);
         radarManager = new RadarManager(this, radarBackend);
         radarContactManager = new RadarContactController(this, radarBackend);
-        metarReader = new MetarReader(dataRegistry);
+        metarReader= new MetarReader(this);
         radioManager = new RadioController(this);
         statusManager = new StatusManager(this);
         mpChatManager = new MpChatManager(this);
@@ -122,10 +124,10 @@ public class GuiMasterController {
      *
      */
     public void start(SetupDialog setupDialog) throws Exception {
+        dataRegistry.loadAirportData(this);
 
         // initialize the front end and load environment data
         mainFrame = new MainFrame(this);
-        dataRegistry.loadAirportData(this);
 
         if(!setupDialog.getIcons().isEmpty()) {
             mainFrame.setIconImages(setupDialog.getIcons());
@@ -328,8 +330,8 @@ public class GuiMasterController {
         return metarReader;
     }
 
-    public MetarData getMetar() {
-        return metarReader.getMetar();
+    public MetarData getAirportMetar() {
+        return metarReader.getMetar(getDataRegistry().getMetarSource());
     }
 
     public RadioController getRadioManager() {
