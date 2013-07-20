@@ -39,6 +39,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,9 @@ import java.util.Properties;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
@@ -87,7 +91,7 @@ public class AirportData implements INavPointListener {
 
     private List<RadioFrequency> radioFrequencies = new ArrayList<RadioFrequency>();
     private Map<String, Radio> radios = new TreeMap<String, Radio>();
-    public Map<String, GuiRunway> runways = new TreeMap<String, GuiRunway>();
+    public Map<String, GuiRunway> runways = Collections.synchronizedMap(new TreeMap<String, GuiRunway>());
 
     public enum FgComMode {
         Internal, External, Off
@@ -103,6 +107,10 @@ public class AirportData implements INavPointListener {
     private int mpServerPort = 5000;
     private int mpLocalPort = 5001; // should be different from default, because
                                     // flightgear want to use this port
+    private boolean fpExchangeEnabled = false;
+    private String fpServerUrl = "";
+    private String fpServerUser = "";
+    private String fpServerPassword = "";
     private String metarUrl = "http://weather.noaa.gov/pub/data/observations/metar/stations/";
     private String metarSource = null;
     private String addMetarSources = null;
@@ -209,19 +217,19 @@ public class AirportData implements INavPointListener {
         return "OpenRadar";
     }
 
-    public FgComMode getFgComMode() {
+    public synchronized FgComMode getFgComMode() {
         return fgComMode;
     }
 
-    public void setFgComMode(FgComMode fgComMode) {
+    public synchronized void setFgComMode(FgComMode fgComMode) {
         this.fgComMode = fgComMode;
     }
 
-    public String getFgComPath() {
+    public synchronized String getFgComPath() {
         return fgComPath;
     }
 
-    public void setFgComPath(String fgComPath) {
+    public synchronized void setFgComPath(String fgComPath) {
         this.fgComPath = fgComPath;
     }
 
@@ -229,27 +237,27 @@ public class AirportData implements INavPointListener {
         return fgComExec;
     }
 
-    public void setFgComExec(String fgComExec) {
+    public synchronized void setFgComExec(String fgComExec) {
         this.fgComExec = fgComExec;
     }
 
-    public String getFgComHost() {
+    public synchronized String getFgComHost() {
         return fgComHost;
     }
 
-    public void setFgComHost(String fgComHost) {
+    public synchronized void setFgComHost(String fgComHost) {
         this.fgComHost = fgComHost;
     }
 
-    public String getFgComServer() {
+    public synchronized String getFgComServer() {
         return fgComServer;
     }
 
-    public void setFgComServer(String fgComServer) {
+    public synchronized void setFgComServer(String fgComServer) {
         this.fgComServer = fgComServer;
     }
 
-    public String getFgComPorts() {
+    public synchronized String getFgComPorts() {
         StringBuilder sFgComPorts = new StringBuilder();
         for (int port : fgComPorts) {
             if (sFgComPorts.length() > 0)
@@ -259,7 +267,7 @@ public class AirportData implements INavPointListener {
         return sFgComPorts.toString();
     }
 
-    public void setFgComPorts(List<Integer> fgComPorts) {
+    public synchronized void setFgComPorts(List<Integer> fgComPorts) {
         this.fgComPorts = fgComPorts;
         radios.clear();
         int i = 0;
@@ -271,28 +279,60 @@ public class AirportData implements INavPointListener {
         }
     }
 
-    public String getMpServer() {
+    public synchronized String getMpServer() {
         return mpServer;
     }
 
-    public void setMpServer(String mpServer) {
+    public synchronized void setMpServer(String mpServer) {
         this.mpServer = mpServer;
     }
 
-    public int getMpServerPort() {
+    public synchronized int getMpServerPort() {
         return mpServerPort;
     }
 
-    public void setMpServerPort(int mpServerPort) {
+    public synchronized void setMpServerPort(int mpServerPort) {
         this.mpServerPort = mpServerPort;
     }
 
-    public int getMpLocalPort() {
+    public synchronized int getMpLocalPort() {
         return mpLocalPort;
     }
 
-    public void setMpLocalPort(int mpLocalPort) {
+    public synchronized void setMpLocalPort(int mpLocalPort) {
         this.mpLocalPort = mpLocalPort;
+    }
+
+    public synchronized boolean isFpExchangeEnabled() {
+        return fpExchangeEnabled;
+    }
+
+    public synchronized void setFpExchangeEnabled(boolean fpExchangeEnabled) {
+        this.fpExchangeEnabled = fpExchangeEnabled;
+    }
+
+    public synchronized String getFpServerUrl() {
+        return fpServerUrl;
+    }
+
+    public synchronized void setFpServerUrl(String fpServerUrl) {
+        this.fpServerUrl = fpServerUrl;
+    }
+
+    public synchronized String getFpServerUser() {
+        return fpServerUser;
+    }
+
+    public synchronized void setFpServerUser(String fpServerUser) {
+        this.fpServerUser = fpServerUser;
+    }
+
+    public synchronized String getFpServerPassword() {
+        return fpServerPassword;
+    }
+
+    public synchronized void setFpServerPassword(String fpServerPassword) {
+        this.fpServerPassword = fpServerPassword;
     }
 
     public synchronized String getMetarUrl() {
@@ -598,5 +638,31 @@ public class AirportData implements INavPointListener {
 
     public synchronized SquawkCodeManager getSquawkCodeManager() {
         return squawkCodeManager;
+    }
+
+    public ComboBoxModel<String> getRunwayModel(boolean addEmptyEntry) {
+        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
+        if(addEmptyEntry) {
+            cbModel.addElement("");
+        }
+        for(GuiRunway rw : runways.values()) {
+            if(rw.getRunwayData().isEnabledAtAll()) {
+                cbModel.addElement(rw.getCode());
+            }
+        }
+        return cbModel;
+    }
+
+    public ComboBoxModel<String> getGeneralArrivalRunwayModel(boolean addEmptyEntry) {
+        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
+        if(addEmptyEntry) {
+            cbModel.addElement("");
+        }
+        for(GuiRunway rw : runways.values()) {
+            if(rw.getRunwayData().isLandingEnabled()) {
+                cbModel.addElement(rw.getCode());
+            }
+        }
+        return cbModel;
     }
 }

@@ -55,6 +55,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListModel;
@@ -606,6 +608,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     public synchronized void selectNShowContactDialog(GuiRadarContact c, MouseEvent e) {
         // show details dialog
         select(c, true, false);
+        contactSettingsDialog = new ContactSettingsDialog(master, this); // todo remove
         contactSettingsDialog.show(c, e);
     }
 
@@ -821,5 +824,20 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
 
     public AirportData getAirportData() {
         return master.getDataRegistry();
+    }
+
+    public synchronized ComboBoxModel<String> getOtherATCsCbModel() {
+        DefaultComboBoxModel<String> cbm = new DefaultComboBoxModel<String>();
+        cbm.addElement("");
+        for (GuiRadarContact c : mapCallSignContact.values()) {
+            if(c.isAtc() && c.isActive()) {
+                cbm.addElement(c.getCallSign());
+            }
+        }
+        return cbm;
+    }
+
+    public List<GuiRadarContact> getContactListCopy() {
+        return new ArrayList<GuiRadarContact>(completeContactList);
     }
 }

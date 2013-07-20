@@ -1,8 +1,3 @@
-package de.knewcleus.openradar.gui.flightplan;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 /**
  * Copyright (C) 2013 Wolfram Wagner
  *
@@ -35,6 +30,12 @@ import java.util.TimeZone;
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
+package de.knewcleus.openradar.gui.flightplan;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class FpTimeUtil {
 
     public static String getUTCTimeString4Digits(Date date) {

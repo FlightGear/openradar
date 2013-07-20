@@ -186,8 +186,18 @@ public class GuiRadarContact {
     }
 
 
-    public void setAlignment(Alignment alignment) {
+    public synchronized void setAlignment(Alignment alignment) {
         this.alignment = alignment;
+        if(alignment.equals(Alignment.LEFT)) {
+            if(getFlightPlan().getOwner()==null || getFlightPlan().getOwner().isEmpty()) {
+                // uncontrolled
+               getFlightPlan().takeControl(this.airportData);
+
+            } else if(airportData.getCallSign().equals(getFlightPlan().getHandover())) {
+                // offered to me
+                getFlightPlan().takeControl(this.airportData);
+            }
+        }
     }
 
     public synchronized FlightPlanData getFlightPlan() {

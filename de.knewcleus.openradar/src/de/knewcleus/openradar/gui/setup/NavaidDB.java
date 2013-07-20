@@ -41,6 +41,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
 import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.NDB;
@@ -235,5 +238,23 @@ public class NavaidDB {
 
     public synchronized List<Aerodrome> getAerodromes() {
         return aerodromeList;
+    }
+
+    public ComboBoxModel<String> getRoutesCbModel(boolean addEmptyEntry) {
+        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
+        if(addEmptyEntry) {
+            cbModel.addElement("");
+        }
+        // todo add sids
+        return cbModel;
+    }
+
+    public ComboBoxModel<String> getSTARCbModel(boolean addEmptyEntry) {
+        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
+        if(addEmptyEntry) {
+            cbModel.addElement("");
+        }
+        // todo add Stars
+        return cbModel;
     }
 }

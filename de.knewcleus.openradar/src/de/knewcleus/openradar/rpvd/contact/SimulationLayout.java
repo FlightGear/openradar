@@ -185,7 +185,9 @@ public class SimulationLayout extends ADatablockLayout {
         if(fp.getAssignedRoute()!=null && !fp.getAssignedRoute().isEmpty()) {
             return fp.getAssignedRoute();
         }
-        if(fp.getAssignedRunway()!=null && !fp.getAssignedRunway().isEmpty()) {
+        if(fp.contactWillLandHere() &&
+           fp.getAssignedRunway()!=null && !fp.getAssignedRunway().isEmpty()) {
+
             return "rw"+fp.getAssignedRunway();
         }
         if(fp.getDestinationAirport()!=null && !fp.getDestinationAirport().isEmpty()) {

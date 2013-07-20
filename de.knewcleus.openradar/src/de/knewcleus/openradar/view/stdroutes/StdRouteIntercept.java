@@ -114,7 +114,7 @@ public class StdRouteIntercept extends AStdRouteElement {
         Point2D firstLineStartPoint = geoStartPoint!=null ? getDisplayPoint(geoStartPoint) : null;
         if(startOffSet!=null) {
             double length = Converter2D.getFeetToDots(startOffSet*Units.NM/Units.FT, mapViewAdapter);
-            firstLineStartPoint = Converter2D.getMapDisplayPoint(firstLineStartPoint, 90 - radial, length);
+            firstLineStartPoint = Converter2D.getMapDisplayPoint(firstLineStartPoint, 90-startHeading, length);
         }
         Point2D bowStartPoint = geoStartBowPoint!=null ? getDisplayPoint(geoStartBowPoint) : null;
         Point2D secondLineEndPoint = getDisplayPoint(geoEndPoint);

@@ -44,6 +44,7 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.IPlayerRegistry;
 import de.knewcleus.openradar.gui.chat.MpChatManager;
 import de.knewcleus.openradar.gui.contacts.RadarContactController;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanExchangeManager;
 import de.knewcleus.openradar.gui.radar.GuiRadarBackend;
 import de.knewcleus.openradar.gui.radar.RadarManager;
 import de.knewcleus.openradar.gui.setup.AirportData;
@@ -81,6 +82,7 @@ public class GuiMasterController {
     private final MetarReader metarReader;
     private RadioController radioManager;
     private MainFrame mainFrame = null;
+    private FlightPlanExchangeManager fpExchangeManager;
     private final SoundManager soundManager = new SoundManager() ;
 
     public synchronized SoundManager getSoundManager() {
@@ -105,6 +107,7 @@ public class GuiMasterController {
         radioManager = new RadioController(this);
         statusManager = new StatusManager(this);
         mpChatManager = new MpChatManager(this);
+        fpExchangeManager = new FlightPlanExchangeManager(this);
     }
 
     public LogWindow getLogWindow() {
@@ -145,6 +148,7 @@ public class GuiMasterController {
         mpChatManager.start(); // GUI Updater
         initShortCuts();
         SoundManager.init(dataRegistry);
+        fpExchangeManager.start();
 
         // ready, so display it
         mainFrame.setDividerPosition();

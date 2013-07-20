@@ -65,6 +65,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -106,6 +107,13 @@ public class SetupDialog extends JFrame {
     private JLabel lbMpServer;
     private JLabel lbMpPort;
     private JLabel lbMpLocalPort;
+    private JCheckBox cbEnableFpExchange;
+    private JLabel lbFpServer;
+    private JTextField tfFpServer;
+    private JLabel lbFpServerUser;
+    private JTextField tfFpServerUser;
+    private JLabel lbFpServerPassword;
+    private JPasswordField tfFpServerPassword;
     private JLabel lbMetarUrl;
     private JLabel lbMessage;
     private JButton btStart;
@@ -536,6 +544,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth=3;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -567,8 +576,8 @@ public class SetupDialog extends JFrame {
         lbMpLocalPort = new JLabel();
         lbMpLocalPort.setText("Client port");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlMultiplayer.add(lbMpLocalPort, gridBagConstraints);
@@ -578,12 +587,100 @@ public class SetupDialog extends JFrame {
         tfMpLocalPort.setToolTipText("Port of FlightGear multiplayer client on this machine");
         tfMpLocalPort.setText("5001");
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlMultiplayer.add(tfMpLocalPort, gridBagConstraints);
+
+        // Flightplan Server
+
+        JPanel jPnlFlightPLan = new JPanel();
+        jPnlFlightPLan.setLayout(new GridBagLayout());
+        jPnlFlightPLan.setBorder(new TitledBorder("Flightplan exchange / Handovers (PROTOTYPE!)"));
+        jPnlFlightPLan.setToolTipText("These settings should be correct already!");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 0;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
+        jPnlSettings.add(jPnlFlightPLan, gridBagConstraints);
+
+        cbEnableFpExchange = new JCheckBox();
+        cbEnableFpExchange.setText("enable flightplan exchange");
+        cbEnableFpExchange.addActionListener(new FpServerActionListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFlightPLan.add(cbEnableFpExchange, gridBagConstraints);
+
+        lbFpServer = new JLabel();
+        lbFpServer.setText("FlightPlanServer");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFlightPLan.add(lbFpServer, gridBagConstraints);
+
+        tfFpServer = new JTextField();
+        tfFpServer.setName("FPServer");
+        tfFpServer.setToolTipText("Base URL of the flightplan exchange server.");
+        tfFpServer.setText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth=3;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFlightPLan.add(tfFpServer, gridBagConstraints);
+
+        lbFpServerUser = new JLabel();
+        lbFpServerUser.setText("User:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFlightPLan.add(lbFpServerUser, gridBagConstraints);
+
+        tfFpServerUser = new JTextField();
+        tfFpServerUser.setToolTipText("Username for Flightplan exchange server.");
+        tfFpServerUser.setText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlMultiplayer.add(tfMpLocalPort, gridBagConstraints);
+        jPnlFlightPLan.add(tfFpServerUser, gridBagConstraints);
+
+        lbFpServerPassword = new JLabel();
+        lbFpServerPassword.setText("Password");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFlightPLan.add(lbFpServerPassword, gridBagConstraints);
+
+        tfFpServerPassword = new JPasswordField();
+        tfFpServerPassword.setToolTipText("Password for Flightplan exchange server.");
+        tfFpServerPassword.setText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFlightPLan.add(tfFpServerPassword, gridBagConstraints);
 
         // METAR
 
@@ -593,7 +690,7 @@ public class SetupDialog extends JFrame {
         jPnlMetar.setToolTipText("These settings should be correct already!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 0;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -628,7 +725,7 @@ public class SetupDialog extends JFrame {
         btCheckSettings.addActionListener(setupManager.getActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.weighty = 1;
         gridBagConstraints.anchor = GridBagConstraints.CENTER;
@@ -831,6 +928,20 @@ public class SetupDialog extends JFrame {
             lbFgComServer.setForeground(Color.red);
             dataOk = false;
         }
+        if (cbEnableFpExchange.isSelected()) {
+            if(checkUrl(tfFpServer.getText())) {
+                lbFpServer.setForeground(Color.black);
+                data.setFpServerUrl(tfFpServer.getText());
+                data.setFpServerUser(tfFpServerUser.getText());
+                data.setFpServerPassword(new String(tfFpServerPassword.getPassword()));
+            } else {
+                lbFpServer.setForeground(Color.red);
+                dataOk = false;
+            }
+        } else {
+            lbFpServer.setForeground(Color.black);
+        }
+        data.setFpExchangeEnabled(cbEnableFpExchange.isSelected());
         if (checkUrl(tfMetarUrl.getText())) {
             lbMetarUrl.setForeground(Color.black);
             data.setMetarUrl(tfMetarUrl.getText());
@@ -876,7 +987,7 @@ public class SetupDialog extends JFrame {
         visibleLayerMap.put("groundnet", cbGroundnet.isSelected());
         data.setVisibleLayerMap(visibleLayerMap);
 
-        btCheckSettings.setText("Check Settings");
+        btCheckSettings.setText("Check Settings & Save");
         btCheckSettings.setEnabled(true);
         btCheckSettings.setForeground(Color.black);
 
@@ -980,6 +1091,15 @@ public class SetupDialog extends JFrame {
                 tfMpServer.setText(p.getProperty("mp.server", "mpserver01.flightgear.org"));
                 tfMpPort.setText(p.getProperty("mp.serverPort", "5000"));
                 tfMpLocalPort.setText(p.getProperty("mp.clientPort", "5001"));
+
+                cbEnableFpExchange.setSelected("true".equals(p.getProperty("fpExchange.enable")));
+                tfFpServer.setText(p.getProperty("fpExchange.server", "<please find URL in fg-Openradar wiki!>"));
+                tfFpServer.setEnabled(cbEnableFpExchange.isSelected());
+                tfFpServerUser.setText(p.getProperty("fpExchange.user", ""));
+                tfFpServerUser.setEnabled(cbEnableFpExchange.isSelected());
+                tfFpServerPassword.setText(p.getProperty("fpExchange.password", ""));
+                tfFpServerPassword.setEnabled(cbEnableFpExchange.isSelected());
+
                 tfMetarUrl.setText(p.getProperty("metar.url", "http://weather.noaa.gov/pub/data/observations/metar/stations/"));
 
                 cbDataboxLayout.setSelectedIndex(setupManager.getDatablockLayoutManager().getIndexOfActiveLayout());
@@ -1016,6 +1136,10 @@ public class SetupDialog extends JFrame {
         p.put("mp.server", tfMpServer.getText());
         p.put("mp.serverPort", tfMpPort.getText());
         p.put("mp.clientPort", tfMpLocalPort.getText());
+        p.put("fpExchange.enable", ""+cbEnableFpExchange.isSelected());
+        p.put("fpExchange.server", tfFpServer.getText());
+        p.put("fpExchange.user", tfFpServerUser.getText());
+        p.put("fpExchange.password", new String(tfFpServerPassword.getPassword()));
         p.put("metar.url", tfMetarUrl.getText());
 
         p.put("radar.datablockLayout", ((ADatablockLayout)cbDataboxLayout.getSelectedItem()).getName());
@@ -1117,6 +1241,15 @@ public class SetupDialog extends JFrame {
             }
 
 
+        }
+    }
+
+    private class FpServerActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tfFpServer.setEnabled(cbEnableFpExchange.isSelected());
+            tfFpServerUser.setEnabled(cbEnableFpExchange.isSelected());
+            tfFpServerPassword.setEnabled(cbEnableFpExchange.isSelected());
         }
     }
 }

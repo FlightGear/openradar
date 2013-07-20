@@ -51,6 +51,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
@@ -89,6 +91,7 @@ public class AtcMessageDialog extends JFrame {
         jPnlContentPane.setOpaque(false);
         jPnlContentPane.setLayout(new GridBagLayout());
         setContentPane(jPnlContentPane);
+
 
         //lbCallSign
         GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
