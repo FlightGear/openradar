@@ -115,6 +115,9 @@ public class AirportData implements INavPointListener {
     private String metarSource = null;
     private String addMetarSources = null;
 
+    private boolean chatAliasesEnabled = true;
+    private String chatAliasPrefix = ".";
+
     private volatile String callSign = null;
 
     private Map<String, Boolean> toggleObjectsMap = new HashMap<String, Boolean>();
@@ -359,6 +362,22 @@ public class AirportData implements INavPointListener {
 
     public synchronized void setAddMetarSources(String addMetarSources) {
         this.addMetarSources = addMetarSources;
+    }
+
+    public synchronized boolean isChatAliasesEnabled() {
+        return chatAliasesEnabled;
+    }
+
+    public synchronized void setChatAliasesEnabled(boolean chatAliasesEnabled) {
+        this.chatAliasesEnabled = chatAliasesEnabled;
+    }
+
+    public synchronized String getChatAliasPrefix() {
+        return chatAliasPrefix;
+    }
+
+    public synchronized void setChatAliasPrefix(String chatAliasPrefix) {
+        this.chatAliasPrefix = chatAliasPrefix;
     }
 
     /**

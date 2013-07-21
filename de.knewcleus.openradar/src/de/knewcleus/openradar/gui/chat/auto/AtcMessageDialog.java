@@ -51,8 +51,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
@@ -173,7 +171,7 @@ public class AtcMessageDialog extends JFrame {
     private class TextMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            AtcMessage msg = manager.getElementAt(Integer.parseInt(((JLabel)e.getSource()).getName()));
+            AtcMenuChatMessage msg = manager.getElementAt(Integer.parseInt(((JLabel)e.getSource()).getName()));
             if(msg!=null) {
                 closeDialog();
                 master.getMpChatManager().setAutoAtcMessage(msg);

@@ -70,7 +70,7 @@ import de.knewcleus.fgfs.multiplayer.IPlayerListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.chat.GuiChatMessage;
-import de.knewcleus.openradar.gui.chat.auto.AtcMessage;
+import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
 import de.knewcleus.openradar.gui.chat.auto.AtcMessageDialog;
 import de.knewcleus.openradar.gui.chat.auto.TextManager;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
@@ -806,7 +806,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         }
         if(name != null && newSquawkCode!=null) {
             // auto chat message
-            AtcMessage msg = new AtcMessage("Assign squawk");
+            AtcMenuChatMessage msg = new AtcMenuChatMessage("Assign squawk");
             msg.addTranslation("en", "%s: squawk "+newSquawkCode);
             msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
             master.getMpChatManager().setAutoAtcMessage(msg);
@@ -839,5 +839,9 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
 
     public List<GuiRadarContact> getContactListCopy() {
         return new ArrayList<GuiRadarContact>(completeContactList);
+    }
+
+    public TextManager getTextManager() {
+        return textManager;
     }
 }
