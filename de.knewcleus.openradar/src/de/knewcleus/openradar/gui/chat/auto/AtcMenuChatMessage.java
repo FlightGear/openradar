@@ -43,13 +43,13 @@ import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.weather.MetarData;
 
-public class AtcMessage {
+public class AtcMenuChatMessage {
 
     private final String displayMessage;
     private Map<String,String> translations = new TreeMap<String, String>();
     private List<String> variables = new ArrayList<String>();
 
-    public AtcMessage(String displayMessage) {
+    public AtcMenuChatMessage(String displayMessage) {
         this.displayMessage=displayMessage;
     }
 

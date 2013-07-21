@@ -45,7 +45,7 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.Glideslope;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
-import de.knewcleus.openradar.gui.chat.auto.AtcMessage;
+import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.weather.MetarData;
 
@@ -426,7 +426,7 @@ public class RunwayPanel extends JPanel {
         boolean rwLandingEnabled = master.getDataRegistry().getRunways().get(rwId).isLandingActive();
         boolean rwStartingEnabled = master.getDataRegistry().getRunways().get(rwId).isStartingActive();
 
-        AtcMessage msg = new AtcMessage("Assign runway");
+        AtcMenuChatMessage msg = new AtcMenuChatMessage("Assign runway");
 
         if (isInAir && rwLandingEnabled) {
             msg.addTranslation("en", "%s: Expect landing on runway " + getRunwayInformation(rwId, true));

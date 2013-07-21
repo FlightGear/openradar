@@ -42,7 +42,7 @@ import java.util.StringTokenizer;
 import com.sun.istack.internal.logging.Logger;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.chat.auto.AtcMessage;
+import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
 import de.knewcleus.openradar.gui.setup.AirportData;
 
 /**
@@ -378,6 +378,12 @@ public class MetarData {
         return windDirection;
     }
 
+    public String getWindDirectionRounded() {
+        int wd = windDirectionI/10*10;
+        wd = wd==360 ? wd = 0 : wd;
+        return String.format("%03d",wd);
+    }
+
     public int getWindDirectionI() {
         return windDirectionI;
     }
@@ -513,7 +519,7 @@ public class MetarData {
         }
 
         ArrayList<String> list = new ArrayList<String>();
-        list.add(String.format(AtcMessage.replaceVariables("ATIS for %s at %2.0f ft: QNH %s wind %s active rwy(s) %s FGCOM %s", master, null, atisVariables)).trim());
+        list.add(String.format(AtcMenuChatMessage.replaceVariables("ATIS for %s at %2.0f ft: QNH %s wind %s active rwy(s) %s FGCOM %s", master, null, atisVariables)).trim());
         if(!shortMsg) list.add("(ATIS) vis:"+getVisibility()+", "+getVisibilityUnit()+" "+getWeatherPhaenomenaForHumans());
         return list;
     }

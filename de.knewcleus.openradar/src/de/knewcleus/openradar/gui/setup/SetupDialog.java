@@ -95,6 +95,7 @@ public class SetupDialog extends JFrame {
     private JTextField tfMpServer;
     private JTextField tfMpPort;
     private JTextField tfMpLocalPort;
+    private JTextField tfChatPrefix;
     private JTextField tfMetarUrl;
     private JLabel lbFgComMode;
     private JLabel lbfgComPath;
@@ -106,6 +107,7 @@ public class SetupDialog extends JFrame {
     private JLabel lbMpServer;
     private JLabel lbMpPort;
     private JLabel lbMpLocalPort;
+    private JLabel lbChatPrefix;
     private JLabel lbMetarUrl;
     private JLabel lbMessage;
     private JButton btStart;
@@ -118,6 +120,7 @@ public class SetupDialog extends JFrame {
 
     private JComboBox<ADatablockLayout> cbDataboxLayout;
 
+    private JCheckBox cbEnableChatAliases;
     private JCheckBox cbLandmass;
     private JCheckBox cbUrban;
     private JCheckBox cbLake;
@@ -585,6 +588,52 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlMultiplayer.add(tfMpLocalPort, gridBagConstraints);
 
+        // CHAT ALIASES
+        JPanel jPnlChat = new JPanel();
+        jPnlChat.setLayout(new GridBagLayout());
+        jPnlChat.setBorder(new TitledBorder("METAR"));
+        jPnlChat.setToolTipText("These settings should be correct already!");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 0;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
+        jPnlSettings.add(jPnlChat, gridBagConstraints);
+
+        cbEnableChatAliases = new JCheckBox();
+        cbEnableChatAliases.setText("Enable chat aliases");
+        cbEnableChatAliases.addActionListener(new ChatEnabledActionListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlChat.add(cbEnableChatAliases, gridBagConstraints);
+
+        lbChatPrefix = new JLabel();
+        lbChatPrefix.setText("Prefix of Chat aliases");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlChat.add(lbChatPrefix, gridBagConstraints);
+
+        tfChatPrefix = new JTextField();
+        tfChatPrefix.setToolTipText("The prefix, for instance '.' to use '.tr 010'");
+        tfChatPrefix.setText(".");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 2);
+        jPnlChat.add(tfChatPrefix, gridBagConstraints);
+
         // METAR
 
         JPanel jPnlMetar = new JPanel();
@@ -867,6 +916,12 @@ public class SetupDialog extends JFrame {
             dataOk = false;
         }
 
+        data.setChatAliasesEnabled(cbEnableChatAliases.isSelected());
+        String alias = tfChatPrefix.getText().trim();
+        if(!alias.isEmpty()) {
+            data.setChatAliasPrefix(alias);
+        }
+
         Map<String, Boolean> visibleLayerMap = new HashMap<String, Boolean>();
         visibleLayerMap.put("landmass", cbLandmass.isSelected());
         visibleLayerMap.put("urban", cbUrban.isSelected());
@@ -980,6 +1035,11 @@ public class SetupDialog extends JFrame {
                 tfMpServer.setText(p.getProperty("mp.server", "mpserver01.flightgear.org"));
                 tfMpPort.setText(p.getProperty("mp.serverPort", "5000"));
                 tfMpLocalPort.setText(p.getProperty("mp.clientPort", "5001"));
+
+                cbEnableChatAliases.setSelected(!"false".equals(p.getProperty("chat.alias.enabled")));
+                tfChatPrefix.setText(p.getProperty("chat.alias.prefix", "."));
+                tfChatPrefix.setEnabled(cbEnableChatAliases.isSelected());
+
                 tfMetarUrl.setText(p.getProperty("metar.url", "http://weather.noaa.gov/pub/data/observations/metar/stations/"));
 
                 cbDataboxLayout.setSelectedIndex(setupManager.getDatablockLayoutManager().getIndexOfActiveLayout());
@@ -1016,6 +1076,10 @@ public class SetupDialog extends JFrame {
         p.put("mp.server", tfMpServer.getText());
         p.put("mp.serverPort", tfMpPort.getText());
         p.put("mp.clientPort", tfMpLocalPort.getText());
+
+        p.put("chat.alias.enabled",""+cbEnableChatAliases.isSelected());
+        p.put("chat.alias.prefix", tfChatPrefix.getText());
+
         p.put("metar.url", tfMetarUrl.getText());
 
         p.put("radar.datablockLayout", ((ADatablockLayout)cbDataboxLayout.getSelectedItem()).getName());
@@ -1117,6 +1181,13 @@ public class SetupDialog extends JFrame {
             }
 
 
+        }
+    }
+
+    private class ChatEnabledActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tfChatPrefix.setEnabled(cbEnableChatAliases.isSelected());
         }
     }
 }

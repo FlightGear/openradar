@@ -58,7 +58,8 @@ import javax.swing.event.ListSelectionListener;
 import de.knewcleus.fgfs.multiplayer.IChatListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.SoundManager;
-import de.knewcleus.openradar.gui.chat.auto.AtcMessage;
+import de.knewcleus.openradar.gui.chat.auto.AtcAliasChatMessage;
+import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.radardata.fgmp.FGMPClient;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
@@ -113,7 +114,8 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     private boolean updaterisRunning = true;
     private GuiUpdater guiUpdater = new GuiUpdater();
 
-    private volatile AtcMessage autoAtcMessage = null;
+    private volatile AtcMenuChatMessage autoAtcMessage = null;
+    private volatile AtcAliasChatMessage aliasAtcMessage = null;
 
     public MpChatManager(GuiMasterController master) {
         this.master = master;
@@ -445,7 +447,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
 
 
-    public void setAutoAtcMessage(AtcMessage msg) {
+    public void setAutoAtcMessage(AtcMenuChatMessage msg) {
         autoAtcMessage = msg;
         GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
         List<String> messages = msg.generateMessages(master, c, null);
@@ -455,10 +457,40 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     private void sendChatMessage() {
         String message = (String) chatPanel.getChatMessage();
-        if(autoAtcMessage!=null) {
+        boolean chatAliasEnabled = master.getDataRegistry().isChatAliasesEnabled();
+        if(chatAliasEnabled && aliasAtcMessage==null
+                && message.contains(master.getDataRegistry().getChatAliasPrefix())) {
+            // alias: first step: resolve alias and place result in chat input field
+            resolveAliasMessage(message);
+            if(aliasAtcMessage==null) {
+                // alias could not be resolved. Normal case, for instance if a dot is used.
+                processOutGoingMessage(message, true);
+            }
+        } else if(chatAliasEnabled && aliasAtcMessage!=null) {
+            // alias: second step, store arguments and send it.
+            aliasAtcMessage.storeArguments(master);
+            aliasAtcMessage = null;
+            processOutGoingMessage(message, true);
+        } else if(autoAtcMessage!=null) {
+            // menu atc text: second step: Send it
             sendFollowUpAtcMessages(message);
         } else {
+            // normal text
             processOutGoingMessage(message, true);
+        }
+    }
+
+    private void resolveAliasMessage(String sMessage) {
+
+        aliasAtcMessage = new AtcAliasChatMessage(master,sMessage);
+
+        if(aliasAtcMessage.getResolvedMessage()!=null) {
+            // message could be resolved
+            chatPanel.setChatMessage(aliasAtcMessage.getResolvedMessage());
+        } else {
+            // original message
+            chatPanel.setChatMessage(sMessage);
+            aliasAtcMessage=null;
         }
     }
 
@@ -510,6 +542,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     public void cancelAutoAtcMessage() {
         autoAtcMessage=null;
+        aliasAtcMessage=null;
         resetChatField();
     }
 

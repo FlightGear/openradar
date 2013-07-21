@@ -170,7 +170,7 @@ public class AtcMessageDialog extends JFrame {
     private class TextMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            AtcMessage msg = manager.getElementAt(Integer.parseInt(((JLabel)e.getSource()).getName()));
+            AtcMenuChatMessage msg = manager.getElementAt(Integer.parseInt(((JLabel)e.getSource()).getName()));
             if(msg!=null) {
                 closeDialog();
                 master.getMpChatManager().setAutoAtcMessage(msg);
