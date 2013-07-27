@@ -2,7 +2,8 @@
 # Tags for alias.txt
 # can be used to create own aliases
 #
-<icao>               Local departing airport
+<icao>               Local departing airport ICAO code
+<aptname>            Local departing airport name
 <icao-altitude>      Local departing airport altitude
 <alt>                Aircraft's current altitude
 <distance>           Aircraft's current distance to local airport
@@ -15,11 +16,13 @@
 <wind-speed>         Current winds speed
 <metar>              Raw METAR of the local airport
 <atis>               Current ATIS of the local airport
-<qnh>                Current QNH of the local airport
+<qnh>                Current QNH of the local airport in hPa
+<mmHg>               Current QNH of the local airport in mmHg
 <runways>            Current active runways
+<runways-land>       Current active LANDING runways
 
 <assigned-runway>    Runway the pilot can expect for his aircraft
 <cruise-altitude>    Aircraft's filed cruise altitude
-<destination>        Aircraft's destination airport
+<destination>        Aircraft's destination airport ICAO code
 <squawk>             Assigned squawk code
-<route>              Code of assigned ATIS/STAR
+<route>              Code of assigned SID/STAR
