@@ -84,6 +84,10 @@ public class SquawkCodeManager {
 
     private int getNexCode(int lastcode) {
         int nextCode = lastcode +1;
+        int lastDigit = nextCode % 10;
+        if(lastDigit>7) {
+            nextCode = nextCode + 10-lastDigit;
+        }
         if(nextCode > squawkTo) {
             nextCode = squawkFrom;
         }
