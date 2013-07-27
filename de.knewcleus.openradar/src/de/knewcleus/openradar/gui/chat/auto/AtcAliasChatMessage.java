@@ -114,7 +114,7 @@ public class AtcAliasChatMessage {
         if(pos == -1) return false;
         if(pos+1==msg.length()) return false;
 
-        if(msg.substring(pos+1, pos+2).matches("\\d") ) return true;
+        if(msg.substring(pos+1, pos+2).matches("\\D") ) return true; // a dot may be followed by a digit, \D means anything but a digit
         return false;
     }
 
@@ -193,6 +193,11 @@ public class AtcAliasChatMessage {
         text = replaceAllInsensitive(text,"<cruise-altitude>",  contact!=null ?  contact.getFlightPlan().getCruisingAltitude():"");
         text = replaceAllInsensitive(text,"<destination>",  contact!=null ? contact.getFlightPlan().getDestinationAirport() :"");
         text = replaceAllInsensitive(text,"<squawk>", ""+contact!=null ? ""+contact.getAssignedSquawk():"");
+        if(contact!=null && text.toLowerCase().contains("<squawk-next>")) {
+            master.getRadarContactManager().assignSquawkCode();
+            text = replaceAllInsensitive(text,"<squawk-next>", ""+contact.getAssignedSquawk());
+        }
+
         text = replaceAllInsensitive(text,"<route>", contact!=null ? contact.getFlightPlan().getRoute():"");
 
         // replace the dynamic variables
@@ -244,6 +249,13 @@ public class AtcAliasChatMessage {
                     selectedContact.getFlightPlan().setAssignedRunway(argumentsToRemember.get(key));
                 } else if(key.equals("ROUTE")) {
                     selectedContact.getFlightPlan().setAssignedRoute(argumentsToRemember.get(key));
+                } else if(key.equals("SQUAWK")) {
+                    try {
+                        int s = Integer.parseInt(argumentsToRemember.get(key));
+                        if(s>0 && s%10<8 && s/1000<8) {
+                            selectedContact.getFlightPlan().setSquawk(""+s);
+                        }
+                    } catch(Exception e) {}
                 } else {
                     // unknown
 
@@ -264,7 +276,7 @@ public class AtcAliasChatMessage {
         while(searchText.contains(searchForLC)) {
             int start = searchText.indexOf(searchForLC);
             int end = start+searchFor.length();
-            searchText = searchText.replace(searchForLC, replaceWith);
+            searchText = searchText.substring(0,start)+replaceWith+text.substring(end);
             text = text.substring(0,start)+replaceWith+text.substring(end);
         }
         return text;

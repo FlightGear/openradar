@@ -103,10 +103,10 @@ public class AutoTextReader {
             File fileAlias = new File("data/atcMessages/alias.txt");
             br = new BufferedReader(new FileReader(fileAlias));
             nextLine = br.readLine();
-            for (int i=0; i<menuMessages.size()&&nextLine!=null;i++) {
+            while (nextLine!=null) {
                 int pos = nextLine.indexOf("=");
                 if(nextLine.trim().length()>0 && !nextLine.trim().startsWith("#") && pos>-1 && pos+1<nextLine.length()) {
-                    chatMessages.put(nextLine.substring(0,pos).trim(),nextLine.substring(pos+1));
+                    chatMessages.put(nextLine.substring(0,pos).trim().toLowerCase(),nextLine.substring(pos+1));
                 }
                 nextLine = br.readLine();
             }

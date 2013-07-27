@@ -65,7 +65,7 @@ public class TextManager implements ListModel<AtcMenuChatMessage> {
     }
 
     public String getChatMessageForAllias(String aliasWithoutActivationChar) {
-        return chatMessages.get(aliasWithoutActivationChar);
+        return chatMessages.get(aliasWithoutActivationChar.toLowerCase());
     }
 
     // ListModel
