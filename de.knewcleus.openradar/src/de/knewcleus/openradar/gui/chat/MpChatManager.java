@@ -462,10 +462,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
                 && message.contains(master.getDataRegistry().getChatAliasPrefix())) {
             // alias: first step: resolve alias and place result in chat input field
             resolveAliasMessage(message);
-            if(aliasAtcMessage==null) {
-                // alias could not be resolved. Normal case, for instance if a dot is used.
-                processOutGoingMessage(message, true);
-            }
+
         } else if(chatAliasEnabled && aliasAtcMessage!=null) {
             // alias: second step, store arguments and send it.
             aliasAtcMessage.storeArguments(master);
