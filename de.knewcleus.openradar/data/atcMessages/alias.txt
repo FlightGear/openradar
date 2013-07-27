@@ -6,7 +6,7 @@ out=Welcome to <aptname> - please advise ATC of your intentions, FGCOM <com0>
 radar=Radar Contact range <distance> mi, QNH <qnh>, expect runway <assigned-runway>, FGCOM <com0>
 own=Resume your OWN navigation - Frequency change approved - Radar surveillance remains active
 end=You are leaving my airspace - Frequency change approved - Radar service terminated
-atis=ATIS for <icao> at <icao-altitude> ft: QNH <qnh> wind <winds> active rwy(s) <runways> FGCOM <com0>
+atis=ATIS for <icao> at <icao-altitude> ft: QNH <qnh>/<mmHg> wind <winds> active rwy(s) <runways> FGCOM <com0>
 
 en=Engine startup approved, please indicate planned destination
 pb=Pushback approved facing {0}
