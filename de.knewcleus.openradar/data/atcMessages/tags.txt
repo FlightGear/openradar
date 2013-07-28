@@ -17,6 +17,7 @@
 <atis>               Current ATIS of the local airport
 <qnh>                Current QNH of the local airport
 <runways>            Current active runways
+<runways-land> 		 Current active runways for landing
 
 <assigned-runway>    Runway the pilot can expect for his aircraft
 <cruise-altitude>    Aircraft's filed cruise altitude

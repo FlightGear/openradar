@@ -1,12 +1,13 @@
 #
 # OpenRadar menu based atcMessages
 #
-in=Welcome to the <icao> area -- please advise <icao> ATC of your flightplan, FGCOM <com0>
+in=Welcome to the <icao> area -- please advise <callsign> ATC of your flightplan, FGCOM <com0>
 out=Welcome to <icao> - please advise ATC of your intentions, FGCOM <com0>
-radar=Radar Contact range <distance> mi, QNH <qnh>, expect runway <assigned-runway>, FGCOM <com0>
+radar=Radar Contact range <distance> mi, QNH <qnh>, active rwy(s) <runways-land>, FGCOM <com0>
 own=Resume your OWN navigation - Frequency change approved - Radar surveillance remains active
 end=You are leaving my airspace - Frequency change approved - Radar service terminated
 atis=ATIS for <icao> at <icao-altitude> ft: QNH <qnh> wind <winds> active rwy(s) <runways> FGCOM <com0>
+rgd=Thanks for flying with us today. Have a good day
 
 en=Engine startup approved, please indicate planned destination
 pb=Pushback approved facing {0}
@@ -21,15 +22,22 @@ tl=Turn left heading {0}
 tr=Turn right heading {0}
 cm=Climb and maintain {0.ALT}
 dm=Descend and maintain {0.ALT}
+
 rs=Reduce speed to {0}
 
-ils=<distance> mi out, maintain hdg until intercepting localizer, cleared for ILS rwy {0.RWY}, report established
+ils=<distance> mi out, maintain hdg until intercepting localizer, cleared for ILS rwy <assigned-runway>, report established
 ris=<distance> mi out, report when you have runway in sight
-lan=<distance> mi out, wind <wind-direction> at <wind-speed> kts, cleared to land rwy {0.RWY}
-vac=Welcome to <icao> -- vacate runway {0.RWY}, report vacated
+lan=<distance> mi out, wind <wind-direction> at <wind-speed> kts, cleared to land rwy <assigned-runway>
+vac=Welcome to <icao> -- vacate runway <assigned-runway>, report vacated
 csr=Cleared to cross runway {0}
 
 chat=Please use FGCOM <com0> only to talk to ATC, NOT to chat between airmen!
 disturb=You are disturbing our ATC training --> please use another airport for uncontrolled flying
 getoff=Please do not start your session on an active runway - Get OFF runway fast
 
+sqa=Squawk <squawk-next>
+sqv=Squawk VFR!
+sqi=Squawk IFR!
+sqm=Squawk {0.SQUAWK}
+
+url=http://charts\.aero/airport/<icao>

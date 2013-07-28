@@ -264,6 +264,7 @@ public class GuiMasterController {
                     }
                     if (e.getKeyCode() == KeyEvent.VK_F12 && e.isShiftDown()) {
                         radarBackend.reloadStandardRoutes();
+                        radarContactManager.reloadTexts();
                         e.consume();
                         return true;
                     }

@@ -94,6 +94,9 @@ public class AtcAliasChatMessage {
                         result.append(args.remove(0));
                     }
                     resolvedMessage=result.toString();
+                    resolvedMessage=resolvedMessage.replace("\\.", "{{dot}}");
+                    resolvedMessage = containsUnresolvedAlias(aliasPrefix, resolvedMessage) ? null : resolvedMessage;
+                    resolvedMessage= resolvedMessage!=null ? resolvedMessage.replace("{{dot}}",".") : null;
                 } else {
                     resolvedMessage = null;
                 }
@@ -104,6 +107,18 @@ public class AtcAliasChatMessage {
             resolvedMessage = null;
         }
     }
+
+    private boolean containsUnresolvedAlias(String prefix, String msg) {
+        int pos = msg.indexOf(prefix);
+
+        if(pos == -1) return false;
+        if(pos+1==msg.length()) return false;
+
+        if(!msg.substring(pos+1, pos+2).matches("[\\d\\s]") ) return true; // a dot may be followed by a digit, \D means anything but a digit
+        return false;
+    }
+
+
 
     public String replaceChatTags(String text, GuiMasterController master, List<String> arguments ) {
         AirportData data = master.getDataRegistry();
@@ -137,48 +152,53 @@ public class AtcAliasChatMessage {
             <route>              Code of assigned ATIS/STAR
          */
 
-        text = text.replaceAll("<icao>",data.getAirportCode());
-        text = text.replaceAll("<icao-altitude>",String.format("%03.0f",data.getElevationFt()));
-        text = text.replaceAll("<alt>",String.format("%1.0f",contact.getAltitude()));
-        text = text.replaceAll("<distance>",contact.getRadarContactDistance());
-        text = text.replaceAll("<callsign>",contact!=null ? contact.getCallSign() : "");
-        text = text.replaceAll("<aircraft>",contact!=null ? contact.getAircraftCode() : "");
+        text = replaceAllInsensitive(text,"<icao>",data.getAirportCode());
+        text = replaceAllInsensitive(text,"<icao-altitude>",String.format("%03.0f",data.getElevationFt()));
+        text = replaceAllInsensitive(text,"<alt>",contact!=null ? String.format("%1.0f",contact.getAltitude()):"");
+        text = replaceAllInsensitive(text,"<distance>",contact!=null ? contact.getRadarContactDistance():"");
+        text = replaceAllInsensitive(text,"<callsign>",contact!=null ? contact.getCallSign() : "");
+        text = replaceAllInsensitive(text,"<aircraft>",contact!=null ? contact.getAircraftCode() : "");
         if(master.getRadioManager().getModels().isEmpty()) {
-            text = text.replaceAll("<com0>","");
+            text = replaceAllInsensitive(text,"<com0>","");
         } else {
-            text = text.replaceAll("<com0>",(master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency()));
+            text = replaceAllInsensitive(text,"<com0>",(master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency()));
         }
         if(master.getRadioManager().getModels().size()<2) {
-            text = text.replaceAll("<com1>","");
+            text = replaceAllInsensitive(text,"<com1>","");
         } else {
-            text = text.replaceAll("<com1>",(master.getRadioManager().getModels().get("COM1").getSelectedItem().getFrequency()));
+            text = replaceAllInsensitive(text,"<com1>",(master.getRadioManager().getModels().get("COM1").getSelectedItem().getFrequency()));
         }
         if(master.getRadioManager().getModels().size()<3) {
-            text = text.replaceAll("<com2>","");
+            text = replaceAllInsensitive(text,"<com2>","");
         } else {
-            text = text.replaceAll("<com2>",(master.getRadioManager().getModels().get("COM2").getSelectedItem().getFrequency()));
+            text = replaceAllInsensitive(text,"<com2>",(master.getRadioManager().getModels().get("COM2").getSelectedItem().getFrequency()));
         }
         if(master.getRadioManager().getModels().size()<4) {
-            text = text.replaceAll("<com3>","");
+            text = replaceAllInsensitive(text,"<com3>","");
         } else {
-            text = text.replaceAll("<com3>",(master.getRadioManager().getModels().get("COM3").getSelectedItem().getFrequency()));
+            text = replaceAllInsensitive(text,"<com3>",(master.getRadioManager().getModels().get("COM3").getSelectedItem().getFrequency()));
         }
-        text = text.replaceAll("<winds>",metar.getWindDisplayString());
-        text = text.replaceAll("<wind-direction>",metar.getWindDirectionRounded());
-        text = text.replaceAll("<wind-speed>",""+metar.getWindSpeed());
-        text = text.replaceAll("<metar>", metar.getMetarBaseData());
-        text = text.replaceAll("<atis>",metar.createATIS(master, true).get(0));
-        text = text.replaceAll("<qnh>",String.format("%4.1f",metar.getPressureInHG()));
-        text = text.replaceAll("<mmHg>",String.format("%2.2f",metar.getPressureHPa()));
-        text = text.replaceAll("<runways>",master.getStatusManager().getActiveRunways());
-        text = text.replaceAll("<runways-land>",master.getStatusManager().getActiveLandingRunways());
+        text = replaceAllInsensitive(text,"<winds>",metar.getWindDisplayString());
+        text = replaceAllInsensitive(text,"<wind-direction>",metar.getWindDirectionRounded());
+        text = replaceAllInsensitive(text,"<wind-speed>",""+metar.getWindSpeed());
+        text = replaceAllInsensitive(text,"<metar>", metar.getMetarBaseData());
+        text = replaceAllInsensitive(text,"<atis>",metar.createATIS(master, true).get(0));
+        text = replaceAllInsensitive(text,"<qnh>",String.format("%4.1f",metar.getPressureInHG()));
+        text = replaceAllInsensitive(text,"<mmHg>",String.format("%2.2f",metar.getPressureHPa()));
+        text = replaceAllInsensitive(text,"<runways>",master.getStatusManager().getActiveRunways());
+        text = replaceAllInsensitive(text,"<runways-land>",master.getStatusManager().getActiveLandingRunways());
 
 //        <expected-runway>    Runway the pilot can expect for his aircraft
-        text = text.replaceAll("<assigned-runway>", contact!=null ? contact.getFlightPlan().getAssignedRunway() : "");
-        text = text.replaceAll("<cruise-altitude>",  contact!=null ?  contact.getFlightPlan().getCruisingAltitude():"");
-        text = text.replaceAll("<destination>",  contact!=null ? contact.getFlightPlan().getDestinationAirport() :"");
-        text = text.replaceAll("<squawk>", ""+contact!=null ? ""+contact.getAssignedSquawk():"");
-        text = text.replaceAll("<route>", contact!=null ? contact.getFlightPlan().getRoute():"");
+        text = replaceAllInsensitive(text,"<assigned-runway>", contact!=null ? contact.getFlightPlan().getAssignedRunway() : "");
+        text = replaceAllInsensitive(text,"<cruise-altitude>",  contact!=null ?  contact.getFlightPlan().getCruisingAltitude():"");
+        text = replaceAllInsensitive(text,"<destination>",  contact!=null ? contact.getFlightPlan().getDestinationAirport() :"");
+        text = replaceAllInsensitive(text,"<squawk>", contact!=null ? ""+contact.getAssignedSquawk():"");
+        if(contact!=null && text.toLowerCase().contains("<squawk-next>")) {
+            master.getRadarContactManager().assignSquawkCode();
+            text = replaceAllInsensitive(text,"<squawk-next>", ""+contact.getAssignedSquawk());
+        }
+
+        text = replaceAllInsensitive(text,"<route>", contact!=null ? contact.getFlightPlan().getRoute():"");
 
         // replace the dynamic variables
         int pos = -1;
@@ -229,6 +249,13 @@ public class AtcAliasChatMessage {
                     selectedContact.getFlightPlan().setAssignedRunway(argumentsToRemember.get(key));
                 } else if(key.equals("ROUTE")) {
                     selectedContact.getFlightPlan().setAssignedRoute(argumentsToRemember.get(key));
+                } else if(key.equals("SQUAWK")) {
+                    try {
+                        int s = Integer.parseInt(argumentsToRemember.get(key));
+                        if(s>0 && s%10<8 && s/1000<8) {
+                            selectedContact.getFlightPlan().setSquawk(""+s);
+                        }
+                    } catch(Exception e) {}
                 } else {
                     // unknown
 
@@ -240,5 +267,18 @@ public class AtcAliasChatMessage {
 
     public String getResolvedMessage() {
         return resolvedMessage;
+    }
+
+    public String replaceAllInsensitive(String text, String searchFor, String replaceWith) {
+        String searchText = text.toLowerCase();
+        String searchForLC = searchFor.toLowerCase();
+
+        while(searchText.contains(searchForLC)) {
+            int start = searchText.indexOf(searchForLC);
+            int end = start+searchFor.length();
+            searchText = searchText.substring(0,start)+replaceWith+text.substring(end);
+            text = text.substring(0,start)+replaceWith+text.substring(end);
+        }
+        return text;
     }
 }
