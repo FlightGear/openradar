@@ -49,6 +49,13 @@ public class TextManager implements ListModel<AtcMenuChatMessage> {
     private final List<ListDataListener> dataListeners = Collections.synchronizedList(new ArrayList<ListDataListener>());
 
     public TextManager() {
+        reloadTexts();
+    }
+
+    public void reloadTexts() {
+        languages.clear();
+        menuMessages.clear();
+        chatMessages.clear();
         AutoTextReader.loadTexts(languages, menuMessages, chatMessages);
     }
 

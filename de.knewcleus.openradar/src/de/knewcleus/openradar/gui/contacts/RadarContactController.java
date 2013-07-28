@@ -148,6 +148,10 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         return master;
     }
 
+    public void reloadTexts() {
+        textManager.reloadTexts();
+    }
+
     public void setFilterOperation(Operation filterOperation) {
         // this.filterOperation = filterOperation;
         applyFilter();

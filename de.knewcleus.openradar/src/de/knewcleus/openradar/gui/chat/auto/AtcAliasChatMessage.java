@@ -94,9 +94,9 @@ public class AtcAliasChatMessage {
                         result.append(args.remove(0));
                     }
                     resolvedMessage=result.toString();
-
+                    resolvedMessage=resolvedMessage.replace("\\.", "{{dot}}");
                     resolvedMessage = containsUnresolvedAlias(aliasPrefix, resolvedMessage) ? null : resolvedMessage;
-
+                    resolvedMessage= resolvedMessage!=null ? resolvedMessage.replace("{{dot}}",".") : null;
                 } else {
                     resolvedMessage = null;
                 }
@@ -114,7 +114,7 @@ public class AtcAliasChatMessage {
         if(pos == -1) return false;
         if(pos+1==msg.length()) return false;
 
-        if(msg.substring(pos+1, pos+2).matches("\\D") ) return true; // a dot may be followed by a digit, \D means anything but a digit
+        if(!msg.substring(pos+1, pos+2).matches("[\\d\\s]") ) return true; // a dot may be followed by a digit, \D means anything but a digit
         return false;
     }
 
@@ -192,7 +192,7 @@ public class AtcAliasChatMessage {
         text = replaceAllInsensitive(text,"<assigned-runway>", contact!=null ? contact.getFlightPlan().getAssignedRunway() : "");
         text = replaceAllInsensitive(text,"<cruise-altitude>",  contact!=null ?  contact.getFlightPlan().getCruisingAltitude():"");
         text = replaceAllInsensitive(text,"<destination>",  contact!=null ? contact.getFlightPlan().getDestinationAirport() :"");
-        text = replaceAllInsensitive(text,"<squawk>", ""+contact!=null ? ""+contact.getAssignedSquawk():"");
+        text = replaceAllInsensitive(text,"<squawk>", contact!=null ? ""+contact.getAssignedSquawk():"");
         if(contact!=null && text.toLowerCase().contains("<squawk-next>")) {
             master.getRadarContactManager().assignSquawkCode();
             text = replaceAllInsensitive(text,"<squawk-next>", ""+contact.getAssignedSquawk());
