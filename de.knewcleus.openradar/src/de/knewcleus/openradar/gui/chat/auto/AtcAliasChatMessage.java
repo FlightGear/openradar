@@ -108,7 +108,7 @@ public class AtcAliasChatMessage {
         }
     }
 
-    private boolean containsUnresolvedAlias(String prefix, String msg) {
+    public static boolean containsUnresolvedAlias(String prefix, String msg) {
         int pos = msg.indexOf(prefix);
 
         if(pos == -1) return false;

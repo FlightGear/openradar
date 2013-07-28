@@ -458,8 +458,10 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     private void sendChatMessage() {
         String message = (String) chatPanel.getChatMessage();
         boolean chatAliasEnabled = master.getDataRegistry().isChatAliasesEnabled();
+        boolean messageContainsAliases = AtcAliasChatMessage.containsUnresolvedAlias(master.getDataRegistry().getChatAliasPrefix(), message);
+
         if(chatAliasEnabled && aliasAtcMessage==null
-                && message.contains(master.getDataRegistry().getChatAliasPrefix())) {
+                && messageContainsAliases) {
             // alias: first step: resolve alias and place result in chat input field
             resolveAliasMessage(message);
 
