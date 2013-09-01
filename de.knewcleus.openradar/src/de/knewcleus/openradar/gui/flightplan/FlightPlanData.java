@@ -39,7 +39,9 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class FlightPlanData {
 
-    private boolean changed = false;
+    public enum UpdateStatus { CHANGED, IN_TRANSMISSION, SYNCHRONIZED }
+
+    private UpdateStatus updateStatus = UpdateStatus.CHANGED;
 
     public enum FlightPlanStatus {
         FILED, ACTIVE, CLOSED, EXPIRED, DELETED
@@ -109,7 +111,7 @@ public class FlightPlanData {
         this.soulsOnBoard = 1;
         this.remarks = null;
 
-        this.changed = true;
+        this.updateStatus = UpdateStatus.CHANGED;
     }
 
     public FlightPlanData(AirportData airportData, GuiRadarContact contact, String flightCode, String callSign, String owner, String handover, String squawk,
@@ -148,8 +150,6 @@ public class FlightPlanData {
             this.soulsOnBoard = 1;
         }
         this.remarks = remarks;
-
-        this.changed = true;
     }
 
     public synchronized void update(String flightCode, String callSign, String owner, String handover, String squawk, String assignedAltitude, String fpStatus,
@@ -185,15 +185,13 @@ public class FlightPlanData {
             this.soulsOnBoard = 1;
         }
         this.remarks = remarks;
-
-        this.changed = true;
     }
 
     public synchronized FlightPlanData copy() {
         FlightPlanData c = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedAltitude,
                 fpStatus, type, aircraft, trueAirspeed, departureAirport, departure, cruisingAltitude, route, destinationAirport,
                 alternativeDestinationAirports, estimatedFlightTime, estimatedFuelTime, pilotName, "" + soulsOnBoard, remarks);
-        c.changed = true;
+        c.updateStatus=UpdateStatus.CHANGED;
 
         return c;
     }
@@ -208,7 +206,7 @@ public class FlightPlanData {
 
     public synchronized void setFlightCode(String flightCode) {
         this.flightCode = flightCode;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getCallsign() {
@@ -217,7 +215,7 @@ public class FlightPlanData {
 
     public synchronized void setCallsign(String callSign) {
         this.callsign = callSign;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getOwner() {
@@ -226,7 +224,7 @@ public class FlightPlanData {
 
     public synchronized void setOwner(String owner) {
         this.owner = owner;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getHandover() {
@@ -235,7 +233,7 @@ public class FlightPlanData {
 
     public synchronized void setHandover(String handover) {
         this.handover = handover;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getSquawk() {
@@ -244,7 +242,7 @@ public class FlightPlanData {
 
     public synchronized void setSquawk(String squawk) {
         this.squawk = squawk;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getAssignedAltitude() {
@@ -253,25 +251,25 @@ public class FlightPlanData {
 
     public synchronized void setAssignedAltitude(String assignedAltitude) {
         this.assignedAltitude = assignedAltitude;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
-    public String getAssignedRoute() {
+    public synchronized String getAssignedRoute() {
         return removeNull(assignedRoute);
     }
 
-    public void setAssignedRoute(String assignedRoute) {
+    public synchronized void setAssignedRoute(String assignedRoute) {
         this.assignedRoute = assignedRoute;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
-    public String getAssignedRunway() {
+    public synchronized String getAssignedRunway() {
         return removeNull(assignedRunway);
     }
 
-    public void setAssignedRunway(String assignedRunway) {
+    public synchronized void setAssignedRunway(String assignedRunway) {
         this.assignedRunway = assignedRunway;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getFpStatus() {
@@ -280,7 +278,7 @@ public class FlightPlanData {
 
     public synchronized void setFpStatus(String fpStatus) {
         this.fpStatus = fpStatus;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getType() {
@@ -289,7 +287,7 @@ public class FlightPlanData {
 
     public synchronized void setType(String type) {
         this.type = type;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getAircraft() {
@@ -298,7 +296,7 @@ public class FlightPlanData {
 
     public synchronized void setAircraft(String aircraft) {
         this.aircraft = aircraft;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getTrueAirspeed() {
@@ -307,7 +305,7 @@ public class FlightPlanData {
 
     public synchronized void setTrueAirspeed(String trueAirspeed) {
         this.trueAirspeed = trueAirspeed;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getDepartureAirport() {
@@ -316,7 +314,7 @@ public class FlightPlanData {
 
     public synchronized void setDepartureAirport(String departureAirport) {
         this.departureAirport = departureAirport;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getDeparture() {
@@ -325,7 +323,7 @@ public class FlightPlanData {
 
     public synchronized void setDeparture(String departureTime) {
         this.departure = departureTime;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getCruisingAltitude() {
@@ -334,7 +332,7 @@ public class FlightPlanData {
 
     public synchronized void setCruisingAltitude(String cruisingAltitude) {
         this.cruisingAltitude = cruisingAltitude;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getRoute() {
@@ -343,7 +341,7 @@ public class FlightPlanData {
 
     public synchronized void setRoute(String route) {
         this.route = route;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getDestinationAirport() {
@@ -352,7 +350,7 @@ public class FlightPlanData {
 
     public synchronized void setDestinationAirport(String destinationAirport) {
         this.destinationAirport = destinationAirport;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getAlternativeDestinationAirports() {
@@ -361,7 +359,7 @@ public class FlightPlanData {
 
     public synchronized void setAlternativeDestinationAirports(String alternativeDestinationAirports) {
         this.alternativeDestinationAirports = alternativeDestinationAirports;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getEstimatedFlightTime() {
@@ -370,7 +368,7 @@ public class FlightPlanData {
 
     public synchronized void setEstimatedFlightTime(String estimatedFlightTime) {
         this.estimatedFlightTime = estimatedFlightTime;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getEstimatedFuelTime() {
@@ -379,7 +377,7 @@ public class FlightPlanData {
 
     public synchronized void setEstimatedFuelTime(String estimatedFuelTime) {
         this.estimatedFuelTime = estimatedFuelTime;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getPilotName() {
@@ -388,7 +386,7 @@ public class FlightPlanData {
 
     public synchronized void setPilotName(String pilotName) {
         this.pilotName = pilotName;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized int getSoulsOnBoard() {
@@ -397,7 +395,7 @@ public class FlightPlanData {
 
     public synchronized void setSoulsOnBoard(int soulsOnBoard) {
         this.soulsOnBoard = soulsOnBoard;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     public synchronized String getRemarks() {
@@ -406,14 +404,10 @@ public class FlightPlanData {
 
     public synchronized void setRemarks(String remarks) {
         this.remarks = remarks;
-        this.changed = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
     // ----------------------- end of bean ---------------------
-
-    public synchronized boolean isChanged() {
-        return changed;
-    }
 
     private String removeNull(String s) {
         return s != null ? s : "";
@@ -506,5 +500,19 @@ public class FlightPlanData {
 
     public String toString() {
         return flightCode+": "+callsign+" "+departureAirport+"("+departure+") > "+ destinationAirport+" ("+aircraft+","+fpStatus+")";
+    }
+
+    public synchronized boolean hasBeenChanged() {
+        return updateStatus.equals(UpdateStatus.CHANGED);
+    }
+
+    public synchronized void setInTransmission() {
+        updateStatus=UpdateStatus.IN_TRANSMISSION;
+    }
+
+    public synchronized void updateAsTransmitted() {
+        if(!updateStatus.equals(UpdateStatus.CHANGED)) {
+            updateStatus=UpdateStatus.SYNCHRONIZED;
+        }
     }
 }

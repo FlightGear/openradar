@@ -777,7 +777,7 @@ public class SetupDialog extends JFrame {
         btCheckSettings.addActionListener(setupManager.getActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.weighty = 1;
         gridBagConstraints.anchor = GridBagConstraints.CENTER;
