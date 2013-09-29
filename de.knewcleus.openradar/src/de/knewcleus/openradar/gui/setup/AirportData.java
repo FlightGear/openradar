@@ -63,6 +63,7 @@ import de.knewcleus.openradar.gui.status.radio.Radio;
 import de.knewcleus.openradar.gui.status.radio.RadioFrequency;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
 import de.knewcleus.openradar.rpvd.contact.DatablockLayoutManager;
+import de.knewcleus.openradar.util.CoreMag;
 import de.knewcleus.openradar.view.glasspane.StPView;
 import de.knewcleus.openradar.view.navdata.INavPointListener;
 import de.knewcleus.openradar.weather.MetarReader;
@@ -136,55 +137,55 @@ public class AirportData implements INavPointListener {
     public synchronized StPView getDirectionMessageView() {
         return directionMessageView;
     }
-    public String getAirportCode() {
+    public synchronized String getAirportCode() {
         return airportCode;
     }
 
-    public void setAirportCode(String airportCode) {
+    public synchronized void setAirportCode(String airportCode) {
         this.airportCode = airportCode;
     }
 
-    public String getAirportName() {
+    public synchronized String getAirportName() {
         return name;
     }
 
-    public void setAirportName(String name) {
+    public synchronized void setAirportName(String name) {
         this.name = name;
     }
 
-    public Point2D getAirportPosition() {
+    public synchronized Point2D getAirportPosition() {
         return towerPosition;
     }
 
-    public void setAirportPosition(Point2D airportPosition) {
+    public synchronized void setAirportPosition(Point2D airportPosition) {
         this.towerPosition = airportPosition;
     }
 
-    public double getLon() {
+    public synchronized double getLon() {
         return towerPosition.getX();
     }
 
-    public double getLat() {
+    public synchronized double getLat() {
         return towerPosition.getY();
     }
 
-    public void setElevation(double elevation) {
+    public synchronized void setElevation(double elevation) {
         this.elevation = elevation;
     }
 
-    public double getElevationFt() {
+    public synchronized double getElevationFt() {
         return elevation / Units.FT;
     }
 
-    public double getElevationM() {
+    public synchronized double getElevationM() {
         return elevation;
     }
 
-    public double getMagneticDeclination() {
+    public synchronized double getMagneticDeclination() {
         return magneticDeclination;
     }
 
-    public void setMagneticDeclination(double magneticDeclination) {
+    public synchronized void setMagneticDeclination(double magneticDeclination) {
         this.magneticDeclination = magneticDeclination;
     }
 
@@ -196,15 +197,15 @@ public class AirportData implements INavPointListener {
         this.callSign = callSign;
     }
 
-    public Map<String, Radio> getRadios() {
+    public synchronized Map<String, Radio> getRadios() {
         return radios;
     }
 
-    public List<RadioFrequency> getRadioFrequencies() {
+    public synchronized List<RadioFrequency> getRadioFrequencies() {
         return radioFrequencies;
     }
 
-    public Map<String, GuiRunway> getRunways() {
+    public synchronized Map<String, GuiRunway> getRunways() {
         return runways;
     }
 
@@ -212,47 +213,47 @@ public class AirportData implements INavPointListener {
         return "OpenRadar";
     }
 
-    public FgComMode getFgComMode() {
+    public synchronized FgComMode getFgComMode() {
         return fgComMode;
     }
 
-    public void setFgComMode(FgComMode fgComMode) {
+    public synchronized void setFgComMode(FgComMode fgComMode) {
         this.fgComMode = fgComMode;
     }
 
-    public String getFgComPath() {
+    public synchronized String getFgComPath() {
         return fgComPath;
     }
 
-    public void setFgComPath(String fgComPath) {
+    public synchronized void setFgComPath(String fgComPath) {
         this.fgComPath = fgComPath;
     }
 
-    public String getFgComExec() {
+    public synchronized String getFgComExec() {
         return fgComExec;
     }
 
-    public void setFgComExec(String fgComExec) {
+    public synchronized void setFgComExec(String fgComExec) {
         this.fgComExec = fgComExec;
     }
 
-    public String getFgComHost() {
+    public synchronized String getFgComHost() {
         return fgComHost;
     }
 
-    public void setFgComHost(String fgComHost) {
+    public synchronized void setFgComHost(String fgComHost) {
         this.fgComHost = fgComHost;
     }
 
-    public String getFgComServer() {
+    public synchronized String getFgComServer() {
         return fgComServer;
     }
 
-    public void setFgComServer(String fgComServer) {
+    public synchronized void setFgComServer(String fgComServer) {
         this.fgComServer = fgComServer;
     }
 
-    public String getFgComPorts() {
+    public synchronized String getFgComPorts() {
         StringBuilder sFgComPorts = new StringBuilder();
         for (int port : fgComPorts) {
             if (sFgComPorts.length() > 0)
@@ -262,7 +263,7 @@ public class AirportData implements INavPointListener {
         return sFgComPorts.toString();
     }
 
-    public void setFgComPorts(List<Integer> fgComPorts) {
+    public synchronized void setFgComPorts(List<Integer> fgComPorts) {
         this.fgComPorts = fgComPorts;
         radios.clear();
         int i = 0;
@@ -274,27 +275,27 @@ public class AirportData implements INavPointListener {
         }
     }
 
-    public String getMpServer() {
+    public synchronized String getMpServer() {
         return mpServer;
     }
 
-    public void setMpServer(String mpServer) {
+    public synchronized void setMpServer(String mpServer) {
         this.mpServer = mpServer;
     }
 
-    public int getMpServerPort() {
+    public synchronized int getMpServerPort() {
         return mpServerPort;
     }
 
-    public void setMpServerPort(int mpServerPort) {
+    public synchronized void setMpServerPort(int mpServerPort) {
         this.mpServerPort = mpServerPort;
     }
 
-    public int getMpLocalPort() {
+    public synchronized int getMpLocalPort() {
         return mpLocalPort;
     }
 
-    public void setMpLocalPort(int mpLocalPort) {
+    public synchronized void setMpLocalPort(int mpLocalPort) {
         this.mpLocalPort = mpLocalPort;
     }
 
@@ -543,6 +544,8 @@ public class AirportData implements INavPointListener {
             } catch (IOException e) {
             }
         }
+        // calculate magnetic declination
+        setMagneticDeclination(CoreMag.calc_magvarDeg(getLat(), getLon(), getElevationM(), System.currentTimeMillis()));
     }
 
     public synchronized void storeAirportData(GuiMasterController master) {

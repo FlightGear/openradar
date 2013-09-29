@@ -424,6 +424,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
     }
 
     private String getSquawkDisplay(GuiRadarContact c) {
+        //if(c.getTranspSquawkCode()!=null) System.out.println(c.getCallSign()+": Sq:"+c.getTranspSquawkCode()+" A:"+c.getTranspAltitude());
         if(c.getAssignedSquawk()==null && c.getTranspSquawkCode()==null) return "";
         if(c.getAssignedSquawk()!=null && c.getTranspSquawkCode()==null) return ""+c.getAssignedSquawk()+"(standby)";
         if(c.getAssignedSquawk()==null) return "("+c.getTranspSquawkCode()+")";

@@ -205,42 +205,64 @@ public class RadarMapPanel extends JComponent {
             radarMapViewAdapter.getUpdateManager().setRootView(rootView);
 
             if(master.getDataRegistry().isLayerVisible("landmass")) {
-                setupDialog.setStatus(5, "Reading landmass layer...");
-                ZippedShapefileLayer landmassLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_landmass");
-                final GeodataView landmassView = new GeodataView(master, radarMapViewAdapter, landmassLayer,"LANDMASS",bounds);
-                landmassLayer.closeZipArchive();
-                landmassView.setColor(Palette.LANDMASS);
-                //landmassView.setFill(false);
-                rootView.pushView(landmassView);
+                try {
+                    setupDialog.setStatus(5, "Reading landmass layer...");
+                    ZippedShapefileLayer landmassLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_landmass");
+                    final GeodataView landmassView = new GeodataView(master, radarMapViewAdapter, landmassLayer,"LANDMASS",bounds);
+                    landmassLayer.closeZipArchive();
+                    landmassView.setColor(Palette.LANDMASS);
+                    //landmassView.setFill(false);
+                    rootView.pushView(landmassView);
+                } catch(Exception e) {
+                    // ignore layer
+                    System.err.println("Could not landmass layer data. Hiding it...");
+                    // set better background color
+                    setBackground(Palette.LANDMASS);
+                }
             } else {
                 // set better background color
                 setBackground(Palette.LANDMASS);
             }
 
             if(master.getDataRegistry().isLayerVisible("urban")) {
-                setupDialog.setStatus(5, "Reading urban layer...");
-                ZippedShapefileLayer urbanLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_urban");
-                final GeodataView urbanView = new GeodataView(master, radarMapViewAdapter, urbanLayer,"URBAN",bounds);
-                urbanLayer.closeZipArchive();
-                urbanView.setColor(new Color(80,80,80));
-                //landmassView.setFill(false);
-                rootView.pushView(urbanView);
+                try {
+                    setupDialog.setStatus(5, "Reading urban layer...");
+                    ZippedShapefileLayer urbanLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_urban");
+                    final GeodataView urbanView = new GeodataView(master, radarMapViewAdapter, urbanLayer,"URBAN",bounds);
+                    urbanLayer.closeZipArchive();
+                    urbanView.setColor(new Color(80,80,80));
+                    //landmassView.setFill(false);
+                    rootView.pushView(urbanView);
+                } catch(Exception e) {
+                    // ignore layer
+                    System.err.println("Could not load urban layer data. Hiding it...");
+                }
             }
             if(master.getDataRegistry().isLayerVisible("lake")) {
-                ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_lake");
-                final GeodataView lakeView = new GeodataView(master, radarMapViewAdapter, lakeLayer,"LAKE",bounds);
-                lakeLayer.closeZipArchive();
-                lakeView.setColor(Palette.LAKE);
-                lakeView.setFill(true);
-                rootView.pushView(lakeView);
+                try {
+                    ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_lake");
+                    final GeodataView lakeView = new GeodataView(master, radarMapViewAdapter, lakeLayer,"LAKE",bounds);
+                    lakeLayer.closeZipArchive();
+                    lakeView.setColor(Palette.LAKE);
+                    lakeView.setFill(true);
+                    rootView.pushView(lakeView);
+                } catch(Exception e) {
+                    // ignore layer
+                    System.err.println("Could not load lake layer data. Hiding it...");
+                }
             }
             if(master.getDataRegistry().isLayerVisible("stream")) {
-                ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_stream");
-                final GeodataView streamView = new GeodataView(master, radarMapViewAdapter, streamLayer,"STREAM", bounds);
-                streamLayer.closeZipArchive();
-                streamView.setColor(Palette.STREAM);
-                streamView.setFill(false);
-                rootView.pushView(streamView);
+                try {
+                    ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_stream");
+                    final GeodataView streamView = new GeodataView(master, radarMapViewAdapter, streamLayer,"STREAM", bounds);
+                    streamLayer.closeZipArchive();
+                    streamView.setColor(Palette.STREAM);
+                    streamView.setFill(false);
+                    rootView.pushView(streamView);
+                } catch(Exception e) {
+                    // ignore layer
+                    System.err.println("Could not load stream layer data. Hiding it...");
+                }
             }
             if(master.getDataRegistry().isLayerVisible("tarmac")) {
                 setupDialog.setStatus(10, "Reading tarmac layer...");

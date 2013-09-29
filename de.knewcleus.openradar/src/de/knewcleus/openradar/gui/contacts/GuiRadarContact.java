@@ -41,6 +41,7 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
+import de.knewcleus.openradar.gui.flightplan.FpTimeUtil;
 import de.knewcleus.openradar.gui.setup.AircraftCodeConverter;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
@@ -87,7 +88,6 @@ public class GuiRadarContact {
     protected volatile double lastHeading=-1;
     protected volatile String atcLanguage = "en";
     private volatile boolean fgComSupport = false;
-    protected volatile Integer assignedSquawk = null;
 
     public GuiRadarContact(GuiMasterController master, RadarContactController manager, TargetStatus player, String atcComment) {
         this.manager=manager;
@@ -452,11 +452,16 @@ public class GuiRadarContact {
     }
 
     public synchronized Integer getAssignedSquawk() {
-        return assignedSquawk;
+        Integer squawk = null; 
+        try {
+            squawk = Integer.parseInt(flightPlan.getSquawk());
+        } catch(Exception e) {
+        }
+        return squawk;
     }
 
     public synchronized void setAssignedSquawk(Integer assignedSquawk) {
-        this.assignedSquawk = assignedSquawk;
+        flightPlan.setSquawk(assignedSquawk!=null?assignedSquawk.toString():"");;
     }
 
     public synchronized void reAppeared() {
