@@ -15,7 +15,8 @@
 <wind-speed>         Current winds speed
 <metar>              Raw METAR of the local airport
 <atis>               Current ATIS of the local airport
-<qnh>                Current QNH of the local airport
+<hPa>                Current QNH of the local airport in hPa
+<mmHg>               Current QNH of the local airport in mmHg
 <runways>            Current active runways
 <runways-land> 		 Current active runways for landing
 
