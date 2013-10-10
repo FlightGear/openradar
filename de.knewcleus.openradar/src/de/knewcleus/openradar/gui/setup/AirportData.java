@@ -492,56 +492,57 @@ public class AirportData implements INavPointListener {
     }
 
     public synchronized void loadAirportData(GuiMasterController master) {
+        Properties p = new Properties();
         File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
+        try {
+            p.load(new FileReader(propertyFile));
+        } catch (IOException e) {
+        }
+
+        callSign = p.getProperty("lastCallsign");
+        if(callSign==null) {
+            callSign = getInitialATCCallSign();
+        }
+        // metar
+        MetarReader metarReader = master.getMetarReader();
+        metarSource = p.getProperty("metarSource");
+        if(metarSource==null) {
+            metarSource = "_"+getAirportCode(); // The underscore marks it as initial setting
+        }
+        addMetarSources = p.getProperty("addMetarSources");
+        metarReader.changeMetarSources(metarSource, addMetarSources);
+
         if (propertyFile.exists()) {
-            Properties p = new Properties();
-            try {
-                p.load(new FileReader(propertyFile));
-                callSign = p.getProperty("lastCallsign");
-                if(callSign==null) {
-                    callSign = getInitialATCCallSign();
-                }
-                // metar
-                MetarReader metarReader = master.getMetarReader();
-                metarSource = p.getProperty("metarSource");
-                if(metarSource==null) {
-                    metarSource = "_"+getAirportCode(); // The underscore marks it as initial setting
-                }
-                addMetarSources = p.getProperty("addMetarSources");
-                metarReader.changeMetarSources(metarSource, addMetarSources);
 
-                // restore runwaydata
-                for (GuiRunway rw : runways.values()) {
-                    rw.getRunwayData().setValuesFromProperties(p);
+            // restore runwaydata
+            for (GuiRunway rw : runways.values()) {
+                rw.getRunwayData().setValuesFromProperties(p);
+            }
+            // restore zoomlevel values
+            master.getRadarBackend().setZoomLevelValuesFromProperties(p);
+            // restore layout
+            datablockLayoutManager.restoreSelectedLayoutFrom(master, p);
+
+            squawkCodeManager.restoreSquawkRangeFrom(p);
+            // restore toggles
+            Enumeration<?> e = p.propertyNames();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                if (name.startsWith("toggle.")) {
+                    String objKey = name.substring(7);
+                    boolean b = !"false".equals(p.getProperty(name));
+                    toggleObjectsMap.put(objKey, b);
                 }
-                // restore zoomlevel values
-                master.getRadarBackend().setZoomLevelValuesFromProperties(p);
-                // restore layout
-                datablockLayoutManager.restoreSelectedLayoutFrom(master, p);
+            }
 
-                squawkCodeManager.restoreSquawkRangeFrom(p);
-                // restore toggles
-                Enumeration<?> e = p.propertyNames();
-                while (e.hasMoreElements()) {
-                    String name = (String) e.nextElement();
-                    if (name.startsWith("toggle.")) {
-                        String objKey = name.substring(7);
-                        boolean b = !"false".equals(p.getProperty(name));
-                        toggleObjectsMap.put(objKey, b);
-                    }
+            // restore saved selected frequencies
+
+            for (Radio r : radios.values()) {
+                String savedFrequency = p.getProperty("radio." + r.getKey());
+                // check if frequency is known
+                if (savedFrequency != null) {
+                    r.setRestoredFrequency(savedFrequency);
                 }
-
-                // restore saved selected frequencies
-
-                for (Radio r : radios.values()) {
-                    String savedFrequency = p.getProperty("radio." + r.getKey());
-                    // check if frequency is known
-                    if (savedFrequency != null) {
-                        r.setRestoredFrequency(savedFrequency);
-                    }
-                }
-
-            } catch (IOException e) {
             }
         }
         // calculate magnetic declination

@@ -91,8 +91,7 @@ public class TargetStatus extends Player {
 		super.updatePosition(t, packet);
 		geodeticPosition=geodToCartTransformation.backward(getCartesianPosition());
 
-		groundSpeed=getLinearVelocity().getLength()*Units.MPS;
-
+        groundSpeed=getLinearVelocity().getLength()*Units.MPS;
 		final Quaternion hf2gcf=Quaternion.fromLatLon(geodeticPosition.getY(), geodeticPosition.getX());
 		final Quaternion gcf2hf=hf2gcf.inverse();
 		final Quaternion bf2hf=gcf2hf.multiply(orientation);
@@ -120,6 +119,7 @@ public class TargetStatus extends Player {
         }
         lastPosition = getGeodeticPosition();
         lastPositionTime = packet.getTime();
+        // System.out.println(((int)(groundSpeed/Units.KNOTS))+ " " + ((int)(calculatedGroundspeed/Units.KNOTS)));
 	}
 
 	/**

@@ -126,7 +126,7 @@ public class TraditionalLayout extends ADatablockLayout {
         String addData = getAddData(c);
         return  String.format("%s %2s",c.getCallSign(),c.getMagnCourse())  +"\n"+
                 c.getModel()+" "+addData+"\n"+
-                String.format("%1s %2s", c.getFlightLevel(),c.getAirSpeed());
+                String.format("%1s %2s", c.getFlightLevel(),c.getGroundSpeed());
     }
 
     private String getAddData(GuiRadarContact c) {

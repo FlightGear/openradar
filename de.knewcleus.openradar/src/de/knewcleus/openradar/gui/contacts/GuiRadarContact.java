@@ -41,7 +41,6 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
-import de.knewcleus.openradar.gui.flightplan.FpTimeUtil;
 import de.knewcleus.openradar.gui.setup.AircraftCodeConverter;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
