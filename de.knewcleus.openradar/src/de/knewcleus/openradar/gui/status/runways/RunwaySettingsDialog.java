@@ -775,9 +775,8 @@ public class RunwaySettingsDialog extends JFrame {
             rwd.setBiDirectional(chbRwBiDirectional.isSelected());
             // store at opposite runway direction
             try {
-                int rwNumber = Integer.parseInt(lbRWNumber.getText());
-                int otherNumber = rwNumber <= 18 ? rwNumber +18 : rwNumber-18;
-                String sOtherRwNumber = otherNumber<10 ? "0"+otherNumber: ""+otherNumber;
+                GuiRunway rw = data.getRunways().get(lbRWNumber.getText());
+                String sOtherRwNumber = rw.getRunwayEnd().getOppositeEnd().getRunwayID();
                 RunwayData otherEndRwd = data.getRunwayData( sOtherRwNumber );
                 otherEndRwd.setBiDirectional(chbRwBiDirectional.isSelected());
             } catch(Exception e) {

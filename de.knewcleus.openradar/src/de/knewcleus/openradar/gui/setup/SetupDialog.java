@@ -74,6 +74,7 @@ import javax.swing.border.TitledBorder;
 
 import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
+import de.knewcleus.openradar.util.CoreMag;
 
 /**
  * The setup dialog...

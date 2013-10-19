@@ -111,10 +111,13 @@ public class AtcAliasChatMessage {
     public static boolean containsUnresolvedAlias(String prefix, String msg) {
         int pos = msg.indexOf(prefix);
 
-        if(pos == -1) return false;
-        if(pos+1==msg.length()) return false;
-
-        if(!msg.substring(pos+1, pos+2).matches("[\\d\\s]") ) return true; // a dot may be followed by a digit, \D means anything but a digit
+        if(pos!=-1) {
+            if(pos+1==msg.length()) return false;
+    
+            if(msg.substring(pos+1).contains(prefix)) return false; // URLs ... 
+            
+            if(!msg.substring(pos+1, pos+2).matches("[\\d\\s]") ) return true; // a dot may be followed by a digit, \D means anything but a digit
+        }
         return false;
     }
 
@@ -183,8 +186,8 @@ public class AtcAliasChatMessage {
         text = replaceAllInsensitive(text,"<wind-speed>",""+metar.getWindSpeed());
         text = replaceAllInsensitive(text,"<metar>", metar.getMetarBaseData());
         text = replaceAllInsensitive(text,"<atis>",metar.createATIS(master, true).get(0));
-        text = replaceAllInsensitive(text,"<qnh>",String.format("%4.1f",metar.getPressureInHG()));
-        text = replaceAllInsensitive(text,"<mmHg>",String.format("%2.2f",metar.getPressureHPa()));
+        text = replaceAllInsensitive(text,"<hPa>",String.format("%4.1f",metar.getPressureHPa()));
+        text = replaceAllInsensitive(text,"<mmHg>",String.format("%2.2f",metar.getPressureInHG()));
         text = replaceAllInsensitive(text,"<runways>",master.getStatusManager().getActiveRunways());
         text = replaceAllInsensitive(text,"<runways-land>",master.getStatusManager().getActiveLandingRunways());
 
@@ -203,10 +206,10 @@ public class AtcAliasChatMessage {
         // replace the dynamic variables
         int pos = -1;
 
-        for(int i=0 ; i<arguments.size(); i++) {
+        for(int i=0 ; 0<arguments.size(); i++) {
             // check for values to be remembered
             String searchFor = "{"+i;
-            String arg = arguments.get(i);
+            String arg = arguments.get(0);
             if(!text.contains(searchFor)) {
                 // the argument is not referenced, so this argument is additional text behind the alias
                 break;

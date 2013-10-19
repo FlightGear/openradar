@@ -79,11 +79,11 @@ public class SectorBean {
     public void setAirportDescription(String airportDescription) {
         this.airportDescription = airportDescription;
     }
-
+    /** feature replaced with magnetic model out of SimGear */
     public double getMagneticDeclination() {
         return magneticDeclination;
     }
-
+    /** feature replaced with magnetic model out of SimGear */
     public void setMagneticDeclination(double magneticDeclination) {
         this.magneticDeclination = magneticDeclination;
     }

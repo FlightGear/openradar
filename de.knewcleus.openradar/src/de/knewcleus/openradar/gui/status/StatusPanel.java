@@ -163,7 +163,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
         lbAirport.setForeground(Palette.DESKTOP_TEXT);
         lbAirport.setText(master.getDataRegistry().getAirportCode() + " " + master.getDataRegistry().getAirportName().toUpperCase());
-        lbAirport.setToolTipText("Your current airport");
+        lbAirport.setToolTipText(String.format("Magnetic declination: %1.1f°", master.getDataRegistry().getMagneticDeclination()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -433,7 +433,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
         String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);
 
-        lbPtS.setText(dTP+"° / "+dTS+"°     "+dist+" NM   ETA "+min);
+        lbPtS.setText(dTP+"° ("+dTS+"°)   "+dist+" NM   ETA "+min);
     }
 
     public String getActiveRunways() {

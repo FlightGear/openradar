@@ -150,7 +150,7 @@ public class StPView implements IBoundedView, INotificationListener {
             String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
             String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);;
 
-            String textLine1 = String.format("%s° / %2s°",dTP,dTS);
+            String textLine1 = String.format("%s° (%2s°)",dTP,dTS);
             String textLine2 = String.format("%1s NM, ETA %2s", dist,min);
             boundsLine1 = fontMetrics.getStringBounds(textLine1, g2d);
             boundsLine2 = fontMetrics.getStringBounds(textLine2, g2d);

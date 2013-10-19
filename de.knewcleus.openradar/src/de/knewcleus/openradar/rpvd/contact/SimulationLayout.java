@@ -148,7 +148,7 @@ public class SimulationLayout extends ADatablockLayout {
             if(!assignedSquawkTunedIn) {
                 // squawk codes do not match
                 sb.append(String.format("%s %s",""+c.getTranspSquawkCode(),c.getMagnCourse())).append("\n");
-                if(!"-9999".equals(c.getTranspAltitude())) {
+                if(-9999!=c.getTranspAltitude()) {
                     sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
                 } else {
                     sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");
@@ -163,7 +163,7 @@ public class SimulationLayout extends ADatablockLayout {
                     sb.append(" ").append(addData);
                 }
                 sb.append("\n");
-                if(!"-9999".equals(c.getTranspAltitude())) {
+                if(-9999!=c.getTranspAltitude()) {
                     sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
                 } else {
                     sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");

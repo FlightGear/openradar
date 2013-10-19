@@ -122,11 +122,12 @@ public class SetupController {
                         double lat = Double.parseDouble(p.getProperty("lat", ""));
                         position = new Point2D.Double(lon, lat);
                     }
-                    if(p.getProperty("magneticDeclination")==null) {
-                        log.severe("Error: Property 'magneticDeclination' not found in "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
-                        System.exit(99);
-                    }
-                    magneticDeclination = Double.parseDouble(p.getProperty("magneticDeclination", "0"));
+                 // not needed anymore, replaced by fgfs model
+//                  if(p.getProperty("magneticDeclination")==null) {
+//                      log.severe("Error: Property 'magneticDeclination' not found in "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
+//                      System.exit(99);
+//                  }
+//                  magneticDeclination = Double.parseDouble(p.getProperty("magneticDeclination", "0"));
                 }
                 SectorBean sb = new SectorBean(airportCode, airportName, position, magneticDeclination, true);
                 mapExistingSectors.put(airportCode, sb);
@@ -398,7 +399,7 @@ public class SetupController {
                 return new InputStreamReader(zifPhonebook.getInputStream(zipentry));
             }
         }
-        throw new IllegalStateException("apt.dat not found in sectors/AtpNav.zip!");
+        throw new IllegalStateException("Could not read data/phonebook.zip!");
     }
 
     public String getPropertiesFile() {

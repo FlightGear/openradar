@@ -119,8 +119,10 @@ public abstract class SectorCreator {
         p.put("metarSource", data.getAirportCode());
         p.put("lat", Double.toString(data.getLat()));
         p.put("lon", Double.toString(data.getLon()));
-        p.put("magneticDeclination", Double.toString(loadMagneticDeclination(data)));
-
+       
+        // 20130915 changed to use the simgear model
+        // p.put("magneticDeclination", Double.toString(loadMagneticDeclination(data)));
+       
         SetupController.saveSectorProperties(data.getAirportCode(), p);
     }
 
