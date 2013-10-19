@@ -206,10 +206,10 @@ public class AtcAliasChatMessage {
         // replace the dynamic variables
         int pos = -1;
 
-        for(int i=0 ; i<arguments.size(); i++) {
+        for(int i=0 ; 0<arguments.size(); i++) {
             // check for values to be remembered
             String searchFor = "{"+i;
-            String arg = arguments.get(i);
+            String arg = arguments.get(0);
             if(!text.contains(searchFor)) {
                 // the argument is not referenced, so this argument is additional text behind the alias
                 break;

@@ -399,7 +399,7 @@ public class SetupController {
                 return new InputStreamReader(zifPhonebook.getInputStream(zipentry));
             }
         }
-        throw new IllegalStateException("apt.dat not found in sectors/AtpNav.zip!");
+        throw new IllegalStateException("Could not read data/phonebook.zip!");
     }
 
     public String getPropertiesFile() {
