@@ -137,9 +137,11 @@ public class FgComController implements Runnable, IRadioBackend {
 
         if(fgComProcesses.size()>0) {
             // only if we have started FGCOM
+            String processName = master.getAirportData().getFgComExec();
+            
             if (System.getProperty("os.name").startsWith("Windows")) {
                 try {
-                    Runtime.getRuntime().exec("taskkill /F /IM fgcom.exe");
+                    Runtime.getRuntime().exec("taskkill /F /IM "+processName);
                 } catch (IOException e) {}
                 try {
                     Runtime.getRuntime().exec("taskkill /F /IM FGComGui.exe");
@@ -147,16 +149,10 @@ public class FgComController implements Runnable, IRadioBackend {
             }
             if (System.getProperty("os.name").startsWith("Linux")) {
                 try {
-                    Runtime.getRuntime().exec("killall fgcom.exe");
+                    Runtime.getRuntime().exec("killall "+processName);
                 } catch (IOException e) {}
                 try {
                     Runtime.getRuntime().exec("killall FGComGui.exe");
-                } catch (IOException e) {}
-                try {
-                    Runtime.getRuntime().exec("killall fgcom");
-                } catch (IOException e) {}
-                try {
-                    Runtime.getRuntime().exec("killall fgcomgui");
                 } catch (IOException e) {}
             }
         }
