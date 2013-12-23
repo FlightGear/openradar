@@ -45,14 +45,18 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.knewcleus.fgfs.navdata.impl.VOR;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class VORSymbol extends AViewObject {
 
-    private AirportData data;
+    private GuiMasterController master;
     private VOR vor;
     private Color defaultColor;
 
@@ -66,9 +70,11 @@ public class VORSymbol extends AViewObject {
     private static BufferedImage imageVORTAC;
     private Point2D displayPosition;
 
-    public VORSymbol(AirportData data, VOR vor, VORType vorType) {
+    private final static Logger log = LogManager.getLogger(VORSymbol.class);
+    
+    public VORSymbol(GuiMasterController master, VOR vor, VORType vorType) {
         super(Palette.CRD_BACKGROUND);
-        this.data = data;
+        this.master = master;
         this.vor = vor;
         this.defaultColor = color;
 
@@ -79,7 +85,7 @@ public class VORSymbol extends AViewObject {
             imageVORTME = ImageIO.read(new File("res/VOR-DME.png"));
             imageVORTAC = ImageIO.read(new File("res/VORTAC.png"));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error while loading VOR symbols!",e);
         }
     }
 
@@ -87,7 +93,7 @@ public class VORSymbol extends AViewObject {
     protected void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
         this.displayPosition = newDisplayPosition;
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,vor);
+        Color highLightColor = master.getAirportData().getNavaidDB().getNavaidHighlightColor(master,vor);
 
         if(highLightColor!=null) {
             this.color = highLightColor;
@@ -108,7 +114,7 @@ public class VORSymbol extends AViewObject {
     @Override
     public void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
-        if(vor.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, vor) || data.getRadarObjectFilterState("VOR")) {
+        if(vor.isHighlighted() || master.getAirportData().getNavaidDB().isPartOfRoute(master, vor) || master.getAirportData().getRadarObjectFilterState("VOR")) {
             // super.paint(g2d, mapViewAdapter);
             int scale = (int)mapViewAdapter.getLogicalScale();
             scale = scale==0 ? 1 : scale;
@@ -117,7 +123,7 @@ public class VORSymbol extends AViewObject {
             if(scale>30) scale=30;
 
 
-            if (vor.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, vor) || displayPosition != null) {
+            if (vor.isHighlighted() || master.getAirportData().getNavaidDB().isPartOfRoute(master, vor) || displayPosition != null) {
                 Image image=imageVOR;
                 switch (vorType) {
                 case VOR:

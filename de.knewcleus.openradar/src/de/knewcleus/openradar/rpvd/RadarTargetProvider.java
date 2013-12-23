@@ -37,6 +37,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.notify.INotification;
@@ -55,6 +58,8 @@ public class RadarTargetProvider implements INotificationListener {
     protected final GuiMasterController master;
 
     protected final Map<ITrack, RadarTargetView> viewMap = Collections.synchronizedMap(new HashMap<ITrack, RadarTargetView>());
+    
+    private final static Logger log = LogManager.getLogger(RadarTargetProvider.class);
 
     public RadarTargetProvider(IRadarMapViewerAdapter radarMapViewAdapter, LayeredView radarTargetLayer, ITrackManager trackManager,
             GuiMasterController guiInteractionManager) {
@@ -85,7 +90,7 @@ public class RadarTargetProvider implements INotificationListener {
                     viewMap.put(track, newView);
                     radarTargetLayer.pushView(newView);
                 } else {
-                    System.out.println("No contact found for package "+targetStatus.getCallsign());
+                    log.error("No contact found for package "+targetStatus.getCallsign());
                 }
                 break;
             case RETIRED:

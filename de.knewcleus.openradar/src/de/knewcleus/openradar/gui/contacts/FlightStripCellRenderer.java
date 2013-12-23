@@ -47,6 +47,8 @@ import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 
 /**
  * This class renders the flight strip like radar contacts
@@ -54,7 +56,7 @@ import de.knewcleus.openradar.gui.GuiMasterController;
  * @author Wolfram Wagner
  */
 
-public class RadarContactListCellRenderer extends JComponent implements ListCellRenderer<GuiRadarContact> {
+public class FlightStripCellRenderer extends JComponent implements ListCellRenderer<GuiRadarContact> {
     private static final long serialVersionUID = 4683696532302543565L;
 
 //    private GuiMasterController master;
@@ -67,8 +69,8 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
     private JLabel lbSquawkCode = null;
     private JLabel lbAircraft = null;
     private JLabel lbFlightLevel= null;
-    private JLabel lbTrueSpeed = null;
     private JLabel lbGroundSpeed = null;
+    private JLabel lbControllingATC = null;
 //    private JLabel lbVerticalSpeed = null;
     private JTextArea taAtcComment = null;
     private JPanel lowerArea = null;
@@ -81,8 +83,8 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
     private GridBagConstraints lbHeadingConstraints;
     private GridBagConstraints lbAircraftConstraints;
     private GridBagConstraints lbFlightLevelConstraints;
-    private GridBagConstraints lbTrueSpeedConstraints;
-    private GridBagConstraints lbGroundSpeedConstraints;
+    private GridBagConstraints lbControllingATCConstraints;
+//    private GridBagConstraints lbGroundSpeedConstraints;
 //    private GridBagConstraints lbVerticalSpeedConstraints;
     private GridBagConstraints taAtcCommentConstraints;
 
@@ -103,7 +105,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
     public static int STRIP_WITDH = 250;
 
 
-    public RadarContactListCellRenderer(GuiMasterController master) {
+    public FlightStripCellRenderer(GuiMasterController master) {
         //this.master=master;
         this.setLayout(new GridBagLayout());
 
@@ -230,27 +232,27 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         lowerArea.add(lbFlightLevel, lbFlightLevelConstraints);
 
 
-        lbTrueSpeed = new JLabel();
-        lbTrueSpeed.setFont(boldFont);
-        lbTrueSpeed.setForeground(java.awt.Color.blue);
-        lbTrueSpeedConstraints = new GridBagConstraints();
-        lbTrueSpeedConstraints.gridx = 2;
-        lbTrueSpeedConstraints.gridy = 0;
-        lbTrueSpeedConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        lbTrueSpeedConstraints.insets = new java.awt.Insets(0, 20, 4, 0);
-        lowerArea.add(lbTrueSpeed, lbTrueSpeedConstraints);
-
         lbGroundSpeed = new JLabel();
-        lbGroundSpeed.setFont(defaultFont);
+        lbGroundSpeed.setFont(boldFont);
         lbGroundSpeed.setForeground(java.awt.Color.blue);
-        lbGroundSpeed.setOpaque(true);
-        lbGroundSpeedConstraints = new GridBagConstraints();
-        lbGroundSpeedConstraints.gridx = 3;
-        lbGroundSpeedConstraints.gridy = 0;
-        lbGroundSpeedConstraints.weightx = 0;
-        lbGroundSpeedConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        lbGroundSpeedConstraints.insets = new java.awt.Insets(0, 8, 4, 5);
-        lowerArea.add(lbGroundSpeed, lbGroundSpeedConstraints);
+        lbControllingATCConstraints = new GridBagConstraints();
+        lbControllingATCConstraints.gridx = 2;
+        lbControllingATCConstraints.gridy = 0;
+        lbControllingATCConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        lbControllingATCConstraints.insets = new java.awt.Insets(0, 20, 4, 0);
+        lowerArea.add(lbGroundSpeed, lbControllingATCConstraints);
+
+        lbControllingATC = new JLabel();
+        lbControllingATC.setFont(boldFont);
+        lbControllingATC.setForeground(java.awt.Color.blue);
+        lbControllingATC.setOpaque(true);
+        lbControllingATCConstraints = new GridBagConstraints();
+        lbControllingATCConstraints.gridx = 3;
+        lbControllingATCConstraints.gridy = 0;
+        lbControllingATCConstraints.weightx = 1;
+        lbControllingATCConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        lbControllingATCConstraints.insets = new java.awt.Insets(0, 8, 4, 5);
+        lowerArea.add(lbControllingATC, lbControllingATCConstraints);
 
 
         // third line
@@ -310,7 +312,7 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
             lbFlightLevel.setText(value.getFlightLevel());
             lbRadarDistance.setText(value.getRadarContactDistance()+" NM");
             // lbRadarBearing.setText("@"+value.getRadarContactDirection()+"°");
-            lbSquawkCode.setText(getSquawkDisplay(value));
+            lbSquawkCode.setText(getSquawkDisplay(value)/*+ " "+value.getFrequency()*/);
             if(value.isNeglect()) {
                 lbAircraft.setText("neglected");
             } else if(!value.isActive()) {
@@ -319,10 +321,14 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
             } else {
                 lbAircraft.setText(value.getModel());
             }
-
-            taAtcComment.setText(value.getAtcComment());
-            lbTrueSpeed.setText(value.getAirSpeed());
+            taAtcComment.setText(composeComment(value));
             lbGroundSpeed.setText(value.getGroundSpeed());
+            String handover = value.getFlightPlan().getHandover();
+            if(handover!=null && !handover.isEmpty()) {
+                lbControllingATC.setText(value.getFlightPlan().getOwner()+"=>"+handover);
+            } else {
+                lbControllingATC.setText(value.getFlightPlan().getOwner());
+            }
             //lbVerticalSpeed.setText("V:"+value.getVerticalSpeed());
         } else {
             // ATC
@@ -341,9 +347,9 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
                 lbAircraft.setText(value.getAircraftCode());
             }
 
-            taAtcComment.setText(value.getAtcComment());
-            lbTrueSpeed.setText("");
+            taAtcComment.setText(value.getFlightPlan().getRemarks());
             lbGroundSpeed.setText("");
+            lbControllingATC.setText("");
             //lbVerticalSpeed.setText("");
         }
 
@@ -366,6 +372,8 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
             background = Color.white;
             newContactColor = new Color(0,110,0);
 
+            FlightPlanData fpd = value.getFlightPlan();
+            
             if (value.isOnEmergency()) {
                 // font = activeFont;
                 foreground = emergencyColor;
@@ -374,8 +382,25 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
                 // font = activeFont;
                 foreground = selectionColor;
 
+            } else if (fpd!=null && fpd.isOfferedToMe()) {
+                int seconds = (int) System.currentTimeMillis()/1000;
+                foreground = Color.black;
+                background = new Color(255,255,203);
+//                if(seconds%2==0) {
+//                    foreground = newContactColor;
+//                } else {
+//                    foreground = Color.blue;
+//                }
             } else if (value.isNew()) {
+                int seconds = (int) System.currentTimeMillis()/1000;
                 foreground = newContactColor;
+                foreground = Color.black;
+                background = new Color(215,255,215);
+//                if(seconds%2==0) {
+//                    foreground = newContactColor;
+//                } else {
+//                    foreground = new Color(0,40,0);;
+//                }
 
             } else if(!value.isActive() || value.isNeglect()) {
                 foreground=incativeColor;
@@ -402,19 +427,21 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         this.taAtcComment.setForeground(foreground);
         this.taAtcComment.setBackground(background);
 
-        this.lbTrueSpeed.setForeground(foreground);
-        this.lbTrueSpeed.setBackground(background);
-        // this.lbGroundSpeed.setFont(activeFont);
         this.lbGroundSpeed.setForeground(foreground);
         this.lbGroundSpeed.setBackground(background);
+        // this.lbGroundSpeed.setFont(activeFont);
+        this.lbControllingATC.setForeground(foreground);
+        this.lbControllingATC.setBackground(background);
 
 //        this.lbVerticalSpeed.setForeground(foreground);
 //        this.lbVerticalSpeed.setBackground(background);
 
+        this.lowerArea.setBackground(background);
+        
         boolean isAtcCommentEmpty = taAtcComment.getText().trim().isEmpty();
 
         int taNormalHeight = (int)lbCallSign.getPreferredSize().getHeight();
-        taNormalHeight = value.isAtc() ? taNormalHeight +8 : taNormalHeight + (int)lbTrueSpeed.getPreferredSize().getHeight() + 8;
+        taNormalHeight = value.isAtc() ? taNormalHeight +8 : taNormalHeight + (int)lbGroundSpeed.getPreferredSize().getHeight() + 8;
         int taCommentHeight = isAtcCommentEmpty ? taNormalHeight : taNormalHeight + (int)taAtcComment.getPreferredSize().getHeight() + 8 ;
         strip.setPreferredSize(new Dimension(250,Math.max(taNormalHeight, taCommentHeight)));
         strip.setBackground(background);
@@ -423,11 +450,47 @@ public class RadarContactListCellRenderer extends JComponent implements ListCell
         return this;
     }
 
+    private String composeComment(GuiRadarContact contact) {
+        
+        FlightPlanData fpd = contact.getFlightPlan();
+        String fpRemarks = fpd.getRemarks()==null?"":fpd.getRemarks();
+        String atcComments = contact.getAtcComment()==null? "" : contact.getAtcComment();
+        
+        StringBuffer remarks = new StringBuffer();
+        if(!fpd.getDepartureAirport().isEmpty() || !fpd.getDestinationAirport().isEmpty()) {
+            remarks.append(fpd.getDepartureAirport().isEmpty()?"____":fpd.getDepartureAirport());
+            remarks.append(" ");
+            remarks.append(fpd.getDestinationAirport().isEmpty()?"____":fpd.getDestinationAirport());
+            remarks.append(" ");
+            remarks.append(fpd.getDirectiontoDestinationAirport().isEmpty()?"___":fpd.getDirectiontoDestinationAirport());
+            remarks.append(" ");
+            remarks.append(fpd.getCruisingAltitude().isEmpty()?"FL___":fpd.getCruisingAltitude());
+            remarks.append(" ");
+            remarks.append(fpd.getAssignedRoute().isEmpty()?"":fpd.getAssignedRoute()+" ");
+            remarks.append(fpd.getAssignedRunway().isEmpty()?"":"RW"+fpd.getAssignedRunway());
+        }        
+        if(remarks.length()>0 && (!fpRemarks.isEmpty() || !atcComments.isEmpty()) ) {
+            remarks.append("\n");
+        }
+        if(fpd.getRemarks()!=null && !fpd.getRemarks().isEmpty()) {
+            remarks.append(fpd.getRemarks());
+        }
+        if(remarks.length()>0 && !fpd.getRemarks().isEmpty() && !atcComments.isEmpty() ) {
+            remarks.append("\n");
+        }
+        if(!atcComments.isEmpty()) {
+            remarks.append(atcComments);
+        }
+
+        return remarks.toString();
+    }
+
     private String getSquawkDisplay(GuiRadarContact c) {
         //if(c.getTranspSquawkCode()!=null) System.out.println(c.getCallSign()+": Sq:"+c.getTranspSquawkCode()+" A:"+c.getTranspAltitude());
         if(c.getAssignedSquawk()==null && c.getTranspSquawkCode()==null) return "";
-        if(c.getAssignedSquawk()!=null && c.getTranspSquawkCode()==null) return ""+c.getAssignedSquawk()+"(standby)";
-        if(c.getAssignedSquawk()==null) return "("+c.getTranspSquawkCode()+")";
+        if(c.getAssignedSquawk()!=null && c.getTranspSquawkCode()==null && (null==c.getTranspSquawkCode() || -9999==c.getTranspSquawkCode() || c.getTranspSquawkCode()==null)) return ""+c.getAssignedSquawk()+"(standby)";
+        if(c.getAssignedSquawk()==null && (null==c.getTranspSquawkCode() || -9999==c.getTranspSquawkCode() || c.getTranspSquawkCode()==null)) return "(standby)";
+        if(c.getAssignedSquawk()==null && -9999!=c.getTranspSquawkCode() ) return "("+c.getTranspSquawkCode()+")";
         if(c.getAssignedSquawk().equals(c.getTranspSquawkCode())) return ""+c.getTranspSquawkCode();
         return c.getAssignedSquawk()+"("+c.getTranspSquawkCode()+")";
     }

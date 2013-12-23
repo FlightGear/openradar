@@ -166,7 +166,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
             boolean highlighted = trackDisplayState.guiContact.isHighlighted();
             contactTextPainter.paint(g2d, highlighted); // paint infos into background
             // the position shape
-            Color baseColor = (trackDisplayState.isSelected() ? Palette.RADAR_SELECTED : contactTextPainter.getColor(trackDisplayState.getGuiContact()));
+            Color baseColor = /*(trackDisplayState.isSelected() ? Palette.RADAR_SELECTED :*/ contactTextPainter.getColor(trackDisplayState.getGuiContact());
             Color color = baseColor;
             int count = displayDotShapes.size();
             int i = count;
@@ -259,7 +259,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
         // shift all shapes backwards and reuse the last as first
         final int maxCount = radarMapViewAdapter.getTrackHistoryLength();
         ContactShape displayDotShape = displayDotShapes.size() == maxCount ? displayDotShapes.remove(maxCount - 1) : new ContactShape();
-        master.getDataRegistry().getDatablockLayoutManager().getActiveLayout().modify(displayDotShape, trackDisplayState.getGuiContact());
+        master.getAirportData().getDatablockLayoutManager().getActiveLayout().modify(displayDotShape, trackDisplayState.getGuiContact());
         // assign contact and current status
         displayDotShapes.add(0, displayDotShape);
 

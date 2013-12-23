@@ -39,14 +39,16 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
 
 public abstract class MultiplayerClient<T extends Player> extends AbstractMultiplayerEndpoint<T> {
-    protected static Logger logger = Logger.getLogger("de.knewcleus.fgfs.multiplayer");
+    protected static Logger log = LogManager.getLogger("de.knewcleus.fgfs.multiplayer");
     private final static long APPLICATION_START_TIME_MILLIS = System.currentTimeMillis();
     protected final InetAddress serverAddress;
     protected final int serverPort;
@@ -145,8 +147,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
             sendPacket(serverAddress, serverPort, mppacket);
             // System.out.println("Message sent");
         } catch (MultiplayerException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("Error in FGFS networking!",e);
         }
         lastPositionUpdateTimeMillis = System.currentTimeMillis();
     }

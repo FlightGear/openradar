@@ -46,11 +46,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
@@ -88,6 +89,8 @@ public class AirportData implements INavPointListener {
     private volatile Point2D towerPosition = null;
     /** given in METER */
     private double elevation = 0f;
+    private int transitionAlt = 5000;
+    private Integer transitionFL = null;
     private double magneticDeclination = 0f;
 
     private List<RadioFrequency> radioFrequencies = new ArrayList<RadioFrequency>();
@@ -133,10 +136,9 @@ public class AirportData implements INavPointListener {
 
     private final SquawkCodeManager squawkCodeManager = new SquawkCodeManager(this);
 
-    private final static Logger log = Logger.getLogger(AirportData.class.toString());
+    private static Logger log = LogManager.getLogger(AirportData.class);
 
-    public AirportData() {
-    }
+    public AirportData() {}
 
     public synchronized void setDirectionMessageView(StPView dmv) {
         this.directionMessageView = dmv;
@@ -432,7 +434,7 @@ public class AirportData implements INavPointListener {
                 if (runways.containsKey(runwayNumber)) {
                     runways.get(runwayNumber).addILS(gs);
                 } else {
-                    System.out.println("Warning found glidescope for non existent runway: " + gs);
+                    log.warn("Warning found glidescope for non existent runway: " + gs);
                 }
             }
         } else if (point instanceof MarkerBeacon) {
@@ -442,7 +444,7 @@ public class AirportData implements INavPointListener {
                 if (runways.containsKey(runwayNumber)) {
                     mb.setRunwayEnd(runways.get(runwayNumber).getRunwayEnd());
                 } else {
-                    System.out.println("Warning found MarkerBeacon for non existent runway: " + mb);
+                    log.warn("Warning found MarkerBeacon for non existent runway: " + mb);
                 }
             }
         } else {
@@ -475,7 +477,7 @@ public class AirportData implements INavPointListener {
                 this.towerPosition= towerPos;
             }
         } catch(Exception e) {
-            log.log(Level.SEVERE, "Error: could not parse tower position in file sectors.properties for airport "+airportCode);
+            log.fatal("Error: could not parse tower position in file sectors.properties for airport "+airportCode);
             this.towerPosition= towerPos;
         }
 
@@ -543,6 +545,14 @@ public class AirportData implements INavPointListener {
         if(callSign==null) {
             callSign = getInitialATCCallSign();
         }
+        
+        String sTA = p.getProperty("transitionAlt");
+        if(sTA!=null) {
+            transitionAlt = Integer.parseInt( sTA );
+        } else {
+            transitionAlt =  getInitialTransitionAlt();
+        }
+        
         // metar
         MetarReader metarReader = master.getMetarReader();
         metarSource = p.getProperty("metarSource");
@@ -589,11 +599,23 @@ public class AirportData implements INavPointListener {
         setMagneticDeclination(CoreMag.calc_magvarDeg(getLat(), getLon(), getElevationM(), System.currentTimeMillis()));
     }
 
+    private int getInitialTransitionAlt() {
+        if(towerPosition.getX()<-13) {
+            // america
+            return 8000;
+        } else {
+            return Math.max(5000, (int)(elevation/Units.FT+3000));
+        }
+    }
+
     public synchronized void storeAirportData(GuiMasterController master) {
         Properties p = new Properties();
         if(master.getCurrentATCCallSign()!=null) {
             p.setProperty("lastCallsign", master.getCurrentATCCallSign());
         }
+        
+        p.setProperty("transitionAlt",""+transitionAlt);
+        
         if(metarSource!=null) {
             p.setProperty("metarSource",metarSource);
         }
@@ -630,7 +652,7 @@ public class AirportData implements INavPointListener {
 
             p.store(writer, "Open Radar Airport Properties");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error while storing airport properties!",e);
         } finally {
             if (writer != null) {
                 try {
@@ -688,4 +710,30 @@ public class AirportData implements INavPointListener {
         }
         return cbModel;
     }
+    
+    @Override
+    public String toString() {
+        return "AirportData: "+getAirportCode();
+    }
+
+    public synchronized int getTransitionAlt() {
+        return transitionAlt;
+    }
+
+    public synchronized void setTransitionAlt(GuiMasterController master, int transitionAlt) {
+        this.transitionAlt = transitionAlt;
+        updateTransitionFl(master);
+    }
+
+    public synchronized void updateTransitionFl(GuiMasterController master) {
+        this.transitionFL = ((int)Math.floor((transitionAlt + 30 * (1013 - master.getAirportMetar().getPressureHPa()))/500) + 1) * 5;
+    }
+
+    public synchronized int getTransitionFL(GuiMasterController master) {
+        if(transitionFL==null) {
+            updateTransitionFl(master);
+        }
+        return transitionFL;
+    }
+
 }

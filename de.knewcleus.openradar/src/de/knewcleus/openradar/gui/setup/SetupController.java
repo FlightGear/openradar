@@ -51,7 +51,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -61,6 +60,9 @@ import javax.swing.JList;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -87,7 +89,7 @@ public class SetupController {
     private ZipFile zif = null;;
     private static ZipFile zifPhonebook = null;;
 
-    private final static Logger log = Logger.getLogger(SetupController.class.toString());
+    private static Logger log = LogManager.getLogger(SetupController.class);
 
     public SetupController(String propertiesFile, String autoStartAirport) {
         this.propertiesFilename=propertiesFile;
@@ -235,8 +237,14 @@ public class SetupController {
                         name.append(st.nextToken());
                     }
                     if(airportCode.toUpperCase().contains(searchTerm.toUpperCase()) || name.toString().toUpperCase().contains(searchTerm.toUpperCase())) {
-                        SectorBean sb = new SectorBean(airportCode, name.toString(), mapExistingSectors.containsKey(airportCode));
-                        mapFindings.put(airportCode, sb);
+                        if(!mapExistingSectors.containsKey(airportCode)) {
+                            // the base for a new download
+                            SectorBean sb = new SectorBean(airportCode, name.toString(), mapExistingSectors.containsKey(airportCode));
+                            mapFindings.put(airportCode, sb);
+                        } else {
+                            // add the existing
+                            mapFindings.put(airportCode, mapExistingSectors.get(airportCode));
+                        }
                     }
                 }
                 line = ir.readLine();
@@ -247,8 +255,7 @@ public class SetupController {
             }
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("Error while reading xplane aptdat file!",e);
         } finally {
             if(zif!=null) {
                 try {
@@ -275,7 +282,7 @@ public class SetupController {
             SectorCreator.downloadData(data, setupDialog);
             parseSectorDir(); // to find results
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error while downloading sector!",e);
         }
     }
 
@@ -287,8 +294,7 @@ public class SetupController {
                 manager.start(setupDialog);
                 setupDialog.dispose();
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("Error while starting application!",e);            
             }
         }
     }
@@ -372,8 +378,7 @@ public class SetupController {
                 line = ir.readLine();
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("Error while reading phonebook zipfile!",e);
         } finally {
             if(zifPhonebook!=null) {
                 try {

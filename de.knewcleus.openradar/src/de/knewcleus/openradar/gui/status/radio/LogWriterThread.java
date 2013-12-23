@@ -34,6 +34,9 @@ package de.knewcleus.openradar.gui.status.radio;
 
 import java.io.BufferedInputStream;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.knewcleus.openradar.gui.LogWindow;
 
 public class LogWriterThread implements Runnable {
@@ -45,6 +48,8 @@ public class LogWriterThread implements Runnable {
     private BufferedInputStream bis = null;
     private volatile boolean isRunning = true;
     private Thread thread;
+
+    private final static Logger log = LogManager.getLogger(LogWriterThread.class);
     
     public LogWriterThread(LogWindow logWindow, Radio radio, Process process) {
         this.logWindow = logWindow;
@@ -86,9 +91,8 @@ public class LogWriterThread implements Runnable {
                 }
             }
         } catch(ThreadDeath e) {
-            //e.printStackTrace();
         } catch(Exception e) {
-            //e.printStackTrace();
+            log.error("Error in FGCOM logging!",e);
         }
     }
 

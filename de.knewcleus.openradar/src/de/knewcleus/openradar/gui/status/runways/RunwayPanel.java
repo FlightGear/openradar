@@ -78,14 +78,14 @@ public class RunwayPanel extends JPanel {
         int i = 0;
         boolean noRWSelected = true;
         // check if at least one is active
-        for (GuiRunway rw : master.getDataRegistry().getRunways().values()) {
+        for (GuiRunway rw : master.getAirportData().getRunways().values()) {
             if (rw.isLandingActive() || rw.isStartingActive()) {
                 noRWSelected = false;
                 break;
             }
         }
 
-        for (GuiRunway rw : master.getDataRegistry().getRunways().values()) {
+        for (GuiRunway rw : master.getAirportData().getRunways().values()) {
             rw.setRunwayPanel(this);
             rw.setMetar(metar);
 
@@ -345,7 +345,7 @@ public class RunwayPanel extends JPanel {
     public String getActiveLandingRunways() {
         StringBuilder sb = new StringBuilder();
         boolean initial = true;
-        for (GuiRunway rw : master.getDataRegistry().getRunways().values()) {
+        for (GuiRunway rw : master.getAirportData().getRunways().values()) {
             if (rw.isLandingActive()) {
                 if (initial) {
                     initial=false;
@@ -375,7 +375,7 @@ public class RunwayPanel extends JPanel {
         StringBuilder sb = new StringBuilder();
         boolean initial = true;
         sb.append("land: ");
-        for (GuiRunway rw : master.getDataRegistry().getRunways().values()) {
+        for (GuiRunway rw : master.getAirportData().getRunways().values()) {
             if (rw.isLandingActive()) {
                 if (initial) {
                     initial=false;
@@ -399,7 +399,7 @@ public class RunwayPanel extends JPanel {
         }
         sb.append(" start: ");
         initial = true;
-        for (GuiRunway rw : master.getDataRegistry().getRunways().values()) {
+        for (GuiRunway rw : master.getAirportData().getRunways().values()) {
             if (rw.isStartingActive()) {
                 if (initial) {
                     initial=false;
@@ -422,8 +422,8 @@ public class RunwayPanel extends JPanel {
         boolean isInAir =  speed > 45; // altAboveAirport > 300 &
         boolean isOnGround = speed <= 45;
 
-        boolean rwLandingEnabled = master.getDataRegistry().getRunways().get(rwId).isLandingActive();
-        boolean rwStartingEnabled = master.getDataRegistry().getRunways().get(rwId).isStartingActive();
+        boolean rwLandingEnabled = master.getAirportData().getRunways().get(rwId).isLandingActive();
+        boolean rwStartingEnabled = master.getAirportData().getRunways().get(rwId).isStartingActive();
 
         if(!rwId.equals(c.getFlightPlan().getAssignedRunway())) {
 
@@ -434,12 +434,12 @@ public class RunwayPanel extends JPanel {
             if (isInAir && rwLandingEnabled) {
                 msg.addTranslation("en", "%s: Expect landing on runway " + getRunwayInformation(rwId, true));
                 msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
-                master.getMpChatManager().setAutoAtcMessage(msg);
+                master.getMpChatManager().setAutoAtcMessage(c, msg);
                 c.getFlightPlan().setAssignedRunway(rwId);
             } else if (isOnGround && rwStartingEnabled) {
                 msg.addTranslation("en", "%s: Expect departure runway " + getRunwayInformation(rwId, false));
                 msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
-                master.getMpChatManager().setAutoAtcMessage(msg);
+                master.getMpChatManager().setAutoAtcMessage(c, msg);
                 c.getFlightPlan().setAssignedRunway(rwId);
             }
         } else {
@@ -450,7 +450,7 @@ public class RunwayPanel extends JPanel {
 
     private String getRunwayInformation(String rwId, boolean isLanding) {
         StringBuilder sb = new StringBuilder();
-        GuiRunway rw = master.getDataRegistry().getRunways().get(rwId);
+        GuiRunway rw = master.getAirportData().getRunways().get(rwId);
         sb.append(rw.getCode());
         if(isLanding) {
             sb.append(" (");

@@ -39,10 +39,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
 import de.knewcleus.fgfs.navdata.impl.Intersection;
@@ -50,6 +52,7 @@ import de.knewcleus.fgfs.navdata.impl.NDB;
 import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.view.stdroutes.StdRoute;
 /**
@@ -66,7 +69,7 @@ public class NavaidDB {
     private List<IIntersection> addNavpointList = Collections.synchronizedList(new ArrayList<IIntersection>());
     private List<Aerodrome> aerodromeList = Collections.synchronizedList(new ArrayList<Aerodrome>());
 
-    private final static Logger log = Logger.getLogger(NavaidDB.class.toString());
+    private static Logger log = LogManager.getLogger(NavaidDB.class);
 
     public synchronized void registerNavaid(IIntersection navPoint) {
         List<IIntersection> list = navaidMap.get(navPoint.getIdentification());
@@ -98,7 +101,7 @@ public class NavaidDB {
                 type = id.substring(id.indexOf("(")+1, id.indexOf(")")).trim();
                 id = id.substring(id.indexOf(")")+1).trim();
             } catch(Exception e) {
-                log.severe("Skipping navpoint highlighting! Cannot parse: "+id);
+                log.error("Skipping navpoint highlighting! Cannot parse: "+id);
             }
         }
         List<IIntersection> list = navaidMap.get(id);
@@ -107,7 +110,7 @@ public class NavaidDB {
                 return list.get(0);
             } else {
                 if(list.size()>1 && type==null) {
-                    log.severe("Navpoint highlighting: ID "+id+" exists multiple times. Taking first! Try to add (FIX),(NDB) or (VOR) in front of it!");
+                    log.error("Navpoint highlighting: ID "+id+" exists multiple times. Taking first! Try to add (FIX),(NDB) or (VOR) in front of it!");
                     return list.get(0);
                 } else {
                     for(IIntersection navPoint : list) {
@@ -127,7 +130,7 @@ public class NavaidDB {
                             return navPoint;
                         }
                     }
-                    log.warning("Navpoint highlighting: ID "+id+" of type "+type+" not found!");
+                    log.warn("Navpoint highlighting: ID "+id+" of type "+type+" not found!");
                     return null;
                 }
             }
@@ -173,11 +176,11 @@ public class NavaidDB {
         selectedNavaid=navPoint;
     }
 
-    public synchronized boolean isPartOfRoute(AirportData data, IIntersection navPoint) {
+    public synchronized boolean isPartOfRoute(GuiMasterController master, IIntersection navPoint) {
 
         if(navPoint==null) return false;
         for(StdRoute route : stdRoutes) {
-            if(route.isVisible(data)) {
+            if(route.isVisible(master)) {
                 if(route.containsNavaid(navPoint)) {
                     return true;
                 }
@@ -186,7 +189,7 @@ public class NavaidDB {
         return false;
     }
 
-    public synchronized Color getNavaidHighlightColor(AirportData data,  IIntersection navPoint) {
+    public synchronized Color getNavaidHighlightColor(GuiMasterController master,  IIntersection navPoint) {
         if(navPoint==null) return null;
 
         if(isNavaidSelected(navPoint)) {
@@ -198,7 +201,7 @@ public class NavaidDB {
         }
 
         for(StdRoute route : stdRoutes) {
-            if(route.isVisible(data) && route.containsNavaid(navPoint)) {
+            if(route.isVisible(master) && route.containsNavaid(navPoint)) {
 
                 return route.getNavaidColor(navPoint);
             }
@@ -245,16 +248,42 @@ public class NavaidDB {
         if(addEmptyEntry) {
             cbModel.addElement("");
         }
-        // todo add sids
+        for(StdRoute r : stdRoutes) {
+            if(r.getDisplayMode().equals(StdRoute.DisplayMode.sid)) {
+                cbModel.addElement(r.getName());
+            }
+        }
+        for(StdRoute r : stdRoutes) {
+            if(r.getDisplayMode().equals(StdRoute.DisplayMode.star)) {
+                cbModel.addElement(r.getName());
+            }
+        }
+
         return cbModel;
     }
 
+    public ComboBoxModel<String> getSIDCbModel(boolean addEmptyEntry) {
+        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
+        if(addEmptyEntry) {
+            cbModel.addElement("");
+        }
+        for(StdRoute r : stdRoutes) {
+            if(r.getDisplayMode().equals(StdRoute.DisplayMode.sid)) {
+                cbModel.addElement(r.getName());
+            }
+        }
+        return cbModel;
+    }
     public ComboBoxModel<String> getSTARCbModel(boolean addEmptyEntry) {
         DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
         if(addEmptyEntry) {
             cbModel.addElement("");
         }
-        // todo add Stars
+        for(StdRoute r : stdRoutes) {
+            if(r.getDisplayMode().equals(StdRoute.DisplayMode.star)) {
+                cbModel.addElement(r.getName());
+            }
+        }
         return cbModel;
     }
 }

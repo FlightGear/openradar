@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<routes>    
+        <route name="Taxiways" zoomMax="10" color="20,180,40">
+		<activeLandingRunways>26L,26R,08L,08R</activeLandingRunways>
+		<activeStartRunways>26L,26R,08L,08R</activeStartRunways>
+
+
+		<text position="0.25NM154@DMN01" font="Arial" fontSize="10" angle="356" text="N"/>
+		<text position="0.475NM113@DMN01" font="Arial" fontSize="10" angle="356" text="N"/>
+		<text position="0.8NM100.6@DMN01" font="Arial" fontSize="10" angle="356" text="N"/>
+		<text position="1.3NM094@DMN01" font="Arial" fontSize="10" angle="356" text="N"/>
+		<text position="1.58NM092.1@DMN01" font="Arial" fontSize="10" angle="356" text="N"/>
+		<text position="1.85NM090.7@DMN01" font="Arial" fontSize="10" angle="356" text="N"/>
+
+		<text position="0.19NM147@DMN01" font="Arial" fontSize="10" angle="356" text="M"/>
+		<text position="0.45NM105@DMN01" font="Arial" fontSize="10" angle="356" text="M"/>
+		<text position="0.78NM096@DMN01" font="Arial" fontSize="10" angle="356" text="M"/>
+		<text position="1.29NM091@DMN01" font="Arial" fontSize="10" angle="356" text="M"/>
+		<text position="1.575NM089.5@DMN01" font="Arial" fontSize="10" angle="356" text="M"/>
+		<text position="1.845NM088.6@DMN01" font="Arial" fontSize="10" angle="356" text="M"/>
+
+		<text position="0.4NM133@DMN01" font="Arial" fontSize="10" angle="356" text="N1"/>
+		<text position="0.45NM126@DMN01" font="Arial" fontSize="10" angle="356" text="N2"/>
+		<text position="0.967NM101.5@DMN01" font="Arial" fontSize="10" angle="356" text="N3"/>
+		<text position="1.03NM100.5@DMN01" font="Arial" fontSize="10" angle="356" text="N4"/>
+
+		<text position="14.95NM082.7@DM036" font="Arial" fontSize="10" angle="356" text="A1"/>
+		<text position="15.03NM082.7@DM036" font="Arial" fontSize="10" angle="356" text="A2"/>
+		<text position="15.41NM082.7@DM036" font="Arial" fontSize="10" angle="356" text="A4"/>
+		<text position="15.75NM082.7@DM036" font="Arial" fontSize="10" angle="356" text="A6"/>
+		<text position="15.93NM082.73@DM036" font="Arial" fontSize="10" angle="356" text="A5"/>
+		<text position="16.01NM082.65@DM036" font="Arial" fontSize="10" angle="356" text="A7"/>
+		<text position="16.18NM082.83@DM036" font="Arial" fontSize="10" angle="356" text="A8"/>
+		<text position="16.18NM082.58@DM036" font="Arial" fontSize="10" angle="356" text="A9"/>
+		<text position="16.43NM082.72@DM036" font="Arial" fontSize="10" angle="356" text="A10"/>
+		<text position="16.73NM082.72@DM036" font="Arial" fontSize="10" angle="356" text="A12"/>
+		<text position="17.04NM082.72@DM036" font="Arial" fontSize="10" angle="356" text="A13"/>
+		<text position="17.11NM082.721@DM036" font="Arial" fontSize="10" angle="356" text="A14"/>
+
+
+
+
+		<text position="0.24NM014@DMS01" font="Arial" fontSize="10" angle="356" text="S"/>
+		<text position="0.42NM051@DMS01" font="Arial" fontSize="10" angle="356" text="S"/>
+		<text position="0.715NM065@DMS01" font="Arial" fontSize="10" angle="356" text="S"/>
+		<text position="0.965NM070@DMS01" font="Arial" fontSize="10" angle="356" text="S"/>
+		<text position="1.263NM073.4@DMS01" font="Arial" fontSize="10" angle="356" text="S"/>
+		<text position="1.58NM075.4@DMS01" font="Arial" fontSize="10" angle="356" text="S"/>
+		<text position="1.9NM076.7@DMS01" font="Arial" fontSize="10" angle="356" text="S"/>
+
+		<text position="0.18NM016@DMS01" font="Arial" fontSize="10" angle="356" text="T"/>
+		<text position="0.38NM058@DMS01" font="Arial" fontSize="10" angle="356" text="T"/>
+		<text position="0.7NM070@DMS01" font="Arial" fontSize="10" angle="356" text="T"/>
+		<text position="0.95NM073.5@DMS01" font="Arial" fontSize="10" angle="356" text="T"/>
+		<text position="1.258NM076@DMS01" font="Arial" fontSize="10" angle="356" text="T"/>
+		<text position="1.57NM077.5@DMS01" font="Arial" fontSize="10" angle="356" text="T"/>
+		<text position="1.895NM078.46@DMS01" font="Arial" fontSize="10" angle="356" text="T"/>
+
+		<text position="0.33NM360@DMS01" font="Arial" fontSize="10" angle="356" text="R"/>
+		<text position="0.51NM043@DMS01" font="Arial" fontSize="10" angle="356" text="R"/>
+		<text position="0.755NM057.5@DMS01" font="Arial" fontSize="10" angle="356" text="R"/>
+
+		<text position="0.32NM322@DMS01" font="Arial" fontSize="10" angle="356" text="S1"/>
+		<text position="0.34NM032@DMS01" font="Arial" fontSize="10" angle="356" text="S2"/>
+		<text position="0.615NM058@DMS01" font="Arial" fontSize="10" angle="356" text="S3"/>
+		<text position="0.85NM065.5@DMS01" font="Arial" fontSize="10" angle="356" text="S4"/>
+		<text position="1.1NM069.2@DMS01" font="Arial" fontSize="10" angle="356" text="S5"/>
+		<text position="1.165NM070@DMS01" font="Arial" fontSize="10" angle="356" text="S6"/>
+		<text position="1.747NM074.7@DMS01" font="Arial" fontSize="10" angle="356" text="S7"/>
+		<text position="1.815NM075.1@DMS01" font="Arial" fontSize="10" angle="356" text="S8"/>
+
+		<text position="20.08NM083.2@DM054" font="Arial" fontSize="10" angle="356" text="B1"/>
+		<text position="20.16NM083.3@DM054" font="Arial" fontSize="10" angle="356" text="B2"/>
+		<text position="20.205NM083.4@DM054" font="Arial" fontSize="10" angle="356" text="B3"/>
+		<text position="20.57NM083.4@DM054" font="Arial" fontSize="10" angle="356" text="B4"/>
+		<text position="20.9NM083.4@DM054" font="Arial" fontSize="10" angle="356" text="B6"/>
+		<text position="21.16NM083.5@DM054" font="Arial" fontSize="10" angle="356" text="B7"/>
+		<text position="21.14NM083.33@DM054" font="Arial" fontSize="10" angle="356" text="B8"/>
+		<text position="21.31NM083.4@DM054" font="Arial" fontSize="10" angle="356" text="B9"/>
+		<text position="21.59NM083.33@DM054" font="Arial" fontSize="10" angle="356" text="B10"/>
+		<text position="21.43NM083.33@DM054" font="Arial" fontSize="10" angle="356" text="B11"/>
+		<text position="21.88NM083.4@DM054" font="Arial" fontSize="10" angle="356" text="B12"/>
+		<text position="22.24NM083.4@DM054" font="Arial" fontSize="10" angle="356" text="B13"/>
+		<text position="22.3NM083.4@DM054" font="Arial" fontSize="10" angle="356" text="B14"/>
+		<text position="22.36NM083.4@DM054" font="Arial" fontSize="10" angle="356" text="B15"/>
+
+		<text position="10.76NM352.1@MUN" font="Arial" fontSize="10" angle="356" text="C1"/>
+		<text position="10.58NM352.1@MUN" font="Arial" fontSize="10" angle="356" text="C2"/>
+		<text position="10.4NM352.1@MUN" font="Arial" fontSize="10" angle="356" text="C3"/>
+		<text position="10.205NM352.05@MUN" font="Arial" fontSize="10" angle="356" text="C4"/>
+		<text position="10.67NM351.65@MUN" font="Arial" fontSize="10" angle="356" text="W1"/>
+		<text position="10.67NM352.5@MUN" font="Arial" fontSize="10" angle="356" text="O1"/>
+		<text position="10.3NM351.63@MUN" font="Arial" fontSize="10" angle="356" text="W1"/>
+		<text position="10.3NM352.5@MUN" font="Arial" fontSize="10" angle="356" text="O1"/>
+		<text position="10.318NM355.3@MUN" font="Arial" fontSize="10" angle="356" text="O2"/>
+		<text position="10.32NM355.7@MUN" font="Arial" fontSize="10" angle="356" text="W2"/>
+		<text position="1.387NM113.5@DMN01" font="Arial" fontSize="10" angle="356" text="O3"/>
+		<text position="10.28NM356.35@MUN" font="Arial" fontSize="10" angle="356" text="D3"/>
+		<text position="10.71NM356.2@MUN" font="Arial" fontSize="10" angle="356" text="D6"/>
+        </route>
+
+        <route name="Main Aprons" zoomMax="10" color="240,200,20">
+		<activeLandingRunways>26L,26R,08L,08R</activeLandingRunways>
+		<activeStartRunways>26L,26R,08L,08R</activeStartRunways>
+
+		<text position="10.5NM352.1@MUN" font="Arial" fontSize="10" angle="356" text="Apron 1"/>
+		<text position="1.085NM112@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 2"/>
+		<text position="1.37NM112@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 3"/>
+        </route>
+
+        <route name="Other Aprons" zoomMax="4" color="240,200,20">
+		<activeLandingRunways>26L,26R,08L,08R</activeLandingRunways>
+		<activeStartRunways>26L,26R,08L,08R</activeStartRunways>
+
+		<text position="1.18NM100.5@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 12 + 10 (GAT)"/>
+		<text position="1.5NM105@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 11"/>
+		<text position="0.98NM181@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 8"/>
+		<text position="1.065NM197.5@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 7"/>
+		<text position="1.21NM210@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 6"/>
+		<text position="0.84NM181@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 9"/>
+        </route>
+
+        <route name="Terminals and Hangars" zoomMax="10" color="100,100,100">
+		<activeLandingRunways>26L,26R,08L,08R</activeLandingRunways>
+		<activeStartRunways>26L,26R,08L,08R</activeStartRunways>
+
+		<text position="0.78NM137@DMN01" font="Arial" fontSize="10" angle="84" text="TERMINAL 1"/>
+		<text position="1.03NM121@DMN01" font="Arial" fontSize="10" angle="84" text="TERMINAL 2"/>
+        </route>
+
+
+        <route name="Taxiways" zoomMax="4" color="20,180,40">
+		<activeLandingRunways>26L,26R,08L,08R</activeLandingRunways>
+		<activeStartRunways>26L,26R,08L,08R</activeStartRunways>
+
+		<text position="10.18NM355@MUN" font="Arial" fontSize="10" angle="356" text="D5"/>
+		<text position="10.185NM355.51@MUN" font="Arial" fontSize="10" angle="356" text="D4"/>
+		<text position="10.44NM355.45@MUN" font="Arial" fontSize="10" angle="356" text="D2"/>
+		<text position="10.76NM355.4@MUN" font="Arial" fontSize="10" angle="356" text="D1"/>
+
+		<text position="16.793NM083.06@DM036" font="Arial" fontSize="10" angle="356" text="A12"/>
+		<text position="16.508NM083.06@DM036" font="Arial" fontSize="10" angle="356" text="A10"/>
+		<text position="16.207NM083.06@DM036" font="Arial" fontSize="10" angle="356" text="A8"/>
+		<text position="16.005NM083.05@DM036" font="Arial" fontSize="10" angle="356" text="A7"/>
+		<text position="16.073NM083.05@DM036" font="Arial" fontSize="10" angle="356" text="A5"/>
+		<text position="15.675NM083.05@DM036" font="Arial" fontSize="10" angle="356" text="A6"/>
+		<text position="15.34NM083.06@DM036" font="Arial" fontSize="10" angle="356" text="A4"/>
+
+		<text position="20.415NM083.09@DM054" font="Arial" fontSize="10" angle="356" text="B4"/>
+		<text position="20.773NM083.1@DM054" font="Arial" fontSize="10" angle="356" text="B6"/>
+		<text position="21.065NM083.1@DM054" font="Arial" fontSize="10" angle="356" text="B8"/>
+		<text position="21.31NM083.1@DM054" font="Arial" fontSize="10" angle="356" text="B11"/>
+		<text position="21.378NM083.1@DM054" font="Arial" fontSize="10" angle="356" text="B7"/>
+		<text position="21.59NM083.1@DM054" font="Arial" fontSize="10" angle="356" text="B10"/>
+		<text position="21.97NM083.1@DM054" font="Arial" fontSize="10" angle="356" text="B12"/>
+		<text position="22.04NM083.1@DM054" font="Arial" fontSize="10" angle="356" text="B12"/>
+        </route>
+</routes>

@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+
+
+	<route name="STAR" zoomMin="10" zoomMax="3000" color="240,200,20">
+		<activeLandingRunways>32R,32L,06,24,14L,14R</activeLandingRunways>
+		<navaids>NOR,GULKO,KOPAG</navaids>
+        </route>
+
+	<route name="STAR2" zoomMin="10" zoomMax="3000" color="140,140,180">
+		<activeLandingRunways>32R,32L,06,24,14L,14R</activeLandingRunways>
+		<navaids>KOGIT,WYP,COL</navaids>
+        </route>
+
+	<route name="SID" zoomMin="10" zoomMax="3000" color="240,200,20">
+		<activeStartRunways>32R,32L,06,24,14L,14R</activeStartRunways>
+		<navaids>WYP,COL,NOR,WYP,KUMIK,PODIP,SONEB</navaids>
+        </route>
+
+	<route name="Radius" color="70,70,70" stroke="dots,1">
+		<bow center="EDDK" radius="100" startAngle="0" extentAngle="360" stroke="line,1"/>
+		<bow center="EDDK" radius="60" startAngle="0" extentAngle="360"/>
+		<bow center="EDDK" radius="20" startAngle="0" extentAngle="360"/>
+		<bow center="EDDF" radius="60" startAngle="0" extentAngle="360" color="80,80,80" stroke="line,1"/>
+		<bow center="EDDF" radius="20" startAngle="0" extentAngle="360" color="80,80,80"/>
+        </route>
+
+----------------------------------------------------------------------------------------------------------
+
+	<route name="RW 32R Approach" zoomMin="10" zoomMax="500" color="140,140,180" stroke="dots,1">
+		<activeLandingRunways>32R,32L</activeLandingRunways>
+
+		<line start="KOPAG" end="DK616" text="204"/>
+		<line start="GULKO" end="DK616" text="256"/>
+
+		<line start="NOR" end="DK637" text="125"/>
+		<line start="DK637" end="DK636" text="099"/>
+		<line start="DK636" end="DK635" text="047"/>
+		<line start="DK635" end="DK655"/>
+
+		<line start="DK616" end="3NM255@DK616" text="255"/>
+
+		<line start="3NM255@DK616" end="DK655"/> 		
+                <line start="DK655" end="RARIX"/>
+
+        </route>
+
+	<route name="RW 32R Approach Navaids" zoomMin="10" zoomMax="130" color="140,140,180">
+		<activeLandingRunways>32R,32L</activeLandingRunways>
+		<navaids>RARIX,DK637,DK636,DK635,DK616,DK655</navaids>
+
+        </route>
+-----------------------------------------------------------------------------------------------------------------
+
+	<route name="RW 14L Approach" zoomMin="10" zoomMax="500" color="140,140,180" stroke="dots,1">
+		<activeLandingRunways>14L,14R</activeLandingRunways>
+
+
+		<line start="KOPAG" end="WYP" text="267"/>
+
+		<line start="KOGIT" end="WYP"/>
+		<line start="GULKO" end="KOGIT"/>
+
+		<line start="WYP" end="DK416" text="285"/>
+		<line start="DK416" end="DK415" text="260"/>
+		<line start="DK415" end="DK454"/>
+
+		<line start="NOR" end="DK437" text="357"/>
+		<line start="DK437" end="DK435" text="027"/>
+		<line start="DK435" end="DK454"/>
+
+                <line start="DK454" end="LEGDU"/>	
+        </route>
+
+	<route name="RW 14L Approach Navaids" zoomMin="10" zoomMax="130" color="140,140,180">
+		<activeLandingRunways>14L</activeLandingRunways>
+		<navaids>LEGDU,DK437,DK435,DK454,DK416,DK415</navaids>
+
+        </route>
+-----------------------------------------------------------------------------------------------------------------
+
+	<route name="RW 24 Approach" zoomMin="10" zoomMax="500" color="140,140,180" stroke="dots,1">
+		<activeLandingRunways>24</activeLandingRunways>
+
+
+		<line start="KOPAG" end="DK554"/>
+		<line start="GULKO" end="DK515" text="313"/>
+
+		<line start="NOR" end="DK537" text="064"/>
+		<line start="DK537" end="DK536" text="064"/>
+		<line start="DK536" end="DK535" text="154"/>
+		<line start="DK535" end="DK554"/>
+
+		<line start="NOR" end="DK547" text="094"/>
+		<line start="DK547" end="DK546" text="064"/>
+		<line start="DK546" end="DK545" text="334"/>
+		<line start="DK545" end="DK554"/>
+	
+                <line start="DK554" end="KUKIT"/>
+        </route>
+
+	<route name="RW 24R Approach Navaids" zoomMin="10" zoomMax="130" color="140,140,180">
+		<activeLandingRunways>24</activeLandingRunways>
+		<navaids>KUKIT,DK515,DK554,DK537,DK536,DK535,DK547,DK546,DK545</navaids>
+
+        </route>
+-----------------------------------------------------------------------------------------------------------	
+
+	<route name="SID 14L" zoomMin="10" zoomMax="500" color="140,180,140" stroke="line,0.5">
+		<activeStartRunways>14L,14R</activeStartRunways>
+
+                
+                <line start="EDDK-RW14L" end="DK130"/> 
+                <line start="DK130" end="DK143"/> 
+                <line start="DK130" end="DK132"/> 
+                
+                <!-- COL 1F -->
+                <line start="DK143" end="COL" arrows="end,10" text="097"/>   
+                
+                <!-- NOR 8F -->
+                <curve start="DK132" end="DK134" controlPoint="1.3NM138@DK132"/>  
+                <curve start="DK136" end="DK134" controlPoint="1.3NM106@DK136"/>  
+                <line start="DK136" end="NOR" text="106" arrows="end,10"/>   
+
+                <!-- NOR 7P -->
+                <line start="DK132" end="DK146" text="171"/> 
+                <curve start="DK146" end="DK147" controlPoint="4NM175@DK146"/>  
+                <line start="DK147" end="NOR" text="305" arrows="end,10"/>   
+
+                <!-- WYP 3F -->
+                <curve start="DK143" end="DK144" controlPoint="1.2NM097@DK143"/>  
+                <curve start="DK145" end="DK144" controlPoint="1.2NM164@DK145"/> 
+                <line start="DK145" end="WYP" text="344" arrows="end,10"/>   
+
+                <!-- PODIP 6F/KUNIK 5F -->
+                <line start="COL" end="PODIP" arrows="end,10" text="041"/>   
+                <line start="COL" end="KUMIK" arrows="end,10" text="079"/> 
+ 
+                <!-- SONEB 6P -->
+                <line start="WYP" end="LI" text="320"/>   
+                <line start="LI" end="DL055" text="012"/>   
+                <line start="DL055" end="LUSIX" text="349"/>   
+                <line start="LUSIX" end="SONEB" text="346" arrows="end,10"/>   
+
+                <!-- SONEB 5F -->
+                <line start="WYP" end="GAPNU" text="314"/>   
+                <line start="GAPNU" end="ERKUM" text="359"/>   
+                <line start="ERKUM" end="SONEB" text="005" arrows="end,10"/>   
+
+        </route>
+
+	<route name="RW 14L Departure Navaids" zoomMin="10" zoomMax="130" color="140,180,140">
+		<activeStartRunways>14L</activeStartRunways>
+		<navaids>KBO,PODIP,KUMIK,SONEB,LI,ERKUM,LUSIX,DK146,DL055,NOKDU,GAPNU,DK144,DK145,DK130,DK132,DK143,DK134,DK136,DK147</navaids>
+
+        </route>
+-----------------------------------------------------------------------------------------------------------	
+
+	<route name="SID 32R" zoomMin="10" zoomMax="500" color="140,180,140" stroke="line,0.5">
+		<activeStartRunways>32R,32L</activeStartRunways>
+		<navaids>LI,KBO,PODIP,KUMIK,NOKDU,ERKUM,LUSIX,SONEB,DK036,DK034,DK035,DK032,DK038,DL055,NOKDU,GAPNU,DK037</navaids>
+                
+                <line start="EDDK-RW32R" end="DK034"/> 
+                
+                <!-- COL 9B -->
+                <curve start="DK034" end="DK035" controlPoint="3.9NM322@KBO"/>  
+                <line start="DK035" end="DK036" text="063" />   
+                <line start="DK036" end="DK037"/>  
+                <line start="DK037" end="COL" arrows="end,10" text="139" />   
+                
+                <!-- NOR 3B -->
+                <line start="DK034" end="DK032"/>  
+                <line start="DK032" end="NOR" text="252" arrows="end,10"/>   
+
+                <!-- WYP 2B -->
+                <line start="DK036" end="WYP" text="016" arrows="end,10"/>   
+
+                <!-- PODIP 5B/KUNIK 6B -->
+                <line start="DK037" end="DK038"/>  
+                <line start="DK038" end="PODIP" arrows="end,10" text="106"/>   
+                <line start="PODIP" end="KUMIK" arrows="end,10" text="123"/>  
+
+                <!-- SONEB 4W -->
+                <line start="WYP" end="LI" text="320"/>   
+                <line start="LI" end="DL055" text="012"/>   
+                <line start="DL055" end="LUSIX" text="349"/>   
+                <line start="LUSIX" end="SONEB" text="346" arrows="end,10"/>   
+
+                <!-- SONEB 3B -->
+                <line start="WYP" end="GAPNU" text="314"/>   
+                <line start="GAPNU" end="ERKUM" text="359"/>   
+                <line start="ERKUM" end="SONEB" text="005" arrows="end,10"/>   
+        </route>
+
+	<route name="RW 32R Departure Navaids" zoomMin="10" zoomMax="130" color="140,180,140">
+		<activeStartRunways>32R</activeStartRunways>
+		<navaids>LI,KBO,PODIP,KUMIK,NOKDU,ERKUM,LUSIX,SONEB,DK036,DK034,DK035,DK032,DK038,DL055,NOKDU,GAPNU,DK037</navaids>
+
+        </route>
+-----------------------------------------------------------------------------------------------------------	
+
+
+	<route name="SID 24" zoomMin="10" zoomMax="500" color="140,180,140" stroke="line,0.5">
+		<activeStartRunways>24</activeStartRunways>
+		<navaids>LI,KBO,PODIP,KUMIK,NOKDU,NIKOG,ERKUM,LUSIX,SONEB,KBO28,DK022,COL16,DL055,NOKDU,GAPNU</navaids>
+                
+                <line start="EDDK-RW24" end="2.8NM250@KBO"/> 
+                
+                <!-- COL 5D -->
+                <curve start="2.8NM250@KBO" end="6.5NM055@DEPUK" controlPoint="6.7NM050@DEPUK"/> 
+		<line start="6.5NM055@DEPUK" angle="159" length="3" text="159"/>
+                <curve start="6.46NM081.8@DEPUK" end="18NM267@COL" controlPoint="19NM267@COL"/> 
+                <line start="18NM267@COL" end="14NM267@COL"/>   
+                <line start="14NM267@COL" end="COL" arrows="end,10" text="COL 5D | R267" />   
+                
+                <!-- NOR 7D --> 
+                <line start="2.8NM250@KBO" end="NOR" text="NOR 7D | R089" arrows="end,10"/>   
+
+                <!-- WYP 2B -->
+                <curve start="14NM267@COL" end="15NM179@WYP" controlPoint="11.7NM267@COL"/>  
+                <line start="15NM179@WYP" end="WYP" text="WYP 2D | R179" arrows="end,10"/>   
+
+                <!-- PODIP 4D/KUNIK 4D -->
+                <line start="COL" end="PODIP" arrows="end,10" text="PODIP 4D | R041 COL"/>   
+                <line start="COL" end="KUMIK" arrows="end,10" text="KUMIK 4D | R079 COL"/> 
+
+                <!-- SONEB 3X -->
+                <line start="WYP" end="LI" arrows="end,10" text="R320"/>   
+                <line start="LI" end="DL055" arrows="end,10"/>   
+                <line start="DL055" end="LUSIX" arrows="end,10"/>   
+                <line start="LUSIX" end="SONEB" arrows="end,10" text="SONEB 6P"/>   
+
+                <!-- SONEB 2D -->
+                <line start="WYP" end="GAPNU" arrows="end,10" text="R314"/>   
+                <line start="GAPNU" end="ERKUM" arrows="end,10"/>   
+                <line start="ERKUM" end="SONEB" arrows="end,10" text="SONEB 5F"/> 
+
+        </route>
+
+
+	<route name="RW 24 Departure Navaids" zoomMin="10" zoomMax="130" color="140,180,140">
+		<activeStartRunways>24</activeStartRunways>
+		<navaids>LI,KBO,PODIP,KUMIK,NOKDU,NIKOG,ERKUM,LUSIX,SONEB,KBO28,DK022,COL16,DL055,NOKDU,GAPNU</navaids>
+
+        </route>
+-----------------------------------------------------------------------------------------------------------	
+	<route name="SID 06" zoomMin="10" zoomMax="500" color="140,180,140" stroke="line,0.5">
+		<activeStartRunways>06</activeStartRunways>
+		<navaids>LW,LI,KBO,PODIP,KUMIK,NOKDU,NIKOG,ERKUM,LUSIX,SONEB,DK071,DK037,DL055,NOKDU,GAPNU</navaids>
+                
+                <line start="EDDK-RW06" end="LW"/> 
+                <line start="LW" end="3NM064@LW" arrows="end,10"/> 
+                
+                <!-- COL 6K -->
+                <line start="LW" end="COL" arrows="end,10" text="COL 6K | R301"/>   
+                
+                <!-- NOR 8K --> 
+                <line start="24NM069@NOR" end="NOR" text="NOR 8K | R069" arrows="end,10"/>  
+                <curve start="5NM156@WYP" end="24NM069@NOR" controlPoint="25.5NM069@NOR"/>   
+
+                <!-- WYP 2B -->
+                <curve start="3NM064@LW" end="6.5NM156@WYP" controlPoint="4.5NM064@LW"/>  
+                <line start="6.5NM156@WYP" end="WYP" text="WYP 2K | R156" arrows="end,10"/>   
+
+                <!-- PODIP 6K/KUNIK 5K -->
+                <line start="3NM064@LW" end="PODIP" arrows="end,10" text="PODIP 6K"/>   
+                <line start="PODIP" end="KUMIK" arrows="end,10" text="KUMIK 5K"/>  
+
+                <!-- SONEB 3U -->
+                <line start="WYP" end="LI" arrows="end,10" text="R320"/>   
+                <line start="LI" end="DL055" arrows="end,10"/>   
+                <line start="DL055" end="LUSIX" arrows="end,10"/>   
+                <line start="LUSIX" end="SONEB" arrows="end,10" text="SONEB 6P"/>   
+
+                <!-- SONEB 2K -->
+                <line start="WYP" end="GAPNU" arrows="end,10" text="R314"/>   
+                <line start="GAPNU" end="ERKUM" arrows="end,10"/>   
+                <line start="ERKUM" end="SONEB" arrows="end,10" text="SONEB 5F"/> 
+        </route>
+
+	<route name="RW 06 Departure Navaids" zoomMin="10" zoomMax="130" color="140,180,140">
+		<activeStartRunways>06</activeStartRunways>
+		<navaids>LW,LI,KBO,PODIP,KUMIK,NOKDU,NIKOG,ERKUM,LUSIX,SONEB,DK071,DK037,DL055,NOKDU,GAPNU</navaids>
+
+        </route>
+
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+
+
+	<route name="Airways App" zoomMin="10" zoomMax="3000" color="80,150,190" stroke="line,0.3">
+		<activeLandingRunways>06,24,14R,14L,32R,32L</activeLandingRunways>
+		<navaids>TABUM,ASKIK,VATAK,BOMBI,WRB,RUNER,GETNI,GEVTA,LAMOP,EBANA,ARCKY,(VOR)LNO,KENUM,DENOV,(VOR)SPI,BUPAL,REMBA,(VOR)DIK,KRH,RANUX,VALEK,SONEB,ARNEM,TEBRO,(VOR)PAM,PETIK,BASUM,HMM,DLE,AGATI</navaids>
+      
+                <line start="GULKO" end="DODEN"/>  
+                <line start="DILUG" end="DODEN"/>  
+                <line start="DILUG" end="TABUM"/>  
+                <line start="TABUM" end="ASKIK"/>  
+                <line start="BOMBI" end="ASKIK"/>
+                <line start="VATAK" end="ASKIK"/>
+                <line start="ESADU" end="WRB"/>
+                <line start="ESADU" end="RUNER"/>
+                <line start="GETNI" end="RUNER"/>
+                <line start="GETNI" end="KOPAG"/>
+                <line start="PELUN" end="RUNER"/>
+                <line start="DLE" end="RUNER"/>
+                <line start="DLE" end="AGATI"/>
+                <line start="SODNA" end="PELUN"/>
+                <line start="SODNA" end="EBANA"/>
+
+                <line start="NOR" end="ARCKY"/>
+                <line start="DIK" end="ARCKY"/>
+                <line start="DIK" end="KRH"/>
+                <line start="NOR" end="KENUM"/>
+                <line start="KENUM" end="(VOR)SPI"/>
+                <line start="REMBA" end="(VOR)SPI"/>
+                <line start="REMBA" end="BUPAL"/>
+                <line start="RANUX" end="VALEK"/>
+                <line start="DIK" end="VALEK"/>
+                <line start="TEBRO" end="(VOR)PAM"/>
+                <line start="PETIK" end="(VOR)PAM"/>
+                <line start="BASUM" end="(VOR)HMM"/>
+                <line start="GETNI" end="(VOR)HMM"/>
+                <line start="TEBRO" end="GETNI"/>
+
+        </route>
+
+	<route name="Airways Dep" zoomMin="10" zoomMax="3000" color="160,160,140" stroke="line,0.3">
+		<activeStartRunways>06,24,14R,14L,32R,32L</activeStartRunways>
+		<navaids>BADGO,PELUN,ROSUX,WRB,ROLIS,DLE,TESGA,OSBIT,BOMBI,KRH,SOGRI,BUPAL,LNO,BUB,TENLI,(VOR)SPY</navaids>
+      
+                <line start="PODIP" end="BADGO"/>  
+                <line start="PELUN" end="BADGO"/>  
+                <line start="PELUN" end="WRB"/>   
+                <line start="DLE" end="WRB"/>  
+                <line start="ROLIS" end="COL" text="EDDF"/> 
+                <line start="KUMIK" end="TESGA"/>  
+                <line start="OSBIT" end="TESGA"/>  
+                <line start="KUMIK" end="BOMBI"/> 
+                <line start="KRH" end="BOMBI"/> 
+                <line start="NOR" end="SOGRI"/> 
+                <line start="BUPAL" end="SOGRI"/> 
+                <line start="NOR" end="LNO" text="EBBR"/> 
+                <line start="SOGRI" end="BUB"/>
+                <line start="TENLI" end="(VOR)SPY"/> 
+                <line start="TENLI" end="SONEB"/> 
+
+        </route>
+
+--------------------------------------------------------------------------------------------------------------------
+	<route name="Sector" zoomMin="10" zoomMax="5000" color="201,85,96">
+
+
+                <line start="RUPIN" end="LUTOM"/>
+                <line start="RUPIN" end="WOODY"/>
+                <line start="SORAT" end="EVOSA"/>   
+                <line start="SORAT" end="LUTOM"/>            
+                <line start="TINIK" end="DIBIR"/>
+
+                <line start="TINIK" end="DIBIR"/>
+                <line start="TINIK" end="GOBNO"/>
+                <line start="NOR26" end="GOBNO"/>
+                <line start="NOR26" end="AGENI"/>
+                <line start="PINUS" end="AGENI"/>
+                <line start="PINUS" end="NOR40"/>
+                <line start="MAS12" end="NOR40"/>
+                <line start="MAS12" end="EVOSA"/>
+                <line start="NAPRO" end="1NM270@EDLV"/> 
+                <line start="VELNI" end="1NM270@EDLV"/> 
+                <line start="VELNI" end="DIBIR"/> 
+                <line start="NAPRO" end="TEBRO"/>
+                <line start="TEBRO" end="SONEB"/>
+                <line start="SONEB" end="NORKU"/> 
+                <line start="NORKU" end="DOBAK"/>
+                <line start="DOBAK" end="LUGUM"/> 
+                <line start="KUBAT" end="LUGUM"/> 
+                <line start="KUBAT" end="SOMPO"/> 
+                <line start="LEKMO" end="SOMPO"/> 
+                <line start="LEKMO" end="TEMLU"/> 
+                <line start="NORKU" end="38NM083@NORKU"/>
+                <line start="12NM090@EDDG" end="38NM083@NORKU"/>
+                <line start="12NM090@EDDG" end="40NM090@EDDG"/>
+
+
+                <line start="ARDEN" end="FAMEN"/>
+                <line start="ARDEN" end="TOLVU"/>
+                <line start="LUTAX" end="TOLVU"/>
+                <line start="LUTAX" end="ROUSY"/>
+                <line start="ROUSY" end="SUTAL"/>
+                <line start="SUTAL" end="DIK22"/>
+                <line start="PITES" end="DIK22"/>
+                <line start="PITES" end="MAKIK"/>
+                <line start="SUTAL" end="AKELU"/>
+                <line start="MAKIK" end="ROBON"/>
+                <line start="GELPA" end="ROBON"/>
+                <line start="GELPA" end="IBESA"/>
+                <line start="AGENI" end="IBESA"/>
+                <line start="BELOB" end="REVGO"/>
+                <line start="REVGO" end="KOK"/>
+                <line start="KONAN" end="KOK"/>
+                <line start="KONAN" end="4NM360@RAPIX"/>
+                <line start="KONAN" end="20NM240@VABIK"/>
+                <line start="18NM280@BNE" end="20NM240@VABIK"/>
+                <line start="18NM280@BNE" end="90NM245@BNE"/>
+        </route>
+
+</routes>
+
+
+

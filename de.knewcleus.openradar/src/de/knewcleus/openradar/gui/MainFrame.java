@@ -77,7 +77,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("OpenRadar - "+guiInteractionManager.getDataRegistry().getAirportCode()+" "+guiInteractionManager.getDataRegistry().getAirportName());
+        setTitle(guiInteractionManager.getAirportData().getAirportCode()+" "+guiInteractionManager.getAirportData().getAirportName() + " - OpenRadar");
         
         // maximize it 
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();

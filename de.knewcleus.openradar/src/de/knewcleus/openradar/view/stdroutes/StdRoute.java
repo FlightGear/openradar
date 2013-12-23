@@ -41,6 +41,8 @@ import java.util.StringTokenizer;
 import com.sun.istack.internal.logging.Logger;
 
 import de.knewcleus.fgfs.navdata.model.IIntersection;
+import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -211,13 +213,24 @@ public class StdRoute {
         return getColor();
     }
 
-    public boolean isVisible(AirportData data) {
+    public boolean isVisible(GuiMasterController master) {
+        
+        AirportData data = master.getAirportData();
 
         if (mapViewerAdapter.getLogicalScale() < zoomMin || mapViewerAdapter.getLogicalScale() > zoomMax) {
             return false;
         }
 
-
+        GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
+        if(c!=null) {
+            String assignedRoute = c.getFlightPlan().getAssignedRoute();
+            if(assignedRoute!=null) {
+                if(getName().equals(assignedRoute)) {
+                    return true;
+                }
+            }
+        }
+        
         if(displayMode.equals(DisplayMode.always)
            || ( displayMode.equals(DisplayMode.optional) && data.getRadarObjectFilterState("STARSID")==true)) {
             return true;

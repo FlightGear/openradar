@@ -62,6 +62,7 @@ public class AtcMessageDialog extends JFrame {
     private final TextManager manager;
     private final JPanel pnlMessages = new JPanel();
     private JScrollPane spList;
+    private volatile GuiRadarContact contact = null;
 
     private JLabel lbCallSign = new JLabel();
 
@@ -141,6 +142,8 @@ public class AtcMessageDialog extends JFrame {
 
     public void setLocation(GuiRadarContact c, MouseEvent e) {
 
+        this.contact = c;
+        
         lbCallSign.setText(c.getCallSign());
 
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -155,11 +158,19 @@ public class AtcMessageDialog extends JFrame {
         Dimension innerSize = getContentPane().getPreferredSize();
         setSize(new Dimension((int)innerSize.getWidth()+8, (int)innerSize.getHeight()+8));
 
-        Point2D p = /*e.getSource() instanceof JList ?
-                ((JComponent) e.getSource()).getLocationOnScreen():*/
-                e.getLocationOnScreen();
-        p = new Point2D.Double(p.getX() - 100 , p.getY()); //- this.getWidth() - 10
-
+        Point2D p;
+        if(e!=null) {
+            p = /*e.getSource() instanceof JList ?
+                    ((JComponent) e.getSource()).getLocationOnScreen():*/
+                    e.getLocationOnScreen();
+            p = new Point2D.Double(p.getX() - 100 , p.getY()); //- this.getWidth() - 10
+        } else {
+            double x = maxBounds.getCenterX()-innerSize.getWidth()/2;
+            double y = maxBounds.getCenterY()-innerSize.getHeight()/2;
+            
+            p = new Point2D.Double(x, y);
+        }
+            
         int lowerDistanceToScreenBorder=50;
         if(p.getY()+getHeight()>maxBounds.getHeight()-lowerDistanceToScreenBorder) {
             p = new Point2D.Double(p.getX(), maxBounds.getHeight()-getHeight() - lowerDistanceToScreenBorder);
@@ -174,7 +185,7 @@ public class AtcMessageDialog extends JFrame {
             AtcMenuChatMessage msg = manager.getElementAt(Integer.parseInt(((JLabel)e.getSource()).getName()));
             if(msg!=null) {
                 closeDialog();
-                master.getMpChatManager().setAutoAtcMessage(msg);
+                master.getMpChatManager().setAutoAtcMessage(contact, msg);
             }
         }
     }
@@ -187,7 +198,7 @@ public class AtcMessageDialog extends JFrame {
 
         @Override
         public void windowDeactivated(WindowEvent e) {
-            closeDialog();
+            // closeDialog();
         }
 
         @Override

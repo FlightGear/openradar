@@ -45,8 +45,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.NDB;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -55,14 +59,16 @@ public class NDBSymbol extends AViewObject {
 
     private static BufferedImage image;
     private Point2D displayPosition;
-    private AirportData data;
+    private GuiMasterController master;
     private Intersection ndb;
     private int defaultMaxScale;
     private Color defaultColor;
 
-    public NDBSymbol(AirportData data, NDB ndb, int minScale, int maxScale) {
+    private final static Logger log = LogManager.getLogger(NDBSymbol.class);
+    
+    public NDBSymbol(GuiMasterController master, NDB ndb, int minScale, int maxScale) {
         super(Palette.CRD_BACKGROUND);
-        this.data = data;
+        this.master = master;
         this.minScalePath=minScale;
         this.maxScalePath=maxScale;
         this.ndb = ndb;
@@ -71,7 +77,7 @@ public class NDBSymbol extends AViewObject {
         try {
             image = ImageIO.read(new File("res/NDB.png"));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error while loading NDB image!",e);
         }
     }
 
@@ -79,7 +85,7 @@ public class NDBSymbol extends AViewObject {
     protected void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
         this.displayPosition = newDisplayPosition;
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,ndb);
+        Color highLightColor = master.getAirportData().getNavaidDB().getNavaidHighlightColor(master,ndb);
 
         if(highLightColor!=null) {
             this.maxScalePath=Integer.MAX_VALUE;
@@ -110,7 +116,7 @@ public class NDBSymbol extends AViewObject {
         if(size<15) size=15;
         if(size>30) size=30;
 
-        if( (ndb.isHighlighted() || data.getNavaidDB().isPartOfRoute(data, ndb)) || (data.getRadarObjectFilterState("NDB") && (scale>minScalePath && scale<maxScalePath))) {
+        if( (ndb.isHighlighted() || master.getAirportData().getNavaidDB().isPartOfRoute(master, ndb)) || (master.getAirportData().getRadarObjectFilterState("NDB") && (scale>minScalePath && scale<maxScalePath))) {
             g2d.drawImage(image.getScaledInstance(size, -1, Image.SCALE_SMOOTH), (int)displayPosition.getX()-size/2, (int)displayPosition.getY()-size/2, (ImageObserver) null);
         }
 }

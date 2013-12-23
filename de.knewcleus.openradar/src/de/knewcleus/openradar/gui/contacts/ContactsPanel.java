@@ -48,6 +48,7 @@ import javax.swing.ToolTipManager;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.setup.DataBlockLayoutListener;
 import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
 
@@ -59,7 +60,7 @@ import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
 public class ContactsPanel extends javax.swing.JPanel implements DropTargetListener, DataBlockLayoutListener {
 
     private static final long serialVersionUID = 1251028249377116215L;
-    private GuiMasterController guiInteractionManager;
+    private GuiMasterController master;
     private javax.swing.JLabel lbShowAll;
     private javax.swing.JLabel lbShowEmergencies;
     private javax.swing.JLabel lbShowGround;
@@ -67,17 +68,18 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
     private javax.swing.JLabel lbShowStarting;
     private javax.swing.JLabel lbShowTransits;
     private javax.swing.JLabel lbShowUnknown;
-    private JLabel lbAssignSquawk;
+    private JLabel lbAssignSquawkVFR;
+    private JLabel lbAssignSquawkIFR;
     private JLabel lbRevokeSquawk;
     private javax.swing.JList<GuiRadarContact> liRadarContacts;
     private javax.swing.JScrollPane spRadarContacs;
 
     public ContactsPanel(GuiMasterController guiInteractionManager) {
-        this.guiInteractionManager = guiInteractionManager;
+        this.master = guiInteractionManager;
         initComponents();
 
-        datablockLayoutChanged(guiInteractionManager.getDataRegistry().getDatablockLayoutManager().getActiveLayout());
-        guiInteractionManager.getDataRegistry().getDatablockLayoutManager().addDataBlockLayoutListener(this);
+        datablockLayoutChanged(guiInteractionManager.getAirportData().getDatablockLayoutManager().getActiveLayout());
+        guiInteractionManager.getAirportData().getDatablockLayoutManager().addDataBlockLayoutListener(this);
     }
 
     private void initComponents() {
@@ -101,7 +103,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         lbShowAll.setText("AUTO");
         lbShowAll.setName("MODE");
         lbShowAll.setToolTipText("Toggle auto ordering of contacts");
-        lbShowAll.addMouseListener(guiInteractionManager.getRadarContactManager().getContactFilterMouseListener());
+        lbShowAll.addMouseListener(master.getRadarContactManager().getContactFilterMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -196,44 +198,57 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         // add(lbShowEmergencies, gridBagConstraints);
 
 
-        JLabel lbDeselect = new JLabel("Deselect");
-        lbDeselect.setName("DESELECT");
-        lbDeselect.setFont(lbDeselect.getFont().deriveFont(Font.BOLD));
-        lbDeselect.setForeground(Palette.DESKTOP_FILTER_SELECTED);
-        lbDeselect.addMouseListener(new HelpMouseListener());
+        lbAssignSquawkVFR = new JLabel("AssVFR");
+        lbAssignSquawkVFR.setToolTipText("Assigns a new VFR squawk code from range");
+        lbAssignSquawkVFR.setName("ASSIGN_SQUAWK_VFR");
+        lbAssignSquawkVFR.setFont(lbAssignSquawkVFR.getFont().deriveFont(Font.BOLD));
+        lbAssignSquawkVFR.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbAssignSquawkVFR.addMouseListener(new HelpMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx=1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
-        add(lbDeselect, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 0);
+        add(lbAssignSquawkVFR, gridBagConstraints);
 
-        lbAssignSquawk = new JLabel("AssSqw");
-        lbAssignSquawk.setToolTipText("Assigns a new squawk code from range");
-        lbAssignSquawk.setName("ASSIGN_SQUAWK");
-        lbAssignSquawk.setFont(lbAssignSquawk.getFont().deriveFont(Font.BOLD));
-        lbAssignSquawk.setForeground(Palette.DESKTOP_FILTER_SELECTED);
-        lbAssignSquawk.addMouseListener(new HelpMouseListener());
+        lbAssignSquawkIFR= new JLabel("AssIFR");
+        lbAssignSquawkIFR.setToolTipText("Assigns a new IFR squawk code from range");
+        lbAssignSquawkIFR.setName("ASSIGN_SQUAWK_IFR");
+        lbAssignSquawkIFR.setFont(lbAssignSquawkVFR.getFont().deriveFont(Font.BOLD));
+        lbAssignSquawkIFR.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbAssignSquawkIFR.addMouseListener(new HelpMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
-        add(lbAssignSquawk, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 0);
+        add(lbAssignSquawkIFR, gridBagConstraints);
 
         lbRevokeSquawk = new JLabel("RevSqw");
         lbRevokeSquawk.setToolTipText("Revoke the assigned Squawk code");
         lbRevokeSquawk.setName("REVOKE_SQUAWK");
-        lbRevokeSquawk.setFont(lbAssignSquawk.getFont().deriveFont(Font.BOLD));
+        lbRevokeSquawk.setFont(lbAssignSquawkVFR.getFont().deriveFont(Font.BOLD));
         lbRevokeSquawk.setForeground(Palette.DESKTOP_FILTER_SELECTED);
         lbRevokeSquawk.addMouseListener(new HelpMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 0);
         add(lbRevokeSquawk, gridBagConstraints);
+
+        JLabel lbDeselect = new JLabel("Deselect");
+        lbDeselect.setName("DESELECT");
+        lbDeselect.setFont(lbDeselect.getFont().deriveFont(Font.BOLD));
+        lbDeselect.setForeground(Palette.DESKTOP_FILTER_SELECTED);
+        lbDeselect.addMouseListener(new HelpMouseListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 0);
+        add(lbDeselect, gridBagConstraints);
 
         JLabel lbNeglect = new JLabel("Neglect");
         lbNeglect.setName("NEGLECT");
@@ -241,11 +256,11 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         lbNeglect.setForeground(Palette.DESKTOP_FILTER_SELECTED);
         lbNeglect.addMouseListener(new HelpMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx=0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 6);
+        gridBagConstraints.insets = new java.awt.Insets(4, 6, 2, 0);
         add(lbNeglect, gridBagConstraints);
 
         JLabel lbHelp = new JLabel("?");
@@ -255,27 +270,27 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         lbHelp.addMouseListener(new HelpMouseListener());
         lbHelp.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 8, 2, 8);
+        gridBagConstraints.insets = new java.awt.Insets(4, 8, 2, 2);
         add(lbHelp, gridBagConstraints);
 
 
         liRadarContacts.setBackground(Palette.DESKTOP);
 //         liRadarContacts.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
-        liRadarContacts.setModel(guiInteractionManager.getRadarContactManager());
-        liRadarContacts.setCellRenderer(new RadarContactListCellRenderer(guiInteractionManager));
+        liRadarContacts.setModel(master.getRadarContactManager());
+        liRadarContacts.setCellRenderer(new FlightStripCellRenderer(master));
         liRadarContacts.setForeground(Palette.DESKTOP_TEXT);
-        guiInteractionManager.getRadarContactManager().setJList(liRadarContacts);
+        master.getRadarContactManager().setJList(liRadarContacts);
         liRadarContacts.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         liRadarContacts.setDragEnabled(true);
         liRadarContacts.setDropMode(javax.swing.DropMode.ON);
         liRadarContacts.setDoubleBuffered(false);
         spRadarContacs.getViewport().setView(liRadarContacts);
 
-        liRadarContacts.addMouseListener(guiInteractionManager.getRadarContactManager().getContactMouseListener());
-        liRadarContacts.addMouseMotionListener(guiInteractionManager.getRadarContactManager().getContactMouseListener());
+        liRadarContacts.addMouseListener(master.getRadarContactManager().getContactMouseListener());
+        liRadarContacts.addMouseMotionListener(master.getRadarContactManager().getContactMouseListener());
         new DropTarget(liRadarContacts, this); // link this with radar contact
                                                // list
 
@@ -334,7 +349,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
                 align = Alignment.RIGHT;
             }
 
-            guiInteractionManager.getRadarContactManager().dragAndDrop(selectedIndex, insertAtIndex, align);
+            master.getRadarContactManager().dragAndDrop(selectedIndex, insertAtIndex, align);
             e.getDropTargetContext().dropComplete(true);
 
         } else {
@@ -370,21 +385,29 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
                     0,
                     false);
 
-            if(((JLabel)e.getSource()).getName().equals("ASSIGN_SQUAWK")) {
+            if(((JLabel)e.getSource()).getName().equals("ASSIGN_SQUAWK_VFR")) {
                 if(e.getButton()==MouseEvent.BUTTON1) {
                     // assign
-                    guiInteractionManager.getRadarContactManager().assignSquawkCode();
+                    master.getRadarContactManager().assignSquawkCode(FlightPlanData.FlightType.VFR);
                 } else if(e.getButton()==MouseEvent.BUTTON3) {
                     // open dialog
-                    guiInteractionManager.getRadarContactManager().getTransponderSettingsDialog().show(e);
+                    master.getRadarContactManager().getTransponderSettingsDialog().show(e);
+                }
+            } else if(((JLabel)e.getSource()).getName().equals("ASSIGN_SQUAWK_IFR")) {
+                if(e.getButton()==MouseEvent.BUTTON1) {
+                    // assign
+                    master.getRadarContactManager().assignSquawkCode(FlightPlanData.FlightType.IFR);;
+                } else if(e.getButton()==MouseEvent.BUTTON3) {
+                    // open dialog
+                    master.getRadarContactManager().getTransponderSettingsDialog().show(e);
                 }
             } else if(((JLabel)e.getSource()).getName().equals("REVOKE_SQUAWK")) {
                 if(e.getButton()==MouseEvent.BUTTON1) {
                     // assign
-                    guiInteractionManager.getRadarContactManager().revokeSquawkCode();
+                    master.getRadarContactManager().revokeSquawkCode();
                 } else if(e.getButton()==MouseEvent.BUTTON3) {
                     // open dialog
-                    guiInteractionManager.getRadarContactManager().getTransponderSettingsDialog().show(e);
+                    master.getRadarContactManager().getTransponderSettingsDialog().show(e);
                 }
             } else if(((JLabel)e.getSource()).getName().equals("HELP")) {
                int delay = ToolTipManager.sharedInstance().getInitialDelay();
@@ -392,16 +415,16 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
                ToolTipManager.sharedInstance().mouseMoved(dummyEvent);
                ToolTipManager.sharedInstance().setInitialDelay(delay);
             } else if(((JLabel)e.getSource()).getName().equals("DESELECT")) {
-                guiInteractionManager.getRadarContactManager().deselectContact();
+                master.getRadarContactManager().deselectContact();
             } else if(((JLabel)e.getSource()).getName().equals("NEGLECT")) {
-                guiInteractionManager.getRadarContactManager().neglectContact();
+                master.getRadarContactManager().neglectSelectedContact();
             }
         }
     }
 
     @Override
     public void datablockLayoutChanged(ADatablockLayout newLayout) {
-        lbAssignSquawk.setVisible(newLayout.supportsSquawk());
+        lbAssignSquawkVFR.setVisible(newLayout.supportsSquawk());
         lbRevokeSquawk.setVisible(newLayout.supportsSquawk());
     }
 }

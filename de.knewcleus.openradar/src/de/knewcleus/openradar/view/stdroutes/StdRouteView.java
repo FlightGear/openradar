@@ -69,7 +69,7 @@ public class StdRouteView implements IBoundedView, INotificationListener {
 		this.mapViewAdapter = mapViewAdapter;
 		this.master=master;
 		this.route=route;
-		geoPosition = route.getSize()>0 ? route.getElements().get(0).getGeoReferencePoint() : master.getDataRegistry().getAirportPosition();
+		geoPosition = route.getSize()>0 ? route.getElements().get(0).getGeoReferencePoint() : master.getAirportData().getAirportPosition();
 		mapViewAdapter.registerListener(this);
         updateLogicalPosition();
 	}
@@ -103,7 +103,7 @@ public class StdRouteView implements IBoundedView, INotificationListener {
     @Override
     public void paint(Graphics2D g2d) {
 
-        boolean isVisible = route.isVisible(master.getDataRegistry());
+        boolean isVisible = route.isVisible(master);
         if(isVisible) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setFont(new Font("Arial", Font.PLAIN, 4));

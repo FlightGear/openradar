@@ -42,6 +42,9 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.knewcleus.fgfs.geodata.Feature;
 import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.IGeodataLayer;
@@ -67,6 +70,8 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	protected Rectangle2D logicalBounds = null;
 	protected List<Shape> logicalShapes = null;
 
+	private final static Logger log = LogManager.getLogger(GeodataView.class);
+	
 	public GeodataView(GuiMasterController master, IMapViewerAdapter mapViewAdapter, IGeodataLayer geodataLayer, String layerCode, Rectangle2D bounds) throws GeodataException {
 	    this.master=master;
 	    this.mapViewAdapter = mapViewAdapter;
@@ -111,7 +116,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 
 	@Override
 	public boolean isVisible() {
-	    boolean mainSwitchOn = layerCode==null || (layerCode!=null && master.getDataRegistry().getRadarObjectFilterState(layerCode));
+	    boolean mainSwitchOn = layerCode==null || (layerCode!=null && master.getAirportData().getRadarObjectFilterState(layerCode));
 		return mainSwitchOn && visible;
 	}
 
@@ -164,8 +169,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 			try {
 				geometry.accept(shapeProjector);
 			} catch (GeodataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			    log.error("Error while adding shapes!",e);
 			}
 		}
 		logicalShapes = shapeProjector.getShapes();

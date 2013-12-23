@@ -38,20 +38,21 @@ import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.NDB;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class NDBName extends AViewObject {
 
-    private AirportData data;
+    private GuiMasterController master;
     private String activeText;
     private Intersection ndb;
     private int defaultMaxScale;
     private Color defaultColor;
 
-    public NDBName(AirportData data, NDB ndb, Font font, Color color, int minScaleText, int maxScaleText) {
+    public NDBName(GuiMasterController master, NDB ndb, Font font, Color color, int minScaleText, int maxScaleText) {
         super(font, color, ndb.getIdentification(), minScaleText, maxScaleText);
-        this.data = data;
+        this.master = master;
         this.ndb = ndb;
         this.defaultMaxScale = maxScaleText;
         this.defaultColor = color;
@@ -61,7 +62,7 @@ public class NDBName extends AViewObject {
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,ndb);
+        Color highLightColor = master.getAirportData().getNavaidDB().getNavaidHighlightColor(master,ndb);
 
         if(highLightColor!=null) {
             this.maxScaleText=Integer.MAX_VALUE;
@@ -78,7 +79,7 @@ public class NDBName extends AViewObject {
         if(scale>15) scale=15;
 
         setTextCoordinates(new Point2D.Double(newDisplayPosition.getX()+scale,newDisplayPosition.getY()+scale));
-        if(data.getRadarObjectFilterState("NDB") || highLightColor!=null) {
+        if(master.getAirportData().getRadarObjectFilterState("NDB") || highLightColor!=null) {
             text = activeText;
         } else {
             text = null;

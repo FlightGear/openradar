@@ -69,7 +69,7 @@ public class LogWindow extends JFrame implements FocusListener {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle maxBounds = env.getMaximumWindowBounds();
 
-        this.setLocation((int) maxBounds.getWidth() / 2 - 300, (int) maxBounds.getHeight() / 2 - 300);
+        this.setLocation((int) maxBounds.getWidth() / 2 - 300, (int) maxBounds.getHeight() / 2 - 200);
         this.setSize(600, 600);
         this.setUndecorated(true);
         // Determine what the default GraphicsDevice can support.

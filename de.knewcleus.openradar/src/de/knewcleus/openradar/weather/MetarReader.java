@@ -50,7 +50,8 @@ import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.sun.istack.internal.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.location.GeoUtil;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
@@ -84,11 +85,13 @@ public class MetarReader implements Runnable {
     private final Object metarsLock = new Object();
 
     private ZipFile zif=null;
+    
+    private final static Logger log = LogManager.getLogger(MetarReader.class);
 
     public MetarReader(GuiMasterController master) {
         this.master=master;
 
-        this.data = master.getDataRegistry();
+        this.data = master.getAirportData();
 
         this.baseUrl = data.getMetarUrl();
         thread.setDaemon(true);
@@ -97,16 +100,16 @@ public class MetarReader implements Runnable {
     public synchronized void changeMetarSources(String ownMetarSource, String addMetarSources) {
         // remove old
         synchronized(metarsLock) {
-            metars.remove(master.getDataRegistry().getMetarSource()); // remove old
+            metars.remove(master.getAirportData().getMetarSource()); // remove old
         }
         // add new
         if(ownMetarSource!=null) {
-            master.getDataRegistry().setMetarSource(ownMetarSource);
+            master.getAirportData().setMetarSource(ownMetarSource);
             addWeatherStation(ownMetarSource);
         }
         if(addMetarSources!=null && !addMetarSources.trim().isEmpty()) {
             // remove old
-            String oldMetarSources = master.getDataRegistry().getAddMetarSources();
+            String oldMetarSources = master.getAirportData().getAddMetarSources();
             if(oldMetarSources!=null) {
                 StringTokenizer st = new StringTokenizer(oldMetarSources,",");
                 synchronized(metarsLock) {
@@ -117,7 +120,7 @@ public class MetarReader implements Runnable {
             }
             // add new
             addMetarSources.trim();
-            master.getDataRegistry().setAddMetarSources(addMetarSources);
+            master.getAirportData().setAddMetarSources(addMetarSources);
             StringTokenizer st = new StringTokenizer(addMetarSources,",");
             while(st.hasMoreTokens()) {
                 addWeatherStation(st.nextToken());
@@ -159,10 +162,13 @@ public class MetarReader implements Runnable {
                     // so we try to load it, if it fails, it will come with the start of the application
                     if(code.startsWith("_")) {
                         code = code.substring(1);
-                        master.getDataRegistry().setMetarSource(code);
+                        master.getAirportData().setMetarSource(code);
                     }
 
                     loadMetar(code,false); // not error logging at this point...
+                    
+                    master.getStatusManager().updateTransitionValues(); // transFL depends on QNH
+
                     if(!metars.get(code).exists()) {
                         // we need to search for another weather station
                         reloadMetars = true;
@@ -170,7 +176,7 @@ public class MetarReader implements Runnable {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error while updating metar data!",e);
         }
         thread.start();
     }
@@ -195,21 +201,22 @@ public class MetarReader implements Runnable {
                 for(String code : new ArrayList<String>(activeWeatherStationList)) {
                     if(code.startsWith("_")) {
                         activeWeatherStationList.remove(code);
-                        code = getClosestWeatherStation(master.getDataRegistry().getAirportPosition()).getIdentification();
-                        master.getDataRegistry().setMetarSource(code);
+                        code = getClosestWeatherStation(master.getAirportData().getAirportPosition()).getIdentification();
+                        master.getAirportData().setMetarSource(code);
                         if(code==null) {
-                            code = master.getDataRegistry().getAirportCode();
+                            code = master.getAirportData().getAirportCode();
                         }
                         activeWeatherStationList.add(0,code);
                     }
                     try {
                         loadMetar(code, true);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        log.error("Error while updating METAR data!",e);
                     }
                 }
             }
-
+            
+            master.getStatusManager().updateTransitionValues(); // transFL depends on QNH
         }
     }
 
@@ -237,14 +244,14 @@ public class MetarReader implements Runnable {
                 for (IMetarListener l : listener) {
                     l.registerNewMetar(metar);
                 }
-                System.out.println("Metar received: " + metar.getMetarBaseData());
+                log.info("Metar received: " + metar.getMetarBaseData());
 
                 SoundManager.playWeather();
             }
         } else {
             if(logError) {
-                System.out.println("WARNING: No Metar for "+code+"(got response code " + responseCode + " from " + url.toString()+")...");
-                System.out.println("Set alternative weather station via dialog!");
+                log.warn("WARNING: No Metar for "+code+"(got response code " + responseCode + " from " + url.toString()+")...");
+                log.warn("Set alternative weather station via dialog!");
             }
             MetarData metar = null;
             metar = MetarData.createNotFoundMetar(code);
@@ -300,7 +307,7 @@ public class MetarReader implements Runnable {
                 line = r.readLine();
             }
         } catch(Exception e) {
-            Logger.getLogger(MetarReader.class).severe("Problem to read metar.dat in metar.dat..zip",e);
+            log.error("Problem to read metar.dat in metar.dat..zip",e);
         } finally {
             closeFiles();
         }

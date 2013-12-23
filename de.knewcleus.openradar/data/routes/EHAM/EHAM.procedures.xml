@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+	<route name="RW 06 Approach" zoomMin="10" zoomMax="700" color="140,140,180">
+		<activeLandingRunways>06</activeLandingRunways>
+		<navaids>CH,PAM25</navaids>
+
+		<line start="SUGOL" end="5NM292@(VOR)SPL" stroke="dots" text="112/R292" arrows="end,10"/>
+		<line start="ARTIP" end="(VOR)SPL" stroke="dots" text="R250"/>
+		<line start="(VOR)SPL" end="5NM250@(VOR)SPL" stroke="dots" text="250" arrows="end,10"/>
+		<line start="5NM250@(VOR)SPL" end="PAM25" stroke="dots" text="240" arrows="end,10"/>
+                <bow center="1.72NM150@PAM25" radius="1.72" startAngle="150" extentAngle="180" stroke="dots"/>
+		<line start="3.4NM237.55@CH" end="CH" stroke="dots" arrows="end,10"/>
+
+		<line start="RIVER" end="(NDB)CH" stroke="dots" text="040" arrows="end,10"/>
+
+		<curve start="5NM292@(VOR)SPL" end="5NM250@(VOR)SPL" controlPoint="1NM280@(VOR)SPL"  stroke="dots"/>
+
+		<line start="(NDB)CH" end="EHAM-RW24" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="06 altitudes" zoomMin="10" zoomMax="150" color="140,140,180">
+		<activeLandingRunways>06</activeLandingRunways>
+		<text position="0.5NM160@EH176" font="Arial" fontSize="10" text="4000ft / 180kts"/>
+        </route>
+
+	<route name="Transition 06" zoomMin="10" zoomMax="350" color="180,180,200">
+		<activeLandingRunways>06</activeLandingRunways>
+		<navaids>PAM</navaids>
+
+                <line start="SUGOL" end="PAM25" text="135" stroke="dots" arrows="end,10"/> 
+		<curve start="PAM25" end="CH" controlPoint="0.8NM240@VBG45" stroke="dots" arrows="end,10"/>
+
+                <line start="ARTIP" end="PAM" stroke="dots"/> 
+                <line start="PAM" end="22NM240@PAM" text="240" stroke="dots" arrows="end,10"/> 
+                <bow center="1.96NM150@KAG92" radius="1.9" startAngle="150" extentAngle="180" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="06 Transition altitudes" zoomMin="10" zoomMax="150" color="180,180,200">
+		<activeLandingRunways>06</activeLandingRunways>
+		<text position="1NM340@RTM36" font="Arial" fontSize="10" text="3000ft / 180kts"/>
+		<text position="KAG62" font="Arial" fontSize="10" text="2000ft"/>
+        </route>
+
+
+	<route name="NIGHT 06" zoomMin="10" zoomMax="200" color="40,40,60"> 
+		<activeLandingRunways>06</activeLandingRunways>
+		<navaids>SOKSI,GUBAS,EH198,EH606</navaids>
+
+                <line start="RIVER" end="EH198" text="360" stroke="dots"/> 
+		<line start="EH198" end="GUBAS" stroke="dots" text="020"/>
+                <line start="GUBAS" end="SOKSI" stroke="dots"/>
+
+                <line start="EH606" end="SOKSI" stroke="dots" text="184"/>  
+
+                <line start="PAM" end="EH058" text="270" stroke="dots"/> 
+		<line start="EH058" end="10.7NM270@EH058" stroke="dots" text="270"/>
+
+                <line start="SOKSI" end="EH613" stroke="dots" text="115"/>  
+		<line start="EH613" end="KAG92" stroke="dots" arrows="end,10"/>
+
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="RW 36C Approach" zoomMin="10" zoomMax="700" color="140,140,180">
+		<activeLandingRunways>36C</activeLandingRunways>
+		<navaids>PAM,NV</navaids>
+
+		<line start="SUGOL" end="8.3NM292@(VOR)SPL" stroke="dots" text="112/R292" arrows="end,10"/>
+		<line start="8.3NM292@(VOR)SPL" end="VBG59" stroke="dots" text="180"/>
+		<line start="VBG59" end="6NM180@VBG59" stroke="dots" arrows="end,10"/>
+		<curve start="6NM180@VBG59" end="7NM091@EH183" controlPoint="8.3NM180@VBG59" stroke="dots"/>
+		<curve start="7NM091@EH183" end="1.8NM239@(NDB)NV" controlPoint="9.5NM090@EH183" stroke="dots" arrows="end,10"/>
+
+		<line start="ARTIP" end="(VOR)PAM" stroke="dots" text="R240"/>
+		<line start="(VOR)PAM" end="14NM200@(VOR)PAM" stroke="dots" text="200" arrows="end,10"/>
+		<curve start="14NM200@(VOR)PAM" end="8NM269@SSB26" controlPoint="16NM199@(VOR)PAM" stroke="dots"/>
+		<curve start="8NM269@SSB26" end="1.8NM239@(NDB)NV" controlPoint="1.5NM270@ABA11" stroke="dots" arrows="end,10"/>
+
+		<line start="RIVER" end="1.8NM239@(NDB)NV" stroke="dots" text="059" arrows="end,10"/>
+
+		<line start="1.8NM239@(NDB)NV" end="EHAM-RW18C" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="36C altitudes" zoomMin="10" zoomMax="150" color="140,140,180"> 
+		<activeLandingRunways>36C</activeLandingRunways>
+		<text position="0.7NM250@EH033" font="Arial" fontSize="10" text="3000ft / 180kts"/>
+		<text position="EH183" font="Arial" fontSize="10" text="3000ft / 180kts"/>
+		<text position="EH091" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="EH071" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="4NM060@EH158" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+        </route>
+
+
+        <route name="36C Transition altitudes" zoomMin="10" zoomMax="150" color="180,180,200">
+		<activeLandingRunways>36C</activeLandingRunways>
+		<text position="1.5NM183@EH046" font="Arial" fontSize="10" text="2000ft"/>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="RW 36R Approach" zoomMin="10" zoomMax="700" color="140,140,180">
+		<activeLandingRunways>36R</activeLandingRunways>
+		<navaids>PAM,NV</navaids>
+
+		<line start="SUGOL" end="8.3NM292@(VOR)SPL" stroke="dots" text="112/R292" arrows="end,10"/>
+		<line start="8.3NM292@(VOR)SPL" end="VBG59" stroke="dots" text="180"/>
+		<line start="VBG59" end="6NM180@VBG59" stroke="dots" arrows="end,10"/>
+		<curve start="6NM180@VBG59" end="8.5NM091@EH183" controlPoint="8.3NM180@VBG59" stroke="dots"/>
+		<curve start="8.5NM091@EH183" end="(NDB)NV" controlPoint="11NM090@EH183" stroke="dots" arrows="end,10"/>
+
+		<line start="ARTIP" end="(VOR)PAM" stroke="dots" text="R240"/>
+		<line start="(VOR)PAM" end="14NM200@(VOR)PAM" stroke="dots" text="200" arrows="end,10"/>
+		<curve start="14NM200@(VOR)PAM" end="6NM269@SSB26" controlPoint="16NM199@(VOR)PAM" stroke="dots"/>
+		<curve start="6NM269@SSB26" end="(NDB)NV" controlPoint="ABA11" stroke="dots" arrows="end,10"/>
+
+		<line start="RIVER" end="(NDB)NV" stroke="dots" text="059" arrows="end,10"/>
+
+		<line start="(NDB)NV" end="EHAM-RW18L" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="36R altitudes" zoomMin="10" zoomMax="150" color="140,140,180">
+		<activeLandingRunways>36R</activeLandingRunways>
+		<text position="0.7NM250@EH033" font="Arial" fontSize="10" text="3000ft / 180kts"/>
+		<text position="EH183" font="Arial" fontSize="10" text="3000ft / 180kts"/>
+		<text position="EH091" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="EH071" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="4NM060@EH158" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+        </route>
+
+        <route name="36R Transition altitudes" zoomMin="10" zoomMax="150" color="180,180,200">
+		<activeLandingRunways>36R</activeLandingRunways>
+		<text position="ABA62" font="Arial" fontSize="10" text="2000ft"/>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="RW 27 Approach" zoomMin="10" zoomMax="700" color="140,140,180">
+		<activeLandingRunways>27</activeLandingRunways>
+		<navaids>EH071,(NDB)WP</navaids>
+
+		<line start="SUGOL" end="8.3NM292@(VOR)SPL" stroke="dots" text="112" arrows="end,10"/>
+		<line start="ARTIP" end="(NDB)WP" stroke="dots" text="241" arrows="end,10"/>
+		<line start="8.3NM292@(VOR)SPL" end="EH071" stroke="dots" text="090" arrows="end,10"/>
+                <bow center="1.58NM180@EH071" radius="1.58" startAngle="360" extentAngle="180" stroke="dots"/>
+		<line start="3.23NM086.5@WP" end="WP" stroke="dots" arrows="end,10"/>
+
+		<line start="RIVER" end="4NM042@SPL" stroke="dots" text="042"/>
+
+		<line start="(NDB)WP" end="EHAM-RW09" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="27 altitudes" zoomMin="10" zoomMax="150" color="140,140,180">
+		<activeLandingRunways>27</activeLandingRunways>
+		<text position="EH043" font="Arial" fontSize="10" text="4000ft / 180kts"/>
+		<text position="EH622" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="PAM22" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+        </route>
+
+	<route name="Transition 27" zoomMin="10" zoomMax="350" color="180,180,200">
+		<activeLandingRunways>27</activeLandingRunways>
+
+                <line start="RIVER" end="4.5NM086.5@EH024" text="060" stroke="dots" arrows="end,10"/> 
+
+                <bow center="2.75NM142@WP" radius="2.27" startAngle="360" extentAngle="150" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="27 Transition altitudes" zoomMin="10" zoomMax="150" color="180,180,200">
+		<activeLandingRunways>27</activeLandingRunways>
+		<text position="EH024" font="Arial" fontSize="10" text="3000ft / 180kts"/>
+		<text position="2NM264@WP" font="Arial" fontSize="10" text="2000ft"/>
+        </route>
+
+--------------------------------------------------------------------------------------------------------------------
+	<route name="RW 18R Approach" zoomMin="10" zoomMax="700" color="140,140,180">
+		<activeLandingRunways>18R</activeLandingRunways>
+		<navaids>(VOR)SPY,VBG59,EH606,EH090,EH035</navaids>
+
+		<line start="SUGOL" end="EH606" stroke="dots" text="112" arrows="end,10"/>
+
+		<line start="VBG59" end="EH090" stroke="dots" text="360" arrows="end,10"/>
+		<curve start="EH606" end="EH090" controlPoint="5NM180@EH090" stroke="dots" arrows="end,10"/>
+                <bow center="3.42NM090@EH090" radius="3.42" startAngle="270" extentAngle="180" stroke="dots" arrows="end,10"/>
+
+		<line start="RIVER" end="VBG59" stroke="dots" text="040" arrows="end,10"/>
+
+		<line start="ARTIP" end="11NM071@(VOR)SPL" stroke="dots" text="R251" arrows="end,10"/>
+		<curve start="11NM071@(VOR)SPL" end="EH035" controlPoint="6.5NM071@(VOR)SPL" stroke="dots" arrows="end,10"/>
+
+		<line start="EH621" end="EHAM-RW36L" stroke="dots" arrows="end,10"/>
+                <bow center="3.78NM270@EH035" radius="3.78" startAngle="270" extentAngle="180" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="18R altitudes" zoomMin="10" zoomMax="150" color="140,140,180">
+		<activeLandingRunways>18R</activeLandingRunways>
+		<text position="1NM180@EH095" font="Arial" fontSize="10" text="3000ft / 180kts"/>
+		<text position="REGSU" font="Arial" fontSize="10" text="3000ft / 180kts"/>
+		<text position="3NM360@EH043" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="3NM330@EH186" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="EH051" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+        </route>
+
+	<route name="Transition 18R" zoomMin="10" zoomMax="350" color="180,180,200">
+		<activeLandingRunways>18R</activeLandingRunways>
+		<line start="RIVER" end="11.5NM269@(VOR)SPY" stroke="dots" text="020" arrows="end,10"/>
+		<line start="SUGOL" end="11.5NM269@(VOR)SPY" stroke="dots" text="R089 SPY" arrows="end,10"/>
+		<curve start="11.5NM269@(VOR)SPY" end="EH621" controlPoint="EH608" stroke="dots" arrows="end,10"/>
+
+		<line start="ARTIP" end="3NM095@(VOR)SPY" stroke="dots" text="R275" arrows="end,10"/>
+		<curve start="3NM095@(VOR)SPY" end="EH621" controlPoint="EH608" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="18R Transition altitudes" zoomMin="10" zoomMax="150" color="180,180,200">
+		<activeLandingRunways>18R</activeLandingRunways>
+		<text position="EH621" font="Arial" fontSize="10" text="2000ft"/>
+        </route>
+
+	<route name="NIGHT 18R" zoomMin="10" zoomMax="200" color="40,40,60"> 
+		<activeLandingRunways>18R</activeLandingRunways>
+		<navaids>EH198,EH606,NIRSI,EH607,EH608,EH603,EH601,NARIX</navaids>
+
+                <line start="RIVER" end="EH198" text="360" stroke="dots"/> 
+		<line start="EH198" end="EH606" stroke="dots" text="025"/>
+                <line start="EH606" end="NIRSI" stroke="dots"/>
+
+                <line start="ARTIP" end="NARIX" text="295" stroke="dots"/> 
+
+                <line start="SUGOL" end="EH606" stroke="dots" text="112"/>  
+                <line start="EH608" end="EH621" stroke="dots"/> 
+
+                <line start="NIRSI" end="EH607" stroke="dots" text="090"/>  
+		<line start="EH607" end="EH608" stroke="dots" arrows="end,10" text="132"/>
+
+		<line start="NARIX" end="EH608" stroke="dots" arrows="end,10" text="233"/>
+
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="RW 18C Approach" zoomMin="10" zoomMax="700" color="140,140,180">
+		<activeLandingRunways>18C</activeLandingRunways>
+		<navaids>(VOR)SPY,VBG59,EH606,EH090,EH035</navaids>
+
+		<line start="SUGOL" end="EH606" stroke="dots" text="112" arrows="end,10"/>
+
+		<line start="VBG59" end="EH090" stroke="dots" text="360" arrows="end,10"/>
+		<curve start="EH606" end="EH090" controlPoint="5NM180@EH090" stroke="dots" arrows="end,10"/>
+                <bow center="3.99NM090@EH090" radius="3.99" startAngle="270" extentAngle="180" stroke="dots" arrows="end,10"/>
+
+		<line start="RIVER" end="VBG59" stroke="dots" text="040" arrows="end,10"/>
+
+		<line start="ARTIP" end="11NM071@(VOR)SPL" stroke="dots" text="R251" arrows="end,10"/>
+		<curve start="11NM071@(VOR)SPL" end="EH035" controlPoint="6.5NM071@(VOR)SPL" stroke="dots" arrows="end,10"/>
+
+		<line start="6.45NM003@EH007" end="EHAM-RW36C" stroke="dots" arrows="end,10"/>
+                <bow center="3.22NM270@EH035" radius="3.22" startAngle="270" extentAngle="180" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="18C altitudes" zoomMin="10" zoomMax="150" color="140,140,180">
+		<activeLandingRunways>18C</activeLandingRunways>
+		<text position="1NM180@EH095" font="Arial" fontSize="10" text="4000ft / 180kts"/>
+		<text position="REGSU" font="Arial" fontSize="10" text="4000ft / 180kts"/>
+		<text position="3NM360@EH043" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="3NM330@EH186" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+		<text position="EH051" font="Arial" fontSize="10" text="FL70 / 220kts"/>
+        </route>
+
+	<route name="Transition 18C" zoomMin="10" zoomMax="350" color="180,180,200">
+		<activeLandingRunways>18C</activeLandingRunways>
+		<line start="RIVER" end="11.5NM269@(VOR)SPY" stroke="dots" text="020" arrows="end,10"/>
+		<line start="SUGOL" end="11.5NM269@(VOR)SPY" stroke="dots" text="R089 SPY" arrows="end,10"/>
+		<curve start="11.5NM269@(VOR)SPY" end="4NM003@EH007" controlPoint="1.2NM090@EH608" stroke="dots" arrows="end,10"/>
+
+		<line start="ARTIP" end="3NM095@(VOR)SPY" stroke="dots" text="R275" arrows="end,10"/>
+		<curve start="3NM095@(VOR)SPY" end="4NM003@EH007" controlPoint="1.2NM090@EH608" stroke="dots" arrows="end,10"/>
+        </route>
+
+        <route name="18C Transition altitudes" zoomMin="10" zoomMax="150" color="180,180,200">
+		<activeLandingRunways>18C</activeLandingRunways>
+		<text position="4NM003@EH007" font="Arial" fontSize="10" text="2000ft"/>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="VOR STAR" zoomMin="10" zoomMax="1000" color="240,200,20">
+		<activeLandingRunways>06,18C,18R,27,36C,36R</activeLandingRunways>
+		<navaids>SUGOL,RIVER,ARTIP,(VOR)SPL</navaids>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="STAR" zoomMin="10" zoomMax="700" color="140,140,180">
+		<activeLandingRunways>06,18C,18R,27,36C,36R</activeLandingRunways>
+		<navaids>REDFA,SULUT,SUGOL,LAMSO,PEPEL,MOLIX,LUTEX,VEREL,TOPPA,MONIL,DENUT,HELEN,PUTTY,PESER,(VOR)HSD,RIVER,(NDB)STD,(VOR)RKN,NORKU,SONSA,ROBIS,OSKUR,ARTIP,(VOR)EEL,NOVEN</navaids>
+
+		<line start="(VOR)RKN" end="OSKUR" text="REKKEN 2A"/>
+		<line start="ROBIS" end="OSKUR"/>
+		<line start="SONSA" end="ROBIS"/>
+		<line start="NORKU" end="SONSA" text="NORKU 2A"/>
+		<line start="(VOR)EEL" end="NOVEN" text="EELDE 1A"/>
+		<line start="NOVEN" end="ARTIP" arrows="end,10"/>
+		<line start="OSKUR" end="ARTIP" arrows="end,10"/>
+
+		<line start="DENUT" end="(VOR)HSD" text="DENUT 1A"/>
+		<line start="HELEN" end="(VOR)HSD" text="HELEN 1A"/>
+		<line start="PUTTY" end="(VOR)HSD" text="PUTTY 1A"/>
+		<line start="PESER" end="(NDB)STD" text="PESER 2A"/>
+		<line start="(NDB)STD" end="RIVER" arrows="end,10"/>
+		<line start="(VOR)HSD" end="RIVER" arrows="end,10"/>
+
+		<line start="REDFA" end="SULUT" text="REFA 1A"/>
+		<line start="LAMSO" end="PEPEL" text="LAMSO 1A"/>
+		<line start="MOLIX" end="LUTEX" text="MOLIX 2A"/>
+		<line start="TOPPA" end="MONIL" text="TOPPA 2A"/>
+		<line start="SULUT" end="SUGOL" arrows="end,10"/>
+		<line start="PEPEL" end="SUGOL" arrows="end,10"/>
+		<line start="VEREL" end="SUGOL" arrows="end,10"/>
+		<line start="LUTEX" end="VEREL"/>
+		<line start="MONIL" end="VEREL"/>
+
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="SID General" zoomMin="10" zoomMax="700" color="140,180,140">
+		<activeStartRunways>36C,36L,18C,18L,04,09,27,22,24</activeStartRunways>
+		<navaids>(VOR)PAM,IVLUT,RENDI,NYKER,ARNEM,ELPAT,SONEB,TEBRO,LOPIK,TOTNA,(NDB)EHN,SOPVI,OSGOS,LUTOM,LEKKO,LARAS,WOODY,DENAG,GORLO,REFSO,RIMBU,XAMAN,RINIS,PEVAD,BERGI,AMGOD,SUPUR,KOLAG,MIMVA,GODOS,ANDIK,KEKIX,UNEXO,KONOM,GRONY,AGISU,(VOR)EEL,DOBAK,SOMPO,BEDUM,VKL99</navaids>
+
+                
+                <line start="NYKER" end="ARNEM"/>  
+                <line start="ARNEM" end="SONEB" arrows="end,10"/>    
+                <line start="ARNEM" end="TEBRO" arrows="end,10"/>    
+
+                <line start="IVLUT" end="RENDI"/>    
+                <line start="RENDI" end="VKL99" arrows="end,10"/>   
+
+                <line start="LOPIK" end="TOTNA"/>   
+                <line start="TOTNA" end="(NDB)EHN"/> 
+                <line start="(VOR)EHN" end="SOPVI"/>  
+                <line start="SOPVI" end="OSGOS" arrows="end,10"/>    
+                <line start="TOTNA" end="LUTOM" arrows="end,10"/>    
+                
+                <line start="LEKKO" end="LARAS"/>  
+                <line start="LARAS" end="WOODY" arrows="end,10"/> 
+
+                <line start="GORLO" end="REFSO"/>  
+                <line start="GORLO" end="PEVAD"/>  
+                <line start="REFSO" end="RIMBU" arrows="end,10"/>   
+                <line start="REFSO" end="XAMAN" arrows="end,10"/>  
+                <line start="PEVAD" end="RINIS" arrows="end,10"/> 
+
+                <line start="BERGI" end="AMGOD"/>  
+                <line start="AMGOD" end="SUPUR"/>  
+                <line start="SUPUR" end="KOLAG" arrows="end,10"/>   
+                <line start="SUPUR" end="MIMVA" arrows="end,10"/>  
+                <line start="SUPUR" end="GODOS" arrows="end,10"/> 
+
+                <line start="ANDIK" end="AGISU" arrows="end,10"/> 
+                <line start="ANDIK" end="GRONY"/>    
+                <line start="GRONY" end="BEDUM" arrows="end,10"/>  
+                <line start="GRONY" end="(VOR)EEL" arrows="end,10"/>  
+                <line start="(VOR)EEL" end="DOBAK" arrows="end,10"/> 
+                <line start="(VOR)EEL" end="SOMPO" arrows="end,10"/> 
+
+
+        </route>
+
+	<route name="SID 36C" zoomMin="10" zoomMax="500" color="140,180,140" stroke="dots">
+		<activeStartRunways>36C</activeStartRunways>
+		<navaids>EH081,EH082,(VOR)SPY,EH059,EH036,OGINA,EH072,EH007,EH033</navaids>
+                
+                <line start="EHAM-RW36C" end="EH007"/>  
+                <line start="EH007" end="EH081" text="050"/> 
+                <line start="EH081" end="(VOR)SPY" text="360"/> 
+                <line start="(VOR)SPY" end="ANDIK" text="052"/> 
+                <line start="EH081" end="EH082" text="090"/> 
+                <line start="EH082" end="(VOR)PAM" text="145"/>     
+                <bow center="1.99NM270@EH059" radius="1.99" startAngle="270" extentAngle="180"/>
+                <line start="EH059" end="EH036" text="181"/>     
+                <line start="EH036" end="EH072" text="181"/>   
+                <line start="EH072" end="LEKKO" text="206"/>  
+                <line start="EH036" end="EH033" text="141"/>   
+                <line start="EH033" end="LOPIK" text="164"/>  
+
+                <line start="(VOR)PAM" end="IVLUT" stroke="dots"/>   
+                <line start="(VOR)PAM" end="NYKER" stroke="dots"/> 
+        </route>
+
+
+	<route name="SID 36L" zoomMin="10" zoomMax="500" color="140,180,140" stroke="dots">
+		<activeStartRunways>36L</activeStartRunways>
+		<navaids>EH622,EH094,EH090,EH091,VOLLA,EH081,EH082,(VOR)SPY,EH059,EH036,OGINA,EH072,EH007,EH033</navaids>
+                
+                <line start="EHAM-RW36L" end="EH622"/>  
+                <line start="EH622" end="EH094"/> 
+                <line start="EH094" end="BERGI" text="320"/> 
+                <line start="EH094" end="EH090" text="271"/> 
+                <line start="EH090" end="EH091" text="212"/>     
+                <line start="EH091" end="VOLLA" text="242"/> 
+                <line start="VOLLA" end="GORLO" text="238"/> 
+        </route>
+
+	<route name="SID 09" zoomMin="10" zoomMax="500" color="140,180,140" stroke="dots">
+		<activeStartRunways>09</activeStartRunways>
+		<navaids>EH055,EH052,EH094,EH090,EH091,VOLLA,EH036,EH072,EH033,EH043,EH042,EH025,EH040,VALKO,EH064,EH053</navaids>
+                
+                <line start="EHAM-RW09" end="EH055"/>  
+                <line start="EH055" end="EH052"/> 
+                <line start="EH052" end="EH043" text="054"/> 
+                <line start="EH043" end="ANDIK" text="015"/> 
+                <line start="EH055" end="EH042" text="113"/>     
+                <line start="EH042" end="IVLUT" text="106"/> 
+
+		<curve start="0.07NM180@EH018" end="EH036" controlPoint="1.2NM090@EH018" stroke="dots"/>
+		<curve start="0.07NM180@EH018" end="EH064" controlPoint="1.5NM090@EH018" stroke="dots"/>
+		<curve start="0.07NM180@EH018" end="EH053" controlPoint="3.2NM090@EH018" stroke="dots"/>
+
+                <line start="EH064" end="EH025" text="034"/> 
+                <line start="EH025" end="EH040" text="240"/> 
+                <line start="EH040" end="VALKO" text="266" arrows="end,10"/> 
+                <line start="VALKO" end="GORLO" text="245"/> 
+                <line start="EH036" end="EH072" text="181"/> 
+                <line start="EH036" end="EH033" text="141"/> 
+                <line start="EH033" end="LOPIK" text="164"/> 
+                <line start="EH072" end="LEKKO" text="206"/> 
+                <line start="EH053" end="EH094" text="315"/> 
+                <line start="EH094" end="BERGI" text="320"/> 
+                <line start="EH094" end="EH090" text="271"/> 
+                <line start="EH090" end="EH091" text="212"/>     
+                <line start="EH091" end="VOLLA" text="242"/> 
+                <line start="VOLLA" end="GORLO" text="238"/> 
+
+                <line start="IVLUT" end="NYKER" stroke="line"/> 
+        </route>
+
+	<route name="SID 18L" zoomMin="10" zoomMax="500" color="140,180,140" stroke="dots">
+		<activeStartRunways>18L</activeStartRunways>
+		<navaids>EH073,EH029,EH009,EH028,EH024,EH050,(VOR)PAM,VALKO</navaids>
+                
+                <line start="EHAM-RW18L" end="EH073" text="163"/>  
+                <line start="EH073" end="EH029"/> 
+                <line start="EH009" end="VALKO" text="251" arrows="end,10"/> 
+                <line start="EH009" end="EH028" text="329"/> 
+                <line start="EH028" end="BERGI" text="355"/>
+
+		<curve start="EHAM-RW18L" end="EH024" controlPoint="EH037" stroke="dots"/>
+		<curve start="EH073" end="EH009" controlPoint="0.5NM163@EH029" stroke="dots"/>
+
+                <line start="VALKO" end="GORLO" text="245"/>  
+
+                <line start="EH029" end="EH050" text="118"/> 
+                <line start="EH050" end="LOPIK" text="150"/> 
+                <line start="EH024" end="(VOR)PAM" text="040"/> 
+                <line start="EH073" end="LEKKO" text="185"/> 
+                <line start="EH024" end="IVLUT" text="093"/> 
+                <line start="(VOR)PAM" end="ANDIK" text="015"/> 
+
+                <line start="IVLUT" end="NYKER" stroke="line"/> 
+        </route>
+
+	<route name="SID 24" zoomMin="10" zoomMax="500" color="140,180,140" stroke="dots">
+		<activeStartRunways>24</activeStartRunways>
+		<navaids>EH001,EH051,EH009,EH028,EH056,(VOR)SPY,ABA05,EH026,EH050,(VOR)PAM,EH039,VALKO</navaids>
+                
+                <line start="EHAM-RW24" end="EH001"/>  
+                <line start="EH001" end="EH051" text="244"/> 
+                <line start="EH051" end="EH009"/> 
+                <line start="EH009" end="VALKO" text="251" arrows="end,10"/> 
+                <line start="EH009" end="EH028" text="315"/> 
+                <line start="EH028" end="BERGI" text="355"/>
+ 
+                <line start="EH056" end="(VOR)SPY" text="030"/> 
+                <line start="(VOR)SPY" end="ANDIK" text="052"/> 
+
+		<curve start="EH001" end="EH056" controlPoint="EH032" stroke="dots"/>
+		<curve start="EH001" end="ABA05" controlPoint="EH051" stroke="dots"/>
+		<curve start="EH001" end="EH039" controlPoint="EH051" stroke="dots"/>
+
+                <line start="VALKO" end="GORLO" text="245"/>  
+
+                <line start="ABA05" end="EH050" text="118"/> 
+                <line start="EH050" end="LOPIK" text="150"/> 
+                <line start="EH026" end="IVLUT" text="073"/> 
+                <line start="EH039" end="LEKKO" text="179"/> 
+                <line start="EH026" end="(VOR)PAM" text="040"/> 
+                <line start="(VOR)PAM" end="ANDIK" text="015"/> 
+
+                <line start="IVLUT" end="NYKER" stroke="line"/> 
+        </route>
+
+	<route name="SID 18C" zoomMin="10" zoomMax="500" color="140,180,140" stroke="dots">
+		<activeStartRunways>18C</activeStartRunways>
+		<navaids>EH046,EH051,EH009,EH080,EH028,EH056,(VOR)SPY,EH026,EH050,(VOR)PAM,EH039,VALKO</navaids>
+                
+                <line start="EHAM-RW18C" end="EH046"/>  
+                <line start="EH080" end="EH051" text="233"/> 
+                <line start="EH051" end="EH009"/> 
+                <line start="EH009" end="VALKO" text="251" arrows="end,10"/> 
+                <line start="EH009" end="EH028" text="315"/> 
+                <line start="EH028" end="BERGI" text="355"/>
+ 
+                <line start="EH056" end="(VOR)SPY" text="030"/> 
+                <line start="(VOR)SPY" end="ANDIK" text="052"/> 
+
+                <bow center="1.95NM310@EH080" radius="1.95" startAngle="140" extentAngle="162" stroke="dots" arrows="end,10"/>
+
+                <line start="VALKO" end="GORLO" text="245"/>  
+
+                <line start="EH046" end="EH050" text="118"/> 
+                <line start="EH046" end="EH074" text="162"/> 
+                <line start="EH050" end="LOPIK" text="150"/> 
+                <line start="EH026" end="IVLUT" text="073"/> 
+                <line start="EH039" end="LEKKO" text="179"/> 
+                <line start="EH026" end="(VOR)PAM" text="040"/> 
+                <line start="(VOR)PAM" end="ANDIK" text="015"/> 
+
+                <line start="IVLUT" end="NYKER" stroke="line"/> 
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+        <route name="IAF Altitudes" zoomMin="10" zoomMax="350" color="240,200,20">
+		<text position="TULIP" font="Arial" fontSize="10" text="FL100 / 250kts"/>
+		<text position="3NM110@RTM84" font="Arial" fontSize="10" text="FL100 / 250kts"/>
+		<text position="FLEVO" font="Arial" fontSize="10" text="FL100 / 250kts"/>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+        <route name="Sector Names" zoomMin="10" zoomMax="1300" color="201,85,96">
+		<text position="13NM270@BUB" font="Arial Bold" fontSize="16" text="Brussels FIR - EBBU"/>
+		<text position="80NM260@RIMBU" font="Arial Bold" fontSize="16" text="London FIR - EGTT"/>
+		<text position="70NM300@SORDA" font="Arial Bold" fontSize="16" text="Scottish FIR - EGPX"/>
+		<text position="80NM070@SORDA" font="Arial Bold" fontSize="16" text="Kobenhavn FIR - EKDK"/>
+		<text position="40NM075@PFF" font="Arial Bold" fontSize="16" text="Langen FIR - EDGG"/>
+		<text position="60NM100@DOBAK" font="Arial Bold" fontSize="16" text="Bremen FIR - EDWW"/>
+		<text position="50NM190@MTD" font="Arial Bold" fontSize="16" text="Paris FIR - LFFF"/>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="Sector" zoomMin="10" zoomMax="5000" color="201,85,96">
+
+                <line start="37NM270@GREFI" end="4NM360@RAPIX"/> 
+                <line start="4NM360@RAPIX" end="(VOR)COA"/> 
+                <line start="(VOR)COA" end="HELEN"/> 
+                <line start="HELEN" end="WOODY"/> 
+                <line start="RUPIN" end="LUTOM"/>
+                <line start="RUPIN" end="WOODY"/>
+                <line start="SORAT" end="EVOSA"/>   
+                <line start="SORAT" end="LUTOM"/>            
+                <line start="TINIK" end="DIBIR"/>
+                <line start="TINIK" end="GOBNO"/>
+                <line start="NOR26" end="GOBNO"/>
+                <line start="NOR26" end="AGENI"/>
+                <line start="PINUS" end="AGENI"/>
+                <line start="PINUS" end="NOR40"/>
+                <line start="MAS12" end="NOR40"/>
+                <line start="MAS12" end="EVOSA"/>
+                <line start="NAPRO" end="1NM270@EDLV"/> 
+                <line start="VELNI" end="1NM270@EDLV"/> 
+                <line start="VELNI" end="DIBIR"/> 
+                <line start="NAPRO" end="TEBRO"/>
+                <line start="TEBRO" end="SONEB"/>
+                <line start="SONEB" end="NORKU"/> 
+                <line start="NORKU" end="DOBAK"/>
+                <line start="DOBAK" end="LUGUM"/> 
+                <line start="KUBAT" end="LUGUM"/> 
+                <line start="KUBAT" end="SOMPO"/> 
+                <line start="LEKMO" end="SOMPO"/> 
+                <line start="LEKMO" end="TEMLU"/> 
+                <line start="LABIL" end="TEMLU"/> 
+                <line start="LABIL" end="1NM180@KUVEK"/> 
+                <line start="1NM180@KUVEK" end="6NM090@AMADA"/>
+                <line start="AMADA" end="37NM270@GREFI"/>
+                <line start="NORKU" end="38NM083@NORKU"/>
+                <line start="12NM090@EDDG" end="38NM083@NORKU"/>
+                <line start="12NM090@EDDG" end="40NM090@EDDG"/>
+                <line start="AMADA" end="KUGAL"/>
+                <line start="37NM270@GREFI" end="100NM360@SORDA"/> 
+                <line start="37NM270@GREFI" end="200NM280@SORDA"/> 
+                <line start="BELOB" end="TULNI"/>
+                <line start="TULNI" end="ROBAL"/>
+                <line start="ROBAL" end="MEDIL"/>
+                <line start="MEDIL" end="NILEM"/>
+                <line start="KENAP" end="NILEM"/>
+                <line start="KENAP" end="FAMEN"/>
+                <line start="ARDEN" end="FAMEN"/>
+                <line start="ARDEN" end="TOLVU"/>
+                <line start="LUTAX" end="TOLVU"/>
+                <line start="LUTAX" end="ROUSY"/>
+                <line start="ROUSY" end="SUTAL"/>
+                <line start="SUTAL" end="DIK22"/>
+                <line start="PITES" end="DIK22"/>
+                <line start="PITES" end="MAKIK"/>
+                <line start="SUTAL" end="AKELU"/>
+                <line start="MAKIK" end="ROBON"/>
+                <line start="GELPA" end="ROBON"/>
+                <line start="GELPA" end="IBESA"/>
+                <line start="AGENI" end="IBESA"/>
+                <line start="BELOB" end="REVGO"/>
+                <line start="REVGO" end="KOK"/>
+                <line start="KONAN" end="KOK"/>
+                <line start="KONAN" end="4NM360@RAPIX"/>
+                <line start="KONAN" end="20NM240@VABIK"/>
+                <line start="18NM280@BNE" end="20NM240@VABIK"/>
+                <line start="18NM280@BNE" end="90NM245@BNE"/>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="No fly zone" zoomMin="10" zoomMax="200" color="100,160,160">
+		<bow center="1NM100@SPL46" radius="3" startAngle="360" extentAngle="360" stroke="dots,1"/>
+		<bow center="2NM220@ZANDA" radius="2" startAngle="360" extentAngle="360" stroke="dots,1"/>
+		<bow center="3NM030@BASNO" radius="2" startAngle="360" extentAngle="360" stroke="dots,1"/>
+		<bow center="1NM130@SPL22" radius="2" startAngle="360" extentAngle="360" stroke="dots,1"/>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="Vectoring Altitudes" zoomMin="10" zoomMax="200" color="75,75,75">
+		<bow center="0.8NM140@EHAM" radius="8" startAngle="360" extentAngle="360" stroke="dashed"/>
+		<bow center="EHRD" radius="8" startAngle="360" extentAngle="360" stroke="dashed"/>
+		<line start="0.6NM180@EH029" end="2.3NM270@MONUT" stroke="dashed"/>
+		<line start="11.8NM270@MONUT" end="2.3NM270@MONUT" stroke="dashed"/>
+		<line start="11.8NM270@MONUT" end="1NM270@EH032" stroke="dashed"/>
+		<line start="11.8NM270@MONUT" end="1NM270@EH032" stroke="dashed"/>
+
+		<line start="0.9NM090@EHLV" end="3.5NM002@EH624" stroke="dashed"/>
+		<line start="8.5NM280@SPY" end="3.5NM002@EH624" stroke="dashed"/>
+		<line start="8.5NM280@SPY" end="4.7NM360@EH031" stroke="dashed"/>
+		<line start="2.8NM180@EH031" end="4.7NM360@EH031" stroke="dashed"/>
+
+		<minAlt position="EHRD" value="30.SFC" color="150,150,150"/>
+		<minAlt position="2.3NM055@EH049" value="30.SFC" color="150,150,150"/>
+		<minAlt position="0.6NM090@EH173" value="30.12" color="150,150,150"/>
+		<minAlt position="EH021" value="30.12" color="150,150,150"/>
+
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="VFR" zoomMin="10" zoomMax="1000" color="160,160,200">
+		<activeLandingRunways>22,04</activeLandingRunways>
+		<activeStartRunways>22,04</activeStartRunways>
+		<line start="1.3NM360@EH065" end="15NM127@SPL" text="307" stroke="dots,1"/>
+		<line start="1.3NM360@EH065" end="1NM180@EH066" text="290" stroke="dots,1"/>
+		<line start="1.3NM360@EH065" end="EH017" text="320" stroke="dots,1"/>
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="Other Airports" zoomMin="10" zoomMax="200" color="160,160,200">
+		<line start="EHRD" end="15NM057@EHRD" text="237" stroke="dots,1"/>
+		<line start="EHRD" end="15NM237@EHRD" text="057" stroke="dots,1"/>
+        </route>
+</routes>
+
+
+

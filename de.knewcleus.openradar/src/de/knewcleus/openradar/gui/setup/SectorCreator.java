@@ -62,13 +62,12 @@ public abstract class SectorCreator {
     private static double mapWidth = 10; // degrees
     private static double mapHeight = 10; // degrees
 
-    public static void findLocationOf(AirportData dataRegistry) {
+    public static Point2D findLocationOf(String airportCode) {
         File fgAirportIndexFile = new File("data/AirportIndex.txt");
         if (!fgAirportIndexFile.exists()) {
             throw new IllegalArgumentException("Path to flightgear seems to be wrong. Cannot find " + fgAirportIndexFile.getAbsolutePath());
         }
 
-        String airportCode = dataRegistry.getAirportCode();
         BufferedReader br = null;
 
         try {
@@ -78,8 +77,7 @@ public abstract class SectorCreator {
                 if (nextLine.startsWith(airportCode)) {
                     StringTokenizer st = new StringTokenizer(nextLine, "|");
                     st.nextElement(); // skip airport code
-                    dataRegistry.setAirportPosition(new Point2D.Double(Double.parseDouble(st.nextToken()), Double.parseDouble(st.nextToken())));
-                    break;
+                    return new Point2D.Double(Double.parseDouble(st.nextToken()), Double.parseDouble(st.nextToken()));
                 }
                 nextLine = br.readLine();
             }
@@ -93,11 +91,12 @@ public abstract class SectorCreator {
                 }
             }
         }
+        return null;
     }
 
     public static void downloadData(AirportData data, SetupDialog setupDialog) throws IOException {
 
-        findLocationOf(data); // find lon and lat of airport
+        data.setAirportPosition(findLocationOf(data.getAirportCode())); // find lon and lat of airport
 
         // 2x2 degrees
         Point2D upperLeftCorner = new Point2D.Double(data.getLon() - mapWidth / 2, data.getLat() - mapHeight / 2);

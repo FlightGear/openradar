@@ -41,7 +41,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.sun.istack.internal.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.geodata.DataFormatException;
 import de.knewcleus.fgfs.geodata.Feature;
@@ -67,6 +68,8 @@ public class ZippedShapefileLayer implements IGeodataLayer {
 
 	protected ZipFile zipArchive = null;
 
+	private final static Logger log = LogManager.getLogger(ZippedShapefileLayer.class);
+	
 	public ZippedShapefileLayer(String airportDir, String layer) throws GeodataException {
 		try {
 	        String archiveName = airportDir+ layer+".zip";
@@ -108,7 +111,7 @@ public class ZippedShapefileLayer implements IGeodataLayer {
 
 			featureDefinition=new FeatureDefinition(fieldDescriptors);
 		} catch (IOException e) {
-			Logger.getLogger(ZippedShapefileLayer.class).warning("Problems to read "+airportDir+ layer+".zip"+": "+e.getMessage());
+			log.warn("Problems to read "+airportDir+ layer+".zip"+": "+e.getMessage());
 			shpFileReader=null;
 			dbfFileReader=null;
 			featureDefinition=null;
@@ -171,8 +174,7 @@ public class ZippedShapefileLayer implements IGeodataLayer {
             try {
                 zipArchive.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("Error while closing zip archive!",e);
             }
         }
     }

@@ -47,4 +47,11 @@ public class ComponentCanvas implements ICanvas {
 	public FontMetrics getFontMetrics(Font font) {
 		return managedComponent.getFontMetrics(font);
 	}
+
+    @Override
+    public Component getManagedComponent() {
+        return managedComponent;
+    }
+	
+	
 }

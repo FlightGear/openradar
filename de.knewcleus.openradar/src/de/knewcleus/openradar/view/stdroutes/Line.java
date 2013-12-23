@@ -204,7 +204,7 @@ public class Line {
                     Point2D p1 = getIntersectionWith(anyLine);
                     Point2D p2 = line2.getIntersectionWith(anyLine);
                     pointMiddleBetweenLines = new Point2D.Double((p2.getX() + p1.getX())/2,(p2.getY() + p1.getY())/2);
-                    System.out.println(pointMiddleBetweenLines);
+                   // System.out.println(pointMiddleBetweenLines);
                 }
             }
             return new Line(pointMiddleBetweenLines , angle);

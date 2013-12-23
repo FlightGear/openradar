@@ -60,7 +60,7 @@ public class AtcAliasChatMessage {
 
     public AtcAliasChatMessage(GuiMasterController master, String sMessage) {
         TextManager textManager = master.getRadarContactManager().getTextManager();
-        String aliasPrefix = master.getDataRegistry().getChatAliasPrefix();
+        String aliasPrefix = master.getAirportData().getChatAliasPrefix();
 
 
         StringBuilder result = new StringBuilder();
@@ -124,7 +124,7 @@ public class AtcAliasChatMessage {
 
 
     public String replaceChatTags(String text, GuiMasterController master, List<String> arguments ) {
-        AirportData data = master.getDataRegistry();
+        AirportData data = master.getAirportData();
         MetarData metar = master.getMetarReader().getMetar(data.getMetarSource());
         GuiRadarContact contact = master.getRadarContactManager().getSelectedContact();
 
@@ -133,6 +133,8 @@ public class AtcAliasChatMessage {
         /*
             <icao>               Local departing airport
             <icao-altitude>      Local departing airport altitude
+            <transitionAlt>      TransitionAlt for this airport
+            <transitionFL>       TransitionAlt for this airport
             <alt>                Aircraft's current altitude
             <distance>           Aircraft's current distance to local airport
             <callsign>           ATC callsign.
@@ -157,6 +159,8 @@ public class AtcAliasChatMessage {
 
         text = replaceAllInsensitive(text,"<icao>",data.getAirportCode());
         text = replaceAllInsensitive(text,"<icao-altitude>",String.format("%03.0f",data.getElevationFt()));
+        text = replaceAllInsensitive(text,"<transitionAlt>",String.format("%dft",data.getTransitionAlt()));
+        text = replaceAllInsensitive(text,"<transitionFL>",String.format("FL%03d",data.getTransitionFL(master)));
         text = replaceAllInsensitive(text,"<alt>",contact!=null ? String.format("%1.0f",contact.getAltitude()):"");
         text = replaceAllInsensitive(text,"<distance>",contact!=null ? contact.getRadarContactDistance():"");
         text = replaceAllInsensitive(text,"<callsign>",contact!=null ? contact.getCallSign() : "");
@@ -186,7 +190,7 @@ public class AtcAliasChatMessage {
         text = replaceAllInsensitive(text,"<wind-speed>",""+metar.getWindSpeed());
         text = replaceAllInsensitive(text,"<metar>", metar.getMetarBaseData());
         text = replaceAllInsensitive(text,"<atis>",metar.createATIS(master, true).get(0));
-        text = replaceAllInsensitive(text,"<hPa>",String.format("%4.1f",metar.getPressureHPa()));
+        text = replaceAllInsensitive(text,"<hPa>",String.format("%4.0f",metar.getPressureHPa()));
         text = replaceAllInsensitive(text,"<mmHg>",String.format("%2.2f",metar.getPressureInHG()));
         text = replaceAllInsensitive(text,"<runways>",master.getStatusManager().getActiveRunways());
         text = replaceAllInsensitive(text,"<runways-land>",master.getStatusManager().getActiveLandingRunways());

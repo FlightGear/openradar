@@ -240,11 +240,11 @@ public class GuiRunway implements ActionListener {
         this.runwayEnd = runwayEnd;
     }
 
-    public boolean isStartingActive() {
+    public synchronized boolean isStartingActive() {
         return runwayEnd.getRunway().getStartSide()==runwayEnd.getOppositeEnd();
     }
 
-    public boolean isLandingActive() {
+    public synchronized boolean isLandingActive() {
         return runwayEnd.getRunway().getLandSide()==runwayEnd;
     }
 

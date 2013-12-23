@@ -66,7 +66,7 @@ public class TrackDisplayState extends Notifier {
             }
         }
         if(e.getButton()==java.awt.event.MouseEvent.BUTTON2) {
-            master.getRadarContactManager().selectNShowContactDialog(guiContact, e);
+            master.getRadarContactManager().selectNShowFlightplanDialog(guiContact, e);
         } else if(e.getButton()==java.awt.event.MouseEvent.BUTTON3) {
             master.getRadarContactManager().selectNShowAtcMsgDialog(guiContact, e);
         }

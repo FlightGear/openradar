@@ -39,13 +39,15 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.MultiplayerException;
 
 public class PositionMessage implements IMultiplayerMessage {
-	protected static final Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
+	protected static Logger log = LogManager.getLogger("de.knewcleus.fgfs.multiplayer");
 	public static final int MAX_MODEL_NAME_LEN=96;
 	public static final int MAX_PROPERTY_LEN=52;
 
@@ -242,7 +244,7 @@ public class PositionMessage implements IMultiplayerMessage {
 		for (Map.Entry<String, Object> entry: properties.entrySet()) {
 			PropertyDescriptor descriptor=PropertyRegistry.getInstance().getByName(entry.getKey());
 			if (descriptor==null) {
-				logger.warning("Skipping encoding of property "+entry.getKey());
+				log.warn("Skipping encoding of property "+entry.getKey());
 				continue;
 			}
 			outputStream.writeInt(descriptor.getPropertyID());
@@ -305,7 +307,7 @@ public class PositionMessage implements IMultiplayerMessage {
 					continue;
 				    //descriptor = new PropertyDescriptor(id, "unknown", PropertyType.INT);
 				}
-				logger.finer("Reading property "+descriptor.getPropertyID()+", name="+descriptor.getPropertyName());
+				log.trace("Reading property "+descriptor.getPropertyID()+", name="+descriptor.getPropertyName());
 
 				Object value=null;
 

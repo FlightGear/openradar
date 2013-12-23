@@ -34,15 +34,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -50,22 +51,27 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.contacts.RadarContactController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class FlightPlanExchangeManager implements Runnable {
 
+    private final GuiMasterController master;
     private Thread thread = new Thread(this, "OpenRadar - FlightPlanExchange");
     private final String baseUrl;
     private final AirportData data;
     private final RadarContactController radarContactController;
     private volatile boolean isRunning = true;
-    private int sleeptime = 5 * 1000;
+    private int sleeptime = 2 * 1000;
     private volatile long lastCheck = 0;
-
+    private volatile boolean connectedToServer = false;
+    private static Logger log = LogManager.getLogger(FlightPlanExchangeManager.class.getName());
+    
     public FlightPlanExchangeManager(GuiMasterController master) {
-        this.data = master.getDataRegistry();
+        this.master = master; 
+        this.data = master.getAirportData();
         this.radarContactController = master.getRadarContactManager();
         this.baseUrl = data.getFpServerUrl();
         thread.setDaemon(true);
@@ -118,10 +124,10 @@ public class FlightPlanExchangeManager implements Runnable {
             }
             callSignList.append(contact.getCallSign().trim());
         }
-        System.out.println("Flightplan: Going to request updates for: " + callSignList);
+        log.trace("Flightplan: "+data.getCallSign()+" Going to request updates for: " + callSignList);
         // send the list to the server to request updated flightplans
 
-        if (callSignList.length() > 0) {
+//        if (callSignList.length() > 0) {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -131,8 +137,19 @@ public class FlightPlanExchangeManager implements Runnable {
                 StringBuilder result = new StringBuilder();
                 String line = null;
                 URL url = new URL(baseUrl + "/getFlightplans");
+                
+                String frequency = "000.00";
+                if(!master.getRadioManager().getModels().isEmpty()) {
+                    frequency = master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency();
+                }
+                
+                
                 String parameters = "user=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8") + "&password="
-                        + URLEncoder.encode(data.getFpServerPassword(), "UTF-8") + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") + "&xmlVersion=1.0"
+                        + URLEncoder.encode(data.getFpServerPassword(), "UTF-8") + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") 
+                        + "&lon="+Double.toString(data.getAirportPosition().getX())
+                        + "&lat="+Double.toString(data.getAirportPosition().getY())
+                        + "&frequency="+frequency
+                        + "&xmlVersion=1.0"
                         + "&lastCheckUTC=" + sLastCheck + "&contacts=" + URLEncoder.encode(callSignList.toString(), "UTF-8");
 
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -163,44 +180,55 @@ public class FlightPlanExchangeManager implements Runnable {
                         Document document = new SAXBuilder().build(new StringReader(result.toString().trim()));
                         // String version = document.getRootElement().getAttributeValue("version");
 
+                        Element eAtcsInRange = document.getRootElement().getChild("atcsInRange");
+                        if(eAtcsInRange!=null) {
+                            List<FpAtc> activeAtcs = FpXml_1_0.parseAtcs(eAtcsInRange);
+                            master.getRadarContactManager().setActiveAtcs(activeAtcs);
+                        }
+                        
                         List<Element> eFlightPlans = document.getRootElement().getChildren("flightplan");
                         for (Element eFp : eFlightPlans) {
                             String callsign = FpXml_1_0.getCallSign(eFp);
                             GuiRadarContact c = radarContactController.getContactFor(callsign);
                             if (c != null) {
-                                FpXml_1_0.parseXml(data, c, eFp);
+                                radarContactController.updateFlightPlan(c,FpXml_1_0.parseXml(data, c, eFp));
                             }
-                            System.out.println("Got FP update for: " + callsign);
+                            log.info("Got FP update for: " + callsign);
                         }
                         lastCheck = System.currentTimeMillis();
+                        connectedToServer=true;
                     } catch (IOException e) {
-                        Logger.getLogger(FlightPlanExchangeManager.class.toString()).log(Level.SEVERE, "Error while parsing flightplan!", e);
+                        log.error("Error while parsing flightplan!", e);
                     }
 
                 } else {
-                    System.out.println("Flightplan: Failed to retrieve flightplan updates! (got response code " + responseCode + " from " + url.toString()
+                    log.warn("Flightplan: "+data.getCallSign()+" Failed to retrieve flightplan updates! (got response code " + responseCode + " from " + url.toString()
                             + ")...");
+                    connectedToServer=false;
                 }
+            } catch (ConnectException e) {
+                log.error("Problem to connect to fpserver: "+ e.getMessage());
             } catch (Exception e) {
-                Logger.getLogger(FlightPlanExchangeManager.class.toString()).log(Level.SEVERE, "Problem to parse updated flightplans!", e);
+                log.error("Problem to parse updated flightplans!", e);
             }
-        } // callsignlist.length>0
+     //   } // callsignlist.length>0
     }
 
     private void postChangesToServer() {
         // collect the updates to send
         for (GuiRadarContact contact : radarContactController.getContactListCopy()) {
             FlightPlanData fp = contact.getFlightPlan();
-            if (fp.hasBeenChanged() && fp.isOwnedByMe(data)) {
-                sendChanges(fp);
+            if (fp.readyToBeTransmitted() && (fp.isOwnedbyNobody() || fp.isOwnedByMe() || fp.isInRelease() ) ) {
+                sendChanges(contact, fp);
+                fp.setInRelease(false);
             }
         }
     }
 
-    private void sendChanges(FlightPlanData fp) {
+    private void sendChanges(GuiRadarContact c, FlightPlanData fp) {
         // build XML
         String xml;
-        synchronized (fp) {
+        synchronized (c) {
             xml = buildXml(fp.copy());
             fp.setInTransmission();
         }
@@ -211,7 +239,7 @@ public class FlightPlanExchangeManager implements Runnable {
                     + URLEncoder.encode(data.getFpServerPassword(), "UTF-8") + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") + "&flightplans="
                     + URLEncoder.encode(xml, "UTF-8");
 
-            System.out.println("Flightplan: Going to send updates for: " + fp.getCallsign());
+            log.info("Flightplan: "+data.getCallSign()+" Going to send updates for: " + fp.getCallsign());
 
             URL url = new URL(baseUrl + "/updateFlightplans");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -231,19 +259,19 @@ public class FlightPlanExchangeManager implements Runnable {
             if (responseCode == 200) {
                 // Everything is fine
                 fp.updateAsTransmitted();
-                System.out.println("Successfully updated flightplans! (got response code " + responseCode + " from " + url.toString() + ")...");
+                log.info("Flightplan: "+data.getCallSign()+" Successfully updated flightplans! (got response code " + responseCode + " from " + url.toString() + ")...");
             } else if (responseCode == 406) {
-                System.err.println("Failed to update flightplan updates! XML not understood at server (got response code " + responseCode + " "
+                log.error("Failed to update flightplan updates! XML not understood at server (got response code " + responseCode + " "
                         + con.getResponseMessage() + " from " + url.toString() + ")...");
             } else if (responseCode == 409) {
-                System.err.println("Failed to update flightplan updates! We are not owner (got response code " + responseCode + " " + con.getResponseMessage()
+                log.error("Failed to update flightplan updates! We are not owner (got response code " + responseCode + " " + con.getResponseMessage()
                         + " from " + url.toString() + ")...");
             } else {
-                System.out.println("Failed to update flightplan updates! (got response code " + responseCode + " " + con.getResponseMessage() + " from "
+                log.warn("Failed to update flightplan updates! (got response code " + responseCode + " " + con.getResponseMessage() + " from "
                         + url.toString() + ")...");
             }
         } catch (IOException e) {
-            Logger.getLogger(FlightPlanExchangeManager.class.toString()).log(Level.SEVERE, "Problem to update flightplans!", e);
+            log.error("Problem to update flightplans! "+ e.getMessage());
         }
     }
 
@@ -259,7 +287,7 @@ public class FlightPlanExchangeManager implements Runnable {
                 root.addContent(elementFp);
             }
         } catch (Exception ex) {
-            Logger.getLogger(FlightPlanExchangeManager.class.getName()).log(Level.SEVERE, "Problem to create flightplan...", ex);
+            log.error( "Problem to create flightplan...", ex);
         }
         StringWriter sw = new StringWriter();
         try {
@@ -268,10 +296,28 @@ public class FlightPlanExchangeManager implements Runnable {
             sw = new StringWriter();
             outputter.output(doc, sw);
         } catch (Exception e) {
-            Logger.getLogger(FlightPlanExchangeManager.class.getName()).log(Level.SEVERE, "Problem to create XML output...", e);
+            log.error("Problem to create XML output...", e);
         }
 
         return sw.toString();
+    }
+
+    public void sendHandoverMessage(GuiRadarContact c, FpAtc atc) {
+        AtcMenuChatMessage msg = new AtcMenuChatMessage("Tell contact about handover");
+        msg.addTranslation("en", c.getCallSign()+": Handing over to " + atc.callSign + " ("+ atc.frequency+" MHz). Frequency changed approved.");
+        //msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
+        master.getMpChatManager().setAutoAtcMessage(c, msg);
+    }
+
+    public void sendReleaseMessage(GuiRadarContact c) {
+        AtcMenuChatMessage msg = new AtcMenuChatMessage("Tell contact about handover");
+        msg.addTranslation("en", c.getCallSign()+": Resume your OWN navigation - Frequency change approved - Radar surveillance remains active");
+        //msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
+        master.getMpChatManager().setAutoAtcMessage(c, msg);
+    }
+
+    public boolean isFpExchangeEnabledAndActive() {
+        return data.isFpExchangeEnabled() && connectedToServer;
     }
 
 }

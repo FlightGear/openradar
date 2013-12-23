@@ -82,7 +82,7 @@ public class RadioController implements Runnable {
     }
 
     public void init() {
-        AirportData data = master.getDataRegistry();
+        AirportData data = master.getAirportData();
         if(data.getFgComMode()!=FgComMode.Off) {
             fgComController = new FgComController(master, data.getModel(), data.getLon(), data.getLat());
 
@@ -145,7 +145,7 @@ public class RadioController implements Runnable {
                 }
                 // todo tune other radios with same frequency away
 
-                master.getDataRegistry().storeAirportData(master);
+                master.getAirportData().storeAirportData(master);
             }
 
         }
@@ -237,17 +237,17 @@ public class RadioController implements Runnable {
 
                 if (fgComController != null) {
 
-                    if (e.getKeyCode() == 17 && e.getKeyLocation() == 2 && models.size() > 0) { // RIGHT
+                    if (e.getKeyCode() == 17 && e.getKeyLocation() == 2 && models.size() > 0) { // RIGHT CTRL
                         hasAutoRepeat = false; // STRG
                         radioKey = modelList.get(0).getRadioKey();
                     }
                     if (e.getKeyCode() == 155 && e.getKeyLocation() == 4 && models.size() > 0) { // NUM0
                         radioKey = modelList.get(0).getRadioKey();
                     }
-                    if (e.getKeyCode() == 16 && e.getKeyLocation() == 2 && models.size() > 1) { // right
-                        hasAutoRepeat = false; // SHIFT
-                        radioKey = modelList.get(1).getRadioKey();
-                    }
+//                    if (e.getKeyCode() == 16 && e.getKeyLocation() == 2 && models.size() > 1) { // right
+//                        hasAutoRepeat = false; // SHIFT
+//                        radioKey = modelList.get(1).getRadioKey();
+//                    }
                     if (e.getKeyCode() == 35 && e.getKeyLocation() == 4 && models.size() > 1) { // NUM1
                         radioKey = modelList.get(1).getRadioKey();
                     }

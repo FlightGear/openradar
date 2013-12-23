@@ -42,6 +42,8 @@ public class Units {
 	public final static float FT=0.3048f*M;
 	public final static float KM=1000.0f*M;
 	public final static float NM=1852.0f*M;
+	/**Statute miles*/
+	public final static float SM=1609.0f*M;
 	
 	/* Time */
 	public final static float MIN=60.0f*SEC;
@@ -68,4 +70,8 @@ public class Units {
 
 	/* Constants */
 	public final static float g=9.81f*NEWTON/KG;
+
+    public static double getMphToKnots(double mph) {
+        return mph*SM/NM;
+    }
 }

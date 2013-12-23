@@ -40,10 +40,11 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -63,7 +64,7 @@ public class GroundnetReader {
     private List<TaxiWaySegment> taxiwaySegmentList = new ArrayList<TaxiWaySegment>();
     private ZipFile zipArchive = null;
 
-    private final static Logger log = Logger.getLogger(GroundnetReader.class.toString());
+    private static Logger log = LogManager.getLogger(GroundnetReader.class);
 
     public GroundnetReader(String airportCode) {
         this.airportCode = airportCode;
@@ -122,7 +123,7 @@ public class GroundnetReader {
             }
 
         } catch (Exception e) {
-            log.severe(e.getMessage());
+            log.error(e.getMessage());
         } finally {
             if (xmlInputStream != null) {
                 try {
@@ -304,7 +305,7 @@ public class GroundnetReader {
             try {
                 zipArchive.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error while closing zip file!",e);
             }
         }
     }

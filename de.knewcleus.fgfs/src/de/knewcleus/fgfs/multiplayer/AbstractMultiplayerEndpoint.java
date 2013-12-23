@@ -47,15 +47,16 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.multiplayer.protocol.MultiplayerPacket;
 import de.knewcleus.fgfs.multiplayer.protocol.XDRInputStream;
 import de.knewcleus.fgfs.multiplayer.protocol.XDROutputStream;
 
 public abstract class AbstractMultiplayerEndpoint<T extends Player> implements Runnable {
-	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
+	protected static Logger log = LogManager.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final DatagramSocket datagramSocket;
 	protected final IPlayerRegistry<T> playerRegistry;
 	protected final List<IChatListener> chatListeners = Collections.synchronizedList(new ArrayList<IChatListener>());
@@ -97,13 +98,11 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 			try {
 				receivePacket();
 			} catch (SocketTimeoutException e) {
-				/* ignore */
+			    log.warn("Error in FGFS networking!",e);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("Error in FGFS networking!",e);
 			} catch (MultiplayerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			    log.error("Error in FGFS networking!",e);
 			}
 			update();
 		}
@@ -118,30 +117,31 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		final DatagramPacket packet=new DatagramPacket(buffer,MAX_PACKET_SIZE);
 		datagramSocket.receive(packet);
 
-		logger.finer("Received packet from "+packet.getAddress()+":"+packet.getPort()+", length="+packet.getLength());
-		if (logger.isLoggable(Level.FINEST)) {
-			int offset=0;
-			while (offset<packet.getLength()) {
-				String line="";
-				final int end=Math.min(offset+16,packet.getLength());
-				int i;
-				for (i=offset;i<end;i++) {
-					line+=String.format("%02x ",buffer[i]);
-				}
-				while (i<offset+16) {
-					line+="   ";
-				}
-				for (i=offset;i<end;i++) {
-					char ch=(char)buffer[i];
-					if (Character.isISOControl(ch)) {
-						ch='.';
-					}
-					line+=ch;
-				}
-				logger.finest(line);
-				offset=end;
-			}
-		}
+		log.trace("Received packet from "+packet.getAddress()+":"+packet.getPort()+", length="+packet.getLength());
+//		if (false) {//log.isTraceEnabled()) {
+		// ENDLESS LOOP!
+//			int offset=0;
+//			while (offset<packet.getLength()) {
+//				String line="";
+//				final int end=Math.min(offset+16,packet.getLength());
+//				int i;
+//				for (i=offset;i<end;i++) {
+//					line+=String.format("%02x ",buffer[i]);
+//				}
+//				while (i<offset+16) {
+//					line+="   ";
+//				}
+//				for (i=offset;i<end;i++) {
+//					char ch=(char)buffer[i];
+//					if (Character.isISOControl(ch)) {
+//						ch='.';
+//					}
+//					line+=ch;
+//				}
+//				log.trace(line);
+//				offset=end;
+//			}
+//		}
 
 		ByteArrayInputStream byteInputStream;
 		XDRInputStream xdrInputStream;

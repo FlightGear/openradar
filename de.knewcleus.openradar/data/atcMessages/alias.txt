@@ -41,3 +41,4 @@ sqi=Squawk IFR!
 sqm=Squawk {0.SQUAWK}
 
 url=http://charts\.aero/airport/<icao>
+trans=Please perform transition at <transitionAlt>/<transitionFL> (QNH <mmHg>/<hPa>)

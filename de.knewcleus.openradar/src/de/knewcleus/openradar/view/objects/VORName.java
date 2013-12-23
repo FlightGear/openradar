@@ -37,20 +37,21 @@ import java.awt.Font;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.impl.VOR;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class VORName extends AViewObject {
 
-    private AirportData data;
+    private GuiMasterController master;
     private String activeText;
     private VOR vor;
     private int defaultMaxScale;
     private Color defaultColor;
 
-    public VORName(AirportData data, VOR vor, Font font, Color color, int minScaleText, int maxScaleText) {
+    public VORName(GuiMasterController master, VOR vor, Font font, Color color, int minScaleText, int maxScaleText) {
         super(font, color, vor.getIdentification(), minScaleText, maxScaleText);
-        this.data = data;
+        this.master = master;
         this.activeText = vor.getIdentification();
         this.vor = vor;
         this.defaultMaxScale = maxScaleText;
@@ -60,7 +61,7 @@ public class VORName extends AViewObject {
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,vor);
+        Color highLightColor = master.getAirportData().getNavaidDB().getNavaidHighlightColor(master,vor);
 
         if(highLightColor!=null) {
             this.maxScaleText=Integer.MAX_VALUE;
@@ -77,7 +78,7 @@ public class VORName extends AViewObject {
         if(scale>15) scale=15;
 
         setTextCoordinates(new Point2D.Double(newDisplayPosition.getX()+scale,newDisplayPosition.getY()+scale));
-        if(data.getRadarObjectFilterState("VOR") || highLightColor!=null) {
+        if(master.getAirportData().getRadarObjectFilterState("VOR") || highLightColor!=null) {
             text = activeText;
         } else {
             text = null;

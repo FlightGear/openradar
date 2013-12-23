@@ -73,7 +73,7 @@ public class TaxiSign implements TaxiWayObjext {
         displayText = displayText.replaceAll("[<>^]", "");
         displayText = displayText.replaceAll("STOP", "");
         displayText = displayText.replaceAll("[-_|]", " ").trim();
-        System.out.println ("Taxisign: "+text+" => "+displayText);
+        // System.out.println ("Taxisign: "+text+" => "+displayText);
     }
 
     public double getLat() {

@@ -36,6 +36,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.fgfs.navdata.model.IIntersection;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -44,15 +45,15 @@ import de.knewcleus.openradar.view.objects.FixSymbol;
 
 public class IntersectionPainter extends AViewObjectPainter<IIntersection> {
 
-    public IntersectionPainter(AirportData data, IMapViewerAdapter mapViewAdapter, IIntersection fix) {
+    public IntersectionPainter(GuiMasterController master, IMapViewerAdapter mapViewAdapter, IIntersection fix) {
         super(mapViewAdapter, fix);
 
             Font font = Palette.BEACON_FONT;
 
-            FixSymbol fs = new FixSymbol(data, fix, 0,100);
+            FixSymbol fs = new FixSymbol(master, fix, 0,100);
             viewObjectList.add(fs);
 
-            FixName fn = new FixName(data, fix, font, Color.lightGray, 0 , 100);
+            FixName fn = new FixName(master, fix, font, Color.lightGray, 0 , 100);
             viewObjectList.add(fn);
     }
 

@@ -103,7 +103,7 @@ public class StPView implements IBoundedView, INotificationListener {
     public StPView(IMapViewerAdapter mapViewAdapter, GuiMasterController master) {
         this.mapViewAdapter = mapViewAdapter;
         this.master = master;
-        master.getDataRegistry().setDirectionMessageView(this);
+        master.getAirportData().setDirectionMessageView(this);
 
         mapViewAdapter.registerListener(this);
     }
@@ -138,7 +138,7 @@ public class StPView implements IBoundedView, INotificationListener {
         constructBackgroundShapes();
         displayExtents = background.getBounds2D();
 
-        if(master.getDataRegistry().getRadarObjectFilterState("STP")) {
+        if(master.getAirportData().getRadarObjectFilterState("STP")) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setFont(new Font("Arial", Font.PLAIN, 10));
             if(fontMetrics==null) {
@@ -214,7 +214,7 @@ public class StPView implements IBoundedView, INotificationListener {
         Double angle = vDistance.getAngle();
         // angle corrections
         // 1. magnetic
-        angle = angle + Math.round(master.getDataRegistry().getMagneticDeclination());
+        angle = angle + Math.round(master.getAirportData().getMagneticDeclination());
         // 2. wind
         MetarData metar = master.getAirportMetar();
         Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD());

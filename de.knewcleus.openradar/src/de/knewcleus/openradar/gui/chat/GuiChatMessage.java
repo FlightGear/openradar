@@ -65,7 +65,7 @@ public class GuiChatMessage {
         this.callSign = callSign;
         this.message = message;
         this.frequency = frequency;
-        this.airportMentioned = message.contains(master.getDataRegistry().getAirportCode());
+        this.airportMentioned = message.contains(master.getAirportData().getAirportCode());
         this.isOwnMessage = (master.getCurrentATCCallSign()!=null) ? callSign.contains(master.getCurrentATCCallSign()) : false;
     }
 

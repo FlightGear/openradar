@@ -45,6 +45,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
+import de.knewcleus.fgfs.location.Vector2D;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.rpvd.TrackDisplayState;
@@ -133,7 +134,15 @@ public class RadarContactTextPainter {
 
             g2d.setColor(textHelper.getColor(trackDisplayState.getGuiContact()));
 
-            line = new Line2D.Double(currentDevicePosition.getX(),currentDevicePosition.getY(),anchor.getX(),anchor.getY());
+            double dx = anchor.getX()-currentDevicePosition.getX();
+            double dy = currentDevicePosition.getY() - anchor.getY();
+            
+            Vector2D vDistance = new Vector2D(dx, dy);
+            Double angle = vDistance.getAngle();
+            
+            Point2D newStartPoint = Converter2D.getMapDisplayPoint(currentDevicePosition, angle, 10);
+            
+            line = new Line2D.Double(newStartPoint.getX(),newStartPoint.getY(),anchor.getX(),anchor.getY());
             g2d.draw(line);
 
             if(hightlighted) {

@@ -35,6 +35,7 @@ package de.knewcleus.openradar.rpvd.contact;
 import java.awt.Color;
 import java.awt.Font;
 
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 
 public abstract class ADatablockLayout {
@@ -55,7 +56,7 @@ public abstract class ADatablockLayout {
 
     public abstract Color getColor(GuiRadarContact contact);
     /** Returns the text that will be displayed in data block. Lines separated by newline...*/
-    public abstract String getDataBlockText(GuiRadarContact contact);
+    public abstract String getDataBlockText(GuiMasterController master, GuiRadarContact contact);
 
     public abstract Font getFont();
     /** Returns the contact shape matching to the current layout mode and contact state... */

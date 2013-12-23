@@ -79,7 +79,7 @@ public class RadioPanel extends JPanel {
 
         this.setLayout(new GridBagLayout());
 
-        boolean isFgComInternal = master.getDataRegistry().getFgComMode() == FgComMode.Internal;
+        boolean isFgComInternal = master.getAirportData().getFgComMode() == FgComMode.Internal;
 
         for(RadioModel model : radioManager.getModels().values()) {
 
@@ -132,7 +132,7 @@ public class RadioPanel extends JPanel {
             i++;
         }
 
-        if(master.getDataRegistry().getFgComMode() != FgComMode.Off) {
+        if(master.getAirportData().getFgComMode() != FgComMode.Off) {
 
             JPanel pnlRight = new JPanel();
             pnlRight.setOpaque(false);

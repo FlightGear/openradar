@@ -159,9 +159,9 @@ public class RadarManager {
                     || itemSource.getName().equals("METAR")) {
                 String objectName = itemSource.getName();
                 // set values to remember setting
-                master.getDataRegistry().changeToggle(master, objectName, false);
+                master.getAirportData().changeToggle(master, objectName, false);
                 // set values in front end
-                radarPanel.setObjectFilter(itemSource, master.getDataRegistry().getToggleState(objectName,false));
+                radarPanel.setObjectFilter(itemSource, master.getAirportData().getToggleState(objectName,false));
                 // toggle features
                 if (itemSource.getName().equals("MUTE")) {
                     SoundManager.toggleMute();
@@ -195,10 +195,10 @@ public class RadarManager {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            NavaidDB navaidDB = master.getDataRegistry().getNavaidDB();
+            NavaidDB navaidDB = master.getAirportData().getNavaidDB();
             navaidDB.resetHighlighting();
             StringTokenizer st = new StringTokenizer(((JTextField) e.getSource()).getText(), " ,.-;/");
-            Point2D airportPos = master.getDataRegistry().getAirportPosition();
+            Point2D airportPos = master.getAirportData().getAirportPosition();
             Rectangle2D bounds = new Rectangle2D.Double(airportPos.getX(), airportPos.getY(), 0, 0);
             while (st.hasMoreTokens()) {
                 IIntersection inters = navaidDB.highlight(st.nextToken().trim().toUpperCase());

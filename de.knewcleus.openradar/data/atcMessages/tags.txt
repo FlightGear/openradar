@@ -4,6 +4,8 @@
 #
 <icao>               Local departing airport
 <icao-altitude>      Local departing airport altitude
+<transitionAlt>      TransitionAlt for this airport
+<transitionFL>       TransitionAlt for this airport
 <alt>                Aircraft's current altitude
 <distance>           Aircraft's current distance to local airport
 <callsign>           ATC callsign.

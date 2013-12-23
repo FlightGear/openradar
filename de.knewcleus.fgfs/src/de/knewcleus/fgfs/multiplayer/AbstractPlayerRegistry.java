@@ -40,10 +40,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 
 public abstract class AbstractPlayerRegistry<T extends Player> implements IPlayerRegistry<T> {
-	protected final static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
+	protected static Logger log = LogManager.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected final int playerExpirationTime = 15000;
 
 	public abstract T createNewPlayer(String callsign) throws MultiplayerException;

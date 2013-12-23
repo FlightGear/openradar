@@ -36,6 +36,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.fgfs.navdata.impl.VOR;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -48,7 +49,7 @@ public class VORPainter extends AViewObjectPainter<VOR> {
 
     private final VOR vor;
 
-    public VORPainter(AirportData data, IMapViewerAdapter mapViewAdapter, VOR vor) {
+    public VORPainter(GuiMasterController master, IMapViewerAdapter mapViewAdapter, VOR vor) {
         super(mapViewAdapter, vor);
         this.vor=vor;
         setPickable(false); // enable tooltips
@@ -59,13 +60,13 @@ public class VORPainter extends AViewObjectPainter<VOR> {
         if(vor.getName().contains("DME")) vorType = VORType.VOR_DME;
         else if(vor.getName().contains("TAC")) vorType = VORType.VORTAC;
 
-        VORSymbol s = new VORSymbol(data, vor, vorType);
+        VORSymbol s = new VORSymbol(master, vor, vorType);
         viewObjectList.add(s);
 
-        VORName n = new VORName(data, vor, font, Color.lightGray, 0 , Integer.MAX_VALUE);
+        VORName n = new VORName(master, vor, font, Color.lightGray, 0 , Integer.MAX_VALUE);
         viewObjectList.add(n);
 
-        VORFrequency f = new VORFrequency(data, vor, font, Color.lightGray, 0 , Integer.MAX_VALUE);
+        VORFrequency f = new VORFrequency(master, vor, font, Color.lightGray, 0 , Integer.MAX_VALUE);
         viewObjectList.add(f);
     }
 

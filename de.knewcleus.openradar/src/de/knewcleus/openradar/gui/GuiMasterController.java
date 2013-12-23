@@ -73,7 +73,7 @@ import de.knewcleus.openradar.weather.MetarReader;
 public class GuiMasterController {
 
     private LogWindow logWindow = new LogWindow();
-    private AirportData dataRegistry;;
+    private AirportData airportData;;
     private GuiRadarBackend radarBackend;
     private RadarManager radarManager;
     private RadarContactController radarContactManager;
@@ -97,8 +97,8 @@ public class GuiMasterController {
     private volatile FGMPClient<TargetStatus> radarProvider;
 
     public GuiMasterController(AirportData data) {
-        this.dataRegistry = data;
-
+        this.airportData = data;
+        
         // init managers
         radarBackend = new GuiRadarBackend(this);
         radarManager = new RadarManager(this, radarBackend);
@@ -127,7 +127,7 @@ public class GuiMasterController {
      *
      */
     public void start(SetupDialog setupDialog) throws Exception {
-        dataRegistry.loadAirportData(this);
+        airportData.loadAirportData(this);
 
         // initialize the front end and load environment data
         mainFrame = new MainFrame(this);
@@ -147,7 +147,7 @@ public class GuiMasterController {
         radarContactManager.start(); // GUI updater
         mpChatManager.start(); // GUI Updater
         initShortCuts();
-        SoundManager.init(dataRegistry);
+        SoundManager.init(airportData);
         fpExchangeManager.start();
 
         // ready, so display it
@@ -162,19 +162,19 @@ public class GuiMasterController {
         // or disappears
         playerRegistry.registerListener(getRadarContactManager());
 
-        final Position clientPosition = new Position(dataRegistry.getLon(), dataRegistry.getLat(), dataRegistry.getElevationM());
+        final Position clientPosition = new Position(airportData.getLon(), airportData.getLat(), airportData.getElevationM());
         final GeodToCartTransformation geodToCartTransformation = new GeodToCartTransformation(Ellipsoid.WGS84);
         //
         radarProvider = new FGMPClient<TargetStatus>(playerRegistry,
-                                                     dataRegistry.getCallSign(),
+                                                     airportData.getCallSign(),
                                                      "OpenRadar",
                                                      geodToCartTransformation.forward(clientPosition),
-                                                     dataRegistry.getMpServer(),
-                                                     dataRegistry.getMpServerPort(),
-                                                     dataRegistry.getMpLocalPort());
+                                                     airportData.getMpServer(),
+                                                     airportData.getMpServerPort(),
+                                                     airportData.getMpLocalPort());
 
 
-        radarProvider.setCallsign(dataRegistry.getCallSign());
+        radarProvider.setCallsign(airportData.getCallSign());
         // register MP Chat (send & receive)
         radarProvider.addChatListener(getMpChatManager());
         getMpChatManager().setMpBackend(radarProvider);
@@ -190,8 +190,7 @@ public class GuiMasterController {
                     try {
                         sleep(1000);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        // I don't care
                     }
                     trackManager.checkForLossOrRetirement();
                     statusManager.updateTime(); // update time display
@@ -209,6 +208,26 @@ public class GuiMasterController {
             @Override
             public boolean dispatchKeyEvent(KeyEvent e) {
 
+                if(e.getID()==KeyEvent.KEY_RELEASED) {
+                    if (e.getKeyCode()==KeyEvent.VK_TAB) {
+                        if(!radarContactManager.isFlightplanDialogVisible() &&
+                           !getStatusManager().isRunwayDialogVisible() &&
+                           !getStatusManager().isMetarDialogVisible() &&
+                           !getRadarContactManager().getTransponderSettingsDialog().isVisible()) {
+                            
+                            radarContactManager.displayChatMenu();
+                            e.consume();
+                            return true;
+                        }
+                        return false;
+                    }
+                    if (e.getKeyCode()==130) { // "^"
+                        radarContactManager.displayContactDialogForSelectedUser();
+                        e.consume();
+                        return true;
+                    }
+                }
+                
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
 
                     if (e.getKeyCode() == 76 && e.isAltDown()) { // ALT + l
@@ -217,11 +236,12 @@ public class GuiMasterController {
                         return true;
                     }
                     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        mpChatManager.cancelAutoAtcMessage();
+                        mpChatManager.requestFocusForInput();
+
                         logWindow.setVisible(false);
                         statusManager.hideRunwayDialog();
                         radarContactManager.hideDialogs();
-                        mpChatManager.cancelAutoAtcMessage();
-                        mpChatManager.requestFocusForInput();
                         e.consume();
                         return true;
                     }
@@ -242,6 +262,16 @@ public class GuiMasterController {
                     }
                     if (e.getKeyCode() == KeyEvent.VK_F4) {
                         radarBackend.setZoomLevel("SECTOR");
+                        e.consume();
+                        return true;
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_F5) {
+                        radarContactManager.displayChatMenu();
+                        e.consume();
+                        return true;
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_F6) {
+                        radarContactManager.displayContactDialogForSelectedUser();
                         e.consume();
                         return true;
                     }
@@ -289,14 +319,14 @@ public class GuiMasterController {
 
     public void setCurrentATCCallSign(String callsign, boolean save) {
         radarProvider.setCallsign(callsign);
-        dataRegistry.setCallSign(callsign);
+        airportData.setCallSign(callsign);
         if(save) {
-            dataRegistry.storeAirportData(this);
+            airportData.storeAirportData(this);
         }
     }
 
     public String getCurrentATCCallSign() {
-        return dataRegistry.getCallSign();
+        return airportData.getCallSign();
     }
 
     public GuiRadarBackend getRadarBackend() {
@@ -311,12 +341,12 @@ public class GuiMasterController {
         return radarContactManager;
     }
 
-    public AirportData getDataRegistry() {
-        return dataRegistry;
+    public AirportData getAirportData() {
+        return airportData;
     }
 
     public void setDataRegistry(AirportData dataRegistry) {
-        this.dataRegistry = dataRegistry;
+        this.airportData = dataRegistry;
     }
 
     public StatusManager getStatusManager() {
@@ -336,12 +366,14 @@ public class GuiMasterController {
     }
 
     public MetarData getAirportMetar() {
-        return metarReader.getMetar(getDataRegistry().getMetarSource());
+        return metarReader.getMetar(getAirportData().getMetarSource());
     }
 
     public RadioController getRadioManager() {
         return radioManager;
     }
 
-
+    public FlightPlanExchangeManager getFlightPlanExchangeManager() {
+        return fpExchangeManager;
+    }
 }

@@ -32,11 +32,13 @@
  */
 package de.knewcleus.openradar.view;
 
+import java.awt.Point;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 public class MouseZoomListener implements MouseWheelListener {
 	protected final IViewerAdapter viewerAdapter;
+	protected final ZoomFilter zoomFilter = new ZoomFilter();
 	
 	public MouseZoomListener(IViewerAdapter viewerAdapter) {
 		this.viewerAdapter = viewerAdapter;
@@ -44,8 +46,64 @@ public class MouseZoomListener implements MouseWheelListener {
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		double scale=viewerAdapter.getLogicalScale();
-		scale*=Math.pow(1.1, e.getWheelRotation());
-		viewerAdapter.setLogicalScale(scale); 
+		double scale = zoomFilter.getRequestedScale();
+		scale*=Math.pow(1.2, e.getWheelRotation());
+		zoomFilter.setScale(scale, e.getPoint());
+	}
+
+	/**
+	 * This class exists to filter too many repaint requests. It saves only the last request and performs it, when it is ready with the last repaint.
+	 * So OR responds much faster on mouse wheel turns. 
+	 * 
+	 * @author Wolfram Wagner
+	 *
+	 */
+	private class ZoomFilter implements Runnable{
+	    
+	    private double scale = -1;
+	    private Point point = null;
+	    private final Thread thread; 
+	    
+	    public ZoomFilter() {
+	        thread = new Thread(this, "MouseWheelZoomFilter" );
+	        thread.start();
+        }
+	    
+	    public synchronized double getRequestedScale() {
+	        return scale==-1 ? viewerAdapter.getLogicalScale() : scale;
+	    }
+	    
+	    synchronized void setScale(double scale, Point p) {
+//	        System.out.println("Set scale to "+scale);
+	        this.scale=scale;
+	        this.point=p;
+	        thread.interrupt();
+	    }
+	    
+	    public void run() {
+	        while(true) {
+                Point p=null;
+                double s=1;
+                
+	            synchronized(this) {
+	                if(point!=null) {
+	                    p=point;
+	                    s=scale;
+	                    scale=-1;
+	                    point=null;
+	                }
+	            }
+	            if(p!=null) {
+	                viewerAdapter.setLogicalScale(s, p);
+//	                System.out.println("Applying scale: "+s);
+	            } 
+	            if(p==null) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                    }
+                }
+	        }
+	    }
 	}
 }

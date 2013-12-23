@@ -49,6 +49,7 @@ import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
 import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.fgfs.navdata.xplane.Helipad;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AdditionalFix;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.groundnet.TaxiSign;
@@ -76,9 +77,11 @@ public abstract class AViewObjectPainter<T> {
     protected volatile Rectangle2D displayExtents = new Rectangle2D.Double(0,0,0,0);
     protected List<AViewObject> viewObjectList = new ArrayList<AViewObject>();
 
-    public static AViewObjectPainter<?> getPainterForNavpoint(IMapViewerAdapter mapViewAdapter, AirportData data, Object navPoint) {
+    public static AViewObjectPainter<?> getPainterForNavpoint(IMapViewerAdapter mapViewAdapter, GuiMasterController master, Object navPoint) {
         AViewObjectPainter<?> viewObjectPainter = null;
 
+        AirportData data = master.getAirportData();
+        
         // the individual paints are redirected to Painters
         if(navPoint instanceof Aerodrome) {
             viewObjectPainter = new AirportPainter(data, mapViewAdapter, (Aerodrome) navPoint);
@@ -87,11 +90,11 @@ public abstract class AViewObjectPainter<T> {
         else if(navPoint instanceof RunwayEnd) viewObjectPainter = new RunwayEndPainter(mapViewAdapter, data, (RunwayEnd) navPoint);
         else if(navPoint instanceof Helipad) viewObjectPainter = new HelipadPainter(mapViewAdapter, (Helipad) navPoint);
         else if(navPoint instanceof NDB) {
-            viewObjectPainter = new NDBPainter(data, mapViewAdapter, (NDB) navPoint);
+            viewObjectPainter = new NDBPainter(master, mapViewAdapter, (NDB) navPoint);
             data.getNavaidDB().registerNavaid((NDB) navPoint);
         }
         else if(navPoint instanceof VOR) {
-            viewObjectPainter = new VORPainter(data, mapViewAdapter, (VOR) navPoint);
+            viewObjectPainter = new VORPainter(master, mapViewAdapter, (VOR) navPoint);
             data.getNavaidDB().registerNavaid((VOR) navPoint);
         }
         else if(navPoint instanceof Localizer) viewObjectPainter = new LocalizerPainter(mapViewAdapter, (Localizer) navPoint);
@@ -99,11 +102,11 @@ public abstract class AViewObjectPainter<T> {
         else if(navPoint instanceof MarkerBeacon) viewObjectPainter = new MarkerBeaconPainter(mapViewAdapter, data, (MarkerBeacon) navPoint);
         else if(navPoint instanceof DME) viewObjectPainter = new DMEPainter(mapViewAdapter, (DME) navPoint);
         else if(navPoint instanceof Intersection) {
-            viewObjectPainter = new IntersectionPainter(data, mapViewAdapter, (Intersection) navPoint);
+            viewObjectPainter = new IntersectionPainter(master, mapViewAdapter, (Intersection) navPoint);
             data.getNavaidDB().registerNavaid((Intersection) navPoint);
         }
         else if(navPoint instanceof AdditionalFix) {
-            viewObjectPainter = new IntersectionPainter(data, mapViewAdapter, (AdditionalFix) navPoint);
+            viewObjectPainter = new IntersectionPainter(master, mapViewAdapter, (AdditionalFix) navPoint);
             // registration is done when new points are read in, to allow direct usage in the stdroutes...
             // so this is not needed here: data.getNavaidDB().registerNavaid((AdditionalFix) navPoint);
         }

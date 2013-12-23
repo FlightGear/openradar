@@ -61,8 +61,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
@@ -112,9 +112,11 @@ public class RunwaySettingsDialog extends JFrame {
 
     private ChooseRunwayMouseListener chooseRunwayMouseListener = new ChooseRunwayMouseListener();
 
+    private static Logger log = LogManager.getLogger(RunwaySettingsDialog.class);
+    
     public RunwaySettingsDialog(GuiMasterController master) {
         this.master = master;
-        this.data = master.getDataRegistry();
+        this.data = master.getAirportData();
         initComponents();
     }
 
@@ -147,7 +149,7 @@ public class RunwaySettingsDialog extends JFrame {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if(isUniformTranslucencySupported) {
-            this.setOpacity(0.8f);
+            this.setOpacity(0.9f);
         }
 
         JPanel jPnlContentPane = new JPanel();
@@ -780,7 +782,7 @@ public class RunwaySettingsDialog extends JFrame {
                 RunwayData otherEndRwd = data.getRunwayData( sOtherRwNumber );
                 otherEndRwd.setBiDirectional(chbRwBiDirectional.isSelected());
             } catch(Exception e) {
-                Logger.getLogger(RunwaySettingsDialog.class.getName()).log(Level.SEVERE,"Problem to set other runway end of "+data.getAirportCode()+"."+lbRWNumber.getText()+" to be bi-idrectional",e);
+                log.error("Problem to set other runway end of "+data.getAirportCode()+"."+lbRWNumber.getText()+" to be bi-idrectional",e);
             }
             rwd.setStartingEnabled(chbRwActiveForStarting.isSelected());
             rwd.setLandingEnabled(chbRwActiveForLanding.isSelected());
@@ -863,7 +865,7 @@ public class RunwaySettingsDialog extends JFrame {
                     rwd.setRepaintNeeded(true);
                 }
             }
-            master.getDataRegistry().storeAirportData(master);
+            master.getAirportData().storeAirportData(master);
             master.getRadarBackend().forceRepaint();
         }
 

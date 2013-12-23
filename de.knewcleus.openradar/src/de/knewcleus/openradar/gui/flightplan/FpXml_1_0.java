@@ -32,9 +32,12 @@
  */
 package de.knewcleus.openradar.gui.flightplan;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
@@ -46,6 +49,8 @@ import de.knewcleus.openradar.gui.setup.AirportData;
  */
 public class FpXml_1_0 {
 
+    private static Logger log = LogManager.getLogger(FpXml_1_0.class);
+    
     public static String getCallSign(Element eFlightPlan) {
         return eFlightPlan.getChild("header").getChildText("callsign");
     }
@@ -63,8 +68,7 @@ public class FpXml_1_0 {
          * <estFlightTime>hours:minutes</estFlightTime> <fuelTime>hours:minutes</fuelTime> <pilot>Name of Pilot</pilot>
          * <sob>number of souls on board</sob> <remarks></remarks> </data>
          */
-
-        // check if
+        
         String flightCode = eFlightPlan.getChild("header").getChildText("flight");
         String callsign = eFlightPlan.getChild("header").getChildText("callsign");
         String owner = eFlightPlan.getChild("header").getChildText("owner");
@@ -72,6 +76,7 @@ public class FpXml_1_0 {
         String squawk = eFlightPlan.getChild("header").getChildText("squawk");
         String assignedAlt = eFlightPlan.getChild("header").getChildText("assignedAlt");
         String state = eFlightPlan.getChild("header").getChildText("status");
+        boolean fgcomSupport = "true".equals(eFlightPlan.getChild("header").getChildText("fgcom"));
 
         String type = eFlightPlan.getChild("data").getChildText("type");
         String aircraft = eFlightPlan.getChild("data").getChildText("aircraft");
@@ -89,16 +94,38 @@ public class FpXml_1_0 {
         String remarks = eFlightPlan.getChild("data").getChildText("remarks");
 
         FlightPlanData fp;
-        FlightPlanData existingFp = contact.getFlightPlan();
-
-        if(existingFp!=null) {
-            existingFp.update(flightCode, callsign, owner, handover, squawk, assignedAlt, state, type, aircraft, trueAirspeed, departure, departureTime,
-                    cruisingAlt, route, destination, alternateDest, estFlightTime, fuelTime, pilot, soulsOnBoard, remarks);
-            fp=existingFp;
-        } else {
+//        FlightPlanData existingFp = contact.getFlightPlan();
+//
+//        if(existingFp!=null) {
+//            String formerHandover = existingFp.getHandover();
+////          String formerOwner = existingFp.getOwner();
+//
+//            existingFp.update(flightCode, callsign, owner, handover, squawk, assignedAlt, state, type, aircraft, trueAirspeed, departure, departureTime,
+//                    cruisingAlt, route, destination, alternateDest, estFlightTime, fuelTime, pilot, soulsOnBoard, remarks);
+//move to fpexchangemanager
+//            if(airportData.getCallSign().equals(owner)) {
+//                // OR has been restarted, the contact is still owned by me
+//                contact.setAlignment(Alignment.LEFT);
+//            }
+//            if(airportData.getCallSign().equals(handover)) {
+//                // Contact has been offered to me
+//                contact.setAlignment(Alignment.CENTER);
+//            }
+//            if(!airportData.getCallSign().equals(owner) & contact.getAlignment()==Alignment.LEFT) {
+//                // HANDOVER finalization contact is not owned by me anymore
+//                contact.setAlignment(Alignment.RIGHT);
+//            }
+//            if(airportData.getCallSign().equals(formerHandover) && ("".equals(handover) || null==handover) && contact.getAlignment()==Alignment.CENTER) {
+//                contact.setAlignment(Alignment.RIGHT);
+//            }
+//            
+//            fp=existingFp;
+//        } else {
+        {
             fp = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedAlt, state, type, aircraft, trueAirspeed, departure, departureTime,
                                     cruisingAlt, route, destination, alternateDest, estFlightTime, fuelTime, pilot, soulsOnBoard, remarks);
         }
+        contact.setFgComSupport(fgcomSupport);
         return fp;
     }
 
@@ -115,6 +142,8 @@ public class FpXml_1_0 {
          * <estFlightTime>hours:minutes</estFlightTime> <fuelTime>hours:minutes</fuelTime> <pilot>Name of Pilot</pilot>
          * <sob>number of souls on board</sob> <remarks></remarks> </data>
          */
+        GuiRadarContact contact = fp.getContact();
+        
         Element eFlightPlan = new Element("flightplan");
 
         try {
@@ -167,6 +196,10 @@ public class FpXml_1_0 {
             }
             eFpHeader.addContent(eState);
 
+            Element eFgCom = new Element("fgcom");
+            eFgCom.setText(contact.hasFgComSupport()?"true":"false");
+            eFpHeader.addContent(eFgCom);
+
             // data
 
             Element eFpData = new Element("data");
@@ -191,8 +224,8 @@ public class FpXml_1_0 {
             eFpData.addContent(eTrueAirspeed);
 
             Element eDeparture = new Element("departure");
-            if (fp.getDeparture() != null) {
-                eDeparture.setText(fp.getDeparture());
+            if (fp.getDepartureAirport() != null) {
+                eDeparture.setText(fp.getDepartureAirport());
             }
             eFpData.addContent(eDeparture);
 
@@ -256,9 +289,23 @@ public class FpXml_1_0 {
             eFpData.addContent(eRemarks);
 
         } catch (Exception e) {
-            Logger.getLogger(FpXml_1_0.class.toString()).log(Level.SEVERE,"Problem to create XML for flightplan " + fp.getFlightCode(), e);
+            log.error("Problem to create XML for flightplan " + fp.getFlightCode(), e);
             eFlightPlan = null;
         }
         return eFlightPlan;
+    }
+
+    public static List<FpAtc> parseAtcs(Element eAtcsInRange) {
+        List<FpAtc> result = new ArrayList<FpAtc>();
+        for(Element eAtc : eAtcsInRange.getChildren("atc")) {
+            String callsign = eAtc.getChildText("callsign");
+            String frequency = eAtc.getChildText("frequency");
+            double lon = Double.parseDouble(eAtc.getChildText("lon"));
+            double lat = Double.parseDouble(eAtc.getChildText("lat"));
+            double distance =  Double.parseDouble(eAtc.getChildText("dist"));
+            result.add(new FpAtc(callsign, frequency, new Point2D.Double(lon,lat),distance));
+        }
+        
+        return result;
     }
 }

@@ -32,6 +32,7 @@
  */
 package de.knewcleus.openradar.view;
 
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -106,7 +107,13 @@ public interface IViewerAdapter extends INotifier {
 	 */
 	public abstract void setLogicalScale(double scale);
 	
-	/**
+    /**
+     * Set the logical scale and issue a notification about the change. This zooms at this spot
+     * @param scale     The new scale.
+     */
+    public abstract void setLogicalScale(double scale, Point mouseLocation);
+
+    /**
 	 * @return the current logical origin.
 	 */
 	public abstract Point2D getLogicalOrigin();

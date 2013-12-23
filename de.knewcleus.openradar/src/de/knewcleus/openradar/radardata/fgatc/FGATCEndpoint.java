@@ -40,13 +40,15 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.radardata.RadarDataProvider;
 
 public class FGATCEndpoint extends RadarDataProvider implements Runnable {
-	protected final static Logger logger=Logger.getLogger("de.knewcleus.openradar.radardata.fgatc");
+	protected static Logger log = LogManager.getLogger("de.knewcleus.openradar.radardata.fgatc");
 	protected final static int receiveBufferLength=1024;
 	
 	protected final DatagramSocket datagramSocket;
@@ -83,8 +85,7 @@ public class FGATCEndpoint extends RadarDataProvider implements Runnable {
 			} catch (SocketTimeoutException e) {
 				// Do nothing, this is expected
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			    log.error("Error in FGFS networking!",e);
 			}
 			sendRadarPackets();
 			removeStaleTargets();
@@ -104,12 +105,12 @@ public class FGATCEndpoint extends RadarDataProvider implements Runnable {
 		String dataLine=new String(buf, Charset.forName("US-ASCII"));
 		dataLine=dataLine.trim();
 
-		logger.finest("Received packet '"+dataLine+"' from "+targetIdentifier);
+		log.trace("Received packet '"+dataLine+"' from "+targetIdentifier);
 
 		final PositionPacket newPacket = parsePacket(dataLine);
 		
 		if (newPacket==null) {
-			logger.warning("Invalid packet '"+dataLine+"' from "+targetIdentifier+", ignoring");
+			log.warn("Invalid packet '"+dataLine+"' from "+targetIdentifier+", ignoring");
 			return;
 		}
 		

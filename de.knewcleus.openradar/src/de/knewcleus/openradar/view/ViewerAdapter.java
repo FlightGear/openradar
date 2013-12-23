@@ -33,6 +33,7 @@
  */
 package de.knewcleus.openradar.view;
 
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -47,8 +48,8 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	protected final IUpdateManager updateManager; 
 	protected Rectangle2D viewerExtents = new Rectangle2D.Double();
 	protected double logicalScale = 1.0;
-	protected Point2D logicalOrigin = new Point2D.Double();
-	protected Point2D deviceOrigin = new Point2D.Double();
+	private Point2D logicalOrigin = new Point2D.Double();
+	private Point2D deviceOrigin = new Point2D.Double();
 	protected AffineTransform deviceToLogicalTransform = null;
 	protected AffineTransform logicalToDeviceTransform = null;
 
@@ -95,10 +96,8 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	
 	@Override
 	public void setDeviceOrigin(double originX, double originY) {
-		deviceOrigin = new Point2D.Double(originX, originY);
-		updateTransforms();
-	    notifyListeners(Change.CENTER);
-}
+		setDeviceOrigin(new Point2D.Double(originX, originY));
+	}
 	
 	@Override
 	public void setDeviceOrigin(Point2D origin) {
@@ -119,6 +118,13 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
         notifyListeners(Change.ZOOM);
 	}
 
+    @Override
+    public void setLogicalScale(double scale, Point mouseLocation) {
+        this.logicalScale = scale;
+        updateTransforms();
+        notifyListeners(Change.ZOOM);
+    }
+	
 	public void shiftLogicalOrigin(double offsetX, double offsetY) {
 		setLogicalOrigin(logicalOrigin.getX()+offsetX, logicalOrigin.getY()+offsetY);
 	}

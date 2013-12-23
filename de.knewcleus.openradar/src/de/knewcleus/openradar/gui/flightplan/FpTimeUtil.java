@@ -39,7 +39,7 @@ import java.util.TimeZone;
 public class FpTimeUtil {
 
     public static String getUTCTimeString4Digits(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("hhMM");
+        SimpleDateFormat sdf = new SimpleDateFormat("hhmm");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.format(date);
     }

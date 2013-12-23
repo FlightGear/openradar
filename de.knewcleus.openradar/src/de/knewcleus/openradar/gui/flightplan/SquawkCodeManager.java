@@ -42,9 +42,12 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class SquawkCodeManager {
 
-    private int squawkFrom = 2000;
-    private int squawkTo = 6000;
-    private volatile int lastSquawkCode = squawkFrom-1;
+    private int squawkFromVFR = 2000;
+    private int squawkToVFR = 2777;
+    private int squawkFromIFR = 4000;
+    private int squawkToIFR = 4777;
+    private volatile int lastSquawkCodeVFR = squawkFromVFR-1;
+    private volatile int lastSquawkCodeIFR = squawkFromIFR-1;
     private Set<Integer> usedCodes = new HashSet<Integer>();
 //    private AirportData data;
 
@@ -52,44 +55,78 @@ public class SquawkCodeManager {
 //        this.data = data;
     }
 
-    public synchronized int getSquawkFrom() {
-        return squawkFrom;
+    public synchronized int getSquawkFromVFR() {
+        return squawkFromVFR;
     }
 
-    public synchronized int getSquawkTo() {
-        return squawkTo;
+    public synchronized int getSquawkToVFR() {
+        return squawkToVFR;
     }
 
-    public synchronized void setSquawkRange(int squawkFrom, int squawkTo) {
-        this.squawkFrom = squawkFrom;
-        this.squawkTo = squawkTo;
-        this.lastSquawkCode=squawkFrom-1;
+    public synchronized int getSquawkFromIFR() {
+        return squawkFromIFR;
     }
 
-    public synchronized Integer getNextSquawkCode(Integer formerCode) {
+    public synchronized int getSquawkToIFR() {
+        return squawkToIFR;
+    }
+
+    public synchronized void setSquawkRange(int squawkFromVFR, int squawkToVFR, int squawkFromIFR, int squawkToIFR) {
+        this.squawkFromVFR = squawkFromVFR;
+        this.squawkToVFR = squawkToVFR;
+        this.squawkFromIFR = squawkFromIFR;
+        this.squawkToIFR = squawkToIFR;
+        this.lastSquawkCodeVFR=squawkFromVFR-1;
+        this.lastSquawkCodeIFR=squawkFromIFR-1;
+    }
+
+    public synchronized Integer getNextVFRSquawkCode(Integer formerCode) {
         if(formerCode!=null) {
             usedCodes.remove(formerCode);
         }
-        int nextSquawkCode = getNexCode(lastSquawkCode);
+        int nextSquawkCode = getNexCode(lastSquawkCodeVFR, true);
         while(usedCodes.contains(nextSquawkCode)) {
-            if(nextSquawkCode==lastSquawkCode) {
+            if(nextSquawkCode==lastSquawkCodeVFR) {
                 return null; // all in use
             }
-            nextSquawkCode = getNexCode(nextSquawkCode);
+            nextSquawkCode = getNexCode(nextSquawkCode, true);
         }
         usedCodes.add(nextSquawkCode);
-        lastSquawkCode=nextSquawkCode;
+        lastSquawkCodeVFR=nextSquawkCode;
         return nextSquawkCode;
     }
 
-    private int getNexCode(int lastcode) {
+    public synchronized Integer getNextIFRSquawkCode(Integer formerCode) {
+        if(formerCode!=null) {
+            usedCodes.remove(formerCode);
+        }
+        int nextSquawkCode = getNexCode(lastSquawkCodeIFR, false);
+        while(usedCodes.contains(nextSquawkCode)) {
+            if(nextSquawkCode==lastSquawkCodeIFR) {
+                return null; // all in use
+            }
+            nextSquawkCode = getNexCode(nextSquawkCode, false);
+        }
+        usedCodes.add(nextSquawkCode);
+        lastSquawkCodeIFR=nextSquawkCode;
+        return nextSquawkCode;
+    }
+
+    private int getNexCode(int lastcode, boolean vfrMode) {
         int nextCode = lastcode +1;
         int lastDigit = nextCode % 10;
         if(lastDigit>7) {
             nextCode = nextCode + 10-lastDigit;
         }
-        if(nextCode > squawkTo) {
-            nextCode = squawkFrom;
+        if(vfrMode) {
+            if(nextCode > squawkToVFR) {
+                nextCode = squawkFromVFR;
+            }
+        } else {
+            // ifr
+            if(nextCode > squawkToIFR) {
+                nextCode = squawkFromIFR;
+            }
         }
         return nextCode;
     }
@@ -105,7 +142,9 @@ public class SquawkCodeManager {
             if(c.getAssignedSquawk()!=null) {
                 // assigned codes
                 usedCodes.add(c.getAssignedSquawk());
-            } else if(c.getTranspSquawkCode()!=null && c.getTranspSquawkCode()>=squawkFrom && c.getTranspSquawkCode()<=squawkTo) {
+            } else if(c.getTranspSquawkCode()!=null 
+                    && (( c.getTranspSquawkCode()>=squawkFromVFR && c.getTranspSquawkCode()<=squawkToVFR) 
+                       || (c.getTranspSquawkCode()>=squawkFromIFR && c.getTranspSquawkCode()<=squawkToIFR) ) ) {
                 // unassigned, but transmitted codes in range
                 usedCodes.add(c.getAssignedSquawk());
             }
@@ -113,13 +152,17 @@ public class SquawkCodeManager {
     }
 
     public synchronized void addSquawkRangeTo(Properties p) {
-        p.setProperty("squawk.first", ""+squawkFrom);
-        p.setProperty("squawk.last", ""+squawkTo);
+        p.setProperty("squawk.vfr.first", ""+squawkFromVFR);
+        p.setProperty("squawk.vfr.last", ""+squawkToVFR);
+        p.setProperty("squawk.ifr.first", ""+squawkFromIFR);
+        p.setProperty("squawk.ifr.last", ""+squawkToIFR);
     }
 
     public synchronized void restoreSquawkRangeFrom(Properties p) {
-        squawkFrom = Integer.parseInt(p.getProperty("squawk.first",""+squawkFrom));
-        squawkTo = Integer.parseInt(p.getProperty("squawk.last",""+squawkTo));
+        squawkFromVFR = Integer.parseInt(p.getProperty("squawk.vfr.first",""+squawkFromVFR));
+        squawkToVFR = Integer.parseInt(p.getProperty("squawk.vfr.last",""+squawkToVFR));
+        squawkFromIFR = Integer.parseInt(p.getProperty("squawk.ifr.first",""+squawkFromIFR));
+        squawkToIFR = Integer.parseInt(p.getProperty("squawk.ifr.last",""+squawkToIFR));
     }
 
     public synchronized void revokeSquawkCode(Integer assignedSquawk) {

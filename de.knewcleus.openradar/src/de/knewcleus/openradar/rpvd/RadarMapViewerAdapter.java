@@ -35,7 +35,6 @@ package de.knewcleus.openradar.rpvd;
 
 import java.awt.geom.Point2D;
 
-
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.view.ICanvas;
 import de.knewcleus.openradar.view.IUpdateManager;
@@ -70,4 +69,5 @@ public class RadarMapViewerAdapter extends MapViewerAdapter implements IRadarMap
 	public void setHeadingVectorTime(double headingVectorTime) {
 		this.headingVectorTime = headingVectorTime;
 	}
+
 }

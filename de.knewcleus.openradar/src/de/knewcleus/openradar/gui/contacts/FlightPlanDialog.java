@@ -38,6 +38,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -60,8 +62,9 @@ import javax.swing.border.TitledBorder;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
+import de.knewcleus.openradar.gui.flightplan.FpAtc;
 
-public class ContactSettingsDialog extends JFrame {
+public class FlightPlanDialog extends JFrame implements FocusListener {
 
     private static final long serialVersionUID = 1L;
     private final GuiMasterController master;
@@ -78,10 +81,9 @@ public class ContactSettingsDialog extends JFrame {
     private JTextField tfFlightCode;
     private JComboBox<String> cbFlightPlanTypes;
     private JTextField tfAircraft;
-    private JTextField tfModel;
+    private JTextField tfSquawk;
 
     private JComboBox<String> cbHandoverATCs = new JComboBox<String>();
-;
 
     private JComboBox<String> cbAssignedRunway;
     private JComboBox<String> cbAssignedRoute;
@@ -92,16 +94,20 @@ public class ContactSettingsDialog extends JFrame {
     private JTextField tfDestAirport;
     private JTextField tfArrivalTime;
     private JTextField tfFpAltitude;
-
+    private JTextField tfFpTAS;
+    
     private JTextField tfRoute;
     private JTextField tfAlternAirports;
 
     private javax.swing.JScrollPane spDetails;
     private javax.swing.JTextPane tpDetails;
 
+    private javax.swing.JScrollPane spPrivateDetails;
+    private javax.swing.JTextPane tpPrivateDetails;
+
     private FpMouseListener fpMouseListener = new FpMouseListener();
 
-    public ContactSettingsDialog(GuiMasterController master, RadarContactController controller) {
+    public FlightPlanDialog(GuiMasterController master, RadarContactController controller) {
         this.master = master;
         this.controller = controller;
         initComponents();
@@ -117,7 +123,7 @@ public class ContactSettingsDialog extends JFrame {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if (isUniformTranslucencySupported) {
-            this.setOpacity(0.8f);
+            this.setOpacity(0.9f);
         }
 
         setLayout(new GridBagLayout());
@@ -139,7 +145,7 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.gridwidth = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         add(jPnlContact, gridBagConstraints);
 
         initContactData(jPnlContact);
@@ -226,7 +232,7 @@ public class ContactSettingsDialog extends JFrame {
         tpDetails.setMinimumSize(new Dimension(200, 60));
         tpDetails.setPreferredSize(new Dimension(200, 60));
         spDetails.setViewportView(tpDetails);
-        master.setDetailsArea(tpDetails);
+       // master.setDetailsArea(tpDetails);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -238,6 +244,45 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         jPnlComment.add(spDetails, gridBagConstraints);
 
+        // private comment
+        
+        JPanel jPnlPrivateComment = new JPanel();
+        jPnlPrivateComment.setOpaque(false);
+        jPnlPrivateComment.setLayout(new GridBagLayout());
+        jPnlPrivateComment.setBorder(new TitledBorder("Private notes"));
+        jPnlPrivateComment.setPreferredSize(new Dimension(100, 70));
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridwidth = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        add(jPnlPrivateComment, gridBagConstraints);
+
+        spPrivateDetails = new javax.swing.JScrollPane();
+        spPrivateDetails.setMinimumSize(new Dimension(100, 60));
+        spPrivateDetails.setPreferredSize(new Dimension(120, 60));
+        tpPrivateDetails = new javax.swing.JTextPane();
+
+        tpPrivateDetails.setToolTipText("Private Notes: RETURN save, STRG+RETURN newline");
+        tpPrivateDetails.addKeyListener(new DetailsKeyListener());
+        tpPrivateDetails.setOpaque(true);
+        tpPrivateDetails.setMinimumSize(new Dimension(100, 60));
+        tpPrivateDetails.setPreferredSize(new Dimension(100, 60));
+        spPrivateDetails.setViewportView(tpPrivateDetails);
+        master.setDetailsArea(tpPrivateDetails);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridwidth = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        jPnlPrivateComment.add(spPrivateDetails, gridBagConstraints);
     }
 
     private void initContactData(JPanel jPnlContact) {
@@ -260,7 +305,7 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlLine1.add(lbLang, gridBagConstraints);
 
         cbLanguages = new JComboBox<String>(controller.getAutoAtcLanguages());
@@ -294,7 +339,7 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(4, 2, 0, 0);
         jPnlContact.add(jPnlLine2, gridBagConstraints);
 
         JLabel lbAircraft = new JLabel("Aircraft:");
@@ -314,7 +359,7 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         jPnlLine2.add(tfAircraft, gridBagConstraints);
 
-        JLabel lbModel = new JLabel("Model:");
+        JLabel lbModel = new JLabel("Squawk:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -322,17 +367,17 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         jPnlLine2.add(lbModel, gridBagConstraints);
 
-        tfModel = new JTextField(14);
-        tfModel.setToolTipText("Simulation model used by this contact");
-        tfModel.setEditable(false);
-        tfModel.setEnabled(false);
+        tfSquawk = new JTextField(5);
+        tfSquawk.setToolTipText("Assigned squawk code");
+        tfSquawk.setEditable(false);
+        tfSquawk.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-        jPnlLine2.add(tfModel, gridBagConstraints);
+        jPnlLine2.add(tfSquawk, gridBagConstraints);
 
         // Contact Line 3
 
@@ -345,7 +390,7 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 0);
         jPnlContact.add(jPnlLine3, gridBagConstraints);
 
         JLabel lbAssRw = new JLabel("Assgnd RWY:");
@@ -359,7 +404,7 @@ public class ContactSettingsDialog extends JFrame {
         cbAssignedRunway = new JComboBox<String>();
         cbAssignedRunway.setEditable(true);
         Dimension dim = cbAssignedRunway.getPreferredSize();
-        cbAssignedRunway.setPreferredSize(new Dimension(60, (int) dim.getHeight()));
+        cbAssignedRunway.setPreferredSize(new Dimension(80, (int) dim.getHeight()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -376,6 +421,7 @@ public class ContactSettingsDialog extends JFrame {
         jPnlLine3.add(lbAssRoute, gridBagConstraints);
 
         cbAssignedRoute = new JComboBox<String>();
+        cbAssignedRoute.setEditable(true);
         dim = cbAssignedRoute.getPreferredSize();
         cbAssignedRoute.setPreferredSize(new Dimension(100, (int) dim.getHeight()));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -468,12 +514,12 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 2, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 0);
         jPnlFlight.add(jPnlLine2, gridBagConstraints);
 
         JLabel lbFrom = new JLabel("Departure:");
         lbFrom.setName("START_HERE");
-        lbFrom.setToolTipText("Click to initialize flightplan as originating from "+master.getDataRegistry().getAirportCode());
+        lbFrom.setToolTipText("Click to initialize flightplan as originating from "+master.getAirportData().getAirportCode());
         lbFrom.addMouseListener(fpMouseListener);
         lbFrom.setForeground(Color.blue);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -501,10 +547,10 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlLine2.add(tfDepTime, gridBagConstraints);
 
-        JLabel lbTo = new JLabel("Arrival:");
+        JLabel lbTo = new JLabel("Destination:");
         lbTo.setName("LAND_HERE");
         lbTo.addMouseListener(fpMouseListener);
-        lbTo.setToolTipText("Click to file flightplan to go to "+master.getDataRegistry().getAirportCode());
+        lbTo.setToolTipText("Click to file flightplan to go to "+master.getAirportData().getAirportCode());
         lbTo.setForeground(Color.blue);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
@@ -515,6 +561,7 @@ public class ContactSettingsDialog extends JFrame {
 
         tfDestAirport = new JTextField(4);
         tfDestAirport.setToolTipText("Destination airport code");
+        tfDestAirport.addFocusListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
@@ -532,7 +579,7 @@ public class ContactSettingsDialog extends JFrame {
 
         tfArrivalTime = new JTextField(5);
         tfArrivalTime.setToolTipText("estimated arrival time");
-        tfArrivalTime.setEditable(false);
+        tfArrivalTime.setEditable(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 6;
         gridBagConstraints.gridy = 0;
@@ -553,7 +600,7 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 0);
         jPnlFlight.add(jPnlLine3, gridBagConstraints);
 
         JLabel lbVia = new JLabel("Route:");
@@ -586,10 +633,10 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 0);
         jPnlFlight.add(jPnlLine4, gridBagConstraints);
 
-        JLabel lbCruisingAlt = new JLabel("Cruising Alt.:");
+        JLabel lbCruisingAlt = new JLabel("Crsg.Alt.:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -597,7 +644,7 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlLine4.add(lbCruisingAlt, gridBagConstraints);
 
-        tfFpAltitude = new JTextField(10);
+        tfFpAltitude = new JTextField(6);
         tfFpAltitude.setToolTipText("Either the alt in ft or as flight level (FLxxx)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -606,18 +653,36 @@ public class ContactSettingsDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlLine4.add(tfFpAltitude, gridBagConstraints);
 
-        JLabel lbAltAirports = new JLabel("Alt. Airports:");
+        JLabel lbCruisingSpeed = new JLabel("Crsg.TAS.:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+        jPnlLine4.add(lbCruisingSpeed, gridBagConstraints);
+
+        tfFpTAS = new JTextField(4);
+        tfFpTAS.setToolTipText("Planned TAS in KN with respect to wind");
+        tfFpTAS.addFocusListener(this);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+        jPnlLine4.add(tfFpTAS, gridBagConstraints);
+
+        JLabel lbAltAirports = new JLabel("Alt. Airports:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         jPnlLine4.add(lbAltAirports, gridBagConstraints);
 
-        tfAlternAirports = new JTextField();
+        tfAlternAirports = new JTextField(9);
         tfAlternAirports.setToolTipText("Comma separated list of alternative airports.");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -658,33 +723,43 @@ public class ContactSettingsDialog extends JFrame {
     }
 
     public void show(GuiRadarContact contact, MouseEvent e) {
+        setVisible(false);
         this.contact = contact;
 
-        initDataDisplay(contact);
+        setData(contact);
+        invalidate();
+        doLayout();
 
         Dimension innerSize = getPreferredSize();
         setSize(new Dimension((int) innerSize.getWidth() + 8, (int) innerSize.getHeight() + 8));
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle maxBounds = env.getMaximumWindowBounds();
 
-        Point2D p = e.getLocationOnScreen();// ((JComponent) e.getSource()).getLocationOnScreen();
-        p = new Point2D.Double(p.getX() - this.getWidth()/2, p.getY());
+        Point2D p;
+        if(e!=null) {
+            p = e.getLocationOnScreen();// ((JComponent) e.getSource()).getLocationOnScreen();
+            p = new Point2D.Double(p.getX() - this.getWidth()/2, p.getY());
+        } else {
+            double x = maxBounds.getCenterX()-innerSize.getWidth()/2;
+            double y = maxBounds.getCenterY()-innerSize.getHeight()/2;
+            
+            p = new Point2D.Double(x, y);
+        }
+        
 
         int lowerDistanceToScreenBorder = 50;
         if (p.getY() + getHeight() > maxBounds.getHeight() - lowerDistanceToScreenBorder) {
             p = new Point2D.Double(p.getX(), maxBounds.getHeight() - getHeight() - lowerDistanceToScreenBorder);
         }
         setLocation(new Point((int) p.getX(), (int) p.getY()));
-        doLayout();
         setVisible(true);
         tpDetails.requestFocus();
     }
 
-    private void initDataDisplay(GuiRadarContact contact) {
+    public void setData(GuiRadarContact contact) {
 
         tbContacts.setTitle("<html><body>Contact <b>"+contact.getCallSign()+"</b></body></html>");
         chbFgComSupport.setSelected(contact.hasFgComSupport());
-        tpDetails.setText(contact.getAtcComment());
         cbLanguages.setSelectedItem(contact.getAtcLanguage());
 
 
@@ -692,7 +767,8 @@ public class ContactSettingsDialog extends JFrame {
 
         String aircraftCode = fpd.getAircraft();
         tfAircraft.setText(aircraftCode==null|| aircraftCode.isEmpty()?contact.getAircraftCode():aircraftCode);
-        tfModel.setText(contact.getModel());
+        tfAircraft.setToolTipText("Model: "+contact.getModel());
+        tfSquawk.setText(contact.getAssignedSquawk()!=null?""+contact.getAssignedSquawk():"");
 
         tfFlightCode.setText(fpd.getFlightCode());
         cbFlightPlanTypes.setSelectedItem(fpd.getType());
@@ -700,14 +776,15 @@ public class ContactSettingsDialog extends JFrame {
         tfDepAirport.setText(fpd.getDepartureAirport());
         tfDepTime.setText(fpd.getDeparture());
         tfDestAirport.setText(fpd.getDestinationAirport());
-        tfArrivalTime.setText(fpd.getArrivalTime());
+        tfArrivalTime.setText(controller.getEstimatedArrivalTime(contact));
         tfRoute.setText(fpd.getRoute());
         tfAlternAirports.setText(fpd.getAlternativeDestinationAirports());
         tfFpAltitude.setText(fpd.getCruisingAltitude());
-
-        cbAssignedRunway.setModel(master.getDataRegistry().getRunwayModel(true));
+        tfFpTAS.setText(fpd.getTrueAirspeed());
+        
+        cbAssignedRunway.setModel(master.getAirportData().getRunwayModel(true));
         cbAssignedRunway.setSelectedItem(fpd.getAssignedRunway());
-        cbAssignedRoute.setModel(master.getDataRegistry().getNavaidDB().getRoutesCbModel(true));
+        cbAssignedRoute.setModel(master.getAirportData().getNavaidDB().getRoutesCbModel(true));
         cbAssignedRoute.setSelectedItem(fpd.getAssignedRoute());
 
         tfAssignedAltitude.setText(fpd.getAssignedAltitude());
@@ -715,16 +792,22 @@ public class ContactSettingsDialog extends JFrame {
 
         cbHandoverATCs.setModel(master.getRadarContactManager().getOtherATCsCbModel());
 
+        tpDetails.setText(fpd.getRemarks());
+        tpPrivateDetails.setText(contact.getAtcComment());
+
         initOwnership(fpd);
+        
+        setFpReadable(fpd.isUncontrolled() || fpd.isOwnedByMe());
     }
     /** fills the panel in fron of the reset flightplan button */
     private void initOwnership(FlightPlanData fpd) {
         jPnlOnwerShip.removeAll();
 
-        if(fpd.isOwnedByMe(master.getDataRegistry())) {
+        if(fpd.isOwnedByMe()) {
             // my contact
+            
             JLabel lbControlledBy = new JLabel("Controlled by me.");
-            lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC));
+            lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC).deriveFont(Font.BOLD));
             GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = 0;
@@ -740,9 +823,9 @@ public class ContactSettingsDialog extends JFrame {
             gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
             jPnlOnwerShip.add(lbHandover, gridBagConstraints);
 
-            cbHandoverATCs.setEditable(true);
+            cbHandoverATCs.setEditable(false);
             Dimension dim = cbAssignedRunway.getPreferredSize();
-            cbHandoverATCs.setPreferredSize(new Dimension(80, (int) dim.getHeight()));
+            cbHandoverATCs.setPreferredSize(new Dimension(100, (int) dim.getHeight()));
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 2;
             gridBagConstraints.gridy = 0;
@@ -764,10 +847,10 @@ public class ContactSettingsDialog extends JFrame {
 
             cbHandoverATCs.setSelectedItem(fpd.getHandover());
 
-        } else if(fpd.isOfferedToMe(master.getDataRegistry())) {
+        } else if(fpd.isOfferedToMe()) {
             // offered to me
             JLabel lbControlledBy = new JLabel("Offered to my by: " + fpd.getOwner());
-            lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC));
+            lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC).deriveFont(Font.BOLD));
             GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = 0;
@@ -790,7 +873,7 @@ public class ContactSettingsDialog extends JFrame {
         } else if(fpd.getOwner()!=null && !fpd.getOwner().isEmpty()) {
             // owned by somebody else
             JLabel lbControlledBy = new JLabel("Controlled by: ");
-            lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC));
+            lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC).deriveFont(Font.BOLD));
             GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = 0;
@@ -810,7 +893,7 @@ public class ContactSettingsDialog extends JFrame {
         } else {
             // owned by nobody
             JLabel lbControlledBy = new JLabel("Uncontrolled...");
-            lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC));
+            lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC).deriveFont(Font.BOLD));
             GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = 0;
@@ -832,7 +915,31 @@ public class ContactSettingsDialog extends JFrame {
         }
     }
 
+    private void setFpReadable(boolean b) {
+        tfFlightCode.setEditable(b);
+        cbFlightPlanTypes.setEnabled(b);
+        tfDepAirport.setEditable(b);
+        tfDepTime.setEditable(b);
+        tfDestAirport.setEditable(b);
+        tfArrivalTime.setEditable(b);
+        tfRoute.setEditable(b);
+        tfAlternAirports.setEditable(b);
+        tfFpAltitude.setEditable(b);
+        tfFpTAS.setEditable(b);
+        cbAssignedRunway.setEnabled(b);
+        cbAssignedRoute.setEnabled(b);
+        tfAssignedAltitude.setEditable(b);
+        // cbFlightPlanStatus.setSelectedItem(fpd.getFpStatus());
+        tpDetails.setEditable(b);
+    }
+
     private class DialogCloseListener extends WindowAdapter {
+        
+        @Override
+        public void windowOpened(WindowEvent e) {
+            
+        }
+        
         @Override
         public void windowClosed(WindowEvent e) {
             closeDialog();
@@ -853,18 +960,20 @@ public class ContactSettingsDialog extends JFrame {
     public void closeDialog() {
         if (isVisible()) {
 
-            saveData(contact);
-
+            saveData();
+            
+            contact.getFlightPlan().setReadyForTransmission();
+            master.getFlightPlanExchangeManager().triggerTransmission();
             setVisible(false);
         }
     }
 
-    private void saveData(GuiRadarContact contact2) {
-        contact.setFgComSupport(chbFgComSupport.isSelected());
-        contact.setAtcComment(tpDetails.getText().trim());
-        contact.setAtcLanguage(controller.getAutoAtcLanguages(cbLanguages.getSelectedIndex()));
+    private void saveData() {
 
         FlightPlanData fpd = contact.getFlightPlan();
+
+        contact.setFgComSupport(chbFgComSupport.isSelected());
+        contact.setAtcLanguage(controller.getAutoAtcLanguages(cbLanguages.getSelectedIndex()));
 
 
         fpd.setAircraft(tfAircraft.getText());
@@ -878,15 +987,27 @@ public class ContactSettingsDialog extends JFrame {
         fpd.setRoute(tfRoute.getText());
         fpd.setAlternativeDestinationAirports(tfAlternAirports.getText());
         fpd.setCruisingAltitude(tfFpAltitude.getText());
-
+        fpd.setTrueAirspeed(tfFpTAS.getText());
+        // estimatedFlightTime+
+        // estimatedFuelTime
+        
         fpd.setAssignedRunway((String)cbAssignedRunway.getSelectedItem());
         fpd.setAssignedRoute((String)cbAssignedRoute.getSelectedItem());
         fpd.setAssignedAltitude(tfAssignedAltitude.getText());
 
-        if(contact2.getFlightPlan().isOwnedByMe(master.getDataRegistry())) {
-            fpd.setHandover((String)cbHandoverATCs.getSelectedItem());
+        if(contact.getFlightPlan().isOwnedByMe()) {
+            String handover = (String)cbHandoverATCs.getSelectedItem();
+            fpd.setHandover(handover);
+            if(handover!=null && !handover.isEmpty()) {
+                FpAtc handoverAtc = master.getRadarContactManager().getAtcFor(handover);
+                if(handoverAtc!=null) {
+                    master.getFlightPlanExchangeManager().sendHandoverMessage(contact, handoverAtc);
+                }
+            }
         }
         // cbFlightPlanStatus.setSelectedItem(fpd.getFpStatus());
+        fpd.setRemarks(tpDetails.getText().trim());
+        contact.setAtcComment(tpPrivateDetails.getText().trim());
     }
 
     private class DetailsKeyListener extends KeyAdapter {
@@ -894,24 +1015,48 @@ public class ContactSettingsDialog extends JFrame {
         public void keyTyped(KeyEvent e) {
             JTextPane ta = (JTextPane) e.getSource();
             String currentText = ta.getText();
-            if (e.getKeyChar() == KeyEvent.VK_ENTER && !e.isControlDown()) {
-                int carretPos = ta.getCaretPosition() - 1;
-                currentText = new StringBuilder(currentText).deleteCharAt(carretPos).toString();
-                master.getRadarContactManager().setAtcComment(currentText);
-                ta.setText(currentText); // remove newline
-                ta.setCaretPosition(carretPos);
-                e.consume();
-
-                closeDialog();
-            }
-            if (e.getKeyChar() == KeyEvent.VK_ENTER && e.isControlDown()) {
-                int carretPos = ta.getCaretPosition();
-                currentText = new StringBuilder(currentText).insert(carretPos, "\n").toString();
-                master.getRadarContactManager().setAtcComment(currentText); // save and continue
-                ta.setText(currentText);
-                ta.setCaretPosition(carretPos + 1);
-                ta.requestFocus();
-            }
+//            if(ta.equals(tpPrivateDetails)) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER && !e.isControlDown()) {
+                    int carretPos = ta.getCaretPosition() - 1;
+                    currentText = new StringBuilder(currentText).deleteCharAt(carretPos).toString();
+                    // master.getRadarContactManager().setAtcComment(currentText);
+                    saveData();
+                    ta.setText(currentText); // remove newline
+                    ta.setCaretPosition(carretPos);
+                    e.consume();
+    
+                    closeDialog();
+                }
+                if (e.getKeyChar() == KeyEvent.VK_ENTER && e.isControlDown()) {
+                    int carretPos = ta.getCaretPosition();
+                    currentText = new StringBuilder(currentText).insert(carretPos, "\n").toString();
+                    //master.getRadarContactManager().setAtcComment(currentText); // save and continue
+                    saveData();
+                    ta.setText(currentText);
+                    ta.setCaretPosition(carretPos + 1);
+                    ta.requestFocus();
+                }
+//            }
+//            if(ta.equals(tpPrivateDetails)) {
+//                if (e.getKeyChar() == KeyEvent.VK_ENTER && !e.isControlDown()) {
+//                    int carretPos = ta.getCaretPosition() - 1;
+//                    currentText = new StringBuilder(currentText).deleteCharAt(carretPos).toString();
+//                    master.getRadarContactManager().setAtcComment(currentText);
+//                    ta.setText(currentText); // remove newline
+//                    ta.setCaretPosition(carretPos);
+//                    e.consume();
+//    
+//                    closeDialog();
+//                }
+//                if (e.getKeyChar() == KeyEvent.VK_ENTER && e.isControlDown()) {
+//                    int carretPos = ta.getCaretPosition();
+//                    currentText = new StringBuilder(currentText).insert(carretPos, "\n").toString();
+//                    master.getRadarContactManager().setAtcComment(currentText); // save and continue
+//                    ta.setText(currentText);
+//                    ta.setCaretPosition(carretPos + 1);
+//                    ta.requestFocus();
+//                }
+//            }
         }
     }
 
@@ -921,25 +1066,50 @@ public class ContactSettingsDialog extends JFrame {
             JComponent source = (JComponent)e.getSource();
 
             if("RESET".equals(source.getName())) {
-                contact.getFlightPlan().reset(master.getDataRegistry());
-                initDataDisplay(contact);
+                contact.getFlightPlan().reset();
+                setData(contact);
             } else if("START_HERE".equals(source.getName())) {
-                contact.getFlightPlan().startFromHere(master.getDataRegistry());
-                initDataDisplay(contact);
+                contact.getFlightPlan().startFromHere(master.getAirportData());
+                setData(contact);
             } else if("LAND_HERE".equals(source.getName())) {
-                contact.getFlightPlan().landHere(master.getDataRegistry());
-                initDataDisplay(contact);
+                contact.getFlightPlan().landHere(master.getAirportData());
+                setData(contact);
             } else if("TAKE_OVER".equals(source.getName())) {
-                contact.getFlightPlan().takeControl(master.getDataRegistry());
-                initDataDisplay(contact);
+                master.getRadarContactManager().takeUnderControl(contact);
+                setData(contact);
             } else if("CONTROL".equals(source.getName())) {
-                contact.getFlightPlan().takeControl(master.getDataRegistry());
-                initDataDisplay(contact);
+                master.getRadarContactManager().takeUnderControl(contact);
+                setData(contact);
             } else if("RELEASE_CONTROL".equals(source.getName())) {
-                contact.getFlightPlan().releaseControl();
-                initDataDisplay(contact);
+                master.getRadarContactManager().releaseFromControl(contact);
+                setData(contact);
             }
         }
+    }
+
+    // focus listener
+    
+    @Override
+    public void focusGained(FocusEvent e) {
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        if(e.getSource().equals(tfDestAirport) || e.getSource().equals(tfFpTAS)) {
+            if(!tfDestAirport.getText().isEmpty() &&
+               !tfDestAirport.getText().equals(master.getAirportData().getAirportCode())) {
+                // destination airport is not own airport
+                cbAssignedRunway.setSelectedItem("");
+                cbAssignedRoute.setSelectedItem("");
+            }
+            saveData();
+            tfArrivalTime.setText(controller.getEstimatedArrivalTime(contact));
+        }
+        
+    }
+
+    public synchronized boolean shows(GuiRadarContact c) {
+        return c.equals(contact);
     }
 
 }

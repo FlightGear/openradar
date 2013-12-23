@@ -84,8 +84,8 @@ public class AtcMenuChatMessage {
         return result;
     }
 
-    public static String replaceVariables(String text, GuiMasterController master, GuiRadarContact contact, List<String> variables ) {
-        AirportData data = master.getDataRegistry();
+    public static String replaceVariables(String text, GuiMasterController master, GuiRadarContact selectedContact, List<String> variables ) {
+        AirportData data = master.getAirportData();
         MetarData metar = master.getMetarReader().getMetar(data.getMetarSource());
 
         /*
@@ -102,8 +102,6 @@ public class AtcMenuChatMessage {
          * /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range
          *
          */
-        GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
-
         ArrayList<Object> values = new ArrayList<Object>();
         for(String varName : variables) {
             if("/openradar/metar/pressure-sea-level".equals(varName)) {
@@ -121,6 +119,12 @@ public class AtcMenuChatMessage {
                 } else {
                     values.add(master.getRadioManager().getActiveFrequenciesForDisplay());
                 }
+            } else if("/openradar/transitionAlt".equals(varName)) {
+                values.add(String.format("%dft",data.getTransitionAlt()));
+
+            } else if("/openradar/transitionFL".equals(varName)) {
+                values.add(String.format("FL%03d",data.getTransitionFL(master)));
+
             } else if("/sim/atc/activeRW".equals(varName)) {
                 values.add(master.getStatusManager().getActiveRunways());
 
@@ -137,7 +141,7 @@ public class AtcMenuChatMessage {
                 values.add(metar.getWindDisplayString());
 
             } else if("/openradar/metar/visibility".equals(varName)) {
-                values.add(metar.getVisibility()+" "+metar.getVisibilityUnit());
+                values.add(metar.getVisibility()+""+metar.getVisibilityUnit());
 
             } else if("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-APalt".equals(varName)) {
                 values.add(data.getElevationFt());
@@ -152,7 +156,7 @@ public class AtcMenuChatMessage {
                 values.add(data.getAirportCode());
 
             } else if("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range".equals(varName)) {
-                values.add(contact.getRadarContactDistanceD());
+                values.add(selectedContact.getRadarContactDistanceD());
             }
         }
 

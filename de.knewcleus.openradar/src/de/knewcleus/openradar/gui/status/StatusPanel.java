@@ -92,6 +92,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     private final MetarSettingsDialog metarSettingsDialog;
 
     private MouseListener metarMouseListener = new MetarMouseListener();
+    private StatusPanelMouseListener statusPanelMouseListener = new StatusPanelMouseListener();
 
     /**
      * Creates new form WeatherRadioRunwayPanel
@@ -152,6 +153,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbTime.setForeground(Palette.DESKTOP_TEXT);
         lbTime.setText("");
         lbTime.setToolTipText("time in UTC");
+        lbTime.addMouseListener(statusPanelMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -162,8 +164,9 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         headerPanel.add(lbTime, gridBagConstraints);
 
         lbAirport.setForeground(Palette.DESKTOP_TEXT);
-        lbAirport.setText(master.getDataRegistry().getAirportCode() + " " + master.getDataRegistry().getAirportName().toUpperCase());
-        lbAirport.setToolTipText(String.format("Magnetic declination: %1.1f°", master.getDataRegistry().getMagneticDeclination()));
+        lbAirport.setText(master.getAirportData().getAirportCode() + " " + master.getAirportData().getAirportName().toUpperCase());
+        updateTransitionValues(); // sets the tool tip text
+        lbAirport.addMouseListener(statusPanelMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -174,7 +177,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         headerPanel.add(lbAirport, gridBagConstraints);
 
         tfCurrentCallSign.setOpaque(true);
-        tfCurrentCallSign.setText(master.getDataRegistry().getInitialATCCallSign());
+        tfCurrentCallSign.setText(master.getAirportData().getInitialATCCallSign());
         tfCurrentCallSign.setToolTipText("Current ATC call sign");
         tfCurrentCallSign.setMinimumSize(new Dimension(80,(int)tfCurrentCallSign.getPreferredSize().getHeight()));
         tfCurrentCallSign.setPreferredSize(new Dimension(80,(int)tfCurrentCallSign.getPreferredSize().getHeight()));
@@ -290,7 +293,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
         add(headerPanel, gridBagConstraints);
 
-        if(!master.getDataRegistry().getRadios().isEmpty() && master.getDataRegistry().getFgComMode()!=FgComMode.Off) {
+        if(!master.getAirportData().getRadios().isEmpty() && master.getAirportData().getFgComMode()!=FgComMode.Off) {
             // in the other case radioPanel is empty and two separator would be displayed...
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
@@ -344,7 +347,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     }
 
     public void updateTime() {
-        lbTime.setText(sdf.format(new Date())+" UTC");
+        lbTime.setText(sdf.format(new Date())+" UTC  "+String.format("%d/TL%03d", master.getAirportData().getTransitionAlt(),master.getAirportData().getTransitionFL(master)));
         if(currentMetar!=null && weatherPanel.getBorder()!=border && currentMetar.isNew()) {
             weatherPanel.setBorder(border);
         }
@@ -375,7 +378,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
     @Override
     public void registerNewMetar(MetarData metar) {
-        if(metar.getAirportCode().equals(master.getDataRegistry().getMetarSource())) {
+        if(metar.getAirportCode().equals(master.getAirportData().getMetarSource())) {
             currentMetar = metar;
 
             StringBuilder sb = new StringBuilder();
@@ -385,7 +388,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
             lbPressure.setText(String.format("QNH: %2.2f / %4.1f", metar.getPressureInHG(),metar.getPressureHPa()));
             lbWind.setToolTipText(metar.getMetarBaseData());
             lbPressure.setToolTipText(metar.getMetarBaseData());
-            lbVisibility.setText(metar.isCavok()?"CAVOK":"Vis: "+metar.getVisibility()+" "+metar.getVisibilityUnit());
+            lbVisibility.setText(metar.isCavok()?"CAVOK":"Vis: "+metar.getVisibility()+""+metar.getVisibilityUnit());
             lbVisibility.setToolTipText(metar.getMetarBaseData());
             String phaenomena = metar.getWeatherPhaenomena().trim();
             if(phaenomena.isEmpty()) {
@@ -400,7 +403,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
             revalidate();
         } else {
             // fill add weather station panel
-            String addMetarSources = master.getDataRegistry().getAddMetarSources();
+            String addMetarSources = master.getAirportData().getAddMetarSources();
             addWeatherStationPanel.removeAll();
             if(addMetarSources!=null && !addMetarSources.trim().isEmpty()) {
                 StringTokenizer st = new StringTokenizer(addMetarSources,",");
@@ -446,6 +449,17 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         runwayPanel.refreshRunways(master.getAirportMetar());
     }
 
+    private class StatusPanelMouseListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            //if(e.getClickCount()==1 && e.getButton() == MouseEvent.BUTTON2) {
+                if(e.getSource()==lbAirport || e.getSource()==lbTime) {
+                    master.getRadarContactManager().getTransponderSettingsDialog().show(e);
+                } 
+            //}
+        }
+    }
+    
     private class MetarMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -461,5 +475,13 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
                 metarSettingsDialog.show(e);
             }
         }
+    }
+
+    public boolean isMetarDialogVisible() {
+        return metarSettingsDialog.isVisible();
+    }
+
+    public void updateTransitionValues() {
+        lbAirport.setToolTipText((String.format("<html><body>Magnetic declination: %1.1f°<br>Transition: %d/FL%03d</body></html>", master.getAirportData().getMagneticDeclination(),master.getAirportData().getTransitionAlt(),master.getAirportData().getTransitionFL(master))));
     }
 }

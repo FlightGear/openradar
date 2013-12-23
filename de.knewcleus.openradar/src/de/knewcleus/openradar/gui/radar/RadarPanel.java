@@ -37,6 +37,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.ButtonGroup;
@@ -50,8 +54,12 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
+import org.apache.log4j.Logger;
+
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+import de.knewcleus.openradar.gui.contacts.HandoverTargetDialog;
 import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
 
 /**
@@ -104,13 +112,19 @@ public class RadarPanel extends JPanel {
 
     private JTextField tfSearchNavaids;
 
+    private HandoverTargetDialog handoverDialog;
+
+    private Logger log = Logger.getLogger(RadarPanel.class);
+    
     /**
      * Creates new form RadarPanel
      */
     public RadarPanel(GuiMasterController master) {
         this.master=master;
         master.getRadarBackend().setPanel(this);
+        handoverDialog = new HandoverTargetDialog(master);
         initComponents();
+        setDropTarget( new RadarDropTarget() );
     }
 
     public RadarMapPanel getRadarMapPanel() {
@@ -131,6 +145,7 @@ public class RadarPanel extends JPanel {
         setLayout(new java.awt.GridBagLayout());
         setOpaque(true);
         setBackground(Palette.DESKTOP);
+        
 
         radarView.setBackground(Palette.DESKTOP);
 
@@ -280,13 +295,13 @@ public class RadarPanel extends JPanel {
         menuMap.add(menuDataMode);
         ButtonGroup bg = new ButtonGroup();
 
-        for(ADatablockLayout layout : master.getDataRegistry().getDatablockLayoutManager().getLayoutModes()) {
+        for(ADatablockLayout layout : master.getAirportData().getDatablockLayoutManager().getLayoutModes()) {
             JCheckBoxMenuItem mItemDbLayout = new JCheckBoxMenuItem();
             bg.add(mItemDbLayout);
             mItemDbLayout.setText(layout.getMenuText());
             mItemDbLayout.setName(layout.getName());
             dataLayoutsMenuItems.put(layout.getName(),mItemDbLayout);
-            mItemDbLayout.addActionListener(master.getDataRegistry().getDatablockLayoutManager().getActionListener(master));
+            mItemDbLayout.addActionListener(master.getAirportData().getDatablockLayoutManager().getActionListener(master));
             menuDataMode.add(mItemDbLayout);
         }
 
@@ -301,7 +316,7 @@ public class RadarPanel extends JPanel {
         mItemLANDMASS.setName("LANDMASS");
         mItemLANDMASS.setToolTipText("Toggle display of landmass layer");
         mItemLANDMASS.addActionListener(master.getRadarManager().getObjectFilterListener());
-        if(master.getDataRegistry().isLayerVisible("landmass")) {
+        if(master.getAirportData().isLayerVisible("landmass")) {
             menuLayers.add(mItemLANDMASS);
         }
 
@@ -310,7 +325,7 @@ public class RadarPanel extends JPanel {
         mItemURBAN.setName("URBAN");
         mItemURBAN.setToolTipText("Toggle display of urban layer");
         mItemURBAN.addActionListener(master.getRadarManager().getObjectFilterListener());
-        if(master.getDataRegistry().isLayerVisible("urban")) {
+        if(master.getAirportData().isLayerVisible("urban")) {
             menuLayers.add(mItemURBAN);
         }
 
@@ -319,7 +334,7 @@ public class RadarPanel extends JPanel {
         mItemLAKE.setName("LAKE");
         mItemLAKE.setToolTipText("Toggle display of lake layer");
         mItemLAKE.addActionListener(master.getRadarManager().getObjectFilterListener());
-        if(master.getDataRegistry().isLayerVisible("lake")) {
+        if(master.getAirportData().isLayerVisible("lake")) {
             menuLayers.add(mItemLAKE);
         }
 
@@ -328,7 +343,7 @@ public class RadarPanel extends JPanel {
         mItemSTREAM.setName("STREAM");
         mItemSTREAM.setToolTipText("Toggle display of stream layer");
         mItemSTREAM.addActionListener(master.getRadarManager().getObjectFilterListener());
-        if(master.getDataRegistry().isLayerVisible("stream")) {
+        if(master.getAirportData().isLayerVisible("stream")) {
             menuLayers.add(mItemSTREAM);
         }
 
@@ -337,7 +352,7 @@ public class RadarPanel extends JPanel {
         mItemTARMAC.setName("TARMAC");
         mItemTARMAC.setToolTipText("Toggle display of tarmac layer");
         mItemTARMAC.addActionListener(master.getRadarManager().getObjectFilterListener());
-        if(master.getDataRegistry().isLayerVisible("tarmac")) {
+        if(master.getAirportData().isLayerVisible("tarmac")) {
             menuLayers.add(mItemTARMAC);
         }
 
@@ -505,6 +520,7 @@ public class RadarPanel extends JPanel {
         tfSearchNavaids.setToolTipText("Enter navaids/airport codes to find and highlight");
         //tfSearchNavaids.setForeground(java.awt.Color.white);
         tfSearchNavaids.addActionListener(master.getRadarManager().getNavaidSearchActionListener());
+        tfSearchNavaids.setMinimumSize(new Dimension(100,tfSearchNavaids.getFont().getSize()+10));
         tfSearchNavaids.setPreferredSize(new Dimension(400,tfSearchNavaids.getFont().getSize()+10));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -523,7 +539,7 @@ public class RadarPanel extends JPanel {
     }
 
     public void selectFilter(String zoomLevelKey) {
-        if(!master.getDataRegistry().getNavaidDB().hasRoutes()) {  // show only if there is something to hide
+        if(!master.getAirportData().getNavaidDB().hasRoutes()) {  // show only if there is something to hide
             mItemSTARSID.setVisible(false);
         }
         // reset
@@ -569,32 +585,58 @@ public class RadarPanel extends JPanel {
     }
 
     public void validateToggles() {
-        setObjectFilter(mItemFIX,master.getDataRegistry().getRadarObjectFilterState("FIX"));
-        setObjectFilter(mItemFIX_NUM,master.getDataRegistry().getToggleState("FIX_NUM", false));
-        setObjectFilter(mItemNDB,master.getDataRegistry().getRadarObjectFilterState("NDB"));
-        setObjectFilter(mItemVOR,master.getDataRegistry().getRadarObjectFilterState("VOR"));
-        setObjectFilter(mItemCircles,master.getDataRegistry().getRadarObjectFilterState("CIRCLES"));
-        setObjectFilter(mItemApt,master.getDataRegistry().getRadarObjectFilterState("APT"));
-        setObjectFilter(mItemPPN,master.getDataRegistry().getRadarObjectFilterState("PPN"));
-        setObjectFilter(mItemPPN2,master.getDataRegistry().getRadarObjectFilterState("PPN"));
-        setObjectFilter(mItemGSH,master.getDataRegistry().getRadarObjectFilterState("GSH"));
-        setObjectFilter(mItemSTP,master.getDataRegistry().getRadarObjectFilterState("STP"));
-        setObjectFilter(mItemSTP2,master.getDataRegistry().getRadarObjectFilterState("STP"));
-        setObjectFilter(mItemSTARSID,master.getDataRegistry().getRadarObjectFilterState("STARSID"));
-        setObjectFilter(mItemSTARSID2,master.getDataRegistry().getRadarObjectFilterState("STARSID"));
+        setObjectFilter(mItemFIX,master.getAirportData().getRadarObjectFilterState("FIX"));
+        setObjectFilter(mItemFIX_NUM,master.getAirportData().getToggleState("FIX_NUM", false));
+        setObjectFilter(mItemNDB,master.getAirportData().getRadarObjectFilterState("NDB"));
+        setObjectFilter(mItemVOR,master.getAirportData().getRadarObjectFilterState("VOR"));
+        setObjectFilter(mItemCircles,master.getAirportData().getRadarObjectFilterState("CIRCLES"));
+        setObjectFilter(mItemApt,master.getAirportData().getRadarObjectFilterState("APT"));
+        setObjectFilter(mItemPPN,master.getAirportData().getRadarObjectFilterState("PPN"));
+        setObjectFilter(mItemPPN2,master.getAirportData().getRadarObjectFilterState("PPN"));
+        setObjectFilter(mItemGSH,master.getAirportData().getRadarObjectFilterState("GSH"));
+        setObjectFilter(mItemSTP,master.getAirportData().getRadarObjectFilterState("STP"));
+        setObjectFilter(mItemSTP2,master.getAirportData().getRadarObjectFilterState("STP"));
+        setObjectFilter(mItemSTARSID,master.getAirportData().getRadarObjectFilterState("STARSID"));
+        setObjectFilter(mItemSTARSID2,master.getAirportData().getRadarObjectFilterState("STARSID"));
 
-        setObjectFilter(mItemSoundMute,master.getDataRegistry().getRadarObjectFilterState("MUTE"));
-        setObjectFilter(mItemSoundChat,master.getDataRegistry().getRadarObjectFilterState("CHAT"));
-        setObjectFilter(mItemSoundContact,master.getDataRegistry().getRadarObjectFilterState("CONTACT"));
-        setObjectFilter(mItemSoundMetar,master.getDataRegistry().getRadarObjectFilterState("METAR"));
+        setObjectFilter(mItemSoundMute,master.getAirportData().getRadarObjectFilterState("MUTE"));
+        setObjectFilter(mItemSoundChat,master.getAirportData().getRadarObjectFilterState("CHAT"));
+        setObjectFilter(mItemSoundContact,master.getAirportData().getRadarObjectFilterState("CONTACT"));
+        setObjectFilter(mItemSoundMetar,master.getAirportData().getRadarObjectFilterState("METAR"));
 
-        setObjectFilter(mItemLANDMASS,master.getDataRegistry().getRadarObjectFilterState("LANDMASS"));
-        setObjectFilter(mItemURBAN,master.getDataRegistry().getRadarObjectFilterState("URBAN"));
-        setObjectFilter(mItemLAKE,master.getDataRegistry().getRadarObjectFilterState("LAKE"));
-        setObjectFilter(mItemSTREAM,master.getDataRegistry().getRadarObjectFilterState("STREAM"));
-        setObjectFilter(mItemTARMAC,master.getDataRegistry().getRadarObjectFilterState("TARMAC"));
+        setObjectFilter(mItemLANDMASS,master.getAirportData().getRadarObjectFilterState("LANDMASS"));
+        setObjectFilter(mItemURBAN,master.getAirportData().getRadarObjectFilterState("URBAN"));
+        setObjectFilter(mItemLAKE,master.getAirportData().getRadarObjectFilterState("LAKE"));
+        setObjectFilter(mItemSTREAM,master.getAirportData().getRadarObjectFilterState("STREAM"));
+        setObjectFilter(mItemTARMAC,master.getAirportData().getRadarObjectFilterState("TARMAC"));
 
-        String key = master.getDataRegistry().getDatablockLayoutManager().getActiveLayout().getName();
+        String key = master.getAirportData().getDatablockLayoutManager().getActiveLayout().getName();
         dataLayoutsMenuItems.get(key).setSelected(true);
+    }
+
+    private class RadarDropTarget extends DropTarget {
+        
+        private static final long serialVersionUID = -2749068600723364921L;
+
+        @Override
+        public void dragEnter(DropTargetDragEvent e) { 
+//            if (((DropTarget) e.getSource()).getComponent() == master.getRadarContactManager().getGuiList()) {
+            GuiRadarContact contact=null;
+            try {
+                String callsign = (String) e.getTransferable().getTransferData(new DataFlavor(java.lang.String.class,"text/plain"));
+                contact = master.getRadarContactManager().getContactFor(callsign);
+            } catch (Exception e1) {
+                log.error("Exception while reading drag and drop data", e1);
+            } 
+
+            if(contact!=null && contact.getFlightPlan().isOwnedByMe()) {
+                // show handover target dialog
+                if(!handoverDialog.isVisible()) {
+                    handoverDialog = new HandoverTargetDialog(master);
+                    MouseEvent dummyEvent = new MouseEvent(radarView.getParent(), MouseEvent.MOUSE_DRAGGED, System.currentTimeMillis(), MouseEvent.BUTTON1, (int)(getX()+ e.getLocation().getX()), (int)(getY()+e.getLocation().getY()), 1, false);
+                    handoverDialog.setLocation(dummyEvent);
+                }
+            }
+        }
     }
 }

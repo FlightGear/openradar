@@ -37,6 +37,10 @@ import java.util.Locale;
 
 import javax.swing.UIManager;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.SetupController;
 
@@ -50,9 +54,15 @@ public class OpenRadar {
     static String propertiesFile = null;
     static String autoStartAirport=null;
 
+    private static Logger log;
+    
     public static void main(String[] args) {
 
-
+        PropertyConfigurator.configureAndWatch( "data/log4j.properties", 60*1000 );
+        //System.setProperty("log4j.configurationFile","data/log4j.xml");
+        log = LogManager.getLogger(OpenRadar.class); 
+        
+        
         for(String arg : args) {
             int pos = arg.indexOf("=");
             if(pos>0) {
@@ -80,7 +90,7 @@ public class OpenRadar {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e1) {
-                e1.printStackTrace();
+                log.error("Error while setting look and feel!",e);
             }
         }
 

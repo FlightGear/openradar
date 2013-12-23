@@ -28,18 +28,21 @@
  */
 package de.knewcleus.openradar.gui.flightplan;
 
+import java.awt.geom.Point2D;
 import java.util.Date;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
+import de.knewcleus.fgfs.location.GeoUtil;
+import de.knewcleus.fgfs.location.GeoUtil.GeoUtilInfo;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
-import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
 import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.setup.SectorCreator;
 
 public class FlightPlanData {
 
-    public enum UpdateStatus { CHANGED, IN_TRANSMISSION, SYNCHRONIZED }
+    public enum UpdateStatus { CHANGED, TO_BE_TRANSMITTED, IN_TRANSMISSION, SYNCHRONIZED }
 
     private UpdateStatus updateStatus = UpdateStatus.CHANGED;
 
@@ -50,7 +53,9 @@ public class FlightPlanData {
     public enum FlightType {
         VFR, IFR
     };
-
+    
+    private boolean inRelease = false;
+    
     private final AirportData airportData;
 
     private final GuiRadarContact contact;
@@ -82,28 +87,34 @@ public class FlightPlanData {
 
     private static FlightPlanTypeModel flightPlanTypeModel;
 
+    private Point2D locDestinationAirport = null;
+    private long lastUpdatelocDestAirport = 0;
+    private String dirToDestination = null;
+    private volatile boolean isDestinationAirportLocationAvailable = true;
+    
     public FlightPlanData(AirportData airportData, GuiRadarContact contact) {
 
         this.airportData = airportData;
 
-        this.assignedAltitude = null;
-        this.assignedRoute = null;
-        this.assignedRunway = null;
+        this.assignedAltitude = "";
+        this.assignedRoute = "";
+        this.assignedRunway = "";
 
         this.contact = contact;
         this.callsign = contact.getCallSign();
         this.owner = null;
         this.handover = null;
         this.squawk = "" + contact.getAssignedSquawk();
-        this.fpStatus = FlightPlanStatus.FILED.toString();
+        this.fpStatus = FlightPlanStatus.ACTIVE.toString();
         this.type = FlightType.IFR.toString();
         this.aircraft = contact.getAircraftCode();
         this.trueAirspeed = null;
-        this.departureAirport = null;
+        
+        this.departureAirport = "";
         this.departure = null;
         this.cruisingAltitude = null;
         this.route = null;
-        this.destinationAirport = null;
+        this.destinationAirport = "";
         this.alternativeDestinationAirports = null;
         this.estimatedFlightTime = null;
         this.estimatedFuelTime = null;
@@ -121,9 +132,9 @@ public class FlightPlanData {
 
         this.airportData = airportData;
 
-        this.assignedAltitude = null;
-        this.assignedRoute = null;
-        this.assignedRunway = null;
+        this.assignedAltitude = "";
+        this.assignedRoute = "";
+        this.assignedRunway = "";
 
         this.contact = contact;
         this.flightCode = flightCode;
@@ -152,41 +163,74 @@ public class FlightPlanData {
         this.remarks = remarks;
     }
 
-    public synchronized void update(String flightCode, String callSign, String owner, String handover, String squawk, String assignedAltitude, String fpStatus,
-                                    String type, String aircraft, String trueAirspeed, String departureAirport, String departureTime, String cruisingAltitude,
-                                    String route, String destinationAirport, String alternativeDestinationAirports, String estimatedFlightTime,
-                                    String estimatedFuelTime, String pilotName, String soulsOnBoard, String remarks) {
+    // not needed? 20131116
+//    public synchronized void update(String flightCode, String callSign, String owner, String handover, String squawk, String assignedAltitude, String fpStatus,
+//                                    String type, String aircraft, String trueAirspeed, String departureAirport, String departureTime, String cruisingAltitude,
+//                                    String route, String destinationAirport, String alternativeDestinationAirports, String estimatedFlightTime,
+//                                    String estimatedFuelTime, String pilotName, String soulsOnBoard, String remarks) {
+//
+////        this.assignedAltitude = null;
+////        this.assignedRoute = null;
+////        this.assignedRunway = null;
+//
+//        this.flightCode = flightCode;
+//        this.callsign = callSign;
+//        this.owner = owner;
+//        this.handover = handover;
+//        this.squawk = squawk;
+//        this.fpStatus = fpStatus;
+//        this.type = type;
+//        this.aircraft = aircraft;
+//        this.trueAirspeed = trueAirspeed;
+//        this.departureAirport = departureAirport;
+//        this.departure = departureTime;
+//        this.cruisingAltitude = cruisingAltitude;
+//        this.route = route;
+//        this.destinationAirport = destinationAirport;
+//        this.alternativeDestinationAirports = alternativeDestinationAirports;
+//        this.estimatedFlightTime = estimatedFlightTime;
+//        this.estimatedFuelTime = estimatedFuelTime;
+//        this.pilotName = pilotName;
+//        try {
+//            this.soulsOnBoard = Integer.parseInt(soulsOnBoard);
+//        } catch (Exception e) {
+//            this.soulsOnBoard = 1;
+//        }
+//        this.remarks = remarks;
+//    }
 
-        this.assignedAltitude = null;
-        this.assignedRoute = null;
-        this.assignedRunway = null;
+    public synchronized void update(FlightPlanData newFp) {
 
-        this.flightCode = flightCode;
-        this.callsign = callSign;
-        this.owner = owner;
-        this.handover = handover;
-        this.squawk = squawk;
-        this.fpStatus = fpStatus;
-        this.type = type;
-        this.aircraft = aircraft;
-        this.trueAirspeed = trueAirspeed;
-        this.departureAirport = departureAirport;
-        this.departure = departureTime;
-        this.cruisingAltitude = cruisingAltitude;
-        this.route = route;
-        this.destinationAirport = destinationAirport;
-        this.alternativeDestinationAirports = alternativeDestinationAirports;
-        this.estimatedFlightTime = estimatedFlightTime;
-        this.estimatedFuelTime = estimatedFuelTime;
-        this.pilotName = pilotName;
+//        this.assignedAltitude = null;
+//        this.assignedRoute = null;
+//        this.assignedRunway = null;
+
+        this.flightCode = newFp.getFlightCode();
+        this.callsign = newFp.getCallsign();
+        this.owner = newFp.getOwner();
+        this.handover = newFp.getHandover();
+        this.squawk = newFp.getSquawk();
+        this.fpStatus = newFp.getFpStatus();
+        this.type = newFp.getType();
+        this.aircraft = newFp.getAircraft();
+        this.trueAirspeed = newFp.getTrueAirspeed();
+        this.departureAirport = newFp.getDepartureAirport();
+        this.departure = newFp.getDeparture();
+        this.cruisingAltitude = newFp.getCruisingAltitude();
+        this.route = newFp.getRoute();
+        this.destinationAirport = newFp.getDestinationAirport();
+        this.alternativeDestinationAirports = newFp.getAlternativeDestinationAirports();
+        this.estimatedFlightTime = newFp.getEstimatedFlightTime();
+        this.estimatedFuelTime = newFp.getEstimatedFuelTime();
+        this.pilotName = newFp.getPilotName();
         try {
-            this.soulsOnBoard = Integer.parseInt(soulsOnBoard);
+            this.soulsOnBoard = newFp.getSoulsOnBoard();
         } catch (Exception e) {
             this.soulsOnBoard = 1;
         }
-        this.remarks = remarks;
+        this.remarks = newFp.getRemarks();
     }
-
+    
     public synchronized FlightPlanData copy() {
         FlightPlanData c = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedAltitude,
                 fpStatus, type, aircraft, trueAirspeed, departureAirport, departure, cruisingAltitude, route, destinationAirport,
@@ -264,6 +308,13 @@ public class FlightPlanData {
     }
 
     public synchronized String getAssignedRunway() {
+        if(assignedRunway!=null && ! assignedRunway.isEmpty()) {
+            if(isDeparting() && contact.getGroundSpeedD()> 60) {
+                // reset runway at start
+                setAssignedRunway(null);
+                setReadyForTransmission();
+            }
+        }
         return removeNull(assignedRunway);
     }
 
@@ -313,8 +364,10 @@ public class FlightPlanData {
     }
 
     public synchronized void setDepartureAirport(String departureAirport) {
-        this.departureAirport = departureAirport;
-        this.updateStatus=UpdateStatus.CHANGED;
+        if(this.departureAirport==null || !departureAirport.equals(this.departureAirport)) {
+            this.departureAirport = departureAirport.toUpperCase();
+            this.updateStatus=UpdateStatus.CHANGED;
+        }
     }
 
     public synchronized String getDeparture() {
@@ -349,8 +402,40 @@ public class FlightPlanData {
     }
 
     public synchronized void setDestinationAirport(String destinationAirport) {
-        this.destinationAirport = destinationAirport;
-        this.updateStatus=UpdateStatus.CHANGED;
+        if(this.destinationAirport==null || !destinationAirport.equals(this.destinationAirport)) {
+            this.destinationAirport = destinationAirport.toUpperCase();
+            locDestinationAirport = null;
+            dirToDestination = null;
+            isDestinationAirportLocationAvailable = true; // to re-enable search after a change from non existing Airport to an existing one
+            this.updateStatus=UpdateStatus.CHANGED;
+        } 
+    }
+
+    public synchronized String getDirectiontoDestinationAirport() {
+        try {
+//            if(isOwnedByMe()) {
+                if(destinationAirport!=null && !destinationAirport.isEmpty() && locDestinationAirport==null && isDestinationAirportLocationAvailable) {
+                    locDestinationAirport = SectorCreator.findLocationOf(destinationAirport.trim());
+                    isDestinationAirportLocationAvailable = locDestinationAirport != null;
+                    if(!isDestinationAirportLocationAvailable) {
+                        dirToDestination=null;
+                    }
+                } 
+                
+                if(isDestinationAirportLocationAvailable && locDestinationAirport!=null &&
+                   (this.dirToDestination==null || System.currentTimeMillis() - lastUpdatelocDestAirport > 3000)) {
+                    lastUpdatelocDestAirport = System.currentTimeMillis();
+                    Point2D locContact = getContact().getCenterGeoCoordinates();
+                    GeoUtilInfo gi = GeoUtil.getDistance(locContact.getX(), locContact.getY(), locDestinationAirport.getX(), locDestinationAirport.getY());
+                    float angle = gi.angle;
+                    
+                    dirToDestination = String.format("%03d°",Math.round(angle/10)*10);
+                } 
+  //          }
+        } catch(Exception e) {
+            dirToDestination="n/a";
+        }
+        return removeNull(dirToDestination);
     }
 
     public synchronized String getAlternativeDestinationAirports() {
@@ -413,12 +498,29 @@ public class FlightPlanData {
         return s != null ? s : "";
     }
 
-    public synchronized boolean isOwnedByMe(AirportData data) {
-        return data.getCallSign().equals(this.getOwner());
+    public synchronized boolean isUncontrolled() {
+        return owner==null || owner.isEmpty();
     }
 
-    public synchronized boolean isOfferedToMe(AirportData data) {
-        return data.getCallSign().equals(this.getHandover());
+    public synchronized boolean isOwnedByMe() {
+        return airportData.getCallSign().equals(this.getOwner());
+    }
+
+    public synchronized boolean isOwnedbyNobody() {
+        return owner==null || "".equals(owner);
+    }
+
+    public boolean isOwnedBySomeoneElse() {
+        return !isOwnedByMe() && !isOwnedbyNobody();
+    }
+    
+
+    public synchronized boolean isOfferedToMe() {
+        return airportData.getCallSign().equals(this.getHandover());
+    }
+    
+    public boolean isDeparting() {
+        return airportData.getAirportCode().equals(getDepartureAirport());
     }
 
     public static ComboBoxModel<String> getFpTypeModel() {
@@ -443,14 +545,14 @@ public class FlightPlanData {
         return null;
     }
 
-    public synchronized void reset(AirportData data) {
+    public synchronized void reset() {
         this.assignedAltitude = null;
         this.assignedRoute = null;
         this.assignedRunway = null;
 
-        this.fpStatus = FlightPlanStatus.FILED.toString();
+        this.fpStatus = FlightPlanStatus.ACTIVE.toString();
         this.aircraft = contact.getAircraftCode();
-        this.departureAirport = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5) ? data.getAirportCode() : "";
+        this.departureAirport = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5) ? airportData.getAirportCode() : "";
         this.departure = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5) ? FpTimeUtil.getUTCTimeString4Digits(new Date()) : "";
         this.cruisingAltitude = null;
         this.route = null;
@@ -462,39 +564,44 @@ public class FlightPlanData {
     }
 
     public synchronized void startFromHere(AirportData data) {
-        this.assignedAltitude = null;
-        this.assignedRoute = null;
-        this.assignedRunway = null;
-
-        this.fpStatus = FlightPlanStatus.FILED.toString();
-        this.aircraft = contact.getAircraftCode();
-        this.departureAirport = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5) ? data.getAirportCode() : "";
-        this.departure = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5) ? FpTimeUtil.getUTCTimeString4Digits(new Date()) : "";
-        this.cruisingAltitude = null;
-        this.route = null;
-        this.destinationAirport = null;
-        this.alternativeDestinationAirports = null;
-        this.estimatedFlightTime = null;
-        this.estimatedFuelTime = null;
+//        this.assignedAltitude = null;
+//        this.assignedRoute = null;
+//        this.assignedRunway = null;
+        if(isOwnedByMe() || isOfferedToMe() || isOwnedbyNobody()) {
+            this.fpStatus = FlightPlanStatus.ACTIVE.toString();
+            this.aircraft = contact.getAircraftCode();
+            this.departureAirport = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5) ? data.getAirportCode() : "";
+            this.departure = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5) ? FpTimeUtil.getUTCTimeString4Digits(new Date()) : "";
+//        this.cruisingAltitude = null;
+//        this.route = null;
+//        this.destinationAirport = null;
+//        this.alternativeDestinationAirports = null;
+//        this.estimatedFlightTime = null;
+//        this.estimatedFuelTime = null;
+        }
     }
 
     public synchronized void landHere(AirportData data) {
-        this.destinationAirport = data.getAirportCode();
+        if(isOwnedByMe() || isOfferedToMe() || isOwnedbyNobody()) {
+            this.destinationAirport = data.getAirportCode();
+        }
     }
 
     public synchronized void releaseControl() {
         this.owner = null;
         this.handover = null;
-        contact.setAlignment(Alignment.RIGHT);
+        inRelease = true;
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
-    public synchronized void takeControl(AirportData dataRegistry) {
-        this.owner = dataRegistry.getCallSign();
+    /** do not call this method directly, call setAlignment on contact! */
+    public synchronized void takeControl() {
+        this.owner = airportData.getCallSign();
         this.handover = null;
-        contact.setAlignment(Alignment.LEFT);
+        this.updateStatus=UpdateStatus.CHANGED;
     }
 
-    public boolean contactWillLandHere() {
+    public synchronized boolean contactWillLandHere() {
         return destinationAirport != null && destinationAirport.contains(airportData.getAirportCode());
     }
 
@@ -506,6 +613,16 @@ public class FlightPlanData {
         return updateStatus.equals(UpdateStatus.CHANGED);
     }
 
+    public synchronized void setReadyForTransmission() {
+        if(updateStatus==UpdateStatus.CHANGED) {
+            updateStatus=UpdateStatus.TO_BE_TRANSMITTED;
+        }
+    }
+    
+    public synchronized boolean readyToBeTransmitted() {
+        return updateStatus.equals(UpdateStatus.TO_BE_TRANSMITTED);
+    }
+    
     public synchronized void setInTransmission() {
         updateStatus=UpdateStatus.IN_TRANSMISSION;
     }
@@ -515,4 +632,13 @@ public class FlightPlanData {
             updateStatus=UpdateStatus.SYNCHRONIZED;
         }
     }
+
+    public synchronized boolean isInRelease() {
+        return inRelease;
+    }
+
+    public synchronized void setInRelease(boolean inRelease) {
+        this.inRelease = inRelease;
+    }
+
 }

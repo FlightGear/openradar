@@ -35,6 +35,7 @@ package de.knewcleus.openradar.rpvd.contact;
 import java.awt.Color;
 import java.awt.Font;
 
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
@@ -118,7 +119,7 @@ public class PureSimulationLayout extends ADatablockLayout {
     }
 
     @Override
-    public String getDataBlockText(GuiRadarContact c) {
+    public String getDataBlockText(GuiMasterController master, GuiRadarContact c) {
         if(c.isAtc()) {
             return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode());
 

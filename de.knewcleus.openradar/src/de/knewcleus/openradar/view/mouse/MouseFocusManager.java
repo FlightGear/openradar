@@ -37,8 +37,6 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.util.IOutputIterator;
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -58,6 +56,7 @@ public class MouseFocusManager extends MouseAdapter {
 	protected final RadarMapViewerAdapter radarMapViewerAdapter;
 	protected final GuiMasterController guiInteractionManager;
 	protected volatile java.awt.Point shiftOrigin;
+	private ShiftFilter zoomFilter = new ShiftFilter();
 
 	public MouseFocusManager(GuiMasterController guiInteractionManager, IFocusManager focusManager, IView rootView, RadarMapViewerAdapter radarMapViewerAdapter) {
 		this.focusManager = focusManager;
@@ -106,17 +105,8 @@ public class MouseFocusManager extends MouseAdapter {
 	}
 
 	private void centerScreenOn(java.awt.Point point) {
-        Point2D newCenter = radarMapViewerAdapter.getDeviceToLogicalTransform().transform(point, null);
-
-	    radarMapViewerAdapter.setLogicalOrigin(newCenter);
+	    radarMapViewerAdapter.setCenterOnDevicePoint(point);
 	}
-
-	private void shiftScreen(java.awt.Point shiftOrigin, java.awt.Point shiftTarget) {
-	    Point2D logOrigin = radarMapViewerAdapter.getDeviceToLogicalTransform().transform(shiftOrigin, null);
-	    Point2D logTarget = radarMapViewerAdapter.getDeviceToLogicalTransform().transform(shiftTarget, null);
-
-	    radarMapViewerAdapter.shiftLogicalOrigin(logOrigin.getX()-logTarget.getX(),logOrigin.getY()-logTarget.getY());
-    }
 
 	private void centerScreen() {
 	    radarMapViewerAdapter.centerMap();
@@ -124,59 +114,26 @@ public class MouseFocusManager extends MouseAdapter {
     @Override
     public synchronized void mouseDragged(MouseEvent e) {
         if(shiftOrigin!=null) {
-// 130519 ww zoom by shifting deactivated
-//            if(e.getModifiersEx()==MouseEvent.BUTTON1_DOWN_MASK) {
-                shiftScreen(shiftOrigin,e.getPoint());
-                shiftOrigin = e.getPoint();
-//            } else {
-//                adaptZoom(e.getPoint());
-//            }
+            zoomFilter.shiftOrigin(shiftOrigin,e.getPoint());
+            
+            radarMapViewerAdapter.shiftDeviceOrigin(shiftOrigin,e.getPoint());
+            
+            shiftOrigin = e.getPoint();
         }
     }
 
-//    private void adaptZoom(Point point) {
-//        Rectangle2D radarSize = radarMapViewerAdapter.getViewerExtents();
-//        double xDistance = (point.getX() - shiftOrigin.getX()) / radarSize.getWidth();
-//        double yDistance = (point.getY() - shiftOrigin.getY()) / radarSize.getHeight();
-//        double mouseScale = (Math.abs(xDistance)>Math.abs(yDistance)) ? xDistance : yDistance;
-//
-//        double oldScale = radarMapViewerAdapter.getLogicalScale();
-//        double newScale = oldScale * 1+mouseScale * 20;
-//        newScale = ( newScale<1 ) ? 1 : newScale ;
-//        newScale = ( newScale>10000 ) ? 10000 : newScale ;
-//
-//        if(oldScale!=newScale) radarMapViewerAdapter.setLogicalScale( newScale );
-//    }
-
     @Override
 	public synchronized void mouseMoved(MouseEvent e) {
-//        // preparations for tooltip text in map
-//        final TooltipPickIterator iterator = new TooltipPickIterator();
-//        final PickVisitor pickVisitor = new PickVisitor(e.getPoint(), iterator);
-//        rootView.accept(pickVisitor);
-//        ITooltipView view = iterator.getTopFocusable();
-//
-//        if(view!=null) {
-//            System.out.println(view.getTooltipText(e.getPoint()));
-//        }
-
 	    // update StP
 
 	    GuiRadarContact contact = guiInteractionManager.getRadarContactManager().getSelectedContact();
 	    if(contact!=null) {
 	        guiInteractionManager.getStatusManager().updateMouseRadarMoved(contact,e);
-	        guiInteractionManager.getDataRegistry().updateMouseRadarMoved(contact,e);
+	        guiInteractionManager.getAirportData().updateMouseRadarMoved(contact,e);
 	    }
 	}
 
 	protected void updateFocus(MouseEvent e) {
-//		final IFocusableView currentFocusOwner = focusManager.getCurrentFocusOwner();
-//
-//		if (currentFocusOwner!=null && currentFocusOwner.contains(e.getPoint())) {
-//			/* The current focus owner takes precedence, even if it is now obscured */
-//			return;
-//		}
-
 		final FocuseablePickIterator iterator = new FocuseablePickIterator();
 		final PickVisitor pickVisitor = new PickVisitor(e.getPoint(), iterator);
 		rootView.accept(pickVisitor);
@@ -203,4 +160,56 @@ public class MouseFocusManager extends MouseAdapter {
 		}
 	}
 
+	/**
+     * This class exists to filter too many repaint requests. It saves only the last request and performs it, when it is ready with the last repaint.
+     * So OR responds much faster 
+     * 
+     * @author Wolfram Wagner
+     *
+     */
+    private class ShiftFilter implements Runnable{
+        
+        private Point shiftOrigin = null;
+        private Point shiftTarget = null;
+        private final Thread thread; 
+        
+        public ShiftFilter() {
+            thread = new Thread(this, "MouseShiftFilter" );
+            thread.start();
+        }
+        
+        synchronized void shiftOrigin(Point origin, Point target) {
+            if(shiftOrigin==null) {
+                this.shiftOrigin=origin;
+                this.shiftTarget=target;
+            } else {
+                this.shiftTarget=new Point(shiftTarget.x+target.x-origin.x, shiftTarget.y+target.y-origin.y);
+            }
+            thread.interrupt();
+        }
+        
+        public void run() {
+            while(true) {
+                Point pO=null;
+                Point pT=null;
+                
+                synchronized(this) {
+                    if(shiftOrigin!=null) {
+                        pO=shiftOrigin;
+                        pT=shiftTarget;
+                        shiftOrigin=null;
+                    }
+                }
+                if(pO!=null) {
+                    radarMapViewerAdapter.shiftDeviceOrigin(pO, pT);
+                } 
+                if(pO==null) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        }
+    }
 }

@@ -69,6 +69,7 @@ public class GuiRadarContact {
 
     private int hightlightCounter = 0;
 
+    private volatile boolean newContact = true;
     private volatile boolean neglect = false;
     private volatile boolean onEmergency = false;
 
@@ -91,8 +92,8 @@ public class GuiRadarContact {
     public GuiRadarContact(GuiMasterController master, RadarContactController manager, TargetStatus player, String atcComment) {
         this.manager=manager;
         this.player=player;
-        this.airportData = master.getDataRegistry();
-        this.airportElevationFt = master.getDataRegistry().getElevationFt();
+        this.airportData = master.getAirportData();
+        this.airportElevationFt = master.getAirportData().getElevationFt();
         this.atcComment = atcComment;
 
         flightStates.add(new FlightState("","UNCONTROLLED","???","Uncontrolled/cold"));
@@ -106,7 +107,7 @@ public class GuiRadarContact {
         flightStates.add(new FlightState("GND","TAXI_TO_GATE","TXGT","Taxi to Gate/Parking"));
         currentFlightState=flightStates.get(0);
 
-        flightPlan = new FlightPlanData(master.getDataRegistry(), this);
+        flightPlan = new FlightPlanData(master.getAirportData(), this);
     }
 
     public synchronized void setTargetStatus(TargetStatus player) {
@@ -135,12 +136,13 @@ public class GuiRadarContact {
         this.hightlightCounter=2;
     }
 
-    public boolean isNeglect() {
+    public synchronized boolean isNeglect() {
         return neglect;
     }
 
-    public void setNeglect(boolean neglect) {
+    public synchronized void setNeglect(boolean neglect) {
         this.neglect = neglect;
+        disableNewContact();
         if(neglect) {
             setAlignment(Alignment.RIGHT);
         }
@@ -185,18 +187,9 @@ public class GuiRadarContact {
     }
 
 
-    public synchronized void setAlignment(Alignment alignment) {
+    synchronized void setAlignment(Alignment alignment) {
+        disableNewContact();
         this.alignment = alignment;
-        if(alignment.equals(Alignment.LEFT)) {
-            if(getFlightPlan().getOwner()==null || getFlightPlan().getOwner().isEmpty()) {
-                // uncontrolled
-               getFlightPlan().takeControl(this.airportData);
-
-            } else if(airportData.getCallSign().equals(getFlightPlan().getHandover())) {
-                // offered to me
-                getFlightPlan().takeControl(this.airportData);
-            }
-        }
     }
 
     public synchronized FlightPlanData getFlightPlan() {
@@ -238,16 +231,44 @@ public class GuiRadarContact {
         return player.getGeodeticPosition().getZ()/Units.FT;
     }
 
-    public double getElevationFtRounded() {
+    public synchronized double getElevationFtRounded() {
         long elev = Math.round(getElevationFt());
         return elev/100;
     }
 
-    public double getAltitude() {
+    public synchronized double getAltitude() {
         return getElevationFt();
     }
 
-    public String getFlightLevel() {
+    public synchronized String getAltitudeString(GuiMasterController master) {
+        if(getElevationFt() > airportData.getTransitionAlt()) {
+            // show flightlevel
+            int flAlt = 0;
+            if(null==getTranspAltitude() || getTranspAltitude()==-9999) {
+                // data from MP Protocol => real alt
+                // convert to pressure alt
+                flAlt = (int)getElevationFt() + 30 * (1013-(int)master.getAirportMetar().getPressureHPa());
+            } else {
+                // data from transponder => pressure alt
+                flAlt = getTranspAltitude();
+            }
+            return String.format("FL%03d", ((int)flAlt/100));
+        } else {
+            // show altitude
+            int realAlt = 0;
+            if(null==getTranspAltitude() || getTranspAltitude()==-9999) {
+                // data from MP Protocol => real alt
+                realAlt = (int)getElevationFt();
+            } else {
+                // data from transponder => pressure alt
+                // convert to real alt
+                realAlt = getTranspAltitude() - 30 * (1013-(int)master.getAirportMetar().getPressureHPa());;
+            }
+            return String.format("%04d", (int)(realAlt/100)*100);
+        }
+    }
+    
+    public synchronized String getFlightLevel() {
         return String.format("FL%03.0f", getElevationFt()/100);
     }
 
@@ -255,30 +276,30 @@ public class GuiRadarContact {
         return String.format("G%03.0f", player.getCalculatedGroundspeed()/Units.KNOTS);
     }
 
-    public double getGroundSpeedD() {
+    public synchronized double getGroundSpeedD() {
         return player.getCalculatedGroundspeed()/Units.KNOTS;
     }
 
-    public String getAirSpeed() {
+    public synchronized String getAirSpeed() {
         return String.format("A%03.0f",getAirSpeedD());
     }
 
-    public String getTrueCourse() {
+    public synchronized String getTrueCourse() {
         return String.format("%03.0f°",getTrueCourseD());
     }
 
-    public double getTrueCourseD() {
+    public synchronized double getTrueCourseD() {
         if(getGroundSpeedD()>0.5 || lastHeading==-1) {
             lastHeading = player.getTrueCourse();
         }
         return lastHeading;
     }
 
-    public String getMagnCourse() {
+    public synchronized String getMagnCourse() {
         return String.format("%03.0f°",getMagnCourseD());
     }
 
-    public double getMagnCourseD() {
+    public synchronized double getMagnCourseD() {
         if(getGroundSpeedD()>0.5 || lastHeading==-1) {
             lastHeading = player.getTrueCourse() - airportData.getMagneticDeclination();
         }
@@ -311,6 +332,8 @@ public class GuiRadarContact {
             activeModel = AircraftCodeConverter.checkLength(model,10);
             aircraft = airportData.getAircraftCodeConverter().convert(model);
 
+            getFlightPlan().setTrueAirspeed(airportData.getAircraftCodeConverter().getCruiseSpeed(activeModel));
+            
             if(checkForAutoAtcNeglect && isAtc()) {
                 this.setNeglect(true); // auto neglect for ATCs
             }
@@ -336,15 +359,15 @@ public class GuiRadarContact {
     }
 
 
-    public boolean isOnEmergency() {
+    public synchronized boolean isOnEmergency() {
         return onEmergency;
     }
 
-    public void setOnEmergency(boolean b) {
+    public synchronized void setOnEmergency(boolean b) {
         onEmergency=b;
     }
 
-    public double getAirSpeedD() {
+    public synchronized double getAirSpeedD() {
         MetarData metar = manager.getMaster().getAirportMetar();
         if(metar==null) return -1;
 
@@ -380,18 +403,18 @@ public class GuiRadarContact {
     }
 
 
-    public double getRadarContactDistanceD() {
+    public synchronized double getRadarContactDistanceD() {
         if(view==null) return 0d;
         Point2D apPos = view.convertToDeviceLocation(airportData.getAirportPosition());
         Point2D plPos = view.getPlayersMapPosition();
         return Math.sqrt( Math.pow(plPos.getX()-apPos.getX(),2) + Math.pow(plPos.getY()-apPos.getY(),2) ) * Converter2D.getMilesPerDot(getMapViewerAdapter());
     }
 
-    public String getRadarContactDistance() {
+    public synchronized String getRadarContactDistance() {
         return String.format("%1.1f",getRadarContactDistanceD());
     }
 
-    public long getRadarContactDirectionD() {
+    public synchronized long getRadarContactDirectionD() {
         if(view==null) return -1;
         Point2D apPos = view.convertToDeviceLocation(airportData.getAirportPosition());
         Point2D plPos = getCenterViewCoordinates();
@@ -399,7 +422,7 @@ public class GuiRadarContact {
         return (long)Converter2D.getDirection(apPos, plPos);
     }
 
-    public String getRadarContactDirection() {
+    public synchronized String getRadarContactDirection() {
         return String.format("%d",getRadarContactDirectionD());
     }
 
@@ -423,24 +446,24 @@ public class GuiRadarContact {
         return view.getMapViewAdapter();
     }
 
-    public Point2D getCenterGeoCoordinates() {
+    public synchronized Point2D getCenterGeoCoordinates() {
         Position p = player.getGeodeticPosition();
         return new Point2D.Double(p.getX(),p.getY());
     }
 
-    public String getFrequency() {
+    public synchronized String getFrequency() {
         return player.getFrequency();
     }
 
-    public double getHeadingD() {
+    public synchronized double getHeadingD() {
         return Converter2D.normalizeAngle(player.getHeading());
     }
 
-    public String getAtcLanguage() {
+    public synchronized String getAtcLanguage() {
         return atcLanguage;
     }
 
-    public void setAtcLanguage(String atcLanguage) {
+    public synchronized void setAtcLanguage(String atcLanguage) {
         this.atcLanguage = atcLanguage;
     }
 
@@ -477,8 +500,13 @@ public class GuiRadarContact {
         appeared = System.currentTimeMillis();
     }
 
+    public synchronized void disableNewContact() {
+        newContact=false;
+    }
+    
     public synchronized boolean isNew() {
-        return System.currentTimeMillis() - appeared < 30000;
+        return newContact;
+        //return System.currentTimeMillis() - appeared < 30000;
     }
 
     public synchronized boolean isAtc() {
@@ -486,7 +514,7 @@ public class GuiRadarContact {
         return acrft.startsWith("ATC") || acrft.startsWith("OPENRA");
     }
 
-    public String getAtcLetter() {
+    public synchronized String getAtcLetter() {
         return null;
     }
 }

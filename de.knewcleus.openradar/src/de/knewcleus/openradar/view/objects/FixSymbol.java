@@ -37,20 +37,20 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.model.IIntersection;
-import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class FixSymbol extends AViewObject {
 
-    private AirportData data;
+    private GuiMasterController master;
     private IIntersection fix;
     private int defaultMaxScale;
     private Color defaultColor;
 
 
-    public FixSymbol(AirportData data, IIntersection fix, int minScale, int maxScale) {
+    public FixSymbol(GuiMasterController master, IIntersection fix, int minScale, int maxScale) {
         super(Color.lightGray);
-        this.data = data;
+        this.master = master;
 
         this.fix = fix;
         this.defaultMaxScale=maxScale;
@@ -65,7 +65,7 @@ public class FixSymbol extends AViewObject {
 
         path = new Path2D.Double();
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,fix);
+        Color highLightColor = master.getAirportData().getNavaidDB().getNavaidHighlightColor(master,fix);
 
         if(highLightColor!=null) {
             this.maxScalePath=Integer.MAX_VALUE;
@@ -76,7 +76,7 @@ public class FixSymbol extends AViewObject {
         }
 
         String fixType = fix.getIdentification().matches("[\\w]{4}[\\d]{1}")?"FIX_NUM":"FIX";
-        if(showNavaid(data, fixType, highLightColor, fix.getIdentification())) {
+        if(showNavaid(master.getAirportData(), fixType, highLightColor, fix.getIdentification())) {
             final double x, y;
             x = newDisplayPosition.getX();
             y = newDisplayPosition.getY();

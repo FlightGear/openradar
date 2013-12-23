@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<routes>    
+        <route name="Taxiways" zoomMax="15" color="20,180,40">
+		<activeLandingRunways>32R,32L,06,24,14L,14R</activeLandingRunways>
+		<activeStartRunways>32R,32L,06,24,14L,14R</activeStartRunways>
+
+		<text position="3.8NM316.56@DK142" font="Arial" fontSize="11" angle="046" text="A" color="200,200,200"/>
+		<text position="4.6NM316.56@DK142" font="Arial" fontSize="11" angle="046" text="A" color="200,200,200"/>
+
+
+		<text position="4.44NM317.33@DK142" font="Arial" fontSize="11" angle="046" text="E" color="200,200,200"/>
+
+		<text position="18.33NM243.55@KOGIT" font="Arial" fontSize="10" angle="-30" text="D"/>
+		<text position="18.87NM243.55@KOGIT" font="Arial" fontSize="10" angle="-30" text="D"/>
+
+		<text position="19.45NM244.2@KOGIT" font="Arial" fontSize="10" angle="70" text="C"/>
+
+		<text position="4.44NM312.5@DK142" font="Arial" fontSize="10" angle="046" text="T"/>
+		<text position="4.44NM312.5@DK142" font="Arial" fontSize="10" angle="046" text="T"/>
+
+        </route>
+
+        <route name="Taxiways" zoomMax="08" color="20,180,40">
+		<activeLandingRunways>32R,32L,06,24,14L,14R</activeLandingRunways>
+		<activeStartRunways>32R,32L,06,24,14L,14R</activeStartRunways>
+
+		<text position="3.01NM317.5@DK142" font="Arial" fontSize="10" angle="046" text="A"/>
+		<text position="3.157NM317.5@DK142" font="Arial" fontSize="10" angle="046" text="A1"/>
+		<text position="3.582NM317.5@DK142" font="Arial" fontSize="10" angle="046" text="A2"/>
+		<text position="4.2NM318.2@DK142" font="Arial" fontSize="10" angle="046" text="A3"/>
+		<text position="4.55NM318.2@DK142" font="Arial" fontSize="10" angle="046" text="A4"/>
+		<text position="4.955NM318@DK142" font="Arial" fontSize="10" angle="046" text="A5"/>
+		<text position="5.085NM318@DK142" font="Arial" fontSize="10" angle="046" text="A7"/>
+
+		<text position="18.17NM243.4@KOGIT" font="Arial" fontSize="10" angle="060" text="D"/>
+		<text position="18.28NM242.84@KOGIT" font="Arial" fontSize="10" angle="-30" text="*D"/>
+		<text position="18.72NM242.71@KOGIT" font="Arial" fontSize="10" angle="-40" text="*C"/>
+		<text position="19.27NM242.69@KOGIT" font="Arial" fontSize="10" angle="15" text="*C"/>
+
+		<text position="4.578NM312@DK142" font="Arial" fontSize="10" angle="-40" text="T2"/>
+
+        </route>
+
+        <route name="Aprons" zoomMax="10" color="240,200,20">
+		<activeLandingRunways>26L,26R,08L,08R</activeLandingRunways>
+		<activeStartRunways>26L,26R,08L,08R</activeStartRunways>
+
+		<text position="10.5NM352.1@MUN" font="Arial" fontSize="10" angle="356" text="Apron 1"/>
+		<text position="1.085NM112@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 2"/>
+		<text position="1.37NM112@DMN01" font="Arial" fontSize="10" angle="356" text="Apron 3"/>
+        </route>
+
+        <route name="Terminals and Hangars" zoomMax="10" color="100,100,100">
+		<activeLandingRunways>26L,26R,08L,08R</activeLandingRunways>
+		<activeStartRunways>26L,26R,08L,08R</activeStartRunways>
+
+		<text position="0.78NM137@DMN01" font="Arial" fontSize="10" angle="84" text="TERMINAL 1"/>
+		<text position="1.03NM121@DMN01" font="Arial" fontSize="10" angle="84" text="TERMINAL 2"/>
+        </route>
+</routes>

@@ -39,6 +39,7 @@ import java.util.List;
 import de.knewcleus.fgfs.navdata.NavDataStreamException;
 import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.IView;
 import de.knewcleus.openradar.view.LayeredView;
@@ -47,18 +48,20 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 public class NavPointProvider {
 	protected final IMapViewerAdapter mapViewerAdapter;
 	protected final LayeredView navPointLayer;
+	protected final GuiMasterController master;
 	protected final AirportData data;
 
 	private List<INavPointListener> navPointListeners = new ArrayList<INavPointListener>();
 
-	public NavPointProvider(IMapViewerAdapter mapViewerAdapter, LayeredView navPointLayer, AirportData data) {
+	public NavPointProvider(IMapViewerAdapter mapViewerAdapter, LayeredView navPointLayer, GuiMasterController master) {
 		this.mapViewerAdapter = mapViewerAdapter;
 		this.navPointLayer = navPointLayer;
-		this.data = data;
+		this.master=master;
+		this.data = master.getAirportData();
 	}
 
 	public IView provideNavPoint(INavPoint point) {
-		return new NavPointView(mapViewerAdapter, data, point);
+		return new NavPointView(mapViewerAdapter, master, point);
 	}
 
 	public void addViews(INavDataStream<? extends INavPoint> stream) throws NavDataStreamException {

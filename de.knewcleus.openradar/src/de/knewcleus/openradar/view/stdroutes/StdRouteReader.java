@@ -36,8 +36,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -56,7 +57,7 @@ public class StdRouteReader {
     private final AirportData data;
     private final IMapViewerAdapter mapViewAdapter;
     private List<StdRoute> stdRoutes = new ArrayList<StdRoute>();
-    private final static Logger log = Logger.getLogger(StdRouteReader.class.toString());
+    private static Logger log = LogManager.getLogger(StdRouteReader.class);
 
     public StdRouteReader(AirportData data, IMapViewerAdapter mapViewAdapter) {
         this.data = data;
@@ -89,7 +90,7 @@ public class StdRouteReader {
                 Document document = (Document) builder.build(xmlInputStream);
                 Element rootNode = document.getRootElement();
 
-                String orFilename = "data/routes/" + data.getAirportCode() + "/" + file.getName().substring(0, file.getName().indexOf(".xml")) + ".or.xml";
+//                String orFilename = "data/routes/" + data.getAirportCode() + "/" + file.getName().substring(0, file.getName().indexOf(".xml")) + ".or.xml";
                 if ("ProceduresDB".equalsIgnoreCase(rootNode.getName())) {// && !(new File(orFilename).exists())) {
                     // if converted file does not exist, convert it now.
                     // deactivated for now convertProcedureDbFile(orFilename, rootNode);
@@ -103,7 +104,7 @@ public class StdRouteReader {
                             Point2D point = StdRoute.getPoint(data, mapViewAdapter, sPoint ,null);
                             data.getNavaidDB().addPoint(code, point);
                         } catch (Exception e) {
-                            log.severe("Problem to parse file " + file.getAbsolutePath() + ", addPoint: " + code + ": " + sPoint+ ", Error:" + e.getMessage());
+                            log.error("Problem to parse file " + file.getAbsolutePath() + ", addPoint: " + code + ": " + sPoint+ ", Error:" + e.getMessage());
                         }
                     }
                     List<Element> includeList = rootNode.getChildren("include");
@@ -262,8 +263,7 @@ public class StdRouteReader {
                                 }
 
                             } catch (Exception e) {
-                                log.severe("Problem to parse file " + file.getAbsolutePath() + ", Route: " + route.getName() + ", Error:" + e.getMessage());
-                                e.printStackTrace();
+                                log.error("Problem to parse file " + file.getAbsolutePath() + ", Route: " + route.getName() + ", Error:" + e.getMessage(),e);
                                 break;
                             }
                         }
@@ -272,7 +272,7 @@ public class StdRouteReader {
                 }
 
             } catch (Exception e) {
-                log.severe("Problem to parse file " + file.getAbsolutePath() + ", Error:" + e.getMessage());
+                log.error("Problem to parse file " + file.getAbsolutePath() + ", Error:" + e.getMessage());
 
             } finally {
                 if (xmlInputStream != null) {
@@ -304,7 +304,7 @@ public class StdRouteReader {
      * @param orFilename
      * @param rootNode
      */
-    private void convertProcedureDbFile(String orFilename, Element rootNode) {
+//    private void convertProcedureDbFile(String orFilename, Element rootNode) {
 //        try {
 //            Document newDoc = new Document();
 //            Element newRoot = new Element("routes");
@@ -533,7 +533,7 @@ public class StdRouteReader {
 //        } catch(Exception e) {
 //            log.log(Level.SEVERE,"Problem to convert file to "+orFilename,e);
 //        }
-    }
+//    }
 
     public List<StdRoute> getStdRoutes() {
         return stdRoutes;

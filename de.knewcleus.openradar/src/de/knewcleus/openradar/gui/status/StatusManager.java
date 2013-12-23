@@ -72,20 +72,20 @@ public class StatusManager implements INavPointListener {
     private CallSignKeyListener callSignKeyListener = new CallSignKeyListener();
     private RunwayMouseListener runwayMouseListener = new RunwayMouseListener();
 
-    private RunwaySettingsDialog settingDialog;
+    private RunwaySettingsDialog runwaySettingDialog;
 
     public StatusManager(GuiMasterController guiInteractionManager) {
         this.master = guiInteractionManager;
-        this.settingDialog = new RunwaySettingsDialog(master);
+        this.runwaySettingDialog = new RunwaySettingsDialog(master);
     }
 
     public void start() {
         setSelectedCallSign("-nobody-");
-        String callsign = master.getDataRegistry().getCallSign();
+        String callsign = master.getAirportData().getCallSign();
         if(callsign==null) {
             // initialize call sign
-            callsign = master.getDataRegistry().getInitialATCCallSign();
-            master.getDataRegistry().setCallSign(callsign);
+            callsign = master.getAirportData().getInitialATCCallSign();
+            master.getAirportData().setCallSign(callsign);
         }
         setCurrentCallSign(callsign);
         updateRunways();
@@ -99,7 +99,7 @@ public class StatusManager implements INavPointListener {
 //    }
 
     public void setSelectedCallSign(String callsign) {
-        this.statusPanel.setAirport(master.getDataRegistry().getAirportCode()+" / "+ (master.getDataRegistry().getAirportName()));
+        this.statusPanel.setAirport(master.getAirportData().getAirportCode()+" / "+ (master.getAirportData().getAirportName()));
         statusPanel.setSelectedCallSign(callsign);
     }
 
@@ -126,7 +126,7 @@ public class StatusManager implements INavPointListener {
         Double angle = vDistance.getAngle();
         // angle corrections
         // 1. magnetic
-        angle = angle + Math.round(master.getDataRegistry().getMagneticDeclination());
+        angle = angle + Math.round(master.getAirportData().getMagneticDeclination());
         // 2. wind
         MetarData metar = master.getAirportMetar();
         Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD());
@@ -134,7 +134,7 @@ public class StatusManager implements INavPointListener {
         Vector2D vResult = vOriginalAngle.add(vWind);
         Long lAngle = vResult.getAngleL();
 
-        Long degreesToPointer = lAngle!=null ? ( lAngle<0 ? lAngle+360 : lAngle) : null;
+        Long degreesToPointer = lAngle!=null ? ( lAngle<=0 ? lAngle+360 : lAngle) : null;
         Long degreesToSelection = lAngle!=null ? (degreesToPointer<180 ? degreesToPointer+180 : degreesToPointer-180) : null;
         // distances
         Double distanceMiles = distance*Converter2D.getMilesPerDot(mapViewerAdapter);
@@ -153,7 +153,9 @@ public class StatusManager implements INavPointListener {
     private class CallSignActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            master.setCurrentATCCallSign(statusPanel.getCurrentCallSign(), true);
+            String newAtcCallSign = statusPanel.getCurrentCallSign();
+            master.getRadarContactManager().performAtcCallSignChange(master.getCurrentATCCallSign(), newAtcCallSign);
+            master.setCurrentATCCallSign(newAtcCallSign, true);
         }
     }
 
@@ -193,8 +195,8 @@ public class StatusManager implements INavPointListener {
             if(e.getButton()==MouseEvent.BUTTON3 && e.getClickCount()==1 && e.getSource() instanceof JLabel) {
                 String rwCode = ((JLabel)e.getSource()).getText();
                 if(rwCode!=null) {
-                    settingDialog.setLocation(e);
-                    settingDialog.showData(rwCode);
+                    runwaySettingDialog.setLocation(e);
+                    runwaySettingDialog.showData(rwCode);
                 }
             }
             if(e.getSource() instanceof RunwayPanel) {
@@ -228,7 +230,7 @@ public class StatusManager implements INavPointListener {
     }
 
     public void hideRunwayDialog() {
-        settingDialog.setVisible(false);
+        runwaySettingDialog.setVisible(false);
     }
 
     public void updateRunways() {
@@ -237,5 +239,17 @@ public class StatusManager implements INavPointListener {
 
     public void setCurrentCallSign(String callsign) {
         statusPanel.setCurrentCallSign(callsign);
+    }
+
+    public boolean isRunwayDialogVisible() {
+        return runwaySettingDialog.isVisible();
+    }
+    public boolean isMetarDialogVisible() {
+        return statusPanel.isMetarDialogVisible();
+    }
+
+    public void updateTransitionValues() {
+        master.getAirportData().updateTransitionFl(master); 
+        statusPanel.updateTransitionValues();
     }
 }

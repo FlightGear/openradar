@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+
+	<route name="GENERAL NAVAIDS" zoomMin="10" zoomMax="1000" color="240,200,20">
+		<navaids>RIBSO,BOGMU,RARUP,NOLGO</navaids>
+        </route>
+
+	<route name="RWY15 NAVAIDS" zoomMin="10" zoomMax="1000" color="240,200,20">
+		<activeLandingRunways>15</activeLandingRunways>
+		<navaids>RIBSO,BOGMU,RARUP,NOLGO,DH822,DH412,DH410,DEVOD</navaids>
+        </route>
+
+	<route name="RWY15 APPROACH" zoomMin="10" zoomMax="1000" color="180,180,200" stroke="dots,1">
+		<activeLandingRunways>15</activeLandingRunways>
+                <line start="TOPRA" end="5.5NM080@TOPRA" text="080"/>
+                <line start="TOPRA" end="RIBSO"/>
+                <curve start="5.5NM080@TOPRA" end="DEVOD" controlPoint="0.7NM330@DH045"/>
+                <line start="NOLGO" end="DH822" text="360"/>
+                <line start="DH412" end="DH822" text="330"/>
+                <line start="RARUP" end="DH410" text="305"/>
+                <line start="DH412" end="DH410" text="280"/>
+                <line start="BOGMU" end="DH412" text="245"/>
+                <curve start="DH412" end="DEVOD" controlPoint="0.2NM330@DH458"/>
+		<bow center="2.5NM240@DH412" radius="2.5" startAngle="240" extentAngle="180"/>
+                <line start="5NM240@DH412" end="DEVOD"/>
+        </route>
+
+	<route name="Transition 15" zoomMin="10" zoomMax="150" color="140,140,180">
+		<activeLandingRunways>15</activeLandingRunways>
+		<navaids>LBE,HAM,DH040,TOPRA</navaids>
+
+                <line start="HAM" end="LBE" text="264" stroke="dots,1"/> 
+                <line start="DH040" end="LBE" text="020" stroke="dots,1"/> 
+		<curve start="DH040" end="3.2NM068@DH040" controlPoint="2.5NM020@DH040" stroke="dots,1"/>
+                <line start="RARUP" end="HAM" stroke="dots,1" text="278"/> 
+                <line start="NOLGO" end="HAM" stroke="dots,1" text="007"/> 
+                <line start="BOGMU" end="LBE" stroke="dots,1" text="230"/> 
+                <line start="RIBSO" end="TOPRA" stroke="dots,1" text="080"/> 
+                <line start="TOPRA" end="LBE" stroke="dots,1" text="170"/> 
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="RWY05 APPROACH" zoomMin="10" zoomMax="1000" color="180,180,200" stroke="dots,1">
+		<activeLandingRunways>05</activeLandingRunways>
+
+                <line start="NOLGO" end="DH232" text="277"/>
+                <curve start="DH232" end="ANEXI" controlPoint="DH257"/>
+                <line start="DH230" end="DH232" text="230"/>
+                <line start="DH230" end="DH225" text="230"/>
+                <line start="BOGMU" end="DH225" text="170"/>
+                <line start="DH230" end="RARUP" text="250"/>
+                <line start="5NM320@DH232" end="ANEXI"/>
+                <curve start="DH213" end="ANEXI" controlPoint="DH257"/>
+		<bow center="2.5NM320@DH232" radius="2.5" startAngle="140" extentAngle="180"/>
+                <line start="RIBSO" end="DH213" text="160"/>
+        </route>
+
+	<route name="RWY05 NAVAIDS" zoomMin="10" zoomMax="1000" color="240,200,20">
+		<activeLandingRunways>05</activeLandingRunways>
+		<navaids>RIBSO,BOGMU,RARUP,NOLGO,DH225,DH230,DH232,DH213,ANEXI</navaids>
+        </route>
+
+	<route name="Transition 05" zoomMin="10" zoomMax="150" color="140,140,180">
+		<activeLandingRunways>05</activeLandingRunways>
+		<navaids>LBE,HAM,DH020,TOPRA</navaids>
+
+                <line start="HAM" end="LBE" text="264" stroke="dots,1"/> 
+                <line start="DH020" end="LBE" text="174" stroke="dots,1"/> 
+		<curve start="DH020" end="ANEXI" controlPoint="3NM230@DH258" stroke="dots,1"/>
+                <line start="RARUP" end="HAM" stroke="dots,1" text="278"/> 
+                <line start="NOLGO" end="HAM" stroke="dots,1" text="007"/> 
+                <line start="BOGMU" end="LBE" stroke="dots,1" text="230"/> 
+                <line start="RIBSO" end="TOPRA" stroke="dots,1" text="080"/> 
+                <line start="TOPRA" end="LBE" stroke="dots,1" text="170"/> 
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+	<route name="RWY23 APPROACH" zoomMin="10" zoomMax="1000" color="180,180,200" stroke="dots,1">
+		<activeLandingRunways>23</activeLandingRunways>
+
+                <line start="NOLGO" end="DH611" text="017"/>
+                <line start="RARUP" end="15.1NM300.97@RARUP" text="301"/>
+                <line start="DH611" end="2NM017@DH611"/>
+		<curve start="2NM017@DH611" end="PISAS" controlPoint="4NM050@DH065" stroke="dots,1"/>
+		<curve start="10NM185@BOGMU" end="PISAS" controlPoint="1.6NM230@DH065" stroke="dots,1"/>
+		<curve start="DH060" end="PISAS" controlPoint="5NM050@DH065" stroke="dots,1"/>
+                <line start="RIBSO" end="DH060" text="088"/>
+                <line start="BOGMU" end="10NM185@BOGMU" text="185"/>
+        </route>
+
+	<route name="RWY23 NAVAIDS" zoomMin="10" zoomMax="1000" color="240,200,20">
+		<activeLandingRunways>23</activeLandingRunways>
+		<navaids>RIBSO,BOGMU,RARUP,NOLGO,DH611,PISAS,DH060</navaids>
+        </route>
+
+	<route name="Transition 23" zoomMin="10" zoomMax="150" color="140,140,180">
+		<activeLandingRunways>23</activeLandingRunways>
+		<navaids>LBE,HAM,TOPRA</navaids>
+
+                <line start="HAM" end="LBE" text="264" stroke="dots,1"/> 
+                <line start="DH060" end="LBE" text="063" stroke="dots,1"/> 
+                <line start="RARUP" end="HAM" stroke="dots,1" text="278"/> 
+                <line start="NOLGO" end="HAM" stroke="dots,1" text="007"/> 
+                <line start="BOGMU" end="LBE" stroke="dots,1" text="230"/> 
+                <line start="RIBSO" end="TOPRA" stroke="dots,1" text="080"/> 
+                <line start="TOPRA" end="LBE" stroke="dots,1" text="170"/> 
+        </route>
+--------------------------------------------------------------------------------------------------------------------
+
+	<route name="SID 05" zoomMin="10" zoomMax="1000" color="140,180,140" stroke="dots,1">
+		<activeStartRunways>05</activeStartRunways>
+		<navaids>HOS,DH054,LBE,HAM,IDEKO,BASUM,WSR,DH150,AMLUH,LUB,EKERN,LYE,RAMAR</navaids>
+                
+                <line start="EDDH-RW05" end="HOS"/> 
+                <line start="DH150" end="HOS"/> 
+                <curve start="HOS" end="DH054" controlPoint="DH003"/>  
+                <curve start="DH150" end="HAM" controlPoint="2NM060@DH150"/>  
+                <curve start="DH150" end="6NM345.5@HAM" controlPoint="2NM050@DH150"/> 
+                <line start="DH054" end="LBE" text="245"/>  
+                
+                <!-- IDEKO -->
+                <line start="LBE" end="IDEKO" text="186" arrows="end,10"/>   
+
+                <!-- BASUM -->
+                <line start="LBE" end="BASUM" text="208" arrows="end,10"/>   
+
+                <!-- WESER -->
+                <line start="LBE" end="WSR" text="233" arrows="end,10"/>   
+
+                <!-- AMLUH -->
+                <line start="HAM" end="AMLUH" text="163" arrows="end,10"/> 
+
+                <!-- LUEBECK -->
+                <line start="DH150" end="LUB" text="051" arrows="end,10"/>  
+
+                <!-- RAMAR -->
+                <line start="DH150" end="LYE" text="073"/>  
+                <line start="LYE" end="RAMAR" text="120" arrows="end,10"/> 
+
+                <!-- EKERN -->
+                <line start="6NM345.5@HAM" end="EKERN" text="345" arrows="end,10"/> 
+
+        </route>
+
+
+	<route name="SID 33" zoomMin="10" zoomMax="1000" color="140,180,140" stroke="dots,1">
+		<activeStartRunways>33</activeStartRunways>
+		<navaids>DH250,DH252,DH253,DH103,DH060,DH806,LBE,HAM,IDEKO,BASUM,WSR,AMLUH,LUB,EKERN,LYE,RAMAR</navaids>
+                
+                <line start="EDDH-RW33" end="DH250"/> 
+                <line start="DH251" end="DH250"/> 
+                <line start="DH251" end="DH253"/> 
+                <line start="DH103" end="DH253" text="033"/> 
+                <line start="DH253" end="DH252"/>  
+                <curve start="DH250" end="DH806" controlPoint="DH254"/> 
+                <line start="DH060" end="DH253" text="060"/>  
+                <line start="DH806" end="LBE" text="250"/>  
+
+                
+                <!-- IDEKO -->
+                <line start="LBE" end="IDEKO" text="186" arrows="end,10"/>   
+
+                <!-- BASUM -->
+                <line start="LBE" end="BASUM" text="208" arrows="end,10"/>   
+
+                <!-- WESER -->
+                <line start="LBE" end="WSR" text="233" arrows="end,10"/>   
+
+                <!-- AMLUH -->
+                <line start="HAM" end="DH252" text="163"/> 
+                <line start="HAM" end="AMLUH" text="163" arrows="end,10"/> 
+
+                <!-- LUEBECK -->
+                <line start="DH060" end="LUB" text="067" arrows="end,10"/>  
+
+                <!-- RAMAR -->
+                <line start="LYE" end="DH060" text="101"/> 
+                <line start="LYE" end="RAMAR" text="120" arrows="end,10"/> 
+
+                <!-- EKERN -->
+                <line start="DH103" end="EKERN" text="345" arrows="end,10"/> 
+
+        </route>
+
+
+	<route name="SID 23" zoomMin="10" zoomMax="1000" color="140,180,140" stroke="dots,1">
+		<activeStartRunways>23</activeStartRunways>
+		<navaids>DH100,DH108,DH105,DH101,DH102,DH104,DH109,DH106,DH107,DH103,DH060,LBE,IDEKO,BASUM,WSR,AMLUH,LUB,EKERN,LYE,GT</navaids>
+                
+                <line start="EDDH-RW23" end="DH100"/> 
+
+ 
+                <line start="DH105" end="DH107"/>  
+		<bow center="2.05NM330@DH100" radius="2.05" startAngle="150" extentAngle="160"/>
+		<bow center="2.05NM132@DH100" radius="2.05" startAngle="180" extentAngle="130"/>
+                <line start="DH102" end="GT" text="039"/>  
+                <line start="DH060" end="DH104" text="062"/> 
+                <line start="DH104" end="GT" text="047"/> 
+
+
+
+                
+                <!-- IDEKO -->
+                <line start="DH100" end="DH105" text="229"/> 
+                <line start="DH105" end="DH106"/> 
+                <line start="DH106" end="IDEKO" text="187" arrows="end,10"/>   
+
+                <!-- BASUM -->
+                <line start="DH105" end="DH107" text="235"/>  
+                <line start="DH107" end="BASUM" text="208" arrows="end,10"/>   
+
+                <!-- WESER -->
+                <line start="DH100" end="WSR" text="248" arrows="end,10"/> 
+
+                <!-- AMLUH -->
+                <line start="DH108" end="DH109" text="089"/> 
+                <line start="DH109" end="AMLUH" text="116" arrows="end,10"/> 
+
+                <!-- LUEBECK -->
+                <line start="DH060" end="LUB" text="067" arrows="end,10"/>  
+
+                <!-- ELBE -->
+                <line start="DH101" end="LBE" text="301" arrows="end,10"/> 
+
+                <!-- RAMAR -->
+                <line start="LYE" end="DH060" text="101"/> 
+                <line start="LYE" end="RAMAR" text="120" arrows="end,10"/> 
+
+                <!-- EKERN -->
+                <line start="GT" end="DH103" text="031"/> 
+                <line start="DH103" end="EKERN" text="345" arrows="end,10"/> 
+
+                <line start="LBE" end="EKERN" color="160,160,140"/> 
+                <line start="LBE" end="WSR" color="160,160,140"/> 
+                <line start="LBE" end="DHE" color="160,160,140"/> 
+
+        </route>
+
+	<route name="SID 15" zoomMin="10" zoomMax="1000" color="140,180,140" stroke="dots,1">
+		<activeStartRunways>15</activeStartRunways>
+		<navaids>DH200,DH202,HAM07,DH204,DH830,DH201,DH225,DH203,DH205,DH206,DH207,LBE,HAM,IDEKO,BASUM,WSR,AMLUH,LUB,EKERN,LYE,RAMAR</navaids>
+                
+                <line start="EDDH-RW15" end="DH200"/> 
+                <line start="DH200" end="DH202"/> 
+                <line start="DH202" end="HAM07"/> 
+                <line start="DH204" end="HAM07"/>  
+                <line start="DH201" end="HAM" text="028"/>
+                <line start="DH203" end="DH205"/>
+                <line start="DH207" end="DH206"/>
+                <line start="DH206" end="DH205"/>
+                <curve start="DH200" end="DH201" controlPoint="0.7NM130@DH202"/> 
+                <curve start="DH202" end="DH203" controlPoint="0.7NM150@HAM07"/> 
+
+                
+                <!-- IDEKO -->
+                <line start="DH206" end="IDEKO" text="186" arrows="end,10"/>   
+
+                <!-- BASUM -->
+                <line start="DH207" end="BASUM" text="208" arrows="end,10"/>   
+
+                <!-- WESER -->
+                <line start="DH207" end="WSR" text="255" arrows="end,10"/>   
+
+                <!-- AMLUH -->
+                <line start="DH204" end="AMLUH" text="116" arrows="end,10"/> 
+
+                <!-- LUEBECK -->
+                <line start="HAM" end="LUB" text="045" arrows="end,10"/>  
+
+                <!-- RAMAR -->
+                <curve start="HAM07" end="DH830" controlPoint="3.2NM130@DH204"/> 
+                <line start="DH225" end="DH830" text="024"/> 
+                <line start="DH225" end="LYE" text="062"/> 
+                <line start="LYE" end="RAMAR" text="120" arrows="end,10"/> 
+
+                <!-- EKERN -->
+                <line start="HAM" end="EKERN" text="345" arrows="end,10"/> 
+
+                <!-- ELBE -->
+                <line start="DH205" end="LBE" text="321" arrows="end,10"/> 
+
+                <line start="LBE" end="EKERN" color="160,160,140"/> 
+                <line start="LBE" end="WSR" color="160,160,140"/> 
+                <line start="LBE" end="DHE" color="160,160,140"/> 
+        </route>
+
+	<route name="Airways App" zoomMin="10" zoomMax="1000" color="80,150,190" stroke="dots,1">
+		<activeLandingRunways>05,15,23,33</activeLandingRunways>
+		<navaids>NIE,WRB,PIROT,ROBEG,DLE,AGATI,AVENU,HLZ,IRKIS,BKD,OSN,DOBAK,BERIM,TAGOB,NUVEN,LEGSA,TOSPA,ALS,WSR,VERED,BASUM,DHE,OSTOR,RAMAR,MIC,GIMRU,BAGOS,LOMPU,ROSOK,EKERN,VES,GIKOG</navaids>
+      
+                <line start="VES" end="OSTOR"/>  
+                <line start="EKERN" end="BOGMU"/>  
+                <line start="ROSOK" end="RAMAR"/>  
+                <line start="MIC" end="GIMRU"/>  
+                <line start="MIC" end="BAGOS"/>  
+                <line start="MIC" end="LOMPU"/>  
+                <line start="MIC" end="BOGMU"/>   
+                <line start="TOSPA" end="RAMAR"/>   
+                <line start="TOSPA" end="MIC"/>   
+                <line start="RAMAR" end="RARUP"/>           
+                <line start="IRKIS" end="RARUP"/> 
+                <line start="BKD" end="IRKIS"/> 
+                <line start="NIE" end="DLE"/> 
+                <line start="OSTOR" end="RIBSO"/> 
+                <line start="DHE" end="OSTOR"/> 
+                <line start="NIE" end="AVENU"/> 
+                <line start="NIE" end="VERED"/> 
+                <line start="WSR" end="VERED"/> 
+                <line start="AVENU" end="NOLGO"/> 
+                <line start="(VOR)DLE" end="AGATI"/>
+                <line start="AGATI" end="NOLGO"/>
+                <line start="ROBEG" end="NIE"/>
+                <line start="ROBEG" end="PIROT"/>
+                <line start="PIROT" end="WRB"/>
+                <line start="BASUM" end="OSN"/>
+                <line start="BASUM" end="WSR"/>
+                <line start="RIBSO" end="WSR"/>
+                <line start="DOBAK" end="WSR"/>
+                <line start="RAMAR" end="BERIM"/>
+                <line start="BERIM" end="TAGOB"/>
+                <line start="TAGOB" end="NUVEN"/>
+                <line start="LEGSA" end="NUVEN"/>
+                <line start="HLZ" end="IRKIS"/>
+                <line start="ALS" end="EKERN"/>
+        </route>
+
+	<route name="Airways Dep" zoomMin="10" zoomMax="1000" color="160,160,140" stroke="dots,1">
+		<activeStartRunways>05,15,23,33</activeStartRunways>
+		<navaids>NIE,WRB,PIROT,ROBEG,DLE,HLZ,ULSEN,HLZ,IRKIS,BKD,OSN,DOBAK,BERIM,TAGOB,NUVEN,LEGSA,GESKA,TOSPA,AMICH,ALS,DHE,RANIN,NATSU</navaids>
+                
+                <line start="NIE" end="ROBEG"/> 
+                <line start="PIROT" end="ROBEG"/> 
+                <line start="PIROT" end="NATSU"/> 
+                <line start="RANIN" end="NATSU" text="to EDDF"/> 
+                <line start="WRB" end="PIROT"/>
+                <line start="IDEKO" end="NIE"/>
+                <line start="DLE" end="NIE"/>
+                <line start="ULSEN" end="HLZ"/>
+                <line start="ULSEN" end="AMLUH"/>
+                <line start="IRKIS" end="AMLUH"/>
+                <line start="IRKIS" end="BKD"/>
+                <line start="BASUM" end="OSN"/>
+                <line start="WSR" end="DOBAK"/>
+                <line start="RAMAR" end="BERIM"/>
+                <line start="BERIM" end="TAGOB"/>
+                <line start="TAGOB" end="NUVEN"/>
+                <line start="LEGSA" end="NUVEN"/>
+                <line start="LUB" end="GESKA"/>
+                <line start="ALS" end="EKERN"/>
+        </route>
+</routes>
+
+
+

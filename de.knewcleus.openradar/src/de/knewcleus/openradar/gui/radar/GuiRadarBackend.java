@@ -42,6 +42,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.GeoUtil;
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -68,12 +71,14 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     private ZoomLevel zoomLevel;
 
+    private final static Logger log = LogManager.getLogger(GuiRadarBackend.class);
+    
     public GuiRadarBackend(GuiMasterController master) {
         this.master=master;
-        zoomLevelMap.put("GROUND",new ZoomLevel("GROUND",14,master.getDataRegistry().getAirportPosition()));
-        zoomLevelMap.put("TOWER",new ZoomLevel("TOWER",26,master.getDataRegistry().getAirportPosition()));
-        zoomLevelMap.put("APP",new ZoomLevel("APP",100,master.getDataRegistry().getAirportPosition()));
-        zoomLevelMap.put("SECTOR",new ZoomLevel("SECTOR",300,master.getDataRegistry().getAirportPosition()));
+        zoomLevelMap.put("GROUND",new ZoomLevel("GROUND",14,master.getAirportData().getAirportPosition()));
+        zoomLevelMap.put("TOWER",new ZoomLevel("TOWER",26,master.getAirportData().getAirportPosition()));
+        zoomLevelMap.put("APP",new ZoomLevel("APP",100,master.getAirportData().getAirportPosition()));
+        zoomLevelMap.put("SECTOR",new ZoomLevel("SECTOR",300,master.getAirportData().getAirportPosition()));
     }
 
     public void setPanel(RadarPanel radarPanel) {
@@ -115,7 +120,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
             zl.setLogicalScale(viewerAdapter.getLogicalScale());
             zl.setCenter(viewerAdapter.getCenter());
         }
-        master.getDataRegistry().storeAirportData(master); // persist settings
+        master.getAirportData().storeAirportData(master); // persist settings
     }
 
     public boolean isContactInRange(GuiRadarContact contact) {
@@ -133,7 +138,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
         //viewerAdapter.setLogicalScale(viewerAdapter.getLogicalScale());
     }
     public void forceRepaint() {
-        viewerAdapter.setLogicalScale(viewerAdapter.getLogicalScale());
+        viewerAdapter.forceRepaint();
     }
     /**
      * This class is prepared for flexible user defined ZoomLevels
@@ -171,18 +176,18 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     public void showRadarContact(GuiRadarContact c, boolean changeZoom) {
         if(changeZoom) {
-            Point2D apPos = master.getDataRegistry().getAirportPosition();
+            Point2D apPos = master.getAirportData().getAirportPosition();
             Point2D plPos = c.getCenterGeoCoordinates();;
-            viewerAdapter.setCenter(new Point2D.Double(apPos.getX()+(plPos.getX()-apPos.getX())/2,apPos.getY()+(plPos.getY()-apPos.getY())/2));
 
             double distance = GeoUtil.getDistance(apPos.getX(), apPos.getY(), plPos.getX(), plPos.getY()).length / Units.NM;
-            double scale = distance>0 ? distance * 2.5 : 1;
-
+            double scale = distance>0 ? distance * 3.5 : 1;
             viewerAdapter.setLogicalScale(scale);
+            viewerAdapter.setGeoCenter(new Point2D.Double(apPos.getX()+(plPos.getX()-apPos.getX())/2,apPos.getY()+(plPos.getY()-apPos.getY())/2));
+//            viewerAdapter.setGeoCenter(c.getCenterGeoCoordinates());
         } else {
-            viewerAdapter.setCenter(c.getCenterGeoCoordinates());
+            viewerAdapter.setGeoCenter(c.getCenterGeoCoordinates());
         }
-        setZoomLevel("SECTOR");
+//        setZoomLevel("SECTOR");
     }
 
     public void addZoomLevelValuesToProperties(Properties p) {
@@ -206,22 +211,22 @@ public class GuiRadarBackend implements IRadarDataRecipient {
                 zl.setCenter(new Point2D.Double(x, y));
                 zl.setLogicalScale(scale);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error while reading zoomlevels from properties file!",e);
             }
         }
     }
 
     public void toggleRadarObjectFilter(String objectName) {
-        master.getDataRegistry().setRadarObjectFilter(master, objectName);
+        master.getAirportData().setRadarObjectFilter(master, objectName);
         forceRepaint();
     }
 
     public boolean getRadarObjectFilterState(String objectName) {
-        return master.getDataRegistry().getRadarObjectFilterState(objectName);
+        return master.getAirportData().getRadarObjectFilterState(objectName);
     }
 
     public boolean getRadarObjectFilterState(String objectName, boolean defaultValue) {
-        return master.getDataRegistry().getToggleState(objectName,defaultValue);
+        return master.getAirportData().getToggleState(objectName,defaultValue);
     }
 
     public void validateToggles() {
@@ -233,14 +238,14 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     }
 
     public void showGeoRectangle(Rectangle2D bounds) {
-        viewerAdapter.setCenter(new Point2D.Double(bounds.getCenterX(),bounds.getCenterY()));
 
         double distance = GeoUtil.getDistance(bounds.getMinX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMaxY()).length / Units.NM;
         if(distance>0) {
-            double scale = distance>0 ? distance * 2 : 1;
+            double scale = distance>0 ? distance * 2.5 : 1;
 
             viewerAdapter.setLogicalScale(scale);
         }
+        viewerAdapter.setGeoCenter(new Point2D.Double(bounds.getCenterX(),bounds.getCenterY()));
     }
 
     public void reloadStandardRoutes() {

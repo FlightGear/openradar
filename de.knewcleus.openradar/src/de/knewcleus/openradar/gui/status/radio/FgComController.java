@@ -45,6 +45,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
@@ -86,6 +89,8 @@ public class FgComController implements Runnable, IRadioBackend {
     private volatile boolean isRunning = true;
     private int sleeptime = 500;
 
+    private final static Logger log = LogManager.getLogger(FgComController.class);
+    
     public FgComController() {
     }
 
@@ -101,7 +106,7 @@ public class FgComController implements Runnable, IRadioBackend {
             this.datagramSocket = new DatagramSocket();
             this.datagramSocket.setSoTimeout(500);
         } catch (SocketException e) {
-            e.printStackTrace();
+            log.error("Error while configuring fgcom socket!",e);
         }
 
         Thread closeChildThread = new Thread("OpenRadar - Shutdown Hook") {
@@ -126,8 +131,7 @@ public class FgComController implements Runnable, IRadioBackend {
             try {
                 p.waitFor();
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                // I don't care
             }
         }
 
@@ -182,15 +186,17 @@ public class FgComController implements Runnable, IRadioBackend {
     }
 
     private void sendSettings(Radio r) {
-        try {
-            String message = composeMessage(r);
-            // System.out.println("Sending fgcom message: "+message);
-            byte[] msgBytes = message.getBytes(Charset.forName("ISO-8859-1"));
-            DatagramPacket packet = new DatagramPacket(msgBytes, msgBytes.length);
-            packet.setSocketAddress(new InetSocketAddress(r.getFgComHost(), r.getFgComPort()));
-            datagramSocket.send(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(master.getCurrentATCCallSign()!=null && !master.getCurrentATCCallSign().isEmpty()) { // after initialization
+            try {
+                String message = composeMessage(r);
+                // System.out.println("Sending fgcom message: "+message);
+                byte[] msgBytes = message.getBytes(Charset.forName("ISO-8859-1"));
+                DatagramPacket packet = new DatagramPacket(msgBytes, msgBytes.length);
+                packet.setSocketAddress(new InetSocketAddress(r.getFgComHost(), r.getFgComPort()));
+                datagramSocket.send(packet);
+            } catch (IOException e) {
+                log.error("Error while tuning FGCOM!",e);
+            }
         }
     }
 
@@ -209,8 +215,7 @@ public class FgComController implements Runnable, IRadioBackend {
         sb.append(String.format("%.6f", this.lat).replaceAll(",", "."));
         sb.append(",ALT=00000,HEAD=0.0");
         sb.append(",CALLSIGN=");
-        String callsign = r.getCallSign();
-        sb.append(callsign.length() > 6 ? r.getCallSign().substring(0, 6) : callsign);
+        sb.append(master.getCurrentATCCallSign());
         sb.append(",MODEL=");
         sb.append(this.model);
 
@@ -239,7 +244,7 @@ public class FgComController implements Runnable, IRadioBackend {
         endFgComProcesses();
         master.getLogWindow().removeLogs();
         
-        AirportData data = master.getDataRegistry();
+        AirportData data = master.getAirportData();
         for(Radio r : radios.values()) {
             initFgCom(r, data.getFgComPath(), data.getFgComExec(), data.getFgComServer(), r.getFgComPort());
         }
@@ -277,7 +282,7 @@ public class FgComController implements Runnable, IRadioBackend {
      */
     public void initFgCom(Radio r, String pathToFgComExec, String fgComExec, String fgComServer, int localPort) {
 
-        if (master.getDataRegistry().getFgComMode()==FgComMode.External)
+        if (master.getAirportData().getFgComMode()==FgComMode.External)
             // do not start it internally
             return;
 
@@ -299,6 +304,7 @@ public class FgComController implements Runnable, IRadioBackend {
             if (!fgComServer.isEmpty()) {
                 arguments.append(" --port=" + localPort);
                 arguments.append(" --voipserver=" + fgComServer);
+                arguments.append(" --callsign=" + master.getCurrentATCCallSign());
             }
             command.add(arguments.toString());
         }
@@ -309,6 +315,7 @@ public class FgComController implements Runnable, IRadioBackend {
             if (!fgComServer.isEmpty()) {
                 arguments.append(" --port=" + localPort);
                 arguments.append(" --voipserver=" + fgComServer);
+                arguments.append(" --callsign=" + master.getCurrentATCCallSign());
             }
             command.add(arguments.toString());
         }
@@ -328,7 +335,7 @@ public class FgComController implements Runnable, IRadioBackend {
             logWriters.add(new LogWriterThread(master.getLogWindow(), r, process));
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error while starting fgcom!",e);
         }
     }
 }

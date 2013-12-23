@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+
+	<route name="Radius" color="70,70,70" stroke="dots,1">
+		<activeLandingRunways>08L,08R,26L,26R</activeLandingRunways>
+		<activeStartRunways>08L,08R,26L,26R</activeStartRunways>
+		<bow center="EDDM" radius="100" startAngle="0" extentAngle="360" stroke="line,1"/>
+		<bow center="EDDM" radius="60" startAngle="0" extentAngle="360"/>
+		<bow center="EDDM" radius="20" startAngle="0" extentAngle="360"/>
+		<bow center="EDDM" radius="10" startAngle="0" extentAngle="360" color="80,80,80" stroke="line,0.5"/>
+		<bow center="LOWI" radius="20" startAngle="0" extentAngle="360" color="80,80,80"/>
+        </route>
+	<route name="VOR08" color="240,200,20">
+		<activeLandingRunways>08L,08R</activeLandingRunways>
+		<navaids>BETOS,NAPSA,ROKIL,LANDU,DM421,DM451</navaids>
+	
+	</route>
+
+	<route name="VOR26" color="240,200,20">
+		<activeLandingRunways>26L,26R</activeLandingRunways>
+		<navaids>BETOS,NAPSA,ROKIL,LANDU,DM428,DM458</navaids>
+	
+	</route>
+
+	<route name="RW 26R Approach" zoomMin="10" zoomMax="350" color="140,140,180" stroke="dots,1">
+		<activeLandingRunways>26R</activeLandingRunways>
+		<navaids>MBG,MIQ</navaids>
+
+                <line start="LANDU" end="DM428" text="200"/>
+                <line start="ROKIL" end="DM428" text="090"/>
+                <line start="DM428" angle="202" length="5" text="202"/>
+		<curve start="5NM202@DM428" end="GUDEG" controlPoint="2.3NM080@GUDEG"/> 		
+
+
+        </route>	
+-------------------------------------------------------------------------------------------------------
+
+        <route name="RW 26L Approach" zoomMin="10" zoomMax="350" color="140,140,180" stroke="dots,1">
+		<activeLandingRunways>26L</activeLandingRunways>
+		<navaids>MDF,DM458,NAPSA,BETOS,MUN</navaids>
+
+		<curve start="5NM320@DM458" end="NELBI" controlPoint="2.5NM080@NELBI" /> 	
+                <line start="NAPSA" end="DM458" text="330"/> 
+                <line start="DM458" length="5" angle="320" text="320"/> 
+                <line start="BETOS" end="DM458" text="068"/> 
+
+
+        </route>
+
+----------------------------------------------------------------------------------------------------------
+
+	<route name="RW 08L Approach" zoomMin="10" zoomMax="350" color="140,140,180" stroke="dots,1">
+		<activeLandingRunways>08L</activeLandingRunways>
+		<navaids>LANDU,ROKIL,DM421</navaids>
+
+                <line start="LANDU" end="DM421" text="255"/>
+                <line start="ROKIL" end="DM421" text="140"/>
+		
+        </route>
+
+	<route name="RW 08L Approach" zoomMax="100" color="40,40,80" stroke="dots,1">
+		<activeLandingRunways>08L</activeLandingRunways>
+
+                <line start="DM421" end="5NM140@DM421"/>
+		<curve start="5NM140@DM421" end="MAGAT" controlPoint="1.7NM262@MAGAT"/> 		
+        </route>
+
+	<route name="RW 08R Approach" zoomMin="10" zoomMax="350" color="140,140,180" stroke="dots,1">
+		<activeLandingRunways>08R</activeLandingRunways>
+		<navaids>BETOS,DM451,NAPSA,MUN</navaids>
+
+                <line start="NAPSA" end="DM451" text="275"/>
+                <line start="BETOS" end="DM451" text="007"/>		
+
+        </route>
+
+	<route name="RW 08R Approach" zoomMax="100" color="40,40,80" stroke="dots,1">
+		<activeLandingRunways>08L</activeLandingRunways>
+
+                <line start="DM451" angle="022" length="4" text="022"/>
+		<curve start="4NM022@DM451" end="BEGEN" controlPoint="1.5NM267@BEGEN"/> 		
+        </route>
+
+----------------------------------------------------------------------------------------------------------
+
+	<route name="SID 26L" zoomMin="10" zoomMax="350" color="140,180,140" stroke="dots,1">
+		<activeStartRunways>26L</activeStartRunways>
+		<navaids>ANKER,BIBAG,GIVMI,KPT,KIRDI,MERSI,MIQ,OLASO,RIDAR,TULSI,TURBU,AMPEG,MSE,MNE,MUN,MANAL,MEBEK,DM056,DMS31,DM057,DM055,DM052,wld,DM054,DM053,DM050</navaids>
+                
+                <line start="EDDM-RW26L" end="MSE"/> 
+                
+                <!-- MERSI 3S -->
+                <line start="MSE" end="DM053"/>   
+                <line start="DM053" end="AMPEG"/>  
+                <line start="AMPEG" end="MERSI" arrows="end,10" text="MERSI 3S" /> 
+                
+                <!-- GIVMI 5S -->
+                <line start="DM052" end="DM055" text="R305 to WLD"/>      
+                <line start="DM055" end="GIVMI" arrows="end,10" text="GIVMI 5S"/> 
+
+                <!-- KPT 1S -->
+                <line start="MERSI" end="KPT" arrows="end,10" text="KPT 1S" /> 
+                
+                <!-- KIRDI 1S -->
+                <line start="MUN" end="MEBEK" text="KIRDI 1S"/> 
+                <line start="MEBEK" end="KIRDI" text="096" arrows="end,10"/> 
+
+                <!-- ANKER 6S -->
+                <curve start="DMS31" end="12NM169@MIQ" controlPoint="1.4NM260@DMS31"/>  
+                <line start="12NM169@MIQ" end="1NM169@DM056" text="MIQ"/>   
+                <curve start="1NM169@DM056" end="1NM077@DM056" controlPoint="DM056"/>  
+                <line start="1NM077@DM056" end="DM057" text="ANKER 6S"/>    
+                <line start="DM057" end="ANKER" arrows="end,10"/>    
+
+                <!-- TURBU 5S -->
+                <line start="MUN" end="TURBU" arrows="end,10" text="TURBU 5S"/> 
+
+                <!-- RIDAR 5S -->
+                <line start="MSE" end="DM054"/> 
+                <line start="DM054" end="RIDAR" arrows="end,10" text="RIDAR 5S | R312 MAH"/> 
+
+                <!-- TULSI 4S -->
+                <curve start="MUN16" end="DM050" controlPoint="0.5NM260@DM049"/>  
+                <line start="DM050" end="MUN" text="R324 MUN"/> 
+                <line start="MUN" end="MANAL"/> 
+                <line start="MANAL" end="TULSI" arrows="end,10" text="TULSI 4S"/>
+        </route>    
+----------------------------------------------------------------------------------------------------------
+
+	<route name="SID 26R" zoomMin="10" zoomMax="350" color="140,180,140" stroke="dots,1">
+		<activeStartRunways>26R</activeStartRunways>
+		<navaids>ANKER,BIBAG,GIVMI,KPT,KIRDI,MERSI,MIQ,OLASO,RIDAR,TULSI,TURBU,AMPEG,MSE,MNE,MUN,MEBEK,MANAL,DM064,DMN35,DM057,DMN35,DM063,DM062,DM061,DM053,DM049,DM050</navaids>
+                
+                <line start="EDDM-RW26R" end="MNE"/> 
+                
+                <!-- MERSI 3N -->
+                <line start="MNE" end="DM061"/>  
+                <line start="DM061" end="DM053"/> 
+                <line start="DM053" end="AMPEG"/> 
+                <line start="AMPEG" end="MERSI" arrows="end,10" text="MERSI 3N" /> 
+                
+                <!-- GIVMI 5W -->
+                <line start="DMN35" end="DM063" text="R300 to WLD"/>   
+                <line start="DM063" end="GIVMI" arrows="end,10" text="GIVMI 5W"/> 
+
+                <!-- KPT 1N -->
+                <line start="MERSI" end="KPT" arrows="end,10" text="KPT 1N" /> 
+
+                <!-- KIRDI 1N -->
+                <line start="MUN" end="MEBEK" text="KIRDI 1N"/> 
+                <line start="MEBEK" end="KIRDI" arrows="end,10"/> 
+
+                <!-- ANKER 8N -->
+                <curve start="DMN35" end="12NM167@MIQ" controlPoint="1.4NM260@DMN35"/>    
+                <line start="12NM167@MIQ" end="1NM169@DM064" text="MIQ"/>   
+                <curve start="1NM169@DM064" end="1NM077@DM064" controlPoint="DM064"/>  
+                <line start="1NM077@DM064" end="DM057" text="ANKER 8N"/>    
+                <line start="DM057" end="ANKER" arrows="end,10"/>  
+
+                <!-- TURBU 4N -->
+                <line start="MUN" end="TURBU" arrows="end,10" text="TURBU 5N"/> 
+
+                <!-- RIDAR 5N -->
+                <line start="MNE" end="DM062"/> 
+                <line start="DM062" end="RIDAR" arrows="end,10" text="RIDAR 5N | R312 MAH"/> 
+
+                <!-- TULSI 9N -->
+                <curve start="DM033" end="DM049" controlPoint="DMN35"/>  
+                <line start="DM049" end="DM050"/> 
+                <line start="DM050" end="MUN" text="R324 MUN"/> 
+                <line start="MUN" end="MANAL"/> 
+                <line start="MANAL" end="TULSI" arrows="end,10" text="TULSI 9N"/>
+        </route>    
+----------------------------------------------------------------------------------------------------------
+
+	<route name="SID 08L" zoomMin="10" zoomMax="350" color="140,180,140" stroke="dots,1">
+		<activeStartRunways>08L</activeStartRunways>
+		<navaids>ANKER,ALONU,BIBAG,GIVMI,KPT,KIRDI,MERSI,MIQ,OBAXA,OLASO,RIDAR,TULSI,TURBU,LAKOL,MSW,MNW,MEBEK,MEBEK,MUN,MANAL,DM070,DM073,DM070,DM072,DM077,DM079,DM071,MNW68,DM082,MDF</navaids>
+                
+                <line start="EDDM-RW08L" end="DM070"/> 
+                <line start="EDDM-RW08L" end="MNW"/> 
+                
+                <!-- MERSI 2E -->
+                <curve start="MNW68" end="DM094" controlPoint="4.6NM082@MNW"/>  
+                <line start="DM094" end="ALONU"/> 
+                <line start="ALONU" end="LAKOL"/> 
+                <line start="LAKOL" end="OBAXA"/> 
+                <line start="OBAXA" end="MERSI" arrows="end,10" text="MERSI 2E" /> 
+
+                <!-- GIVMI 4Q -->
+                <curve start="DM070" end="DM073" controlPoint="3.5NM082@DM070"/>                  
+                <line start="DM073" end="MIQ"/>     
+                <line start="MIQ" end="GIVMI" arrows="end,10" text="GIVMI 4Q"/> 
+
+                <!-- KPT 2Q -->
+                <line start="MERSI" end="KPT" arrows="end,10" text="KPT 2Q"/> 
+                <line start="MUN" end="OBAXA" arrows="end,10" text="KPT 1T" /> 
+                
+                <!-- KIRDI 1Q -->
+                <line start="MNW" end="DM071"/>       
+                <line start="DM071" end="MDF"/>    
+                <line start="MDF" end="MEBEK"/>                 
+                <line start="MEBEK" end="KIRDI" arrows="end,10" text="KIRDI 1Q"/> 
+                
+                <!-- ANKER 7Q -->       
+                <line start="DM070" end="DM072"/>      
+                <line start="DM072" end="DM077"/>  
+                <line start="DM077" end="DM079"/>    
+                <line start="DM079" end="ANKER" arrows="end,10" text="ANKER 7Q"/> 
+
+                <!-- TURBU 6Q -->
+                <line start="LAKOL" end="TURBU" arrows="end,10" text="TURBU 6Q"/> 
+
+                <!-- RIDAR 5Q -->
+                <line start="MIQ" end="RIDAR" arrows="end,10" text="RIDAR 5Q"/> 
+
+                <!-- TULSI 9Q -->
+                <curve start="MNW" end="DM082" controlPoint="2NM035@DM074"/>     
+                <line start="DM082" end="DM086"/> 
+                <line start="DM086" end="MUN"/>  
+                <line start="MUN" end="MANAL"/> 
+                <line start="MANAL" end="TULSI" arrows="end,10" text="TULSI 9Q"/>
+
+        </route>        
+
+----------------------------------------------------------------------------------------------------------
+
+	<route name="SID 08R" zoomMin="10" zoomMax="350" color="140,180,140" stroke="dots,1">
+		<activeStartRunways>08R</activeStartRunways>
+		<navaids>ANKER,BIBAG,GIVMI,KPT,KIRDI,MERSI,MIQ,OBAXA,OLASO,RIDAR,TULSI,TURBU,ALONU,LAKOL,MSW,RATGI,MEBEK,MUN,MANAL,DM084,DM085,DM079,DM446,DM080,DM078,MDF</navaids>
+                
+                <line start="EDDM-RW08R" end="DM084"/> 
+                <line start="EDDM-RW08R" end="MSW"/> 
+                
+                <!-- MERSI 2E --> 
+                <curve start="MSW" end="ALONU" controlPoint="5NM082@MSW"/>  
+                <line start="ALONU" end="LAKOL"/> 
+                <line start="LAKOL" end="OBAXA"/> 
+                <line start="OBAXA" end="MERSI" arrows="end,10" text="MERSI 2E" /> 
+
+                <!-- GIVMI 4E -->
+                <curve start="DM084" end="DM085" controlPoint="3.5NM082@DM084"/>                  
+                <line start="DM085" end="MIQ"/>     
+                <line start="MIQ" end="GIVMI" arrows="end,10" text="GIVMI 4E"/> 
+
+                <!-- KPT 2Q -->
+                <line start="MERSI" end="KPT" arrows="end,10" text="KPT 2E"/> 
+                <line start="MUN" end="OBAXA" arrows="end,10" text="KPT 1P" /> 
+                
+                <!-- KIRDI 1E -->
+                <line start="DM080" end="MDF"/>     
+                <line start="MDF" end="MEBEK"/>                     
+                <line start="MEBEK" end="KIRDI" arrows="end,10" text="KIRDI 1E" /> 
+
+                <!-- ANKER 8E -->
+                <line start="MSW" end="DM446"/>     
+                <curve start="DM446" end="DM079" controlPoint="0.3NM260@MSW10"/>                  
+                <line start="DM079" end="ANKER" arrows="end,10" text="ANKER 8E"/> 
+
+                <!-- TURBU 5E -->
+                <line start="LAKOL" end="TURBU" arrows="end,10" text="TURBU 5E"/> 
+
+                <!-- RIDAR 5E -->
+                <line start="MIQ" end="RIDAR" arrows="end,10" text="RIDAR 5E"/> 
+
+                <!-- TULSI 1E -->
+                <curve start="MSW" end="DM078" controlPoint="6NM090@MSW"/>     
+                <line start="DM078" end="MUN"/>  
+                <line start="MUN" end="MANAL"/> 
+                <line start="MANAL" end="TULSI" arrows="end,10" text="TULSI 1E"/>
+        </route>        
+---------------------------------------------------------------------------------------------------------------
+
+        <route name="CDA 08" zoomMax="100" color="140,140,180">
+		<activeLandingRunways>08L,08R</activeLandingRunways>
+		<text position="29.7NM251@NAMUG" font="Arial" fontSize="12" angle="0" text="At or above FL80"/>
+		<text position="30NM274@ELMUG" font="Arial" fontSize="12" angle="0" text="At or above FL80"/>
+		<text position="1NM260@DM451" font="Arial" fontSize="12" angle="0" text="FL70"/>
+		<text position="1NM260@DM421" font="Arial" fontSize="12" angle="0" text="FL70"/>
+		<bow center="ELMUG" radius="31.9" startAngle="275.9" extentAngle="1"/>
+		<bow center="NAMUG" radius="31.4" startAngle="254" extentAngle="1"/>
+        </route>
+
+        <route name="CDA 26" zoomMax="100" color="140,140,180">
+		<activeLandingRunways>26L,26R</activeLandingRunways>
+		<text position="32NM072@BETOS" font="Arial" fontSize="12" angle="0" text="At or above FL80"/>
+		<text position="33NM092@ROKIL" font="Arial" fontSize="12" angle="0" text="At or above FL80"/>
+		<text position="1NM230@DM428" font="Arial" fontSize="12" angle="0" text="FL70"/>
+		<text position="1NM270@DM458" font="Arial" fontSize="12" angle="0" text="FL70"/>
+		<bow center="BETOS" radius="31" startAngle="068.7" extentAngle="1"/>
+		<bow center="ROKIL" radius="32.3" startAngle="092.4" extentAngle="1"/>
+        </route>
+
+--------------------------------------------------------------------------------------------
+
+
+	<route name="Airways App" zoomMin="10" zoomMax="3000" color="80,150,190" stroke="line,0.3">
+		<navaids>HAREM,DKB,EXUSI,RDG,GOMAX,VESIX,BAGMI,ODUDA,NETES,UNKOM,MITNU,TUSTO,ARBAX,USEMI,LITLI,OSTES,BINGU,BAMTA,ROSAB,AKANU,LUPOX,RENLO,ANORA,XERUM,BURAM,RIXED,OSBIT,MASEK,WUR,REDVO,RIDAR,LELTA,LURER,ABGAS,KUNOD,PELOG,WLD,BOMBI,DINKU,VAMAS,DINOG,BIXEL,STAUB,ABISI,MAXAL,ARBER,LEKMI,ELSAL,SODRO,ARMUT,OSBIT,KOMIB,SULUS,LONLI,KULOK,ABERU,DOBEN,RAK,OBAGA,KOGOL,ANDEC,MERSI,KPT,BODAN,ZUE,NORTO,MATAR,BZO,ERKIR,ARTUS,OBEDI,GIMIX,(VOR)KFT,OSKOR,TAGIP,(VOR)VIC,AMADI,MATIG,BAGSI,(VOR)SBG,TITG,INSOL,MORED,SUNIS,PASTA,PEREX,BUMUK,TULSI,BADVI,(VOR)LNZ,EPODO,(VOR)ILB,(VOR)DOL</navaids>
+      
+                <line start="HAREM" end="BOMBI"/>  
+                <line start="HAREM" end="DKB"/>  
+                <line start="XERUM" end="DKB" text="130"/> 
+		<line start="XERUM" end="BURAM"/>
+
+                <line start="ABGAS" end="RIDAR"/>  
+                <line start="RIDAR" end="ROKIL"/> 
+
+		<line start="DINKU" end="WUR"/>
+		<line start="AKANU" end="DINKU"/>
+		<line start="WUR" end="OSBIT"/>
+		<line start="OSBIT" end="MASEK"/>
+		<line start="AKANU" end="LUPOX"/>
+		<line start="LUPOX" end="RENLO"/>
+		<line start="RENLO" end="ROKIL"/>
+
+		<line start="BURAM" end="ROKIL"/>
+
+		<line start="OSBIT" end="KOMIB"/>
+		<line start="KOMIB" end="LONLI"/>
+		<line start="ABERU" end="LONLI"/>
+
+		<line start="SODRO" end="ABERU"/>
+		<line start="ARMUT" end="ABERU"/>
+		<line start="ELSAL" end="ARMUT"/>
+		<line start="ELSAL" end="LEKMI"/>
+		<line start="MAXAL" end="LEKMI"/>
+		<line start="RDG" end="MAXAL"/>
+		<line start="RDG" end="VAMAS"/>
+		<line start="LANDU" end="VAMAS"/>
+		<line start="LANDU" end="DINOG"/>
+		<line start="BIXEL" end="DINOG"/>
+		<line start="BIXEL" end="STAUB"/>
+		<line start="ABISI" end="STAUB"/>
+		<line start="ABISI" end="ARBER"/>
+		<line start="DOBEN" end="ARBER"/>
+		<line start="DOBEN" end="RAK"/>
+
+		<line start="BODAN" end="ZUE"/>
+		<line start="BODAN" end="KPT"/>
+		<line start="MERSI" end="KPT"/>
+		<line start="MERSI" end="BETOS"/>
+		<line start="KOGOL" end="ANDEC"/>
+		<line start="ANDEC" end="BETOS"/>
+
+		<line start="ANDEC" end="OBAGA"/>
+		<line start="NORTO" end="OBAGA"/>
+		<line start="NORTO" end="MATAR"/>
+		<line start="BZO" end="MATAR"/>
+		<line start="BZO" end="TAGIP"/>
+		<line start="OSKOR" end="TAGIP"/>
+		<line start="BZO" end="(VOR)VIC"/>
+
+
+		<line start="KOGOL" end="ERKIR"/>
+		<line start="ARTUS" end="ERKIR"/>
+		<line start="ARTUS" end="OBEDI"/>
+		<line start="GIMIX" end="ERKIR"/>
+		<line start="(VOR)KFT" end="ERKIR"/>
+		<line start="GIMIX" end="EPODO"/>
+		<line start="(VOR)ILB" end="EPODO"/>
+		<line start="(VOR)ILB" end="(VOR)DOL"/>
+		<line start="(VOR)KFT" end="(VOR)DOL"/>
+
+		<line start="(VOR)KFT" end="PEREX"/>
+		<line start="MORED" end="PEREX"/>
+		<line start="MORED" end="(VOR)SBG"/>
+		<line start="NAPSA" end="(VOR)SBG"/>
+		<line start="INSOL" end="(VOR)SBG"/>
+		<line start="(VOR)LNZ" end="(VOR)SBG"/>
+		<line start="INSOL" end="BADVI"/>
+		<line start="TULSI" end="BADVI"/>
+		<line start="TULSI" end="KOGOL"/>
+		<line start="NAPSA" end="AMADI"/>
+		<line start="MATIG" end="AMADI"/>
+		<line start="MATIG" end="BAGSI"/>
+
+
+        </route>
+
+
+		<line start="GONBA" end="DINOG"/>
+		<line start="GONBA" end="LALIN"/>
+		<line start="LUSAN" end="LALIN"/>
+		<line start="LUSAN" end="DOMAL"/>
+
+</routes>
+

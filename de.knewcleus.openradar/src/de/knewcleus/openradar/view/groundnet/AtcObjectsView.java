@@ -41,6 +41,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
@@ -54,6 +55,7 @@ import de.knewcleus.openradar.view.painter.AViewObjectPainter;
 
 public class AtcObjectsView implements IBoundedView, INotificationListener {
     protected final IMapViewerAdapter mapViewAdapter;
+    protected final GuiMasterController master;
     protected final AirportData data;
 
     protected boolean visible = true;
@@ -64,12 +66,13 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
 
     protected AViewObjectPainter<?> viewObjectPainter;
 
-	public AtcObjectsView(IMapViewerAdapter mapViewAdapter, AirportData data) {
+	public AtcObjectsView(IMapViewerAdapter mapViewAdapter, GuiMasterController master) {
 		this.mapViewAdapter = mapViewAdapter;
-		this.data = data;
+		this.master=master;
+		this.data = master.getAirportData();
 		mapViewAdapter.registerListener(this);
         // factory method
-        viewObjectPainter = AViewObjectPainter.getPainterForNavpoint(mapViewAdapter, data, data);
+        viewObjectPainter = AViewObjectPainter.getPainterForNavpoint(mapViewAdapter, master, data);
         updateLogicalPosition();
 	}
     @Override

@@ -37,14 +37,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
-import com.sun.istack.internal.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import de.knewcleus.fgfs.Units;
 
 public class AircraftCodeConverter {
 
     private List<AircraftDefinition> aircraftList = new ArrayList<AircraftDefinition>();
 
+    private final static Logger log = LogManager.getLogger(AircraftCodeConverter.class);
+    
     public AircraftCodeConverter() {
         BufferedReader ir = null;
 
@@ -53,15 +59,25 @@ public class AircraftCodeConverter {
             String line = removeComment(ir.readLine().trim());
             while(line!=null) {
                 if(!line.isEmpty()) {
-                    StringTokenizer st = new StringTokenizer(line,",");
-                    String regex = st.nextToken();
-                    String icao = st.nextToken();
-                    aircraftList.add(new AircraftDefinition(regex, icao));
+                    try {
+                        StringTokenizer st = new StringTokenizer(line,",");
+                        st.countTokens();
+                        String regex = st.nextToken();
+                        String icao = st.nextToken();
+                        String cruiseSpeed = st.hasMoreTokens() ? st.nextToken() : "";
+                        String turbulanceClass = st.hasMoreTokens() ? st.nextToken(): "";
+                        aircraftList.add(new AircraftDefinition(regex, icao, getMphToKnots(cruiseSpeed), turbulanceClass));
+                    } catch(NoSuchElementException e) {
+                        log.error("File data/aircraftCodes.txt: Missing fields (should be 4, comma separated): "+line);
+                    }
                 }
                 line = ir.readLine();
+                if(line!=null) {
+                    line = removeComment(line.trim());
+                }
             }
         } catch (IOException e) {
-            Logger.getLogger(AircraftCodeConverter.class).warning("File data/aircraftCodes.txt could not be read", e);
+            log.error("File data/aircraftCodes.txt could not be read", e);
         } finally {
             if(ir!=null) {
                 try {
@@ -69,6 +85,18 @@ public class AircraftCodeConverter {
                 } catch (IOException e) {}
             }
         }
+    }
+
+    private String getMphToKnots(String cruiseSpeed) {
+        if(!cruiseSpeed.isEmpty()) {
+            try {
+                double mph = Double.parseDouble(cruiseSpeed);
+                return String.format("%01.0f",Units.getMphToKnots(mph)); 
+            } catch (Exception e) {
+                log.error("Problem to convert cruisespeed to number: "+cruiseSpeed,e);
+            }
+        }
+        return "";
     }
 
     private String removeComment(String line) {
@@ -87,17 +115,39 @@ public class AircraftCodeConverter {
         return checkLength(modelName, 10) ;
     }
 
+    public String getCruiseSpeed(String modelName) {
+        for(AircraftDefinition ad : aircraftList) {
+            if(modelName.matches(ad.regex)) {
+                return ad.cruiseSpeed;
+            }
+        }
+        return "" ;
+    }
+    
+    public String getTurbulanceClass(String modelName) {
+        for(AircraftDefinition ad : aircraftList) {
+            if(modelName.matches(ad.regex)) {
+                return ad.turbulanceClass;
+            }
+        }
+        return "" ;
+    }
+
     public static String checkLength(String source, int length) {
         return source.length()>length ? source.substring(0,length):source;
     }
 
     private class AircraftDefinition {
-        public AircraftDefinition(String regex, String icao) {
+        public AircraftDefinition(String regex, String icao, String cruiseSpeed, String turbulanceClass) {
             this.regex=regex;
             this.icao=icao;
+            this.cruiseSpeed=cruiseSpeed;
+            this.turbulanceClass=turbulanceClass;
         }
 
         public final String regex;
         public final String icao;
+        public final String cruiseSpeed;
+        public final String turbulanceClass;
     }
 }

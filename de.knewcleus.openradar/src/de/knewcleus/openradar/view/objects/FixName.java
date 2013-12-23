@@ -37,20 +37,20 @@ import java.awt.Font;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.model.IIntersection;
-import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class FixName extends AViewObject {
 
-    private AirportData data;
+    private GuiMasterController master;
     private IIntersection fix;
     private String activeText;
     private int defaultMaxScale;
     private Color defaultColor;
 
-    public FixName(AirportData data, IIntersection fix, Font font, Color color, int minScaleText, int maxScaleText) {
+    public FixName(GuiMasterController master, IIntersection fix, Font font, Color color, int minScaleText, int maxScaleText) {
         super(font, color, fix.getIdentification(), minScaleText, maxScaleText);
-        this.data=data;
+        this.master=master;
         this.fix = fix;
         this.defaultMaxScale = maxScaleText;
         this.activeText = fix.getIdentification();
@@ -60,7 +60,7 @@ public class FixName extends AViewObject {
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
 
-        Color highLightColor = data.getNavaidDB().getNavaidHighlightColor(data,fix);
+        Color highLightColor = master.getAirportData().getNavaidDB().getNavaidHighlightColor(master,fix);
 
         if(highLightColor!=null) {
             this.maxScaleText=Integer.MAX_VALUE;
@@ -72,7 +72,7 @@ public class FixName extends AViewObject {
 
         setTextCoordinates(new Point2D.Double(newDisplayPosition.getX()+12,newDisplayPosition.getY()));
         String fixType = fix.getIdentification().matches("[\\w]{4}[\\d]{1}")?"FIX_NUM":"FIX";
-        if(showNavaid(data, fixType, highLightColor, fix.getIdentification())) {
+        if(showNavaid(master.getAirportData(), fixType, highLightColor, fix.getIdentification())) {
             text = activeText;
         } else {
             text = null;

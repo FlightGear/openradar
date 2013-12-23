@@ -39,7 +39,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.sun.istack.internal.logging.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
@@ -113,6 +114,8 @@ public class MetarData {
 
     private long created = System.currentTimeMillis();
 
+    private final static Logger log = LogManager.getLogger(MetarData.class);
+    
     public MetarData(AirportData data, String metar) {
         exists=true;
 
@@ -124,8 +127,7 @@ public class MetarData {
         try {
             observationTime = sdf.parse(st.nextToken()+" "+st.nextToken());
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("Error while parsing observation time!",e);
         }
 
         airportCode=st.nextToken();
@@ -258,7 +260,7 @@ public class MetarData {
                 weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("REGR","hail");
                 weatherPhaenomenaHuman = weatherPhaenomenaHuman.replaceAll("RETS","thunderstorm");
         } catch(Exception e) {
-            Logger.getLogger(MetarData.class).warning("Failed to parse Metar: "+metar,e);
+            log.error("Failed to parse Metar: "+metar,e);
             weatherPhaenomena="";
         }
 
@@ -279,11 +281,13 @@ public class MetarData {
             // variable
             windDirection="VRB";
             windDirectionI=0;
+            windDirectionVariates=true;
         } else {
             wd=(Integer.parseInt(t.substring(0,3)) - (int)data.getMagneticDeclination());
-            wd=wd<0?wd+360:wd;
-            windDirection = String.format("%03d", wd);
+            wd=wd<=0?wd+360:wd;
+            windDirection = String.format("%03d", Math.round((float)wd/10)*10);
             windDirectionI = wd;
+            windDirectionVariates=false;
         }
         windSpeed=Integer.parseInt(t.substring(3,5));
         if(t.charAt(5)=='G') {
@@ -293,11 +297,11 @@ public class MetarData {
     }
     private void parseVariations(String t) {
         int wdMin = Integer.parseInt(t.substring(0,3)) - (int)data.getMagneticDeclination();
-        wdMin=wdMin<0?wdMin+360:wdMin;
-        windDirectionMin = String.format("%03d", wdMin);
+        wdMin=wdMin<=0?wdMin+360:wdMin;
+        windDirectionMin = String.format("%03d", Math.round((float)wdMin/10)*10);
         int wdMax=Integer.parseInt(t.substring(4)) - (int)data.getMagneticDeclination();
-        wdMax=wdMax<0?wdMax+360:wdMax;
-        windDirectionMax = String.format("%03d", wdMax);
+        wdMax=wdMax<=0?wdMax+360:wdMax;
+        windDirectionMax = String.format("%03d", Math.round((float)wdMax/10)*10);
     }
 
     private void parseVisibility(String t) {
@@ -312,7 +316,7 @@ public class MetarData {
             visibility=visibility/Integer.parseInt(t.substring(t.indexOf("/")+1,t.indexOf("SM")));
             visibilityUnit="SM";
         } else {
-            System.out.println("Unparsed visibility: "+t);
+            log.warn("Unparsed visibility: "+t);
         }
 
     }
@@ -379,9 +383,8 @@ public class MetarData {
     }
 
     public String getWindDirectionRounded() {
-        int wd = windDirectionI/10*10;
-        wd = wd==360 ? wd = 0 : wd;
-        return String.format("%03d",wd);
+        int wd = windDirectionI;
+        return String.format("%03d",Math.round((float)wd/10)*10);
     }
 
     public int getWindDirectionI() {
@@ -482,7 +485,11 @@ public class MetarData {
 
     public String getWindDisplayString() {
         StringBuffer sb = new StringBuffer();
-        sb.append(getWindDirection());
+        if(isWindDirectionVariates()) {
+            sb.append("VRB");
+        } else {
+            sb.append(getWindDirectionRounded());
+        }
         if(getWindDirectionMin()!=null) {
             sb.append("(");
             sb.append(getWindDirectionMin());
@@ -503,7 +510,7 @@ public class MetarData {
     }
 
     public Object getPressureDisplayString() {
-        return String.format("%2.2f/%4.1f", pressureInHG, pressureHPa);
+        return String.format("%2.2f/%4.0f", pressureInHG, pressureHPa);
     }
 
     public List<String> createATIS(GuiMasterController master, boolean shortMsg) {
@@ -513,14 +520,15 @@ public class MetarData {
             atisVariables.add("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-APalt");
             atisVariables.add("/openradar/metar/pressure-sea-level");
             atisVariables.add("/openradar/metar/wind");
+            atisVariables.add("/openradar/transitionAlt");
 //            atisVariables.add("/openradar/metar/visibility");
             atisVariables.add("/sim/atc/activeRW");
             atisVariables.add("/openradar/comm/frequencies");
         }
 
         ArrayList<String> list = new ArrayList<String>();
-        list.add(String.format(AtcMenuChatMessage.replaceVariables("ATIS for %s at %2.0f ft: QNH %s wind %s active rwy(s) %s FGCOM %s", master, null, atisVariables)).trim());
-        if(!shortMsg) list.add("(ATIS) vis:"+getVisibility()+", "+getVisibilityUnit()+" "+getWeatherPhaenomenaForHumans());
+        list.add(String.format(AtcMenuChatMessage.replaceVariables("ATIS for %s at %2.0fft: QNH %s wind %s transAlt %s act. rwy(s) %s FGCOM %s", master, null, atisVariables)).trim());
+        if(!shortMsg) list.add("(ATIS) vis:"+getVisibility()+""+getVisibilityUnit()+" "+getWeatherPhaenomenaForHumans());
         return list;
     }
 

@@ -33,6 +33,7 @@
  */
 package de.knewcleus.openradar.view.map;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
@@ -43,15 +44,13 @@ import de.knewcleus.openradar.view.ViewerAdapter;
 
 public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter {
 	protected volatile IProjection projection;
-	protected volatile Point2D originalCenter = null;
-	protected volatile Point2D currentCenter = null;
+	protected volatile Point2D originalOrigin = null;
 
 	
 	public MapViewerAdapter(ICanvas canvas, IUpdateManager updateManager, IProjection projection, Point2D center) {
 		super(canvas, updateManager);
 		this.projection = projection;
-        this.currentCenter = center; 
-        this.originalCenter = center;
+        this.originalOrigin = center;
 	}
 
 	@Override
@@ -65,37 +64,96 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
 		notify(new ProjectionNotification(this));
 	}
 
-	public Point2D getGeoLocationOf(Point awtPoint) {
-        Point2D result = new Point2D.Double();
-        getDeviceToLogicalTransform().transform(new Point2D.Double(awtPoint.getX(),awtPoint.getY()), result);
-        result = getProjection().toGeographical(result);
-        return result;
+    public void setZoom(double scale, Point2D newGeoOrigin) {
+        
+        setLogicalScale(scale, newGeoOrigin);
+        originalOrigin = getCenter(); // centers zoom at mouse
+    }       
+    
+    @Override
+    public void setLogicalScale(double scale) {
+        Point2D center = getGeoCenter();
+        setLogicalScale(scale, center);
     }
 
-    public void setZoom(double scale, Point2D newCenter) {
-        setLogicalOrigin(new Point2D.Double());
-        currentCenter = newCenter;
-        setProjection(new LocalSphericalProjection(newCenter));
-        setLogicalScale(scale);
-        notifyListeners(Change.CENTER);
-    }       
+    public void setLogicalScale(double scale, Point mouseLocation) {
+        setLogicalScale(scale, originalOrigin);
+    }
     
+    public void setLogicalScale(double scale, Point2D center) {
+        this.logicalScale = scale;
+        updateTransforms();
+        notifyListeners(Change.ZOOM);
+        
+        setGeoCenter(center);
+    }
     
-    public void setCenter(Point2D newCenter) {
-        setProjection(new LocalSphericalProjection(newCenter));
-        currentCenter = newCenter;
-        setLogicalOrigin(new Point2D.Double());
-        notifyListeners(Change.CENTER);
-    }       
+    public void shiftDeviceOrigin(Point2D deviceOrigin, Point2D deviceTarget) {
+        // new
+        double deltaX = deviceTarget.getX() - deviceOrigin.getX();
+        double deltaY = deviceTarget.getY() - deviceOrigin.getY();
+        setDeviceOrigin(new Point2D.Double(getDeviceOrigin().getX()+deltaX, getDeviceOrigin().getY()+deltaY));
+        
+        updateTransforms();
+        originalOrigin = getGeoLocationOf(getDeviceCenter());
+    }
+    
 
+    public Point2D getDeviceCenter() {
+        Component c = canvas.getManagedComponent();
+        double x = c.getWidth()/2;
+        double y = c.getHeight()/2;
+        return new Point2D.Double(x, y);
+    }
+    
+    
+    /**
+     * Returns the GEO coordinates of the point in the middle
+     * @return
+     */
+    public Point2D getGeoCenter() {
+        return projection.toGeographical(getDeviceToLogicalTransform().transform(getDeviceOrigin(),null));
+    }
+
+    public void setCenterOnDevicePoint(Point devicePoint) {
+        Point2D newCenter = getGeoLocationOf(devicePoint);
+        setGeoCenter(newCenter);
+        originalOrigin= newCenter;
+    }
+
+    
+    
+    /**
+     * Sets the center of the displayed map to the given GEO coordinates 
+     * @return
+     */
+    public void setGeoCenter(Point2D newGeoCenter) {
+        Point2D newDeviceCenter = getLogicalToDeviceTransform().transform(projection.toLogical(newGeoCenter),null);
+        shiftDeviceOrigin(newDeviceCenter,getDeviceCenter());
+    }
+    
+//    public void setGeoOrigin(Point2D newGeoOrigin) {
+//        Point2D newDeviceOrigin = getLogicalToDeviceTransform().transform(projection.toLogical(newGeoOrigin),null);
+//        shiftDeviceOrigin(getDeviceCenter(), newDeviceOrigin);
+//    }       
+    
     public void centerMap() {
-        setProjection(new LocalSphericalProjection(originalCenter));
-        currentCenter = originalCenter;
-        setLogicalOrigin(new Point2D.Double());
-        notifyListeners(Change.CENTER);
+        setGeoCenter(originalOrigin);
     }
 
 	public Point2D getCenter() {
-	    return projection.toGeographical(logicalOrigin); 
+	    return getGeoLocationOf(getDeviceCenter()); 
 	}
+
+   public Point2D getGeoLocationOf(Point2D devicePoint) {
+        return getProjection().toGeographical(getDeviceToLogicalTransform().transform(devicePoint,null));
+    }
+
+   public Point2D getGeoLocationOf(Point awtPoint) {
+       return getProjection().toGeographical(getDeviceToLogicalTransform().transform(new Point2D.Double(awtPoint.getX(),awtPoint.getY()),null));
+    }
+
+   public void forceRepaint() {
+       updateTransforms();
+   }
 }

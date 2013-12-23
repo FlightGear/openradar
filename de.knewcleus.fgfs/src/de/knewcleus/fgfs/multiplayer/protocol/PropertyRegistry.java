@@ -37,10 +37,13 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 
 public class PropertyRegistry {
-	protected static Logger logger=Logger.getLogger("de.knewcleus.fgfs.multiplayer");
+	protected static Logger log = LogManager.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected static PropertyRegistry instance;
 	
 	protected final Map<String, PropertyDescriptor> descriptorsByName=new HashMap<String, PropertyDescriptor>();
@@ -52,7 +55,7 @@ public class PropertyRegistry {
 		try {
 			properties.load(inputStream);
 		} catch (IOException e) {
-			logger.warning("Failed to load multiplayer propertytypes");
+			log.warn("Failed to load multiplayer propertytypes");
 			return;
 		}
 		

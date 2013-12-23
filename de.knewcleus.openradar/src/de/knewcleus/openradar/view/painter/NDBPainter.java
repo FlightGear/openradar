@@ -36,6 +36,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.fgfs.navdata.impl.NDB;
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -47,20 +48,20 @@ public class NDBPainter extends AViewObjectPainter<NDB> {
 
     private final NDB ndb;
 
-    public NDBPainter(AirportData data, IMapViewerAdapter mapViewAdapter, NDB ndb) {
+    public NDBPainter(GuiMasterController master, IMapViewerAdapter mapViewAdapter, NDB ndb) {
         super(mapViewAdapter, ndb);
         this.ndb=ndb;
         setPickable(false); // enable tooltips
 
         Font font = Palette.BEACON_FONT;
 
-        NDBSymbol s = new NDBSymbol(data, ndb, 0 , 200);
+        NDBSymbol s = new NDBSymbol(master, ndb, 0 , 200);
         viewObjectList.add(s);
 
-        NDBName n = new NDBName(data, ndb, font, Color.lightGray, 0 , 200);
+        NDBName n = new NDBName(master, ndb, font, Color.lightGray, 0 , 200);
         viewObjectList.add(n);
 
-        NDBFrequency f = new NDBFrequency(data, ndb, font, Color.lightGray, 0 , 200);
+        NDBFrequency f = new NDBFrequency(master, ndb, font, Color.lightGray, 0 , 200);
         viewObjectList.add(f);
     }
 

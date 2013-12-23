@@ -54,6 +54,7 @@ import de.knewcleus.openradar.rpvd.TrackDisplayState;
  */
 public class RadarDataBlockHelper {
 
+    private final GuiMasterController master;
     private final DatablockLayoutManager datablockLayoutManager;
     private final TrackDisplayState trackDisplayState;
     private volatile String text;
@@ -74,7 +75,8 @@ public class RadarDataBlockHelper {
      *
      */
     public RadarDataBlockHelper(GuiMasterController master,TrackDisplayState trackDisplayState, double space) {
-        this.datablockLayoutManager = master.getDataRegistry().getDatablockLayoutManager();
+        this.master=master;
+        this.datablockLayoutManager = master.getAirportData().getDatablockLayoutManager();
         this.trackDisplayState=trackDisplayState;
         this.SPACE = space;
     }
@@ -83,7 +85,7 @@ public class RadarDataBlockHelper {
      * Called as first method before displaying a text. Retrieves the text and determines the base values.
      */
     public void initializeDisplay() {
-        text = datablockLayoutManager.getActiveLayout().getDataBlockText(trackDisplayState.getGuiContact());
+        text = datablockLayoutManager.getActiveLayout().getDataBlockText(master, trackDisplayState.getGuiContact());
         lineList.clear();
         StringTokenizer st = new StringTokenizer(text,"\n");
         while(st.hasMoreElements()) {

@@ -130,8 +130,8 @@ public class MetarSettingsDialog extends JFrame {
     }
 
     public void show(MouseEvent e) {
-        tfOwnWeatherStation.setText(master.getDataRegistry().getMetarSource());
-        tfAddWeatherStation.setText(master.getDataRegistry().getAddMetarSources()!=null?master.getDataRegistry().getAddMetarSources():"");
+        tfOwnWeatherStation.setText(master.getAirportData().getMetarSource());
+        tfAddWeatherStation.setText(master.getAirportData().getAddMetarSources()!=null?master.getAirportData().getAddMetarSources():"");
 
         Dimension innerSize = getPreferredSize();
         setSize(new Dimension((int)innerSize.getWidth()+8, (int)innerSize.getHeight()+8));
@@ -172,7 +172,7 @@ public class MetarSettingsDialog extends JFrame {
     public void closeDialog() {
         if(isVisible()) {
             master.getMetarReader().changeMetarSources(tfOwnWeatherStation.getText(),tfAddWeatherStation.getText());
-            master.getDataRegistry().storeAirportData(master);
+            master.getAirportData().storeAirportData(master);
             setVisible(false);
         }
     }

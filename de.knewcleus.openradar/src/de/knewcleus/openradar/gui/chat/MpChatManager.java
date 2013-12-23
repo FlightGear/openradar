@@ -447,18 +447,17 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
 
 
-    public void setAutoAtcMessage(AtcMenuChatMessage msg) {
+    public void setAutoAtcMessage(GuiRadarContact contact, AtcMenuChatMessage msg) {
         autoAtcMessage = msg;
-        GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
-        List<String> messages = msg.generateMessages(master, c, null);
+        List<String> messages = msg.generateMessages(master, contact, null);
         chatPanel.setChatMessage(messages.get(0)); // English text
         requestFocusForInput();
     }
 
     private void sendChatMessage() {
         String message = (String) chatPanel.getChatMessage();
-        boolean chatAliasEnabled = master.getDataRegistry().isChatAliasesEnabled();
-        boolean messageContainsAliases = AtcAliasChatMessage.containsUnresolvedAlias(master.getDataRegistry().getChatAliasPrefix(), message);
+        boolean chatAliasEnabled = master.getAirportData().isChatAliasesEnabled();
+        boolean messageContainsAliases = AtcAliasChatMessage.containsUnresolvedAlias(master.getAirportData().getChatAliasPrefix(), message);
 
         if(chatAliasEnabled && aliasAtcMessage==null
                 && messageContainsAliases) {

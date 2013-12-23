@@ -72,9 +72,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
-import de.knewcleus.openradar.util.CoreMag;
 
 /**
  * The setup dialog...
@@ -142,6 +144,8 @@ public class SetupDialog extends JFrame {
 
     private List<Image> icons = new ArrayList<Image>();
 
+    private final static Logger log = LogManager.getLogger(SetupDialog.class);
+    
     public SetupDialog(SetupController setupManager) {
         this.setupManager = setupManager;
 
@@ -175,7 +179,7 @@ public class SetupDialog extends JFrame {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle maxBounds = env.getMaximumWindowBounds();
 
-        this.setLocation((int) maxBounds.getWidth() / 2 - 200, (int) maxBounds.getHeight() / 2 - 300);
+        this.setLocation((int) maxBounds.getWidth() / 2 - 300, 100);//(int) maxBounds.getHeight() / 2 - 200);
         //this.setSize(400,600);
 
         JPanel jPnlContentPane = new JPanel();
@@ -262,18 +266,18 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(12, 0, 0, 8);
+        gridBagConstraints.insets = new java.awt.Insets(12, 0, 0, 0);
         jPnlSelectAirport.add(btSearch, gridBagConstraints);
 
         JButton btShowExisting = new JButton();
-        btShowExisting.setText("existing");
+        btShowExisting.setText("show existing");
         btShowExisting.setToolTipText("Reset search results to existing sectors");
         btShowExisting.setName("ShowExistingButton");
         btShowExisting.addActionListener(setupManager.getActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.insets = new java.awt.Insets(12, 0, 0, 8);
+        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 8);
         jPnlSelectAirport.add(btShowExisting, gridBagConstraints);
 
         JScrollPane jsPane = new JScrollPane();
@@ -1100,7 +1104,7 @@ public class SetupDialog extends JFrame {
         } catch (UnknownHostException e) {
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error while checking host!",e);
         }
         return false;
     }

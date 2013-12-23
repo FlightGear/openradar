@@ -135,7 +135,7 @@ public class RunwayEndIlsCone extends AViewObject {
         int textspacing = showHeights ? 15 : 0 ; // the dots that are kept free for better text readability
 
 
-        Point2D textPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset);;
+        Point2D textPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset);
         Point2D startPoint = Converter2D.getMapDisplayPoint(newDisplayPosition, reverseHeading, offset);
         Point2D endPoint = startPoint;
         double distanceToAirport = 0;
