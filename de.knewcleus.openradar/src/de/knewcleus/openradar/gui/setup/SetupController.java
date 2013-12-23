@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2013 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -39,6 +39,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -46,9 +47,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
@@ -87,7 +90,8 @@ public class SetupController {
     private Map<String, SectorBean> mapExistingSectors = new TreeMap<String, SectorBean>();
 
     private ZipFile zif = null;;
-    private static ZipFile zifPhonebook = null;;
+    private static ZipFile zifPhonebook = null; // old fgcom file
+    private static Reader fgcomPositionsFile = null; // new fgcom file
 
     private static Logger log = LogManager.getLogger(SetupController.class);
 
@@ -347,6 +351,9 @@ public class SetupController {
             }
         }
     }
+    
+    //    FGCOM 2 (old)
+    
     /**
      * Loads the radio frequencies from fgcoms phonebook file.
      *
@@ -413,6 +420,72 @@ public class SetupController {
         }
 
         return propertiesFilename;
+    }
+    
+    // FGCOM 3
+    
+    /**
+     * Loads the radio frequencies from fgcoms positions file.
+     *
+     * @param airportCode
+     * @return
+     */
+    public static List<RawFrequency> loadRadioFrequenciesFgCom3(AirportData data, String airportCode) {
+        List<RawFrequency> radioFrequencies = new ArrayList<RawFrequency>();
+        BufferedReader ir = null;
+
+        HashSet<String> knownCodes = new HashSet<String>(); 
+        try {
+             // get a scanner instance
+             Scanner scanner = new Scanner(openFgComPositionsTxt(data));
+             // Set the delimiter used in the file
+             scanner.useDelimiter(",");
+             // get all token and store them in some data structure
+             while (scanner.hasNext()) {
+                 String ac = scanner.next();
+                 if(ac!=null && airportCode.equals(ac)) {
+                     String freq = scanner.next();
+                     scanner.nextDouble(); // lat
+                     scanner.nextDouble(); // lon
+                     String code = scanner.next();
+                     if(!code.contains("ATIS") && !knownCodes.contains(code)) {
+                         radioFrequencies.add(new RawFrequency(code, freq));
+                         knownCodes.add(code); // to avoid multiple entries of the same frequency
+                     }
+                 }
+                 if(scanner.hasNextLine()) {
+                     scanner.nextLine();
+                 } else {
+                     break;
+                 }
+             } 
+             scanner.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            if(fgcomPositionsFile!=null) {
+                try {
+                    fgcomPositionsFile.close();
+                } catch (IOException e) { }
+            }
+            if(ir!=null) {
+                try {
+                    ir.close();
+                } catch (IOException e) {}
+            }
+        }
+        return radioFrequencies;
+    }
+
+    private static Reader openFgComPositionsTxt(AirportData data) throws IOException {
+        final File inputFile = new File(data.getFgComPath()+File.separator+".."+File.separator+"share"+File.separator+"flightgear"+File.separator+"positions.txt");
+        if(!inputFile.exists()) {
+            log.error("FgCcom frequency file not found at "+inputFile.getAbsolutePath());
+            throw new FileNotFoundException("FgCcom frequency file not found at "+inputFile.getAbsolutePath());
+        }
+        fgcomPositionsFile = new FileReader(inputFile); 
+        return fgcomPositionsFile;
     }
 
 }

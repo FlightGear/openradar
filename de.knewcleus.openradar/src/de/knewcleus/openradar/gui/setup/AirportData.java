@@ -402,7 +402,8 @@ public class AirportData implements INavPointListener {
                 this.name = aerodrome.getName();
 
                 // load fgcom phonebook
-                List<RawFrequency> frequencies = SetupController.loadRadioFrequencies(getAirportCode());
+                List<RawFrequency> frequencies = SetupController.loadRadioFrequencies(getAirportCode()); // fgcom stable
+                //List<RawFrequency> frequencies = SetupController.loadRadioFrequenciesFgCom3(this, getAirportCode()); // fgcom 3
                 for (RawFrequency f : frequencies) {
                     RadioFrequency rf = new RadioFrequency(f.getCode(), f.getFrequency());
                     this.radioFrequencies.add(rf);
