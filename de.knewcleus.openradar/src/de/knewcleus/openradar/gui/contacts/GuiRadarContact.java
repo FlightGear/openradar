@@ -389,8 +389,12 @@ public class GuiRadarContact {
     public String toString() { return player.getCallsign(); }
 
 
-    public void setView(RadarTargetView view) {
+    public void setView(GuiMasterController master, RadarTargetView view) {
         this.view = view;
+        
+        if(getFlightPlan().getDestinationAirport().isEmpty() && getRadarContactDistanceD()<3 && getGroundSpeedD()<1) {
+            getFlightPlan().setDepartureAirport(master.getAirportData().getAirportCode());
+        }
     }
 
     public boolean isVisible() {

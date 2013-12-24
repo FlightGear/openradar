@@ -38,7 +38,6 @@ import java.awt.Font;
 import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
-import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.objects.VORFrequency;
 import de.knewcleus.openradar.view.objects.VORName;

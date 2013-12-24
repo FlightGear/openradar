@@ -83,7 +83,7 @@ public class TrackDisplayState extends Notifier {
     }
     public synchronized void setView(RadarTargetView view) {
         this.view = view;
-        guiContact.setView(view);
+        guiContact.setView(master, view);
     }
 
     public synchronized GuiRadarContact getGuiContact() {

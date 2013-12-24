@@ -38,7 +38,6 @@ import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.impl.VOR;
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class VORName extends AViewObject {

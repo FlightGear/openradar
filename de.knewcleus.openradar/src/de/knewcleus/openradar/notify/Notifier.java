@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 20013 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -39,13 +40,13 @@ public class Notifier implements INotifier {
 	protected final Set<INotificationListener> listeners=new HashSet<INotificationListener>();
 
 	@Override
-	public void registerListener(INotificationListener listener) {
+	public synchronized void registerListener(INotificationListener listener) {
 		assert(!listeners.contains(listener));
 		listeners.add(listener);
 	}
 
 	@Override
-	public void unregisterListener(INotificationListener listener) {
+	public synchronized void unregisterListener(INotificationListener listener) {
 		assert(listeners.contains(listener));
 		listeners.remove(listener);
 	}
@@ -53,7 +54,7 @@ public class Notifier implements INotifier {
 	/**
 	 * Send out a notification to all listeners.
 	 */
-	public void notify(INotification notification) {
+	public synchronized void notify(INotification notification) {
 		for (INotificationListener listener: listeners) {
 			listener.acceptNotification(notification);
 		}

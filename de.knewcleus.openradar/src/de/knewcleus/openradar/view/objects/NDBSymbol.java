@@ -52,7 +52,6 @@ import de.knewcleus.fgfs.navdata.impl.Intersection;
 import de.knewcleus.fgfs.navdata.impl.NDB;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
-import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class NDBSymbol extends AViewObject {

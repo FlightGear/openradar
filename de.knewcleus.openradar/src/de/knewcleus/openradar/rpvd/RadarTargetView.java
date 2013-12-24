@@ -44,7 +44,6 @@ import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodesicUtils;
 import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;

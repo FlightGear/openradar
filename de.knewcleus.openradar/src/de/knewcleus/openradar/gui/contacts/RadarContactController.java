@@ -1067,7 +1067,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
      */
     public void setContactsAlignment(GuiRadarContact c, Alignment newAlignment) {
         
-        Alignment formerAlignment = c.getAlignment();
+//        Alignment formerAlignment = c.getAlignment();
         FlightPlanData flightPlan = c.getFlightPlan();
         
         c.setAlignment(newAlignment);

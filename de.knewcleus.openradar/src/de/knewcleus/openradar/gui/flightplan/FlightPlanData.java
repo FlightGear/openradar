@@ -110,7 +110,7 @@ public class FlightPlanData {
         this.aircraft = contact.getAircraftCode();
         this.trueAirspeed = null;
         
-        this.departureAirport = "";
+        this.departureAirport="";
         this.departure = null;
         this.cruisingAltitude = null;
         this.route = null;

@@ -47,7 +47,6 @@ import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 
 /**
@@ -383,7 +382,7 @@ public class FlightStripCellRenderer extends JComponent implements ListCellRende
                 foreground = selectionColor;
 
             } else if (fpd!=null && fpd.isOfferedToMe()) {
-                int seconds = (int) System.currentTimeMillis()/1000;
+//                int seconds = (int) System.currentTimeMillis()/1000;
                 foreground = Color.black;
                 background = new Color(255,255,203);
 //                if(seconds%2==0) {
@@ -392,7 +391,7 @@ public class FlightStripCellRenderer extends JComponent implements ListCellRende
 //                    foreground = Color.blue;
 //                }
             } else if (value.isNew()) {
-                int seconds = (int) System.currentTimeMillis()/1000;
+//                int seconds = (int) System.currentTimeMillis()/1000;
                 foreground = newContactColor;
                 foreground = Color.black;
                 background = new Color(215,255,215);
