@@ -48,6 +48,8 @@ import java.util.zip.ZipFile;
 import javax.swing.JComponent;
 import javax.swing.ToolTipManager;
 
+import org.apache.log4j.Logger;
+
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.shapefile.ZippedShapefileLayer;
@@ -139,6 +141,8 @@ public class RadarMapPanel extends JComponent {
     // this view will contain the Fixes defined inline in the standard routes
     protected LayeredView addNavSymbolView;
 
+    private static final Logger log = Logger.getLogger(SwingRadarDataAdapter.class); 
+    
     public RadarMapPanel(GuiMasterController guiInteractionManager) {
         this.master = guiInteractionManager;
 
@@ -189,6 +193,15 @@ public class RadarMapPanel extends JComponent {
             this.setBackground(Palette.WATERMASS);
 
             /* Load the nav data */
+            // check if new or old data files should be used
+            boolean newFormat = new File(data.getAirportDir()+ "cs_urban.zip").exists();
+            if(!newFormat) {
+                log.warn("*************************************");
+                log.warn("WARNING: You are using the old, deprecated scenery format for "+data.getAirportCode()+". Please remove and download this airport again!");
+                log.warn("*************************************");
+            }
+            
+            
             final INavDatumFilter<INavDatum> spatialFilter = new SpatialFilter(bounds);
             final NavDatumFilterChain<INavDatum> filter = new NavDatumFilterChain<INavDatum>(Kind.CONJUNCT);
             filter.add(spatialFilter);
@@ -209,7 +222,7 @@ public class RadarMapPanel extends JComponent {
             if(master.getAirportData().isLayerVisible("landmass")) {
                 try {
                     setupDialog.setStatus(5, "Reading landmass layer...");
-                    ZippedShapefileLayer landmassLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_landmass");
+                    ZippedShapefileLayer landmassLayer = new ZippedShapefileLayer(data.getAirportDir(), newFormat?"v0_landmass":"v0_landmass");
                     final GeodataView landmassView = new GeodataView(master, radarMapViewAdapter, landmassLayer,"LANDMASS",bounds);
                     landmassLayer.closeZipArchive();
                     landmassView.setColor(Palette.LANDMASS);
@@ -229,7 +242,7 @@ public class RadarMapPanel extends JComponent {
             if(master.getAirportData().isLayerVisible("urban")) {
                 try {
                     setupDialog.setStatus(5, "Reading urban layer...");
-                    ZippedShapefileLayer urbanLayer = new ZippedShapefileLayer(data.getAirportDir(), "v0_urban");
+                    ZippedShapefileLayer urbanLayer = new ZippedShapefileLayer(data.getAirportDir(), newFormat?"cs_urban":"v0_urban");
                     final GeodataView urbanView = new GeodataView(master, radarMapViewAdapter, urbanLayer,"URBAN",bounds);
                     urbanLayer.closeZipArchive();
                     urbanView.setColor(new Color(80,80,80));
@@ -242,7 +255,7 @@ public class RadarMapPanel extends JComponent {
             }
             if(master.getAirportData().isLayerVisible("lake")) {
                 try {
-                    ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_lake");
+                    ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),  newFormat?"cs_lake":"v0_lake");
                     final GeodataView lakeView = new GeodataView(master, radarMapViewAdapter, lakeLayer,"LAKE",bounds);
                     lakeLayer.closeZipArchive();
                     lakeView.setColor(Palette.LAKE);
@@ -255,7 +268,8 @@ public class RadarMapPanel extends JComponent {
             }
             if(master.getAirportData().isLayerVisible("stream")) {
                 try {
-                    ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),  "v0_stream");
+//                    ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),  "osm_stream");
+                    ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),  newFormat?"osm_river":"v0_stream");
                     final GeodataView streamView = new GeodataView(master, radarMapViewAdapter, streamLayer,"STREAM", bounds);
                     streamLayer.closeZipArchive();
                     streamView.setColor(Palette.STREAM);

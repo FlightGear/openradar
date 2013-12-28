@@ -833,7 +833,7 @@ public class FlightPlanDialog extends JFrame implements FocusListener {
             gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
             jPnlOnwerShip.add(cbHandoverATCs, gridBagConstraints);
 
-            JButton btReleaseControl = new JButton("Release");
+            JButton btReleaseControl = new JButton("UnControl");
             btReleaseControl.setName("RELEASE_CONTROL");
             btReleaseControl.setToolTipText("Release the contact from control.");
             btReleaseControl.addMouseListener(fpMouseListener);

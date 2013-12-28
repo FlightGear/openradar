@@ -58,7 +58,7 @@ public abstract class SectorCreator {
 
     // "http://mapserver.flightgear.org/dlaction?layer=<layername>&xmin=<degree>&xmax=<degree>&ymin=<degree>&ymax=<degree>";
     private static String address = "http://mapserver.flightgear.org/dlaction?";
-    private static String[] layers = { "v0_landmass", "v0_urban", "v0_lake", "v0_stream", "apt_airfield", "apt_runway", "apt_tarmac" };
+    private static String[] layers = { "v0_landmass", "cs_urban", "cs_lake", "osm_river", "apt_airfield", "apt_runway", "apt_tarmac" };
     private static double mapWidth = 10; // degrees
     private static double mapHeight = 10; // degrees
 

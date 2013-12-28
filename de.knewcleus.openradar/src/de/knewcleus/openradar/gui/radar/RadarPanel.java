@@ -590,7 +590,7 @@ public class RadarPanel extends JPanel {
         setObjectFilter(mItemNDB,master.getAirportData().getRadarObjectFilterState("NDB"));
         setObjectFilter(mItemVOR,master.getAirportData().getRadarObjectFilterState("VOR"));
         setObjectFilter(mItemCircles,master.getAirportData().getRadarObjectFilterState("CIRCLES"));
-        setObjectFilter(mItemApt,master.getAirportData().getRadarObjectFilterState("APT"));
+        setObjectFilter(mItemApt,master.getAirportData().getToggleState("APT",false));
         setObjectFilter(mItemPPN,master.getAirportData().getRadarObjectFilterState("PPN"));
         setObjectFilter(mItemPPN2,master.getAirportData().getRadarObjectFilterState("PPN"));
         setObjectFilter(mItemGSH,master.getAirportData().getRadarObjectFilterState("GSH"));
@@ -607,7 +607,7 @@ public class RadarPanel extends JPanel {
         setObjectFilter(mItemLANDMASS,master.getAirportData().getRadarObjectFilterState("LANDMASS"));
         setObjectFilter(mItemURBAN,master.getAirportData().getRadarObjectFilterState("URBAN"));
         setObjectFilter(mItemLAKE,master.getAirportData().getRadarObjectFilterState("LAKE"));
-        setObjectFilter(mItemSTREAM,master.getAirportData().getRadarObjectFilterState("STREAM"));
+        setObjectFilter(mItemSTREAM,master.getAirportData().getToggleState("STREAM", false));
         setObjectFilter(mItemTARMAC,master.getAirportData().getRadarObjectFilterState("TARMAC"));
 
         String key = master.getAirportData().getDatablockLayoutManager().getActiveLayout().getName();

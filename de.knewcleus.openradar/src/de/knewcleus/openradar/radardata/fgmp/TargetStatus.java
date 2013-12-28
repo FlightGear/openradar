@@ -50,6 +50,10 @@ public class TargetStatus extends Player {
 	protected volatile Position geodeticPosition=new Position();
     private volatile Position lastPosition = null;
     private volatile double lastPositionTime = 0;
+    private volatile long lastReceptionTimeMs = 0;
+    private volatile long recIntervalMax = 0;
+    private volatile long recIntervalMin = Integer.MAX_VALUE;
+    private volatile long recIntervalAvg = -1;
     private volatile Vector3D linearVelocityHF = new Vector3D();
 
 	protected volatile double groundSpeed=0f;
@@ -89,6 +93,8 @@ public class TargetStatus extends Player {
 	@Override
 	public synchronized void updatePosition(long t, PositionMessage packet) {
 		super.updatePosition(t, packet);
+		
+		updateReceptionStatistics();
 		geodeticPosition=geodToCartTransformation.backward(getCartesianPosition());
 
         groundSpeed=getLinearVelocity().getLength()*Units.MPS;
@@ -122,7 +128,17 @@ public class TargetStatus extends Player {
         // System.out.println(((int)(groundSpeed/Units.KNOTS))+ " " + ((int)(calculatedGroundspeed/Units.KNOTS)));
 	}
 
-	/**
+	private void updateReceptionStatistics() {
+	    long intervall = System.currentTimeMillis()-lastReceptionTimeMs;
+	    
+	    recIntervalMin = intervall < recIntervalMin ? intervall : recIntervalMin;
+	    recIntervalMax = intervall < recIntervalMax ? intervall : recIntervalMax;
+	    recIntervalAvg = recIntervalAvg==-1 ? intervall : (20*recIntervalAvg+intervall)/21;
+	    
+        lastReceptionTimeMs = System.currentTimeMillis();
+    }
+
+    /**
 	 * Returns he velocity vector aligned with the global coordinates
 	 *
 	 * @return
@@ -140,4 +156,17 @@ public class TargetStatus extends Player {
     public String getAddressPort() {
         return getAddress().toString()+":"+getPort();
     }
+
+    public synchronized double getRecIntervalMax() {
+        return recIntervalMax;
+    }
+
+    public synchronized double getRecIntervalMin() {
+        return recIntervalMin;
+    }
+
+    public synchronized double getRecIntervalAvg() {
+        return recIntervalAvg;
+    }
+
 }
