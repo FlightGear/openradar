@@ -241,18 +241,25 @@ public class GuiRadarContact {
     }
 
     public synchronized String getAltitudeString(GuiMasterController master) {
+        AirportData data = master.getAirportData();
         if(getElevationFt() > airportData.getTransitionAlt()) {
             // show flightlevel
             int flAlt = 0;
             if(null==getTranspAltitude() || getTranspAltitude()==-9999) {
                 // data from MP Protocol => real alt
+                
+                /* This calculation is too simple to be correct. A better implementation would retrieve the metar, used by the contact,
+                 * simulate the ambient pressure and derive the pressure altitute out of it. As doing this away from FGFS this is pretty 
+                 * error prone, so I did no implement it yet  */
+                
                 // convert to pressure alt
-                flAlt = (int)getElevationFt() + 30 * (1013-(int)master.getAirportMetar().getPressureHPa());
+                flAlt = (int)Math.round((int)getElevationFt() + (30 * (1013.25-master.getAirportMetar().getPressureHPa())));
+                return String.format("FL%03d", (Math.round(flAlt/100.0)));
             } else {
                 // data from transponder => pressure alt
                 flAlt = getTranspAltitude();
+                return String.format("FL%03d", (Math.round(flAlt/100.0)));
             }
-            return String.format("FL%03d", ((int)flAlt/100));
         } else {
             // show altitude
             int realAlt = 0;
@@ -264,7 +271,7 @@ public class GuiRadarContact {
                 // convert to real alt
                 realAlt = getTranspAltitude() - 30 * (1013-(int)master.getAirportMetar().getPressureHPa());;
             }
-            return String.format("%04d", (int)(realAlt/100)*100);
+            return String.format("%04d", Math.round((realAlt/100.0))*100);
         }
     }
     

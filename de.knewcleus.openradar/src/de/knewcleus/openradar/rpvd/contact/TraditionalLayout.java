@@ -121,10 +121,12 @@ public class TraditionalLayout extends ADatablockLayout {
     @Override
     public String getDataBlockText(GuiMasterController master, GuiRadarContact c) {
         if(c.isAtc()) {
+            setAltSpeedIndex(-1);
             return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode());
 
         }
         String addData = getAddData(c);
+        setAltSpeedIndex(2);
         return  String.format("%s %2s",c.getCallSign(),c.getMagnCourse())  +"\n"+
                 c.getModel()+" "+addData+"\n"+
                 String.format("%1s %2s", c.getFlightLevel(),c.getGroundSpeed());

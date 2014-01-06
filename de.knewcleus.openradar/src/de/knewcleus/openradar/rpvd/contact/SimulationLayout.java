@@ -70,7 +70,7 @@ public class SimulationLayout extends ADatablockLayout {
     }
 
     @Override
-    public Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
+    public synchronized Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
         if (highlighted || contact.isIdentActive()) {
             return Color.white;
         }
@@ -78,7 +78,7 @@ public class SimulationLayout extends ADatablockLayout {
     }
 
     @Override
-    public Color getColor(GuiRadarContact c) {
+    public synchronized Color getColor(GuiRadarContact c) {
         Color color = Palette.RADAR_UNCONTROLLED;
 
         boolean assignedSquawkTunedIn = c.getAssignedSquawk() == null
@@ -87,9 +87,9 @@ public class SimulationLayout extends ADatablockLayout {
         if (c.isIdentActive()) {
             color = Color.black;
             c.setHighlighted();
-        } else if (c.getTranspSquawkCode() != null && 7700 == c.getTranspSquawkCode()) {
+        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
             // Emergency
-            color = Color.red;
+            color = new Color(255,100,0);
 
         } else if (!assignedSquawkTunedIn) {
             color = new Color(80, 0, 160);
@@ -121,13 +121,15 @@ public class SimulationLayout extends ADatablockLayout {
     }
 
     @Override
-    public String getDataBlockText(GuiMasterController master, GuiRadarContact c) {
+    public synchronized String getDataBlockText(GuiMasterController master, GuiRadarContact c) {
         if (c.isAtc()) {
+            setAltSpeedIndex(-1);
             return String.format("%s\n%s", c.getCallSign(), c.getAircraftCode());
-
         }
 
         boolean transmitterAvailable = c.getTranspSquawkCode() != null;
+        int currentAltSpeedIndex = 2;
+        
         if (transmitterAvailable) {
             // there is a transmitter
             boolean assignedSquawkTunedIn = c.getAssignedSquawk() == null
@@ -136,14 +138,19 @@ public class SimulationLayout extends ADatablockLayout {
 
             if (7500 == c.getTranspSquawkCode()) {
                 sb.append("HJ").append("\n");
+                currentAltSpeedIndex++;
             } else if (7600 == c.getTranspSquawkCode()) {
                 sb.append("RF").append("\n");
+                currentAltSpeedIndex++;
             } else if (7700 == c.getTranspSquawkCode()) {
                 sb.append("EM").append("\n");
+                currentAltSpeedIndex++;
             }
 
             if (!assignedSquawkTunedIn) {
                 // squawk codes do not match
+                currentAltSpeedIndex--; // no aircraft line
+
                 sb.append(String.format("%s %s", "" + c.getTranspSquawkCode(), c.getMagnCourse())).append("\n");
                 if (-9999 != c.getTranspAltitude()) {
                     sb.append(c.getAltitudeString(master)).append(" ");
@@ -168,15 +175,17 @@ public class SimulationLayout extends ADatablockLayout {
                 sb.append(String.format("%02.0f", c.getGroundSpeedD() / 10));
 
             }
+            setAltSpeedIndex(currentAltSpeedIndex);
             return sb.toString();
         } else {
             String addData = getAddData(c);
+            setAltSpeedIndex(currentAltSpeedIndex);
             return String.format("%s %s\n", c.getCallSign(), c.getMagnCourse()) + String.format("%s %s\n", c.getAircraftCode(), addData)
                     + c.getAltitudeString(master)+String.format("*%02.0f", c.getGroundSpeedD() / 10);
         }
     }
 
-    public String getAddData(GuiRadarContact c) {
+    public synchronized String getAddData(GuiRadarContact c) {
         FlightPlanData fp = c.getFlightPlan();
         StringBuffer sb = new StringBuffer();
 
@@ -247,7 +256,7 @@ public class SimulationLayout extends ADatablockLayout {
     }
 
     @Override
-    public void modify(ContactShape shape, GuiRadarContact c) {
+    public synchronized void modify(ContactShape shape, GuiRadarContact c) {
 
         if (c.getTranspSquawkCode() != null && (1200 == c.getTranspSquawkCode() || 7000 == c.getTranspSquawkCode())) {
             // Squawking VFR
@@ -265,4 +274,5 @@ public class SimulationLayout extends ADatablockLayout {
             shape.modify(Type.FilledDot, c, 6);
         }
     }
+    
 }

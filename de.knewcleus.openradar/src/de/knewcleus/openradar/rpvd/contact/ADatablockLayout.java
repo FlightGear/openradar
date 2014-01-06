@@ -39,6 +39,9 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 
 public abstract class ADatablockLayout {
+    
+    protected volatile int altSpeedIndex = -1; 
+    
     /**
      * Returns a name of the layout that can be used as a key to store and load properties
      * or identify menu items
@@ -61,8 +64,18 @@ public abstract class ADatablockLayout {
     public abstract Font getFont();
     /** Returns the contact shape matching to the current layout mode and contact state... */
     public abstract void modify(ContactShape shape, GuiRadarContact c);
+
+    public synchronized int getAltSpeedIndex() {
+        return altSpeedIndex;
+    }
+
+    public synchronized void setAltSpeedIndex(int altSpeedIndex) {
+        this.altSpeedIndex = altSpeedIndex;
+    }
+
     @Override
     public String toString() {
         return getMenuText();
     }
+
 }

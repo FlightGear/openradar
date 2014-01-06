@@ -39,24 +39,32 @@ import java.util.Set;
 public class Notifier implements INotifier {
 	protected final Set<INotificationListener> listeners=new HashSet<INotificationListener>();
 
+	private final Object listenerLock = new Object();
+	
 	@Override
-	public synchronized void registerListener(INotificationListener listener) {
-		assert(!listeners.contains(listener));
-		listeners.add(listener);
+	public void registerListener(INotificationListener listener) {
+	    synchronized(listenerLock) {
+    		assert(!listeners.contains(listener));
+    		listeners.add(listener);
+	    }
 	}
 
 	@Override
-	public synchronized void unregisterListener(INotificationListener listener) {
-		assert(listeners.contains(listener));
-		listeners.remove(listener);
+	public void unregisterListener(INotificationListener listener) {
+	    synchronized(listenerLock) {
+    		assert(listeners.contains(listener));
+    		listeners.remove(listener);
+	    }
 	}
 	
 	/**
 	 * Send out a notification to all listeners.
 	 */
-	public synchronized void notify(INotification notification) {
-		for (INotificationListener listener: listeners) {
-			listener.acceptNotification(notification);
-		}
+	public void notify(INotification notification) {
+	    synchronized(listenerLock) {
+    		for (INotificationListener listener: listeners) {
+    			listener.acceptNotification(notification);
+    		}
+	    }
 	}
 }

@@ -155,10 +155,12 @@ public class RadarContactTextPainter {
             }
 
             // the symbols
-            drawArrow(g2d,vspeed, newX+textHelper.getLineWidth(g2d, 0) + 8 , newY , textHelper.getLineHeight(g2d));
+            if(textHelper.getAltSpeedLineIndex()>-1) {
+                drawArrow(g2d,vspeed, newX+textHelper.getLineWidth(g2d, textHelper.getAltSpeedLineIndex()) + 8 , newY+textHelper.getLineYOffset(g2d, textHelper.getAltSpeedLineIndex()-1) + 2 , textHelper.getLineHeight(g2d)-2);
+            }
 
             if(fgComSupport) {
-                drawFgComSymbol(g2d, newX + textHelper.getLineWidth(g2d, 0) + (fgComSupport?14:4), newY +2);
+                drawFgComSymbol(g2d, newX + textHelper.getLineWidth(g2d, 0) + (fgComSupport?4:4), newY +2);
             }
         }
         g2d.setFont(formerFont);
@@ -216,8 +218,8 @@ public class RadarContactTextPainter {
             Point2D tipPoint = new Point2D.Double(Math.round(x+xOffset), Math.round(vSpeed<0 ? y+length : y));
             Point2D otherPoint = new Point2D.Double(Math.round(x+xOffset), Math.round(vSpeed<0 ? y : y+length));
             double heading = vSpeed>0 ? 0 : 180;
-            Point2D point1 = Converter2D.getMapDisplayPoint(tipPoint, heading-180+25, 6);
-            Point2D point2 = Converter2D.getMapDisplayPoint(tipPoint, heading-180-25, 6);
+            Point2D point1 = Converter2D.getMapDisplayPoint(tipPoint, heading-180+25, 5);
+            Point2D point2 = Converter2D.getMapDisplayPoint(tipPoint, heading-180-25, 5);
 
             g2d.draw(new Line2D.Double(otherPoint, tipPoint));
 

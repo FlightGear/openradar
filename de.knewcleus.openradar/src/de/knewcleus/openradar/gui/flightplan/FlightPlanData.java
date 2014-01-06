@@ -520,7 +520,7 @@ public class FlightPlanData {
     }
     
     public boolean isDeparting() {
-        return airportData.getAirportCode().equals(getDepartureAirport());
+        return airportData.getAirportCode().equals(getDepartureAirport()) && !airportData.getAirportCode().equals(getDestinationAirport());
     }
 
     public static ComboBoxModel<String> getFpTypeModel() {

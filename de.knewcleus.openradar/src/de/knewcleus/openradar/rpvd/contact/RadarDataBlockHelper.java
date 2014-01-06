@@ -182,4 +182,9 @@ public class RadarDataBlockHelper {
     public Font getFont() {
         return datablockLayoutManager.getActiveLayout().getFont();
     }
+
+    /** Returns the index of the line containing the Altitude and Speed for displaying the arrow */
+    public int getAltSpeedLineIndex() {
+        return datablockLayoutManager.getActiveLayout().getAltSpeedIndex();
+    }
 }

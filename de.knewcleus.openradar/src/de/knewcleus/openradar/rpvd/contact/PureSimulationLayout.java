@@ -120,9 +120,11 @@ public class PureSimulationLayout extends ADatablockLayout {
 
     @Override
     public String getDataBlockText(GuiMasterController master, GuiRadarContact c) {
-        if(c.isAtc()) {
-            return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode());
+        int currentAltSpeedIndex = 2;
 
+        if(c.isAtc()) {
+            setAltSpeedIndex(-1);
+            return String.format("%s\n%s",c.getCallSign(),c.getAircraftCode());
         }
 
 
@@ -135,14 +137,18 @@ public class PureSimulationLayout extends ADatablockLayout {
 
             if(7500==c.getTranspSquawkCode()) {
                 sb.append("HJ").append("\n");
+                currentAltSpeedIndex++;
             } else if(7600==c.getTranspSquawkCode()) {
                 sb.append("RF").append("\n");
+                currentAltSpeedIndex++;
             } else if(7700==c.getTranspSquawkCode()) {
                 sb.append("EM").append("\n");
+                currentAltSpeedIndex++;
             }
 
             if(!assignedSquawkTunedIn) {
                 // squawk codes do not match
+                currentAltSpeedIndex--; // no aircraft line
                 sb.append(String.format("%s %2s",""+c.getTranspSquawkCode(),c.getMagnCourse())).append("\n");
                 if(-9999!=c.getTranspAltitude()) {
                     sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
@@ -161,8 +167,10 @@ public class PureSimulationLayout extends ADatablockLayout {
                 sb.append(String.format("%02.0f",c.getGroundSpeedD()/10)).append("\n");
                 sb.append(c.getAircraftCode());
             }
+            setAltSpeedIndex(currentAltSpeedIndex);
             return sb.toString();
         } else {
+            setAltSpeedIndex(-1);
             return "";
         }
     }
