@@ -43,7 +43,7 @@ import de.knewcleus.openradar.view.IUpdateManager;
 import de.knewcleus.openradar.view.ViewerAdapter;
 
 public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter {
-	protected volatile IProjection projection;
+	private final IProjection projection;
 	protected volatile Point2D originalOrigin = null;
 
 	
@@ -58,16 +58,10 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
 		return projection;
 	}
 	
-	public void setProjection(IProjection projection) {
-		this.projection = projection;
-		updateTransforms();
-		notify(new ProjectionNotification(this));
-	}
-
     public void setZoom(double scale, Point2D newGeoOrigin) {
         
         setLogicalScale(scale, newGeoOrigin);
-        originalOrigin = getCenter(); // centers zoom at mouse
+        originalOrigin = newGeoOrigin;
     }       
     
     @Override
@@ -82,9 +76,9 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
     
     public void setLogicalScale(double scale, Point2D center) {
         this.logicalScale = scale;
-        updateTransforms();
+        updateTransforms(false);
         notifyListeners(Change.ZOOM);
-        
+
         setGeoCenter(center);
     }
     
@@ -93,8 +87,9 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
         double deltaX = deviceTarget.getX() - deviceOrigin.getX();
         double deltaY = deviceTarget.getY() - deviceOrigin.getY();
         setDeviceOrigin(new Point2D.Double(getDeviceOrigin().getX()+deltaX, getDeviceOrigin().getY()+deltaY));
+//        System.out.println("Shifting by "+new Point2D.Double(deltaX, deltaY));
         
-        updateTransforms();
+        updateTransforms(true);
         originalOrigin = getGeoLocationOf(getDeviceCenter());
     }
     
@@ -132,11 +127,6 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
         shiftDeviceOrigin(newDeviceCenter,getDeviceCenter());
     }
     
-//    public void setGeoOrigin(Point2D newGeoOrigin) {
-//        Point2D newDeviceOrigin = getLogicalToDeviceTransform().transform(projection.toLogical(newGeoOrigin),null);
-//        shiftDeviceOrigin(getDeviceCenter(), newDeviceOrigin);
-//    }       
-    
     public void centerMap() {
         setGeoCenter(originalOrigin);
     }
@@ -154,6 +144,6 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
     }
 
    public void forceRepaint() {
-       updateTransforms();
+       updateTransforms(true);
    }
 }

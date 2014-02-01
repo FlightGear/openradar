@@ -33,13 +33,13 @@
 package de.knewcleus.openradar.gui;
 
 import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import de.knewcleus.openradar.gui.radar.RadarMapPanel;
+import de.knewcleus.openradar.gui.setup.AirportData;
 
 /**
  * This is the application main window. 
@@ -80,8 +80,7 @@ public class MainFrame extends javax.swing.JFrame {
         setTitle(guiInteractionManager.getAirportData().getAirportCode()+" "+guiInteractionManager.getAirportData().getAirportName() + " - OpenRadar");
         
         // maximize it 
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Rectangle maxBounds = env.getMaximumWindowBounds();
+        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;;
         this.setLocation(0, 0);
         this.setSize(maxBounds.width,maxBounds.height);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);

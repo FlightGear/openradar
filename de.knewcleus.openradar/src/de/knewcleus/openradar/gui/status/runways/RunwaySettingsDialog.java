@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -68,7 +69,7 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.setup.RunwayData;
 
-public class RunwaySettingsDialog extends JFrame {
+public class RunwaySettingsDialog extends JDialog {
 
     /**
      *
@@ -124,8 +125,7 @@ public class RunwaySettingsDialog extends JFrame {
 
         Dimension innerSize = getContentPane().getPreferredSize();
         setSize(new Dimension((int) innerSize.getWidth() + 8, (int) innerSize.getHeight() + 8));
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Rectangle maxBounds = env.getMaximumWindowBounds();
+        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
 
         Point2D p = ((JComponent) e.getSource()).getLocationOnScreen();
         p = new Point2D.Double(p.getX() - this.getWidth() - 10, p.getY() - 100);
@@ -149,7 +149,7 @@ public class RunwaySettingsDialog extends JFrame {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if(isUniformTranslucencySupported) {
-            this.setOpacity(0.9f);
+            this.setOpacity(0.92f);
         }
 
         JPanel jPnlContentPane = new JPanel();

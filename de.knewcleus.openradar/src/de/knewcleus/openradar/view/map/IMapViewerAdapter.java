@@ -46,9 +46,4 @@ public interface IMapViewerAdapter extends IViewerAdapter {
 	 */
 	public IProjection getProjection();
 	
-	/**
-	 * Set the projection and issue a notification about the change.
-	 * @param projection	The new projection
-	 */
-	public void setProjection(IProjection projection);
 }

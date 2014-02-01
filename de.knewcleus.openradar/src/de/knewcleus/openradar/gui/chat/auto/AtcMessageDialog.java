@@ -46,6 +46,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -54,8 +55,9 @@ import javax.swing.JSeparator;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+import de.knewcleus.openradar.gui.setup.AirportData;
 
-public class AtcMessageDialog extends JFrame {
+public class AtcMessageDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final GuiMasterController master;
@@ -82,7 +84,7 @@ public class AtcMessageDialog extends JFrame {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if(isUniformTranslucencySupported) {
-            this.setOpacity(0.8f);
+            this.setOpacity(0.92f);
         }
 
 
@@ -146,8 +148,7 @@ public class AtcMessageDialog extends JFrame {
         
         lbCallSign.setText(c.getCallSign());
 
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Rectangle maxBounds = env.getMaximumWindowBounds();
+        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
 
         // size scrollpane
         Dimension preferredSize = pnlMessages.getPreferredSize();
@@ -177,6 +178,7 @@ public class AtcMessageDialog extends JFrame {
         }
         setLocation(new Point((int) p.getX(), (int) p.getY()));
         setVisible(true);
+        invalidate();
     }
 
     private class TextMouseListener extends MouseAdapter {

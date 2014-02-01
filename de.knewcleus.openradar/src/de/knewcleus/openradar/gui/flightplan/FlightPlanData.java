@@ -519,7 +519,7 @@ public class FlightPlanData {
         return airportData.getCallSign().equals(this.getHandover());
     }
     
-    public boolean isDeparting() {
+    public synchronized boolean isDeparting() {
         return airportData.getAirportCode().equals(getDepartureAirport()) && !airportData.getAirportCode().equals(getDestinationAirport());
     }
 
@@ -605,7 +605,7 @@ public class FlightPlanData {
         return destinationAirport != null && destinationAirport.contains(airportData.getAirportCode());
     }
 
-    public String toString() {
+    public synchronized String toString() {
         return flightCode+": "+callsign+" "+departureAirport+"("+departure+") > "+ destinationAirport+" ("+aircraft+","+fpStatus+")";
     }
 

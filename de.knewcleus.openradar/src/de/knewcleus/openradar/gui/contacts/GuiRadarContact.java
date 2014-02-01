@@ -241,9 +241,8 @@ public class GuiRadarContact {
     }
 
     public synchronized String getAltitudeString(GuiMasterController master) {
-        AirportData data = master.getAirportData();
         if(getElevationFt() > airportData.getTransitionAlt()) {
-            // show flightlevel
+            // show flight level
             int flAlt = 0;
             if(null==getTranspAltitude() || getTranspAltitude()==-9999) {
                 // data from MP Protocol => real alt
@@ -263,14 +262,17 @@ public class GuiRadarContact {
         } else {
             // show altitude
             int realAlt = 0;
-            if(null==getTranspAltitude() || getTranspAltitude()==-9999) {
-                // data from MP Protocol => real alt
-                realAlt = (int)getElevationFt();
-            } else {
-                // data from transponder => pressure alt
-                // convert to real alt
-                realAlt = getTranspAltitude() - 30 * (1013-(int)master.getAirportMetar().getPressureHPa());;
-            }
+            realAlt = (int)getElevationFt();
+            
+            // alternative implementation, problem: works with local pressure from METAR
+//            if(null==getTranspAltitude() || getTranspAltitude()==-9999) {
+//                // data from MP Protocol => real alt
+//                realAlt = (int)getElevationFt();
+//            } else {
+//                // data from transponder => pressure alt
+//                // convert to real alt
+//                realAlt = getTranspAltitude() - 30 * (1013-(int)master.getAirportMetar().getPressureHPa());;
+//            }
             return String.format("%04d", Math.round((realAlt/100.0))*100);
         }
     }
@@ -488,6 +490,10 @@ public class GuiRadarContact {
 
     public synchronized Integer getTranspAltitude() {
         return player.getTranspAltitude();
+    }
+
+    public synchronized String getTranspMode() {
+        return player.getTranspMode();
     }
 
     public synchronized boolean isIdentActive() {

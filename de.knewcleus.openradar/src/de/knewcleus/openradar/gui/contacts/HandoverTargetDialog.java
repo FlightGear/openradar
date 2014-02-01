@@ -51,6 +51,7 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -61,8 +62,9 @@ import org.apache.log4j.Logger;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.flightplan.FpAtc;
+import de.knewcleus.openradar.gui.setup.AirportData;
 
-public class HandoverTargetDialog extends JFrame {
+public class HandoverTargetDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final GuiMasterController master;
@@ -91,7 +93,7 @@ public class HandoverTargetDialog extends JFrame {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if(isUniformTranslucencySupported) {
-            this.setOpacity(0.8f);
+            this.setOpacity(0.92f);
         }
 
         JPanel jPnlContentPane = new JPanel();
@@ -160,8 +162,7 @@ public class HandoverTargetDialog extends JFrame {
         reloadAtcs();
         if(pnlHandoverAtcs.getComponentCount()>0) {
         
-            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Rectangle maxBounds = env.getMaximumWindowBounds();
+            Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
     
             // size scrollpane
             Dimension preferredSize = pnlHandoverAtcs.getPreferredSize();
@@ -177,7 +178,7 @@ public class HandoverTargetDialog extends JFrame {
                 p = /*e.getSource() instanceof JList ?
                         ((JComponent) e.getSource()).getLocationOnScreen():*/
                         e.getLocationOnScreen();
-                p = new Point2D.Double(p.getX() - 100 , p.getY() - this.getWidth()/2 );
+                p = new Point2D.Double(p.getX() - 90 , p.getY() - this.getWidth()/2 );
             } else {
                 double x = maxBounds.getCenterX()-innerSize.getWidth()/2;
                 double y = maxBounds.getCenterY()-innerSize.getHeight()/2;
@@ -191,6 +192,7 @@ public class HandoverTargetDialog extends JFrame {
             }
             setLocation(new Point((int) p.getX(), (int) p.getY()));
             setVisible(true);
+            invalidate();
         }
     }
 

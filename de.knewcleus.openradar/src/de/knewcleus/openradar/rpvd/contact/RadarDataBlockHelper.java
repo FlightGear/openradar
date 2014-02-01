@@ -187,4 +187,13 @@ public class RadarDataBlockHelper {
     public int getAltSpeedLineIndex() {
         return datablockLayoutManager.getActiveLayout().getAltSpeedIndex();
     }
+    
+    public double getAltitudeTextWidth(Graphics2D g2d, GuiRadarContact guiContact) {
+        boolean bContainsAsterix = getLine(getAltSpeedLineIndex()).contains("*");
+        return g2d.getFontMetrics().getStringBounds(guiContact.getAltitudeString(master)+(bContainsAsterix?"*":""),g2d).getWidth();
+    }
+
+    public boolean displayVSpeedArrow() {
+        return datablockLayoutManager.getActiveLayout().displayVSpeedArrow(trackDisplayState.getGuiContact());
+    }
 }

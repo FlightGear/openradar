@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -32,104 +33,58 @@
  */
 package de.knewcleus.openradar.gui.flightplan;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 
 public class SquawkCodeManager {
 
-    private int squawkFromVFR = 2000;
-    private int squawkToVFR = 2777;
-    private int squawkFromIFR = 4000;
-    private int squawkToIFR = 4777;
-    private volatile int lastSquawkCodeVFR = squawkFromVFR-1;
-    private volatile int lastSquawkCodeIFR = squawkFromIFR-1;
     private Set<Integer> usedCodes = new HashSet<Integer>();
+    
+    private Map<String, SquawkRange> ranges = Collections.synchronizedMap(new TreeMap<String, SquawkRange>());
 //    private AirportData data;
 
     public SquawkCodeManager(AirportData data) {
 //        this.data = data;
     }
 
-    public synchronized int getSquawkFromVFR() {
-        return squawkFromVFR;
+    public synchronized void putSquawkRange(SquawkRange sqRange) {
+        ranges.put(sqRange.getName(),sqRange);
     }
 
-    public synchronized int getSquawkToVFR() {
-        return squawkToVFR;
+    public synchronized void removeSquawkRange(String name) {
+        ranges.remove(name);
     }
 
-    public synchronized int getSquawkFromIFR() {
-        return squawkFromIFR;
-    }
-
-    public synchronized int getSquawkToIFR() {
-        return squawkToIFR;
-    }
-
-    public synchronized void setSquawkRange(int squawkFromVFR, int squawkToVFR, int squawkFromIFR, int squawkToIFR) {
-        this.squawkFromVFR = squawkFromVFR;
-        this.squawkToVFR = squawkToVFR;
-        this.squawkFromIFR = squawkFromIFR;
-        this.squawkToIFR = squawkToIFR;
-        this.lastSquawkCodeVFR=squawkFromVFR-1;
-        this.lastSquawkCodeIFR=squawkFromIFR-1;
-    }
-
-    public synchronized Integer getNextVFRSquawkCode(Integer formerCode) {
+    public synchronized Integer getNextSquawkCode(String rangeName, Integer formerCode) {
         if(formerCode!=null) {
             usedCodes.remove(formerCode);
         }
-        int nextSquawkCode = getNexCode(lastSquawkCodeVFR, true);
+        SquawkRange sqRange = ranges.get(rangeName);
+        if(sqRange==null) {
+            throw new IllegalArgumentException("Error: Squawk range "+rangeName+" not known.");
+        }
+        int nextSquawkCode = sqRange.getNexCode(sqRange.getLastIssued());
         while(usedCodes.contains(nextSquawkCode)) {
-            if(nextSquawkCode==lastSquawkCodeVFR) {
+            if(nextSquawkCode==sqRange.getLastIssued()) {
                 return null; // all in use
             }
-            nextSquawkCode = getNexCode(nextSquawkCode, true);
+            nextSquawkCode = sqRange.getNexCode(sqRange.getLastIssued());
         }
         usedCodes.add(nextSquawkCode);
-        lastSquawkCodeVFR=nextSquawkCode;
+        sqRange.setLastIssued(nextSquawkCode);
         return nextSquawkCode;
     }
 
-    public synchronized Integer getNextIFRSquawkCode(Integer formerCode) {
-        if(formerCode!=null) {
-            usedCodes.remove(formerCode);
-        }
-        int nextSquawkCode = getNexCode(lastSquawkCodeIFR, false);
-        while(usedCodes.contains(nextSquawkCode)) {
-            if(nextSquawkCode==lastSquawkCodeIFR) {
-                return null; // all in use
-            }
-            nextSquawkCode = getNexCode(nextSquawkCode, false);
-        }
-        usedCodes.add(nextSquawkCode);
-        lastSquawkCodeIFR=nextSquawkCode;
-        return nextSquawkCode;
-    }
-
-    private int getNexCode(int lastcode, boolean vfrMode) {
-        int nextCode = lastcode +1;
-        int lastDigit = nextCode % 10;
-        if(lastDigit>7) {
-            nextCode = nextCode + 10-lastDigit;
-        }
-        if(vfrMode) {
-            if(nextCode > squawkToVFR) {
-                nextCode = squawkFromVFR;
-            }
-        } else {
-            // ifr
-            if(nextCode > squawkToIFR) {
-                nextCode = squawkFromIFR;
-            }
-        }
-        return nextCode;
-    }
     /**
      * Updates the list of assigned SquawkCodes to free unused ones to be re-used.
      *
@@ -142,31 +97,48 @@ public class SquawkCodeManager {
             if(c.getAssignedSquawk()!=null) {
                 // assigned codes
                 usedCodes.add(c.getAssignedSquawk());
-            } else if(c.getTranspSquawkCode()!=null 
-                    && (( c.getTranspSquawkCode()>=squawkFromVFR && c.getTranspSquawkCode()<=squawkToVFR) 
-                       || (c.getTranspSquawkCode()>=squawkFromIFR && c.getTranspSquawkCode()<=squawkToIFR) ) ) {
-                // unassigned, but transmitted codes in range
-                usedCodes.add(c.getAssignedSquawk());
+            } else {
+                if(c.getTranspSquawkCode()!=null && c.getTranspSquawkCode()>0) { // filter out transponder off -9999
+                    // unassigned, but transmitted codes in range
+                    usedCodes.add(c.getAssignedSquawk());
+                }
             }
         }
     }
 
     public synchronized void addSquawkRangeTo(Properties p) {
-        p.setProperty("squawk.vfr.first", ""+squawkFromVFR);
-        p.setProperty("squawk.vfr.last", ""+squawkToVFR);
-        p.setProperty("squawk.ifr.first", ""+squawkFromIFR);
-        p.setProperty("squawk.ifr.last", ""+squawkToIFR);
+        for(SquawkRange sqRange : ranges.values()) {
+            sqRange.addValuesToProperties(p);
+        }
     }
 
     public synchronized void restoreSquawkRangeFrom(Properties p) {
-        squawkFromVFR = Integer.parseInt(p.getProperty("squawk.vfr.first",""+squawkFromVFR));
-        squawkToVFR = Integer.parseInt(p.getProperty("squawk.vfr.last",""+squawkToVFR));
-        squawkFromIFR = Integer.parseInt(p.getProperty("squawk.ifr.first",""+squawkFromIFR));
-        squawkToIFR = Integer.parseInt(p.getProperty("squawk.ifr.last",""+squawkToIFR));
+        ranges.clear();
+        for(Object o : p.keySet() ) {
+            String key = (String)o;
+            if(key.startsWith("squawk.") && key.contains("first")) {
+                // do it only once
+                String name = key.substring(7,key.indexOf(".", 7));
+                int first = Integer.parseInt(p.getProperty("squawk."+name+".first","2000"));
+                int last = Integer.parseInt(p.getProperty("squawk."+name+".last","4000"));
+                String symbolName = p.getProperty("squawk."+name+".first",Symbol.Asterix.toString());
+
+                Symbol symbol = Symbol.valueOf(symbolName);
+                if(symbol==null) {
+                    symbol=Symbol.Asterix;
+                }
+                
+                ranges.put(name, new SquawkRange(name, first, last, symbol));
+                
+            }
+        }
     }
 
     public synchronized void revokeSquawkCode(Integer assignedSquawk) {
         // called when an ATC revokes a squawk code. The code stays in the list of used codes, until it is actually gone...
     }
 
+    public synchronized List<String> getSqRangeNames() {
+        return new ArrayList<String>(ranges.keySet());
+    }
 }

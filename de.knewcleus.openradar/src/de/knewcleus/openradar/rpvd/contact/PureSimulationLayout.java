@@ -39,7 +39,7 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
-import de.knewcleus.openradar.rpvd.contact.ContactShape.Type;
+import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 /**
  * This data block layout is even more strict.
  * In no transmitter mode it displays no text at all.
@@ -120,7 +120,7 @@ public class PureSimulationLayout extends ADatablockLayout {
 
     @Override
     public String getDataBlockText(GuiMasterController master, GuiRadarContact c) {
-        int currentAltSpeedIndex = 2;
+        int currentAltSpeedIndex = 1;
 
         if(c.isAtc()) {
             setAltSpeedIndex(-1);
@@ -131,6 +131,10 @@ public class PureSimulationLayout extends ADatablockLayout {
         boolean transmitterAvailable = c.getTranspSquawkCode() !=null;
         if(transmitterAvailable) {
             // there is a transmitter
+            if(c.getTranspSquawkCode()==null || c.getTranspSquawkCode()==-9999) {
+                return "";
+            }
+            
             boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
 
             StringBuilder sb = new StringBuilder();
@@ -150,20 +154,12 @@ public class PureSimulationLayout extends ADatablockLayout {
                 // squawk codes do not match
                 currentAltSpeedIndex--; // no aircraft line
                 sb.append(String.format("%s %2s",""+c.getTranspSquawkCode(),c.getMagnCourse())).append("\n");
-                if(-9999!=c.getTranspAltitude()) {
-                    sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
-                } else {
-                    sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");
-                }
+                sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
                 sb.append(String.format("%02.0f",c.getGroundSpeedD()/10));
             } else {
                 // squawk codes match
                 sb.append(String.format("%s %2s",c.getCallSign(),c.getMagnCourse())).append("\n");
-                if(-9999!=c.getTranspAltitude()) {
-                    sb.append(String.format("%03d",c.getTranspAltitude()/100)).append(" ");
-                } else {
-                    sb.append(String.format("%03.0f",c.getAltitude()/100)).append("*");
-                }
+                sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
                 sb.append(String.format("%02.0f",c.getGroundSpeedD()/10)).append("\n");
                 sb.append(c.getAircraftCode());
             }
@@ -175,23 +171,44 @@ public class PureSimulationLayout extends ADatablockLayout {
         }
     }
 
+    private String getAccuracySeparator(GuiRadarContact c) {
+        if(-9999!=c.getTranspAltitude()) {
+            if(displayVSpeedArrow(c)) {
+                return "  ";
+            } else {
+                return " ";
+            }
+        } else {
+            if(displayVSpeedArrow(c)) {
+                return "*  ";
+            } else {
+                return "* ";
+            }
+        }
+    }
+
     @Override
     public void modify(ContactShape shape, GuiRadarContact c) {
 
         if(c.getTranspSquawkCode()!=null && ( 1200==c.getTranspSquawkCode() || 7000==c.getTranspSquawkCode())) {
             // Squawking VFR
-            shape.modify(Type.EmptySquare, c, 6);
+            shape.modify(Symbol.EmptySquare, c, 6);
         } else  if(c.getTranspSquawkCode()==null) {
             // no squawk or standby
-            shape.modify(Type.FilledDiamond, c, 8);
+            shape.modify(Symbol.FilledDiamond, c, 8);
         } else if(c.getTranspSquawkCode()!=null && c.getAtcLetter()==null) {
             // untracked
-            shape.modify(Type.Asterix, c, 6);
+            shape.modify(Symbol.Asterix, c, 6);
         } else if(c.getTranspSquawkCode()!=null && c.getAtcLetter()!=null) {
             // controlled
-            shape.modify(Type.Letter, c, 8);
+            shape.modify(Symbol.Letter, c, 8);
         } else {
-            shape.modify(Type.FilledDot, c, 6);
+            shape.modify(Symbol.FilledDot, c, 6);
         }
+    }
+    
+    @Override
+    public boolean displayVSpeedArrow(GuiRadarContact c) {
+        return Math.abs(c.getVerticalSpeedD())>100;
     }
 }

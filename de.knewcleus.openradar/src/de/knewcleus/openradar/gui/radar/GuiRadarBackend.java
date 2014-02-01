@@ -88,8 +88,6 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     public void setViewerAdapter(RadarMapViewerAdapter viewerAdapter) {
         this.viewerAdapter=viewerAdapter;
-
-        setZoomLevel("SECTOR");
     }
 
     public void start() {
@@ -111,6 +109,11 @@ public class GuiRadarBackend implements IRadarDataRecipient {
             this.zoomLevel=zoomLevelMap.get(zoomLevelKey);
             radarPanel.selectFilter(zoomLevelKey);
             viewerAdapter.setZoom(zoomLevel.getLogicalScale(), zoomLevel.getCenter());
+        } else {
+            // parsing of airport data delivered tower position, move center
+            Point2D center = new Point2D.Double(master.getAirportData().getLon(), master.getAirportData().getLat());
+
+            viewerAdapter.setLogicalScale(100.0,center); // initial case
         }
     }
 

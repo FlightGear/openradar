@@ -32,6 +32,8 @@
  */
 package de.knewcleus.openradar.gui.setup;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -63,7 +65,7 @@ import de.knewcleus.fgfs.navdata.xplane.Helipad;
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
-import de.knewcleus.openradar.gui.flightplan.SquawkCodeManager;
+import de.knewcleus.openradar.gui.flightplan.SquawkCodeManagerOld;
 import de.knewcleus.openradar.gui.status.radio.Radio;
 import de.knewcleus.openradar.gui.status.radio.RadioFrequency;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
@@ -80,9 +82,11 @@ import de.knewcleus.openradar.weather.MetarReader;
  */
 public class AirportData implements INavPointListener {
 
+    public static final Rectangle MAX_WINDOW_SIZE;
     // private final static long
     // APPLICATION_START_TIME_MILLIS=System.currentTimeMillis();
 
+    private volatile boolean fgcom3=false;
     private String airportCode = null;
     private String name = null;
     private String sectorDir = null;
@@ -98,7 +102,7 @@ public class AirportData implements INavPointListener {
     public Map<String, GuiRunway> runways = Collections.synchronizedMap(new TreeMap<String, GuiRunway>());
 
     public enum FgComMode {
-        Internal, External, Off
+        Auto, Internal, External, Off
     };
 
     private FgComMode fgComMode = FgComMode.Internal;
@@ -134,10 +138,15 @@ public class AirportData implements INavPointListener {
 
     private final DatablockLayoutManager datablockLayoutManager = new DatablockLayoutManager(this);
 
-    private final SquawkCodeManager squawkCodeManager = new SquawkCodeManager(this);
+    private final SquawkCodeManagerOld squawkCodeManager = new SquawkCodeManagerOld(this);
 
     private static Logger log = LogManager.getLogger(AirportData.class);
 
+    static {
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        MAX_WINDOW_SIZE = env.getMaximumWindowBounds();
+    }
+    
     public AirportData() {}
 
     public synchronized void setDirectionMessageView(StPView dmv) {
@@ -245,6 +254,15 @@ public class AirportData implements INavPointListener {
 
     public synchronized void setFgComExec(String fgComExec) {
         this.fgComExec = fgComExec;
+    }
+
+    
+    public synchronized boolean isFgcom3() {
+        return fgcom3;
+    }
+
+    public synchronized void setFgcom3(boolean fgcom3) {
+        this.fgcom3 = fgcom3;
     }
 
     public synchronized String getFgComHost() {
@@ -402,8 +420,14 @@ public class AirportData implements INavPointListener {
                 this.name = aerodrome.getName();
 
                 // load fgcom phonebook
-                List<RawFrequency> frequencies = SetupController.loadRadioFrequencies(getAirportCode()); // fgcom stable
-                //List<RawFrequency> frequencies = SetupController.loadRadioFrequenciesFgCom3(this, getAirportCode()); // fgcom 3
+                List<RawFrequency> frequencies;
+                if(!fgcom3) {
+                 // fgcom stable
+                    frequencies = SetupController.loadRadioFrequencies(getAirportCode()); // fgcom stable
+                } else {
+                    //fgcom3
+                    frequencies = SetupController.loadRadioFrequenciesFgCom3(this, getAirportCode()); // fgcom 3
+                }
                 for (RawFrequency f : frequencies) {
                     RadioFrequency rf = new RadioFrequency(f.getCode(), f.getFrequency());
                     this.radioFrequencies.add(rf);
@@ -500,17 +524,26 @@ public class AirportData implements INavPointListener {
             return null;
         return runways.get(runwayCode).getRunwayData();
     }
-
+    /** master can be null, but settings will not be saved in this case */
     public synchronized void setRadarObjectFilter(GuiMasterController master, String objectName) {
         boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
         toggleObjectsMap.put(objectName, !oldState);
-        storeAirportData(master);
+        if(master!=null) {
+            storeAirportData(master);
+        }
     }
-
+    /** master can be null, but settings will not be saved in this case */
     public synchronized void changeToggle(GuiMasterController master, String objectName, boolean defaultValue) {
         boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : defaultValue;
         toggleObjectsMap.put(objectName, !oldState);
-        storeAirportData(master);
+        if(master!=null) {
+            storeAirportData(master);
+        }
+    }
+
+    /** master can be null, but settings will not be saved in this case */
+    public synchronized void setToggle(String objectName, boolean value) {
+        toggleObjectsMap.put(objectName, value);
     }
 
     public synchronized boolean getRadarObjectFilterState(String objectName) {
@@ -565,10 +598,6 @@ public class AirportData implements INavPointListener {
 
         if (propertyFile.exists()) {
 
-            // restore runwaydata
-            for (GuiRunway rw : runways.values()) {
-                rw.getRunwayData().setValuesFromProperties(p);
-            }
             // restore zoomlevel values
             master.getRadarBackend().setZoomLevelValuesFromProperties(p);
             // restore layout
@@ -598,6 +627,22 @@ public class AirportData implements INavPointListener {
         }
         // calculate magnetic declination
         setMagneticDeclination(CoreMag.calc_magvarDeg(getLat(), getLon(), getElevationM(), System.currentTimeMillis()));
+    }
+    
+    public void restoreRunwaySettings() {
+            Properties p = new Properties();
+            File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
+            try {
+                p.load(new FileReader(propertyFile));
+            } catch (IOException e) {
+            }
+
+            if (propertyFile.exists()) {
+                // restore runwaydata
+                for (GuiRunway rw : runways.values()) {
+                    rw.getRunwayData().setValuesFromProperties(p);
+                }
+            }        
     }
 
     private int getInitialTransitionAlt() {
@@ -682,7 +727,7 @@ public class AirportData implements INavPointListener {
         return datablockLayoutManager;
     }
 
-    public synchronized SquawkCodeManager getSquawkCodeManager() {
+    public synchronized SquawkCodeManagerOld getSquawkCodeManager() {
         return squawkCodeManager;
     }
 

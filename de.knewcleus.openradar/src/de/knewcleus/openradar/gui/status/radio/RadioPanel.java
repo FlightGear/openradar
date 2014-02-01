@@ -79,7 +79,7 @@ public class RadioPanel extends JPanel {
 
         this.setLayout(new GridBagLayout());
 
-        boolean isFgComInternal = master.getAirportData().getFgComMode() == FgComMode.Internal;
+        boolean isFgComRestartable = master.getAirportData().getFgComMode() == FgComMode.Internal || master.getAirportData().getFgComMode() == FgComMode.Auto ;
 
         for(RadioModel model : radioManager.getModels().values()) {
 
@@ -120,7 +120,7 @@ public class RadioPanel extends JPanel {
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 2;
             gridBagConstraints.gridy = i;
-            gridBagConstraints.weightx = isFgComInternal ? 0 : 1;
+            gridBagConstraints.weightx = isFgComRestartable ? 0 : 1;
             gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
             gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
             this.add(btPTT,gridBagConstraints);
@@ -158,7 +158,7 @@ public class RadioPanel extends JPanel {
             gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
             pnlRight.add(lbFreq,gridBagConstraints);
 
-            if(isFgComInternal) {
+            if(isFgComRestartable) {
                 JLabel lbReset = new JLabel();
                 lbReset.setName("lbRestart");
                 lbReset.setText("Restart");

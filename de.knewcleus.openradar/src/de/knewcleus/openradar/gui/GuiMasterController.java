@@ -73,7 +73,7 @@ import de.knewcleus.openradar.weather.MetarReader;
 public class GuiMasterController {
 
     private LogWindow logWindow = new LogWindow();
-    private AirportData airportData;;
+    private final AirportData airportData;;
     private GuiRadarBackend radarBackend;
     private RadarManager radarManager;
     private RadarContactController radarContactManager;
@@ -137,9 +137,8 @@ public class GuiMasterController {
         }
         mainFrame.getRadarScreen().setup(airportCode, this, setupDialog);
         initMpRadar();
-
-
         mainFrame.getRadarScreen().initRadarData();
+        airportData.restoreRunwaySettings();
         metarReader.start(); // loads metar and refreshes the runway panel
         radioManager.init();
         statusManager.start();
@@ -153,6 +152,8 @@ public class GuiMasterController {
         // ready, so display it
         mainFrame.setDividerPosition();
         mainFrame.setVisible(true);
+        
+        mainFrame.getRadarScreen().showMap(); // move map and display it
     }
 
     private void initMpRadar() throws Exception {
@@ -345,10 +346,6 @@ public class GuiMasterController {
         return airportData;
     }
 
-    public void setDataRegistry(AirportData dataRegistry) {
-        this.airportData = dataRegistry;
-    }
-
     public StatusManager getStatusManager() {
         return statusManager;
     }
@@ -375,5 +372,9 @@ public class GuiMasterController {
 
     public FlightPlanExchangeManager getFlightPlanExchangeManager() {
         return fpExchangeManager;
+    }
+    
+    public boolean isVisible() {
+        return mainFrame.isVisible();
     }
 }

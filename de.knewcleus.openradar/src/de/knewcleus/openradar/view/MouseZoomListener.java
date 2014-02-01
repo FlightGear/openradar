@@ -65,7 +65,7 @@ public class MouseZoomListener implements MouseWheelListener {
 	    private final Thread thread; 
 	    
 	    public ZoomFilter() {
-	        thread = new Thread(this, "MouseWheelZoomFilter" );
+	        thread = new Thread(this, "OpenRadar - MouseWheelZoomFilter" );
 	        thread.start();
         }
 	    

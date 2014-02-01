@@ -168,15 +168,18 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
             Color baseColor = /*(trackDisplayState.isSelected() ? Palette.RADAR_SELECTED :*/ contactTextPainter.getColor(trackDisplayState.getGuiContact());
             Color color = baseColor;
             int count = displayDotShapes.size();
-            int i = count;
+            int i = 0;
+            
             for (ContactShape displayDotShape : displayDotShapes) {
-                color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255 * i / count);
-                g2d.setColor(color);
-
-                if (displayDotShapes.indexOf(displayDotShape) == 0 || displayDotShape.isTailVisible()) {
-                    displayDotShape.paintShape(g2d);
+                // paint every second
+                if(i==0 || i%3==0) {
+                    if (displayDotShapes.indexOf(displayDotShape) == 0 || displayDotShape.isTailVisible()) {
+                        color = i==0 ? color : new Color(color.getRed(), color.getGreen(), color.getBlue(), 200 * (count-i) / count);
+                        g2d.setColor(color);
+                        displayDotShape.paintShape(g2d);
+                    }
                 }
-                --i;
+                ++i;
             }
             g2d.setColor(baseColor);
             // heading line

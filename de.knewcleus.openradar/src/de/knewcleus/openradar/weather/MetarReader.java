@@ -246,7 +246,9 @@ public class MetarReader implements Runnable {
                 }
                 log.info("Metar received: " + metar.getMetarBaseData());
 
-                SoundManager.playWeather();
+                if(code.equalsIgnoreCase(data.getAirportCode())) {
+                    SoundManager.playWeather();
+                }
             }
         } else {
             if(logError) {

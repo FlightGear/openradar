@@ -33,7 +33,9 @@
  */
 package de.knewcleus.openradar.notify;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Notifier implements INotifier {
@@ -61,10 +63,12 @@ public class Notifier implements INotifier {
 	 * Send out a notification to all listeners.
 	 */
 	public void notify(INotification notification) {
+	    List<INotificationListener> currentList;
 	    synchronized(listenerLock) {
-    		for (INotificationListener listener: listeners) {
-    			listener.acceptNotification(notification);
-    		}
+	        currentList = new ArrayList<INotificationListener>(listeners);
 	    }
+		for (INotificationListener listener: currentList) {
+			listener.acceptNotification(notification);
+		}
 	}
 }

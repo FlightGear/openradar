@@ -650,7 +650,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     public synchronized void selectNShowFlightplanDialog(GuiRadarContact c, MouseEvent e) {
         // show details dialog
         select(c, true, false);
-        flightplanDialog = new FlightPlanDialog(master, this); // TODO remove
+//        flightplanDialog = new FlightPlanDialog(master, this); // TODO remove
         flightplanDialog.show(c, e);
     }
 
@@ -1016,11 +1016,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         
         if(existingFp!=null) {
             String formerHandover = existingFp.getHandover();
-//          String formerOwner = existingFp.getOwner();
 
             existingFp.update(newFlightPlan);
-//                    flightCode, callsign, owner, handover, squawk, assignedAlt, state, type, aircraft, trueAirspeed, departure, departureTime,
-//                    cruisingAlt, route, destination, alternateDest, estFlightTime, fuelTime, pilot, soulsOnBoard, remarks);
 
             if(myCallSign.equals(owner)) {
                 // OR has been restarted, the contact is still owned by me

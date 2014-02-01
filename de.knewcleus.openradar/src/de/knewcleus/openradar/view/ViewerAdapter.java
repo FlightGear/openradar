@@ -58,7 +58,6 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	public ViewerAdapter(ICanvas canvas, IUpdateManager updateManager) {
 		this.canvas = canvas;
 		this.updateManager = updateManager;
-		updateTransforms();
 	}
 	
 	public void addRadarViewChangeListener(IRadarViewChangeListener l) {
@@ -102,7 +101,7 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	@Override
 	public void setDeviceOrigin(Point2D origin) {
 		deviceOrigin = origin;
-		updateTransforms();
+		updateTransforms(false);
         notifyListeners(Change.CENTER);
 	}
 
@@ -114,15 +113,13 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	@Override
 	public void setLogicalScale(double scale) {
 		this.logicalScale = scale;
-		updateTransforms();
+		updateTransforms(true);
         notifyListeners(Change.ZOOM);
 	}
 
     @Override
     public void setLogicalScale(double scale, Point mouseLocation) {
-        this.logicalScale = scale;
-        updateTransforms();
-        notifyListeners(Change.ZOOM);
+        setLogicalScale(scale);
     }
 	
 	public void shiftLogicalOrigin(double offsetX, double offsetY) {
@@ -130,15 +127,13 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	}
 	
     public void setLogicalOrigin(double newX, double newY) {
-        logicalOrigin = new Point2D.Double(newX, newY);
-        updateTransforms();
-        notifyListeners(Change.CENTER);
+        setLogicalOrigin(new Point2D.Double(newX, newY));
     }
 
     @Override
 	public void setLogicalOrigin(Point2D origin) {
 		logicalOrigin = origin;
-		updateTransforms();
+		updateTransforms(true);
         notifyListeners(Change.CENTER);
 	}
 	
@@ -148,27 +143,32 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	}
 
 	@Override
-	public AffineTransform getDeviceToLogicalTransform() {
+	public synchronized AffineTransform getDeviceToLogicalTransform() {
 		return deviceToLogicalTransform;
 	}
 
 	@Override
-	public AffineTransform getLogicalToDeviceTransform() {
+	public synchronized AffineTransform getLogicalToDeviceTransform() {
 		return logicalToDeviceTransform;
 	}
 	
-	protected void updateTransforms() {
-		deviceToLogicalTransform = new AffineTransform(
-				logicalScale, 0,
-				0, -logicalScale,
-				logicalOrigin.getX() - logicalScale * deviceOrigin.getX(),
-				logicalOrigin.getY() + logicalScale * deviceOrigin.getY());
-		logicalToDeviceTransform = new AffineTransform(
-				1.0/logicalScale, 0,
-				0, -1.0/logicalScale,
-				deviceOrigin.getX() - logicalOrigin.getX()/logicalScale,
-				deviceOrigin.getY() + logicalOrigin.getY()/logicalScale);
-		notify(new CoordinateSystemNotification(this));
+	protected void updateTransforms(boolean notifyDisplay) {
+
+	    synchronized(this) {
+    		deviceToLogicalTransform = new AffineTransform(
+    				logicalScale, 0,
+    				0, -logicalScale,
+    				logicalOrigin.getX() - logicalScale * deviceOrigin.getX(),
+    				logicalOrigin.getY() + logicalScale * deviceOrigin.getY());
+    		logicalToDeviceTransform = new AffineTransform(
+    				1.0/logicalScale, 0,
+    				0, -1.0/logicalScale,
+    				deviceOrigin.getX() - logicalOrigin.getX()/logicalScale,
+    				deviceOrigin.getY() + logicalOrigin.getY()/logicalScale);
+	    }
+		if(notifyDisplay) {
+		    notify(new CoordinateSystemNotification(this));
+		}
 	}
 	
 	public void notifyListeners(Change c) {

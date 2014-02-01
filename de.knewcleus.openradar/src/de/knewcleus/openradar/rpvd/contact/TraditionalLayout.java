@@ -40,7 +40,7 @@ import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
-import de.knewcleus.openradar.rpvd.contact.ContactShape.Type;
+import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 
 /**
  * This class implements the orginal layout introduced into OR by W.Wagner.
@@ -150,7 +150,11 @@ public class TraditionalLayout extends ADatablockLayout {
     @Override
     public void modify(ContactShape shape, GuiRadarContact c) {
 
-        shape.modify(Type.FilledDot, c, 6);
+        shape.modify(Symbol.FilledDot, c, 6);
+    }
+    @Override
+    public boolean displayVSpeedArrow(GuiRadarContact c) {
+        return Math.abs(c.getVerticalSpeedD())>100;
     }
 
 }

@@ -189,7 +189,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
                 String frequency = "";
                 String f = (String) positionMessage.getProperty("sim/multiplay/transmission-freq-hz");
                 if (f != null) {
-                    BigDecimal bdFreq = new BigDecimal((String) positionMessage.getProperty("sim/multiplay/transmission-freq-hz"));
+                    BigDecimal bdFreq = new BigDecimal(f);
                     bdFreq = bdFreq.divide(new BigDecimal(1000000));
                     frequency = String.format("%1.3f", bdFreq);
                 }
@@ -200,10 +200,20 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
                 Integer transponderAltitude = (Integer) positionMessage.getProperty("instrumentation/transponder/altitude");
 //                transponderAltitude=null;
                 player.setTranspAltitude(transponderAltitude);
+//                for(String key : positionMessage.getProperties().keySet()) {
+//                    if(key.contains("ident")) {
+//                        System.out.println(positionMessage.getProperty(key));
+//                    }
+//                }
                 Boolean b = positionMessage.getProperty("instrumentation/transponder/ident");
                 if(b!=null && b==true) {
                     player.startTranspIdent();
                 }
+                String transponderMode = positionMessage.getProperty("instrumentation/transponder/inputs/mode");
+                if(transponderMode!=null) {
+                    player.setTranspMode(transponderMode);
+                }
+
                 notifyChatListeners(mppacket.getCallsign(), frequency, chatMessage);
             }
 

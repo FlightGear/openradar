@@ -42,7 +42,7 @@ import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.MapViewerAdapter;
 
 public class RadarMapViewerAdapter extends MapViewerAdapter implements IRadarMapViewerAdapter {
-	protected int trackHistoryLength = 5;
+	protected int trackHistoryLength = 10;
 	protected double headingVectorTime = 1.0 * Units.MIN;
 	
 	public RadarMapViewerAdapter(ICanvas canvas, IUpdateManager updateManager, IProjection projection, Point2D center) {

@@ -39,9 +39,9 @@ import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 
 public class ContactShape {
 
-    public enum Type {FilledDot,Asterix,FilledDiamond,EmptyDiamond,EmptySquare,Letter}
+    public enum Symbol {FilledDot,Asterix,FilledDiamond,EmptyDiamond,EmptySquare,Letter}
     private Path2D path = new Path2D.Double();
-    private Type type;
+    private Symbol type;
     private GuiRadarContact contact;
 
     private double x=0;
@@ -50,7 +50,7 @@ public class ContactShape {
 
     private boolean tailVisible = true;
 
-    public synchronized void modify(Type type, GuiRadarContact contact, double size) {
+    public synchronized void modify(Symbol type, GuiRadarContact contact, double size) {
         this.contact=contact;
         this.type=type;
         this.size=size;
@@ -67,7 +67,7 @@ public class ContactShape {
 
         switch(type) {
         case Asterix:
-            tailVisible=false;
+            tailVisible=true;
             path.reset();
             path.append(new Line2D.Double(x-s1,y,x+s1,y),false);
             path.append(new Line2D.Double(x,y-s1,x,y+s1),false);
@@ -76,7 +76,7 @@ public class ContactShape {
             g2d.draw(path);
             break;
         case EmptyDiamond:
-            tailVisible=false;
+            tailVisible=true;
             path.reset();
             path.append(new Line2D.Double(x-s1,y,x,y+s1),false);
             path.append(new Line2D.Double(x,y+s1,x+s1,y),true);
@@ -85,7 +85,7 @@ public class ContactShape {
             g2d.draw(path);
             break;
         case EmptySquare:
-            tailVisible=false;
+            tailVisible=true;
             path.reset();
             path.append(new Line2D.Double(x-s1,y+s1,x+s1,y+s1),false);
             path.append(new Line2D.Double(x+s1,y+s1,x+s1,y-s1),true);
@@ -94,7 +94,7 @@ public class ContactShape {
             g2d.draw(path);
             break;
         case FilledDiamond:
-            tailVisible=false;
+            tailVisible=true;
             path.reset();
             path.append(new Line2D.Double(x-s1,y,x,y+s1),false);
             path.append(new Line2D.Double(x,y+s1,x+s1,y),true);

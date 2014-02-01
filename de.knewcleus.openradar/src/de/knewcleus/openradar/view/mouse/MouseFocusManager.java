@@ -115,9 +115,6 @@ public class MouseFocusManager extends MouseAdapter {
     public synchronized void mouseDragged(MouseEvent e) {
         if(shiftOrigin!=null) {
             zoomFilter.shiftOrigin(shiftOrigin,e.getPoint());
-            
-            radarMapViewerAdapter.shiftDeviceOrigin(shiftOrigin,e.getPoint());
-            
             shiftOrigin = e.getPoint();
         }
     }
@@ -174,7 +171,7 @@ public class MouseFocusManager extends MouseAdapter {
         private final Thread thread; 
         
         public ShiftFilter() {
-            thread = new Thread(this, "MouseShiftFilter" );
+            thread = new Thread(this, "OpenRadar - MouseShiftFilter" );
             thread.start();
         }
         
@@ -182,10 +179,12 @@ public class MouseFocusManager extends MouseAdapter {
             if(shiftOrigin==null) {
                 this.shiftOrigin=origin;
                 this.shiftTarget=target;
+//                System.out.println("Input: direct shift"+origin+">"+target);
+                thread.interrupt();
             } else {
-                this.shiftTarget=new Point(shiftTarget.x+target.x-origin.x, shiftTarget.y+target.y-origin.y);
+                this.shiftTarget=target;//new Point(shiftTarget.x+target.x-origin.x, shiftTarget.y+target.y-origin.y);
+//                System.out.println("Input: relative shift");
             }
-            thread.interrupt();
         }
         
         public void run() {

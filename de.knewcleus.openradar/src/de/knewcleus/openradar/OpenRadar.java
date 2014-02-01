@@ -53,7 +53,7 @@ public class OpenRadar {
 
     static String propertiesFile = null;
     static String autoStartAirport=null;
-
+    
     private static Logger log;
     
     public static void main(String[] args) {

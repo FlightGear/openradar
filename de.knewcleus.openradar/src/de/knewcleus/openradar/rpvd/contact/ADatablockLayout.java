@@ -78,4 +78,6 @@ public abstract class ADatablockLayout {
         return getMenuText();
     }
 
+    public abstract boolean displayVSpeedArrow(GuiRadarContact c) ;
+
 }

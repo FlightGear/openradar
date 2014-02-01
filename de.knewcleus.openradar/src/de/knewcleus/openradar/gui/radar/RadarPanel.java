@@ -632,7 +632,7 @@ public class RadarPanel extends JPanel {
             if(contact!=null && contact.getFlightPlan().isOwnedByMe()) {
                 // show handover target dialog
                 if(!handoverDialog.isVisible()) {
-                    handoverDialog = new HandoverTargetDialog(master);
+                    handoverDialog = handoverDialog==null ? new HandoverTargetDialog(master) : handoverDialog;
                     MouseEvent dummyEvent = new MouseEvent(radarView.getParent(), MouseEvent.MOUSE_DRAGGED, System.currentTimeMillis(), MouseEvent.BUTTON1, (int)(getX()+ e.getLocation().getX()), (int)(getY()+e.getLocation().getY()), 1, false);
                     handoverDialog.setLocation(dummyEvent);
                 }

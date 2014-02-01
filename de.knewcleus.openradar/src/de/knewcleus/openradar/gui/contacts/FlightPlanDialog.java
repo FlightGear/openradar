@@ -52,6 +52,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -63,8 +64,9 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightplan.FpAtc;
+import de.knewcleus.openradar.gui.setup.AirportData;
 
-public class FlightPlanDialog extends JFrame implements FocusListener {
+public class FlightPlanDialog extends JDialog implements FocusListener {
 
     private static final long serialVersionUID = 1L;
     private final GuiMasterController master;
@@ -123,7 +125,7 @@ public class FlightPlanDialog extends JFrame implements FocusListener {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if (isUniformTranslucencySupported) {
-            this.setOpacity(0.9f);
+            this.setOpacity(0.92f);
         }
 
         setLayout(new GridBagLayout());
@@ -727,13 +729,12 @@ public class FlightPlanDialog extends JFrame implements FocusListener {
         this.contact = contact;
 
         setData(contact);
-        invalidate();
-        doLayout();
+//        invalidate();
+//        doLayout();
 
         Dimension innerSize = getPreferredSize();
         setSize(new Dimension((int) innerSize.getWidth() + 8, (int) innerSize.getHeight() + 8));
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Rectangle maxBounds = env.getMaximumWindowBounds();
+        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
 
         Point2D p;
         if(e!=null) {

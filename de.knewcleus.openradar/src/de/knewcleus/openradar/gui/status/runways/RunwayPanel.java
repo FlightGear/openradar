@@ -417,7 +417,7 @@ public class RunwayPanel extends JPanel {
         GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
         if(c==null) return;
 //        double altAboveAirport = c.getAltitude() - master.getDataRegistry().getElevationFt();
-        double speed = c.getAirSpeedD();
+        double speed = c.getGroundSpeedD();
 
         boolean isInAir =  speed > 45; // altAboveAirport > 300 &
         boolean isOnGround = speed <= 45;

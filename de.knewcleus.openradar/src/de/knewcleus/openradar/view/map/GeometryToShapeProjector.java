@@ -52,13 +52,17 @@ import de.knewcleus.fgfs.geodata.geometry.NullShape;
 import de.knewcleus.fgfs.geodata.geometry.Point;
 import de.knewcleus.fgfs.geodata.geometry.Polygon;
 import de.knewcleus.fgfs.geodata.geometry.Ring;
+import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class GeometryToShapeProjector implements IGeometryVisitor {
 	protected final IProjection projection;
+	protected final AirportData data;
+	public final static String TOGGLE_STATE="projection.nice";
 	protected final List<Shape> shapes=new ArrayList<Shape>();
 	
-	public GeometryToShapeProjector(IProjection projection) {
+	public GeometryToShapeProjector(AirportData data, IProjection projection) {
 		this.projection = projection;
+		this.data = data;
 	}
 	
 	public List<Shape> getShapes() {
@@ -68,7 +72,7 @@ public class GeometryToShapeProjector implements IGeometryVisitor {
 	@Override
 	public void visit(Polygon polygon) throws GeodataException {
 		final GeometryToShapeProjector ringProjector;
-		ringProjector = new GeometryToShapeProjector(projection);
+		ringProjector = new GeometryToShapeProjector(data, projection);
 		polygon.traverse(ringProjector);
 		
 		final Iterator<Shape> shapeIterator = ringProjector.getShapes().iterator();
@@ -79,14 +83,20 @@ public class GeometryToShapeProjector implements IGeometryVisitor {
 		
 		final Shape outerShape = shapeIterator.next();
 		
-		final Area polygonArea = new Area(outerShape);
-		
-		while (shapeIterator.hasNext()) {
-			final Shape innerShape = shapeIterator.next();
-			polygonArea.subtract(new Area(innerShape));
+		if(data.getToggleState(TOGGLE_STATE, true)) {
+		    // performance issue: This loop is looping over all existing shapes => gets slower with growing shape count
+    		final Area polygonArea = new Area(outerShape);
+    
+    		while (shapeIterator.hasNext()) {
+    			final Shape innerShape = shapeIterator.next();
+    			polygonArea.subtract(new Area(innerShape));
+    		}
+    		
+    		shapes.add(polygonArea);
+		} else {		
+		    // this quick solution does not display islands in a layer
+		    shapes.add(outerShape);
 		}
-		
-		shapes.add(polygonArea);
 	}
 	
 	@Override

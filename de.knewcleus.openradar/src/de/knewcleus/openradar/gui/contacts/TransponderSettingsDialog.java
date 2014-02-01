@@ -48,6 +48,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -56,9 +57,10 @@ import javax.swing.border.TitledBorder;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
-import de.knewcleus.openradar.gui.flightplan.SquawkCodeManager;
+import de.knewcleus.openradar.gui.flightplan.SquawkCodeManagerOld;
+import de.knewcleus.openradar.gui.setup.AirportData;
 
-public class TransponderSettingsDialog extends JFrame {
+public class TransponderSettingsDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private final GuiMasterController master;
@@ -74,7 +76,7 @@ public class TransponderSettingsDialog extends JFrame {
     private JTextField tfSquawkToIFR = new JTextField(4);
 
     private SquawkCodeListener squawkCodeListener = new SquawkCodeListener();
-    private SquawkCodeManager squawkCodeManager;
+    private SquawkCodeManagerOld squawkCodeManager;
 
     public TransponderSettingsDialog(GuiMasterController master, RadarContactController controller) {
         this.master = master;
@@ -93,7 +95,7 @@ public class TransponderSettingsDialog extends JFrame {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if(isUniformTranslucencySupported) {
-            this.setOpacity(0.8f);
+            this.setOpacity(0.92f);
         }
 
         setLayout(new GridBagLayout());
@@ -217,8 +219,7 @@ public class TransponderSettingsDialog extends JFrame {
 
         Dimension innerSize = getPreferredSize();
         setSize(new Dimension((int)innerSize.getWidth()+8, (int)innerSize.getHeight()+8));
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Rectangle maxBounds = env.getMaximumWindowBounds();
+        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
 
         Point2D p = e.getLocationOnScreen();// ((JComponent) e.getSource()).getLocationOnScreen();
         p = new Point2D.Double(p.getX() - this.getWidth() - 10, p.getY());

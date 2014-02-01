@@ -33,6 +33,7 @@
 package de.knewcleus.openradar.gui.status.radio;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -41,21 +42,26 @@ import de.knewcleus.openradar.gui.LogWindow;
 
 public class LogWriterThread implements Runnable {
 
-    private Radio radio = null;
-    private LogWindow logWindow = null;
-    private Process process = null;
-    private String tabName = null;
+    private final Radio radio;
+    private final LogWindow logWindow;
+    private final Process process;
+    private final String tabName;
+    private final String dir;
+    private final String command;
+    
     private BufferedInputStream bis = null;
     private volatile boolean isRunning = true;
     private Thread thread;
 
     private final static Logger log = LogManager.getLogger(LogWriterThread.class);
     
-    public LogWriterThread(LogWindow logWindow, Radio radio, Process process) {
+    public LogWriterThread(LogWindow logWindow, Radio radio, Process process, String dir, String command) {
         this.logWindow = logWindow;
         this.process = process;
         this.radio = radio;
         this.tabName=radio.getKey();
+        this.dir=dir;
+        this.command=command;
         thread = new Thread(this, "OpenRadar - FGCom Log Writer");
         thread.setDaemon(true);
         thread.start();
@@ -68,13 +74,17 @@ public class LogWriterThread implements Runnable {
         bis = new BufferedInputStream(process.getInputStream());
 
         try {
+            logWindow.addText(tabName,"FGCOM LOG \n"
+                                     +"dir:\n"+dir+"\n"
+                                     +"cmd:\n"+command+"\n\n");
+            
             while(isRunning) {
                 int len = isRunning ? bis.read(buffer) : 0;
                 synchronized(this) {
                     if(len>0 && isRunning) {
                         String content = new String(buffer,0,len);
                         // System.out.println(content);
-                        if(content.contains("rejected") || content.contains("Hanging up")) {
+                        if(content.contains("rejected") || content.contains("Hanging up") || content.contains("timed out")) {
                             radio.setConnectedToServer(false);
                         } else if(content.contains("accepted")){
                             radio.setConnectedToServer(true);
@@ -83,23 +93,28 @@ public class LogWriterThread implements Runnable {
                     }
                 }
                 if(isRunning) {
-                    if(len>0) {
-                        Thread.sleep(200);
-                    } else {
-                        Thread.sleep(1000);
+                    try {
+                        if(len>0) {
+                            Thread.sleep(200);
+                        } else {
+                            Thread.sleep(1000);
+                        }
+                    } catch(InterruptedException e) {
+                        // this is ok, I interupt it
                     }
                 }
             }
+        } catch (IOException e) {
+            // stream closed
         } catch(ThreadDeath e) {
         } catch(Exception e) {
             log.error("Error in FGCOM logging!",e);
-        }
+        } 
     }
 
-    @SuppressWarnings("deprecation")
     public synchronized void stop() {
         radio.setConnectedToServer(false);
         isRunning=false;
-        thread.stop();
+        thread.interrupt();
     }
 }

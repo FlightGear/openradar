@@ -91,12 +91,14 @@ public class GeodataView implements IBoundedView, INotificationListener {
 		updateLogicalShapes();
 	}
 
-	public Color getColor() {
+	public synchronized Color getColor() {
 		return color;
 	}
 
 	public void setColor(Color color) {
-		this.color = color;
+	    synchronized(this) {
+	        this.color = color;
+	    }
 		repaint();
 	}
 
@@ -164,7 +166,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	protected void updateLogicalShapes() {
 		final IProjection projection = mapViewAdapter.getProjection();
 		final GeometryToShapeProjector shapeProjector;
-		shapeProjector = new GeometryToShapeProjector(projection);
+		shapeProjector = new GeometryToShapeProjector(master.getAirportData(), projection);
 		for (Geometry geometry: geometries) {
 			try {
 				geometry.accept(shapeProjector);

@@ -56,6 +56,7 @@ public class Player {
 	protected volatile String frequency="";
     protected volatile Integer transpSquawkCode=null;
 	protected volatile Integer transpAltitude=null;
+	protected volatile String transpMode=null;
 	protected volatile long transpLastIdentStart=0;
 
 	public Player(String callsign) {
@@ -132,6 +133,14 @@ public class Player {
 
     public synchronized void setTranspAltitude(Integer transpAltitude) {
         this.transpAltitude = transpAltitude;
+    }
+
+    public synchronized String getTranspMode() {
+        return transpMode == null ? (transpAltitude!=null ? "C" : null) : transpMode;
+    }
+
+    public synchronized void setTranspMode(String transpMode) {
+        this.transpMode = transpMode;
     }
 
     public synchronized void startTranspIdent() {

@@ -425,6 +425,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
     @Override
     public void datablockLayoutChanged(ADatablockLayout newLayout) {
         lbAssignSquawkVFR.setVisible(newLayout.supportsSquawk());
+        lbAssignSquawkIFR.setVisible(newLayout.supportsSquawk());
         lbRevokeSquawk.setVisible(newLayout.supportsSquawk());
     }
 }

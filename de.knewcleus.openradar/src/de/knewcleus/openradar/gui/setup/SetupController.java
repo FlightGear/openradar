@@ -51,7 +51,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
@@ -69,6 +68,8 @@ import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
+import de.knewcleus.openradar.gui.status.radio.FgComController;
 import de.knewcleus.openradar.rpvd.contact.DatablockLayoutManager;
 
 /**
@@ -80,11 +81,10 @@ public class SetupController {
 
     private String propertiesFilename, autoStartAirport;
     private SectorBean preselectedAirport = null;
-
     private SetupDialog setupDialog;
     private SetupActionListener setupActionListener = new SetupActionListener();
     private DefaultListModel<SectorBean> searchResultsModel = new DefaultListModel<SectorBean>();
-    private AirportData data = new AirportData();
+    private final AirportData data;
     private SectorListSelectionListener listSelectionListener = new SectorListSelectionListener();
     private SectorListMouseListener sectorListMouseListener = new SectorListMouseListener();
     private Map<String, SectorBean> mapExistingSectors = new TreeMap<String, SectorBean>();
@@ -98,6 +98,7 @@ public class SetupController {
     public SetupController(String propertiesFile, String autoStartAirport) {
         this.propertiesFilename=propertiesFile;
         this.autoStartAirport=autoStartAirport;
+        data = new AirportData();
         parseSectorDir(); // fills existing airport list
         showDialog();
     }
@@ -433,40 +434,34 @@ public class SetupController {
     public static List<RawFrequency> loadRadioFrequenciesFgCom3(AirportData data, String airportCode) {
         List<RawFrequency> radioFrequencies = new ArrayList<RawFrequency>();
         BufferedReader ir = null;
-
         HashSet<String> knownCodes = new HashSet<String>(); 
+
         try {
-             // get a scanner instance
-             Scanner scanner = new Scanner(openFgComPositionsTxt(data));
-             // Set the delimiter used in the file
-             scanner.useDelimiter(",");
-             // get all token and store them in some data structure
-             while (scanner.hasNext()) {
-                 String ac = scanner.next();
-                 if(ac!=null && airportCode.equals(ac)) {
-                     String freq = scanner.next();
-                     scanner.nextDouble(); // lat
-                     scanner.nextDouble(); // lon
-                     String code = scanner.next();
-                     if(!code.contains("ATIS") && !knownCodes.contains(code)) {
-                         radioFrequencies.add(new RawFrequency(code, freq));
-                         knownCodes.add(code); // to avoid multiple entries of the same frequency
-                     }
-                 }
-                 if(scanner.hasNextLine()) {
-                     scanner.nextLine();
-                 } else {
-                     break;
-                 }
-             } 
-             scanner.close();
+            ir = new BufferedReader(openFgComPositionsTxt(data));
+            // now search the airport
+            String line = ir.readLine();
+            while(line!=null) {
+                StringTokenizer st = new StringTokenizer(line,",");
+                String ac = st.nextToken().trim();
+                
+                if(ac!=null && airportCode.equals(ac)) {
+                    String freq = st.nextToken();
+                    st.nextToken(); // lat
+                    st.nextToken(); // lon
+                    String code = st.nextToken();
+                    if(!code.contains("ATIS") && !knownCodes.contains(code)) {
+                        radioFrequencies.add(new RawFrequency(code, freq));
+                        knownCodes.add(code); // to avoid multiple entries of the same frequency
+                    }
+                }
+                line = ir.readLine();
+            }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("Error while reading phonebook zipfile!",e);
         } finally {
-            if(fgcomPositionsFile!=null) {
+            if(zifPhonebook!=null) {
                 try {
-                    fgcomPositionsFile.close();
+                    zifPhonebook.close();
                 } catch (IOException e) { }
             }
             if(ir!=null) {
@@ -476,10 +471,16 @@ public class SetupController {
             }
         }
         return radioFrequencies;
+            
     }
 
     private static Reader openFgComPositionsTxt(AirportData data) throws IOException {
-        final File inputFile = new File(data.getFgComPath()+File.separator+".."+File.separator+"share"+File.separator+"flightgear"+File.separator+"positions.txt");
+        String pathToFgComExec = data.getFgComPath();
+        if (data.getFgComMode()==FgComMode.Auto) {
+            // AUTO mode
+            pathToFgComExec = System.getProperty("user.dir")+File.separator+"fgcom"+File.separator+"bin";
+        }
+        final File inputFile = new File(FgComController.getFgComPositionsPath(data, pathToFgComExec));
         if(!inputFile.exists()) {
             log.error("FgCcom frequency file not found at "+inputFile.getAbsolutePath());
             throw new FileNotFoundException("FgCcom frequency file not found at "+inputFile.getAbsolutePath());

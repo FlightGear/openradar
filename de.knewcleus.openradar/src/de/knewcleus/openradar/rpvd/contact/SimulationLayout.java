@@ -36,7 +36,7 @@ import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
-import de.knewcleus.openradar.rpvd.contact.ContactShape.Type;
+import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 
 /**
  * This data block layout aims to be closer on the reality. There is no heading displayed and as long as no or the wrong
@@ -152,11 +152,7 @@ public class SimulationLayout extends ADatablockLayout {
                 currentAltSpeedIndex--; // no aircraft line
 
                 sb.append(String.format("%s %s", "" + c.getTranspSquawkCode(), c.getMagnCourse())).append("\n");
-                if (-9999 != c.getTranspAltitude()) {
-                    sb.append(c.getAltitudeString(master)).append(" ");
-                } else {
-                    sb.append(c.getAltitudeString(master)).append("*");
-                }
+                sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
                 sb.append(String.format("%02.0f", c.getGroundSpeedD() / 10));
             } else {
                 // squawk codes match
@@ -167,11 +163,7 @@ public class SimulationLayout extends ADatablockLayout {
                     sb.append(" ").append(addData);
                 }
                 sb.append("\n");
-                if (-9999 != c.getTranspAltitude()) {
-                    sb.append(c.getAltitudeString(master)).append(" ");
-                } else {
-                    sb.append(c.getAltitudeString(master)).append("*");
-                }
+                sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
                 sb.append(String.format("%02.0f", c.getGroundSpeedD() / 10));
 
             }
@@ -181,9 +173,26 @@ public class SimulationLayout extends ADatablockLayout {
             String addData = getAddData(c);
             setAltSpeedIndex(currentAltSpeedIndex);
             return String.format("%s %s\n", c.getCallSign(), c.getMagnCourse()) + String.format("%s %s\n", c.getAircraftCode(), addData)
-                    + c.getAltitudeString(master)+String.format("*%02.0f", c.getGroundSpeedD() / 10);
+                    + c.getAltitudeString(master)+getAccuracySeparator(c)+String.format("%02.0f", c.getGroundSpeedD() / 10);
         }
     }
+
+    private String getAccuracySeparator(GuiRadarContact c) {
+        if(null!=c.getTranspAltitude() && -9999!=c.getTranspAltitude()) {
+            if(displayVSpeedArrow(c)) {
+                return "  ";
+            } else {
+                return " ";
+            }
+        } else {
+            if(displayVSpeedArrow(c)) {
+                return "*  ";
+            } else {
+                return "* ";
+            }
+        }
+    }
+
 
     public synchronized String getAddData(GuiRadarContact c) {
         FlightPlanData fp = c.getFlightPlan();
@@ -260,19 +269,24 @@ public class SimulationLayout extends ADatablockLayout {
 
         if (c.getTranspSquawkCode() != null && (1200 == c.getTranspSquawkCode() || 7000 == c.getTranspSquawkCode())) {
             // Squawking VFR
-            shape.modify(Type.EmptySquare, c, 6);
+            shape.modify(Symbol.EmptySquare, c, 6);
         } else if (c.getTranspSquawkCode() != null && c.getAtcLetter() == null) {
             // untracked
-            shape.modify(Type.Asterix, c, 6);
+            shape.modify(Symbol.Asterix, c, 6);
         } else if (c.getTranspSquawkCode() == null) {
             // no squawk or standby
-            shape.modify(Type.FilledDiamond, c, 8);
+            shape.modify(Symbol.FilledDiamond, c, 8);
         } else if (c.getTranspSquawkCode() != null && c.getAtcLetter() != null) {
             // controlled
-            shape.modify(Type.Letter, c, 8);
+            shape.modify(Symbol.Letter, c, 8);
         } else {
-            shape.modify(Type.FilledDot, c, 6);
+            shape.modify(Symbol.FilledDot, c, 6);
         }
+    }
+
+    @Override
+    public boolean displayVSpeedArrow(GuiRadarContact c) {
+        return Math.abs(c.getVerticalSpeedD())>100;
     }
     
 }

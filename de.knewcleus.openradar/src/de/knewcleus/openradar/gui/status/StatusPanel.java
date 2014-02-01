@@ -39,10 +39,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -218,6 +220,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         weatherPanel = new JPanel();
         weatherPanel.setLayout(new GridBagLayout());
         weatherPanel.setOpaque(false);
+        weatherPanel.setName(master.getAirportData().getAirportCode());
         weatherPanel.addMouseListener(metarMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -232,6 +235,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbWind.setForeground(Palette.LIGHTBLUE);
         lbWind.setText("W:");
         lbWind.setToolTipText("Wind: knods@Direction");
+        lbWind.setName(master.getAirportData().getAirportCode());
         lbWind.addMouseListener(metarMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -242,6 +246,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
         lbPressure.setForeground(Palette.DESKTOP_TEXT);
         lbPressure.setText("");
+        lbPressure.setName(master.getAirportData().getAirportCode());
         lbPressure.addMouseListener(metarMouseListener);
         lbPressure.setToolTipText("Pressure");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -253,6 +258,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
         lbVisibility.setForeground(Palette.DESKTOP_TEXT);
         lbVisibility.setText("");
+        lbVisibility.setName(master.getAirportData().getAirportCode());
         lbVisibility.addMouseListener(metarMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -264,6 +270,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
         lbWeatherPhaenomena.setForeground(Palette.DESKTOP_TEXT);
         lbWeatherPhaenomena.setText("");
+        lbWeatherPhaenomena.setName(master.getAirportData().getAirportCode());
         lbWeatherPhaenomena.addMouseListener(metarMouseListener);
         //lbWeatherPhaenomena.setToolTipText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -414,6 +421,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
                     if(m.getWindDirectionI()>=0) {
                         JLabel lbAddMetar = new JLabel();
                         lbAddMetar.setForeground(Palette.DESKTOP_TEXT);
+                        lbAddMetar.setName(code);
                         lbAddMetar.setText(code+": "+m.getWindDisplayString());
                         lbAddMetar.setToolTipText(m.getMetarBaseData());
                         lbAddMetar.addMouseListener(metarMouseListener);
@@ -465,11 +473,18 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         public void mouseClicked(MouseEvent e) {
             if(e.getClickCount()==2 && e.getButton() == MouseEvent.BUTTON1) {
                 // send ATIS
-                MetarData metar = master.getAirportMetar();
-                if(e.getSource()==lbWeatherPhaenomena) {
-                    master.getMpChatManager().sendMessages(metar.createATIS(master,false)); // long
+                String metarCode = ((JComponent)e.getSource()).getName();
+                MetarData metar = master.getMetarReader().getMetar(metarCode);
+                if(metarCode.equals(master.getAirportData().getAirportCode())) {
+                    if(e.getSource()==lbWeatherPhaenomena) {
+                        master.getMpChatManager().sendMessages(metar.createATIS(master,false)); // long
+                    } else {
+                        master.getMpChatManager().sendMessages(metar.createATIS(master,true)); // short
+                    }
                 } else {
-                    master.getMpChatManager().sendMessages(metar.createATIS(master,true)); // short
+                    ArrayList<String> msg = new ArrayList<String>();
+                    msg.add(metar.getMetarBaseData());
+                    master.getMpChatManager().sendMessages(msg); // METAR
                 }
             } else if(e.getButton() == MouseEvent.BUTTON3) {
                 metarSettingsDialog.show(e);

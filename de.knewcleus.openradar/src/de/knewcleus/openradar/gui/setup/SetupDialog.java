@@ -33,7 +33,6 @@
 package de.knewcleus.openradar.gui.setup;
 
 import java.awt.Color;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -77,6 +76,7 @@ import org.apache.log4j.Logger;
 
 import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
+import de.knewcleus.openradar.view.map.GeometryToShapeProjector;
 
 /**
  * The setup dialog...
@@ -104,6 +104,7 @@ public class SetupDialog extends JFrame {
     private JLabel lbFgComMode;
     private JLabel lbfgComPath;
     private JLabel lbfgComExec;
+    private JCheckBox cbFgCom3;
     private JLabel lbFgComServer;
     private JLabel lbFgComHost;
     private JLabel lbFgComPorts;
@@ -130,6 +131,7 @@ public class SetupDialog extends JFrame {
     private StatusMessageComboboxModel cbStatusModel;
 
     private JComboBox<ADatablockLayout> cbDataboxLayout;
+    private JCheckBox cbNiceShapes;
 
     private JCheckBox cbEnableChatAliases;
     private JCheckBox cbLandmass;
@@ -140,7 +142,7 @@ public class SetupDialog extends JFrame {
     private JCheckBox cbGroundnet;
 
     private FgComMode fgComMode = FgComMode.Internal;
-    private String[] modeModel = new String[]{"Internal: Started and controlled by OpenRadar","External: Control external instance", "OFF: No FgCom support"};
+    private String[] modeModel = new String[]{"Auto: Use the internal fgcom","Internal: OR starts and controls a fgcom client","External: Control external fgcom client instance", "OFF: No FgCom support"};
 
     private List<Image> icons = new ArrayList<Image>();
 
@@ -164,7 +166,7 @@ public class SetupDialog extends JFrame {
         }
 
         initComponents();
-
+        invalidate();
         this.loadProperties();
     }
 
@@ -176,8 +178,7 @@ public class SetupDialog extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("OpenRadar - Welcome!");
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        Rectangle maxBounds = env.getMaximumWindowBounds();
+        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
 
         this.setLocation((int) maxBounds.getWidth() / 2 - 300, 100);//(int) maxBounds.getHeight() / 2 - 200);
         //this.setSize(400,600);
@@ -372,7 +373,6 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlFgCom.add(lbFgComMode, gridBagConstraints);
@@ -383,7 +383,8 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlFgCom.add(cbFgComMode, gridBagConstraints);
@@ -408,6 +409,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
@@ -449,10 +451,22 @@ public class SetupDialog extends JFrame {
 //        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
 //        jPnlFgCom.add(btBrowseFgComServer, gridBagConstraints);
 
+        cbFgCom3 = new JCheckBox();
+        cbFgCom3.setText("FGCom3");
+        cbFgCom3.setToolTipText("Check if this fgcom is an fgcom3 instance!");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFgCom.add(cbFgCom3, gridBagConstraints);
+
+        
         // server
 
         lbFgComServer = new JLabel();
-        lbFgComServer.setText("Server");
+        lbFgComServer.setText("FgCom Server");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -467,7 +481,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.weightx = 1;
-        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
@@ -476,7 +490,7 @@ public class SetupDialog extends JFrame {
         // host
 
         lbFgComHost = new JLabel();
-        lbFgComHost.setText("Client");
+        lbFgComHost.setText("Client host");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -486,14 +500,14 @@ public class SetupDialog extends JFrame {
 
         tfFgComHost = new JTextField();
         tfFgComHost.setName("FgComHost");
-        tfFgComHost.setToolTipText("The machine that runs fgcom, if set to 'localhost', OpenRadar will start it automatically..");
+        tfFgComHost.setToolTipText("The machine that runs fgcom client, usually 'localhost'");
         tfFgComHost.setText("localhost");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.gridwidth = 1;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlFgCom.add(tfFgComHost, gridBagConstraints);
 
@@ -515,9 +529,9 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.gridwidth = 1;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 2);
         jPnlFgCom.add(tfFgComPorts, gridBagConstraints);
 
@@ -815,17 +829,27 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1;
-        gridBagConstraints.weighty = 0;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
         jPnlDataBlockLayout.add(cbDataboxLayout, gridBagConstraints);
 
+        cbNiceShapes = new JCheckBox();
+        cbNiceShapes.setText("Enable detailed background shapes (Slower initial loading)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
+        jPnlTweaks.add(cbNiceShapes, gridBagConstraints);
+        
         JPanel jPnlLayerInput = new JPanel();
         jPnlLayerInput.setLayout(new GridBagLayout());
         jPnlLayerInput.setBorder(new TitledBorder("Visible background layers"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.weighty = 0;
@@ -865,7 +889,7 @@ public class SetupDialog extends JFrame {
         jPnlLayerInput.add(cbLake, gridBagConstraints);
 
         cbStream = new JCheckBox();
-        cbStream.setText("streams");
+        cbStream.setText("streams (disable it to accelerate everything)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -941,32 +965,52 @@ public class SetupDialog extends JFrame {
 
         List<Integer> list = null;
 
-        if (fgComMode!=FgComMode.Internal ||
-                checkPath(tfFgComPath.getText())) {
+        if (fgComMode!=FgComMode.Internal) {
             lbfgComPath.setForeground(Color.black);
-            data.setFgComPath(tfFgComPath.getText());
         } else {
-            lbfgComPath.setForeground(Color.red);
-            dataOk = false;
+            // internal
+            if (checkPath(tfFgComPath.getText())) {
+                lbfgComPath.setForeground(Color.black);
+                data.setFgComPath(tfFgComPath.getText());
+            } else {
+                lbfgComPath.setForeground(Color.red);
+                dataOk = false;
+            }
         }
-
-        if (fgComMode!=FgComMode.Internal ||
-                (!tfFgComExec.getText().trim().isEmpty() &&
-                checkPath(tfFgComPath.getText()+File.separator+tfFgComExec.getText()))) {
-            lbfgComExec.setForeground(Color.black);
-            data.setFgComExec(tfFgComExec.getText());
+        
+        if (fgComMode!=FgComMode.Internal) {
+            lbfgComPath.setForeground(Color.black);
+        } else {
+            // internal
+            if (!tfFgComExec.getText().trim().isEmpty() &&
+                checkPath(tfFgComPath.getText()+File.separator+tfFgComExec.getText())) {
+                lbfgComExec.setForeground(Color.black);
+                data.setFgComExec(tfFgComExec.getText());
             } else {
                 lbfgComExec.setForeground(Color.red);
                 dataOk = false;
             }
-
-        if (fgComMode!=FgComMode.Internal ||
-                checkHost(tfFgComHost.getText())) {
-            lbFgComHost.setForeground(Color.black);
-            data.setFgComHost(tfFgComHost.getText());
+        }
+        if(fgComMode==FgComMode.Auto) {
+            data.setFgcom3(true);
         } else {
-            lbFgComHost.setForeground(Color.red);
-            dataOk = false;
+            data.setFgcom3(cbFgCom3.isSelected());
+        }
+        
+        if(fgComMode!=FgComMode.Internal) {
+            if(fgComMode==FgComMode.Auto) {
+                lbFgComHost.setText("localhost");
+            }
+            lbFgComHost.setForeground(Color.black);
+        } else {
+            // auto + internal
+            if(checkHost(tfFgComHost.getText())) {
+                lbFgComHost.setForeground(Color.black);
+                data.setFgComHost(tfFgComHost.getText());
+            } else {
+                lbFgComHost.setForeground(Color.red);
+                dataOk = false;
+            }
         }
 
         if (fgComMode==FgComMode.Off ||
@@ -1041,6 +1085,7 @@ public class SetupDialog extends JFrame {
             data.setChatAliasPrefix(alias);
         }
 
+        data.setToggle(GeometryToShapeProjector.TOGGLE_STATE, cbNiceShapes.isSelected());
         Map<String, Boolean> visibleLayerMap = new HashMap<String, Boolean>();
         visibleLayerMap.put("landmass", cbLandmass.isSelected());
         visibleLayerMap.put("urban", cbUrban.isSelected());
@@ -1141,13 +1186,15 @@ public class SetupDialog extends JFrame {
                     } catch (IOException e) {}
                 }
                 fgComMode = FgComMode.valueOf(p.getProperty("fgCom.mode", FgComMode.Internal.toString()));
-                if(fgComMode == FgComMode.Internal) cbFgComMode.setSelectedIndex(0);
-                if(fgComMode == FgComMode.External) cbFgComMode.setSelectedIndex(1);
-                if(fgComMode == FgComMode.Off) cbFgComMode.setSelectedIndex(2);
+                if(fgComMode == FgComMode.Auto) cbFgComMode.setSelectedIndex(0);
+                if(fgComMode == FgComMode.Internal) cbFgComMode.setSelectedIndex(1);
+                if(fgComMode == FgComMode.External) cbFgComMode.setSelectedIndex(2);
+                if(fgComMode == FgComMode.Off) cbFgComMode.setSelectedIndex(3);
 
                 tfFgComPath.setText(p.getProperty("fgCom.path", ""));
                 tfFgComPath.setText(p.getProperty("fgCom.path", ""));
                 tfFgComExec.setText(p.getProperty("fgCom.exec", ""));
+                cbFgCom3.setSelected(!"false".equals(p.getProperty("fgCom.fgcom3", "false")));
                 tfFgComServer.setText(p.getProperty("fgCom.server", ""));
                 tfFgComHost.setText(p.getProperty("fgCom.host", "localhost"));
                 tfFgComPorts.setText(p.getProperty("fgCom.clientPorts", "16661,16662"));
@@ -1179,7 +1226,8 @@ public class SetupDialog extends JFrame {
                         cbDataboxLayout.setSelectedItem(setupManager.getDatablockLayoutManager().getActiveLayout());
                     }
                 }
-
+                cbNiceShapes.setSelected(!"false".equals(p.getProperty(GeometryToShapeProjector.TOGGLE_STATE)));
+                
                 cbLandmass.setSelected(!"false".equals(p.getProperty("layer.landmass")));
                 cbUrban.setSelected(!"false".equals(p.getProperty("layer.urban")));
                 cbLake.setSelected(!"false".equals(p.getProperty("layer.lake")));
@@ -1198,6 +1246,7 @@ public class SetupDialog extends JFrame {
         p.put("fgCom.mode", fgComMode.toString());
         p.put("fgCom.path", tfFgComPath.getText());
         p.put("fgCom.exec", tfFgComExec.getText());
+        p.put("fgCom.fgcom3", ""+cbFgCom3.isSelected());
         p.put("fgCom.server", tfFgComServer.getText());
         p.put("fgCom.host", tfFgComHost.getText());
         p.put("fgCom.clientPorts", tfFgComPorts.getText());
@@ -1216,6 +1265,8 @@ public class SetupDialog extends JFrame {
         p.put("metar.url", tfMetarUrl.getText());
 
         p.put("radar.datablockLayout", ((ADatablockLayout)cbDataboxLayout.getSelectedItem()).getName());
+
+        p.put(GeometryToShapeProjector.TOGGLE_STATE, ""+cbNiceShapes.isSelected());
 
         p.put("layer.landmass", ""+cbLandmass.isSelected());
         p.put("layer.urban", ""+cbUrban.isSelected());
@@ -1284,36 +1335,51 @@ public class SetupDialog extends JFrame {
     private class FgComModeActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(cbFgComMode.getSelectedIndex()==0) {
-                fgComMode = FgComMode.Internal;
-                cbFgComMode.setToolTipText("OpenRadar will start FGCom internally and control it!");
-                // internal
-                tfFgComPath.setEnabled(true);
-                tfFgComExec.setEnabled(true);
-                tfFgComPorts.setEnabled(true);
-                tfFgComHost.setEnabled(true);
-                tfFgComServer.setEnabled(true);
-            } else if(cbFgComMode.getSelectedIndex()==1) {
-                fgComMode = FgComMode.External;
-                cbFgComMode.setToolTipText("You will start FGCom or FgComGui yourself and OpenRadar will control it!");
-                // external
-                tfFgComPath.setEnabled(false);
-                tfFgComExec.setEnabled(false);
-                tfFgComPorts.setEnabled(true);
-                tfFgComHost.setEnabled(true);
-                tfFgComServer.setEnabled(false);
-            } else if(cbFgComMode.getSelectedIndex()==2) {
-                fgComMode = FgComMode.Off;
-                cbFgComMode.setToolTipText("FGCom will not be controlled by OpenRadar");
-                // off
-                tfFgComPath.setEnabled(false);
-                tfFgComExec.setEnabled(false);
-                tfFgComPorts.setEnabled(false);
-                tfFgComHost.setEnabled(false);
-                tfFgComServer.setEnabled(false);
+            if(e.getSource()==cbFgComMode) {
+                if(cbFgComMode.getSelectedIndex()==0) {
+                    fgComMode = FgComMode.Auto;
+                    cbFgComMode.setToolTipText("OpenRadar will start FGCom internally and control it!");
+                    // internal
+                    tfFgComPath.setEnabled(false);
+                    tfFgComExec.setEnabled(false);
+                    tfFgComPorts.setEnabled(true);
+                    tfFgComHost.setEnabled(false);
+                    tfFgComHost.setText("localhost");
+                    tfFgComServer.setEnabled(true);
+                    cbFgCom3.setEnabled(true);
+                    cbFgCom3.setSelected(true);
+                } else if(cbFgComMode.getSelectedIndex()==1) {
+                    fgComMode = FgComMode.Internal;
+                    cbFgComMode.setToolTipText("OpenRadar will start FGCom internally and control it!");
+                    // internal
+                    tfFgComPath.setEnabled(true);
+                    tfFgComExec.setEnabled(true);
+                    tfFgComPorts.setEnabled(true);
+                    tfFgComHost.setEnabled(true);
+                    tfFgComServer.setEnabled(true);
+                    cbFgCom3.setEnabled(true);
+                } else if(cbFgComMode.getSelectedIndex()==2) {
+                    fgComMode = FgComMode.External;
+                    cbFgComMode.setToolTipText("You will start FGCom or FgComGui yourself and OpenRadar will control it!");
+                    // external
+                    tfFgComPath.setEnabled(false);
+                    tfFgComExec.setEnabled(false);
+                    tfFgComPorts.setEnabled(true);
+                    tfFgComHost.setEnabled(true);
+                    tfFgComServer.setEnabled(false);
+                    cbFgCom3.setEnabled(true);
+                } else if(cbFgComMode.getSelectedIndex()==3) {
+                    fgComMode = FgComMode.Off;
+                    cbFgComMode.setToolTipText("FGCom will not be controlled by OpenRadar");
+                    // off
+                    tfFgComPath.setEnabled(false);
+                    tfFgComExec.setEnabled(false);
+                    tfFgComPorts.setEnabled(false);
+                    tfFgComHost.setEnabled(false);
+                    tfFgComServer.setEnabled(false);
+                    cbFgCom3.setEnabled(false);
+                }
             }
-
-
         }
     }
 

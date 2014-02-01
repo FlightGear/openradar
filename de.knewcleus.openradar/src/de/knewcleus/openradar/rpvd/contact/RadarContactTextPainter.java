@@ -145,7 +145,7 @@ public class RadarContactTextPainter {
             line = new Line2D.Double(newStartPoint.getX(),newStartPoint.getY(),anchor.getX(),anchor.getY());
             g2d.draw(line);
 
-            if(hightlighted) {
+            if(hightlighted || trackDisplayState.getGuiContact().isIdentActive()) {
                 // SELECTED
                 g2d.setColor(Color.black);
             }
@@ -155,8 +155,8 @@ public class RadarContactTextPainter {
             }
 
             // the symbols
-            if(textHelper.getAltSpeedLineIndex()>-1) {
-                drawArrow(g2d,vspeed, newX+textHelper.getLineWidth(g2d, textHelper.getAltSpeedLineIndex()) + 8 , newY+textHelper.getLineYOffset(g2d, textHelper.getAltSpeedLineIndex()-1) + 2 , textHelper.getLineHeight(g2d)-2);
+            if(textHelper.getAltSpeedLineIndex()>-1 && textHelper.displayVSpeedArrow()) {
+                drawArrow(g2d, vspeed, newX+textHelper.getAltitudeTextWidth(g2d, trackDisplayState.getGuiContact()) + 6 , newY+textHelper.getLineYOffset(g2d, textHelper.getAltSpeedLineIndex()-1) + 2 , textHelper.getLineHeight(g2d)-2);
             }
 
             if(fgComSupport) {
@@ -213,23 +213,20 @@ public class RadarContactTextPainter {
     private void drawArrow(Graphics2D g2d, double vSpeed, double x, double y, double length) {
         int xOffset = 0;
 
-        if(Math.abs(vSpeed)>100) {
+        Point2D tipPoint = new Point2D.Double(Math.round(x+xOffset), Math.round(vSpeed<0 ? y+length : y));
+        Point2D otherPoint = new Point2D.Double(Math.round(x+xOffset), Math.round(vSpeed<0 ? y : y+length));
+        double heading = vSpeed>0 ? 0 : 180;
+        Point2D point1 = Converter2D.getMapDisplayPoint(tipPoint, heading-180+25, 5);
+        Point2D point2 = Converter2D.getMapDisplayPoint(tipPoint, heading-180-25, 5);
 
-            Point2D tipPoint = new Point2D.Double(Math.round(x+xOffset), Math.round(vSpeed<0 ? y+length : y));
-            Point2D otherPoint = new Point2D.Double(Math.round(x+xOffset), Math.round(vSpeed<0 ? y : y+length));
-            double heading = vSpeed>0 ? 0 : 180;
-            Point2D point1 = Converter2D.getMapDisplayPoint(tipPoint, heading-180+25, 5);
-            Point2D point2 = Converter2D.getMapDisplayPoint(tipPoint, heading-180-25, 5);
+        g2d.draw(new Line2D.Double(otherPoint, tipPoint));
 
-            g2d.draw(new Line2D.Double(otherPoint, tipPoint));
-
-            Path2D path = new Path2D.Double();
-            path.append(new Line2D.Double(tipPoint, point1),false);
-            path.append(new Line2D.Double(point1, point2),true);
-            path.append(new Line2D.Double(point2, tipPoint),true);
-            g2d.draw(path);
-            g2d.fill(path);
-        }
+        Path2D path = new Path2D.Double();
+        path.append(new Line2D.Double(tipPoint, point1),false);
+        path.append(new Line2D.Double(point1, point2),true);
+        path.append(new Line2D.Double(point2, tipPoint),true);
+        g2d.draw(path);
+        g2d.fill(path);
     }
 
     private void drawFgComSymbol(Graphics2D g2d, double x, double y) {

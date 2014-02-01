@@ -40,7 +40,7 @@ import de.knewcleus.openradar.notify.Notifier;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
 
 public class Track extends Notifier implements ITrack {
-	protected final static int historySize = 2000;
+	protected final static int historySize = 10;//2000;
 	protected final IRadarDataPacket history[] = new IRadarDataPacket[historySize];
 	protected int headIndex = historySize-1;
 	protected int size = 0;

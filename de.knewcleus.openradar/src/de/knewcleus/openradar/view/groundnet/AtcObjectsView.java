@@ -100,12 +100,10 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
 
     @Override
     public void paint(Graphics2D g2d) {
-
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setFont(new Font("Arial", Font.PLAIN, 4));
-
-        viewObjectPainter.paint(g2d);
-
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setFont(new Font("Arial", Font.PLAIN, 4));
+    
+            viewObjectPainter.paint(g2d);
     }
 
     @Override
@@ -114,12 +112,11 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
 
     @Override
     public void acceptNotification(INotification notification) {
-        if (notification instanceof ProjectionNotification) {
-            updateLogicalPosition();
-        }
-        if (notification instanceof CoordinateSystemNotification) {
-            updateDisplayPosition();
-        }
+            if (notification instanceof ProjectionNotification) {
+                updateLogicalPosition();
+            } else if (notification instanceof CoordinateSystemNotification) {
+                updateDisplayPosition();
+            }
     }
 
     protected void updateLogicalPosition() {
