@@ -421,21 +421,24 @@ public class AirportData implements INavPointListener {
 
                 // load fgcom phonebook
                 List<RawFrequency> frequencies;
-                if(!fgcom3) {
-                 // fgcom stable
-                    frequencies = SetupController.loadRadioFrequencies(getAirportCode()); // fgcom stable
-                } else {
-                    //fgcom3
-                    frequencies = SetupController.loadRadioFrequenciesFgCom3(this, getAirportCode()); // fgcom 3
+                boolean includeFgCom = getFgComMode()!=FgComMode.Off;
+                if(includeFgCom) {
+                    if(!fgcom3) {
+                     // fgcom stable
+                        frequencies = SetupController.loadRadioFrequencies(getAirportCode()); // fgcom stable
+                    } else {
+                        //fgcom3
+                        frequencies = SetupController.loadRadioFrequenciesFgCom3(this, getAirportCode()); // fgcom 3
+                    }
+                    for (RawFrequency f : frequencies) {
+                        RadioFrequency rf = new RadioFrequency(f.getCode(), f.getFrequency());
+                        this.radioFrequencies.add(rf);
+                    }
+                    // air to air
+                    this.radioFrequencies.add(new RadioFrequency("Air2Air1", "122.75"));
+                    this.radioFrequencies.add(new RadioFrequency("Air2Air2", "123.45"));
+                    this.radioFrequencies.add(new RadioFrequency("TestFgCom", "910.00"));
                 }
-                for (RawFrequency f : frequencies) {
-                    RadioFrequency rf = new RadioFrequency(f.getCode(), f.getFrequency());
-                    this.radioFrequencies.add(rf);
-                }
-                // air to air
-                this.radioFrequencies.add(new RadioFrequency("Air2Air1", "122.75"));
-                this.radioFrequencies.add(new RadioFrequency("Air2Air2", "123.45"));
-                this.radioFrequencies.add(new RadioFrequency("TestFgCom", "910.00"));
             }
 
         } else if (point instanceof RunwayEnd) {

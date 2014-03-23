@@ -389,7 +389,7 @@ public class FgComController implements Runnable, IRadioBackend {
     
     public static String getFgComPositionsPath(AirportData data, String pathToFgComExec) {
         String os = System.getProperty("os.name");
-        String fgcomBasePath = pathToFgComExec.substring(0,pathToFgComExec.lastIndexOf("/"));
+        String fgcomBasePath = pathToFgComExec.contains("/")? pathToFgComExec.substring(0,pathToFgComExec.lastIndexOf("/")) : pathToFgComExec;
         
         String posPath;
         if (data.getFgComMode()==FgComMode.Auto) {

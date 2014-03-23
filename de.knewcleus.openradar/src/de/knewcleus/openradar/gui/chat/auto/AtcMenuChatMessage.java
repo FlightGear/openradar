@@ -115,7 +115,7 @@ public class AtcMenuChatMessage {
                 }
             } else if("/openradar/comm/frequencies".equals(varName)) {
                 if(master.getRadioManager().getModels().isEmpty()) {
-                    values.add("");
+                    values.add("n/a");
                 } else {
                     values.add(master.getRadioManager().getActiveFrequenciesForDisplay());
                 }

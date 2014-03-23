@@ -68,7 +68,7 @@ public class StdRouteIntercept extends AStdRouteElement {
     public StdRouteIntercept(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
                         String start, String startOffset, String startHeading, String startBow, String radius, String speed, String end, String radial, String endHeading, String direction, String endOffset,
                         String stroke, String lineWidth, String arrows, String color, String text) {
-        super(mapViewAdapter, route.getPoint(start,previous),stroke,lineWidth,arrows,color);
+        super(mapViewAdapter, route.getPoint((start != null ? start : startBow),previous),stroke,lineWidth,arrows,color);
 
         this.geoStartPoint = start!=null ? route.getPoint(start,previous) : null;
         this.geoStartBowPoint = startBow!=null ? route.getPoint(startBow,previous) : null;
@@ -112,7 +112,7 @@ public class StdRouteIntercept extends AStdRouteElement {
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
         Point2D firstLineStartPoint = geoStartPoint!=null ? getDisplayPoint(geoStartPoint) : null;
-        if(startOffSet!=null) {
+        if(startOffSet!=null && firstLineStartPoint!=null) {
             double length = Converter2D.getFeetToDots(startOffSet*Units.NM/Units.FT, mapViewAdapter);
             firstLineStartPoint = Converter2D.getMapDisplayPoint(firstLineStartPoint, 90-startHeading, length);
         }
@@ -254,7 +254,9 @@ public class StdRouteIntercept extends AStdRouteElement {
 
 
         // the line to start
-        path.append(new Line2D.Double(firstLineStartPoint, bowStartPoint),false);
+        if (firstLineStartPoint!=null) {
+            path.append(new Line2D.Double(firstLineStartPoint, bowStartPoint),false);
+        }
 
         // the circle bow
         path.append(new Arc2D.Double(bowCenter.getX()-radiusDots, bowCenter.getY()-radiusDots,radiusDots*2,radiusDots*2,startAngle,extentAngle,Arc2D.OPEN), false);
@@ -306,7 +308,11 @@ public class StdRouteIntercept extends AStdRouteElement {
         g2d.draw(path);
 
         if("both".equalsIgnoreCase(arrows) || "start".equalsIgnoreCase(arrows)) {
-            this.paintArrow(g2d, firstLineStartPoint, 90-startHeading, arrowSize, false);
+            if (firstLineStartPoint!=null) {
+                this.paintArrow(g2d, firstLineStartPoint, 90-startHeading, arrowSize, false);
+            } else if (bowStartPoint!=null) {
+                this.paintArrow(g2d, bowStartPoint, 90-startHeading, arrowSize, false);
+            }
         }
         if("both".equalsIgnoreCase(arrows) || "end".equalsIgnoreCase(arrows)) {
             this.paintArrow(g2d, secondLineEndPoint,  90-radial+180, arrowSize, true);

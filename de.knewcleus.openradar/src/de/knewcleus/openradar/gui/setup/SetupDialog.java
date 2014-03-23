@@ -1231,7 +1231,7 @@ public class SetupDialog extends JFrame {
                 cbLandmass.setSelected(!"false".equals(p.getProperty("layer.landmass")));
                 cbUrban.setSelected(!"false".equals(p.getProperty("layer.urban")));
                 cbLake.setSelected(!"false".equals(p.getProperty("layer.lake")));
-                cbStream.setSelected(!"false".equals(p.getProperty("layer.stream")));
+                cbStream.setSelected("true".equals(p.getProperty("layer.stream")));
                 cbTarmac.setSelected(!"false".equals(p.getProperty("layer.tarmac")));
                 cbGroundnet.setSelected(!"false".equals(p.getProperty("layer.groundnet")));
             }
