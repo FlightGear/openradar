@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -144,8 +144,10 @@ public class FlightPlanExchangeManager implements Runnable {
                 }
                 
                 
-                String parameters = "user=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8") + "&password="
-                        + URLEncoder.encode(data.getFpServerPassword(), "UTF-8") + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") 
+                String parameters = "user=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8") 
+                        + "&password=" + URLEncoder.encode(data.getFpServerPassword(), "UTF-8") 
+                        + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") 
+                        + "&airport=" + URLEncoder.encode(data.getAirportCode(), "UTF-8")
                         + "&lon="+Double.toString(data.getAirportPosition().getX())
                         + "&lat="+Double.toString(data.getAirportPosition().getY())
                         + "&frequency="+frequency
@@ -159,6 +161,7 @@ public class FlightPlanExchangeManager implements Runnable {
                 con.setUseCaches(false);
                 con.setRequestProperty("Accept-Charset", "UTF-8");
                 con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+                con.setRequestProperty("User-Agent", "OpenRadar");
                 DataOutputStream dos = new DataOutputStream(con.getOutputStream());
                 dos.write(parameters.getBytes("UTF-8"));
                 dos.flush();
@@ -248,6 +251,7 @@ public class FlightPlanExchangeManager implements Runnable {
             con.setDoOutput(true);
             con.setRequestProperty("Accept-Charset", "UTF-8");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+            con.setRequestProperty("User-Agent", "OpenRadar");
             DataOutputStream dos = new DataOutputStream(con.getOutputStream());
             dos.write(parameters.getBytes("UTF-8"));
             dos.flush();

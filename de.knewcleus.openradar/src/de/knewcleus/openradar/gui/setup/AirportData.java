@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.ComboBoxModel;
@@ -86,7 +87,6 @@ public class AirportData implements INavPointListener {
     // private final static long
     // APPLICATION_START_TIME_MILLIS=System.currentTimeMillis();
 
-    private volatile boolean fgcom3=false;
     private String airportCode = null;
     private String name = null;
     private String sectorDir = null;
@@ -133,6 +133,8 @@ public class AirportData implements INavPointListener {
 
     private NavaidDB navaidDB = new NavaidDB();
     private StPView directionMessageView;
+    
+    private String lenny64Url="http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans";
 
     private final AircraftCodeConverter aircraftCodeConverter = new AircraftCodeConverter();
 
@@ -257,14 +259,6 @@ public class AirportData implements INavPointListener {
     }
 
     
-    public synchronized boolean isFgcom3() {
-        return fgcom3;
-    }
-
-    public synchronized void setFgcom3(boolean fgcom3) {
-        this.fgcom3 = fgcom3;
-    }
-
     public synchronized String getFgComHost() {
         return fgComHost;
     }
@@ -420,16 +414,12 @@ public class AirportData implements INavPointListener {
                 this.name = aerodrome.getName();
 
                 // load fgcom phonebook
-                List<RawFrequency> frequencies;
+                Set<RawFrequency> frequencies;
                 boolean includeFgCom = getFgComMode()!=FgComMode.Off;
                 if(includeFgCom) {
-                    if(!fgcom3) {
-                     // fgcom stable
-                        frequencies = SetupController.loadRadioFrequencies(getAirportCode()); // fgcom stable
-                    } else {
-                        //fgcom3
-                        frequencies = SetupController.loadRadioFrequenciesFgCom3(this, getAirportCode()); // fgcom 3
-                    }
+                    //fgcom3
+                    frequencies = SetupController.loadRadioFrequenciesFgCom3(this, getAirportCode()); // fgcom 3
+
                     for (RawFrequency f : frequencies) {
                         RadioFrequency rf = new RadioFrequency(f.getCode(), f.getFrequency());
                         this.radioFrequencies.add(rf);
@@ -783,6 +773,14 @@ public class AirportData implements INavPointListener {
             updateTransitionFl(master);
         }
         return transitionFL;
+    }
+
+    public synchronized String getLenny64Url() {
+        return lenny64Url;
+    }
+
+    public synchronized void setLenny64Url(String lenny64Url) {
+        this.lenny64Url = lenny64Url;
     }
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -45,14 +45,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -90,7 +90,6 @@ public class SetupController {
     private Map<String, SectorBean> mapExistingSectors = new TreeMap<String, SectorBean>();
 
     private ZipFile zif = null;;
-    private static ZipFile zifPhonebook = null; // old fgcom file
     private static Reader fgcomPositionsFile = null; // new fgcom file
 
     private static Logger log = LogManager.getLogger(SetupController.class);
@@ -352,68 +351,6 @@ public class SetupController {
             }
         }
     }
-    
-    //    FGCOM 2 (old)
-    
-    /**
-     * Loads the radio frequencies from fgcoms phonebook file.
-     *
-     * @param airportCode
-     * @return
-     */
-    public static List<RawFrequency> loadRadioFrequencies(String airportCode) {
-        List<RawFrequency> radioFrequencies = new ArrayList<RawFrequency>();
-        BufferedReader ir = null;
-
-        try {
-            ir = new BufferedReader(openPhoneBookZip());
-            // the header
-            ir.readLine();
-            ir.readLine();
-            // now search the airport
-            String line = ir.readLine();
-            while(line!=null) {
-                if(line.trim().length()>35) {
-                    String ac = line.substring(0,4).trim();
-                    if(airportCode.equals(ac)) {
-                        String code = line.substring(6,26).trim();
-                        if(!code.contains("ATIS")) {
-                            String freq = line.substring(28,35).trim();
-                            radioFrequencies.add(new RawFrequency(code, freq));
-                        }
-                    }
-                }
-                line = ir.readLine();
-            }
-        } catch (IOException e) {
-            log.error("Error while reading phonebook zipfile!",e);
-        } finally {
-            if(zifPhonebook!=null) {
-                try {
-                    zifPhonebook.close();
-                } catch (IOException e) { }
-            }
-            if(ir!=null) {
-                try {
-                    ir.close();
-                } catch (IOException e) {}
-            }
-        }
-        return radioFrequencies;
-    }
-
-    private static Reader openPhoneBookZip() throws IOException {
-        final File inputFile = new File("data/phonebook.zip");
-        zifPhonebook = new ZipFile(inputFile);
-        Enumeration<? extends ZipEntry> entries = zifPhonebook.entries();
-        while(entries.hasMoreElements()) {
-            ZipEntry zipentry = entries.nextElement();
-            if(zipentry.getName().equals("phonebook.txt")) {
-                return new InputStreamReader(zifPhonebook.getInputStream(zipentry));
-            }
-        }
-        throw new IllegalStateException("Could not read data/phonebook.zip!");
-    }
 
     public String getPropertiesFile() {
         if(propertiesFilename==null) {
@@ -431,10 +368,9 @@ public class SetupController {
      * @param airportCode
      * @return
      */
-    public static List<RawFrequency> loadRadioFrequenciesFgCom3(AirportData data, String airportCode) {
-        List<RawFrequency> radioFrequencies = new ArrayList<RawFrequency>();
+    public static Set<RawFrequency> loadRadioFrequenciesFgCom3(AirportData data, String airportCode) {
+        Set<RawFrequency> radioFrequencies = new TreeSet<RawFrequency>();
         BufferedReader ir = null;
-        HashSet<String> knownCodes = new HashSet<String>(); 
 
         try {
             ir = new BufferedReader(openFgComPositionsTxt(data));
@@ -449,19 +385,18 @@ public class SetupController {
                     st.nextToken(); // lat
                     st.nextToken(); // lon
                     String code = st.nextToken();
-                    if(!code.contains("ATIS") && !knownCodes.contains(code)) {
+                    if(!code.contains("ATIS") && frequencyIsNotKnownYet(radioFrequencies,freq)) {
                         radioFrequencies.add(new RawFrequency(code, freq));
-                        knownCodes.add(code); // to avoid multiple entries of the same frequency
                     }
                 }
                 line = ir.readLine();
             }
         } catch (IOException e) {
-            log.error("Error while reading phonebook zipfile!",e);
+            log.error("Error while reading positions.txt zipfile!",e);
         } finally {
-            if(zifPhonebook!=null) {
+            if(fgcomPositionsFile!=null) {
                 try {
-                    zifPhonebook.close();
+                    fgcomPositionsFile.close();
                 } catch (IOException e) { }
             }
             if(ir!=null) {
@@ -472,6 +407,24 @@ public class SetupController {
         }
         return radioFrequencies;
             
+    }
+
+    private static boolean frequencyIsNotKnownYet(Set<RawFrequency> radioFrequencies, String freq) {
+        BigDecimal newFreq = new BigDecimal(freq);
+        for(RawFrequency rf : radioFrequencies) {
+            try {
+                BigDecimal existingFreq = new BigDecimal(rf.getFrequency());
+                BigDecimal existingPlus = existingFreq.add(new BigDecimal("0.005"));
+                BigDecimal existingMinus = existingFreq.add(new BigDecimal("-0.005"));
+                if(newFreq.compareTo(existingPlus) == 0 || newFreq.compareTo(existingMinus) == 0) {
+                    return false;
+                }
+            } catch (Exception e) {
+                return true;
+            }
+            
+        }
+        return true;
     }
 
     private static Reader openFgComPositionsTxt(AirportData data) throws IOException {

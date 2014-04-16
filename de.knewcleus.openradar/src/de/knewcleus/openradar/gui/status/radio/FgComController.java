@@ -294,8 +294,6 @@ public class FgComController implements Runnable, IRadioBackend {
         if (master.getAirportData().getFgComMode()==FgComMode.Auto) {
             // AUTO mode
             
-            master.getAirportData().setFgcom3(true);
-            
             // set path and exec
             pathToFgComExec = System.getProperty("user.dir")+File.separator+"fgcom"+File.separator+"bin";
             if(os.toLowerCase().contains("win")) {
@@ -350,11 +348,9 @@ public class FgComController implements Runnable, IRadioBackend {
         if (!fgComServer.isEmpty()) {
             arguments.append(" --port=" + localPort);
             arguments.append(" --voipserver=" + fgComServer);
-            if(master.getAirportData().isFgcom3()) {                
-                arguments.append(" --callsign=" + master.getCurrentATCCallSign());
-                arguments.append(" --positions=" + posPath);
-                arguments.append(" --special=" + specialsPath);
-            }
+            arguments.append(" --callsign=" + master.getCurrentATCCallSign());
+            arguments.append(" --positions=" + posPath);
+            arguments.append(" --special=" + specialsPath);
         }
         command.add(arguments.toString());
 
@@ -389,7 +385,7 @@ public class FgComController implements Runnable, IRadioBackend {
     
     public static String getFgComPositionsPath(AirportData data, String pathToFgComExec) {
         String os = System.getProperty("os.name");
-        String fgcomBasePath = pathToFgComExec.contains("/")? pathToFgComExec.substring(0,pathToFgComExec.lastIndexOf("/")) : pathToFgComExec;
+        String fgcomBasePath = getFgComBasePath(pathToFgComExec);
         
         String posPath;
         if (data.getFgComMode()==FgComMode.Auto) {
@@ -414,7 +410,7 @@ public class FgComController implements Runnable, IRadioBackend {
 
     public static String getFgComSpecialsPath(AirportData data, String pathToFgComExec) {
         String os = System.getProperty("os.name");
-        String fgcomBasePath = pathToFgComExec.substring(0,pathToFgComExec.lastIndexOf("/"));
+        String fgcomBasePath = getFgComBasePath(pathToFgComExec);
         
         String specialsPath;
         if (data.getFgComMode()==FgComMode.Auto) {
@@ -437,4 +433,12 @@ public class FgComController implements Runnable, IRadioBackend {
         return specialsPath;
     }
 
+    private static String getFgComBasePath(String pathToFgComExec) {
+        String path = pathToFgComExec.trim();
+        if(path.contains(File.separator)) {
+            File parentDir = pathToFgComExec.isEmpty() ? new File(System.getProperty("user.dir")) : new File(pathToFgComExec).getParentFile();
+            path = parentDir!=null ? parentDir.getAbsolutePath() : "";
+        }
+        return path;
+    }
 }

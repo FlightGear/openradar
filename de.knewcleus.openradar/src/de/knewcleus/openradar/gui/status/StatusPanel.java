@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -361,8 +361,8 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         if(currentMetar!=null && weatherPanel.getBorder()==border  && !currentMetar.isNew()) {
             weatherPanel.setBorder(null);
         }
-
-        revalidate();
+        weatherPanel.invalidate();
+        weatherPanel.repaint();
     }
 
     public void setAirport(String airport) {
@@ -386,13 +386,15 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     @Override
     public void registerNewMetar(MetarData metar) {
         if(metar.getAirportCode().equals(master.getAirportData().getMetarSource())) {
+            addWeatherStationPanel.removeAll();
+            
             currentMetar = metar;
 
             StringBuilder sb = new StringBuilder();
             sb.append("Wind: ");
             sb.append(metar.getWindDisplayString());
             lbWind.setText(sb.toString());
-            lbPressure.setText(String.format("QNH: %2.2f / %4.1f", metar.getPressureInHG(),metar.getPressureHPa()));
+            lbPressure.setText(String.format("QNH: %2.2f / %4.0f", metar.getPressureInHG(),metar.getPressureHPa()));
             lbWind.setToolTipText(metar.getMetarBaseData());
             lbPressure.setToolTipText(metar.getMetarBaseData());
             lbVisibility.setText(metar.isCavok()?"CAVOK":"Vis: "+metar.getVisibility()+""+metar.getVisibilityUnit());
@@ -415,26 +417,43 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
             if(addMetarSources!=null && !addMetarSources.trim().isEmpty()) {
                 StringTokenizer st = new StringTokenizer(addMetarSources,",");
                 int i=0;
+                JPanel pnlLine=null;
                 while(st.hasMoreElements()) {
-                    String code = st.nextToken();
+                    String code = st.nextToken().trim();
                     MetarData m = master.getMetarReader().getMetar(code);
                     if(m.getWindDirectionI()>=0) {
+                        if(pnlLine==null || 0==i - (i/3)*3) {
+                            pnlLine = new JPanel();
+                            pnlLine.setOpaque(false);
+                            pnlLine.setLayout(new GridBagLayout());
+                            GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+                            gridBagConstraints.gridx = 0;
+                            gridBagConstraints.gridy = i;
+                            gridBagConstraints.gridwidth = 0;
+                            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+                            gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+                            addWeatherStationPanel.add(pnlLine, gridBagConstraints);
+                        }
                         JLabel lbAddMetar = new JLabel();
+                        lbAddMetar.setFont(lbAddMetar.getFont().deriveFont(12.0f));
                         lbAddMetar.setForeground(Palette.DESKTOP_TEXT);
                         lbAddMetar.setName(code);
                         lbAddMetar.setText(code+": "+m.getWindDisplayString());
                         lbAddMetar.setToolTipText(m.getMetarBaseData());
                         lbAddMetar.addMouseListener(metarMouseListener);
                         GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-                        gridBagConstraints.gridx = i;
+                        gridBagConstraints.gridx = i - (i/3)*3;
                         gridBagConstraints.gridy = 0;
                         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
                         gridBagConstraints.insets = new java.awt.Insets(2, 6, 2, 4);
-                        addWeatherStationPanel.add(lbAddMetar, gridBagConstraints);
+                        pnlLine.add(lbAddMetar, gridBagConstraints);
                         i++;
                     }
                 }
             }
+            doLayout();
+            revalidate();
+            updateTime();
         }
     }
 

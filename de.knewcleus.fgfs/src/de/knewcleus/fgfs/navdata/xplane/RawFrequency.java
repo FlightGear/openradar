@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -32,7 +32,7 @@
  */
 package de.knewcleus.fgfs.navdata.xplane;
 
-public class RawFrequency {
+public class RawFrequency implements Comparable<RawFrequency> {
 
     private String code;
     private String frequency;
@@ -49,5 +49,10 @@ public class RawFrequency {
 
     public String getFrequency() {
         return frequency;
+    }
+
+    @Override
+    public int compareTo(RawFrequency o) {
+        return code.compareTo(o.getCode())*100000 + frequency.compareTo(o.getFrequency());
     }
 }

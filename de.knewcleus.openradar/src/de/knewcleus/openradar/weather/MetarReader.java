@@ -100,43 +100,26 @@ public class MetarReader implements Runnable {
     public synchronized void changeMetarSources(String ownMetarSource, String addMetarSources) {
         // remove old
         synchronized(metarsLock) {
-            metars.remove(master.getAirportData().getMetarSource()); // remove old
-        }
-        // add new
-        if(ownMetarSource!=null) {
-            master.getAirportData().setMetarSource(ownMetarSource);
-            addWeatherStation(ownMetarSource);
-        }
-        if(addMetarSources!=null && !addMetarSources.trim().isEmpty()) {
-            // remove old
-            String oldMetarSources = master.getAirportData().getAddMetarSources();
-            if(oldMetarSources!=null) {
-                StringTokenizer st = new StringTokenizer(oldMetarSources,",");
-                synchronized(metarsLock) {
-                    while(st.hasMoreTokens()) {
-                        metars.remove(st.nextToken());
-                    }
+            activeWeatherStationList.clear();
+            metars.clear();
+            // add new
+            if(ownMetarSource!=null) {
+                master.getAirportData().setMetarSource(ownMetarSource);
+                activeWeatherStationList.add(ownMetarSource.trim());
+            }
+            if(addMetarSources!=null) {
+                // add new
+                addMetarSources.trim();
+                master.getAirportData().setAddMetarSources(addMetarSources);
+                StringTokenizer st = new StringTokenizer(addMetarSources,",");
+                while(st.hasMoreTokens()) {
+                    activeWeatherStationList.add(st.nextToken().trim());
                 }
             }
-            // add new
-            addMetarSources.trim();
-            master.getAirportData().setAddMetarSources(addMetarSources);
-            StringTokenizer st = new StringTokenizer(addMetarSources,",");
-            while(st.hasMoreTokens()) {
-                addWeatherStation(st.nextToken());
-            }
         }
+
         thread.interrupt();
     }
-
-    public synchronized void addWeatherStation(String code) {
-        activeWeatherStationList.add(code);
-    }
-
-    public synchronized void removeWeatherStation(String code) {
-        activeWeatherStationList.remove(code);
-    }
-
 
     private List<IMetarListener> listener = new ArrayList<IMetarListener>();
 

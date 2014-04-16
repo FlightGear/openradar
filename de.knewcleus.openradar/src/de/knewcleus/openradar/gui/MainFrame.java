@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012-2014 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -34,6 +34,8 @@ package de.knewcleus.openradar.gui;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -55,6 +57,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private de.knewcleus.openradar.gui.contacts.ContactsPanel contactsPanel;
     private javax.swing.JSplitPane hspMain;
+    private ResizeListener resizeListener = new ResizeListener();
     private de.knewcleus.openradar.gui.chat.MpChatPanel mpChatPanel;
     private javax.swing.JPanel pnlRightTop;
     private de.knewcleus.openradar.gui.radar.RadarPanel radarPanel;
@@ -94,7 +97,8 @@ public class MainFrame extends javax.swing.JFrame {
         jPnlContentPane.setBackground(Palette.DESKTOP);
 
         hspMain = new javax.swing.JSplitPane();
-
+        hspMain.addComponentListener(resizeListener);
+        
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -116,7 +120,7 @@ public class MainFrame extends javax.swing.JFrame {
         // Left MAIN split pane
         
         vspLeft.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        vspLeft.setResizeWeight(0.0);
+        vspLeft.setResizeWeight(1.0);
         vspLeft.setForeground(Palette.DESKTOP);
         hspMain.setLeftComponent(vspLeft);
 
@@ -134,7 +138,7 @@ public class MainFrame extends javax.swing.JFrame {
         // Right MAIN split pane
         
         vspRight.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        vspRight.setResizeWeight(1.0);
+        vspRight.setResizeWeight(0.5);
         vspRight.setMinimumSize(new java.awt.Dimension(400,0));
         vspRight.setPreferredSize(new java.awt.Dimension(400,0));
         hspMain.setRightComponent(vspRight);
@@ -164,5 +168,12 @@ public class MainFrame extends javax.swing.JFrame {
         hspMain.setDividerLocation((int)Math.round(windowSize.getWidth()-dim.getWidth()));
         vspLeft.setDividerLocation((int)Math.round(windowSize.getHeight()*0.8));
         guiInteractionManager.getStatusManager().updateRunways();
+    }
+    
+    public class ResizeListener extends ComponentAdapter {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            setDividerPosition();
+        }
     }
 }
