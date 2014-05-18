@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *

@@ -362,7 +362,7 @@ public class GuiMasterController {
         return metarReader;
     }
 
-    public MetarData getAirportMetar() {
+    public synchronized MetarData getAirportMetar() {
         return metarReader.getMetar(getAirportData().getMetarSource());
     }
 

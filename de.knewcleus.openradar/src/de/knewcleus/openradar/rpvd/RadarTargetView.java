@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2012-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -248,7 +249,8 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
         final AffineTransform logical2device = radarMapViewAdapter.getLogicalToDeviceTransform();
         logical2device.transform(currentLogicalPosition, currentDevicePosition);
 
-        double trueCourse = (trackDisplayState.guiContact != null) ? trackDisplayState.guiContact.getHeadingD() : 0;
+//        double trueCourse = (trackDisplayState.guiContact != null) ? trackDisplayState.guiContact.getHeadingD() : 0;
+        double trueCourse = (trackDisplayState.guiContact != null) ? trackDisplayState.guiContact.getMagnCourseD() : 0;
 
         Point2D headingLineStart = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 4d);
         Point2D headingLineEnd = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 7d + trackDisplayState.getTrack().getCurrentState()

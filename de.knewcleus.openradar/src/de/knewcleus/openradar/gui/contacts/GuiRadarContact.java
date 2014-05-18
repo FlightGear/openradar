@@ -310,7 +310,7 @@ public class GuiRadarContact {
 
     public synchronized double getMagnCourseD() {
         if(getGroundSpeedD()>0.5 || lastHeading==-1) {
-            lastHeading = player.getTrueCourse() - airportData.getMagneticDeclination();
+            lastHeading = player.getTrueCourse() ;//- airportData.getMagneticDeclination();
         }
         return lastHeading;
     }

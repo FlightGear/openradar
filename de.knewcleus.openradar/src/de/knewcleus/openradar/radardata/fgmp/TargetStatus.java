@@ -43,6 +43,7 @@ import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.multiplayer.Player;
 import de.knewcleus.fgfs.multiplayer.protocol.PositionMessage;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
+import de.knewcleus.openradar.view.Converter2D;
 
 public class TargetStatus extends Player {
 	private static final GeodToCartTransformation geodToCartTransformation=new GeodToCartTransformation(Ellipsoid.WGS84);
@@ -103,20 +104,26 @@ public class TargetStatus extends Player {
 		final Quaternion bf2hf=gcf2hf.multiply(orientation);
 		linearVelocityHF=bf2hf.transform(getLinearVelocity());
 
-		trueCourse=Math.atan2(linearVelocityHF.getY(), linearVelocityHF.getX())*Units.RAD;
-
-		if (trueCourse<=0*Units.DEG) {
-			trueCourse+=360*Units.DEG;
-		} else if (trueCourse>360*Units.DEG) {
-			trueCourse-=360*Units.DEG;
+		heading = bf2hf.getAngle();
+        Position pos = getGeodeticPosition();
+        if(lastPosition==null) {
+           lastPosition = new Position(1, 1, 1); 
+        }
+        
+        if(groundSpeed>10) {
+    		trueCourse = Converter2D.normalizeAngle(90-Converter2D.getDirection(linearVelocityHF.getX(),linearVelocityHF.getY()));
+		} else {
+		    // too slow
+		    trueCourse = heading;
 		}
-
-        heading = bf2hf.getAngle();
+//		if(Math.abs(trueCourse-heading)>10) {
+//          // these values can differ if there is a strong cross wind        
+//		    System.out.println(String.format("%8s T:%3.0f H:%3.0f", callsign, trueCourse, heading));
+//		}
 
         // calculate groundspeed
         double timeSecs = positionTime - lastPositionTime; // this is the time in seconds that the contacts applications runs
         if(lastPosition!=null && timeSecs>0 && timeSecs<3) {
-            Position pos = getGeodeticPosition();
             double distance = GeoUtil.getDistance(lastPosition.getX(), lastPosition.getY(), pos.getX(), pos.getY()).length; // meter
             calculatedGroundspeed = Math.abs(distance/timeSecs); // m/s
         } else {

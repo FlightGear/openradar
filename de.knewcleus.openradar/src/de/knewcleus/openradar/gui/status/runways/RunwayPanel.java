@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -302,12 +302,6 @@ public class RunwayPanel extends JPanel {
             i++;
         }
         doLayout();
-        invalidate(); // marks this region to be layouted
-        getParent().validate(); // ask parent to layout everything
-        // alternatively, revalidate, would invalidate everthing from here to top level and run validate() there
-        getParent().repaint();
-        revalidate();
-        ((JSplitPane) getParent().getParent().getParent()).setDividerLocation((int) getParent().getParent().getPreferredSize().getHeight());
     }
 
     public synchronized void updateRunways() {

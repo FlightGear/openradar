@@ -93,8 +93,11 @@ public abstract class Converter2D {
     public static double getDirection (Point2D point1, Point2D point2) {
         double dx = point2.getX()-point1.getX();
         double dy = -1*(point2.getY()-point1.getY());
-
-        double distance = (double)point2.distance(point1);
+        return getDirection(dx, dy);
+    }
+    public static double getDirection (double dx, double dy) {
+        
+        double distance = Math.sqrt(dx*dx + dy*dy);
         Long angle = null;
         if(distance!=0) {
             if(dx>=0 && dy>=0) angle = Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);

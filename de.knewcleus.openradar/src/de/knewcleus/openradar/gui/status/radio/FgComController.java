@@ -344,7 +344,8 @@ public class FgComController implements Runnable, IRadioBackend {
             command.add("-c");
         }
         // add arguments
-        StringBuilder arguments = new StringBuilder(pathToFgComExec + File.separator + fgComExec);
+        StringBuilder arguments = new StringBuilder("\"");
+        arguments.append(pathToFgComExec).append(File.separator).append(fgComExec).append("\"");
         if (!fgComServer.isEmpty()) {
             arguments.append(" --port=" + localPort);
             arguments.append(" --voipserver=" + fgComServer);

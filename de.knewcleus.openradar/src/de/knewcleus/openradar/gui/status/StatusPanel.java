@@ -35,6 +35,8 @@ package de.knewcleus.openradar.gui.status;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -47,6 +49,7 @@ import java.util.TimeZone;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
@@ -222,6 +225,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         weatherPanel.setOpaque(false);
         weatherPanel.setName(master.getAirportData().getAirportCode());
         weatherPanel.addMouseListener(metarMouseListener);
+        weatherPanel.addComponentListener(new StatusResizeListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -357,12 +361,16 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         lbTime.setText(sdf.format(new Date())+" UTC  "+String.format("%d/TL%03d", master.getAirportData().getTransitionAlt(),master.getAirportData().getTransitionFL(master)));
         if(currentMetar!=null && weatherPanel.getBorder()!=border && currentMetar.isNew()) {
             weatherPanel.setBorder(border);
+            doLayout();
+            weatherPanel.invalidate();
+            weatherPanel.repaint();
         }
         if(currentMetar!=null && weatherPanel.getBorder()==border  && !currentMetar.isNew()) {
             weatherPanel.setBorder(null);
+            doLayout();
+            weatherPanel.invalidate();
+            weatherPanel.repaint();
         }
-        weatherPanel.invalidate();
-        weatherPanel.repaint();
     }
 
     public void setAirport(String airport) {
@@ -410,6 +418,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
             runwayPanel.refreshRunways(metar);
             doLayout();
             revalidate();
+            updateTime();
         } else {
             // fill add weather station panel
             String addMetarSources = master.getAirportData().getAddMetarSources();
@@ -517,5 +526,14 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
     public void updateTransitionValues() {
         lbAirport.setToolTipText((String.format("<html><body>Magnetic declination: %1.1f°<br>Transition: %d/FL%03d</body></html>", master.getAirportData().getMagneticDeclination(),master.getAirportData().getTransitionAlt(),master.getAirportData().getTransitionFL(master))));
+    }
+    
+    private class StatusResizeListener extends ComponentAdapter {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            super.componentResized(e);
+            
+            ((JSplitPane) getParent().getParent()).setDividerLocation((int) getParent().getPreferredSize().getHeight());
+        }
     }
 }
