@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the approaches, visible everytime the zoomlevel is above 100 -->
+<routes>
+	<route name="LEBB RWY 30 Approaches" zoomMin="100">
+		<activeLandingRunways>30</activeLandingRunways>
+		<navaids color="255,255,0">SNR,CALCE,DOSUL,MAPAX,BLV,ALBIZ,SARRA,PAKKI,KARMA,LEKTO,CEGAM,DGO</navaids>
+		<!-- SNR 2K/2Q -->
+		<line start="SNR" end="CALCE" text="SNR2K/2Q - 103° - FL80"/>
+		<line start="CALCE" end="BLV" text="104°"/>
+		<line start="BLV" end="ALBIZ" text="112° - 6000 ft"/>
+		<line start="ALBIZ" end="PAKKI"/>
+		<line start="BLV" end="SARRA" text="118° - 6000 ft"/>
+		<!-- DOSUL 2K/2Q -->
+		<line start="DOSUL" end="BLV" text="145° - DOSUL2K/2Q"/>
+		<!-- DGO 1L -->
+		<line start="DGO" end="CEGAM" text="DGO1L - 043° - FL70"/>
+		<line start="CEGAM" end="LEKTO" text="203° - FL70"/>
+		<line start="LEKTO" end="KARMA"/>
+		<line start="KARMA" end="SARRA"/>
+		<!-- MAPAX 1K/1Q -->
+		<line start="MAPAX" end="21NM350@BLV" text="MAPAX1K/1Q - 170° - FL70"/>
+		<bow center="BLV" radius="21" startAngle="350" extentAngle="78" text="FL70"/>
+		<bow center="BLV" radius="21" startAngle="068" extentAngle="25" text="6000ft"/>
+		<curve start="21NM093@BLV" end="PAKKI" controlPoint="21NM108@BLV"/>
+		<curve start="21NM093@BLV" end="SARRA" controlPoint="21NM110@BLV"/>
+	</route>
+	<!-- SID RWY 30 -->
+	<route name="LEBB RWY 30 Departures" zoomMin="10" zoomMax="100">
+		<activeStartRunways>30</activeStartRunways>
+		<navaids color="255,255,0">CALCE,FEBRI,SSN,PPN,BLV,AMTOS,DOSUL,MAPAX,BISKA</navaids>
+		<line start="0.33NM045@BLV" end="2NM310@BLV" text="300°"/>
+		<line start="2NM310@BLV" end="8NM314@BLV" text="314°"/>
+		<!-- PPN 2E/SSN 2A -->
+		<curve start="9.47NM325@BLV" end="9NM345@BLV" controlPoint="9.8NM335@BLV"/>
+		<line start="9NM345@BLV" end="FEBRI" text="PPN2E/SSN2A - 106°"/>
+		<!-- PPN 2E/PPN 2F -->
+		<line start="FEBRI" end="PPN" text="PPN2E/PPN2F - 146°"/>
+		<!-- SSN 2A/SSN 2C -->
+		<line start="FEBRI" end="SSN" text="SSN2A/SSN2C"/>
+		<!-- PPN 2F/SSN 2C/AMTOS 2A -->
+		<bow center="8NM324.5@BLV" radius="1.468" startAngle="229" extentAngle="190" text="MAX IAS 210kt"/>
+		<line start="8NM335@BLV" end="BLV" text="PPN2F/SSN2C/AMTOS2A"/>
+		<!-- PPN 2F/SSN 2C -->
+		<line start="BLV" end="FEBRI" text="PPN2F/SSN2C - 091°"/>
+		<!--AMTOS 2A -->
+		<line start="BLV" end="10NM216@BLV" text="AMTOS2A - 216°"/>
+		<line start="10NM216@BLV" end="AMTOS" text="216°"/>
+		<!-- BISKA 3A -->
+		<curve start="9NM345@BLV" end="11NM015@BLV" controlPoint="9NM015@BLV"/>
+		<line start="11NM015@BLV" end="BISKA" text="BISKA3A - 015°"/>
+		<!-- MAPAX 2A -->
+		<bow center="8NM328.4@BLV" radius="2" startAngle="248" extentAngle="080"/>
+		<line start="10NM328.3@BLV" end="10NM340@BLV" text="053°"/>
+		<curve start="10NM340@BLV" end="12NM350@BLV" controlPoint="10.5NM350@BLV"/>
+		<line start="12NM350@BLV" end="MAPAX" text="MAPAX2A - 350°"/>
+		<!-- DOSUL 2A -->
+		<curve start="9.74NM322@BLV" end="11NM325@BLV" controlPoint="10NM325@BLV"/>
+		<line start="11NM325@BLV" end="DOSUL" text="DOSUL2A - 325°"/>
+		<!-- CALCE 3A -->
+		<bow center="9NM284@BLV" radius="4.5" startAngle="050" extentAngle="-120" text="CALCE3A"/>
+		<line start="14NM282.1@BLV" end="CALCE" text="CALCE3A - 284°"/>
+		<curve start="13.486NM286@BLV" end="14NM282.1@BLV" controlPoint="13.5NM282.1@BLV"/>
+		<!--AMTOS 3C -->
+		<curve start="8NM314@BLV" end="SUNIR " controlPoint="10NM310@BLV"/>
+		<bow center="BLV" radius="10" startAngle="300" extentAngle="-072" text="AMTOS3C - ARC 10.0 DME BLV"/>
+		<curve start="10NM228@BLV" end="12NM215.5@BLV" controlPoint="10NM216@BLV"/>
+	</route>
+</routes>
