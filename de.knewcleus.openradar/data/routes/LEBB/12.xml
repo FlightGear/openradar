@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the approaches, visible everytime the zoomlevel is above 100 -->
+<routes>
+	<!-- DEFINITION OF MISSING OR MISPLACED WAYPOINTS DUE TO OUTDATED NAVIGATION DATA!1!!-->
+	<addPoint code="SUNIR " point="43.3875,-3.133889"/>
+	<route name="LEBB RWY 12 Approaches" zoomMin="100">
+		<activeLandingRunways>12</activeLandingRunways>
+		<navaids color="255,255,0">SNR,SOMAN,SANTU,BLV,DOSUL,MAPAX,ASPES,SANBI,KALDO,SUNIR ,ROSTO,CEGAM,VRA,DGO</navaids>
+		<!-- SNR 2T/2Z -->
+		<line start="SNR" end="SANBI" text="SNR2T/2Z - 087° - 6000ft"/>
+		<line start="SANBI" end="KALDO"/>
+		<line start="KALDO" end="ROSTO"/>
+		<curve start="SANBI" end="SUNIR " controlPoint="19NM300@BLV"/>
+		<!-- DOSUL 1T/1Z -->
+		<line start="DOSUL" end="ASPES" text="145° - DOSUL1T/1Z"/>
+		<line start="ASPES" end="KALDO" text="4000ft"/>
+		<curve start="KALDO" end="SUNIR " controlPoint="15NM300@BLV"/>		
+		<!-- MAPAX 1T/1Z -->
+		<line start="MAPAX" end="15NM350@BLV" text="MAPAX1T/1Z- 170° - 6000ft"/>
+		<bow center="BLV" radius="15" startAngle="322" extentAngle="028" text="4500ft"/>
+		<!-- DGO 1T/1Z-->
+		<line start="DGO" end="VRA" text="DGO1T/1Z - 004° - FL70"/>
+		<!-- DGO 1T-->
+		<line start="VRA" end="BLV" text="DGO1T - 356° - FL70"/>
+		<!-- DGO 1Z-->
+		<line start="VRA" end="15NM252@BLV" text="DGO1Z - 332° - FL70"/>
+		<bow center="BLV" radius="15" startAngle="252" extentAngle="026" text="4500ft"/>
+		<bow center="BLV" radius="15" startAngle="278" extentAngle="024" text="4500ft"/>
+		<!-- CEGAM2T -->
+		<line start="CEGAM" end="BLV" text="CEGAM2T - 004° - FL70"/>
+	</route>
+	<!-- SID RWY 11 -->
+	<route name="LEBB RWY 12 Departures" zoomMin="10" zoomMax="100">
+		<activeStartRunways>12</activeStartRunways>
+		<navaids color="255,255,0">LUKEP,CEGAM,MALOB,FEBRI,SSN,PPN,BLV,AMTOS,CALCE,DOSUL,MAPAX,BISKA</navaids>
+		<!-- DOSUL 2B -->
+		<line start="1.9NM107@BLV" end="LUKEP" text="118°"/>
+		<curve start="LUKEP" end="11NM097@BLV" controlPoint="11NM110@BLV"/>
+		<bow center="BLV" radius="11" startAngle="097" extentAngle="-121" text="ARC 11.0 DME BLV"/>
+		<curve start="11NM336@BLV" end="13NM325@BLV" controlPoint="11NM325@BLV"/>
+		<line start="13NM325@BLV" end="DOSUL" text="DOSUL2B - 325°"/>
+		<!-- MAPAX 2B -->
+		<curve start="11NM001@BLV" end="13NM350@BLV" controlPoint="11NM350@BLV"/>
+		<line start="13NM350@BLV" end="MAPAX" text="MAPAX2B - 350°"/>
+		<!-- BISKA 2B -->
+		<curve start="11NM026@BLV" end="13NM015@BLV" controlPoint="11NM015@BLV"/>
+		<line start="13NM015@BLV" end="BISKA" text="BISKA2B - 015°"/>
+		<!-- AMTOS 3B -->
+		<bow center="8.7NM098.4@BLV" radius="2.4" startAngle="008" extentAngle="204" text="IAS MAX 210 kt"/>
+		<line start="9NM083@BLV" end="BLV" text="AMTOS3B - 263°"/>
+		<line start="BLV" end="13NM216@BLV" text="AMTOS3B - 216°"/>
+		<!-- AMTOS 3D -->
+		<curve start="LUKEP" end="11NM126@BLV" controlPoint="11NM119@BLV"/>
+		<bow center="BLV" radius="11" startAngle="126" extentAngle="081" text="AMTOS3D - ARC 11.0 DME BLV"/>
+		<curve start="11NM207@BLV" end="13NM216@BLV" controlPoint="11NM216@BLV"/>
+		<line start="13NM216@BLV" end="AMTOS" text="AMTOS3B/3D - 216°"/>
+		<!-- PPN 2G -->
+		<curve start="11.2NM98@BLV" end="13NM091@BLV" controlPoint="12NM091@BLV"/>
+		<line start="13NM091@BLV" end="FEBRI" text="PPN2G/SSN2B - 091°"/>
+		<line start="FEBRI" end="PPN" text="PPN2G - 146°"/>
+		<!-- SSN 2B -->
+		<line start="FEBRI" end="SSN" text="SSN2B"/>
+		<!-- PPN 1H -->
+		<curve start="10.4NM120.72@BLV" end="12NM123@BLV" controlPoint="11NM123@BLV"/>
+		<line start="12NM123@BLV" end="CEGAM" text="PPN1H - 123°"/>
+		<line start="CEGAM" end="MALOB" text="PPN1H - 123°"/>
+		<line start="MALOB" end="PPN" text="PPN1H - 123°"/>
+		<!-- CALCE 2B -->
+		<line start="BLV" end="CALCE" text="CALCE2B - 284°"/>
+	</route>
+</routes>

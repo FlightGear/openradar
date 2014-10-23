@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the approaches, visible everytime the zoomlevel is above 100 -->
+<routes>
+	<!-- DEFINITION OF MISSING OR MISPLACED WAYPOINTS DUE TO OUTDATED NAVIGATION DATA!1!!-->
+	<addPoint code="SUNIR " point="43.3875,-3.133889"/>
+	<route name="LEBB BLV,SANTU holding pattern" zoomMin="100">
+		<activeLandingRunways>10</activeLandingRunways>
+		<navaids color="255,255,0">BLV,SANTU</navaids>
+		<loop navpoint="BLV" inboundHeading="325" length="5" arrows="both" right="false" minHeight="5000"/>
+		<loop navpoint="SANTU" inboundHeading="100" length="5" arrows="both" minHeight="4500"/>
+	</route>
+	<route name="LEBB SUNIR ,ROTSTO holding patterns" zoomMin="100">
+		<activeLandingRunways>12</activeLandingRunways>
+		<navaids color="255,255,0">SUNIR ,ROTSTO</navaids>
+		<loop navpoint="SUNIR " inboundHeading="122" length="5" arrows="both" right="false" minHeight="4000"/>
+		<loop navpoint="ROSTO" inboundHeading="125" length="5" arrows="both" right="false" minHeight="4000"/>
+	</route>
+	<route name="LEBB CHOMI holding pattern" zoomMin="100">
+		<activeLandingRunways>28</activeLandingRunways>
+		<navaids color="255,255,0">CHOMI</navaids>
+		<loop navpoint="CHOMI" inboundHeading="281" length="5" arrows="both" minHeight="6000" misapHeight="MAX IAS 210kt"/>
+	</route>
+	<route name="LEBB ALBIZ,SARRA holding pattern" zoomMin="100">
+		<activeLandingRunways>30</activeLandingRunways>
+		<navaids color="255,255,0">ALBIZ,SARRA</navaids>
+		<loop navpoint="ALBIZ" inboundHeading="292" length="5" arrows="both" minHeight="6000"/>
+		<loop navpoint="SARRA" inboundHeading="298" length="5" arrows="both" minHeight="6000"/>
+	</route>
+	<!-- RESTRICTED AREAS -->
+	<route name="restricted area LEP142" displayMode="always" color="255,0,110">
+		<bow center="42.784722,-3.210278" radius="5" startAngle="0" extentAngle="360"/>
+		<text position="42.784722,-3.210278" fontSize="10" text="LEP142"/>
+		<text position="42.764722,-3.210278" fontSize="10" text="4000 ALT"/>
+		<text position="42.764722,-3.210278" fontSize="10" text="________"/>
+		<text position="42.744722,-3.210278" fontSize="10" text="GND"/>
+	</route>
+	<route name="restricted area LER99C" displayMode="always" color="255,0,110">
+		<multiPointLine close="false">
+			<point>42.263889,-2.769167</point>
+			<point>42.431944,-2.740833</point>
+			<point>42.623333,-2.513889</point>
+			<point>42.627778,-2.347222</point>
+			<point>42.458333,-2.286667</point>
+			<point>42.349167,-2.383333</point>
+			<point>42.255556,-2.624444</point>
+			<point>42.263889,-2.769167</point>
+		</multiPointLine>
+		<text position="42.431944,-2.520000" fontSize="10" text="LER99C"/>
+		<text position="42.411944,-2.520000" fontSize="10" text="6000 ALT"/>
+		<text position="42.411944,-2.520000" fontSize="10" text="________"/>
+		<text position="42.391944,-2.520000" fontSize="10" text="GND"/>
+	</route>
+	<route name="restricted area LER99A" displayMode="always" color="255,0,110">
+		<multiPointLine close="false">
+			<point>42.627778,-2.347222</point>
+			<point>42.458333,-2.286667</point>
+			<point>42.340278,-2.1175</point>
+			<point>42.522778,-1.997222</point>
+			<point>42.631111,-2.041667</point>
+			<point>42.631944,-2.195</point>
+			<point>42.627778,-2.347222</point>
+		</multiPointLine>
+		<text position="42.508333,-2.16000" fontSize="10" text="LER99A"/>
+		<text position="42.488333,-2.16000" fontSize="10" text="5000 ALT"/>
+		<text position="42.488333,-2.16000" fontSize="10" text="________"/>
+		<text position="42.468333,-2.16000" fontSize="10" text="GND"/>
+	</route>
+	<route name="restricted area LER99B" displayMode="always" color="255,0,110">
+		<multiPointLine close="false">
+			<point>42.458333,-2.286667</point>
+			<point>42.340278,-2.1175</point>
+			<point>42.206111,-2.208889</point>
+			<point>42.169722,-2.385833</point>
+			<point>42.255556,-2.624444</point>
+			<point>42.349167,-2.383333</point>
+			<point>42.458333,-2.286667</point>
+		</multiPointLine>
+		<text position="42.300000,-2.30000" fontSize="10" text="LER99B"/>
+		<text position="42.280000,-2.30000" fontSize="10" text="FL 70"/>
+		<text position="42.280000,-2.30000" fontSize="10" text="_____"/>
+		<text position="42.260000,-2.30000" fontSize="10" text="GND"/>
+	</route>
+	<route name="restricted area LED8" displayMode="always" color="255,0,110">
+		<multiPointLine close="false">
+			<point>43.333333,-1.883889</point>
+			<point>43.350333,-1.883889</point>
+			<point>43.350333,-1.850889</point>
+			<point>43.333333,-1.850889</point>
+			<point>43.333333,-1.883889</point>
+		</multiPointLine>
+		<text position="43.380333,-1.92000" fontSize="10" text="LED8"/>
+		<text position="43.360333,-1.92000" fontSize="10" text="2300 AGL"/>
+		<text position="43.360333,-1.92000" fontSize="10" text="_______"/>
+		<text position="43.340333,-1.92000" fontSize="10" text="GND"/>
+	</route>
+</routes>
