@@ -25,9 +25,9 @@ dm=Descend and maintain {0.ALT}
 
 rs=Reduce speed to {0}
 
-ils=<distance> mi out, maintain hdg until intercepting localizer, cleared for ILS rwy <assigned-runway>, report established
+ils=<distance> mi out, maintain hdg until intercepting localizer, cleared for ILS appr rwy {0.RWY}
 ris=<distance> mi out, report when you have runway in sight
-lan=<distance> mi out, wind <wind-direction> at <wind-speed> kts, cleared to land rwy <assigned-runway>
+lan=<distance> mi out, wind <wind-direction> at <wind-speed> kts, cleared to land rwy {0.RWY}
 vac=Welcome to <aptname> -- exit runway to the {0}
 csr=Cleared to cross runway {0}
 
