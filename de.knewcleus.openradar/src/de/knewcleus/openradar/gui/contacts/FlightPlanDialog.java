@@ -64,6 +64,7 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightplan.FpAtc;
+import de.knewcleus.openradar.gui.flightplan.lenny64.Lenny64Controller;
 import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class FlightPlanDialog extends JDialog implements FocusListener {
@@ -97,6 +98,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     private JTextField tfArrivalTime;
     private JTextField tfFpAltitude;
     private JTextField tfFpTAS;
+    private JButton btRetrieveFp;
     
     private JTextField tfRoute;
     private JTextField tfAlternAirports;
@@ -109,15 +111,19 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
     private FpMouseListener fpMouseListener = new FpMouseListener();
 
+    private final Lenny64Controller lenny64Controller;
+    
     public FlightPlanDialog(GuiMasterController master, RadarContactController controller) {
         this.master = master;
         this.controller = controller;
         initComponents();
+        lenny64Controller = new Lenny64Controller(master, this, master.getAirportData());
     }
 
     private void initComponents() {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setUndecorated(true);
+        //setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         this.addWindowListener(new DialogCloseListener());
 
         // Determine what the default GraphicsDevice can support.
@@ -500,11 +506,23 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.weightx = 1.0;
+//        gridBagConstraints.weightx = 0;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlLine1.add(cbFlightPlanTypes, gridBagConstraints);
 
+        btRetrieveFp = new JButton("Retrieve FP");
+        btRetrieveFp.setToolTipText("Download FPs from http://flightgear-atc.alwaysdata.net/");
+        btRetrieveFp.setName("RETRIEVE_FP");
+        btRetrieveFp.addMouseListener(fpMouseListener);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+        jPnlLine1.add(btRetrieveFp, gridBagConstraints);
+        
         // line 2
 
         JPanel jPnlLine2 = new JPanel();
@@ -725,12 +743,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     }
 
     public void show(GuiRadarContact contact, MouseEvent e) {
-        setVisible(false);
         this.contact = contact;
 
         setData(contact);
-//        invalidate();
-//        doLayout();
 
         Dimension innerSize = getPreferredSize();
         setSize(new Dimension((int) innerSize.getWidth() + 8, (int) innerSize.getHeight() + 8));
@@ -798,6 +813,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
         initOwnership(fpd);
         
+        setLennyButtonText("Retrieve FP");
         setFpReadable(fpd.isUncontrolled() || fpd.isOwnedByMe());
     }
     /** fills the panel in fron of the reset flightplan button */
@@ -932,6 +948,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         tfAssignedAltitude.setEditable(b);
         // cbFlightPlanStatus.setSelectedItem(fpd.getFpStatus());
         tpDetails.setEditable(b);
+        
+        btRetrieveFp.setEnabled(b);
     }
 
     private class DialogCloseListener extends WindowAdapter {
@@ -943,33 +961,39 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         
         @Override
         public void windowClosed(WindowEvent e) {
-            closeDialog();
+//            closeDialog();
         }
 
         @Override
         public void windowDeactivated(WindowEvent e) {
-            closeDialog();
+//            if(!lenny64Controller.isDialogOpen()) {
+//                closeDialog();
+//            }
         }
 
         @Override
         public void windowLostFocus(WindowEvent e) {
-            closeDialog();
+//            if(!lenny64Controller.isDialogOpen()) {
+//                closeDialog();
+//            }
         }
 
     }
 
     public void closeDialog() {
         if (isVisible()) {
-
-            saveData();
-            
-            contact.getFlightPlan().setReadyForTransmission();
-            master.getFlightPlanExchangeManager().triggerTransmission();
-            setVisible(false);
+            if(lenny64Controller.isDialogOpen()) {
+                getLenny64Controller().closeFpSelectionDialog();
+                toFront();
+            } else {
+                saveData();
+                
+                setVisible(false);
+            }
         }
     }
 
-    private void saveData() {
+    public void saveData() {
 
         FlightPlanData fpd = contact.getFlightPlan();
 
@@ -1009,6 +1033,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         // cbFlightPlanStatus.setSelectedItem(fpd.getFpStatus());
         fpd.setRemarks(tpDetails.getText().trim());
         contact.setAtcComment(tpPrivateDetails.getText().trim());
+
+        contact.getFlightPlan().setReadyForTransmission();
+        master.getFlightPlanExchangeManager().triggerTransmission();
     }
 
     private class DetailsKeyListener extends KeyAdapter {
@@ -1084,6 +1111,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
             } else if("RELEASE_CONTROL".equals(source.getName())) {
                 master.getRadarContactManager().releaseFromControl(contact);
                 setData(contact);
+            } else if("RETRIEVE_FP".equals(source.getName()) && e.getClickCount()==1) {
+                lenny64Controller.downloadFlightPlansFor(e, contact.getCallSign());
             }
         }
     }
@@ -1103,7 +1132,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
                 cbAssignedRunway.setSelectedItem("");
                 cbAssignedRoute.setSelectedItem("");
             }
-            saveData();
+            //saveData();
             tfArrivalTime.setText(controller.getEstimatedArrivalTime(contact));
         }
         
@@ -1113,4 +1142,11 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         return c.equals(contact);
     }
 
+    public synchronized Lenny64Controller getLenny64Controller() {
+        return lenny64Controller;
+    }
+
+    public void setLennyButtonText(String text) {
+        btRetrieveFp.setText(text);
+    }
 }

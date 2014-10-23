@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -64,6 +64,7 @@ public class FlightPlanData {
     private String assignedRoute;
     private String assignedRunway;
 
+    private String flightPlanId;
     private String flightCode;
     private String callsign;
     private String owner;
@@ -104,7 +105,7 @@ public class FlightPlanData {
         this.callsign = contact.getCallSign();
         this.owner = null;
         this.handover = null;
-        this.squawk = "" + contact.getAssignedSquawk();
+        this.squawk = contact.getAssignedSquawk()!=null?"" + contact.getAssignedSquawk():null;
         this.fpStatus = FlightPlanStatus.ACTIVE.toString();
         this.type = FlightType.IFR.toString();
         this.aircraft = contact.getAircraftCode();
@@ -242,6 +243,14 @@ public class FlightPlanData {
 
     public synchronized GuiRadarContact getContact() {
         return contact;
+    }
+
+    public String getFlightPlanId() {
+        return flightPlanId;
+    }
+
+    public void setFlightPlanId(String flightPlanId) {
+        this.flightPlanId = flightPlanId;
     }
 
     public synchronized String getFlightCode() {
@@ -639,6 +648,21 @@ public class FlightPlanData {
 
     public synchronized void setInRelease(boolean inRelease) {
         this.inRelease = inRelease;
+    }
+
+    public String getTextForSelection() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getDeparture());
+        sb.append(" ");
+        if(getFlightCode()!=null && !getFlightCode().isEmpty()) {
+            sb.append("(");
+            sb.append(getFlightCode());
+            sb.append(") ");
+        }
+        sb.append(getDepartureAirport());
+        sb.append("->   ");
+        sb.append(getDestinationAirport());
+        return sb.toString();
     }
 
 }
