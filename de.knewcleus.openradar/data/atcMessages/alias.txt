@@ -1,12 +1,12 @@
 #
 # OpenRadar menu based atcMessages
 #
-in=Welcome to the <icao> area -- please advise <icao> ATC of your flightplan, FGCOM <com0>
-out=Welcome to <icao> - please advise ATC of your intentions, FGCOM <com0>
-radar=Radar Contact range <distance> mi, QNH <mmHg>, active rwy(s) <runways-land>, FGCOM <com0>
+in=Welcome to the <aptname> area -- are you inbound <icao>? FGCOM <com0>
+out=Welcome to <aptname> - please advise ATC of your intentions, FGCOM <com0>
+radar=Radar Contact range <distance> mi, QNH <hPa>/<mmHg>, active rwy(s) <runways-land>, FGCOM <com0>
 own=Resume your OWN navigation - Frequency change approved - Radar surveillance remains active
 end=You are leaving my airspace - Frequency change approved - Radar service terminated
-atis=ATIS for <icao> at <icao-altitude> ft: QNH <mmHg> wind <winds> active rwy(s) <runways> FGCOM <com0>
+atis=ATIS for <icao> at <icao-altitude> ft: QNH <hPa>/<mmHg> wind <winds> active rwy(s) <runways> FGCOM <com0>
 rgd=Thanks for flying with us today. Have a good day
 
 en=Engine startup approved, please indicate planned destination
@@ -28,7 +28,7 @@ rs=Reduce speed to {0}
 ils=<distance> mi out, maintain hdg until intercepting localizer, cleared for ILS rwy <assigned-runway>, report established
 ris=<distance> mi out, report when you have runway in sight
 lan=<distance> mi out, wind <wind-direction> at <wind-speed> kts, cleared to land rwy <assigned-runway>
-vac=Welcome to <icao> -- vacate runway <assigned-runway>, report vacated
+vac=Welcome to <aptname> -- exit runway to the {0}
 csr=Cleared to cross runway {0}
 
 chat=Please use FGCOM <com0> only to talk to ATC, NOT to chat between airmen!
