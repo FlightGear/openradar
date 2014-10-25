@@ -660,7 +660,7 @@ public class FlightPlanData {
             sb.append(") ");
         }
         sb.append(getDepartureAirport());
-        sb.append("->   ");
+        sb.append(" -> ");
         sb.append(getDestinationAirport());
         return sb.toString();
     }

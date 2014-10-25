@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012-2014 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -238,11 +238,7 @@ public class GuiMasterController {
                     }
                     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                         mpChatManager.cancelAutoAtcMessage();
-                        mpChatManager.requestFocusForInput();
-
-                        logWindow.setVisible(false);
-                        statusManager.hideRunwayDialog();
-                        radarContactManager.hideDialogs();
+                        closeDialogs(false);
                         e.consume();
                         return true;
                     }
@@ -304,6 +300,14 @@ public class GuiMasterController {
                 return false;
             }
         });
+    }
+
+    protected void closeDialogs(boolean save) {
+        mpChatManager.requestFocusForInput();
+
+        logWindow.setVisible(false);
+        statusManager.hideRunwayDialog();
+        radarContactManager.hideDialogs(save);
     }
 
     public FGMPClient<TargetStatus> getRadarProvider() {

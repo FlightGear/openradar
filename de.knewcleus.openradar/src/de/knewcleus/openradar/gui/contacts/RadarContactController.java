@@ -828,9 +828,9 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         //return new TransponderSettingsDialog(master,this);
     }
 
-    public void hideDialogs() {
+    public void hideDialogs(boolean save) {
         atcMessageDialog.setVisible(false);
-        flightplanDialog.closeDialog();
+        flightplanDialog.closeDialog(save);
         transponderSettingsDialog.closeDialog();
     }
 

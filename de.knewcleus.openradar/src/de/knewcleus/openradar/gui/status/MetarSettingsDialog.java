@@ -38,6 +38,7 @@ import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
@@ -46,7 +47,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -72,6 +77,7 @@ public class MetarSettingsDialog extends JDialog {
     }
 
     private void initComponents() {
+        setTitle("OpenRadar - Flightplan");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setUndecorated(true);
         this.addWindowListener(new DialogCloseListener());
@@ -82,6 +88,21 @@ public class MetarSettingsDialog extends JDialog {
         boolean isUniformTranslucencySupported = gd.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
         if(isUniformTranslucencySupported) {
             this.setOpacity(0.92f);
+        }
+
+        List<Image> icons = new ArrayList<Image>();
+        File iconDir = new File("res/icons");
+        if(iconDir.exists()) {
+            File[] files = iconDir.listFiles();
+            for(File f : files) {
+                if(f.getName().matches("OpenRadar.*\\.ico") || f.getName().matches("OpenRadar.*\\.png")
+                  || f.getName().matches("OpenRadar.*\\.gif") || f.getName().matches("OpenRadar.*\\.jpg")) {
+                    icons.add(new ImageIcon(f.getAbsolutePath()).getImage());
+                }
+            }
+            if(!icons.isEmpty()) {
+                setIconImages(icons);
+            }
         }
 
         setLayout(new GridBagLayout());

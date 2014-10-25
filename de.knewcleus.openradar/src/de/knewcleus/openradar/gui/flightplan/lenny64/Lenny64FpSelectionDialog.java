@@ -34,6 +34,7 @@ import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
@@ -41,8 +42,11 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -74,9 +78,26 @@ public class Lenny64FpSelectionDialog extends JDialog  implements FocusListener 
     }
 
     private void initComponents() {
+        setTitle("OpenRadar - Select FP!");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setUndecorated(true);
         this.addFocusListener(this);
+        
+        List<Image> icons = new ArrayList<Image>();
+        File iconDir = new File("res/icons");
+        if(iconDir.exists()) {
+            File[] files = iconDir.listFiles();
+            for(File f : files) {
+                if(f.getName().matches("OpenRadar.*\\.ico") || f.getName().matches("OpenRadar.*\\.png")
+                  || f.getName().matches("OpenRadar.*\\.gif") || f.getName().matches("OpenRadar.*\\.jpg")) {
+                    icons.add(new ImageIcon(f.getAbsolutePath()).getImage());
+                }
+            }
+            if(!icons.isEmpty()) {
+                setIconImages(icons);
+            }
+        }
+
 
         // Determine what the default GraphicsDevice can support.
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();

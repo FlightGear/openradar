@@ -68,7 +68,7 @@ public class Lenny64Controller {
      * @param callsign
      */
     public void downloadFlightPlansFor(MouseEvent e, String callsign) {
-        dialog.saveData();
+//        dialog.saveData();
         GuiRadarContact c = master.getRadarContactManager().getContactFor(callsign);
         List<FlightPlanData> existingFPs = lenny64Connector.checkForFlightplan(airportData, c);
         if (existingFPs.isEmpty()) {
