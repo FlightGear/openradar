@@ -599,10 +599,10 @@ public class RadarPanel extends JPanel {
         setObjectFilter(mItemSTARSID,master.getAirportData().getRadarObjectFilterState("STARSID"));
         setObjectFilter(mItemSTARSID2,master.getAirportData().getRadarObjectFilterState("STARSID"));
 
-        setObjectFilter(mItemSoundMute,master.getAirportData().getRadarObjectFilterState("MUTE"));
-        setObjectFilter(mItemSoundChat,master.getAirportData().getRadarObjectFilterState("CHAT"));
-        setObjectFilter(mItemSoundContact,master.getAirportData().getRadarObjectFilterState("CONTACT"));
-        setObjectFilter(mItemSoundMetar,master.getAirportData().getRadarObjectFilterState("METAR"));
+        setObjectFilter(mItemSoundMute,master.getAirportData().getToggleState("MUTE",false));
+        setObjectFilter(mItemSoundChat,master.getAirportData().getToggleState("CHAT",false));
+        setObjectFilter(mItemSoundContact,master.getAirportData().getToggleState("CONTACT",false));
+        setObjectFilter(mItemSoundMetar,master.getAirportData().getToggleState("METAR",false));
 
         setObjectFilter(mItemLANDMASS,master.getAirportData().getRadarObjectFilterState("LANDMASS"));
         setObjectFilter(mItemURBAN,master.getAirportData().getRadarObjectFilterState("URBAN"));
