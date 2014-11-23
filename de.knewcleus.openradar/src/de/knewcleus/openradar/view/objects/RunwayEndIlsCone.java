@@ -59,16 +59,16 @@ public class RunwayEndIlsCone extends AViewObject {
 
     private Point2D leftVectoringTextOrigin = null;
     private double leftVectoringAngle = 0;
-    private double leftVectoringFlyAngle = 0;
+    private int leftVectoringFlyAngle = 0;
     private Point2D leftBaselegTextOrigin = null;
     private double leftBaselegAngle = 0;
-    private double leftBaselegFlyAngle = 0;
+    private int leftBaselegFlyAngle = 0;
     private Point2D rightVectoringTextOrigin = null;
     private double rightVectoringAngle = 0;
-    private double rightVectoringFlyAngle = 0;
+    private int rightVectoringFlyAngle = 0;
     private Point2D rightBaselegTextOrigin = null;
     private double rightBaselegAngle = 0;
-    private double rightBaselegFlyAngle = 0;
+    private int rightBaselegFlyAngle = 0;
 
     private float  elevation = 0;
     private double distancePerHeight = 0;
@@ -108,15 +108,15 @@ public class RunwayEndIlsCone extends AViewObject {
             rwd = data.getRunwayData(runwayEnd.getRunwayID());
             reverseHeading = Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+180);
 
-            rightVectoringAngle =  Math.round(Converter2D.normalizeAngle(reverseHeading-rwd.getRightVectoringAngle())/10)*10;;
-            rightVectoringFlyAngle =  Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()-rwd.getRightVectoringAngle()-data.getMagneticDeclination())/10)*10;
+            rightVectoringAngle = Math.round(Converter2D.normalizeAngle(reverseHeading-rwd.getRightVectoringAngle())/10)*10;;
+            rightVectoringFlyAngle = Converter2D.toDisplayAngle( Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()-rwd.getRightVectoringAngle()-data.getMagneticDeclination())/10)*10);
             rightBaselegAngle = Math.round(Converter2D.normalizeAngle(reverseHeading-90)/10)*10;
-            rightBaselegFlyAngle = Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()-90-data.getMagneticDeclination())/10)*10;
+            rightBaselegFlyAngle = Converter2D.toDisplayAngle(Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()-90-data.getMagneticDeclination())/10)*10);
 
             leftVectoringAngle =  Math.round(Converter2D.normalizeAngle(reverseHeading+rwd.getLeftVectoringAngle())/10)*10;
-            leftVectoringFlyAngle =  Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+rwd.getLeftVectoringAngle()-data.getMagneticDeclination())/10)*10;
+            leftVectoringFlyAngle =  Converter2D.toDisplayAngle(Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+rwd.getLeftVectoringAngle()-data.getMagneticDeclination())/10)*10);
             leftBaselegAngle = Math.round(Converter2D.normalizeAngle(reverseHeading+90)/10)*10;
-            leftBaselegFlyAngle = Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+90-data.getMagneticDeclination())/10)*10;
+            leftBaselegFlyAngle = Converter2D.toDisplayAngle(Math.round(Converter2D.normalizeAngle(runwayEnd.getTrueHeading()+90-data.getMagneticDeclination())/10)*10);
             rwd.setRepaintNeeded(false);
 
             elevation = runwayEnd.getRunway().getAerodrome().getElevation()/Units.FT;
@@ -290,22 +290,22 @@ public class RunwayEndIlsCone extends AViewObject {
                 g2d.setFont(font);
 
             if(rightVectoringTextOrigin!=null) {
-                String text = String.format("%3.0f", rightVectoringFlyAngle);
+                String text = String.format("%03d", rightVectoringFlyAngle);
                 Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
                 g2d.drawString(text, (float)(rightVectoringTextOrigin.getX()-b.getWidth()/2), (float) (rightVectoringTextOrigin.getY()+b.getHeight()/2-2));
             }
             if(rightBaselegTextOrigin!=null) {
-                String text = String.format("%3.0f", rightBaselegFlyAngle);
+                String text = String.format("%03d", rightBaselegFlyAngle);
                 Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
                 g2d.drawString(text, (float)(rightBaselegTextOrigin.getX()-b.getWidth()/2), (float) (rightBaselegTextOrigin.getY()+b.getHeight()/2-2));
             }
             if(leftVectoringTextOrigin!=null) {
-                String text = String.format("%3.0f", leftVectoringFlyAngle);
+                String text = String.format("%03d", leftVectoringFlyAngle);
                 Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
                 g2d.drawString(text, (float)(leftVectoringTextOrigin.getX()-b.getWidth()/2), (float) (leftVectoringTextOrigin.getY()+b.getHeight()/2-2));
             }
             if(leftBaselegTextOrigin!=null) {
-                String text = String.format("%3.0f", leftBaselegFlyAngle);
+                String text = String.format("%03d", leftBaselegFlyAngle);
                 Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
                 g2d.drawString(text, (float)(leftBaselegTextOrigin.getX()-b.getWidth()/2), (float) (leftBaselegTextOrigin.getY()+(b.getHeight())/2-2));
             }

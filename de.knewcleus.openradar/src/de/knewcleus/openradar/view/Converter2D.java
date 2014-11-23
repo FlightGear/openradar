@@ -81,7 +81,7 @@ public abstract class Converter2D {
     }
 
     public static double normalizeAngle(double d) {
-        while(d>=360) {
+        while(d>360) {
             d = d-360;
         }
         while(d<0) {
@@ -108,5 +108,9 @@ public abstract class Converter2D {
         long degrees = angle!=null ? ( angle<0 ? angle+360 : angle) : -1;
 
         return degrees;
+    }
+
+    public static int toDisplayAngle(long l) {
+        return l==0 ? 360 : (int)l;
     }
 }
