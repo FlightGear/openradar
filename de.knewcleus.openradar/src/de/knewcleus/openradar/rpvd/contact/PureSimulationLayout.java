@@ -48,11 +48,11 @@ import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
  */
 public class PureSimulationLayout extends ADatablockLayout {
 
-//    private final DatablockLayoutManager manager;
+    private final DatablockLayoutManager manager;
     private final Font font = new Font("Courier", Font.PLAIN, 11);
 
     public PureSimulationLayout(DatablockLayoutManager manager) {
-//        this.manager = manager;
+        this.manager = manager;
     }
 
     @Override
@@ -89,8 +89,6 @@ public class PureSimulationLayout extends ADatablockLayout {
             // Emergency
             color=Color.red;
 
-        } else if(c.getTranspSquawkCode()!=null && !assignedSquawkTunedIn) {
-            color = new Color(80,0,160);
         } else if(c.isSelected()) {
             // SELECTED
             color=Palette.RADAR_SELECTED;
@@ -103,6 +101,8 @@ public class PureSimulationLayout extends ADatablockLayout {
             // BAD GUYS
             color=Palette.RADAR_GHOST;
 
+//        } else if(c.getTranspSquawkCode()!=null && !assignedSquawkTunedIn) {
+//            color = new Color(80,0,160);
         } else if(c.getState()==State.IMPORTANT) {
             // CONTROLLED left column
             color=Palette.RADAR_CONTROLLED;
@@ -153,7 +153,8 @@ public class PureSimulationLayout extends ADatablockLayout {
             if(!assignedSquawkTunedIn) {
                 // squawk codes do not match
                 currentAltSpeedIndex--; // no aircraft line
-                sb.append(String.format("%s %2s",""+c.getTranspSquawkCode(),c.getMagnCourse())).append("\n");
+                Integer squawk = c.getTranspSquawkCode();
+                sb.append(String.format("%s %2s",squawk == -9999 ? "----" : squawk,c.getMagnCourse())).append("\n");
                 sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
                 sb.append(String.format("%02.0f",c.getGroundSpeedD()/10));
             } else {
@@ -190,7 +191,10 @@ public class PureSimulationLayout extends ADatablockLayout {
     @Override
     public void modify(ContactShape shape, GuiRadarContact c) {
 
-        if(c.getTranspSquawkCode()!=null && ( 1200==c.getTranspSquawkCode() || 7000==c.getTranspSquawkCode())) {
+        int vfrCode = manager.getData().getSquawkCodeManager().getVfrCode();
+//        int ifrCode = manager.getData().getSquawkCodeManager().getIfrCode();
+        
+        if(c.getTranspSquawkCode()!=null && ( vfrCode==c.getTranspSquawkCode())) {
             // Squawking VFR
             shape.modify(Symbol.EmptySquare, c, 6);
         } else  if(c.getTranspSquawkCode()==null) {

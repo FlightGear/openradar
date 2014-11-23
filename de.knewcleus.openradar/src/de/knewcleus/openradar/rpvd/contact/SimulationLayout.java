@@ -47,11 +47,11 @@ import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
  */
 public class SimulationLayout extends ADatablockLayout {
 
-    //private final DatablockLayoutManager manager;
+    private final DatablockLayoutManager manager;
     private final Font font = new Font("Courier", Font.PLAIN, 11);
 
     public SimulationLayout(DatablockLayoutManager manager) {
-        //this.manager = manager;
+        this.manager = manager;
     }
 
     @Override
@@ -81,8 +81,8 @@ public class SimulationLayout extends ADatablockLayout {
     public synchronized Color getColor(GuiRadarContact c) {
         Color color = Palette.RADAR_UNCONTROLLED;
 
-        boolean assignedSquawkTunedIn = c.getAssignedSquawk() == null
-                || (c.getTranspSquawkCode() != null && c.getAssignedSquawk() != null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
+//        boolean assignedSquawkTunedIn = c.getAssignedSquawk() == null
+//                || (c.getTranspSquawkCode() != null && c.getAssignedSquawk() != null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
 
         if (c.isIdentActive()) {
             color = Color.black;
@@ -91,8 +91,6 @@ public class SimulationLayout extends ADatablockLayout {
             // Emergency
             color = new Color(255,100,0);
 
-        } else if (!assignedSquawkTunedIn) {
-            color = new Color(80, 0, 160);
         } else if (c.isSelected()) {
             // SELECTED
             //color = Palette.RADAR_SELECTED;
@@ -105,6 +103,8 @@ public class SimulationLayout extends ADatablockLayout {
             // BAD GUYS
             color = Palette.RADAR_GHOST;
 
+//        } else if (!assignedSquawkTunedIn) {
+//            color = new Color(80, 0, 160);
         } else if (c.getState() == State.IMPORTANT) {
             // CONTROLLED left column
             color = Palette.RADAR_CONTROLLED;
@@ -150,8 +150,8 @@ public class SimulationLayout extends ADatablockLayout {
             if (!assignedSquawkTunedIn) {
                 // squawk codes do not match
                 currentAltSpeedIndex--; // no aircraft line
-
-                sb.append(String.format("%s %s", "" + c.getTranspSquawkCode(), c.getMagnCourse())).append("\n");
+                Integer squawk = c.getTranspSquawkCode();
+                sb.append(String.format("%s %s", squawk == -9999 ? "----" : squawk, c.getMagnCourse())).append("\n");
                 sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
                 sb.append(String.format("%02.0f", c.getGroundSpeedD() / 10));
             } else {
@@ -267,7 +267,10 @@ public class SimulationLayout extends ADatablockLayout {
     @Override
     public synchronized void modify(ContactShape shape, GuiRadarContact c) {
 
-        if (c.getTranspSquawkCode() != null && (1200 == c.getTranspSquawkCode() || 7000 == c.getTranspSquawkCode())) {
+        int vfrCode = manager.getData().getSquawkCodeManager().getVfrCode();
+//      int ifrCode = manager.getData().getSquawkCodeManager().getIfrCode();
+
+        if (c.getTranspSquawkCode() != null && vfrCode == c.getTranspSquawkCode()) {
             // Squawking VFR
             shape.modify(Symbol.EmptySquare, c, 6);
         } else if (c.getTranspSquawkCode() != null && c.getAtcLetter() == null) {
