@@ -5,6 +5,7 @@ A tous les pilotes:
 %s: Bienvenue a %s - Merci d'informez le controleur de vos intentions, FGCOM %s
 %s: Contact radar %3.0f nm, QNH %s, piste en service %s, FGCOM %s
 
+
 %s: Vous quittez mon espace aerien - vous pouvez quitter la frequence - bon vol
 ATIS de %s sur %2.0f ft: QNH %s, vent %s, piste(s) en service %s,  FGCOM %s
 Contact-ATC-Aide: pour ARRIVEE touche: "-">>"3">>"3">>"3"  pour DEPART touche: "-">>"3">>"6"

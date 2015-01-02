@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012  Wolfram Wagner
+ * Copyright (C) 2012,2015  Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -42,24 +42,13 @@ import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.MapViewerAdapter;
 
 public class RadarMapViewerAdapter extends MapViewerAdapter implements IRadarMapViewerAdapter {
-	protected int trackHistoryLength = 10;
+    
 	protected double headingVectorTime = 1.0 * Units.MIN;
 	
 	public RadarMapViewerAdapter(ICanvas canvas, IUpdateManager updateManager, IProjection projection, Point2D center) {
 		super(canvas, updateManager, projection, center);
 	}
 
-	@Override
-	public int getTrackHistoryLength() {
-		return trackHistoryLength;
-	}
-	
-	@Override
-	public void setTrackHistoryLength(int trackHistoryLength) {
-		this.trackHistoryLength = trackHistoryLength;
-		notify(new RadarMapViewerNotification(this));
-	}
-	
 	@Override
 	public double getHeadingVectorTime() {
 		return headingVectorTime;

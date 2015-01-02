@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -73,5 +73,10 @@ public class GeoDataTruncater  implements IGeodataLayer {
     @Override
     public Feature getNextFeature() throws GeodataException {
         return resultIterator.next();
+    }
+
+    @Override
+    public boolean hasNext() {
+        return resultIterator.hasNext();
     }
 }

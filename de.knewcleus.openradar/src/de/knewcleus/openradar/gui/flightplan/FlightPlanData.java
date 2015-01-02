@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2014 Wolfram Wagner
+ * Copyright (C) 2013-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -127,15 +127,15 @@ public class FlightPlanData {
     }
 
     public FlightPlanData(AirportData airportData, GuiRadarContact contact, String flightCode, String callSign, String owner, String handover, String squawk,
-            String assignedAltitude, String fpStatus, String type, String aircraft, String trueAirspeed, String departureAirport, String departureTime,
+            String assignedRunway, String assignedAltitude, String assignedRoute, String fpStatus, String type, String aircraft, String trueAirspeed, String departureAirport, String departureTime,
             String cruisingAltitude, String route, String destinationAirport, String alternativeDestinationAirports, String estimatedFlightTime,
             String estimatedFuelTime, String pilotName, String soulsOnBoard, String remarks) {
 
         this.airportData = airportData;
 
-        this.assignedAltitude = "";
-        this.assignedRoute = "";
-        this.assignedRunway = "";
+        this.assignedAltitude = assignedAltitude;
+        this.assignedRoute = assignedRoute;
+        this.assignedRunway = assignedRunway;
 
         this.contact = contact;
         this.flightCode = flightCode;
@@ -202,9 +202,9 @@ public class FlightPlanData {
 
     public synchronized void update(FlightPlanData newFp) {
 
-//        this.assignedAltitude = null;
-//        this.assignedRoute = null;
-//        this.assignedRunway = null;
+        this.assignedAltitude = newFp.getAssignedAltitude();
+        this.assignedRoute = newFp.getAssignedRoute();
+        this.assignedRunway = newFp.getAssignedRunway();
 
         this.flightCode = newFp.getFlightCode();
         this.callsign = newFp.getCallsign();
@@ -233,7 +233,7 @@ public class FlightPlanData {
     }
     
     public synchronized FlightPlanData copy() {
-        FlightPlanData c = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedAltitude,
+        FlightPlanData c = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedRunway, assignedAltitude, assignedRoute,
                 fpStatus, type, aircraft, trueAirspeed, departureAirport, departure, cruisingAltitude, route, destinationAirport,
                 alternativeDestinationAirports, estimatedFlightTime, estimatedFuelTime, pilotName, "" + soulsOnBoard, remarks);
         c.updateStatus=UpdateStatus.CHANGED;
@@ -558,7 +558,8 @@ public class FlightPlanData {
         this.assignedAltitude = null;
         this.assignedRoute = null;
         this.assignedRunway = null;
-
+        this.squawk=null;
+        
         this.fpStatus = FlightPlanStatus.ACTIVE.toString();
         this.aircraft = contact.getAircraftCode();
         this.departureAirport = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5) ? airportData.getAirportCode() : "";

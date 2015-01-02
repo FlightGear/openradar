@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -138,7 +138,6 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     public void repaint() {
         viewerAdapter.getUpdateManager().markViewportDirty();
-        //viewerAdapter.setLogicalScale(viewerAdapter.getLogicalScale());
     }
     public void forceRepaint() {
         viewerAdapter.forceRepaint();
@@ -270,6 +269,11 @@ public class GuiRadarBackend implements IRadarDataRecipient {
         StringSelection selection = new StringSelection(String.format("%1.1f",viewerAdapter.getLogicalScale()));
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(selection, selection);
+    }
+
+    public void recenter() {
+        viewerAdapter.centerMap();
+        //viewerAdapter.notify(new CoordinateSystemNotification(viewerAdapter));
     }
 
 }

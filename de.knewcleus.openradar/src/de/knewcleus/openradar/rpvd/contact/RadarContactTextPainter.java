@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -141,6 +141,8 @@ public class RadarContactTextPainter {
             Double angle = vDistance.getAngle();
             
             Point2D newStartPoint = Converter2D.getMapDisplayPoint(currentDevicePosition, angle, 10);
+
+            g2d.setColor(textHelper.getDataBlockColor(trackDisplayState.getGuiContact()));
             
             line = new Line2D.Double(newStartPoint.getX(),newStartPoint.getY(),anchor.getX(),anchor.getY());
             g2d.draw(line);
@@ -149,6 +151,7 @@ public class RadarContactTextPainter {
                 // SELECTED
                 g2d.setColor(Color.black);
             }
+            
             for(int i=0;i<textHelper.getLineCount(g2d);i++) {
                 g2d.drawString(textHelper.getLine(i),(float)(newX+SPACE),(float)(newY+textHelper.getLineYOffset(g2d, i)));
 

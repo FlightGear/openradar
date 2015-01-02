@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+
+    <addPoint code="LEGVO" point="46.667928,6.285567"/>
+    <addPoint code="GOGOL" point="46.614625,6.206342"/>
+
+	<route  name="NAV points" color="255,255,0">
+		<navaids>SPR,GVA,CBY</navaids>
+	</route>
+
+	<!-- Approaches -->
+
+    <route name="LSGG ILS/LOC/VOR Approach RWY 23" color="150,120,120" zoomMin="10" zoomMax="100">
+		<activeLandingRunways>23</activeLandingRunways>-->
+        <navaids color="100,200,100">SPR,PETAL</navaids>
+
+        <loop navpoint="SPR" inboundHeading="225" length="3" right="true" arrows="both" minHeight="7000" maxHeight="FL230"/>
+		<line start="SPR" angle="225" length="5" arrows="end" text="225 SPR"/>
+
+        <!-- MISAP -->
+        <line start="LSGG-RW23" angle="225" length="5.0" text="225 GVA" color="250,20,20" stroke="2-5"/>
+		<bow center="GVA" radius="9.5" startAngle="210" extentAngle="40" color="250,20,20" stroke="2-5" text="9.5 GVA"/>
+
+        <intercept start="8NM225@GVA" startHeading="225" end="20NM040@CBY" radial="220" radius="1.62" direction="left" color="250,20,20" stroke="2-5" text="040 BCY"/>
+        <line start="20NM040@CBY" end="40NM040@CBY" text="7000 ft" arrows="end" color="250,20,20" stroke="2-5"/>
+	</route>
+
+    <route name="LSGG ILS/LOC/VOR Approach RWY 05" color="150,120,120" zoomMin="10" zoomMax="100">
+		<activeLandingRunways>05</activeLandingRunways>-->
+        <navaids color="100,200,100">PINOT,INDIS,BELKA,PAS</navaids>
+
+        <loop navpoint="PAS" inboundHeading="225" length="3" right="false" arrows="both" minHeight="7000" maxHeight="1mn"/>
+		<line start="SPR" angle="225" length="5" arrows="end" text="225 SPR"/>
+        <line start="PAS" end="PINOT" text="195 PAS - 6000 ft" arrows="end"/>
+        <intercept start="PINOT" startHeading="195" end="BELKA" radial="225" radius="2.8" direction="right" stroke="3-3-3" arrows="end"/>
+
+        <!-- MISAP -->
+        <line start="LSGG-RW05" end="SPR" text="045 GVA" arrows="end" color="250,20,20" stroke="2-5"/>
+        <loop navpoint="SPR" inboundHeading="225" length="3" right="true" arrows="both" minHeight="7000" maxHeight="FL230" color="250,20,20" stroke="2-5"/>
+	</route>
+
+	<!-- SID -->
+
+    <route name="MOLUS 3N" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">GVA,PETAL,MOLUS</navaids>
+
+        <line start="GVA" end="PETAL" text="045 GVA" arrows="end"/>
+        <text position="PETAL" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+5000"/>
+        <line start="PETAL" end="MOLUS" text="073 - MOLUS 3N" arrows="end"/>
+        <text position="MOLUS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL100"/>
+	</route>
+
+    <route name="KONIL 4J" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">DEREM,KONIL</navaids>
+
+        <intercept start="LSGG-RW23" startHeading="225" end="GG603" radial="221" radius="1.28" direction="right"/>
+        <line start="GG603" end="DEREM" text="042 GLA"/>
+        <line start="DEREM" end="KONIL" text="KONIL 4J" arrows="end"/>
+        <text position="GLA" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+4000"/>
+        <text position="18NM035@GVA" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+7000"/>
+	</route>
+
+    <route name="MOLUS 3A" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">TINAM,MOLUS</navaids>
+
+        <line start="LSGG-RW23" end="PAS"/>
+        <intercept start="PAS" startHeading="225" end="GG602" radial="232" radius="2.0" direction="left"/>
+        <line start="GG602" end="TINAM" text="052"/>
+        <line start="TINAM" end="MOLUS" text="050 - MOLUS 3A" arrows="end"/>
+        <text position="TINAM" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL100"/>
+	</route>
+
+    <route name="DIPIR 5A" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">PAS,KELUK,DIPIR</navaids>
+        <loop navpoint="KEMIT" inboundHeading="225" length="2.5" right="false" arrows="both" minHeight="210 kt" maxHeight="1 min"/>
+
+        <intercept start="LSGG-RW23" startHeading="225" end="7NM330@PAS" radial="201" radius="3.3" direction="right"/>
+        <line start="7NM330@PAS" end="10NM221@GLA" arrows="end"/>
+
+        <line start="7NM330@PAS" end="KELUK" text="330 PAS"/>
+        <line start="KELUK" end="DIPIR" text="149 DJL - DIPIR 5A" arrows="end"/>
+	</route>
+
+    <route name="KONIL 5A-5C-3D" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">PAS,DEREM,GLA,KONIL</navaids>
+        <line start="LSGG-RW23" end="PAS" text="225 GVA"/>
+
+        <intercept start="LSGG-RW23" startHeading="225" end="DEREM" radial="221" radius="1.15" direction="right"/>
+
+        <line start="DEREM" end="GLA" text="041 GLA"/>
+        <line start="GLA" end="KONIL" text="042 GLA - KONIL 5A/5C/3D" arrows="end"/>
+        <text position="GLA" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+4000"/>
+        <text position="18NM035@GVA" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+7000"/>
+	</route>
+
+    <route name="ROCCA 4A-4B-4C" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">PAS,ODIKI,ROCCA</navaids>
+        <line start="LSGG-RW23" end="PAS" text="225 GVA"/>
+        <line start="PAS" end="ODIKI" text="132 PAS"/>
+        <line start="ODIKI" end="ROCCA" text="ROCCA 4A/B/C" arrows="end"/>
+        <text position="9NM132@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL100"/>
+        <text position="14NM132@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL120"/>
+        <text position="ODIKI" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL150"/>
+        <text position="33NM132@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL190"/>
+	</route>
+
+    <route name="MEDAM 4A-4B-4C" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">PAS,ESAPI,VANAS,MEDAM</navaids>
+        <line start="LSGG-RW23" end="PAS" text="225 GVA"/>
+        <line start="PAS" end="ESAPI" text="142 PAS"/>
+        <line start="ESAPI" end="VANAS" text="142 PAS"/>
+        <line start="VANAS" end="MEDAM" text="MEDAM 4A/B/C" arrows="end"/>
+        <text position="9NM142@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL100"/>
+        <text position="16NM142@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL120"/>
+        <text position="ESAPI" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL150"/>
+        <text position="27NM142@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL180"/>
+        <text position="VANAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL200"/>
+	</route>
+
+    <route name="BALSI 6A" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">PAS,RUMIL,BEVEN,BALSI</navaids>
+        <line start="LSGG-RW23" end="PAS" text="225 GVA"/>
+        <line start="PAS" end="RUMIL" text="181 PAS"/>
+        <line start="RUMIL" end="BEVEN" text="181 PAS"/>
+        <line start="BEVEN" end="BALSI" text="181 PAS - BALSI 6A" arrows="end"/>
+        <text position="9NM181@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL100"/>
+        <text position="RUMIL" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL120"/>
+        <text position="22NM181@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL150"/>
+        <text position="BALSI" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL200"/>
+	</route>
+
+    <route name="BELUS 5A" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">PAS,CBY,BELUS</navaids>
+        <line start="LSGG-RW23" end="PAS" text="225 GVA"/>
+        <line start="PAS" end="CBY" text="210 PAS"/>
+        <line start="CBY" end="BELUS" text="208 CBY - BELUS 5A" arrows="end"/>
+        <text position="2NM028@CBY" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL100"/>
+        <text position="2NM208@CBY" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL120"/>
+	</route>
+
+    <route name="DEPUL 2A" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">PAS,ARGIS,DEPUL</navaids>
+        <line start="LSGG-RW23" end="PAS" text="225 GVA"/>
+        <line start="PAS" end="ARGIS" text="235 PAS"/>
+        <line start="ARGIS" end="DEPUL" text="056 LSE - DEPUL 2A" arrows="end"/>
+        <text position="DEPUL" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL150"/>
+	</route>
+
+    <route name="SPR 4N" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100"></navaids>
+        <line start="LSGG-RW05" end="SPR" arrows="end" text="045 GVA - SPR 4N"/>
+        <text position="SPR" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+7000"/>
+	</route>
+
+    <route name="ARBOS 7N" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">ARBOS,LEGVO</navaids>
+        <line start="LSGG-RW05" end="9.5NM045@GVA"/>
+        <line start="9.5NM045@GVA" end="13NM045@GVA"/>
+        <line start="13NM045@GVA" angle="015" length="7.4" text="015"/>
+        <line start="4NM330@SPR" end="LEGVO" text="330 SPR"/>
+        <line start="LEGVO" end="ARBOS" text="ARBOS 7N" arrows="end"/>
+        <text position="26NM330@SPR" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL200"/>
+	</route>
+
+    <route name="SIROD 5N" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">GOGOL,SIROD</navaids>
+        <line start="LSGG-RW05" end="9.5NM045@GVA"/>
+        <line start="9.5NM045@GVA" end="13NM045@GVA"/>
+        <line start="13NM045@GVA" end="GG514" text="356"/>
+        <line start="GG514" end="GOGOL" text="129 DJL"/>
+        <line start="GOGOL" end="SIROD" text="129 DJL - SIROD 5N" arrows="end"/>
+	</route>
+
+    <route name="BELUS 5N/5P" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">PAS</navaids>
+        <line start="LSGG-RW05" end="GVA08"/>
+        <intercept start="GVA08" startHeading="045" end="GG604" radial="049" radius="3.9" direction="right" text="BELUS 5N"/>
+        <line start="GG604" end="CBY" text="049 CBY"/>
+        <line start="CBY" end="BELUS" text="208 CBY - BELUS 5N/5P" arrows="end"/>
+
+        <intercept start="1NM045@GVA" startHeading="045" end="PAS" radial="030" radius="1.2" direction="left" text="BELUS 5P"/>
+        <line start="PAS" end="CBY" text="210 PAS"/>
+        <text position="2NM028@CBY" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL100"/>
+        <text position="2NM208@CBY" font="Arial" fontSize="10" color="0,0,0" alignHeading="270" text="+FL120"/>
+        <text position="PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="210" text="+7000"/>
+	</route>
+
+    <route name="ROCCA 4N/4P/4Q" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">ODIKI,ROCCA</navaids>
+        <line start="GG604" end="GG605" text="182"/>
+        <line start="GG605" end="ODIKI" text="132 PAS"/>
+        <line start="ODIKI" end="ROCCA" text="ROCCA 4N/4P/4Q" arrows="end"/>
+        <text position="ODIKI" font="Arial" fontSize="10" color="0,0,0" alignHeading="130" text="+FL140"/>
+        <text position="33NM133@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="130" text="+FL180"/>
+	</route>
+
+    <route name="MEDAM 4N/4P/4Q" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">ESAPI,VANAS,MEDAM</navaids>
+        <line start="GG605" end="ESAPI" text="182"/>
+        <line start="ESAPI" end="VANAS" text="142 PAS"/>
+        <line start="VANAS" end="MEDAM" text="MEDAM 4N/4P/4Q" arrows="end"/>
+        <text position="27NM144@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="130" text="+FL180"/>
+        <text position="VANAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="142" text="+FL200"/>
+	</route>
+
+    <route name="BALSI 7N" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">RUMIL,BEVEN,BALSI</navaids>
+        <line start="8.8NM182@PAS" end="RUMIL" text="181 PAS"/>
+        <line start="RUMIL" end="BEVEN"/>
+        <line start="BEVEN" end="BALSI" text="BALSI 7N" arrows="end"/>
+        <text position="10NM181@PAS" font="Arial" fontSize="10" color="0,0,0" alignHeading="181" text="+FL100"/>
+        <text position="RUMIL" font="Arial" fontSize="10" color="0,0,0" alignHeading="181" text="+FL120"/>
+        <text position="BEVEN" font="Arial" fontSize="10" color="0,0,0" alignHeading="181" text="+FL190"/>
+        <text position="BALSI" font="Arial" fontSize="10" color="0,0,0" alignHeading="181" text="+FL200"/>
+	</route>
+
+    <route name="DEPUL 2P/2T" zoomMin="10" zoomMax="300" displayMode="sid">
+        <activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">ARGIS,DEPUL,PAS</navaids>
+        <intercept start="7NM045@GVA" startHeading="045" end="10NM030@PAS" radial="030" radius="2.5" direction="left" text="210 PAS - DEPUL 2T"/>
+        <line start="10NM030@PAS" end="PAS"/>
+        <intercept start="1NM045@GVA" startHeading="045" end="8NM030@PAS" radial="030" radius="1.2" direction="left" text="DEPUL 2P"/>
+        <line start="8NM030@PAS" end="PAS"/>
+        <line start="PAS" end="ARGIS" text="235 PAS"/>
+        <line start="ARGIS" end="DEPUL" text="056 LSE - DEPUL 2P/2T" arrows="end"/>
+        <text position="DEPUL" font="Arial" fontSize="10" color="0,0,0" alignHeading="235" text="+FL150"/>
+	</route>
+
+	<!-- STAR -->
+
+    <route name="BELUS 1N" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">INDIS,CBY</navaids>
+
+        <line start="BELUS" end="CBY" text="028 - 208 CBY - BELUS 1N"/>
+        <loop navpoint="CBY" inboundHeading="028" length="4" width="5" right="true" arrows="both" minHeight="10000" maxHeight="14000"/>
+        <line start="CBY" end="INDIS" text="010"/>
+    </route>
+
+    <route name="BANKO 2N" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">GOLEB,VALBU,SUVEL,BIVLO,PITOM</navaids>
+
+        <line start="BANKO" end="GG520" text="303 - 123 GVA - BANKO 2N"/>
+        <line start="GG520" end="GOLEB"/>
+        <line start="GOLEB" end="VALBU"/>
+        <line start="VALBU" end="SUVEL" arrows="end" text="303"/>
+        <line start="SUVEL" end="BIVLO"/>
+        <line start="BIVLO" end="PITOM" text="225"/>
+        <line start="PITOM" end="GG502" arrows="end" text="224"/>
+        <loop navpoint="GOLEB" inboundHeading="348" length="3" width="3" right="true" arrows="both" minHeight="FL180" maxHeight="FL240"/>
+
+        <line start="GG502" end="INDIS" stroke="2-2-2" arrows="end" text="314"/>
+        <line start="GG502" angle="224" length="4" stroke="2-2-2" arrows="end" text="224"/>
+
+        <text position="GG520" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="FL180"/>
+        <text position="VALBU" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="-FL140"/>
+        <text position="SUVEL" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="-FL110"/>
+        <text position="INDIS" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="-7000"/>
+    </route>
+
+    <route name="KINES 1N" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">ROCCA,GOLEB</navaids>
+
+        <line start="KINES" end="GG519" text="348 - KINES 1N"/>
+        <line start="GG519" end="ROCCA"/>
+        <line start="ROCCA" end="GOLEB"/>
+    </route>
+
+    <route name="BENOT 1N/1P" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">NEMOS,VADAR,SOVAD,KERAD</navaids>
+
+        <line start="BENOT" end="NEMOS" text="BENOT 1N/1P"/>
+        <line start="NEMOS" end="VADAR" text="BENOT 1P"/>
+        <line start="NEMOS" end="GG514" arrows="end" text="BENOT 1N"/>
+        <line start="GG514" end="SOVAD"/>
+        <line start="SOVAD" end="KERAD"/>
+        <line start="KERAD" end="GG503"/>
+        <line start="GG503" end="INDIS" stroke="2-2-2" text="134"/>
+        <loop navpoint="NEMOS" inboundHeading="230" length="3" width="3" right="true" arrows="both" minHeight="FL110" maxHeight="FL230"/>
+        <text position="GG514" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="-FL150"/>
+    </route>
+
+    <route name="ULMES 1N/1P" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">ESEVA,VADAR</navaids>
+
+        <line start="ULMES" end="ESEVA" text="ULMES 1N/1P"/>
+        <line start="ESEVA" end="VADAR"/>
+        <line start="VADAR" end="GG512" arrows="end" text="BENOT 1P/ULMES 1P"/>
+        <line start="VADAR" end="GG514" text="ULMES 1N"/>
+        <line start="GG512" end="BIVLO"/>
+        <loop navpoint="VADAR" inboundHeading="230" length="3" width="3" right="true" arrows="both" minHeight="9000" maxHeight="FL230"/>
+        <text position="GG512" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="-FL150"/>
+    </route>
+
+    <route name="DJL 1N" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">LIRKO,DINIG,SOVAD</navaids>
+        <line start="DJL" end="GG517" text="144 - DJL 1N"/>
+        <line start="GG517" end="LIRKO"/>
+        <line start="LIRKO" end="DINIG"/>
+        <line start="DINIG" end="SOVAD" text="144"/>
+        <loop navpoint="DINIG" inboundHeading="144" length="3" width="3" right="false" arrows="both" minHeight="7000" maxHeight="FL240"/>
+        <text position="LIRKO" font="Arial" fontSize="10" color="0,0,0" alignHeading="144" text="+7000"/>
+        <text position="SOVAD" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+7000"/>
+    </route>
+
+    <route name="LUSAR 1N" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">SAUNI,LIRKO</navaids>
+        <line start="LUSAR" end="SAUNI" text="101 - LUSAR 1N"/>
+        <line start="SAUNI" end="LIRKO"/>
+        <text position="SAUNI" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+FL160"/>
+        <text position="LUSAR" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+FL200"/>
+    </route>
+
+    <route name="AKITO 1N" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">BOLGI,LIRKO</navaids>
+        <line start="AKITO" end="GG518" text="221 - AKITO 1N"/>
+        <line start="GG518" end="BOLGI"/>
+        <line start="BOLGI" end="LIRKO"/>
+    </route>
+
+    <route name="FRI 1S" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">SALEV,PINOT</navaids>
+        <line start="FRI" end="SALEV" text="228 FRI - FRI 1S"/>
+        <line start="SALEV" end="PINOT" arrows="end"/>
+        <text position="SALEV" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+6000"/>
+        <text position="36NM228@FRI" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="-FL150"/>
+        <text position="33NM048@CBY" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+9000"/>
+    </route>
+
+    <route name="FRI 1T" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">SPR,PETAL</navaids>
+        <line start="FRI" end="ROMOM" text="240 FRI - FRI 1T"/>
+        <line start="ROMOM" end="SPR"/>
+        <line start="SPR" end="PETAL" text="045 GVA"/>
+        <loop navpoint="ROMOM" inboundHeading="240" length="3" right="true" arrows="both" minHeight="090" maxHeight="FL120"/>
+        <text position="ROMOM" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+7000"/>
+    </route>
+
+    <route name="BELUS 1R" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">CBY,PITOM,BIVLO,SPR</navaids>
+
+        <line start="BELUS" end="CBY" text="028 - 208 CBY - BELUS 1R"/>
+        <loop navpoint="CBY" inboundHeading="028" length="4" width="5" right="true" arrows="both" minHeight="10000" maxHeight="14000"/>
+        <line start="CBY" end="GG502" text="053"/>
+        <line start="GG502" end="PITOM" arrows="end" text="044"/>
+        <line start="PITOM" end="BIVLO" text="045"/>
+        <line start="BIVLO" end="GG525"/>
+        <line start="GG525" end="GG512"/>
+        <line start="GG512" end="SPR" stroke="2-2-2" text="314"/>
+        <text position="GG502" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="+10000"/>
+        <text position="PITOM" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="7000 - FL150"/>
+        <text position="BIVLO" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="+7000"/>
+    </route>
+
+    <route name="BANKO 2R" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">GOLEB,VALBU,SUVEL,BIVLO,PITOM</navaids>
+
+        <line start="BANKO" end="GG520" text="303 - 123 GVA - BANKO 2R"/>
+        <line start="GG520" end="GOLEB"/>
+        <line start="GOLEB" end="VALBU"/>
+        <line start="VALBU" end="SUVEL" arrows="end" text="303"/>
+        <line start="SUVEL" end="BIVLO"/>
+        <loop navpoint="GOLEB" inboundHeading="348" length="3" width="3" right="true" arrows="both" minHeight="FL180" maxHeight="FL240"/>
+
+        <text position="GG520" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="+FL180"/>
+        <text position="VALBU" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="+FL140"/>
+        <text position="SUVEL" font="Arial" fontSize="10" color="0,0,0" alignHeading="220" text="+FL110"/>
+    </route>
+
+    <route name="KINES 1R" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">ROCCA,GOLEB</navaids>
+
+        <line start="KINES" end="GG519" text="348 - KINES 1R"/>
+        <line start="GG519" end="ROCCA"/>
+        <line start="ROCCA" end="GOLEB"/>
+    </route>
+
+    <route name="BENOT 1R/1T" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">NEMOS,VADAR,VEROX</navaids>
+
+        <line start="BENOT" end="NEMOS" text="230"/>
+        <line start="NEMOS" end="VEROX" text="BENOT 1T"/>
+        <line start="NEMOS" end="VADAR" text="BENOT 1R"/>
+        <line start="VEROX" end="SPR" text="198"/>
+        <line start="VADAR" end="SPR" text="227"/>
+        <loop navpoint="NEMOS" inboundHeading="230" length="3" width="3" right="true" arrows="both" minHeight="FL110" maxHeight="FL230"/>
+        <loop navpoint="VADAR" inboundHeading="230" length="3" width="3" right="true" arrows="both" minHeight="9000" maxHeight="FL230"/>
+    </route>
+
+    <route name="ULMES 1R" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">ESEVA,VADAR</navaids>
+
+        <line start="ULMES" end="ESEVA" text="230 - ULMES 1R"/>
+        <line start="ESEVA" end="VADAR"/>
+    </route>
+
+    <route name="DJL 1R" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">LIRKO,DINIG,SOVAD</navaids>
+        <line start="DJL" end="GG517" text="144 - DJL 1R"/>
+        <line start="GG517" end="LIRKO"/>
+        <line start="LIRKO" end="DINIG"/>
+        <line start="DINIG" end="SOVAD" text="144"/>
+        <line start="SOVAD" end="GG507"/>
+        <line start="GG507" end="GG514"/>
+        <line start="GG514" end="SPR" stroke="2-2-2" text="135"/>
+        <loop navpoint="DINIG" inboundHeading="144" length="3" width="3" right="false" arrows="both" minHeight="7000" maxHeight="FL240"/>
+        <text position="LIRKO" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+7000"/>
+        <text position="SOVAD" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+7000"/>
+        <loop navpoint="SPR" inboundHeading="225" length="3" width="3" right="true" arrows="both" minHeight="7000" maxHeight="FL230"/>
+    </route>
+
+    <route name="LUSAR 1R" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">SAUNI,LIRKO</navaids>
+        <line start="LUSAR" end="SAUNI" text="101 - LUSAR 1R"/>
+        <line start="SAUNI" end="LIRKO" text="102"/>
+        <text position="SAUNI" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+FL160"/>
+        <text position="LUSAR" font="Arial" fontSize="10" color="0,0,0" alignHeading="045" text="+FL200"/>
+    </route>
+
+    <route name="AKITO 2R" color="150,120,120" zoomMin="10" displayMode="star">
+        <activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">BOLGI,LIRKO</navaids>
+        <line start="AKITO" end="GG518" text="221 - AKITO 2R"/>
+        <line start="GG518" end="BOLGI"/>
+        <line start="BOLGI" end="LIRKO"/>
+    </route>
+
+</routes>

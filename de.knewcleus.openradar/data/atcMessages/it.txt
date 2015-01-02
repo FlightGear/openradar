@@ -4,6 +4,7 @@ A tutti i piloti:
 %s: Benvenuto nell'area di %s -- è diretto a %s? FGCOM %s
 %s: Benvenuto a %s - comunichi all'ATC le Sue intenzioni, FGCOM %s
 %s: Contatto radar range %3.0f miglia, QNH %s, pista in uso %s, FGCOM %s
+
 %s: Riprenda la SUA navigazione - sorveglianza radar attiva
 %s: Sta lasciando il mio spazio aereo - autorizzato a cambiare frequenza - servizio radar terminato
 ATIS per %s a %2.0f piedi: QNH %s vento %s pista/e in uso %s FGCOM %s

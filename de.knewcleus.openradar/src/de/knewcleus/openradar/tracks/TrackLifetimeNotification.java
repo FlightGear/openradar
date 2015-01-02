@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -60,11 +61,6 @@ public class TrackLifetimeNotification implements INotification {
 		this.newTrack = track;
 		this.lifetimeState = lifetimeState;
 	}	
-
-	@Override
-	public ITrackManager getSource() {
-		return trackManager;
-	}
 
 	public ITrack getTrack() {
 		return newTrack;

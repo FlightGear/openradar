@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -35,15 +36,6 @@ package de.knewcleus.openradar.rpvd;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public interface IRadarMapViewerAdapter extends IMapViewerAdapter {
-	/**
-	 * @return the track history length.
-	 */
-	public int getTrackHistoryLength();
-
-	/**
-	 * Set the track history length.
-	 */
-	public abstract void setTrackHistoryLength(int trackHistoryLength);
 
 	/**
 	 * @return the lookahead-time represented by the heading vector.
@@ -54,4 +46,9 @@ public interface IRadarMapViewerAdapter extends IMapViewerAdapter {
 	 * Set the lookahead-time represented by the heading vector.
 	 */
 	public abstract double getHeadingVectorTime();
+	
+	/**
+	 * Returns how many symbols will be displayed as contact tail.
+	 */
+	public int getMaxTailLength();
 }

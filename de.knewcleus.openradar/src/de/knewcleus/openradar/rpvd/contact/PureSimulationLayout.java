@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -83,7 +83,42 @@ public class PureSimulationLayout extends ADatablockLayout {
     public Color getColor(GuiRadarContact c) {
         Color color = Palette.RADAR_UNCONTROLLED;
 
-        boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
+//        boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
+
+        if(c.getTranspSquawkCode()!=null && 7700==c.getTranspSquawkCode()) {
+            // Emergency
+            color=Color.red;
+
+        } else if(!c .isActive()) {
+            // INCACTIVE GHOSTS
+            color=Palette.RADAR_GHOST;
+
+        } else if(c.isNeglect()) {
+            // BAD GUYS
+            color=Palette.RADAR_GHOST;
+
+//        } else if(c.getTranspSquawkCode()!=null && !assignedSquawkTunedIn) {
+//            color = new Color(80,0,160);
+        } else if(c.getState()==State.IMPORTANT) {
+            // CONTROLLED left column
+            color=Palette.RADAR_CONTROLLED;
+
+        } else if(c.getState()==State.CONTROLLED) {
+            // WATCHED middle column
+            color=Palette.RADAR_IMPORTANT;
+        } else {
+            // UNCONTROLLED right column
+            color=Palette.RADAR_UNCONTROLLED;
+        }
+
+        return color;
+    }
+
+    @Override
+    public Color getDataBlockColor(GuiRadarContact c) {
+        Color color = Palette.RADAR_UNCONTROLLED;
+
+//        boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
 
         if(c.getTranspSquawkCode()!=null && 7700==c.getTranspSquawkCode()) {
             // Emergency
@@ -135,7 +170,7 @@ public class PureSimulationLayout extends ADatablockLayout {
                 return "";
             }
             
-            boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
+            boolean assignedSquawkTunedIn = c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk());
 
             StringBuilder sb = new StringBuilder();
 
@@ -152,7 +187,6 @@ public class PureSimulationLayout extends ADatablockLayout {
 
             if(!assignedSquawkTunedIn) {
                 // squawk codes do not match
-                currentAltSpeedIndex--; // no aircraft line
                 Integer squawk = c.getTranspSquawkCode();
                 sb.append(String.format("%s %2s",squawk == -9999 ? "----" : squawk,c.getMagnCourse())).append("\n");
                 sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;

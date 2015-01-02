@@ -4,13 +4,14 @@ An alle Piloten:
 %s: Willkommen im Gebiet: %s - beabsichtigen Sie in %s zu landen ? FGCOM %s
 %s: Willkommen in %s, bitte informieren Sie ATC ueber Ihre Plaene, FGCOM %s
 %s: Radar-Kontakt in %3.0f mi Entfernung, Hoehenmesser %s, planen Sie mit Landebahn %s, FGCOM %s
+
 %s: Folgen Sie Ihrem Flugplan - Radar-Ueberwachung bleibt aktiv
 %s: Sie verlassen meine Zone - Sie koennen nun die Frequenz wechseln - RADAR Service wird beendet - Guten Flug!
 
 
 
 %s: Freigabe zum Starten der Motoren, bitte geben Sie Ihr geplantes Ziel an
-%s: Freigabe zum Zuruecksetzen für Richtung:
+%s: Freigabe zum Zuruecksetzen fuer Richtung:
 %s: Freigabe zur Landebahn:
 %s: Halten Sie vor dem Eingang zur Runway:
 

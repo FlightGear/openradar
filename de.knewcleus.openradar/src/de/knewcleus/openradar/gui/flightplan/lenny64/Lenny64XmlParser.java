@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 Wolfram Wagner
+ * Copyright (C) 2014-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -92,11 +92,13 @@ public class Lenny64XmlParser {
 //                    messages.append(user).append(": ").append(message).append("; ");
 //                }
                 String status = eFp.getChildText("status");
+                status = status.equals("")?FlightPlanData.FlightPlanStatus.ACTIVE.toString():status.replaceAll("filled", "FILED");
 //                String additionalInformation = eFp.getChildText("additionalInformation");
 //                String lastUpdated = eFp.getChildText("lastUpdated");
                 
-                if( /*(airportFrom.equals(data.getAirportCode()) || airportTo.equals(data.getAirportCode()) )
-                    &&*/ (dateDeparture.equals(today) || dateArrival.equals(today))
+                if( (status.equalsIgnoreCase(FlightPlanData.FlightPlanStatus.ACTIVE.toString()) || status.equalsIgnoreCase(FlightPlanData.FlightPlanStatus.FILED.toString()))  
+                        /*(airportFrom.equals(data.getAirportCode()) || airportTo.equals(data.getAirportCode()) ) */
+                    && (dateDeparture.equals(today) || dateArrival.equals(today))
                         ) {
                     // check for departure date
                     try {
@@ -116,7 +118,6 @@ public class Lenny64XmlParser {
                         //fpd.setEstimatedFlightTime(estimatedFlightTime); // todo
                         fpd.setEstimatedFuelTime(fuelTime);
                         fpd.setFlightCode(flightNumber);
-                        status = status.equals("")?FlightPlanData.FlightPlanStatus.ACTIVE.toString():status.replaceAll("filled", "FILED");
                         fpd.setFpStatus(status);
                         fpd.setPilotName(pilotName);
                        // fpd.setRemarks(messages.toString());

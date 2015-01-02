@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+
+    <addPoint code="STG48" point="N48°53'22.3'',E7°05'31.4''"/> 
+    <addPoint code="STA17" point="N48°45'41.6'',E7°49'58.1''"/> 
+    <addPoint code="STA12" point="N48°41'01.5'',E7°52'41.2''"/> 
+    <addPoint code="STB40" point="N48°40'21.6'',E7°15'29.4''"/> 
+    <addPoint code="STB28" point="N48°43'08.0'',E7°33'11.5''"/> 
+    <addPoint code="STS40" point="N48°34'20.9'',E7°18'08.7''"/> 
+    <addPoint code="STS26" point="N48°40'49.0'',E7°36'19.8''"/> 
+
+    <route name="LFST RNAV APPROACH GTQ/BERUG/SOREM RWY 23" color="150,120,120" zoomMin="10" zoomMax="200">
+        <activeLandingRunways>23</activeLandingRunways>
+        <line start="GTQ" end="STG48" text="110"/>
+        <text position="GTQ" font="Arial" fontSize="10" color="0,0,0" alignHeading="110" text="FL210/140"/>
+        <line start="STG48" end="SAV" text="110"/>
+        <text position="STG48" font="Arial" fontSize="10" color="0,0,0" alignHeading="110" text="FL160/110"/>
+        <line start="SAV" end="STA17" text="097"/>
+        <text position="SAV" font="Arial" fontSize="10" color="0,0,0" alignHeading="097" text="FL100/80"/>
+        <line start="STA17" end="STA12" text="158"/>
+        <text position="STA17" font="Arial" fontSize="10" color="0,0,0" alignHeading="158" text="6000 - 4500"/>
+        <text position="STA12" font="Arial" fontSize="10" color="0,0,0" alignHeading="158" text="3500"/>
+
+        <line start="BERUG" end="STB40" text="076"/>
+        <text position="BERUG" font="Arial" fontSize="10" color="0,0,0" alignHeading="110" text="FL180/140"/>
+        <line start="STB40" end="STB28" text="076"/>
+        <line start="STB28" end="STA17" text="076"/>
+
+        <line start="SOREM" end="STS40" text="061"/>
+        <text position="SOREM" font="Arial" fontSize="10" color="0,0,0" alignHeading="110" text="FL180/140"/>
+        <line start="STS40" end="STS26" text="061"/>
+        <line start="STS26" end="STA17" text="061"/>
+
+    </route>
+
+    <route name="LFST RNAV APPROACH MIRGU RWY 05" color="150,10,10" zoomMin="10" zoomMax="200">
+        <activeLandingRunways>05</activeLandingRunways>
+        <line start="MIRGU" end="BAKIX" text="037"/>
+        <text position="MIRGU" font="Arial" fontSize="10" color="0,0,0" alignHeading="037" text="FL220/150"/>
+        <text position="BAKIX" font="Arial" fontSize="10" color="0,0,0" alignHeading="037" text="FL120/90"/>
+        <line start="BAKIX" end="LOPSU" text="088"/>
+        <text position="LOPSU" font="Arial" fontSize="10" color="0,0,0" alignHeading="088" text="7900 - 5800"/>
+        <line start="MIRGU" end="LOPSU" stroke="5-5-5" text="051"/>
+    </route>
+
+    <route name="LFST ILS/LOC APPROACH RWY 23" color="150,10,10">
+        <activeLandingRunways>23</activeLandingRunways>
+        <!-- MISAP -->
+        <intercept start="STR" startHeading="228" end="SE" endHeading="091" direction="right" radius="3" stroke="2-5" text="2500 ft - 091" color="250,20,20"/>
+	</route>
+
+    <route name="LFST ILS/LOC APPROACH RWY 05" color="150,10,10">
+        <activeLandingRunways>05</activeLandingRunways>
+        <!-- MISAP -->
+        <line start="LFST-RW23" end="SE" stroke="2-5" color="250,20,20"/>
+        <intercept start="SE" startHeading="048" end="SE" endHeading="170" direction="left" radius="2" stroke="2-5" arrows="end" text="2500" color="250,20,20"/>
+        <loop navpoint="SE" inboundHeading="228" length="7.5" width="3" right="true" arrows="both" minHeight="5500" maxHeight="to ANDLO" stroke="2-5" color="250,20,20"/>
+	</route>
+
+
+    <!-- SID -->
+	<route name="BERUG 7J" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">BERUG</navaids>
+		<line start="SE" end="DOBEG" startOffset="5.05" text="273"/>
+		<line start="DOBEG" end="DIBOT" text="273"/>
+		<line start="DIBOT" end="BERUG" text="273 - BERUG 7J" arrows="end"/>
+	</route>
+
+	<route name="EPIKO 7J" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">EPIKO</navaids>
+		<line start="SE" end="DOBEG" startOffset="5.05" text="273"/>
+		<line start="DOBEG" end="DIBOT" text="273"/>
+		<line start="DIBOT" end="SOREM" text="221 SAV"/>
+		<line start="SOREM" end="EPIKO" text="221 - EPIKO 7J" arrows="end"/>
+	</route>
+
+	<route name="GTQ 7J" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">GTQ</navaids>
+		<line start="SE" end="DOBEG" startOffset="5.05" text="273"/>
+		<line start="DOBEG" end="PHALO" text="310 STR"/>
+		<line start="PHALO" end="GTQ" text="309 - GTQ 7J" arrows="end"/>
+	</route>
+
+	<route name="GTQ 7K" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">GTQ</navaids>
+		<line start="SE" end="GTQ" startOffset="3.52" text="300 - GTQ 7K" stroke="5-5-5" arrows="end"/>
+	</route>
+
+	<route name="LUPEN 7J" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">LUPEN</navaids>
+		<line start="LFST-RW05" end="SE" text="1500 ft"/>
+        <intercept start="SE" startHeading="048" end="48.570488,7.539209" endHeading="234" radius="1.6" direction="left" text="234" arrows="end"/>
+        <intercept start="48.570488,7.539209" startHeading="234" end="STR" endHeading="130" radius="1.6" direction="left" text="234"/>
+		<line start="STR" end="LUPEN" text="LUPEN 7J" arrows="end"/>
+	</route>
+
+	<route name="SUL 1N" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">SUL</navaids>
+		<intercept start="SE" startHeading="048" end="SUL" endHeading="129" radius="2.0" direction="right" text="309 SUL - SUL 1N" arrows="end"/>
+        <bow center="STR" radius="20" startAngle="045" extentAngle="15" stroke="3-1-3" text="20 STR"/>
+	</route>
+
+	<route name="STR 1Q" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">STR</navaids>
+        <intercept start="LHR" startHeading="027" end="STR" endHeading="267" direction="left" radius="2.5" text="267 - STR 1Q" arrows="end"/>
+        <!--<intercept start="LHR" startHeading="027" startOffset="3" end="STR" endHeading="267" direction="left" radius="2.5" text="STR 1Q" arrows="end"/>-->
+	</route>
+
+	<route name="STR 4N" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>05</activeStartRunways>
+        <navaids color="100,200,100">STR</navaids>
+        <intercept start="KBA" startHeading="031" end="SE" endHeading="213" direction="left" radius="2.95" text="213 - STR 4N" arrows="end"/>
+	</route>
+
+	<route name="GTQ 7H" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">GTQ</navaids>
+		<line start="STR" end="BERUG" text="284"/>
+		<line start="BERUG" end="GTQ" arrows="end" text="338 - GTQ 7H"/>
+	</route>
+
+	<route name="GTQ 7L" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">GTQ</navaids>
+		<line start="STR" end="DOBEG" stroke="5-5-5"/>
+		<line start="DOBEG" end="PHALO" stroke="5-5-5" text="310 STR"/>
+		<line start="PHALO" end="GTQ" stroke="5-5-5" arrows="end" text="GTQ 7L"/>
+	</route>
+
+	<route name="LUPEN 7H" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">LUPEN</navaids>
+        <bow center="STR" radius="3.0" startAngle="190" extentAngle="50" stroke="3-1-3" text="3.0 STR"/>
+        <intercept start="STR" startHeading="228" end="LUPEN" endHeading="078" direction="left" radius="2.2" text="078 - LUPEN 7H" arrows="end"/>
+	</route>
+
+	<route name="MIRGU 7H" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">MIRGU</navaids>
+		<line start="STR" end="OBORN" text="259"/>
+		<line start="OBORN" end="BAKIX" text="217"/>
+		<line start="BAKIX" end="MIRGU" arrows="end" text="217 - MIRGU 7H"/>
+	</route>
+
+	<route name="MIRGU 7L" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">MIRGU</navaids>
+		<line start="STR" end="MIRGU" stroke="5-5-5" arrows="end" text="230 - MIRGU 7L"/>
+	</route>
+
+    <route name="POGOL 7H" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">POGOL</navaids>
+		<line start="STR" end="OBORN" text="259"/>
+		<line start="OBORN" end="POGOL" arrows="end" text="258 - POGOL 7H"/>
+	</route>
+
+	<route name="SUL 1S" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">SUL</navaids>
+		<line start="LUPEN" end="SUL" arrows="end" text="094 - SUL 1S"/>
+	</route>
+
+	<route name="STR 4P" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">STR</navaids>
+        <intercept start="KBA" startHeading="213" end="STR" endHeading="302" direction="right" radius="2" arrows="end" text="302 - STR 4P"/>
+	</route>
+
+	<route name="STR 1R" zoomMin="10" zoomMax="300" displayMode="sid">
+		<activeStartRunways>23</activeStartRunways>
+        <navaids color="100,200,100">STR</navaids>
+        <intercept start="LHR" startHeading="207" end="LHR" endHeading="353" direction="left" radius="1.6" arrows="end"/>
+        <line start="LHR" end="LUPEN"/>
+	</route>
+
+
+    <!-- STAR -->
+
+	<route name="GTQ 6Y" color="150,120,120" zoomMin="10" displayMode="star">
+		<activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">GTQ</navaids>
+        <!-- IAF ANDLO -->
+		<line start="GTQ" end="BERUG" text="158 - GTQ 6Y"/>
+        <text position="GTQ" font="Arial" fontSize="10" color="0,0,0" alignHeading="40" text="FL115 5500"/>
+		<line start="BERUG" end="SOREM"/>
+        <text position="BERUG" font="Arial" fontSize="10" color="0,0,0" alignHeading="158" text="FL90"/>
+        <text position="SOREM" font="Arial" fontSize="10" color="0,0,0" alignHeading="158" text="6500"/>
+		<intercept start="SOREM" startHeading="158" end="LOPSU" endHeading="089" radius="0.5" direction="left"/>
+	</route>
+
+	<route name="EPL 6Y" color="150,120,120" zoomMin="10" displayMode="star">
+		<activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">EPL</navaids>
+        <!-- IAF ANDLO -->
+		<line start="EPL" end="BAKIX" text="087 - EPL 6Y"/>
+        <text position="EPL" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="FL070 6500"/>
+		<line start="BAKIX" end="LOPSU" text="5500"/>
+		<line start="LOPSU" end="ANDLO"/>
+        <loop navpoint="ANDLO" inboundHeading="048" length="4.5" right="false" arrows="both" minHeight="5500" maxHeight="220 kt"/>
+	</route>
+
+	<route name="LUL 6Y" color="150,120,120" zoomMin="10" displayMode="star">
+		<activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">LUL</navaids>
+        <!-- IAF ANDLO -->
+        <text position="LUL" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="FL070 6500"/>
+		<line start="LUL" end="MIRGU" text="037 - LUL 6Y"/>
+        <line start="MIRGU" end="BAKIX"/>
+	</route>
+
+	<route name="LUPEN 6Y" color="150,120,120" zoomMin="10" displayMode="star">
+		<activeLandingRunways>05</activeLandingRunways>
+        <navaids color="200,50,50">LUPEN</navaids>
+        <!-- IAF ANDLO -->
+		<line start="LUPEN" end="STR" text="302 - LUPEN 6Y"/>
+        <text position="LUPEN" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="5500"/>
+		<line start="STR" end="ANDLO" text="228"/>
+	</route>
+
+	<route name="EPL 6Y" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">EPL</navaids>
+        <!-- IAF ANDLO -->
+		<line start="EPL" end="BAKIX" text="087 - EPL 6Y"/>
+        <text position="EPL" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="FL70 5500"/>
+		<line start="BAKIX" end="LOPSU"/>
+        <loop navpoint="ANDLO" inboundHeading="048" length="4.5" right="false" arrows="both" minHeight="5500" maxHeight="220 kt"/>
+	</route>
+
+	<route name="GTQ 6Y" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">GTQ</navaids>
+        <!-- IAF ANDLO -->
+		<line start="GTQ" end="BERUG" text="158 - GTQ 6Y"/>
+        <text position="GTQ" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="FL115 5500"/>
+		<line start="BERUG" end="SOREM"/>
+		<intercept start="SOREM" startHeading="158" end="LOPSU" endHeading="089" radius="0.5" direction="left"/>
+	</route>
+
+	<route name="LUL 6Y" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">LUL</navaids>
+        <!-- IAF ANDLO -->
+		<line start="LUL" end="MIRGU" text="037 - LUL 6Y"/>
+        <text position="LUL" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="FL70 6500"/>
+		<line start="MIRGU" end="BAKIX" text="037"/>
+		<line start="BAKIX" end="LOPSU"/>
+        <text position="BAKIX" font="Arial" fontSize="10" color="0,0,0" alignHeading="90" text="5500"/>
+	</route>
+
+	<route name="LUPEN 6Y" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">LUPEN</navaids>
+        <!-- IAF ANDLO -->
+		<line start="LUPEN" end="STR" text="302 - LUPEN 6Y"/>
+        <text position="LUPEN" font="Arial" fontSize="10" color="0,0,0" alignHeading="90" text="5500"/>
+		<line start="STR" end="ANDLO" text="228" arrows="end"/>
+	</route>
+
+	<route name="EPL 6V" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">EPL</navaids>
+        <!-- IAF SAV -->
+		<line start="EPL" end="BERUG" text="061 - EPL 6V"/>
+        <text position="EPL" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="FL90 6500"/>
+		<line start="BERUG" end="SAV"/>
+        <text position="BERUG" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="FL90 6500"/>
+        <loop navpoint="SAV" inboundHeading="061" length="5" width="3" right="true" arrows="both" minHeight="6500" maxHeight="FL140 (IAS 230)"/>-->
+        <loop navpoint="SE" inboundHeading="228" length="7.5" width="3" right="true" arrows="both" minHeight="2500" maxHeight="5500" stroke="5-5-5"/>-->
+	</route>
+
+	<route name="LUL 6V" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">LUL</navaids>
+        <!-- IAF SAV -->
+		<line start="LUL" end="EPIKO" text="025 - LUL 6V"/>
+        <text position="EPIKO" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="FL90 6500"/>
+		<line start="EPIKO" end="SOREM" text="041"/>
+		<line start="SOREM" end="SAV" text="6500"/>
+	</route>
+
+	<route name="LUPEN 6V" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">LUPEN</navaids>
+        <!-- IAF SAV -->
+		<line start="LUPEN" end="STR" text="302 - LUPEN 6V"/>
+        <text position="LUPEN" font="Arial" fontSize="10" color="0,0,0" alignHeading="209" text="5000"/>
+		<line start="STR" end="SAV" text="343"/>
+	</route>
+
+	<route name="GTQ 6U" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">GTQ</navaids>
+        <!-- IAF SAV -->
+		<line start="GTQ" end="SAV" text="110 - GTQ 6U" stroke="5-5-5"/>
+        <text position="48.977282,6.753236" font="Arial" fontSize="10" color="0,0,0" alignHeading="90" text="FL90"/>
+	</route>
+
+	<route name="GTQ 6V" color="150,120,120" displayMode="star">
+		<activeLandingRunways>23</activeLandingRunways>
+        <navaids color="200,50,50">GTQ</navaids>
+        <!-- IAF SAV -->
+		<line start="GTQ" end="PHALO" text="129 - GTQ 6V"/>
+        <text position="PHALO" font="Arial" fontSize="10" color="0,0,0" alignHeading="90" text="FL90"/>
+        <line start="PHALO" end="SAV" text="084"/>
+	</route>
+
+</routes>

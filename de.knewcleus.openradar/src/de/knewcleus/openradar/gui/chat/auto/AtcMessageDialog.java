@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -38,6 +38,7 @@ import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -45,7 +46,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -86,7 +91,21 @@ public class AtcMessageDialog extends JDialog {
         if(isUniformTranslucencySupported) {
             this.setOpacity(0.92f);
         }
-
+        setTitle("OpenRadar - Commands");
+        List<Image> icons = new ArrayList<Image>();
+        File iconDir = new File("res/icons");
+        if(iconDir.exists()) {
+            File[] files = iconDir.listFiles();
+            for(File f : files) {
+                if(f.getName().matches("OpenRadar.*\\.ico") || f.getName().matches("OpenRadar.*\\.png")
+                  || f.getName().matches("OpenRadar.*\\.gif") || f.getName().matches("OpenRadar.*\\.jpg")) {
+                    icons.add(new ImageIcon(f.getAbsolutePath()).getImage());
+                }
+            }
+            if(!icons.isEmpty()) {
+                setIconImages(icons);
+            }
+        }
 
         JPanel jPnlContentPane = new JPanel();
         jPnlContentPane.setOpaque(false);
@@ -184,10 +203,12 @@ public class AtcMessageDialog extends JDialog {
     private class TextMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            AtcMenuChatMessage msg = manager.getElementAt(Integer.parseInt(((JLabel)e.getSource()).getName()));
-            if(msg!=null) {
-                closeDialog();
-                master.getMpChatManager().setAutoAtcMessage(contact, msg);
+            if(e.getButton() == MouseEvent.BUTTON1) {
+                AtcMenuChatMessage msg = manager.getElementAt(Integer.parseInt(((JLabel)e.getSource()).getName()));
+                if(msg!=null) {
+                    closeDialog();
+                    master.getMpChatManager().setAutoAtcMessage(contact, msg);
+                }
             }
         }
     }
@@ -200,13 +221,13 @@ public class AtcMessageDialog extends JDialog {
 
         @Override
         public void windowDeactivated(WindowEvent e) {
-            // closeDialog();
+            //closeDialog();
         }
 
-        @Override
-        public void windowLostFocus(WindowEvent e) {
-            closeDialog();
-        }
+//        @Override
+//        public void windowLostFocus(WindowEvent e) {
+//            closeDialog();
+//        }
 
     }
 

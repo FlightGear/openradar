@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -37,6 +37,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -177,8 +178,10 @@ public abstract class AViewObject {
         return displayExtents!=null ? displayExtents.contains(p) : false;
     }
 
+    
     protected abstract void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter);
 
+    
     protected boolean showNavaid(AirportData data, String globalToggleKey, Color highlightColor, String name) {
         boolean global = data.getRadarObjectFilterState(globalToggleKey); // e.g. FIX
         boolean highlighted = highlightColor!=null;
@@ -196,4 +199,6 @@ public abstract class AViewObject {
         }
         return true;
     }
+
+    public void mouseClicked(MouseEvent e) {   }
 }

@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -134,4 +135,9 @@ public class ShapefileLayer implements IGeodataLayer {
 		}
 		return new Feature(featureDefinition, featureID, geometry, row);
 	}
+
+    @Override
+    public boolean hasNext() {
+        return shpFileReader.getLastFeatureID()<recordCount;
+    }
 }

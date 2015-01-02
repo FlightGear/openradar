@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013 Wolfram Wagner 
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -57,25 +57,29 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 	 * 
 	 * At most one radar data packet per aircraft is sent per antenna rotation.
 	 */
-	protected static final int antennaRotationTimeMsecs=1000;
+	protected volatile int antennaRotationTimeMsecs=1000;
 	
 	/**
 	 * Timeout for removal of stale targets in milliseconds.
 	 */
-	protected static final int staleTargetTimeoutMsecs= 10 * antennaRotationTimeMsecs;
+	protected final int staleTargetTimeoutMsecs= 10 * antennaRotationTimeMsecs;
 
 	
 	protected final Set<IRadarDataRecipient> recipients=new HashSet<IRadarDataRecipient>();
 
-	public FGMPClient(IPlayerRegistry<T> playerRegistry, String callsign, String model, Position position, String mpServer, int mpServerPort, int mpLocalPort) throws IOException {
+	public FGMPClient(IPlayerRegistry<T> playerRegistry, String callsign, String model, Position position, String mpServer, int mpServerPort, int mpLocalPort, int antennaRotationTimeMsecs) throws IOException {
 		super(playerRegistry, mpServer, mpServerPort, mpLocalPort);
 		//this.callsign=callsign;
 		this.position=position;
 		this.model=model;
-		lastAntennaRotationTime=System.currentTimeMillis();
-		
+		this.antennaRotationTimeMsecs = antennaRotationTimeMsecs;
+		lastAntennaRotationTime=0;//System.currentTimeMillis();
 		// must be last to be sure, everything is initialized!
 		startSending();
+	}
+	
+	public synchronized void setAntennaRotationTime(int timeInMs) {
+	    this.antennaRotationTimeMsecs = timeInMs;
 	}
 	
 //	@Override
@@ -85,7 +89,7 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 	
 	@Override
 	protected int getPlayerTimeoutMillis() {
-		return 10*60*1000; // staleTargetTimeoutMsecs;
+		return 1*60*1000; // staleTargetTimeoutMsecs;
 	}
 	
 	@Override

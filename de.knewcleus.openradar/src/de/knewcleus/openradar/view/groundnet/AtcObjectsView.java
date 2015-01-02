@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -36,6 +36,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -65,6 +66,7 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
     protected Path2D displayShape = null;
 
     protected AViewObjectPainter<?> viewObjectPainter;
+    protected Rectangle2D displayExtents;
 
 	public AtcObjectsView(IMapViewerAdapter mapViewAdapter, GuiMasterController master) {
 		this.mapViewAdapter = mapViewAdapter;
@@ -76,7 +78,7 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
         updateLogicalPosition();
 	}
     @Override
-    public Rectangle2D getDisplayExtents() {
+    public synchronized Rectangle2D getDisplayExtents() {
         return viewObjectPainter.getDisplayExtents();
     }
 
@@ -86,11 +88,11 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
     }
 
     @Override
-    public boolean isVisible() {
+    public synchronized boolean isVisible() {
         return visible;
     }
 
-    public void setVisible(boolean visible) {
+    public synchronized  void setVisible(boolean visible) {
         if (this.visible == visible) {
             return;
         }
@@ -99,7 +101,7 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
+    public synchronized  void paint(Graphics2D g2d) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setFont(new Font("Arial", Font.PLAIN, 4));
     
@@ -107,11 +109,12 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
     }
 
     @Override
-    public void validate() {
+    public synchronized  void validate() {
+        mapViewAdapter.getUpdateManager().markRegionDirty(viewObjectPainter.getDisplayExtents()/*displayExtents*/);
     }
 
     @Override
-    public void acceptNotification(INotification notification) {
+    public synchronized  void acceptNotification(INotification notification) {
             if (notification instanceof ProjectionNotification) {
                 updateLogicalPosition();
             } else if (notification instanceof CoordinateSystemNotification) {
@@ -119,13 +122,13 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
             }
     }
 
-    protected void updateLogicalPosition() {
+    protected synchronized void updateLogicalPosition() {
         final IProjection projection = mapViewAdapter.getProjection();
         logicalPosition = projection.toLogical(data.getAirportPosition());
         updateDisplayPosition();
     }
 
-    protected void updateDisplayPosition() {
+    protected synchronized void updateDisplayPosition() {
         final AffineTransform logical2display = mapViewAdapter.getLogicalToDeviceTransform();
         displayPosition = logical2display.transform(logicalPosition, null);
         viewObjectPainter.updateDisplayPosition(displayPosition);
@@ -134,5 +137,10 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
     @Override
     public String getTooltipText(Point p) {
         return viewObjectPainter.isPickable() ? viewObjectPainter.getTooltipText(p) : null;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        viewObjectPainter.mouseClicked(e);
     }
 }

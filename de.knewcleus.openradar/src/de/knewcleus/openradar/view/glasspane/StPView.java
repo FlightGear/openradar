@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -240,4 +240,6 @@ public class StPView implements IBoundedView, INotificationListener {
         return null;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent p) {  }
 }

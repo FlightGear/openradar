@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -39,8 +40,4 @@ public class Notification implements INotification {
 		this.notifier = notifier;
 	}
 
-	@Override
-	public INotifier getSource() {
-		return notifier;
-	}
 }

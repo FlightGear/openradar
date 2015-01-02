@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -33,7 +34,6 @@
 package de.knewcleus.openradar.rpvd;
 
 import de.knewcleus.openradar.notify.INotification;
-import de.knewcleus.openradar.notify.INotifier;
 
 public class SelectionChangeNotification implements INotification {
 	protected final TrackDisplayState source;
@@ -41,10 +41,4 @@ public class SelectionChangeNotification implements INotification {
 	public SelectionChangeNotification(TrackDisplayState source) {
 		this.source = source;
 	}
-
-	@Override
-	public INotifier getSource() {
-		return source;
-	}
-
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -59,17 +59,19 @@ public class TrackDisplayState extends Notifier {
 
 	public void setSelected(MouseEvent e, boolean selected) {
 	    //System.out.println(e.getButton());
-        if(e.getButton()==java.awt.event.MouseEvent.BUTTON1) {
-            master.getRadarContactManager().select(guiContact, true, false);
-            if(guiContact.isSelected()) {
-                master.getMpChatManager().requestFocusForInput();
+	    if(selected) {
+            if(e.getButton()==java.awt.event.MouseEvent.BUTTON1) {
+                master.getRadarContactManager().select(guiContact, true, false);
+                if(guiContact.isSelected()) {
+                    master.getMpChatManager().requestFocusForInput();
+                }
             }
-        }
-        if(e.getButton()==java.awt.event.MouseEvent.BUTTON2) {
-            master.getRadarContactManager().selectNShowFlightplanDialog(guiContact, e);
-        } else if(e.getButton()==java.awt.event.MouseEvent.BUTTON3) {
-            master.getRadarContactManager().selectNShowAtcMsgDialog(guiContact, e);
-        }
+            if(e.getButton()==java.awt.event.MouseEvent.BUTTON2) {
+                master.getRadarContactManager().selectNShowFlightplanDialog(guiContact, e);
+            } else if(e.getButton()==java.awt.event.MouseEvent.BUTTON3) {
+                master.getRadarContactManager().selectNShowAtcMsgDialog(guiContact, e);
+            }
+	    }
 		notify(new SelectionChangeNotification(this));
 	}
 

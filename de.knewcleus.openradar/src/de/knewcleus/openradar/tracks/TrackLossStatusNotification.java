@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -47,10 +48,5 @@ public class TrackLossStatusNotification implements INotification {
 
 	public TrackLossStatusNotification(ITrack track) {
 		this.track = track;
-	}
-	
-	@Override
-	public ITrack getSource() {
-		return track;
 	}
 }

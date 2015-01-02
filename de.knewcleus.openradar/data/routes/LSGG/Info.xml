@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+  <route name="LSGG Infos">
+    <screenText screenPos="200,30" font="Arial" fontSize="22" color="10,10,100" text="Geneva"/>
+    <screenText screenPos="250,50" font="Arial" fontSize="16" color="10,10,100" text="APP: 131.325 / DEP: 119.525 / TWR: 119.90 / GND: 121.675"/>
+    <screenText screenPos="250,90" font="Arial" fontSize="16" color="10,10,100" text="VFR enter TMA at 3500 ft QNH, pattern 2500, final 2000"/>
+    <screenText screenPos="650,750" font="Arial" fontSize="14" color="150,150,150" text="PAS/Passeiry, SPR/Saint-Prex, GVA/Geneva, CBY/Chambery"/>
+  </route>
+
+  <route name="LSGG ILS 05">
+    <activeLandingRunways>05</activeLandingRunways>
+    <screenText screenPos="200,70" font="Arial" fontSize="16" color="10,10,100" text="ILS 05: 110.90"/>
+  </route>
+
+  <route name="LSGG ILS 23">
+    <activeLandingRunways>23</activeLandingRunways>
+    <screenText screenPos="200,70" font="Arial" fontSize="16" color="10,10,100" text="ILS 23: 109.90"/>
+  </route>
+
+  <route name="Entry points">
+     <navaids color="200,100,0">BELUS,KINES,BANKO,ULMES,BENOT,DJL,AKITO,LUSAR,FRI</navaids>
+  </route>
+</routes>

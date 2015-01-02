@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -35,6 +35,7 @@ package de.knewcleus.openradar.view;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 
 /**
  * A view is an entity on the map display.
@@ -67,4 +68,5 @@ public interface IView {
 
     public String getTooltipText(Point p);
 
+    public void mouseClicked(MouseEvent e);
 }

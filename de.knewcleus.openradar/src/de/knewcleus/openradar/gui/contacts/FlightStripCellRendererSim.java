@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -460,14 +460,14 @@ public class FlightStripCellRendererSim extends JComponent implements ListCellRe
             remarks.append(fpd.getDepartureAirport().isEmpty()?"____":fpd.getDepartureAirport());
             remarks.append(" ");
             remarks.append(fpd.getDestinationAirport().isEmpty()?"____":fpd.getDestinationAirport());
+//            remarks.append(" ");
+//            remarks.append(fpd.getDirectiontoDestinationAirport().isEmpty()?"___":fpd.getDirectiontoDestinationAirport());
+            remarks.append(fpd.getCruisingAltitude().isEmpty()?" ":" "+fpd.getCruisingAltitude());
             remarks.append(" ");
-            remarks.append(fpd.getDirectiontoDestinationAirport().isEmpty()?"___":fpd.getDirectiontoDestinationAirport());
-            remarks.append(" ");
-            remarks.append(fpd.getCruisingAltitude().isEmpty()?"FL___":fpd.getCruisingAltitude());
-            remarks.append(" ");
-            remarks.append(fpd.getAssignedRoute().isEmpty()?"":fpd.getAssignedRoute()+" ");
-            remarks.append(fpd.getAssignedRunway().isEmpty()?"":"RW"+fpd.getAssignedRunway());
         }        
+        remarks.append(fpd.getAssignedRoute().isEmpty()?"":fpd.getAssignedRoute()+" ");
+        remarks.append(fpd.getAssignedRunway().isEmpty()?"":"RW"+fpd.getAssignedRunway());
+
         if(remarks.length()>0 && (!fpRemarks.isEmpty() || !atcComments.isEmpty()) ) {
             remarks.append("\n");
         }
@@ -487,7 +487,7 @@ public class FlightStripCellRendererSim extends JComponent implements ListCellRe
     private String getSquawkDisplay(GuiRadarContact c) {
         //if(c.getTranspSquawkCode()!=null) System.out.println(c.getCallSign()+": Sq:"+c.getTranspSquawkCode()+" A:"+c.getTranspAltitude());
         if(c.getAssignedSquawk()==null && c.getTranspSquawkCode()==null) return "";
-        if(c.getAssignedSquawk()!=null && c.getTranspSquawkCode()==null && (null==c.getTranspSquawkCode() || -9999==c.getTranspSquawkCode() || c.getTranspSquawkCode()==null)) return ""+c.getAssignedSquawk()+"(standby)";
+        if(c.getAssignedSquawk()!=null && (null==c.getTranspSquawkCode() || -9999==c.getTranspSquawkCode() || c.getTranspSquawkCode()==null)) return ""+c.getAssignedSquawk()+"(standby)";
         if(c.getAssignedSquawk()==null && (null==c.getTranspSquawkCode() || -9999==c.getTranspSquawkCode() || c.getTranspSquawkCode()==null)) return "(standby)";
         if(c.getAssignedSquawk()==null && -9999!=c.getTranspSquawkCode() ) return "("+c.getTranspSquawkCode()+")";
         if(c.getAssignedSquawk().equals(c.getTranspSquawkCode())) return ""+c.getTranspSquawkCode();

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -35,7 +35,9 @@ package de.knewcleus.openradar.view.stdroutes;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Stroke;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -54,7 +56,7 @@ public abstract class AStdRouteElement {
     protected final String arrows;
     protected final int arrowSize;
     protected final Color color;
-
+    
     public AStdRouteElement(IMapViewerAdapter mapViewAdapter, Point2D geoReferencePoint, String stroke, String sLineWidth, String arrows, String color) {
         this.mapViewerAdapter = mapViewAdapter;
         this.geoReferencePoint= geoReferencePoint;
@@ -164,4 +166,8 @@ public abstract class AStdRouteElement {
         g2d.fill(path);
 
     }
+
+    public abstract boolean contains(Point p);
+
+    public void mouseClicked(MouseEvent e) {}
 }

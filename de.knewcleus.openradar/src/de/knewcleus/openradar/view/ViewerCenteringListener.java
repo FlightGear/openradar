@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -48,8 +49,8 @@ public class ViewerCenteringListener implements ComponentListener {
 	public void componentResized(ComponentEvent e) {
 		Dimension size = e.getComponent().getSize();
 		Rectangle viewerExtents = new Rectangle(size);
-		viewerAdapter.setViewerExtents(viewerExtents);
 		viewerAdapter.setDeviceOrigin(viewerExtents.getCenterX(), viewerExtents.getCenterY());
+        viewerAdapter.setViewerExtents(viewerExtents);
 	}
 
 	@Override

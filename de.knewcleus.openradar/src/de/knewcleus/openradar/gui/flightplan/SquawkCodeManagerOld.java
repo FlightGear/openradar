@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -42,7 +42,9 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class SquawkCodeManagerOld {
 
-    private int squawkFromVFR = 2000;
+    private int ifrCode = 2000;  
+    private int vfrCode = 1200; // Europe, US 7000
+    private int squawkFromVFR = 2001;
     private int squawkToVFR = 2777;
     private int squawkFromIFR = 4000;
     private int squawkToIFR = 4777;
@@ -54,6 +56,22 @@ public class SquawkCodeManagerOld {
 
     public SquawkCodeManagerOld(AirportData data) {
 //        this.data = data;
+    }
+
+    public synchronized int getIfrCode() {
+        return ifrCode;
+    }
+
+    public synchronized void setIfrCode(int ifrCode) {
+        this.ifrCode = ifrCode;
+    }
+
+    public synchronized int getVfrCode() {
+        return vfrCode;
+    }
+
+    public synchronized void setVfrCode(int vfrCode) {
+        this.vfrCode = vfrCode;
     }
 
     public synchronized int getSquawkFromVFR() {
@@ -153,6 +171,8 @@ public class SquawkCodeManagerOld {
     }
 
     public synchronized void addSquawkRangeTo(Properties p) {
+        p.setProperty("squawk.ifrCode",""+ifrCode);
+        p.setProperty("squawk.vfrCode",""+vfrCode);
         p.setProperty("squawk.vfr.first", ""+squawkFromVFR);
         p.setProperty("squawk.vfr.last", ""+squawkToVFR);
         p.setProperty("squawk.ifr.first", ""+squawkFromIFR);
@@ -160,6 +180,8 @@ public class SquawkCodeManagerOld {
     }
 
     public synchronized void restoreSquawkRangeFrom(Properties p) {
+        ifrCode = Integer.parseInt(p.getProperty("squawk.ifrCode","2000"));
+        vfrCode = Integer.parseInt(p.getProperty("squawk.vfrCode","1200"));
         squawkFromVFR = Integer.parseInt(p.getProperty("squawk.vfr.first",""+squawkFromVFR));
         squawkToVFR = Integer.parseInt(p.getProperty("squawk.vfr.last",""+squawkToVFR));
         squawkFromIFR = Integer.parseInt(p.getProperty("squawk.ifr.first",""+squawkFromIFR));

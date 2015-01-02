@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012-2014 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -32,13 +32,13 @@ package de.knewcleus.openradar.rpvd;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import de.knewcleus.fgfs.location.Ellipsoid;
@@ -92,6 +92,8 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
     protected volatile Rectangle2D displayExtents = new Rectangle2D.Double();
 
     protected RadarContactTextPainter contactTextPainter;
+    
+    private int distance = 10;
 
     public RadarTargetView(GuiMasterController master, IRadarMapViewerAdapter radarMapViewAdapter, TrackDisplayState trackDisplayState) {
         this.master = master;
@@ -100,7 +102,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
         contactTextPainter = new RadarContactTextPainter(master, trackDisplayState);
         radarMapViewAdapter.registerListener(this);
         trackDisplayState.registerListener(this);
-        trackDisplayState.getTrack().registerListener(this);
+        master.getTrackManager().registerListener(this); // listen for updated or lost tracks
         updateGeographicPositions();
     }
 
@@ -166,21 +168,41 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
             boolean highlighted = trackDisplayState.guiContact.isHighlighted();
             contactTextPainter.paint(g2d, highlighted); // paint infos into background
             // the position shape
-            Color baseColor = /*(trackDisplayState.isSelected() ? Palette.RADAR_SELECTED :*/ contactTextPainter.getColor(trackDisplayState.getGuiContact());
-            Color color = baseColor;
-            int count = displayDotShapes.size();
-            int i = 0;
+            //Color baseColor = (trackDisplayState.isSelected() ? Palette.RADAR_SELECTED : contactTextPainter.getColor(trackDisplayState.getGuiContact()) );
+            Color baseColor = contactTextPainter.getColor(trackDisplayState.getGuiContact());
+            if(trackDisplayState.isSelected()) {
+                baseColor = baseColor.brighter().brighter();
+            }
             
-            for (ContactShape displayDotShape : displayDotShapes) {
-                // paint every second
-                if(i==0 || i%3==0) {
+            distance = (int)Math.round(radarMapViewAdapter.getLogicalScale())/4; //2
+            // if antenna turns slowly, the history dots are further away from each other
+            int radarSpeedCorrection = master.getAirportData().getAntennaRotationTime()/1000;
+            distance /= radarSpeedCorrection;
+            if(distance<1) distance = 1;
+            if(distance>50) distance = 50;
+            int maxTailLength = radarMapViewAdapter.getMaxTailLength();
+            int tailOffset = trackDisplayState.getTrack().getTailOffset();
+            
+            // the original shape
+            g2d.setColor(baseColor);
+            ContactShape displayDotShape = displayDotShapes.get(0);
+            displayDotShape.paintShape(g2d);
+            
+            if(maxTailLength>0) {
+                int tailLength = 0;
+                Color color = baseColor;
+                for (int i=0; i<50; i++) {
+                    if(tailOffset+distance*i > displayDotShapes.size()-1 || tailLength>maxTailLength) {
+                        break;
+                    }
+                    displayDotShape = displayDotShapes.get(tailOffset+distance*i);
                     if (displayDotShapes.indexOf(displayDotShape) == 0 || displayDotShape.isTailVisible()) {
-                        color = i==0 ? color : new Color(color.getRed(), color.getGreen(), color.getBlue(), 200 * (count-i) / count);
+                        color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 150 * (maxTailLength-tailLength) / maxTailLength);
                         g2d.setColor(color);
                         displayDotShape.paintShape(g2d);
                     }
+                    tailLength++;
                 }
-                ++i;
             }
             g2d.setColor(baseColor);
             // heading line
@@ -200,7 +222,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
     }
 
     @Override
-    public synchronized void acceptNotification(INotification notification) {
+    public void acceptNotification(INotification notification) {
         if (notification instanceof SelectionChangeNotification) {
             repaint();
         } else if (notification instanceof TrackUpdateNotification) {
@@ -228,21 +250,11 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
         currentLogicalPosition = projection.toLogical(currentGeoPosition);
         futureLogicalPosition = projection.toLogical(futureGeoPosition);
 
-        logicalDotPositions.clear();
-
-        final Iterator<IRadarDataPacket> radarDataIterator = trackDisplayState.getTrack().iterator();
-        final int trackHistoryLength = radarMapViewAdapter.getTrackHistoryLength();
-
-        for (int i = 0; i < trackHistoryLength && radarDataIterator.hasNext(); ++i) {
-            final IRadarDataPacket radarDataPacket = radarDataIterator.next();
-            final Point2D geographicalPosition = radarDataPacket.getPosition();
-            final Point2D logicalPosition = projection.toLogical(geographicalPosition);
-            logicalDotPositions.add(logicalPosition);
-        }
         updateDisplayPositions();
     }
 
     protected synchronized void updateDisplayPositions() {
+        
         /* Ensure that the formerly occupied region is repainted */
         radarMapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
 
@@ -259,23 +271,32 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
         displayExtents = displayHeadingLine.getBounds2D();
 
         // the dots
-        int i = 0;
         // shift all shapes backwards and reuse the last as first
-        final int maxCount = radarMapViewAdapter.getTrackHistoryLength();
+        final int maxCount = trackDisplayState.getTrack().size();
         ContactShape displayDotShape = displayDotShapes.size() == maxCount ? displayDotShapes.remove(maxCount - 1) : new ContactShape();
         master.getAirportData().getDatablockLayoutManager().getActiveLayout().modify(displayDotShape, trackDisplayState.getGuiContact());
         // assign contact and current status
         displayDotShapes.add(0, displayDotShape);
 
         // update data
-        for (Point2D logicalPosition : logicalDotPositions) {
+        final IProjection projection = radarMapViewAdapter.getProjection();
+        logicalDotPositions.clear();
+        
+        List<IRadarDataPacket> history = trackDisplayState.getTrack().getCopyOfHistory();
+        for (int i = 0; i < maxCount && i<history.size(); ++i) {
+            final IRadarDataPacket radarDataPacket = history.get(i);
+            final Point2D geographicalPosition = radarDataPacket.getPosition();
+            final Point2D logicalPosition = projection.toLogical(geographicalPosition);
             final Point2D displayPosition = logical2device.transform(logicalPosition, null);
+            
             displayDotShapes.get(i).setCenter(displayPosition);
             Rectangle2D.union(displayDotShapes.get(i).getBounds2D(), displayExtents, displayExtents);
-            i++;
+            
         }
         // compose description field for contact
         Rectangle2D.union(contactTextPainter.getDisplayExtents(currentDevicePosition), displayExtents, displayExtents);
+
+        if(trackDisplayState.getTrack().getTailOffset()>=distance)  trackDisplayState.getTrack().resetTailOffset();
 
         repaint();
     }
@@ -317,4 +338,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
     // return
     // "<html><body>"+c.getCallSign()+"<br>"+c.getAircraft()+"  "+c.getRadarContactDistance()+" NM"+(c.getAtcComment()!=null?"<br>"+c.getAtcComment():"")+"</body></html>";
     // }
+
+    @Override
+    public void mouseClicked(MouseEvent p) {  }
 }

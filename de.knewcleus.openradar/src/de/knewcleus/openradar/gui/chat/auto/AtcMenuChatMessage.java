@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -114,11 +114,16 @@ public class AtcMenuChatMessage {
                     values.add(Double.parseDouble(master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency())); // todo multiple frequencies?
                 }
             } else if("/openradar/comm/frequencies".equals(varName)) {
+                String v;
                 if(master.getRadioManager().getModels().isEmpty()) {
-                    values.add("n/a");
+                    v="n/a";
                 } else {
-                    values.add(master.getRadioManager().getActiveFrequenciesForDisplay());
+                    v = master.getRadioManager().getActiveFrequenciesForDisplay();
                 }
+                if(master.getAirportData().isAltRadioTextEnabled()) {
+                    v+="; "+master.getAirportData().getAltRadioText();
+                }
+                values.add(v);
             } else if("/openradar/transitionAlt".equals(varName)) {
                 values.add(String.format("%dft",data.getTransitionAlt()));
 

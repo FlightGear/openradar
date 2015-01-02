@@ -1,68 +1,168 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- This file contains the STAR and SID of RW 15 -->
+<!-- This file contains the star and sid of RW 15 -->
 <routes>
 
-	<route name="RW 15 finals" zoomMin="10" zoomMax="100" color="120,120,140" >
+	<!-- APP -->
+
+	<route name="APP" zoomMin="10">
+		<activeLandingRunways>15</activeLandingRunways>
+
+		<navaids color="255,255,0">ALTIK,ADOGA</navaids>
+		<loop navpoint="ALTIK" inboundHeading="093" length="5" arrows="both" minHeight="5500" maxHeight="MAX 11000" misapHeight="MISAP4000"/>
+		<loop navpoint="ADOGA" inboundHeading="199" length="5" arrows="both" right="false" minHeight="FL100" maxHeight="MAX FL160" stroke="dots"/>
+	</route>
+
+	<!-- STAR ALTIK -->
+
+	<route name="ALTIK" displayMode="star" zoomMin="10" zoomMax="100" color="120,120,140" >
 
 		<activeLandingRunways>15</activeLandingRunways>
 		<navaids>BLM,ALTIK,ROFAC,INTEM,HOMBO,LUMEL,ARPUS</navaids>
 
 		<!-- ALTIK - rw 15 circeling approach -->
-		<line start="ALTIK" end="BLM" endOffset="10" text="094"/>
-		<line start="BLM" angle="274" length="10" stroke="dashed" lineWidth="1" text="094" />
-		<curve start="10NM274@BLM" end="9NM277@BLM" controlPoint="9NM274@BLM"/>
-		<bow center="BLM" radius="9" startAngle="277" extentAngle="50" text="D9"/>
-		<curve start="9NM327@BLM" end="8NM335@BLM" controlPoint="9NM335@BLM"/>
+		<line start="ALTIK" end="BLM" endOffset="13" text="094"/>
+		<line start="BLM" angle="274" length="13" stroke="dashed" lineWidth="1" text="094" />
+		<curve start="13.3NM274@BLM" end="12NM277@BLM" controlPoint="12NM274@BLM"/>
+		<bow center="BLM" radius="12" startAngle="277" extentAngle="48" text="D12 BLM"/>
+		<curve start="12NM325@BLM" end="10NM335@BLM" controlPoint="12NM334@BLM"/>
+		
+		<text position="47.652878,7.226980" fontSize="11" clickable="true" text="ALTIK"/>
 	</route>
 
-	<route name="RW 15 MISAP" zoomMin="10" zoomMax="100" color="140,120,120" stroke="dashed">
+	<!-- MISAP -->
+	
+	<route name="MISAP" displayMode="star" zoomMin="10" zoomMax="100" color="140,120,120" stroke="dashed">
 		<activeLandingRunways>15</activeLandingRunways>
 		<navaids>BLM,ALTIK,BS</navaids>
 
 		<!-- misap -->
 		<curve start="BS" end="7NM190@BLM" controlPoint="8NM155@BLM" />
-		<line start="7NM190@BLM" end="11NM231@BLM" text="276" />
-		<line start="11NM231@BLM" end="13NM231@BLM" text="231" />
-		<line start="BLM" angle="231" length="11" lineWidth="1" stroke="dashed" text="232" />
+		<line start="7NM190@BLM" end="11NM231@BLM" text="275" />
+		<line start="11NM231@BLM" end="13NM231@BLM"  text="230 BLM" />
 		<curve start="13NM231@BLM" end="15NM238@BLM" controlPoint="15NM232@BLM"/>
-		<bow center="BLM" radius="15" startAngle="238" extentAngle="36" arrows="end" text="D15"/>
+		<bow center="BLM" radius="15" startAngle="238" extentAngle="36" arrows="end" text="D15 BLM"/>
 	</route>
 
-	<route name="RW 15 SID" zoomMin="10" zoomMax="100" color="120,140,120">
-		<activeStartRunways>15</activeStartRunways>
-		<navaids>BASUD,BLM,BS,ELBEG,HOC,HOMBO,LUMEL,WIL</navaids>
 
-		<!-- LUMEL 2S -->
-		<curve start="BS" end="4.5NM180@BLM" controlPoint="4.5NM155@BLM"/>
-		<line start="4.5NM180@BLM" end="8NM226@BLM" text="258" />
-		<line start="BLM" angle="226" length="8" stroke="dashed" lineWidth="1" text="226" />
-		<line start="8NM226@BLM" end="LUMEL" text="226" />
+	<!-- SIDs -->
 
-		<!-- BASUD 2S -->
-		<bow center="8.317NM184@BLM" radius="3.65" startAngle="168" extentAngle="180"/>
-		<line start="BLM" angle="196" length="6" stroke="dashed" lineWidth="1" text="196" />
-		<line start="3NM190@BLM" angle="190" length="3" stroke="dashed" lineWidth="1" text="190" />
-		<line start="HOC" angle="254" length="6.85" text="074" />
-		<line start="BASUD" angle="315" length="5.7" text="135" />
-		<line start="WIL" end="BASUD" stroke="dashed" lineWidth="1" text="315"/>
+	<!-- SID LUMEL 6T -->
+	<route name="LUMEL 6T" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">BLM,BS,LUMEL</navaids>
 
-		<!-- HOC 2S -->
-		<curve start="7.5NM292@HOC" end="4.72NM190@BLM" controlPoint="6.8NM210@BLM"/>
-		<line start="HOC" angle="292" length="7.5" text="112" />
-
-		<!-- ELBEG 2S -->
-		<line start="HOC" end="ELBEG" text="013" />
-
-		<!-- HOMBO 2S -->
-		<line start="HOC" end="HOMBO" text="341" />
-
-		<!-- Strassburg 2S -->
-		<line start="BLM" angle="003" length="90" text="003" />
-		<curve start="4.42NM175@BLM" end="3NM190@BLM" controlPoint="4.8NM190@BLM" />
-		<line start="BLM" angle="190" length="3" text="190" />
-
-		<!-- BASUD 2Z -->
-		<line start="BLM" end="ELBEG" text="069" arrows="end"/>
-
+		<intercept start="BS" startHeading="155" end="6NM195@BLM" endHeading="257" direction="right" text="257"/>
+		<intercept start="6NM195@BLM" startHeading="257" end="LUMEL" endHeading="225" direction="left" text="155"/>
+		
+		<line start="BLM" angle="226" length="8" stroke="dashed" lineWidth="1" text="225" />
+		
+		<text position="47.494406,7.343784" fontSize="11" clickable="true" text="LUMEL 6T"/>
 	</route>
+	
+	<!-- SID BASUD 6T -->
+	<route name="BASUD 6T" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">BASUD,BS,HOC</navaids>
+
+		<intercept start="BS" startHeading="155" end="6NM195@BLM" endHeading="246" direction="right" text="246"/>
+		<intercept start="6NM195@BLM" startHeading="246" end="7NM252@HOC" endHeading="072" radius="3.2" direction="left" />
+		<intercept start="7NM252@HOC" startHeading="072" end="BASUD" endHeading="134" direction="right" arrows="end" text="134"/>
+		
+		<text position="47.431991,7.439986" fontSize="11" clickable="true" text="BASUD 6T"/>
+	</route>
+
+	<!-- SID HOC 6T -->
+
+	<route name="HOC 6T" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">BLM,BS,HOC</navaids>
+
+		<intercept start="BS" startHeading="155" end="6NM195@BLM" endHeading="257" direction="right" text="257"/>
+		<intercept start="6NM195@BLM" startHeading="257" end="HOC" endHeading="090" radius="2.1" direction="left" arrows="end" text="090"/>
+
+		<text position="47.461478,7.429783" fontSize="11" clickable="true" text="HOC 6T"/>
+	</route>
+
+
+	<!-- SID ELBEG 6T -->
+	
+	<route name="ELBEG 6T" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">ELBEG,HOC</navaids>
+
+		<intercept start="BS" startHeading="155" end="6NM195@BLM" endHeading="246" direction="right" text="246"/>
+		<intercept start="6NM195@BLM" startHeading="246" end="3NM252@HOC" endHeading="072" radius="3.2" direction="left" text="072"/>
+		<intercept start="3NM252@HOC" startHeading="072" end="ELBEG" endHeading="014" arrows="end" direction="left" text="013"/>
+		
+		<text position="47.546992,7.664459" fontSize="11" clickable="true" text="ELBEG 6T"/>
+	</route>
+
+	<!-- SID STR 6Y -->
+
+	<route name="STR 6Y" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">BLM,BS</navaids>
+
+		<intercept start="BS" startHeading="155" end="BLM" endHeading="015" radius="1.18" direction="right" />
+		<line start="BLM" angle="003" length="18" arrows="end" text="002"  />
+		
+		<text position="47.672804,7.523799" fontSize="11" clickable="true" text="STR 6Y"/>
+	</route>
+
+	<!-- SID ELBEG 6Y -->
+
+	<route name="ELBEG 6Y" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">BLM,BS,ELBEG</navaids>
+
+		<intercept start="BS" startHeading="155" end="BLM" endHeading="015" radius="1.18" direction="right" />
+		<line start="BLM" end="ELBEG" text="068" />
+		
+		<text position="47.682270,7.641433" fontSize="11" clickable="true" text="ELBEG 6Y"/>
+	</route>
+
+	<!-- SID GTQ 6Y -->
+
+	<route name="GTQ 6Y" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">BLM,BS,BN,GTQ</navaids>
+
+		<intercept start="BS" startHeading="155" end="BN" endHeading="007" radius="1.45" text="007" direction="right" />
+		<line start="BN" angle="338" length="10" arrows="end" text="338"  />
+		
+		<text position="47.650689,7.438529" fontSize="11" clickable="true" text="GTQ 6Y"/>
+	</route>
+
+	<!-- SID STR 6T South-->
+
+	<route name="STR 6T" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">BLM,BS,HOC,HOMBO,STR</navaids>
+
+		<intercept start="BS" startHeading="155" end="6NM195@BLM" endHeading="246" direction="right" text="246"/>
+		<intercept start="6NM195@BLM" startHeading="246" end="3NM252@HOC" endHeading="072" radius="3.2" direction="left" text="072"/>
+		<intercept start="3NM252@HOC" startHeading="072" end="3NM341@HOC" endHeading="341" direction="left"/>
+		<line start="HOC" end="HOMBO" startOffset="3" text="013" arrows="end"/>
+		<line start="HOMBO" angle="001" length="11.7" arrows="end" text="001" />
+		
+		<text position="47.614626,7.630282" fontSize="11" clickable="true" text="STR 6T"/>
+		<text position="47.540603,7.601782" fontSize="11" clickable="true" text="STR 6T"/>
+	</route>
+
+	<!-- SID GTQ 6T South-->
+
+	<route name="GTQ 6T" displayMode="sid" zoomMin="10" zoomMax="100" color="120,140,120">
+		<activestartRunways>15</activestartRunways>
+		<navaids color="255,255,0">BLM,BS,HOC,HOMBO,GTQ</navaids>
+
+		<intercept start="BS" startHeading="155" end="6NM195@BLM" endHeading="246" direction="right" text="246"/>
+		<intercept start="6NM195@BLM" startHeading="246" end="3NM252@HOC" endHeading="072" radius="3.2" direction="left" text="072"/>
+		<intercept start="3NM252@HOC" startHeading="072" end="3NM341@HOC" endHeading="341" direction="left"/>
+		<line start="HOC" end="HOMBO" startOffset="3" text="013" arrows="end"/>
+		<line start="HOMBO" angle="336" length="10" arrows="end" text="336" />
+		
+		<text position="47.587450,7.646654" fontSize="11" clickable="true" text="GTQ 6T"/>
+		<text position="47.527825,7.609070" fontSize="11" clickable="true" text="GTQ 6T"/>
+	</route>
+
 </routes>

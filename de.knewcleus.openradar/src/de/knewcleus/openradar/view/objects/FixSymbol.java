@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -61,7 +61,7 @@ public class FixSymbol extends AViewObject {
     }
 
     @Override
-    protected void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
+    protected synchronized void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
 
         path = new Path2D.Double();
 

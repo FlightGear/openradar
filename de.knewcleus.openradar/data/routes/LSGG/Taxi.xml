@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+  <route name="LSGG Taxiways" zoomMin="0" zoomMax="8">
+    <text position="46.225587,6.092470" font="Arial" fontSize="10" color="55,0,0" angle="0" text="G"/>
+    <text position="46.229224,6.098445" font="Arial" fontSize="10" color="55,0,0" angle="0" text="F"/>
+    <text position="46.231113,6.100951" font="Arial" fontSize="10" color="55,0,0" angle="0" text="E"/>
+    <text position="46.235044,6.106724" font="Arial" fontSize="10" color="55,0,0" angle="0" text="D"/>
+    <text position="46.237814,6.110909" font="Arial" fontSize="10" color="55,0,0" angle="0" text="C"/>
+    <text position="46.243309,6.118942" font="Arial" fontSize="10" color="55,0,0" angle="0" text="B"/>
+    <text position="46.248571,6.127154" font="Arial" fontSize="10" color="55,0,0" angle="0" text="A"/>
+    <text position="46.239550,6.108467" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y"/>
+    <text position="46.233743,6.100108" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Z"/>
+
+    <!--
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    <text position="" font="Arial" fontSize="10" color="55,0,0" angle="0" text=""/>
+    -->
+  </route>
+
+  <route name="LSGG Terminal" zoomMin="0" zoomMax="20">
+    <text position="46.225278,6.102368" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Terminal 1"/>
+    <text position="46.225278,6.112368" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Fret"/>
+  </route>
+
+</routes>

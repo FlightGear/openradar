@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -74,7 +75,7 @@ public class SHPFileReader {
 	protected final int shapeType;
 	protected final double xMin, xMax, yMin, yMax, zMin, zMax, mMin, mMax;
 	protected int lastFeatureID=-1;
-	
+
 	public SHPFileReader(InputStream shapeFileStream) throws IOException, DataFormatException {
 		this.shapeDataStream=new DataInputStream(shapeFileStream);
 		
@@ -304,8 +305,9 @@ public class SHPFileReader {
 			}
 		}
 		
+//		innerRings.get(0).getEnclosedArea();
 		if (outerRing==null) {
-			throw new DataFormatException("Polygon has no outer ring");
+		    throw new DataFormatException("Polygon has no outer ring");
 		}
 		
 		final Polygon polygon=new Polygon();

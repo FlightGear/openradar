@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -57,7 +57,7 @@ import java.util.StringTokenizer;
 public abstract class SectorCreator {
 
     // "http://mapserver.flightgear.org/dlaction?layer=<layername>&xmin=<degree>&xmax=<degree>&ymin=<degree>&ymax=<degree>";
-    private static String address = "http://mapserver.flightgear.org/dlaction?";
+    private static String address = "http://mapserver.flightgear.org/dlsingle?";
     private static String[] layers = { "v0_landmass", "cs_urban", "cs_lake", "osm_river", "apt_airfield", "apt_runway", "apt_tarmac" };
     private static double mapWidth = 10; // degrees
     private static double mapHeight = 10; // degrees
@@ -111,7 +111,7 @@ public abstract class SectorCreator {
             downloadZip(data, layers[i], upperLeftCorner, lowerRightCorner);
             setupDialog.setStatus((i + 1) * 100 / layers.length, "..." + layers[i] + " downloaded");
         }
-        setupDialog.setStatus(100, "Ready.");
+        setupDialog.setStatus(0, "Ready.");
         // Create sector.properties
         Properties p = new Properties();
         p.put("airportName", data.getAirportName());

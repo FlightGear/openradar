@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -32,9 +33,8 @@
  */
 package de.knewcleus.openradar.tracks;
 
-import java.util.Iterator;
+import java.util.List;
 
-import de.knewcleus.openradar.notify.INotifier;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
 
 /**
@@ -45,7 +45,7 @@ import de.knewcleus.openradar.radardata.IRadarDataPacket;
  * @see ITrackManager
  *
  */
-public interface ITrack extends INotifier, Iterable<IRadarDataPacket> {
+public interface ITrack {
 	/**
 	 * @return the number of states available.
 	 */
@@ -78,11 +78,9 @@ public interface ITrack extends INotifier, Iterable<IRadarDataPacket> {
 	 */
 	public IRadarDataPacket getCurrentState();
 	
-	/**
-	 * Return an iterator over the states of the track.
-	 * 
-	 * The iterator starts with the current state and proceeds backwards in history.
-	 */
-	@Override
-	public Iterator<IRadarDataPacket> iterator();
+	public int getTailOffset();
+
+    public void resetTailOffset();
+
+    public List<IRadarDataPacket> getCopyOfHistory();
 }

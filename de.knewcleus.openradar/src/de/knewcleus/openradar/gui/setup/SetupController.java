@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2014 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -294,6 +294,7 @@ public class SetupController {
         if (setupDialog.readInputs(data)) {
             // start application
             try {
+                data.setCallSign(setupDialog.getCallsign());
                 GuiMasterController manager = new GuiMasterController(data);
                 manager.start(setupDialog);
                 setupDialog.dispose();

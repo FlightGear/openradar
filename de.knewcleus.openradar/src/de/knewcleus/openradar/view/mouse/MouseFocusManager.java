@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -80,10 +80,11 @@ public class MouseFocusManager extends MouseAdapter {
         if (e.getButton()==MouseEvent.BUTTON3 && e.getClickCount()==2) {
             centerScreen();
             shiftOrigin=null;
-        } else
-        if (e.getButton()==MouseEvent.BUTTON1 && e.getClickCount()==2) {
+        } else if (e.getButton()==MouseEvent.BUTTON1 && e.getClickCount()==2) {
             centerScreenOn(e.getPoint());
         }
+        rootView.mouseClicked(e);
+        guiInteractionManager.getRadarBackend().forceRepaint();
     }
 
     @Override
@@ -135,13 +136,34 @@ public class MouseFocusManager extends MouseAdapter {
 		final PickVisitor pickVisitor = new PickVisitor(e.getPoint(), iterator);
 		rootView.accept(pickVisitor);
 		focusManager.forceCurrentFocusOwner(iterator.getTopFocusable(),e);
+		
 	}
 
-	protected class FocuseablePickIterator implements IOutputIterator<IPickable> {
+    protected class FocuseablePickIterator implements IOutputIterator<IPickable> {
+        protected IFocusableView topFocusable = null;
+
+        @Override
+        public void next(IPickable v) {
+            if (v instanceof IFocusableView) {
+                topFocusable = (IFocusableView)v;
+            }
+        }
+
+        @Override
+        public boolean wantsNext() {
+            return true;
+        }
+
+        public IFocusableView getTopFocusable() {
+            return topFocusable;
+        }
+    }
+
+    protected class MousePickIterator implements IOutputIterator<IClickable> {
 		protected IFocusableView topFocusable = null;
 
 		@Override
-		public void next(IPickable v) {
+		public void next(IClickable v) {
 			if (v instanceof IFocusableView) {
 				topFocusable = (IFocusableView)v;
 			}

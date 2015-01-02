@@ -2,56 +2,24 @@
 <!-- This file contains the approaches, visible everytime the zoomlevel is above 100 -->
 
 <routes>
-	<route name="LFSB minimum altitudes"  zoomMin="0" zoomMax="100" >
-		<!-- black forest -->
-		<minAlt position="47.705141,7.911530" value="5.7"/>
-		<minAlt position="47.861,8.01315" value="5.9"/>
-		<!-- jura -->
-		<minAlt position="47.81546,6.847916" value="5.3"/>
-		<minAlt position="48.084501,7.236557" value="5.4"/>
-		<!-- alsace -->
-		<minAlt position="47.406250,7.706909" value="5.7"/>
-		<minAlt position="47.208841,7.245483" value="6.2"/>
-
-	</route>
-
-	<route name="LFSB Taxiways" zoomMin="0" zoomMax="18">
-		<text position="47.588392,7.535101" font="Arial" fontSize="12" text="A"/>
-		<text position="47.608806,7.519516" font="Arial" fontSize="12" text="B"/>
-		<text position="47.593346,7.532080" font="Arial" fontSize="12" text="A"/>
-		<text position="47.592003,7.529471" font="Arial" fontSize="12" text="B"/>
-		<text position="47.591216,7.534826" font="Arial" fontSize="12" text="C"/>
-		<text position="47.594755,7.526943" font="Arial" fontSize="12" text="D"/>
-		<text position="47.591033,7.518639" font="Arial" fontSize="12" text="D"/>
-		<text position="47.598615,7.524312" font="Arial" fontSize="12" text="E"/>
-		<text position="47.601502,7.522404" font="Arial" fontSize="12" text="F"/>
-		<text position="47.605606,7.519413" font="Arial" fontSize="12" text="G"/>
-		<text position="47.610823,7.515905" font="Arial" fontSize="12" text="H"/>
-		<text position="47.587744,7.532217" font="Arial" fontSize="12" text="B"/>
-		<text position="47.617371,7.513614" font="Arial" fontSize="12" text="B"/>
-	</route>
 
 	<route name="LFSB Major navaids" >
-		<navaids color="255,255,0">ALTIK,BLM,BS,SEDOR</navaids>
+		<navaids color="255,255,0">ALTIK,BLM,BS,LUMEL,BASUD,HOC,ELBEG,STR,GTQ,TRA,LIPKA,MIRGU,ARPUS</navaids>
 	</route>
 
 	<route name="LFSB Wait loops" >
 
 		<navaids>BLM,ALTIK,SEDOR,ARPUS,ADOGA</navaids>
-		<loop navpoint="SEDOR" inboundHeading="192" length="5" arrows="both" minHeight="7000" maxHeight="MAX 12000"/>>
 		<loop navpoint="ALTIK" inboundHeading="093" length="5" arrows="both" minHeight="5500" maxHeight="MAX 11000" misapHeight="MISAP4000"/>
-		<loop navpoint="BALIR" inboundHeading="319" length="5" arrows="both" minHeight="7000" maxHeight="MAX 12000"/>
-		<loop navpoint="ARPUS" inboundHeading="093" length="5" arrows="both" minHeight="FL100" maxHeight="MAX FL140"/>
-		<loop navpoint="ADOGA" inboundHeading="199" length="5" arrows="both" minHeight="FL100" maxHeight="MAX FL160"/>
+		<loop navpoint="BALIR" inboundHeading="319" length="5" arrows="both" minHeight="7000" maxHeight="MAX 12000"  stroke="dots"/>
+		<loop navpoint="ARPUS" inboundHeading="093" right="false" length="5" arrows="both" minHeight="FL100" maxHeight="MAX FL140"/>
+		<loop navpoint="ADOGA" inboundHeading="199" right="false" length="5" arrows="both" minHeight="FL100" maxHeight="MAX FL160"  stroke="dots"/>
 	</route>
 
 	<!-- **************************************** -->
 
 	<route name="LFSB Approaches" zoomMin="100" >
-		<navaids color="255,255,0">GTQ,STR,ALTIC,ARPUS,BALIR,BLM,HOC,HOMBO,INTEM,LUMEL,SEDOR</navaids>
-		<!-- SEDOR 8K -->
-		<line start="SEDOR" end="HOMBO" text="229"/>
-		<line start="HOMBO" end="ALTIK" text="252"/>
+		<navaids color="255,255,0">GTQ,STR,ALTIC,ARPUS,BALIR,BLM,HOC,HOMBO,INTEM,LUMEL</navaids>
 		<!-- GTQ 8K -->
 		<line start="GTQ" end="INTEM" text="159 - FL090"/>
 		<line start="INTEM" end="ALTIK" text="198"/>
@@ -62,7 +30,7 @@
 		<line start="LUL" end="ARPUS" text="093 - 250 kt"/>
 		<line start="ARPUS" end="ALTIK" text="093"/>
 		<!-- LUMEL 8K -->
-		<line start="BALIR" end="LUMEL" text="319"/>
+		<line start="BALIR" end="LUMEL" text="319" stroke="dots"/>
 		<line start="LUMEL" end="25NM248@BLM" text="293"/>
 		<bow center="BLM" radius="25" startAngle="248" extentAngle="21" text="D25"/>
 		<curve start="25NM269@BLM" end="23NM274@BLM" controlPoint="25NM274@BLM"/>

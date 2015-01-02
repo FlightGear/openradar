@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -41,16 +42,4 @@ import de.knewcleus.openradar.notify.INotification;
  * @author Ralf Gerlich
  *
  */
-public class TrackUpdateNotification implements INotification {
-	protected final ITrack source;
-
-	public TrackUpdateNotification(ITrack source) {
-		this.source = source;
-	}
-
-	@Override
-	public ITrack getSource() {
-		return source;
-	}
-
-}
+public class TrackUpdateNotification implements INotification {}

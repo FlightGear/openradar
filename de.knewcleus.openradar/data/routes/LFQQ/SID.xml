@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<routes>
+    <addPoint code="DEP08" point="2.6NM075@LEQ"/>
+    <addPoint code="DEP26" point="3.3NM275@LEQ"/>
+
+<!-- RWY 08 -->
+	<route displayMode="sid" name="CMB 2E" zoomMin="10" zoomMax="300">
+		<activeStartRunways>08</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<intercept start="DEP08" startHeading="078" direction="right" radius="2" endHeading="188" end="CMB" text="CMB 2E" arrows="end"/>
+	</route>
+
+	<route displayMode="sid" name="TRACA/BNE/ABB 2E" zoomMin="10" zoomMax="300">
+		<activeStartRunways>08</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<intercept start="18NM008@CMB" startHeading="188" direction="right" radius="2" endHeading="279" end="26NM099@BNE" arrows="end"/> <!-- chart says 56NM (not 26), but looks too far! -->
+		<intercept start="26NM099@BNE" startHeading="279" direction="right" radius=".1" endHeading="310" end="IBERU" arrows="end"/>
+		<line start="IBERU" end="TRACA" arrows="end" text="TRACA 2E"/>
+		<line start="26NM099@BNE" end="BNE" arrows="end" text="BNE 2E"/>
+		<intercept start="26NM099@BNE" startHeading="268" direction="left" radius=".1" endHeading="210" end="ABB" arrows="end" text="ABB 2E"/>
+	</route>
+	
+	<route displayMode="sid" name="MATIX/CIV 2E" zoomMin="10" zoomMax="300">
+		<activeStartRunways>08</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<intercept start="19NM008@CMB" startHeading="161" direction="left" radius=".1" endHeading="131" end="DENIN" arrows="end"/>
+		<intercept start="3NM311@DENIN" startHeading="131" direction="left" radius="2" endHeading="051" end="CIV" arrows="end" text="CIV 2E"/>
+		<line start="DENIN" end="MATIX" arrows="end" text="MATIX 2E"/>
+	</route>
+
+<!-- RWY 26 -->
+	<route displayMode="sid" name="TRACA/BNE 2W" zoomMin="10" zoomMax="300">
+		<activeStartRunways>26</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<line start="DEP26" end="IBERU" arrows="end"/>
+		<line start="IBERU" end="TRACA" arrows="end" text="TRACA 2W"/>
+		<line start="IBERU" end="BNE" arrows="end" text="BNE 2W"/>
+	</route>
+	
+	<route displayMode="sid" name="ABB 2W" zoomMin="10" zoomMax="300">
+		<activeStartRunways>26</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<intercept start="DEP26" startHeading="268" direction="left" radius=".1" endHeading="210" end="ABB" arrows="end" text="ABB 2W"/>
+	</route>
+	
+	<route displayMode="sid" name="CMB 2X" zoomMin="10" zoomMax="300">
+		<activeStartRunways>26</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<intercept start="DEP26" startHeading="268" direction="left" radius="1.5" endHeading="223" end="19.1NM320@CMB" arrows="end" text="CMB 2X"/>
+		<intercept start="19.1NM320@CMB" startHeading="223" direction="left" radius="2" endHeading="130" end="CMB" arrows="end"/>
+	</route>
+	
+	<route displayMode="sid" name="CMB 2Y" zoomMin="10" zoomMax="300">
+		<activeStartRunways>26</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<intercept start="DEP26" startHeading="268" direction="left" radius="1.5" endHeading="157" end="CMB" arrows="end" text="CMB 2Y"/>
+	</route>
+	
+	<route displayMode="sid" name="CMB 2Z" zoomMin="10" zoomMax="300">
+		<activeStartRunways>26</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<line start="19NM350@CMB" end="CMB" arrows="end" text="CMB 2Z"/>
+	</route>
+	
+	<route displayMode="sid" name="MATIX/CIV 2S/2T" zoomMin="10" zoomMax="300">
+		<activeStartRunways>26</activeStartRunways>
+		<navaids color="100,200,100"></navaids>
+		<intercept start="1NM200@LEQ" startHeading="101" direction="right" radius=".1" endHeading="131" end="5NM131@LEQ" text="MATIX-CIV 2S"/>
+		<line start="5NM131@LEQ" end="DENIN" arrows="end"/>
+		<intercept start="3NM312@DENIN" startHeading="131" direction="left" radius="2" endHeading="051" end="CIV" arrows="end" text="CIV 2S-2T"/>
+		<line start="DENIN" end="MATIX" arrows="end" text="MATIX 2S-2T"/>
+		<intercept start="19NM337@CMB" startHeading="157" direction="left" radius="1.5" endHeading="092" end="4.5NM131@LEQ" arrows="end" text="MATIX-CIV 2T"/>
+	</route>
+
+</routes>

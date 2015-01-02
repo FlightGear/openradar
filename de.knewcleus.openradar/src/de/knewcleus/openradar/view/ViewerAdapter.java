@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -85,6 +85,7 @@ public class ViewerAdapter extends Notifier implements IViewerAdapter {
 	@Override
 	public void setViewerExtents(Rectangle2D extents) {
 		viewerExtents = extents;
+		updateTransforms(true);
 		notify(new CoordinateSystemNotification(this));
 	}
 	

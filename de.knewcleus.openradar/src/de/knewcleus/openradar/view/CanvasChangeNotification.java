@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -41,9 +42,4 @@ public class CanvasChangeNotification implements INotification {
 		this.source = source;
 	}
 	
-	@Override
-	public IViewerAdapter getSource() {
-		return source;
-	}
-
 }

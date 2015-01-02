@@ -4,6 +4,7 @@
 <span style="color:rgb(48,97,48);">Welcome outside</span>
 <span style="color:rgb(48,97,48);">Welcome to the airport</span>
 <span style="color:rgb(48,97,48);">Radar contact + QNH + RW</span>
+
 <span style="color:rgb(117,0,0);">Follow FlightPlan</span>
 <span style="color:rgb(117,0,0);">Leaving Area</span>
 ATIS

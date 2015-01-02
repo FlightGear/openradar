@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -47,7 +48,6 @@ import org.apache.log4j.Logger;
 
 public abstract class AbstractPlayerRegistry<T extends Player> implements IPlayerRegistry<T> {
 	protected static Logger log = LogManager.getLogger("de.knewcleus.fgfs.multiplayer");
-	protected final int playerExpirationTime = 15000;
 
 	public abstract T createNewPlayer(String callsign) throws MultiplayerException;
 

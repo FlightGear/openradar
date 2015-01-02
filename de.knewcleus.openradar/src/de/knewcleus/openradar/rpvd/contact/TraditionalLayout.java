@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -89,6 +89,33 @@ public class TraditionalLayout extends ADatablockLayout {
 
     @Override
     public Color getColor(GuiRadarContact contact) {
+        Color color = Palette.RADAR_UNCONTROLLED;
+
+        if(!contact .isActive()) {
+            // INCACTIVE GHOSTS
+            color=Palette.RADAR_GHOST;
+
+        } else if(contact.isNeglect()) {
+            // BAD GUYS
+            color=Palette.RADAR_GHOST;
+
+        } else if(contact.getState()==State.IMPORTANT) {
+            // CONTROLLED left column
+            color=Palette.RADAR_CONTROLLED;
+
+        } else if(contact.getState()==State.CONTROLLED) {
+            // WATCHED middle column
+            color=Palette.RADAR_IMPORTANT;
+        } else {
+            // UNCONTROLLED right column
+            color=Palette.RADAR_UNCONTROLLED;
+        }
+
+        return color;
+    }
+
+    @Override
+    public Color getDataBlockColor(GuiRadarContact contact) {
         Color color = Palette.RADAR_UNCONTROLLED;
 
         if(contact.isSelected()) {

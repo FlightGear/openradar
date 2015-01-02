@@ -5,6 +5,7 @@ A todos los hombres del aire:
 %s: Bienvenido a %s - por favor informe al ATC sobre sus intenciones, FGCOM %s
 %s: Contacto Radar a %3.0f mi, QNH %s, espere pista: %s, FGCOM %s
 
+
 %s: Esta abandonando mi area - Autorizado a cambiar frecuencia - Que tenga buen viaje
 ATIS en %s a %2.0f ft: QNH %s  viento %3.0f. Pista en uso %s  FGCOM %s
 

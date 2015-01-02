@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -462,21 +462,27 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     }
 
     public synchronized void dragAndDrop(int selectedIndex, int insertAtIndex, Alignment alignment) {
-
-        GuiRadarContact c = activeContactList.get(selectedIndex);
-        setContactsAlignment(c,alignment);
-
-        if (selectedIndex == insertAtIndex)
-            return;
-
-        activeContactList.remove(selectedIndex);
-
-        if (insertAtIndex < activeContactList.size()) {
-            activeContactList.add(insertAtIndex, c);
-        } else {
-            activeContactList.add(c);
+        try {
+            if(selectedIndex>activeContactList.size()-1 || selectedIndex<0) {
+                return;
+            }
+            GuiRadarContact c = activeContactList.get(selectedIndex);
+            setContactsAlignment(c,alignment);
+    
+            if (selectedIndex == insertAtIndex)
+                return;
+    
+            activeContactList.remove(selectedIndex);
+    
+            if (insertAtIndex < activeContactList.size()) {
+                activeContactList.add(insertAtIndex, c);
+            } else {
+                activeContactList.add(c);
+            }
+            publishData();
+        } catch(Exception e) {
+            log.error("Handled problem while drag and drop! "+e.getMessage());
         }
-        publishData();
     }
 
     // mouse listener
@@ -495,12 +501,16 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         public void mouseClicked(MouseEvent e) {
             synchronized (RadarContactController.this) {
                 int index = guiList.locationToIndex(e.getPoint());
-
+                
                 if (index > -1) {
                     GuiRadarContact c = activeContactList.get(index);
                     analyseClickPoint(c, guiList, e);
 
-                    if (clickLocation == ClickLocation.ON_STRIP) {
+                    if (clickLocation != ClickLocation.ON_STRIP && e.getButton() == MouseEvent.BUTTON1) {
+                        // side click with mouse button 1
+                        handleSideClick(c, c.getAlignment(), e.getClickCount());
+                    } else {
+                        // click on fs row
                         if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
                             // select
                             select(c, true, false);
@@ -513,21 +523,20 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                             c.setHighlighted();
                             master.getRadarBackend().showRadarContact(c, !e.isShiftDown() );
                             atcMessageDialog.setVisible(false);
-
+                            master.getMpChatManager().requestFocusForInput();
+                            
                         } else if( (e.getButton() == MouseEvent.BUTTON2 && e.getClickCount() == 1)
                                 || (e.isAltDown() && e.getButton() == MouseEvent.BUTTON3) ) {
                             // show contact settings dialog
                             selectNShowFlightplanDialog(c, e);
 
-                        } else if (e.getButton() == MouseEvent.BUTTON3 && e.getClickCount() == 1) {
+                        } else if (e.getButton() == MouseEvent.BUTTON3 /*&& e.getClickCount() == 1*/) {
                          // show ATC message dialog
                             selectNShowAtcMsgDialog(c, e);
 
                         }
                         publishData();
-                    } else {
-                        handleSideClick(c, c.getAlignment(), e.getClickCount());
-                    }
+                    } 
                 }
             }
         }
@@ -561,6 +570,9 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             case LEFT:
                 if (alignment == Alignment.CENTER || (alignment == Alignment.RIGHT && clickCount == 2)) {
                     setContactsAlignment(c,Alignment.LEFT);
+                    select(c, true, false);
+                    c.setHighlighted();
+                    master.getMpChatManager().requestFocusForInput();
                 } else if (alignment == Alignment.RIGHT && clickCount == 1) {
                     setContactsAlignment(c,Alignment.CENTER);
                 }
@@ -870,7 +882,10 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 } else {
                     log.error("Unsupported flight mode! Supported are 'VFR' and 'IFR' Value: "+flightType);
                 }
+                selectedContact.getFlightPlan().setType(flightType.toString());
                 selectedContact.setAssignedSquawk(newSquawkCode);
+                selectedContact.getFlightPlan().setReadyForTransmission();
+                master.getFlightPlanExchangeManager().triggerTransmission();
                 name = selectedContact.getCallSign();
             }
         }
@@ -888,6 +903,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             if (selectedContact != null) {
                 master.getAirportData().getSquawkCodeManager().revokeSquawkCode(selectedContact.getAssignedSquawk());
                 selectedContact.setAssignedSquawk(null);
+                selectedContact.getFlightPlan().setReadyForTransmission();
+                master.getFlightPlanExchangeManager().triggerTransmission();
             }
         }
     }
@@ -1093,7 +1110,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 if(//formerAlignment.equals(Alignment.LEFT) &&  // was owned by me AND
                      !flightPlan.isOwnedBySomeoneElse()) { // no other ATC has taken over
                         
-                    master.getFlightPlanExchangeManager().sendReleaseMessage(c);
+                    //master.getFlightPlanExchangeManager().sendReleaseMessage(c);
                     flightPlan.releaseControl();
                     flightPlan.setReadyForTransmission();
                     master.getFlightPlanExchangeManager().triggerTransmission();                    
@@ -1137,4 +1154,25 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             return mapActiveAtcs.get(callsign);
         }
     }
+
+    public void assignRoute(String newRouteName) {
+        synchronized (selectedContactLock) {
+            if (selectedContact != null) {
+                String currentRoute = selectedContact.getFlightPlan().getAssignedRoute();
+                if(newRouteName!=null && newRouteName.equals(currentRoute)) {
+                    selectedContact.getFlightPlan().setAssignedRoute(null);
+                } else {
+                    selectedContact.getFlightPlan().setAssignedRoute(newRouteName);
+                }
+            }
+            master.getRadarBackend().forceRepaint();
+        }
+    }
+
+    public boolean isRouteAssigned(String newRouteName) {
+        synchronized (selectedContactLock) {
+            return selectedContact!=null && selectedContact.isActive() && newRouteName.equals(selectedContact.getFlightPlan().getAssignedRoute());
+        }
+    }
+
 }

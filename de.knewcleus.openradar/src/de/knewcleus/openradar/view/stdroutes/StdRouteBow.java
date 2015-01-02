@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -33,6 +33,7 @@
 package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Path2D;
@@ -119,5 +120,10 @@ public class StdRouteBow extends AStdRouteElement {
     @Override
     public Point2D getEndPoint() {
         return endPoint;
+    }
+
+    @Override
+    public boolean contains(Point p) {
+        return false;
     }
 }

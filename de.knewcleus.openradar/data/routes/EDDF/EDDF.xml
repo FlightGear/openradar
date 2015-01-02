@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <routes>
-	<addPoint code="AGOLO" point="50.200000,9.676111"/>
+<!-- These addPoints must not be used any more with OR-scenery Jan.2014 (or better):
  	<addPoint code="BIBTI" point="50.966667,7.108611"/>
- 	<addPoint code="ESUPI" point="50.058333,8.121111"/>
+	<addPoint code="ESUPI" point="50.058333,8.121111"/>
+ 	<addPoint code="KERAX" point="50.475000,9.581944"/>
+ 	<addPoint code="OBOKA" point="50.745000,7.338056"/>
+ 	<addPoint code="UNOKO" point="50.454722,7.227222"/> -->
+	<addPoint code="AGOLO" point="50.200000,9.676111"/>
  	<addPoint code="FRD"   point="50.030556,8.566944"/>
  	<addPoint code="IBVIL" point="50.434444,7.369167"/>
- 	<addPoint code="KERAX" point="50.475000,9.581944"/>
  	<addPoint code="KUPIP" point="49.940833,8.160278"/>
  	<addPoint code="LISKI" point="50.047500,8.277222"/>
  	<addPoint code="MANUV" point="50.295556,7.458889"/>
  	<addPoint code="MAROB" point="50.294167,8.542778"/>
- 	<addPoint code="OBOKA" point="50.745000,7.338056"/>
  	<addPoint code="OKTUM" point="50.199722,10.010556"/>
  	<addPoint code="PABVI" point="49.885000,8.373056"/>
- 	<addPoint code="UNOKO" point="50.454722,7.227222"/>
  	<addPoint code="RAMOB" point="50.111389,7.683889"/>
  	<addPoint code="ROXAP" point="49.915278,8.364167"/>
  	<addPoint code="SIVDO" point="49.890556,8.265833"/>
@@ -23,7 +24,7 @@
 	<!-- *********************************** -->
 	<!-- ******   EDDF GROUND LABLES  ****** -->
 	<!-- *********************************** -->
-	<route name="EDDF Ground-Lables"  color="255,255,255" zoomMax="10">
+	<route name="EDDF Ground-Lables"  color="200,200,200" zoomMax="10" displayMode="optional">
 		<text position="50.049201,8.584400" angle="-20" fontSize="16" color="0,255,0" text="N"/>
 		<text position="50.041709,8.557074" angle="-20" fontSize="16" color="0,255,0" text="N"/>
 		<text position="50.049112,8.586861" angle="-20" text="N1"/>
@@ -59,6 +60,7 @@
 		<text position="50.041637,8.578858" angle="-20" text="M10"/>
 		<text position="50.036816,8.569110" angle="-20" text="M11"/>
 		<text position="50.035708,8.564797" angle="-20" text="M13"/>
+		<text position="50.038996,8.567639" angle="-20" text="M14"/>
 		<text position="50.034932,8.560052" angle="-20" text="M15"/>
 		<text position="50.034323,8.557809" angle="-20" text="M17"/>
 		<text position="50.033658,8.555997" angle="-20" text="M19"/>
@@ -96,7 +98,22 @@
 		<text position="50.050262,8.570112" angle="-20" fontSize="16" color="0,255,0" text="Term-1"/>
 		<text position="50.051204,8.583483" angle="-20" fontSize="16" color="0,255,0" text="Term-2"/>
 		<text position="50.031479,8.583225" angle="-20" fontSize="16" color="0,255,0" text="(Term-3)"/>
-		<curve start="50.043981,8.535277"	end="50.041923,8.548388"  controlPoint="50.046088,8.545686" color="180,180,0"/>
+
+	<!-- **************+++++++++********************* -->
+	<!-- ******  Add ons for taxiways P and P1 ****** -->
+	<!-- *****************+++++++++****************** -->
+
+		<curve start="50.043981,8.535277"	end="50.041923,8.548388"  controlPoint="50.046088,8.545686" color="150,150,0"/>
+			<multiPointLine close="false" color="150,150,0" lineWidth="1" >
+				<point>50.035285,8.519283</point>
+				<point>50.035903,8.524744</point>
+				<point>50.035873,8.525939</point>
+				<point>50.036321,8.528158</point>
+				<point>50.035873,8.528980</point>
+				<point>50.035913,8.530004</point>
+				<point>50.035414,8.530703</point>
+				<point>50.035363,8.530984</point>
+			</multiPointLine>
 	</route>
 
 	<!-- *********************************** -->
@@ -157,10 +174,8 @@
 	<!-- ******   Major NAVaids  ****** -->
 	<!-- *********************************** -->
 	<route  name="Major NAVaids">
-		<navaids color="255,255,0">CHA,COL,(VOR)DIK,(VOR)FFM,GED,LBU,(VOR)MTR,RID,TAU</navaids>
-	</route>
-	<route  name="Route-Names/Endpoints">
-		<navaids color="186,226,229">ANEKI,BIBTI,DKB,KOMIB,MARUN,NOMBO,RATIM,SOBRA,SULUS,TOBAK</navaids>
+		<navaids color="255,255,0">CHA,COL,(VOR)DIK,DKB,(VOR)FFM,GED,KIR,LBU,(VOR)MTR,RID,TAU,WUR,ZWN</navaids>
+		<navaids color="186,226,229">ANEKI,BIBTI,KOMIB,MARUN,NOMBO,RATIM,SOBRA,SULUS,TOBAK</navaids>
 	</route>
 
 	<!-- ************************** -->
@@ -284,12 +299,12 @@
 	<!-- ************************ -->
 	<!-- ******  EDDF SIDs ****** -->
 	<!-- ************************ -->
-	<route name="07 SID -Names" color="186,226,229" zoomMin="10">
+	<route name="07 SID -Names" color="186,226,229" zoomMin="10" >
 		<activeStartRunways>07R,07C</activeStartRunways>
 		<screenText screenPos="-150,10" fontSize="12" font="courier" text="D ___ Standard             "/>
 		<screenText screenPos="-150,25" fontSize="12" font="courier" text="E --- medium/small planes  "/>
 	</route>
-	<route name="Reduced Views" color="122,150,108" zoomMin="10" zoomMax="170">
+	<route name="Reduced Views" color="186,226,229" zoomMin="10" zoomMax="170">
 		<activeStartRunways>07R,07C</activeStartRunways>
 		<text position="49.660636,8.510574" angle="-90" text="ANEKI 2E"/>
 		<text position="49.611201,8.640182" angle="-73" text="ANEKI 9D"/>
@@ -305,10 +320,9 @@
 		<navaids>AGOLO,AKONI,APROX,DITAM,DONAB,FR,GEBNO,GUBAX,KNG,KUSOM,LAMPU,OBOKA,ODAGA,OKTUM,RAVKI,ROSIG</navaids>
 	<!-- ANEKI -->
 		<!-- 2E -->
-	 	<line start="(VOR)FFM" end="FR" arrows="end" stroke="dashed"/>
-		<intercept start="FR" startHeading="068" end="4NM180@(VOR)FFM" radial="050" direction="right" endOffset="0" arrows="end" stroke="dashed" color="122,150,108"/>
-		<intercept start="4NM180@(VOR)FFM" startHeading="230" end="10.3NM199@(VOR)FFM" radial="19" direction="left" endOffset="0" arrows="end" text="199-FFM"  stroke="dashed" color="122,150,108"/>
-	 	<intercept start="10.3NM199@(VOR)FFM" startHeading="199" end="RID" radial="356" direction="left" endOffset="0" arrows="end" text="176-RID" stroke="dashed" color="122,150,108"/>
+		<intercept start="-1NM068@(VOR)FFM" startHeading="068" end="4NM180@(VOR)FFM" endHeading="223" direction="right" radius="1.6" arrows="end" text="223" stroke="dashed"/>
+		<intercept start="4NM180@(VOR)FFM" startHeading="223" end="10.3NM199@(VOR)FFM" endHeading="199" direction="left" radius="1.6" arrows="end" text="199-FFM" stroke="dashed"/>
+	 	<intercept start="10.3NM199@(VOR)FFM" startHeading="199" end="RID" endHeading="176" direction="left" radius="1.6" arrows="end" text="176-RID" stroke="dashed"/>
 		<line start="RID" end="ANEKI" arrows="end" text ="183-RID" stroke="dashed"/>
 		<!-- 9D -->
 		<curve start="(VOR)FFM" end="15NM192@(VOR)MTR" controlPoint="4NM068@FR" arrows="end,10"/>
@@ -318,11 +332,11 @@
 	 	<line start="28.8NM192@(VOR)MTR" 	end="ANEKI" text="193" arrows="end,15"/>
 	<!-- BIBIT -->
 		<!-- 3E -->
-		<intercept start="(VOR)FFM" startHeading="068" end="14.8NM356@(VOR)FFM" radial="176" direction="left" endOffset="0" arrows="end" stroke="dashed" text="356" color="122,150,108"/>
-		<intercept start="14.8NM356@(VOR)FFM" startHeading="356" end="KUSOM" radial="109" direction="left" endOffset="0" arrows="end" stroke="dashed" color="122,150,108"/>
+		<intercept start="(VOR)FFM" startHeading="068" end="14.8NM356@(VOR)FFM" radial="176" direction="left" radius="1.6" arrows="end" stroke="dashed" text="356"/>
+		<intercept start="14.8NM356@(VOR)FFM" startHeading="356" end="KUSOM" radial="109" direction="left" radius="1.6" arrows="end" stroke="dashed"/>
 		<!-- 4D -->
-		<intercept start="FR" startHeading="068" end="2NM202@MTR" radial="202" direction="left" endOffset="0" arrows="end" text="022-MTR" color="122,150,108"/>
-		<intercept start="2NM202@MTR" startHeading="022" end="ODAGA" radial="107" direction="left" endOffset="0" arrows="end" text="287-MTR" color="122,150,108"/>
+		<intercept start="FR" startHeading="068" end="2NM202@(VOR)MTR" radial="202" direction="left" radius="1.6" arrows="end" text="022-MTR"/>
+		<intercept start="2NM202@(VOR)MTR" startHeading="022" end="ODAGA" radial="107" direction="left" radius="1.6" arrows="end" text="287-MTR"/>
     	<line start="ODAGA" end="KUSOM" 			arrows="end"/>
 		<!---->
 	  	<line start="KUSOM" end="GUBAX" text="251" arrows="end"/>
@@ -333,7 +347,8 @@
 	<!-- DKB 6E 8D-->
 	  	<line start="AKONI" end="DKB" text="130"	arrows="end,15"/>
 	<!-- KOMIB 1E 1D-->
-		<intercept start="FR" startHeading="068" end="24NM087@(VOR)FFM" radial="275" direction="right" endOffset="0" arrows="end" text="087-FFM" color="122,150,108"/>
+		<intercept start="FR" startHeading="068" end="3NM087@(VOR)FFM" endHeading="099" direction="right" radius="1.6" arrows="end" text="099"/>
+		<intercept start="3NM087@(VOR)FFM" startHeading="099" end="24NM087@(VOR)FFM" endHeading="087" radius="1.6" direction="left" arrows="end" text="087-FFM"/>
 	  	<line start="24NM087@(VOR)FFM" end="AGOLO" text="060" arrows="end"/>
 		<line start="AGOLO" end="OKTUM" text="089" arrows="end"/>
 	  	<line start="OKTUM" end="KOMIB" text="129" arrows="end"/>
@@ -355,8 +370,8 @@
 	  	<line start="KNG"   			end="RATIM" text="102" arrows="end,15"/>
 	<!-- SOBRA -->
 		<!-- 4E (ANEKI 2E) -->
-	   	<line start="10.3NM199@(VOR)FFM" end="17.3NM0199@(VOR)FFM" text="199" arrows="end" stroke="dashed"/>
-		<intercept start="17.3NM0199@(VOR)FFM" startHeading="199" end="ROSIG" radial="82" direction="right" endOffset="0" arrows="end" text="283" stroke="dashed" color="122,150,108"/>
+	   	<line start="10.3NM199@(VOR)FFM" end="16.3NM0199@(VOR)FFM" text="199" arrows="end" stroke="dashed"/>
+		<intercept start="16.3NM0199@(VOR)FFM" startHeading="199" end="ROSIG" radial="82" direction="right" radius="1.6" arrows="end" text="283" stroke="dashed"/>
 		<!-- 4D (ANEKI 9D) -->
 		<curve start="28.8NM192@(VOR)MTR"	end="RID" controlPoint="30.1NM192@(VOR)MTR"/>
 	  	<line start="RID"   end="ROSIG" text="262" arrows="end"/>
@@ -372,32 +387,48 @@
 	<!-- ========================================================== -->
 	<route name="rw 18x SID DELTA" color="122,150,108" zoomMin="10">
 		<activeStartRunways>18</activeStartRunways>
- 		<navaids>AKONI,APROX,DITAM,DONAB,GEBNO,GIBSA,GISNO,GUBAX,HAREM,KUSOM,KNG,LAMPU,LIKSI,LORPA,MASIR,NOMBO, 			OBOKA,ODAGA,PIPIX,RATIM,RAVKI,ROSIG,TABUM,TESGA,TUKRU,VETUX,WUR,XAMUB</navaids>
-		<screenText screenPos="-150,10" fontSize="12" font="courier" text="D ___ Standard             "/>
-		<screenText screenPos="-150,25" fontSize="12" font="courier" text="E --- medium/small planes  "/>
-		<screenText screenPos="-150,40" fontSize="12" font="courier" text="S ... if assigned by ATC   "/>
+ 		<navaids>AKONI,APROX,DITAM,DONAB,GEBNO,GIBSA,GISNO,GUBAX,HAREM,KUSOM,KNG,LAMPU,LIKSI,LORPA,MASIR,NOMBO,OBOKA,ODAGA,PIPIX,RATIM,RAVKI,ROSIG,TABUM,TESGA,TUKRU,VETUX,WUR,XAMUB</navaids>
+		<screenText screenPos="-150,10" fontSize="12" font="courier" text="D L R ___ Standard             "/>
+		<screenText screenPos="-150,25" fontSize="12" font="courier" text="  E   --- medium/small planes  "/>
+		<screenText screenPos="-150,40" fontSize="12" font="courier" text="  S   ... if assigned by ATC   "/>
 	</route>
-	<route name="Reduced Views" color="122,150,108" zoomMin="10" zoomMax="170">
+	<route name="Reduced Views" color="186,226,229" zoomMin="10" zoomMax="170">
 		<activeStartRunways>18</activeStartRunways>
-		<text position="49.660636,8.510574" angle="-90" text="ANEKI 2E"/>
-		<text position="49.611201,8.640182" angle="-73" text="ANEKI 9D"/>
-		<text position="50.144674,8.639055" angle="266" text="BIBTI 3E"/>
-		<text position="50.149648,8.761655" angle="-68" text="BIBTI 4D"/>
-		<text position="50.492477,8.615917" angle="-86" text="MARUN 4E"/>
-		<text position="50.650045,8.804598" angle="-107" text="MARUN 8D"/>
+		<text position="49.660636,8.510574" angle="-90" text="ANEKI 6L"/>
+		<text position="50.329662,7.842671" angle="23" text="BIBTI 2R"/>
+		<text position="49.979190,8.076417" angle="49" text="BIBTI 2L"/>
+		<text position="49.987273,8.092247" angle="48" text="BIBTI 4S"/>
+		<text position="49.318271,9.955173" angle="40" text="DKB 5L 7S"/>
+		<text position="50.491864,8.503287" angle="-74" text="MARUN 4S"/>
+		<text position="50.650045,8.804598" angle="-107" text="MARUN 2R"/>
+		<text position="49.846866,7.975051" angle="23" text="SOBRA 4L"/>
 		<text position="49.822086,8.494954" angle="-81" text="SOBRA 4E"/>
-		<text position="49.759888,8.455974" angle="-8" text="SOBRA 4D"/>
+		<text position="49.762139,8.108771" angle="07" text="SOBRA 4U"/>
+		<text position="50.487035,8.842596" angle="261" text="TOBAK 2R"/>
+		<text position="50.454172,8.618896" angle="-50" text="TOBAK 6S"/>
+		<text position="49.720920,7.946524" angle="12" text="ULKIG 5U"/>
 	</route>
 	<route name="rw 18x SID DELTA" color="122,150,108" zoomMin="10">
 		<activeStartRunways>18</activeStartRunways>
 
-	<!-- BASE -->
-	  	<line start="12NM357.5@RID"   end="RID" text="176" arrows="end"/>
+	<!-- BASE RID -->
+	  	<line start="49.985113,8.527192"   end="6.4NM356@RID" text="118-RID" arrows="end"/>
+	  	<line start="6.4NM356@RID"   end="RID" arrows="end" text="176-RID"/>
+	<!-- L east-->
+		<intercept start="3NM356@RID" startHeading="178" end="KNG" endHeading="92" radius="3" direction="left" arrows="end" text="92-RID"/>
+	  	<line start="KNG"   end="AKONI" arrows="end"/>
+	<!-- S east-->
+		<intercept start="49.985113,8.527192" startHeading="178" end="KNG" endHeading="118" radius="2.4" direction="left" arrows="end" stroke="dots" text="118"/>
+	<!-- S west-->
+		<intercept start="49.985113,8.527192" startHeading="178" end="14NM223@(VOR)FFM" endHeading="223" radius="0.7" direction="right" arrows="end" stroke="dots" text="223-FFM IAS220"/>
+		<intercept start="14NM223@(VOR)FFM" startHeading="223" end="16NM301@RID" endHeading="301" radius="2" direction="right" arrows="end" stroke="dots" text="301-RID"/>
+	  	<line start="14NM223@(VOR)FFM"   end="20.6NM223@(VOR)FFM" arrows="end" stroke="dots" text="223-FFM"/>
+
 	<!-- ANEKI 6L-->
 	  	<line start="RID"   end="ANEKI" text="183" arrows="end,15" />
-	<!-- BIBTI -->
+	<!-- BIBTI 4s -->
 		<!-- 4S -->
-		<intercept start="16NM301@RID" startHeading="301" end="MASIR" radial="140" direction="RIGHT" endOffset="0" arrows="end" text="318" color="122,150,108"/>
+		<intercept start="16NM301@RID" startHeading="301" end="MASIR" radial="140" direction="RIGHT" radius="1.6" arrows="end" stroke="dots" text="318"/>
 		<!-- 2R (MTR) -->
 		<line start="(VOR)MTR"   end="ODAGA" text="287" arrows="end" stroke="dots"/>
 		<line start="ODAGA"	end="KUSOM" text="287" arrows="end" stroke="dots" />
@@ -411,13 +442,12 @@
 	  	<line start="RAVKI" end="DITAM" text="335" arrows="end" />
 		<line start="DITAM" end="OBOKA" text="326" arrows="end" />
 		<line start="OBOKA" end="BIBTI" text="326" arrows="end" />
-	<!-- DKB 3L 5L 7S-->
-	  	<line start="AKONI" end="HAREM" text="034" arrows="end" />
-	  	<line start="HAREM" end="DKB"   text="034" arrows="end,15" />
+	<!-- DKB 5L 7S-->
+	  	<line start="AKONI" end="HAREM" text="130-DKB" arrows="end" />
+	  	<line start="HAREM" end="DKB"   text="130-DKB" arrows="end,15" />
 	<!-- MARUN 4S -->
-		<intercept start="12NM357.5@RID" startHeading="178" end="14NM223@(VOR)FFM" radial="48" direction="right" endOffset="0" arrows="end" text="223-FFM" stroke="dots" color="122,150,108"/>
-		<intercept start="14NM223@(VOR)FFM" startHeading="223" end="16NM301@RID" radial="121" direction="right" endOffset="0" arrows="end" text="301-RID" stroke="dots" color="122,150,108"/>
-		<intercept start="16NM301@RID" startHeading="301" end="TABUM" radial="203" direction="right" endOffset="0" arrows="end" text="301-RID" stroke="dots" color="122,150,108"/>
+		<!-- 4S (west >>>) -->
+		<intercept start="16NM301@RID" startHeading="301" end="TABUM" endHeading="023" direction="right" radius="1.6" arrows="end" text="023" stroke="dots"/>
 		<line start="TABUM" end="LIKSI" text="018" arrows="end" stroke="dots" />
 		<line start="LIKSI" end="LORPA" text="016" arrows="end" stroke="dots" />
 		<line start="LORPA" end="MARUN" text="016" arrows="end" stroke="dots"/>
@@ -428,41 +458,39 @@
 	  	<line start="HAREM" end="LAMPU" text="148" arrows="end" />
 	  	<line start="LAMPU" end="GEBNO" text="134" arrows="end" />
 		<line start="GEBNO" end="NOMBO" text="134" arrows="end,15" />
-	<!-- RATIM 4S (AKONI) -->
-	  	<curve start="12NM358@RID" end="KNG" controlPoint="10NM358@RID" text="118" arrows="end" />
-	  	<curve start="3NM358@RID" end="KNG" controlPoint="RID"   text="092" arrows="end" />
-	  	<line start="KNG"   end="AKONI" text="114" arrows="end" />
+	<!-- RATIM  ("S") -->
 	  	<line start="AKONI" end="RATIM" text="102" arrows="end,15" />
 	<!-- ROTEN 3L 4L 6S (ONROUTE DKB) -->
-	<!-- SOBRA -->
+	<!-- SOBRA 4S -->
+		<!-- 4S -->
 	  	<line start="6.4NM358@RID" end="17.3NM199@(VOR)FFM" text="199" arrows="end" />
 	  	<curve start="17.3NM199@(VOR)FFM" end="ROSIG" controlPoint="18.4NM199@(VOR)FFM" text="283" arrows="end" />
 	  	<line start="ROSIG" end="DONAB" text="283" arrows="end" />
 	  	<line start="DONAB" end="SOBRA" text="283" arrows="end,15" />
 		<!-- 4U -->
-	  	<line start="PIPIX" end="VETUX" text="283" arrows="end" />
-	  	<line start="VETUX" end="SOBRA" text="283" arrows="end,15" />
-
-	<!-- SULUS 6S 7L (RATIM)-->
-	  	<line start="RATIM" end="GIBSA" text="118" arrows="end" />
-	  	<line start="GIBSA" end="WUR"   text="114" arrows="end" />
-	  	<line start="WUR"   end="SULUS" text="102" arrows="end,15" />
+	  	<line start="PIPIX" end="VETUX" text="297" arrows="end" />
+	  	<line start="VETUX" end="SOBRA" text="297" arrows="end,15" />
+	<!-- SULUS 6S 7L ("S" or "L")-->
+	  	<line start="RATIM" end="GIBSA" text="102" arrows="end" />
+	  	<line start="GIBSA" end="WUR"   text="073-WUR" arrows="end" />
+	  	<line start="WUR"   end="SULUS" text="053-WUR" arrows="end,15" />
 	<!-- TOBAK 2R -->
 		<!-- 2R -->
-		<intercept start="12NM358@RID" startHeading="178" end="1NM268@TUKRU" radial="268" direction="LEFT" endOffset="0" arrows="end" text="088" stroke="dots" color="122,150,108"/>
-		<intercept start="1NM268@TUKRU" startHeading="88" end="MTR" radial="192" direction="LEFT" endOffset="0" arrows="end" text="012-MTR" stroke="dots" color="122,150,108"/>
+		<intercept start="49.985113,8.527192" startHeading="178" end="1NM268@TUKRU" endHeading="088" radius="2.5" direction="LEFT" arrows="end" text="088"/>
+		<intercept start="1NM268@TUKRU" startHeading="88" end="(VOR)MTR" radial="192" direction="LEFT" radius="1.6" arrows="end" text="012-MTR"/>
 		<line start="(VOR)MTR"   end="TOBAK" text="351" arrows="end" />
 		<!-- 6S (TABUM) -->
-		<line start="TABUM" end="TESGA" text="040" arrows="end" />
-	  	<line start="TESGA" end="TOBAK" text="038" arrows="end,15" />
+		<line start="TABUM" end="TESGA" text="040" arrows="end" stroke="dots" />
+	  	<line start="TESGA" end="TOBAK" text="038" arrows="end,15" stroke="dots" />
 	<!-- ULKIG -->
 		<!-- 1S (SOBRA) -->
+		<intercept start="20.6NM223@(VOR)FFM" startHeading="223" end="DONAB" endHeading="283" radius="1" direction="right" arrows="end" stroke="dots"/>
 	  	<line start="SOBRA" end="ULKIG" text="102" arrows="end,15" />
 		<!-- 5U (TABUM) -->
 	  	<line start="17.3NM199@(VOR)FFM" end="19.4NM199@(VOR)FFM" text="199" arrows="end" />
-		<intercept start="19.4NM199@(VOR)FFM" startHeading="199" end="PIPIX" radial="84" direction="right" endOffset="0" arrows="end" text="264" stroke="dots" color="122,150,108"/>
-	  	<line start="PIPIX" end="GISNO" text="102" arrows="end"/>
-	  	<line start="GISNO" end="ULKIG" text="102" arrows="end,15"/>
+		<intercept start="19.4NM199@(VOR)FFM" startHeading="199" end="PIPIX" radial="84" direction="right" radius="1.6" arrows="end" text="264"/>
+	  	<line start="PIPIX" end="GISNO" text="283" arrows="end"/>
+	  	<line start="GISNO" end="ULKIG" text="318" arrows="end,15"/>
 	</route>
 
 <!-- ========================================================== -->
@@ -472,41 +500,43 @@
 		<screenText screenPos="-150,10" fontSize="12" font="courier" text="G,M,N-Süd ___ Standard             "/>
 		<screenText screenPos="-150,25" fontSize="12" font="courier" text="      F,J --- Small planes         "/>
 		<screenText screenPos="-150,40" fontSize="12" font="courier" text="        N ... night 20:00-06:00 UTC"/>
+		<screenText screenPos="-150,55" fontSize="12" font="courier" text="        P     not used             "/>
 	</route>
-	<route name="Reduced Views" color="122,150,108" zoomMin="10" zoomMax="170">
+	<route name="Reduced Views" color="186,226,229" zoomMin="10" zoomMax="170">
 		<activeStartRunways>25L,25C</activeStartRunways>
-		<text position="50.053342,7.982407" angle="48" text="BIBTI 2M/4N"/>
-		<text position="50.076238,8.053691" angle="37" text="BIBTI 3F/3G"/>
+		<text position="50.053342,7.982407" angle="48" text="BIBTI 2M,4N"/>
+		<text position="50.076238,8.053691" angle="37" text="BIBTI 3F,3G"/>
 		<text position="50.159232,8.328014" angle="295" text="MARUN 2M"/>
 		<text position="49.945474,8.325961" angle="66" text="MARUN 2M"/>
 		<text position="50.147927,8.276979" angle="297" text="MARUN 4G"/>
-		<text position="50.175737,8.370073" angle="290" text="MARUN 3F/3J"/>
-		<text position="49.787332,8.172343" angle="13" text="SOBRA 5N"/>
+		<text position="50.175737,8.370073" angle="290" text="MARUN 3F,3J"/>
+		<text position="49.935773,8.446690" angle="288" text="SOBRA 4F,4G 198°"/>
+		<text position="49.937451,8.491541" angle="288" text="SOBRA 5N 184°"/>
+		<text position="49.832539,8.331119" angle="313" text="SOBRA 4F,4G, 5N"/>
 	</route>
 	<route name="rw 25L,25C SID DELTA" color="122,150,108" zoomMin="10">
 		<activeStartRunways>25L,25C</activeStartRunways>
-		<navaids>AKONI,DONAB,ESUPI,FFM,GEBNO,GIBSA,HAREM,KNG,LAMPU,LIKSI,LISKI,LORPA,
-			MASIR,OBOKA,RATIM,RAVKI,TABUM,TESGA,WUR,PABVI,SIVDO,KUPIP,ROXAP</navaids>
+		<navaids>AKONI,DITAM,DONAB,ESUPI,FFM,GEBNO,GIBSA,HAREM,KNG,LAMPU,LIKSI,LISKI,LORPA,MASIR,OBOKA,RATIM,RAVKI,TABUM,TESGA,WUR,PABVI,SIVDO,KUPIP,ROXAP</navaids>
 	<!--AKONI-->
-		<intercept start="4.5NM250@(VOR)FFM" startHeading="248" end="KNG" radial="298" direction="left" endOffset="0" text="118->KNG" arrows="end" color="122,150,108"/>
+		<intercept start="4.5NM250@(VOR)FFM" startHeading="248" end="KNG" radial="298" radius="2.3" direction="left" text="118->KNG" arrows="end"/>
 	  	<line start="KNG"   end="AKONI"   text="102" arrows="end" />
 	<!--G-->
-		<intercept start="4.5NM250@(VOR)FFM" startHeading="248" end="9.7NM258@(VOR)FFM" radial="90" direction="right" endOffset="0" arrows="end" color="122,150,108" stroke="dashed"/>
+		<intercept start="4.5NM250@(VOR)FFM" startHeading="248" end="9.7NM258@(VOR)FFM" radial="90" direction="right" radius="1.6" text="258" arrows="end" stroke="dashed"/>
 	<!--RID-->
-		<intercept start="49.958354,8.517283" startHeading="118" end="RID" radial="004" direction="right" endOffset="0" text="183-RID" arrows="end" color="122,150,108"/>
+		<intercept start="49.958354,8.517283" startHeading="118" end="RID" radial="004" direction="right" radius="1.6" text="183-RID" arrows="end"/>
 		<text position="49.901444,8.555325" angle="0" text="5000-" color="201,85,96"/>
-	<!--VFM 113.75-->
-		<intercept start="4.5NM250@(VOR)FFM" startHeading="248" end="VFM 113.75" radial="15" direction="left" endOffset="0" arrows="end" color="122,150,108"/>
-		<line start="VFM 113.75" end="3NM195@VFM 113.75" text="195-FFM" arrows="end" color="122,150,108"/>
+	<!--VFM 113.75	1.9NM195@VFM 113.75-->
+		<intercept start="4.5NM250@(VOR)FFM" startHeading="248" end="VFM 113.75" radial="15" radius="2.3" direction="left" arrows="end"/>
+		<line start="VFM 113.75" end="1.9NM195@VFM 113.75" text="195-VFM" arrows="end"/>
 	<!-- ANEKI 8F,8G (RID) -->
 	  	<line start="RID"   end="ANEKI" text="183" arrows="end,15" />
 		<text position="49.669023,8.527981" angle="0" text="6000+" color="201,85,96"/>
 	<!-- BIBTI 3F,3G,2M,4N  -->
 		<!-- 3F,3G (von G) -->
-		<intercept start="9.7NM258@(VOR)FFM" startHeading="270" end="ESUPI" radial="113" direction="right" endOffset="0" text="293" arrows="end" color="122,150,108" stroke="dots"/>
+		<intercept start="9.7NM258@(VOR)FFM" startHeading="270" end="ESUPI" radial="113" radius="1.3" direction="right" text="293" arrows="end" stroke="dots"/>
 		<line start="ESUPI"	end="MASIR" text="307" arrows="end,15" stroke="dots"/>
 		<!-- 2M,4N (von VFM 113.75) -->
-		<intercept start="3NM195@VFM 113.75" startHeading="195" end="PABVI" radial="93" direction="right" endOffset="0" text="238" arrows="end" color="122,150,108"/>
+		<intercept start="1.9NM195@VFM 113.75" startHeading="195" end="PABVI" endHeading="238" direction="right" radius="1.6" text="238" arrows="end"/>
 		<line start="PABVI" end="SIVDO" text="273" arrows="end"/>
 		<line start="SIVDO" end="KUPIP" text="305" arrows="end"/>
 		<line start="KUPIP"	end="MASIR" text="318" arrows="end"/>
@@ -517,18 +547,18 @@
 		<line start="OBOKA" end="BIBTI" text="326" arrows="end,15"/>
 	<!-- DKB 6F,7G (von AKONI)-->
 	  	<line start="AKONI" end="HAREM" text="130-FFM" arrows="end" />
-	  	<line start="HAREM" end="DKB"   text="310-DKB" arrows="end,15" />
+	  	<line start="HAREM" end="DKB"   text="130-DKB" arrows="end,15" />
 	<!-- MARUN 3F,4G,5N  -->
-		<!-- 3F,3J -->
-		<intercept start="4.5NM250@(VOR)FFM" startHeading="248" end="11.4NM141@TAU" radial="141" direction="right" endOffset="0" text="141-TAU" arrows="end" color="122,150,108" stroke="dots"/>
-		<intercept start="11.4NM141@TAU" startHeading="321" end="TABUM" radial="196" direction="right" endOffset="0" text="016" arrows="end" color="122,150,108" stroke="dots"/>
-		<!-- 4G  (von "G") -->
-		<intercept start="9.7NM258@(VOR)FFM" startHeading="264" end="9.6NM150@TAU" radial="150" direction="right" endOffset="0" text="150-TAU" arrows="end" color="122,150,108" stroke="dashed"/>
-		<intercept start="9.6NM150@TAU" startHeading="330" end="TABUM" radial="207" direction="right" endOffset="0" text="27" arrows="end" color="122,150,108" stroke="dashed"/>
 		<!-- 2M,5N (von VFM 113.75) -->
-		<intercept start="3NM195@VFM 113.75" startHeading="195" end="ROXAP" radial="156" direction="right" endOffset="0" text="336" arrows="end" color="122,150,108"/>
-	  	<line start="ROXAP" end="LISKI" text="336" arrows="end"/>
+		<intercept start="1.9NM195@VFM 113.75" startHeading="195" end="49.911518,8.393072" endHeading="279" radius="1.2" direction="right" text="279" arrows="end"/>
+		<intercept start="49.911518,8.393072" startHeading="279" end="LISKI" endHeading="336" radius="1.1" direction="right" text="336" arrows="end"/>
 	  	<line start="LISKI" end="TABUM" text="017" arrows="end"/>
+		<!-- 3F,3J -->
+		<intercept start="4.5NM250@(VOR)FFM" startHeading="248" end="11.4NM141@TAU" radial="141" direction="right" radius="1.6" text="321-TAU" arrows="end" stroke="dots"/>
+		<intercept start="11.4NM141@TAU" startHeading="321" end="TABUM" radial="196" direction="right" radius="1.6" text="016" arrows="end" stroke="dots"/>
+		<!-- 4G  (von "G") -->
+		<intercept start="9.7NM258@(VOR)FFM" startHeading="264" end="9.6NM150@TAU" radial="150" direction="right" radius="1.6" text="330-TAU" arrows="end" stroke="dashed"/>
+		<intercept start="9.6NM150@TAU" startHeading="330" end="TABUM" radial="207" direction="right" radius="1.6" text="27" arrows="end" color="122,150,108"/>
 		<!--TABUM-->
 	  	<line start="TABUM" end="LIKSI" text="018" arrows="end"/>
 		<line start="LIKSI" end="LORPA" text="016" arrows="end"/>
@@ -537,14 +567,17 @@
 	  	<line start="HAREM" end="LAMPU" text="148" arrows="end" />
 	  	<line start="LAMPU" end="GEBNO" text="134" arrows="end" />
 		<line start="GEBNO" end="NOMBO" text="134" arrows="end,15"/>
-	<!-- RATIM 5F,5G (von AKONI) -->
+	<!-- RATIM 5F 5G (von AKONI) -->
 	  	<line start="AKONI" end="RATIM" text="102" arrows="end,15" />
 	<!-- ROTEN 6F, (on Route DKB)) -->
 	<!-- SOBRA 4F,4G -->
-		<!-- 4F,4G,3P not used - go via VFM 113.75-->
-		<!-- 5N  (von VFM 113.75) -->
-		<intercept start="3NM195@VFM 113.75" startHeading="195" end="20.6NM223@(VOR)FFM" radial="050" direction="right" endOffset="0" text="223" arrows="end"  color="122,150,108"/>
-		<intercept start="20.6NM223@(VOR)FFM" startHeading="230" end="DONAB" radial="103" direction="right" endOffset="0" text="283" arrows="end"  color="122,150,108"/>
+		<text position="49.801520,8.323465" text="20.6 DME FFM 223"/>
+		<!-- 4F 4G -->
+		<intercept start="49.998848,8.488259" startHeading="198" end="20.6NM223@(VOR)FFM" endHeading="223" direction="right" radius="1.6" text="223-FFM" arrows="end"/>
+		<!-- 5N -->
+		<intercept start="49.998848,8.488259" startHeading="184" end="20.6NM223@(VOR)FFM" endHeading="223" direction="right" radius="1.6" arrows="end" stroke="dots"/>
+		<!-- all -->
+		<intercept start="20.6NM223@(VOR)FFM" startHeading="230" end="DONAB" radial="103" direction="right" radius="1.6" text="283" arrows="end"/> 
 	  	<line start="DONAB" end="SOBRA" text="283" arrows="end,15"/>
 	<!-- SULUS 7F,8G (von RATIM) -->
 	  	<line start="RATIM" end="GIBSA" text="102" arrows="end" />
@@ -555,3 +588,4 @@
 	  	<line start="TESGA" end="TOBAK" text="038" arrows="end,15" />
 	</route>
 </routes>
+

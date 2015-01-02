@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -40,6 +40,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -78,7 +79,6 @@ public class NavPointView implements IBoundedView, INotificationListener {
         this.navPoint = navPoint;
         // factory method
         viewObjectPainter = AViewObjectPainter.getPainterForNavpoint(mapViewAdapter, master, navPoint);
-
         mapViewAdapter.registerListener(this);
         updateLogicalPosition();
     }
@@ -118,6 +118,7 @@ public class NavPointView implements IBoundedView, INotificationListener {
 
     @Override
     public void validate() {
+        mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
     }
 
     @Override
@@ -141,10 +142,17 @@ public class NavPointView implements IBoundedView, INotificationListener {
         final AffineTransform logical2display = mapViewAdapter.getLogicalToDeviceTransform();
         displayPosition = logical2display.transform(logicalPosition, null);
         viewObjectPainter.updateDisplayPosition(displayPosition);
+        //mapViewAdapter.getUpdateManager().markRegionDirty(viewObjectPainter.getDisplayExtents());
     }
 
     public String getTooltipText(Point p) {
         return viewObjectPainter.isPickable() ? viewObjectPainter.getTooltipText(p) : null;
     }
 
+    public boolean hasToBePainted() {
+        return viewObjectPainter.hasToBePainted();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent p) {  }
 }

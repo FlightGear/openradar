@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+  <route name="TMA Geneve" zoomMin="120" zoomMax="400" displayMode="always" color="201,85,96">
+
+    <!--TMA GENEVE partie  1 AH FL 195 AL 3500FT AMSL-->
+    <text position="49.940997,1.623526" font="Arial" fontSize="18" text="TMA Geneve" color="201,85,96" />
+    <multiPointLine >
+        <point>N46°26'20'',E6°28'44''</point>
+        <point>N46°22'03'',E6°33'04''</point>
+        <point>N45°58'23'',E5°50'28''</point>
+        <point>N45°59'58'',E5°48'14''</point>
+        <point>N46°05'08'',E5°47'03''</point>
+        <point>N46°07'02'',E5°49'04''</point>
+        <point>N46°23'51'',E6°07'04''</point>
+        <point>N46°26'20'',E6°28'44''</point>
+    </multiPointLine >
+
+    <!--TMA GENEVE partie  2 AH FL 195 AL 5500FT AMSL-->
+    <multiPointLine >
+        <point>N46°27'18'',E6°37'35''</point>
+        <point>N46°24'54'',E6°39'59''</point>
+        <point>N46°18'17'',E6°30'34''</point>
+        <point>N46°02'56'',E6°09'33''</point>
+        <point>N45°55'41'',E5°54'39''</point>
+        <point>N46°10'24'',E5°39'42''</point>
+        <point>N46°10'59'',E5°40'52''</point>
+        <point>N46°07'02'',E5°49'04''</point>
+        <point>N46°05'08'',E5°47'03''</point>
+        <point>N45°59'58'',E5°48'14''</point>
+        <point>N45°58'23'',E5°50'28''</point>
+        <point>N46°22'03'',E6°33'04''</point>
+        <point>N46°26'20'',E6°28'44''</point>
+        <point>N46°27'18'',E6°37'35''</point>
+    </multiPointLine >
+
+    <!--Geneve2 E 126.35 AH 5500FT AMSL AL 3500FT AMSL-->
+    <multiPointLine >
+        <point>N46°27'18'',E6°37'35''</point>
+        <point>N46°24'54'',E6°39'59''</point>
+        <point>N46°18'17'',E6°30'34''</point>
+        <point>N46°02'56'',E6°09'33''</point>
+        <point>N45°55'41'',E5°54'39''</point>
+        <point>N46°10'24'',E5°39'42''</point>
+        <point>N46°10'59'',E5°40'52''</point>
+        <point>N46°07'02'',E5°49'04''</point>
+        <point>N46°05'08'',E5°47'03''</point>
+        <point>N45°59'58'',E5°48'14''</point>
+        <point>N45°58'23'',E5°50'28''</point>
+        <point>N46°22'03'',E6°33'04''</point>
+        <point>N46°26'20'',E6°28'44''</point>
+        <point>N46°27'18'',E6°37'35''</point>
+    </multiPointLine >
+
+    <!--TMA GENEVE partie  3 AH FL 195 AL 6500FT AMSL-->
+    <multiPointLine >
+        <point>N46°24'40'',E6°05'17''</point>
+        <point>N46°23'51'',E6°07'04''</point>
+        <point>N46°23'38'',E6°06'39''</point>
+        <point>N46°07'02'',E5°49'04''</point>
+        <point>N46°10'59'',E5°40'52''</point>
+        <point>N46°14'32'',E5°48'04''</point>
+        <point>N46°22'29'',E6°02'03''</point>
+        <point>N46°24'40'',E6°05'17''</point>
+    </multiPointLine >
+
+    <!--Geneve3 E 126.35 AH 6500FT AMSL AL 3500FT AMSL-->
+    <multiPointLine >
+        <point>N46°24'40'',E6°05'17''</point>
+        <point>N46°23'51'',E6°07'04''</point>
+        <point>N46°23'38'',E6°06'39''</point>
+        <point>N46°07'02'',E5°49'04''</point>
+        <point>N46°10'59'',E5°40'52''</point>
+        <point>N46°14'32'',E5°48'04''</point>
+        <point>N46°22'29'',E6°02'03''</point>
+        <point>N46°24'40'',E6°05'17''</point>
+    </multiPointLine >
+
+    <!--TMA GENEVE partie  4 AH FL 195 AL FL 075-->
+    <multiPointLine >
+        <point>N46°34'34'',E6°06'39''</point>
+        <point>N46°24'40'',E6°05'17''</point>
+        <point>N46°22'29'',E6°02'04''</point>
+        <point>N46°14'32'',E5°48'04''</point>
+        <point>N46°18'44'',E5°44'36''</point>
+        <point>N46°28'38'',E5°36'22''</point>
+        <point>N46°30'00'',E5°35'10''</point>
+        <point>N46°30'00'',E5°53'26''</point>
+        <point>N46°34'34'',E6°06'39''</point>
+    </multiPointLine >
+
+    <!--TMA GENEVE partie 4.1 ST CLAUDE NORD 124.75 AH FL 085 AL FL 075-->
+    <multiPointLine >
+        <point>N46°34'34'',E6°06'39''</point>
+        <point>N46°27'05'',E6°04'42''</point>
+        <point>N46°22'22'',E5°57'47''</point>
+        <point>N46°18'44'',E5°44'36''</point>
+        <point>N46°28'38'',E5°36'22''</point>
+        <point>N46°30'00'',E5°35'10''</point>
+        <point>N46°30'00'',E5°53'26''</point>
+        <point>N46°34'28'',E6°06'29''</point>
+        <point>N46°34'34'',E6°06'39''</point>
+    </multiPointLine >
+
+    <!--TMA GENEVE partie 5 AH FL 195 AL FL 075-->
+    <multiPointLine >
+        <point>N46°44'00'',E6°33'26''</point>
+        <point>N46°40'36'',E6°45'02''</point>
+        <point>N46°39'26'',E6°45'13''</point>
+        <point>N46°32'45'',E6°54'02''</point>
+        <point>N46°28'09'',E6°48'05''</point>
+        <point>N46°26'14'',E6°41'53''</point>
+        <point>N46°24'54'',E6°39'59''</point>
+        <point>N46°34'55'',E6°29'57''</point>
+        <point>N46°34'23'',E6°19'35''</point>
+        <point>N46°44'00'',E6°33'26''</point>
+    </multiPointLine >
+
+    <!--TMA GENEVE partie 6 AH FL 195 AL FL 085-->
+    <multiPointLine >
+        <point>N46°25'51'',E6°48'10''</point>
+        <point>N46°22'40'',E6°48'17''</point>
+        <point>N46°21'31'',E6°48'19''</point>
+        <point>N46°10'24'',E6°25'00''</point>
+        <point>N45°59'16'',E6°14'18''</point>
+        <point>N46°02'56'',E6°09'33''</point>
+        <point>N46°18'17'',E6°30'34''</point>
+        <point>N46°24'54'',E6°39'59''</point>
+        <point>N46°26'14'',E6°41'53''</point>
+        <point>N46°28'09'',E6°48'05''</point>
+        <point>N46°25'51'',E6°48'10''</point>
+    </multiPointLine >
+
+    <!--TMA GENEVE partie 7 AH FL 195 AL FL 105-->
+    <multiPointLine >
+        <point>N46°19'14'',E6°48'25''</point>
+        <point>N46°15'27'',E6°51'16''</point>
+        <point>N46°04'36'',E6°28'46''</point>
+        <point>N45°52'22'',E6°16'25''</point>
+        <point>N45°55'07'',E6°12'15''</point>
+        <point>N45°58'25'',E6°15'24''</point>
+        <point>N45°59'16'',E6°14'18''</point>
+        <point>N46°10'24'',E6°25'00''</point>
+        <point>N46°21'31'',E6°48'19''</point>
+        <point>N46°19'14'',E6°48'25''</point>
+    </multiPointLine >
+
+    <!--Geneve8 C 126.35 AH FL195 AL FL095-->
+    <multiPointLine >
+        <point>N46°02'56'',E6°09'33''</point>
+        <point>N45°59'16'',E6°14'18''</point>
+        <point>N45°58'25'',E6°15'24''</point>
+        <point>N45°55'07'',E6°12'15''</point>
+        <point>N45°55'56'',E6°11'01''</point>
+        <point>N45°52'25'',E6°07'45''</point>
+        <point>N45°49'44'',E5°34'53''</point>
+        <point>N45°55'41'',E5°39'46''</point>
+        <point>N45°55'41'',E5°54'39''</point>
+    </multiPointLine >
+
+    <!--Geneve9 C 126.35 AH FL195 AL FL115-->
+    <multiPointLine >
+        <point>N45°52'25'',E6°07'45''</point>
+        <point>N45°50'38'',E6°06'05''</point>
+        <point>N45°37'14'',E6°05'16''</point>
+        <point>N45°41'20'',E5°28'00''</point>
+        <point>N45°49'44'',E5°34'53''</point>
+    </multiPointLine >
+  </route>
+</routes>

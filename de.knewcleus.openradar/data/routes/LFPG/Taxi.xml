@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+  <route name="LFPG Taxiways" zoomMin="0" zoomMax="8">
+    <text position="49.018589,2.516527" font="Arial" fontSize="10" color="55,0,0" angle="0" text="D"/>
+    <text position="49.020226,2.552270" font="Arial" fontSize="10" color="55,0,0" angle="0" text="D"/>
+    <text position="49.007800,2.559865" font="Arial" fontSize="10" color="55,0,0" angle="0" text="E"/>
+    <text position="49.005856,2.558027" font="Arial" fontSize="10" color="55,0,0" angle="0" text="G"/>
+    <text position="49.006508,2.567728" font="Arial" fontSize="10" color="55,0,0" angle="0" text="G"/>
+    <text position="49.008228,2.585057" font="Arial" fontSize="10" color="55,0,0" angle="0" text="G"/>
+    <text position="49.006392,2.553855" font="Arial" fontSize="10" color="55,0,0" angle="0" text="F"/>
+    <text position="49.015586,2.551267" font="Arial" fontSize="10" color="55,0,0" angle="0" text="F"/>
+    <text position="49.006055,2.552632" font="Arial" fontSize="10" color="55,0,0" angle="0" text="N"/>
+    <text position="49.023816,2.524620" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Z1"/>
+    <text position="49.023838,2.527119" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Z2"/>
+    <text position="49.024083,2.531676" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Z3"/>
+    <text position="49.022212,2.535433" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="49.024978,2.539996" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="49.021409,2.535332" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="49.020634,2.535390" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="49.020038,2.535442" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="49.023399,2.549916" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="49.022092,2.550063" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="49.021016,2.550195" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+
+    <text position="48.998986,2.590574" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="48.998083,2.590626" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="48.996619,2.590782" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="48.997947,2.573418" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+    <text position="48.995853,2.573651" font="Arial" fontSize="10" color="55,0,0" angle="0" text="XX"/>
+
+    <text position="49.024827,2.546140" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Z5"/>
+    <text position="49.025289,2.554297" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Z6"/>
+    <text position="49.025686,2.558876" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Z7"/>
+    <text position="49.025657,2.561749" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Z8"/>
+    <text position="49.023000,2.525137" font="Arial" fontSize="10" color="55,0,0" angle="0" text="L"/>
+    <text position="49.024478,2.556800" font="Arial" fontSize="10" color="55,0,0" angle="0" text="L"/>
+
+    <text position="49.008602,2.580687" font="Arial" fontSize="10" color="55,0,0" angle="0" text="GE6"/>
+    <text position="49.008552,2.582663" font="Arial" fontSize="10" color="55,0,0" angle="0" text="GE7"/>
+    <text position="49.007530,2.564346" font="Arial" fontSize="10" color="55,0,0" angle="0" text="GE1"/>
+    <text position="49.000027,2.559064" font="Arial" fontSize="10" color="55,0,0" angle="0" text="FR"/>
+    <text position="49.008253,2.576697" font="Arial" fontSize="10" color="55,0,0" angle="0" text="GE5"/>
+    <text position="49.008228,2.574759" font="Arial" fontSize="10" color="55,0,0" angle="0" text="GE4"/>
+    <text position="49.000152,2.554656" font="Arial" fontSize="10" color="55,0,0" angle="0" text="U"/>
+    <text position="49.006907,2.552984" font="Arial" fontSize="10" color="55,0,0" angle="0" text="FN2"/>
+    <text position="49.005386,2.553972" font="Arial" fontSize="10" color="55,0,0" angle="0" text="FN2"/>
+    <text position="49.003243,2.554808" font="Arial" fontSize="10" color="55,0,0" angle="0" text="FN3"/>
+    <text position="49.000426,2.556252" font="Arial" fontSize="10" color="55,0,0" angle="0" text="FN5"/>
+    <text position="49.015770,2.548682" font="Arial" fontSize="10" color="55,0,0" angle="0" text="N"/>
+    <text position="49.018185,2.544428" font="Arial" fontSize="10" color="55,0,0" angle="0" text="B"/>
+    <text position="49.016481,2.535720" font="Arial" fontSize="10" color="55,0,0" angle="0" text="MD3"/>
+    <text position="49.015807,2.536662" font="Arial" fontSize="10" color="55,0,0" angle="0" text="A"/>
+    <text position="49.015564,2.546941" font="Arial" fontSize="10" color="55,0,0" angle="0" text="A"/>
+    <text position="49.011818,2.542115" font="Arial" fontSize="10" color="55,0,0" angle="0" text="A"/>
+    <text position="49.022064,2.523026" font="Arial" fontSize="10" color="55,0,0" angle="0" text="K1"/>
+    <text position="49.022205,2.526694" font="Arial" fontSize="10" color="55,0,0" angle="0" text="K2"/>
+    <text position="49.022289,2.529762" font="Arial" fontSize="10" color="55,0,0" angle="0" text="K3"/>
+    <text position="49.019982,2.513009" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y1"/>
+    <text position="49.019953,2.514854" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y2"/>
+    <text position="49.020150,2.520967" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y3"/>
+    <text position="49.020474,2.524914" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y4"/>
+    <text position="49.020643,2.531864" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y5"/>
+    <text position="49.021163,2.534630" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y6"/>
+    <text position="49.021140,2.539364" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y7"/>
+    <text position="49.021105,2.543175" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y8"/>
+    <text position="49.021381,2.551967" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y10"/>
+    <text position="49.023520,2.555850" font="Arial" fontSize="10" color="55,0,0" angle="0" text="K6"/>
+    <text position="49.023686,2.559341" font="Arial" fontSize="10" color="55,0,0" angle="0" text="K7"/>
+    <text position="49.023917,2.561739" font="Arial" fontSize="10" color="55,0,0" angle="0" text="K8"/>
+    <text position="49.021806,2.562617" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y11"/>
+    <text position="49.021870,2.565757" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y12"/>
+    <text position="49.022036,2.569501" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Y13"/>
+    <text position="49.020212,2.573444" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Q"/>
+    <text position="49.017607,2.580341" font="Arial" fontSize="10" color="55,0,0" angle="0" text="B"/>
+    <text position="49.018465,2.532662" font="Arial" fontSize="10" color="55,0,0" angle="0" text="D"/>
+    <text position="49.016592,2.531317" font="Arial" fontSize="10" color="55,0,0" angle="0" text="M"/>
+    <text position="49.017613,2.532237" font="Arial" fontSize="10" color="55,0,0" angle="0" text="B"/>
+    <text position="49.016856,2.516554" font="Arial" fontSize="10" color="55,0,0" angle="0" text="B"/>
+    <text position="49.015059,2.516924" font="Arial" fontSize="10" color="55,0,0" angle="0" text="M"/>
+    <text position="49.017363,2.512607" font="Arial" fontSize="10" color="55,0,0" angle="0" text="BD"/>
+    <text position="49.018891,2.522036" font="Arial" fontSize="10" color="55,0,0" angle="0" text="DY"/>
+    <text position="49.000813,2.559601" font="Arial" fontSize="10" color="55,0,0" angle="0" text="P"/>
+    <text position="48.999188,2.564532" font="Arial" fontSize="10" color="55,0,0" angle="0" text="R"/>
+    <text position="48.997800,2.576131" font="Arial" fontSize="10" color="55,0,0" angle="0" text="W4"/>
+    <text position="48.998022,2.579428" font="Arial" fontSize="10" color="55,0,0" angle="0" text="W3"/>
+    <text position="48.999026,2.578427" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T"/>
+    <text position="48.998553,2.545398" font="Arial" fontSize="10" color="55,0,0" angle="0" text="C"/>
+    <text position="48.996528,2.551837" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T1"/>
+    <text position="48.996698,2.555055" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T2"/>
+    <text position="48.996460,2.560895" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T3"/>
+    <text position="48.996800,2.563153" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T4"/>
+    <text position="48.996766,2.565282" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T5"/>
+    <text position="48.997584,2.567410" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T6"/>
+    <text position="48.996971,2.566346" font="Arial" fontSize="10" color="55,0,0" angle="0" text="W1"/>
+    <text position="48.997584,2.571459" font="Arial" fontSize="10" color="55,0,0" angle="0" text="W2"/>
+    <text position="48.997466,2.554738" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T"/>
+    <text position="48.998324,2.564091" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T"/>
+    <text position="48.999112,2.556218" font="Arial" fontSize="10" color="55,0,0" angle="0" text="N"/>
+    <text position="48.998409,2.557612" font="Arial" fontSize="10" color="55,0,0" angle="0" text="N"/>
+    <text position="48.998843,2.558819" font="Arial" fontSize="10" color="55,0,0" angle="0" text="RT1"/>
+    <text position="48.998656,2.563101" font="Arial" fontSize="10" color="55,0,0" angle="0" text="RT2"/>
+    <text position="48.998860,2.567254" font="Arial" fontSize="10" color="55,0,0" angle="0" text="RT3"/>
+    <text position="48.997754,2.558274" font="Arial" fontSize="10" color="55,0,0" angle="0" text="ST"/>
+    <text position="48.999180,2.548753" font="Arial" fontSize="10" color="55,0,0" angle="0" text="UT1"/>
+    <text position="48.999224,2.550484" font="Arial" fontSize="10" color="55,0,0" angle="0" text="UT2"/>
+    <text position="48.999373,2.553081" font="Arial" fontSize="10" color="55,0,0" angle="0" text="UT4"/>
+    <text position="48.994877,2.561025" font="Arial" fontSize="10" color="55,0,0" angle="0" text="S1"/>
+    <text position="48.995234,2.563361" font="Arial" fontSize="10" color="55,0,0" angle="0" text="S2"/>
+    <text position="48.995558,2.567670" font="Arial" fontSize="10" color="55,0,0" angle="0" text="S3"/>
+    <text position="48.994638,2.565671" font="Arial" fontSize="10" color="55,0,0" angle="0" text="S"/>
+    <text position="48.995030,2.575171" font="Arial" fontSize="10" color="55,0,0" angle="0" text="S"/>
+    <text position="48.993719,2.565126" font="Arial" fontSize="10" color="55,0,0" angle="0" text="V1"/>
+    <text position="48.993957,2.567851" font="Arial" fontSize="10" color="55,0,0" angle="0" text="V2"/>
+    <text position="48.994264,2.571823" font="Arial" fontSize="10" color="55,0,0" angle="0" text="V3"/>
+    <text position="48.994570,2.579713" font="Arial" fontSize="10" color="55,0,0" angle="0" text="V4"/>
+    <text position="48.994996,2.588797" font="Arial" fontSize="10" color="55,0,0" angle="0" text="V5"/>
+    <text position="48.995438,2.596013" font="Arial" fontSize="10" color="55,0,0" angle="0" text="V6"/>
+    <text position="48.995592,2.599673" font="Arial" fontSize="10" color="55,0,0" angle="0" text="V7"/>
+    <text position="48.995796,2.602320" font="Arial" fontSize="10" color="55,0,0" angle="0" text="V9"/>
+    <text position="48.997243,2.596922" font="Arial" fontSize="10" color="55,0,0" angle="0" text="S6"/>
+    <text position="48.997311,2.599491" font="Arial" fontSize="10" color="55,0,0" angle="0" text="S7"/>
+    <text position="48.997447,2.601801" font="Arial" fontSize="10" color="55,0,0" angle="0" text="S9"/>
+    <text position="48.998503,2.585138" font="Arial" fontSize="10" color="55,0,0" angle="0" text="W5"/>
+    <text position="48.998894,2.592068" font="Arial" fontSize="10" color="55,0,0" angle="0" text="W6"/>
+    <text position="48.999099,2.596870" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T9"/>
+    <text position="48.998946,2.600296" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T10"/>
+    <text position="48.999099,2.602528" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T11"/>
+    <text position="48.999644,2.592353" font="Arial" fontSize="10" color="55,0,0" angle="0" text="T"/>
+    <text position="49.000580,2.595364" font="Arial" fontSize="10" color="55,0,0" angle="0" text="R"/>
+    <text position="49.000903,2.605591" font="Arial" fontSize="10" color="55,0,0" angle="0" text="R1"/>
+  </route>
+
+  <route name="LFPG Terminals" zoomMin="0" zoomMax="20">
+    <text position="49.014304,2.541537" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Terminal 1"/>
+    <text position="49.000862,2.536872" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Fret"/>
+    <text position="49.012832,2.559140" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Terminal 3"/>
+    <text position="49.005125,2.574887" font="Arial" fontSize="10" color="55,0,0" angle="0" text="Terminal 2"/>
+  </route>
+
+</routes>

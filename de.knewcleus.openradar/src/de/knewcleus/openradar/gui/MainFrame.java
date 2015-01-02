@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2014 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -87,7 +87,6 @@ public class MainFrame extends javax.swing.JFrame {
         this.setSize(maxBounds.width, maxBounds.height);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.addWindowListener(new MainFrameListener());
-        
         // add main view
         this.setContentPane(jPnlContentPane);
 
@@ -160,14 +159,9 @@ public class MainFrame extends javax.swing.JFrame {
         vspRight.setBottomComponent(contactsPanel);
     }
 
-    public void setDividerPosition() {
-        Dimension windowSize = getSize();
-        Dimension dim = pnlRightTop.getPreferredSize();
-        hspMain.setDividerLocation((int) Math.round(windowSize.getWidth() - dim.getWidth()));
-        vspLeft.setDividerLocation((int) Math.round(windowSize.getHeight() * 0.8));
-        guiInteractionManager.getStatusManager().updateRunways();
-    }
-
+    /**
+     * Adapts divider position, when window is being resized or moved to another screen.
+     */
     public class ResizeListener extends ComponentAdapter {
         @Override
         public void componentResized(ComponentEvent e) {
@@ -175,12 +169,24 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    private class MainFrameListener extends WindowAdapter {
+    public void setDividerPosition() {
+        Dimension windowSize = getSize();
+        Dimension dim = pnlRightTop.getPreferredSize();
+        hspMain.setDividerLocation((int) Math.round(windowSize.getWidth() - dim.getWidth()));
+        vspLeft.setDividerLocation((int) Math.round(windowSize.getHeight() * 0.8));
+        guiInteractionManager.getStatusManager().updateRunways();
+        guiInteractionManager.getRadarBackend().forceRepaint();
+    }
 
+    /**
+     * Responsible for closing the dialogs when user returns to the main window.
+     */
+    private class MainFrameListener extends WindowAdapter {
         @Override
         public void windowActivated(WindowEvent e) {
-            guiInteractionManager.closeDialogs(true);
-            
+            if(e.getOppositeWindow()!=null) {
+                guiInteractionManager.closeDialogs(true);
+            }
         }
     }
 }

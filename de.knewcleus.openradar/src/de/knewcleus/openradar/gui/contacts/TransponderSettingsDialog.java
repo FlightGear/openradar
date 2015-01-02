@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -68,8 +68,12 @@ public class TransponderSettingsDialog extends JDialog {
 
     private JLabel lbTransitionAlt = new JLabel("TransitionAlt");
     private JTextField tfTransitionAlt = new JTextField(5);
+    private JLabel lbVFRCode = new JLabel("VFR code");
+    private JLabel lbIFRCode = new JLabel("IFR code");
     private JLabel lbVFR = new JLabel("VFR range");
     private JLabel lbIFR = new JLabel("IFR range");
+    private JTextField tfVFRCode = new JTextField(4);
+    private JTextField tfIFRCode = new JTextField(4);
     private JTextField tfSquawkFromVFR = new JTextField(4);
     private JTextField tfSquawkToVFR = new JTextField(4);
     private JTextField tfSquawkFromIFR = new JTextField(4);
@@ -150,10 +154,50 @@ public class TransponderSettingsDialog extends JDialog {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
         add(jPnlSquawk, gridBagConstraints);
-        
+
+        // squawk codes
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlSquawk.add(lbVFRCode, gridBagConstraints);
+
+        tfVFRCode.setToolTipText("The default VFR code for uncontrolled flights");
+        tfVFRCode.addKeyListener(squawkCodeListener);
+        tfVFRCode.setHorizontalAlignment(JTextField.RIGHT);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlSquawk.add(tfVFRCode, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlSquawk.add(lbIFRCode, gridBagConstraints);
+
+        tfIFRCode.setToolTipText("The default IFR code for uncontrolled flights");
+        tfIFRCode.addKeyListener(squawkCodeListener);
+        tfIFRCode.setHorizontalAlignment(JTextField.RIGHT);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlSquawk.add(tfIFRCode, gridBagConstraints);
+
+        // squawk ranges
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
@@ -164,7 +208,7 @@ public class TransponderSettingsDialog extends JDialog {
         tfSquawkFromVFR.setHorizontalAlignment(JTextField.RIGHT);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
         jPnlSquawk.add(tfSquawkFromVFR, gridBagConstraints);
@@ -174,14 +218,14 @@ public class TransponderSettingsDialog extends JDialog {
         tfSquawkToVFR.setHorizontalAlignment(JTextField.RIGHT);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
         jPnlSquawk.add(tfSquawkToVFR, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
@@ -192,7 +236,7 @@ public class TransponderSettingsDialog extends JDialog {
         tfSquawkFromIFR.setHorizontalAlignment(JTextField.RIGHT);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlSquawk.add(tfSquawkFromIFR, gridBagConstraints);
@@ -202,7 +246,7 @@ public class TransponderSettingsDialog extends JDialog {
         tfSquawkToIFR.setHorizontalAlignment(JTextField.RIGHT);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlSquawk.add(tfSquawkToIFR, gridBagConstraints);
@@ -212,6 +256,10 @@ public class TransponderSettingsDialog extends JDialog {
     public void show(MouseEvent e) {
 
         tfTransitionAlt.setText(""+master.getAirportData().getTransitionAlt());
+        
+        tfVFRCode.setText(""+squawkCodeManager.getVfrCode());
+        tfIFRCode.setText(""+squawkCodeManager.getIfrCode());
+        
         tfSquawkFromVFR.setText(""+squawkCodeManager.getSquawkFromVFR());
         tfSquawkToVFR.setText(""+squawkCodeManager.getSquawkToVFR());
         tfSquawkFromIFR.setText(""+squawkCodeManager.getSquawkFromIFR());
@@ -261,6 +309,11 @@ public class TransponderSettingsDialog extends JDialog {
                 return;
             }
             try {
+                int iVFRCode = Integer.parseInt(tfVFRCode.getText());
+                int iIFRCode = Integer.parseInt(tfIFRCode.getText());
+                squawkCodeManager.setVfrCode(iVFRCode);
+                squawkCodeManager.setIfrCode(iIFRCode);
+                
                 int squawkFromVFR = Integer.parseInt(tfSquawkFromVFR.getText());
                 int squawkToVFR = Integer.parseInt(tfSquawkToVFR.getText());
                 int squawkFromIFR = Integer.parseInt(tfSquawkFromIFR.getText());
@@ -281,6 +334,12 @@ public class TransponderSettingsDialog extends JDialog {
 
             if(e.getKeyChar()==KeyEvent.VK_ENTER) {
                 if(tfTransitionAlt.equals(e.getSource())) {
+                    tfVFRCode.requestFocus();
+                }
+                if(tfVFRCode.equals(e.getSource())) {
+                    tfIFRCode.requestFocus();
+                }
+                if(tfIFRCode.equals(e.getSource())) {
                     tfSquawkFromVFR.requestFocus();
                 }
                 if(tfSquawkFromVFR.equals(e.getSource())) {

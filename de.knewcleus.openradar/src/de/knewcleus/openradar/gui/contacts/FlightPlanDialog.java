@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2014 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -45,8 +45,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -68,8 +66,11 @@ import javax.swing.border.TitledBorder;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData.FlightType;
 import de.knewcleus.openradar.gui.flightplan.FpAtc;
+import de.knewcleus.openradar.gui.flightplan.SquawkCode;
 import de.knewcleus.openradar.gui.flightplan.lenny64.Lenny64Controller;
+import de.knewcleus.openradar.gui.flightplan.lenny64.Lenny64FpExistsChecker;
 import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class FlightPlanDialog extends JDialog implements FocusListener {
@@ -86,10 +87,13 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
     private JPanel jPnlOnwerShip;
 
+    private JButton btReset;
     private JTextField tfFlightCode;
     private JComboBox<String> cbFlightPlanTypes;
     private JTextField tfAircraft;
     private JTextField tfSquawk;
+    private JButton btNextSquawk;
+    private JButton btResetSquawk;
 
     private JComboBox<String> cbHandoverATCs = new JComboBox<String>();
 
@@ -103,6 +107,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     private JTextField tfArrivalTime;
     private JTextField tfFpAltitude;
     private JTextField tfFpTAS;
+    private JButton btCloseFp;
     private JButton btRetrieveFp;
     
     private JTextField tfRoute;
@@ -118,6 +123,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
     private final Lenny64Controller lenny64Controller;
     
+    private final String FPCLOSE_BUTTON_DEFAULT = "Close FP";
+    private final String FPCLOSE_BUTTON_ASK = "Really Close?";
+    
     public FlightPlanDialog(GuiMasterController master, RadarContactController controller) {
         this.master = master;
         this.controller = controller;
@@ -129,7 +137,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setUndecorated(true);
         //setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        this.addWindowListener(new DialogCloseListener());
+//        this.addWindowListener(new DialogCloseListener());
 
         // Determine what the default GraphicsDevice can support.
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -204,7 +212,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         jPnlControl.add(jPnlOnwerShip, gridBagConstraints);
 
 
-        JButton btReset = new JButton("Reset Flightplan");
+        btReset = new JButton("Reset Flightplan");
         btReset.setName("RESET");
         btReset.addMouseListener(fpMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -397,16 +405,43 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
         tfSquawk = new JTextField(5);
         tfSquawk.setToolTipText("Assigned squawk code");
-        tfSquawk.setEditable(false);
-        tfSquawk.setEnabled(false);
+        tfSquawk.setEditable(true);
+        tfSquawk.setEnabled(true);
+        tfSquawk.addKeyListener(new SquawkFieldKeyListener());
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weightx = 0.0;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         jPnlLine2.add(tfSquawk, gridBagConstraints);
 
+        btNextSquawk = new JButton("next");
+        btNextSquawk.setToolTipText("Assign next free Squawk, depending on flight mode below");
+        btNextSquawk.setName("NEXT_SQUAWK");
+        btNextSquawk.addMouseListener(fpMouseListener);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 0.0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+        jPnlLine2.add(btNextSquawk, gridBagConstraints);
+
+        btResetSquawk = new JButton("del");
+        btResetSquawk.setToolTipText("Reset Squawk");
+        btResetSquawk.setName("RESET_SQUAWK");
+        btResetSquawk.addMouseListener(fpMouseListener);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+        jPnlLine2.add(btResetSquawk, gridBagConstraints);
+        
+        
         // Contact Line 3
 
         JPanel jPnlLine3 = new JPanel();
@@ -440,7 +475,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlLine3.add(cbAssignedRunway, gridBagConstraints);
 
-        JLabel lbAssRoute = new JLabel(" Route:");
+        JLabel lbAssRoute = new JLabel(" SID/STAR:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -542,6 +577,18 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         gridBagConstraints.anchor = GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlLine1.add(btRetrieveFp, gridBagConstraints);
+
+        btCloseFp = new JButton(FPCLOSE_BUTTON_DEFAULT);
+        btCloseFp.setToolTipText("Closes the current FP and resets it");
+        btCloseFp.setName("CLOSE_FP");
+        btCloseFp.addMouseListener(fpMouseListener);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 0.0;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+        jPnlLine1.add(btCloseFp, gridBagConstraints);
         
         // line 2
 
@@ -643,7 +690,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 0);
         jPnlFlight.add(jPnlLine3, gridBagConstraints);
 
-        JLabel lbVia = new JLabel("Route:");
+        JLabel lbVia = new JLabel("Waypoints:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -793,6 +840,11 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     }
 
     public void setData(GuiRadarContact contact) {
+        
+        btRetrieveFp.setForeground(Color.black);
+        if(master.getAirportData().isLenny64Enabled()) {
+            (new Thread(new Lenny64FpExistsChecker(master, contact, this,this.lenny64Controller.getLenny64Connector()),"OpenRadar - Lenny64 Flightplan exists checker")).start();
+        }
 
         tbContacts.setTitle("<html><body>Contact <b>"+contact.getCallSign()+"</b></body></html>");
         chbFgComSupport.setSelected(contact.hasFgComSupport());
@@ -819,12 +871,12 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         tfFpTAS.setText(fpd.getTrueAirspeed());
         
         cbAssignedRunway.setModel(master.getAirportData().getRunwayModel(true));
-        cbAssignedRunway.setSelectedItem(fpd.getAssignedRunway());
-        cbAssignedRoute.setModel(master.getAirportData().getNavaidDB().getRoutesCbModel(true));
-        cbAssignedRoute.setSelectedItem(fpd.getAssignedRoute());
+        cbAssignedRunway.getEditor().setItem(fpd.getAssignedRunway());
+        cbAssignedRoute.setModel(master.getAirportData().getNavaidDB().getRoutesCbModel(master,true));
+        cbAssignedRoute.getEditor().setItem(fpd.getAssignedRoute());
 
         tfAssignedAltitude.setText(fpd.getAssignedAltitude());
-        // cbFlightPlanStatus.setSelectedItem(fpd.getFpStatus());
+        //cbFlightPlanStatus.getEditor().setItem(fpd.getFpStatus());
 
         cbHandoverATCs.setModel(master.getRadarContactManager().getOtherATCsCbModel());
 
@@ -834,7 +886,10 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         initOwnership(fpd);
         
         setLennyButtonText("Retrieve FP");
+        btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
+
         setFpReadable(fpd.isUncontrolled() || fpd.isOwnedByMe());
+        btCloseFp.setEnabled(fpd.isOwnedByMe() && fpd.getFlightPlanId()!=null && !fpd.getFlightPlanId().isEmpty());
     }
     /** fills the panel in fron of the reset flightplan button */
     private void initOwnership(FlightPlanData fpd) {
@@ -927,6 +982,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
             gridBagConstraints.anchor = GridBagConstraints.WEST;
             gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
             jPnlOnwerShip.add(lbOwner, gridBagConstraints);
+
+
         } else {
             // owned by nobody
             JLabel lbControlledBy = new JLabel("Uncontrolled...");
@@ -953,7 +1010,10 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     }
 
     private void setFpReadable(boolean b) {
+        
+        btReset.setEnabled(b);
         tfFlightCode.setEditable(b);
+        btResetSquawk.setEnabled(b);
         cbFlightPlanTypes.setEnabled(b);
         tfDepAirport.setEditable(b);
         tfDepTime.setEditable(b);
@@ -972,33 +1032,33 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         btRetrieveFp.setEnabled(b);
     }
 
-    private class DialogCloseListener extends WindowAdapter {
-        
-        @Override
-        public void windowOpened(WindowEvent e) {
-            
-        }
-        
-        @Override
-        public void windowClosed(WindowEvent e) {
-//            closeDialog();
-        }
-
-        @Override
-        public void windowDeactivated(WindowEvent e) {
-//            if(!lenny64Controller.isDialogOpen()) {
-//                closeDialog();
-//            }
-        }
-
-        @Override
-        public void windowLostFocus(WindowEvent e) {
-//            if(!lenny64Controller.isDialogOpen()) {
-//                closeDialog();
-//            }
-        }
-
-    }
+//    private class DialogCloseListener extends WindowAdapter {
+//        
+//        @Override
+//        public void windowOpened(WindowEvent e) {
+//            
+//        }
+//        
+//        @Override
+//        public void windowClosed(WindowEvent e) {
+////            closeDialog();
+//        }
+//
+//        @Override
+//        public void windowDeactivated(WindowEvent e) {
+////            if(!lenny64Controller.isDialogOpen()) {
+////                closeDialog();
+////            }
+//        }
+//
+//        @Override
+//        public void windowLostFocus(WindowEvent e) {
+////            if(!lenny64Controller.isDialogOpen()) {
+////                closeDialog();
+////            }
+//        }
+//
+//    }
 
     public void closeDialog(boolean save) {
         if (isVisible()) {
@@ -1038,8 +1098,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         // estimatedFlightTime+
         // estimatedFuelTime
         
-        fpd.setAssignedRunway((String)cbAssignedRunway.getSelectedItem());
-        fpd.setAssignedRoute((String)cbAssignedRoute.getSelectedItem());
+        fpd.setAssignedRunway((String)cbAssignedRunway.getEditor().getItem());//.getSelectedItem());
+        fpd.setAssignedRoute((String)cbAssignedRoute.getEditor().getItem());//getSelectedItem());
         fpd.setAssignedAltitude(tfAssignedAltitude.getText());
 
         if(contact.getFlightPlan().isOwnedByMe()) {
@@ -1052,6 +1112,12 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
                 }
             }
         }
+        
+        String sqCode = tfSquawk.getText();
+        if(SquawkCode.checkValue(sqCode)) {
+            contact.setAssignedSquawk(Integer.parseInt(sqCode));
+        }
+        
         // cbFlightPlanStatus.setSelectedItem(fpd.getFpStatus());
         fpd.setRemarks(tpDetails.getText().trim());
         contact.setAtcComment(tpPrivateDetails.getText().trim());
@@ -1135,6 +1201,24 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
                 setData(contact);
             } else if("RETRIEVE_FP".equals(source.getName()) && e.getClickCount()==1) {
                 lenny64Controller.downloadFlightPlansFor(e, contact.getCallSign());
+            } else if("CLOSE_FP".equals(source.getName()) && e.getClickCount()==1) {
+                if(btCloseFp.getText().equals(FPCLOSE_BUTTON_DEFAULT)) {
+                    // change text to are you sure?
+                    btCloseFp.setText(FPCLOSE_BUTTON_ASK); 
+                } else {
+                    btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
+                    // really close it
+                    lenny64Controller.closeFlightPlan(contact);
+                    setData(contact);
+                    saveData();
+                }
+            } else if("NEXT_SQUAWK".equals(source.getName()) && e.getClickCount()==1) {
+                saveData();
+                master.getRadarContactManager().assignSquawkCode(FlightType.valueOf(contact.getFlightPlan().getType()));
+                setData(contact);
+            } else if("RESET_SQUAWK".equals(source.getName()) && e.getClickCount()==1) {
+                contact.getFlightPlan().setSquawk(null);
+                setData(contact);
             }
         }
     }
@@ -1170,5 +1254,39 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
     public void setLennyButtonText(String text) {
         btRetrieveFp.setText(text);
+    }
+    
+    private class SquawkFieldKeyListener extends KeyAdapter {
+        @Override
+        public void keyTyped(KeyEvent e) {
+            
+            if(((JTextField)e.getSource()).getText().length()>=4 || !(""+e.getKeyChar()).matches("[0-7]")) {
+                e.consume();
+                return;
+            } 
+            
+            String newText = tfSquawk.getText();
+            tfSquawk.setForeground(newText.matches("[0-7]{0,4}")?Color.black:Color.red);
+        
+            String key=""+e.getKeyChar();
+            newText = newText+key;
+            if(newText.length()==4 && !"".equals(key)) {
+                if(!SquawkCode.checkValue(newText)) {
+                    tfSquawk.setForeground(Color.red);
+                    e.consume();
+                } else {
+                    tfSquawk.setForeground(Color.black);
+                }
+            }                
+        }
+    }
+
+    public void setFlightplansAvailable(boolean fpsExist) {
+        if(fpsExist) {
+            btRetrieveFp.setForeground(Color.blue);
+        } else {
+            btRetrieveFp.setForeground(Color.GRAY);
+        }
+        btRetrieveFp.repaint();
     }
 }

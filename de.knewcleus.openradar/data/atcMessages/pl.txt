@@ -5,6 +5,7 @@ Do wszystkich pilotow:
 %s: Tu radar %s - prosze o informacje o twoich zamiarach. FGCOM %s
 %s: Kontakt radarowy - %3.0f mil, QNH %s, aktywny pas %s, FGCOM %s
 
+
 %s: Opuszczasz moja strefe kontroli - milego lotu.
 Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotliwosc FGCOM %s
 

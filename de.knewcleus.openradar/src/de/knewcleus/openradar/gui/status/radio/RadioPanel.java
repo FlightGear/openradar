@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -33,8 +33,13 @@
 package de.knewcleus.openradar.gui.status.radio;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +48,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
@@ -58,6 +64,7 @@ public class RadioPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private GuiMasterController master;
     private RadioController radioManager;
+    private JTextField tfAltRadioText;
 
     private Map<String,JButton> mapPTTButtons = new HashMap<String,JButton>() ;
     private Map<String,JLabel> mapRadioLabels = new HashMap<String,JLabel>() ;
@@ -162,7 +169,7 @@ public class RadioPanel extends JPanel {
                 JLabel lbReset = new JLabel();
                 lbReset.setName("lbRestart");
                 lbReset.setText("Restart");
-                lbReset.setFont(lbFreq.getFont().deriveFont(8));
+                lbReset.setFont(lbFreq.getFont().deriveFont(6));
                 lbReset.setForeground(Palette.DESKTOP_FILTER_SELECTED);
                 lbReset.setToolTipText("<html><body><b>Restart FgCom</b> if sound is distorted...<br/> Use it of users complain!</body></html>");
                 lbReset.addMouseListener(radioManager.getPttButtonListener());
@@ -172,13 +179,35 @@ public class RadioPanel extends JPanel {
                 gridBagConstraints.anchor = java.awt.GridBagConstraints.CENTER;
                 gridBagConstraints.insets = new java.awt.Insets(4, 2, 2, 0);
                 pnlRight.add(lbReset,gridBagConstraints);
-
-                doLayout();
-                if(getParent()!=null) {
-                    getParent().invalidate();
-                    ((JSplitPane)getParent().getParent().getParent()).invalidate();
-                }
             }
+        }
+        
+        if(master.getAirportData().isAltRadioTextEnabled()) {
+            tfAltRadioText = new JTextField(30);
+            tfAltRadioText.setName("tfAltRadioTextEnabled");
+            tfAltRadioText.setText(master.getAirportData().getAltRadioText());
+            tfAltRadioText.setFont(tfAltRadioText.getFont().deriveFont(8));
+            tfAltRadioText.setToolTipText("A text that should be transmitted to the contacts in ATIS");
+            tfAltRadioText.addFocusListener(new AltRadioTextFocusListener());
+            tfAltRadioText.addKeyListener(new AltRadioTextKeyListener());
+            Dimension preferredSize = tfAltRadioText.getPreferredSize();
+            preferredSize.setSize(300, 24);//preferredSize.getHeight()-4);
+            tfAltRadioText.setPreferredSize(preferredSize);
+            tfAltRadioText.setMaximumSize(preferredSize);
+            GridBagConstraints gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = i;
+            gridBagConstraints.gridwidth=4;
+            gridBagConstraints.weightx=1.0;
+            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+            gridBagConstraints.insets = new java.awt.Insets(6, 2, 2, 4);
+            this.add(tfAltRadioText,gridBagConstraints);
+        }
+        doLayout();
+        if(getParent()!=null) {
+            getParent().invalidate();
+            ((JSplitPane)getParent().getParent().getParent()).invalidate();
         }
     }
 
@@ -202,4 +231,32 @@ public class RadioPanel extends JPanel {
         mapRadioLabels.get(radioKey).repaint();
     }
 
+    public class AltRadioTextFocusListener extends FocusAdapter {
+        @Override
+        public void focusGained(FocusEvent e) {
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            master.getAirportData().setAltRadioText(tfAltRadioText.getText());
+            master.getAirportData().storeAirportData(master);
+            if(tfAltRadioText.getText().length()>40) {
+                tfAltRadioText.setText(tfAltRadioText.getText().substring(0,40));
+            }
+        }
+    }
+    
+    public class AltRadioTextKeyListener extends KeyAdapter {
+        @Override
+        public void keyTyped(KeyEvent e) {
+            if(e.getKeyChar() == '\n') {
+                master.getAirportData().setAltRadioText(tfAltRadioText.getText());
+                master.getAirportData().storeAirportData(master);
+                e.consume();
+            }
+            if(tfAltRadioText.getText().length()>40) {
+                tfAltRadioText.setText(tfAltRadioText.getText().substring(0,40));
+            }
+        }
+    }
 }

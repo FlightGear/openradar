@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -36,8 +36,10 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import javax.swing.ComboBoxModel;
@@ -243,21 +245,57 @@ public class NavaidDB {
         return aerodromeList;
     }
 
-    public ComboBoxModel<String> getRoutesCbModel(boolean addEmptyEntry) {
+    public ComboBoxModel<String> getRoutesCbModel(GuiMasterController master, boolean addEmptyEntry) {
         DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
         if(addEmptyEntry) {
             cbModel.addElement("");
         }
+        HashSet<String> activeRunways = master.getAirportData().getActiveRunways();
+        
         for(StdRoute r : stdRoutes) {
             if(r.getDisplayMode().equals(StdRoute.DisplayMode.sid)) {
-                cbModel.addElement(r.getName());
+                StringTokenizer st = new StringTokenizer(r.getActiveStartingRunways(),",;");
+                while(st.hasMoreElements()) {
+                    if(activeRunways.contains(st.nextToken())) {
+                        cbModel.addElement(r.getName());
+                        break;
+                    }
+                }
             }
         }
+//        for(StdRoute r : stdRoutes) {
+//            if(r.getDisplayMode().equals(StdRoute.DisplayMode.dep)) {
+//                StringTokenizer st = new StringTokenizer(r.getActiveStartingRunways(),",;");
+//                while(st.hasMoreElements()) {
+//                    if(activeRunways.contains(st.nextToken())) {
+//                        cbModel.addElement(r.getName());
+//                        break;
+//                    }
+//                }
+//            }
+//        }
         for(StdRoute r : stdRoutes) {
             if(r.getDisplayMode().equals(StdRoute.DisplayMode.star)) {
-                cbModel.addElement(r.getName());
+                StringTokenizer st = new StringTokenizer(r.getActiveLandingRunways(),",;");
+                while(st.hasMoreElements()) {
+                    if(activeRunways.contains(st.nextToken())) {
+                        cbModel.addElement(r.getName());
+                        break;
+                    }
+                }
             }
         }
+//        for(StdRoute r : stdRoutes) {
+//            if(r.getDisplayMode().equals(StdRoute.DisplayMode.app)) {
+//                StringTokenizer st = new StringTokenizer(r.getActiveLandingRunways(),",;");
+//                while(st.hasMoreElements()) {
+//                    if(activeRunways.contains(st.nextToken())) {
+//                        cbModel.addElement(r.getName());
+//                        break;
+//                    }
+//                }
+//            }
+//        }
 
         return cbModel;
     }

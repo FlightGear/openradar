@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -35,6 +35,7 @@ package de.knewcleus.openradar.view.stdroutes;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -103,4 +104,8 @@ public class StdRouteMinAltitude extends AStdRouteElement {
         return geoReferencePoint;
     }
 
+    @Override
+    public boolean contains(Point p) {
+        return false;
+    }
 }

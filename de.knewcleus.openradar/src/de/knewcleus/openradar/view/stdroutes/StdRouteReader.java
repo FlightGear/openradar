@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -134,6 +134,9 @@ public class StdRouteReader {
                                 } else if (element.getName().equalsIgnoreCase("navaids")) {
                                     color = element.getAttributeValue("color");
                                     route.setNavaids(element.getText(), color);
+                                } else if (element.getName().equalsIgnoreCase("include")) {
+                                    String routeName = element.getAttributeValue("routeName");
+                                    route.includeRoute(stdRoutes, routeName);
                                 } else if (element.getName().equalsIgnoreCase("line")) {
                                     String start = element.getAttributeValue("start");
                                     String end = element.getAttributeValue("end");
@@ -235,8 +238,9 @@ public class StdRouteReader {
                                     String font = element.getAttributeValue("font");
                                     String fontSize = element.getAttributeValue("fontSize");
                                     color = element.getAttributeValue("color");
+                                    boolean clickable = "true".equals(element.getAttributeValue("clickable"));
                                     String sText = element.getAttributeValue("text");
-                                    StdRouteText text = new StdRouteText(route, mapViewAdapter, previous, position, angle, alignHeading, font, fontSize, color, sText);
+                                    StdRouteText text = new StdRouteText(route, mapViewAdapter, previous, position, angle, alignHeading, font, fontSize, color, clickable, sText);
                                     previous = text;
                                     route.addElement(text);
                                 } else if (element.getName().equalsIgnoreCase("screenText")) {

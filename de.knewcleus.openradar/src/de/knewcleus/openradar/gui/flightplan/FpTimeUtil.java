@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -39,7 +39,7 @@ import java.util.TimeZone;
 public class FpTimeUtil {
 
     public static String getUTCTimeString4Digits(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("hhmm");
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.format(date);
     }

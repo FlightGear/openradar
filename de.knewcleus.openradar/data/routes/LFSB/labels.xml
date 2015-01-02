@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file contains the STAR and SID of RW 15 -->
+<routes>
+
+	<route name="LFSB minimum altitudes"  zoomMin="0" zoomMax="100" >
+		<!-- black forest -->
+		<minAlt position="47.705141,7.911530" value="5.7"/>
+		<minAlt position="47.861,8.01315" value="5.9"/>
+		<!-- alsace -->
+		<minAlt position="47.81546,6.847916" value="5.3"/>
+		<minAlt position="48.084501,7.236557" value="5.4"/>
+		<!-- jura -->
+		<minAlt position="47.385581,7.724529" value="5.7"/>
+		<minAlt position="47.208841,7.245483" value="6.2"/>
+
+	</route>
+
+	<route name="LFSB Taxiways" zoomMin="0" zoomMax="18">
+		<text position="47.588392,7.535101" font="Arial" fontSize="12" text="A"/>
+		<text position="47.608806,7.519516" font="Arial" fontSize="12" text="B"/>
+		<text position="47.593346,7.532080" font="Arial" fontSize="12" text="A"/>
+		<text position="47.592003,7.529471" font="Arial" fontSize="12" text="B"/>
+		<text position="47.591216,7.534826" font="Arial" fontSize="12" text="C"/>
+		<text position="47.594755,7.526943" font="Arial" fontSize="12" text="D"/>
+		<text position="47.591033,7.518639" font="Arial" fontSize="12" text="D"/>
+		<text position="47.598615,7.524312" font="Arial" fontSize="12" text="E"/>
+		<text position="47.601502,7.522404" font="Arial" fontSize="12" text="F"/>
+		<text position="47.605606,7.519413" font="Arial" fontSize="12" text="G"/>
+		<text position="47.610823,7.515905" font="Arial" fontSize="12" text="H"/>
+		<text position="47.587744,7.532217" font="Arial" fontSize="12" text="B"/>
+		<text position="47.617371,7.513614" font="Arial" fontSize="12" text="B"/>
+	</route>
+</routes>

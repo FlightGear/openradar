@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+	<route name="BOGNA 1M/V Departure" color="120,150,100" zoomMin="26" zoomMax="150" displayMode="sid">
+		<navaids>BOGNA</navaids>
+		<activeStartRunways>26L,26R</activeStartRunways>
+		<line start="IGG00" end="5NM259@IGG00" text="@259" arrows="end" />
+		<curve start="5NM259@IGG00" end="13NM177@OCK" controlPoint="8.5NM259@IGG00" arrows="end" />
+		<line start="13NM177@OCK" end="18NM177@OCK" text="@177" arrows="end" />
+		<line start="18NM177@OCK" end="23NM177@OCK" arrows="end" />
+		<line start="23NM177@OCK" end="28NM177@OCK" arrows="end" />
+		<curve start="28NM177@OCK" end="25.5NM147@MID" controlPoint="30NM177@OCK" arrows="end" />
+		<text position="5NM254@IGG00" text="25/50" fontSize="14" color="0,150,0" />
+		<text position="13NM174@OCK" text="30/50" fontSize="14" color="0,150,0" />
+		<text position="18NM176@OCK" text="50" fontSize="14" color="0,150,0" />
+		<text position="23NM176@OCK" text="60" fontSize="14" color="0,150,0" />
+		<text position="1.5NM180@BOGNA" text="BOGNA 1M/V" alignHeading="118" />
+	</route>
+	
+	<route name="CLACTON 8M/V Departure" color="120,150,100" zoomMin="26" zoomMax="150" displayMode="sid">
+		<navaids>ACORN,DAGGA,(VOR)CLN</navaids>
+		<activeStartRunways>26L,26R</activeStartRunways>
+		<intercept start="IGG00" startHeading="259" end="DET31" endHeading="081" endOffset="0" radius="2.2555" direction="right" arrows="end"/>
+		<line start="DET31" end="DET29" arrows="end" text="@081" />
+		<line start="DET29" end="ACORN" arrows="end" text="@081" />
+		<intercept start="ACORN" startHeading="100" end="DET" endHeading="6" endOffset="0" speed="240" direction="left" arrows="end"/>	
+		<line start="DET" end="5NM15@DET" arrows="end" text="@015" />
+		<line start="5NM15@DET" end="DAGGA" arrows="end" />
+		<line start="DAGGA" end="(VOR)CLN" arrows="end" text="@85"/>
+		<text position="29NM262@DET" text="-/40" fontSize="14" color="0,150,0" />
+		<text position="0.75NM270@DET" text="50" fontSize="14" color="0,150,0" />
+		<text position="5NM10@DET" text="60" fontSize="14" color="0,150,0" />
+		<text position="0.5NM0@(VOR)CLN" text="CLACTON 8M/V" alignHeading="265" />
+	</route>
+	
+	<route name="DOVER 8M/V Departure" color="120,150,100" zoomMin="26" zoomMax="150" displayMode="sid">
+		<navaids>ACORN,DVR,</navaids>
+		<activeStartRunways>26L,26R</activeStartRunways>
+		<intercept start="2.3NM258@IGG00" startHeading="259" end="DET31" endHeading="081" direction="right" radius="2.275" />
+		<line start="DET31" end="DET29" arrows="end" text="@081" />
+		<line start="DET29" end="ACORN" arrows="end" text="@081" />
+		<line start="ACORN" end="DVR" text="@099" />
+		<text position="0.5NM180@ACORN" text="50" fontSize="14" color="0,150,0" />
+		<text position="33NM280@DVR" text="60" fontSize="14" color="0,150,0" />
+		<text position="0.5NM0@DVR" text="DOVER 8M/V" alignHeading="99" />
+	</route>
+	
+	<route name="HARDY 5M/V" color="120,150,100" zoomMin="26" zoomMax="150" displayMode="sid">
+		<activeStartRunways>26L,26R</activeStartRunways>
+		<navaids>BOGNA,HARDY</navaids>
+		<line start="IGG00" end="5NM259@IGG00" text="@259" arrows="end" />
+		<curve start="5NM259@IGG00" end="13NM177@OCK" controlPoint="8.5NM259@IGG00" arrows="end" />
+		<line start="13NM177@OCK" end="18NM177@OCK" text="@177" arrows="end" />
+		<line start="18NM177@OCK" end="23NM177@OCK" arrows="end" />
+		<line start="23NM177@OCK" end="28NM177@OCK" arrows="end" />
+		<curve start="28NM177@OCK" end="25.5NM147@MID" controlPoint="30NM177@OCK" arrows="end" />
+		<text position="5NM254@IGG00" text="25/50" fontSize="14" color="0,150,0" />
+		<text position="13NM174@OCK" text="30/50" fontSize="14" color="0,150,0" />
+		<text position="18NM176@OCK" text="50" fontSize="14" color="0,150,0" />
+		<text position="23NM176@OCK" text="60" fontSize="14" color="0,150,0" />
+		<line start="BOGNA" end="HARDY" text="@181" arrows="end" />
+		<text position="1.5NM180@HARDY" text="HARDY 5M/V" alignHeading="118" />
+	</route>
+	
+	<route name="KENET 2M/V Departure" color="120,150,100" zoomMin="26" zoomMax="150" displayMode="sid">
+		<navaids>KENET,MID</navaids>
+		<activeStartRunways>26L,26R</activeStartRunways>
+		<line start="5NM259@IGG00" end="8NM64@MID" arrows="end" />
+		<line start="8NM64@MID" end="MID" arrows="end" text="@244" />
+		<line start="MID" end="MID10" arrows="end" text="@259" />
+		<intercept start="MID10" startHeading="259" end="40NM328@GWC" endHeading="328" endOffset="0" speed="240" direction="right" arrows="end"/>
+		<line start="40NM328@GWC" end="KENET" arrows="end" text="@329" />
+		<text position="5NM264@IGG00" text="25/40" fontSize="14" color="0,150,0" />
+		<text position="8NM59@MID" text="30/40" fontSize="14" color="0,150,0" />
+		<text position="0.5NM180@MID" text="40" fontSize="14" color="0,150,0" />
+		<text position="1NM90@KENET" text="KENET 2M/V" alignHeading="329" />
+	</route>
+
+	<route name="LAMBOURNE 4M/V" color="120,150,100" zoomMin="26" zoomMax="150" displayMode="sid">
+		<navaids>LAM,ACORN</navaids>
+		<activeStartRunways>26L,26R</activeStartRunways>
+		<intercept start="2.3NM258@IGG00" startHeading="259" end="DET31" endHeading="081" direction="right" radius="2.275" />
+		<line start="DET31" end="DET29" arrows="end" text="@081" />
+		<line start="DET29" end="ACORN" arrows="end" text="@081" />
+		<intercept start="ACORN" startHeading="81" end="LAM15" endHeading="339" endOffset="0" speed="240" direction="left" arrows="end" />
+		<line start="15NM159@LAM" end="10NM159@LAM"  text="@339" arrows="end" />
+		<line start="10NM159@LAM" end="LAM" arrows="end" />
+		<text position="15NM156@LAM" text="50" fontSize="14" color="0,150,0" />
+		<text position="10NM156@LAM" text="60" fontSize="14" color="0,150,0" />
+		<text position="1NM270@LAM" text="LAMBOURNE 4M/V" alignHeading="159" />
+	</route>		
+
+	<route name="SEAFORD 4M/V" color="120,150,100" zoomMin="26" zoomMax="150" displayMode="sid">
+		<navaids>SFD,SFD25,SFD16</navaids>
+		<activeStartRunways>26L,26R</activeStartRunways>
+		<!-- DME line --><bow center="IGG00" radius="2.3" startAngle="209" extentAngle="100" color="150,150,150" stroke="dots,1" />
+		<line start="IGG00" end="5NM259@IGG00" text="@259" arrows="end" />
+		<intercept start="6.8NM258@IGG00" startHeading="258" end="SFD25" endHeading="133" radius="2.5" direction="left" />
+		 <line start="SFD25" end="SFD16" arrows="end" text="@133"/>
+		 <line start="SFD16" end="SFD" arrows="end"/>
+		<text position="SFD16" text="/60/" fontSize="14" color="0,150,0" />
+		<text position="SFD25" text="/40/" fontSize="14" color="0,150,0"/>
+		<text position="1NM0@SFD" text="SEAFORD 4M/V" alignHeading="133" />
+	</route>	
+	
+	<route name="SOUTHAMPTON 2M/V" color="120,150,100" zoomMin="26" zoomMax="150" displayMode="sid">
+		<navaids>SAM</navaids>
+		<activeStartRunways>26L,26R</activeStartRunways>
+		<line start="IGG00" end="5NM259@IGG00" text="@259" arrows="end" />
+		<line start="5NM259@IGG00" end="8NM64@MID" arrows="end" />
+		<line start="8NM64@MID" end="MID" arrows="end" text="@244" />
+		<line start="MID" end="SAM" arrows="end" />
+		<text position="0.5NM0@SAM" text="SOUTHAMPTON 2M/V" alignHeading="79" />
+	</route>	
+	
+</routes>

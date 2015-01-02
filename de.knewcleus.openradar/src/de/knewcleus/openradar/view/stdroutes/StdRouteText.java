@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -34,6 +34,7 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -61,10 +62,13 @@ public class StdRouteText extends AStdRouteElement {
     private final String font;
     private final Float fontSize;
     private final String text;
+    private final boolean clickable;
+    private volatile Rectangle2D bounds;
+    private volatile Rectangle2D extBounds;
 
     public StdRouteText(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
                         String position, String angle, String alignHeading, String font, String fontSize,
-                        String color, String text) {
+                        String color, boolean clickable, String text) {
         super(mapViewAdapter, route.getPoint(position,previous),null,null,null,color);
 
         if(alignHeading!=null) {
@@ -74,6 +78,7 @@ public class StdRouteText extends AStdRouteElement {
         }
         this.font = font!=null ? font : "Arial";
         this.fontSize = fontSize !=null ? Float.parseFloat(fontSize) : 10;
+        this.clickable=clickable;
         this.text=text;
     }
 
@@ -89,7 +94,7 @@ public class StdRouteText extends AStdRouteElement {
     }
 
     @Override
-    public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
+    public synchronized Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
         if(color!=null) {
             g2d.setColor(color);
@@ -105,13 +110,15 @@ public class StdRouteText extends AStdRouteElement {
         newTransform.setToRotation(Math.toRadians(angle), displayPoint.getX(), displayPoint.getY());
         g2d.transform(newTransform);
 
-        Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
+        bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
         g2d.drawString(text, (int)(displayPoint.getX()-bounds.getWidth()/2), (int)(displayPoint.getY()-2));
 
         g2d.setFont(origFont);
         g2d.setTransform(oldTransform);
 
         bounds.setRect(displayPoint.getX(), displayPoint.getY(),bounds.getWidth(),bounds.getHeight());
+        extBounds = new Rectangle2D.Double(displayPoint.getX()-bounds.getWidth(),displayPoint.getY()-bounds.getHeight(),2*bounds.getWidth(),2*bounds.getHeight());
+        
         return bounds;
     }
 
@@ -120,4 +127,10 @@ public class StdRouteText extends AStdRouteElement {
         return geoReferencePoint;
     }
 
+    @Override
+    public synchronized boolean contains(Point e) {
+        // ! route.isVisible(master) || 
+        if(!clickable || extBounds==null) return false;
+        return extBounds.contains(e);
+    }
 }

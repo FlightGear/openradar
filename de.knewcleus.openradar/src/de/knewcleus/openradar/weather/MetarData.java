@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -45,7 +45,6 @@ import org.apache.log4j.Logger;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
 import de.knewcleus.openradar.gui.setup.AirportData;
-import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 
 /**
  * This class parses and delivers the METAR information.
@@ -515,7 +514,7 @@ public class MetarData {
     }
 
     public List<String> createATIS(GuiMasterController master, boolean shortMsg) {
-        boolean includeFgCom = data.getFgComMode()!=FgComMode.Off;
+//        boolean includeFgCom = data.getFgComMode()!=FgComMode.Off;
         
         
         if(atisVariables==null) {
@@ -527,17 +526,17 @@ public class MetarData {
             atisVariables.add("/openradar/transitionAlt");
 //            atisVariables.add("/openradar/metar/visibility");
             atisVariables.add("/sim/atc/activeRW");
-            if(includeFgCom) {
+//            if(includeFgCom) {
                 atisVariables.add("/openradar/comm/frequencies");
-            }
+//            }
         }
 
         ArrayList<String> list = new ArrayList<String>();
-        if(includeFgCom) {
+//        if(includeFgCom) {
             list.add(String.format(AtcMenuChatMessage.replaceVariables("ATIS for %s at %2.0fft: QNH %s wind %s transAlt %s act. rwy(s) %s FGCOM %s", master, null, atisVariables)).trim());
-        } else {
-            list.add(String.format(AtcMenuChatMessage.replaceVariables("ATIS for %s at %2.0fft: QNH %s wind %s transAlt %s act. rwy(s) %s", master, null, atisVariables)).trim());
-        }
+//        } else {
+//            list.add(String.format(AtcMenuChatMessage.replaceVariables("ATIS for %s at %2.0fft: QNH %s wind %s transAlt %s act. rwy(s) %s; %s", master, null, atisVariables)).trim());
+//        }
         if(!shortMsg) list.add("(ATIS) vis:"+getVisibility()+""+getVisibilityUnit()+" "+getWeatherPhaenomenaForHumans());
         return list;
     }

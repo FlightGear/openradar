@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -33,7 +34,6 @@
 package de.knewcleus.openradar.view;
 
 import de.knewcleus.openradar.notify.INotification;
-import de.knewcleus.openradar.notify.INotifier;
 
 /**
  * A coordinate system notification is sent whenever the coordinate system of a viewer changes,
@@ -47,10 +47,5 @@ public class CoordinateSystemNotification implements INotification {
 
 	public CoordinateSystemNotification(IViewerAdapter source) {
 		this.source = source;
-	}
-
-	@Override
-	public INotifier getSource() {
-		return source;
 	}
 }

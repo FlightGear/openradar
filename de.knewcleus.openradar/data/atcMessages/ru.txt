@@ -4,6 +4,7 @@
 %s: Dobro pozjalovat' v %s - Vi napravlyaetes' v %s ? FGCOM %s
 %s: Dobro pozjalovat' v %s - pozhaluista, soobs4ite dispet4eru o vashih namereniyah, FGCOM %s
 %s: Dalnost' obnaruzheniya radara %3.0f morskih mil', davlenie na urovne morya %s, ozhidaite polosu %s, FGCOM %s
+
 %s: Vi pokidaete moe vozdushnoe prostranstvo - razreshau smenit' 4astotu - priyatnogo poleta
 %s: Vi ostavlyaete moe vozdushnoe prostranstvo. Razreshau izmenit' 4astotu radara. Obsluzhivanie ATC zakon4eno. S4astlivogo poleta
 ATIS dlya %s na visote %2.0f futov: davlenie %s, veter %s, aktivnaya polosa  %s,  FGCOM %s

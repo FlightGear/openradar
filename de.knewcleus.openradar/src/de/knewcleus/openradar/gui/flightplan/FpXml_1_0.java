@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -74,7 +74,9 @@ public class FpXml_1_0 {
         String owner = eFlightPlan.getChild("header").getChildText("owner");
         String handover = eFlightPlan.getChild("header").getChildText("handover");
         String squawk = eFlightPlan.getChild("header").getChildText("squawk");
+        String assignedRunway = eFlightPlan.getChild("header").getChildText("assignedRunway");
         String assignedAlt = eFlightPlan.getChild("header").getChildText("assignedAlt");
+        String assignedRoute = eFlightPlan.getChild("header").getChildText("assignedRoute");        
         String state = eFlightPlan.getChild("header").getChildText("status");
         boolean fgcomSupport = "true".equals(eFlightPlan.getChild("header").getChildText("fgcom"));
 
@@ -122,7 +124,7 @@ public class FpXml_1_0 {
 //            fp=existingFp;
 //        } else {
         {
-            fp = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedAlt, state, type, aircraft, trueAirspeed, departure, departureTime,
+            fp = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedRunway, assignedAlt, assignedRoute, state, type, aircraft, trueAirspeed, departure, departureTime,
                                     cruisingAlt, route, destination, alternateDest, estFlightTime, fuelTime, pilot, soulsOnBoard, remarks);
         }
         contact.setFgComSupport(fgcomSupport);
@@ -184,11 +186,23 @@ public class FpXml_1_0 {
             }
             eFpHeader.addContent(eSquawk);
 
+            Element eAssignedRunway = new Element("assignedRunway");
+            if (fp.getAssignedRunway() != null) {
+                eAssignedRunway.setText(fp.getAssignedRunway());
+            }
+            eFpHeader.addContent(eAssignedRunway);
+
             Element eAssignedAlt = new Element("assignedAlt");
             if (fp.getAssignedAltitude() != null) {
                 eAssignedAlt.setText(fp.getAssignedAltitude());
             }
             eFpHeader.addContent(eAssignedAlt);
+
+            Element eAssignedRoute = new Element("assignedRoute");
+            if (fp.getAssignedRoute() != null) {
+                eAssignedRoute.setText(fp.getAssignedRoute());
+            }
+            eFpHeader.addContent(eAssignedRoute);
 
             Element eState = new Element("status");
             if (fp.getFpStatus() != null) {

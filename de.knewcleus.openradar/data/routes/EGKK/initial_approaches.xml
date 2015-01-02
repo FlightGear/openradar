@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+	<route name="ILS DME 08R APPR" zoomMin="26" zoomMax="60" color="160,90,110" displayMode="star">
+		<activeLandingRunways>08L,08R</activeLandingRunways>
+		<navaids>WILLO,MID,MAY,TIMBA,MAY23,GY888</navaids>
+		<line start="WILLO" end ="11NM105@MID" text="3000" arrows="end" />
+		<line start="11NM105@MID" end="GY888" arrows="end" text="3000"/>
+		<intercept start="GY888" startHeading="285" end="IGG00" endHeading="078" endOffset="10" radius="2.2" direction="right" arrows="end"/>
+
+		<line start="MAY" end="MAY23" arrows="end" text="3000"/>
+		<intercept start="MAY23" startHeading="274" end="IGG00" endHeading="078" endOffset="10" radius="1.8" direction="right" arrows="end"/>
+
+		<line start="TIMBA" end="MAY" arrows="end" text="4000 310"/>
+		<!-- missed approach -->
+		<curve start="IWW00" end="5.2NM169@IWW00" controlPoint="3NM79@IWW00" color="250,20,20" stroke="dots" arrow="end"/>
+	</route>
+
+	<route name="ILS DME 26L APPR" zoomMin="26" zoomMax="60" color="160,90,110" displayMode="star">
+		<navaids>WILLO,MAY,,</navaids>
+		<activeLandingRunways>26L,26R</activeLandingRunways>
+		<intercept start="MAY" startHeading="5" end="IWW00" endHeading="259" endOffset="10" speed="240" direction="left" arrows="end"/>
+		<curve start="1.5NM270@MAY" end="1.5NM005@MAY" controlPoint="MAY" />
+
+		<curve start="22NM112@MID" end="6NM224@MAY" controlPoint="9NM224@MAY" />
+		<line start="6NM224@MAY" end ="MAY" text="4000 044" arrows="end" />
+
+		<line start="TIMBA" end="MAY" arrows="end" text="4000 310"/>
+
+		<curve start="IGG00" end="5.2NM191@IGG00" controlPoint="3NM259@IGG00" color="250,20,20" stroke="dots" arrow="end"/>
+	</route>
+	
+	<route name="EGKK Holding Patterns" zoomMin="26" zoomMax="60" displayMode="optional">
+		<loop navpoint="MAY" inboundHeading="90" width="3" length="4.5" minHeight="3000" maxHeight="6000" right="false" arrows="both"/>
+		<loop navpoint="WILLO" inboundHeading="285" width="3" length="5" minHeight="4000" maxHeight="6000" right="false" arrows="both"/>
+		<loop navpoint="TIMBA" inboundHeading="310" width="4" length="6" minHeight="4000" maxHeight="6000" right="true" arrows="both"/>
+	</route>
+</routes>
+

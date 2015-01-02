@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -40,6 +40,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -194,4 +195,6 @@ public class ActiveAtcSymbolView implements IBoundedView, INotificationListener 
         return null;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent p) {  }
 }

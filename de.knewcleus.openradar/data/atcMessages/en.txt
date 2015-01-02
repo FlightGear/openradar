@@ -4,6 +4,7 @@ To All Airmen:
 %s: Welcome to the %s area -- are you inbound %s ? FGCOM %s
 %s: Welcome to %s - please advise ATC of your intentions, FGCOM %s
 %s: Radar Contact range %3.0f mi, QNH %s, expect runway %s, FGCOM %s
+
 %s: Resume your OWN navigation - Radar surveillance is active
 %s: You are leaving my airspace - frequency change approved - radar service terminated
 ATIS for %s at %2.0f ft: QNH %s wind %s active rwy(s) %s FGCOM %s

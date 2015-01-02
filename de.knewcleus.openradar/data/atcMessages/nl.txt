@@ -5,6 +5,7 @@ Aan alle piloten:
 %s: Welkom in %s - Geef uw vliegplan aan bij de luchtverkeerdleiding, FGCOM %s
 %s: Radar contact op %3.0f nm, QNH %s, verwacht landingsbaan %s, FGCOM %s
 
+
 %s: U verlaat mijn luchtruim - U mag van frequentie wisselen - Goede reis!
 ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  FGCOM %s
 

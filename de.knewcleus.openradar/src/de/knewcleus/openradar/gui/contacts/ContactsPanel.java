@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -32,6 +32,7 @@
  */
 package de.knewcleus.openradar.gui.contacts;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
@@ -43,6 +44,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -276,7 +278,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         gridBagConstraints.insets = new java.awt.Insets(4, 8, 2, 2);
         add(lbHelp, gridBagConstraints);
 
-
+        
         liRadarContacts.setBackground(Palette.DESKTOP);
 //         liRadarContacts.setToolTipText("<html><body><b>left click:</b> select/move,<br/> <b>left double click:</b> center map on contact, <br/><b>middle click:</b> edit details, <br/><b>right click:</b> show atcmsgs<br/><b>CTRL+left click</b>: neglect</body></html>");
         liRadarContacts.setModel(master.getRadarContactManager());
@@ -287,12 +289,20 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         liRadarContacts.setDragEnabled(true);
         liRadarContacts.setDropMode(javax.swing.DropMode.ON);
         liRadarContacts.setDoubleBuffered(false);
-        spRadarContacs.getViewport().setView(liRadarContacts);
+//        spRadarContacs.getViewport().setView(liRadarContacts);
 
         liRadarContacts.addMouseListener(master.getRadarContactManager().getContactMouseListener());
         liRadarContacts.addMouseMotionListener(master.getRadarContactManager().getContactMouseListener());
         new DropTarget(liRadarContacts, this); // link this with radar contact
                                                // list
+        
+        // to avoid the clicking below the list selects the last contact
+        // I shrink the list to match the required size.
+        JPanel pnlHelper = new JPanel();
+        pnlHelper.setBackground(Palette.DESKTOP);
+        pnlHelper.setLayout(new BorderLayout());
+        pnlHelper.add(liRadarContacts, BorderLayout.NORTH);
+        spRadarContacs.getViewport().setView(pnlHelper);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

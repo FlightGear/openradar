@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <routes>
+        <addPoint code="PX502" point="45.3417917,10.7706222" />
+    	<route name="LEGLO 7U" displayMode="sid" activeStartRunways="22" navaids="PX502,LEGLO">
+            <line start="LIPX-RW22" end="PX502" stroke="dashed" arrows="end" />
+            <!--intercept start="PX502" startHeading="237" radius="3.060672" direction="right" endHeading="293" end="LEGLO" />-->
+            <intercept start="LIPX-RW22" startHeading="238.5" direction="right" endHeading="295.5" end="LEGLO" />
+            <!--intercept startTurn="PX502" startHeading="238.5" direction="right" radial="114.5" end="LEGLO" text="LEGLO7U, 113°" arrows="end" /-->
+            <line start="BEG" end="LEGLO" arrows="end" />
+        </route>
+    </routes>

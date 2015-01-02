@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -39,11 +40,6 @@ public class RadarMapViewerNotification implements INotification {
 	
 	public RadarMapViewerNotification(IRadarMapViewerAdapter radarMapViewerAdapter) {
 		this.radarMapViewerAdapter = radarMapViewerAdapter;
-	}
-
-	@Override
-	public IRadarMapViewerAdapter getSource() {
-		return radarMapViewerAdapter;
 	}
 
 }

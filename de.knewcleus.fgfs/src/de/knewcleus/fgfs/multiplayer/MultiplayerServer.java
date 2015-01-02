@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -126,4 +127,9 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 		
 		broadcastChatMessage("server:"+player.getCallsign()+" came online");
 	}
+
+    @Override
+    protected int getPlayerTimeoutMillis() {
+        return 1 * 60 * 1000;
+    }
 }

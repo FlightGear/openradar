@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -91,10 +91,6 @@ public class SimulationLayout extends ADatablockLayout {
             // Emergency
             color = new Color(255,100,0);
 
-        } else if (c.isSelected()) {
-            // SELECTED
-            //color = Palette.RADAR_SELECTED;
-            color = Palette.WHITE;
         } else if (!c.isActive()) {
             // INCACTIVE GHOSTS
             color = Palette.RADAR_GHOST;
@@ -118,6 +114,49 @@ public class SimulationLayout extends ADatablockLayout {
         }
 
         return color;
+    }
+
+    @Override
+    public synchronized Color getDataBlockColor(GuiRadarContact c) {
+        Color color = Palette.RADAR_UNCONTROLLED;
+
+//      boolean assignedSquawkTunedIn = c.getAssignedSquawk() == null
+//              || (c.getTranspSquawkCode() != null && c.getAssignedSquawk() != null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
+
+      if (c.isIdentActive()) {
+          color = Color.black;
+          c.setHighlighted();
+      } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
+          // Emergency
+          color = new Color(255,100,0);
+
+      } else if (c.isSelected()) {
+          // SELECTED
+          //color = Palette.RADAR_SELECTED;
+          color = Palette.WHITE;
+      } else if (!c.isActive()) {
+          // INCACTIVE GHOSTS
+          color = Palette.RADAR_GHOST;
+
+      } else if (c.isNeglect()) {
+          // BAD GUYS
+          color = Palette.RADAR_GHOST;
+
+//      } else if (!assignedSquawkTunedIn) {
+//          color = new Color(80, 0, 160);
+      } else if (c.getState() == State.IMPORTANT) {
+          // CONTROLLED left column
+          color = Palette.RADAR_CONTROLLED;
+
+      } else if (c.getState() == State.CONTROLLED) {
+          // WATCHED middle column
+          color = Palette.RADAR_IMPORTANT;
+      } else {
+          // UNCONTROLLED right column
+          color = Palette.RADAR_UNCONTROLLED;
+      }
+
+      return color;
     }
 
     @Override

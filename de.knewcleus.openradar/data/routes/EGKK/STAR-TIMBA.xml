@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- TIMBA 1C and TIMBA 1D excluded due to redunancy -->
+<routes>
+	<route name="TIMBA 1H" zoomMin="60" zoomMax="150" color="150,120,120" displayMode="star">
+		<navaids>TRIPO,SPEAR,DET,LARCK,TIMBA</navaids>
+		<activeLandingRunways>08R,08L,26R,26L</activeLandingRunways>
+		<line start="TRIPO" end="SPEAR" arrows="end" text="@241"/>
+		<line start="SPEAR" end="DET" arrows="end" text="@195" />
+		
+		<line start="DET" end="LARCK" arrows="end" />
+		<intercept start="LARCK" end="TIMBA" startHeading="192.5" endHeading="307.5" arrows="end" direction="right" speed="250"/>
+		
+		<text position="11NM195@DET" color="150,0,0" text="SLP 250" />
+		<text position="1.5NM180@TRIPO" text="TIMBA 1H" alignHeading="238.5" />
+		</route>
+		
+	<route name="TIMBA 1F" zoomMin="60" zoomMax="150" color="150,120,120" displayMode="star">
+		<navaids>LYD,LARCK,TIMBA</navaids>
+		<activeLandingRunways>08R,08L,26R,26L</activeLandingRunways>
+		<line start="LYD" end="LARCK" arrows="end"/>
+		<intercept start="LARCK" end="TIMBA" startHeading="192.5" endHeading="307.5" arrows="end" direction="right" speed="250"/>
+		
+		<text position="5NM254@LYD" color="150,0,0" text="SLP 250" />
+		<text position="2NM200@LYD" text="TIMBA 1F" alignHeading="251.5" />
+	</route>
+			
+	<route name="TIMBA 1G" zoomMin="60" zoomMax="150" color="150,120,120" displayMode="star">
+		<navaids>HASTY,TIMBA</navaids>
+		<activeLandingRunways>08R,08L,26R,26L</activeLandingRunways>
+		<intercept start="HASTY" startHeading="40" end="MAY19" endHeading="310" direction="left" speed="240" arrows="start" />
+
+		<line start="MAY19" end="TIMBA" arrows="end" text="@310"/>	 
+
+		<text position="19NM130@MAY" color="150,0,0" text="SLP 250" />
+		<text position="1.5NM180@HASTY" text="TIMBA 1G" />
+	</route>
+	
+	<route name="TIMBA 2B" zoomMin="60" zoomMax="150" color="150,120,120" displayMode="star">
+		<navaids>KUNAV,BEXIL,LARCK,TIMBA</navaids>
+		<activeLandingRunways>08R,08L,26R,26L</activeLandingRunways>
+		<line start="KUNAV" end="BEXIL" arrows="end" text="@314"/>
+		<line start="BEXIL" end="MAY19" arrows="end" text="@310"/>
+		
+		<line start="MAY19" end="TIMBA" arrows="end" text="@310"/>		
+
+		<text position="1NM245@BEXIL" color="0,0,0" text="/150" />
+		<text position="2NM270@KUNAV" text="TIMBA 2B" alignHeading="311.5" />
+	</route>
+
+	<route name="TIMBA 2E" zoomMin="60" zoomMax="150" color="150,120,120" displayMode="star">
+		<activeLandingRunways>08R,08L,26R,26L</activeLandingRunways>
+		<navaids>KOPUL,TANET,DET,LARCK,ERING,TEBRA</navaids>
+		<line start="KOPUL" end="TANET" arrows="end" text="@236"/>
+		<line start="TANET" end="DET" arrows="end" />
+		
+		<line start="DET" end="LARCK" arrows="end" text="@195" />
+		<intercept start="LARCK" end="TIMBA" startHeading="192.5" endHeading="307.5" arrows="end" direction="right" speed="250"/>
+		
+		<text position="11NM195@DET" color="150,0,0" text="SLP 250" />
+		<text position="ERING" color="0,0,0" text="/220" />
+		<text position="TEBRA" color="0,0,0" text="/220" />
+		<text position="1NM180@TANET" color="0,0,0" text="/130" />
+		<text position="1.5NM180@KOPUL" text="TIMBA 2E" alignHeading="233.5" />
+	</route>
+
+
+
+	<!-- Holding Points -->
+	<route name="TIMBA Holding" zoomMin="60" zoomMax="150" displayMode="always">
+		<loop navpoint="TIMBA" inboundHeading="310" width="4" length="5" minHeight="7000" right="true" arrows="both"/>
+		<loop navpoint="BEXIL" inboundHeading="310" width="3" length="4.5" minHeight="14000" maxHeight="19000" right="true" arrows="both"/>
+	</route>	
+</routes>

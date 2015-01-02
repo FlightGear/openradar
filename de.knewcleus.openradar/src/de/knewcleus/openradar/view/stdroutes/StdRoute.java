@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -30,15 +30,17 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import com.sun.istack.internal.logging.Logger;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -60,17 +62,24 @@ public class StdRoute {
     private final float zoomMax;
     protected final Stroke stroke;
     private final Color color;
+    private final Color colorSelected;
 
     private String activeLandingRunways = null;
     private String activeStartingRunways = null;
 
+//    private volatile boolean selected = false; 
+    
 //    private final Set<String> navaids = new HashSet<String>();
 //    private Color navaidColor = null;
 
     private final Set<NavaidList> navaids = new HashSet<NavaidList>();
 
     private final List<AStdRouteElement> elements = new ArrayList<AStdRouteElement>();
+    /** The list of routes, that use this route as an include */
+    private final List<StdRoute> parentRoutes = Collections.synchronizedList(new ArrayList<StdRoute>());
 
+    private final Logger log = Logger.getLogger(StdRoute.class);    
+    
     public StdRoute(AirportData data, IMapViewerAdapter mapViewerAdapter, String name, String displayMode, String zoomMin, String zoomMax, String stroke, String sLineWidth,
             String color) {
         this.mapViewerAdapter = mapViewerAdapter;
@@ -137,7 +146,16 @@ public class StdRoute {
         } else {
             this.color = Color.gray;
         }
+        this.colorSelected=this.color.brighter();
     }
+
+//    public synchronized boolean isSelected() {
+//        return selected;
+//    }
+
+//    public synchronized void setSelected(boolean selected) {
+//        this.selected = selected;
+//    }
 
     public String getName() {
         return name;
@@ -159,6 +177,10 @@ public class StdRoute {
         return color;
     }
 
+    public synchronized Color getSelectedColor() {
+        return colorSelected;
+    }
+
     public String getActiveLandingRunways() {
         return activeLandingRunways;
     }
@@ -175,6 +197,15 @@ public class StdRoute {
         this.activeStartingRunways = activeStartingRunways;
     }
 
+    public synchronized boolean contains(Point p) {
+        for(AStdRouteElement e : elements) {
+            if(e.contains(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public synchronized boolean containsNavaid(IIntersection navPoint) {
         for(NavaidList nl : navaids) {
             if(nl.containsNavaid(navPoint)) {
@@ -214,6 +245,12 @@ public class StdRoute {
     }
 
     public boolean isVisible(GuiMasterController master) {
+        
+        if(isParentRouteVisible(master)) {
+            // this means, this route is included into another route which is visible.
+            return true;
+        }
+        
         
         AirportData data = master.getAirportData();
 
@@ -259,6 +296,15 @@ public class StdRoute {
         return true;
     }
 
+    private boolean isParentRouteVisible(GuiMasterController master) {
+        for(StdRoute parentRoute : parentRoutes) {
+            if(parentRoute.isVisible(master)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addElement(AStdRouteElement e) {
         elements.add(e);
     }
@@ -295,10 +341,18 @@ public class StdRoute {
             int pos2 = pointDescr.indexOf("@");
             float angle = Float.parseFloat(pointDescr.substring(pos + 2, pos2));
             String id = pointDescr.substring(pos2 + 1);
-            if (data.getNavaidDB().getNavaid(id) == null) {
-                throw new IllegalArgumentException("Navaid " + pointDescr + " not found!");
+            
+            Point2D navaidPoint;
+            if (id.contains("@")) {
+                // another recursive redirection 
+                navaidPoint = getPoint(data, mapViewerAdapter, id, previous);
+            } else {
+                // search the referenced navaid
+                if (data.getNavaidDB().getNavaid(id) == null) {
+                    throw new IllegalArgumentException("Navaid " + pointDescr + " not found!");
+                }
+                navaidPoint = data.getNavaidDB().getNavaid(id).getGeographicPosition();
             }
-            Point2D navaidPoint = data.getNavaidDB().getNavaid(id).getGeographicPosition();
             Point2D point = new IndirectPoint2D(mapViewerAdapter, navaidPoint, angle, distance);
             return point;
         } else if (pointDescr.contains(",")) {
@@ -375,5 +429,41 @@ public class StdRoute {
 
     public int getSize() {
         return elements.size();
+    }
+
+    public void includeRoute(List<StdRoute> stdRoutes, String routeName) {
+        StdRoute routeToInclude = null;
+        for(StdRoute r : stdRoutes) {
+            if(r.getName().equals(routeName)) {
+                routeToInclude = r;
+            }
+        }
+        if(routeToInclude!=null) {
+            routeToInclude.registerParentRoute(this);
+        } else {
+            log.warn(getName() + ": Could not find route '"+routeName+"' to include it.");
+        }
+    }
+
+    private void registerParentRoute(StdRoute stdRoute) {
+        parentRoutes.add(stdRoute);
+    }
+
+    /** checks if this route is assigned to the selected contact or 
+     * if it is implicitelly assigned, because it is included into an assigned route.
+     *  
+     * @param master
+     * @return true if assigned
+     */
+    public boolean isRouteAssigned(GuiMasterController master) {
+        boolean result = master.getRadarContactManager().isRouteAssigned(getName());
+        if(result==false) {
+            for(StdRoute parentRoute : parentRoutes) {
+                if(parentRoute.isRouteAssigned(master)) {
+                    return true;
+                }
+            }
+        }
+        return result;
     }
 }

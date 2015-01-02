@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2014 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -91,6 +91,9 @@ public class SetupDialog extends JFrame {
     private JTextField tfSearchBox;
     private JList<SectorBean> liSearchResults;
     private JComboBox<String> cbFgComMode;
+    private JLabel lbCallSign;
+    private JTextField tfCallSign;
+
     private JTextField tfFgComPath;
     private JTextField tfFgComExec;
     private JTextField tfFgComServer;
@@ -136,6 +139,7 @@ public class SetupDialog extends JFrame {
     private JComboBox<ADatablockLayout> cbDataboxLayout;
     private JCheckBox cbNiceShapes;
 
+    private JCheckBox cbEnableAltRadioText;
     private JCheckBox cbEnableChatAliases;
     private JCheckBox cbLandmass;
     private JCheckBox cbUrban;
@@ -334,9 +338,30 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx = 1;
-        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 2);
         jPnlButtons.add(btCreateSector, gridBagConstraints);
+
+        lbCallSign = new JLabel();
+        lbCallSign.setText("CallSign:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlButtons.add(lbCallSign, gridBagConstraints);
+
+        tfCallSign = new JTextField(8);
+        tfCallSign.setName("callsign");
+        tfCallSign.setText("");
+        tfCallSign.setToolTipText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 2);
+        jPnlButtons.add(tfCallSign, gridBagConstraints);
 
         btStart = new JButton();
         btStart.setText("Start");
@@ -344,7 +369,7 @@ public class SetupDialog extends JFrame {
         btStart.setEnabled(false);
         btStart.addActionListener(setupManager.getActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 4);
@@ -453,7 +478,6 @@ public class SetupDialog extends JFrame {
 //        gridBagConstraints.anchor = GridBagConstraints.WEST;
 //        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
 //        jPnlFgCom.add(btBrowseFgComServer, gridBagConstraints);
-
         
         // server
 
@@ -527,6 +551,33 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 2);
         jPnlFgCom.add(tfFgComPorts, gridBagConstraints);
 
+        // alternative radios
+        
+        JPanel jPnlAltRadio = new JPanel();
+        jPnlAltRadio.setLayout(new GridBagLayout());
+        jPnlAltRadio.setBorder(new TitledBorder("Alternative radios (like Mumble)"));
+        jPnlAltRadio.setToolTipText("Enable a text field to send radio information to your contacts");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 0;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
+        jPnlSettings.add(jPnlAltRadio, gridBagConstraints);
+
+
+        cbEnableAltRadioText = new JCheckBox();
+        cbEnableAltRadioText.setText("Enable alternative radio text (for mumble etc.)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlAltRadio.add(cbEnableAltRadioText, gridBagConstraints);
+
 
         // Multiplayer
 
@@ -536,7 +587,7 @@ public class SetupDialog extends JFrame {
         jPnlMultiplayer.setToolTipText("These settings should be correct already!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 0;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -617,7 +668,7 @@ public class SetupDialog extends JFrame {
         jPnlChat.setBorder(new TitledBorder("Multiplayer Chat"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 0;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -630,7 +681,8 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlChat.add(cbEnableChatAliases, gridBagConstraints);
@@ -640,19 +692,20 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = 0;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlChat.add(lbChatPrefix, gridBagConstraints);
 
-        tfChatPrefix = new JTextField(2);
+        tfChatPrefix = new JTextField(1);
         tfChatPrefix.setToolTipText("The prefix, for instance '.' to use '.tr 010'");
         tfChatPrefix.setText(".");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.weightx = 0;
+        gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = GridBagConstraints.NONE;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 2);
         jPnlChat.add(tfChatPrefix, gridBagConstraints);
 
@@ -664,7 +717,7 @@ public class SetupDialog extends JFrame {
         jPnlMetar.setToolTipText("These settings should be correct already!");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 0;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -1073,6 +1126,8 @@ public class SetupDialog extends JFrame {
             lbFgComServer.setForeground(Color.red);
             dataOk = false;
         }
+        data.setAltRadioTextEnabled(cbEnableAltRadioText.isSelected());
+        
         if (cbEnableFpExchange.isSelected()) {
             if(checkUrl(tfFpServer.getText().trim())) {
                 lbFpServer.setForeground(Color.black);
@@ -1248,6 +1303,9 @@ public class SetupDialog extends JFrame {
                 tfFgComServer.setText(p.getProperty("fgCom.server", ""));
                 tfFgComHost.setText(p.getProperty("fgCom.host", "localhost"));
                 tfFgComPorts.setText(p.getProperty("fgCom.clientPorts", "16661,16662"));
+                
+                cbEnableAltRadioText.setSelected("true".equals(p.getProperty("altRadioText.enable", "false")));
+                
                 tfMpServer.setText(p.getProperty("mp.server", "mpserver01.flightgear.org"));
                 tfMpPort.setText(p.getProperty("mp.serverPort", "5000"));
                 tfMpLocalPort.setText(p.getProperty("mp.clientPort", "5001"));
@@ -1310,6 +1368,8 @@ public class SetupDialog extends JFrame {
         p.put("fpExchange.user", tfFpServerUser.getText().trim());
         p.put("fpExchange.password", new String(tfFpServerPassword.getPassword()));
 
+        p.put("altRadioText.enable", ""+cbEnableAltRadioText.isSelected());
+
         p.put("chat.alias.enabled",""+cbEnableChatAliases.isSelected());
         p.put("chat.alias.prefix", tfChatPrefix.getText().trim());
 
@@ -1356,6 +1416,12 @@ public class SetupDialog extends JFrame {
                 data.setMagneticDeclination(sb.getMagneticDeclination());
                 btStart.setEnabled(readInputs(data));
                 btCreateSector.setEnabled(false);
+                data.loadLastCallSign();
+                if(data.getCallSign()!=null) {
+                    tfCallSign.setText(data.getCallSign());
+                } else {
+                    tfCallSign.setText(data.getAirportCode()+"_TW");
+                }
             } else {
                 data.setAirportCode(sb.getAirportCode());
                 data.setAirportName(sb.getAirportName());
@@ -1445,5 +1511,9 @@ public class SetupDialog extends JFrame {
         public void actionPerformed(ActionEvent e) {
             tfChatPrefix.setEnabled(cbEnableChatAliases.isSelected());
         }
+    }
+
+    public String getCallsign() {
+        return tfCallSign.getText();
     }
 }

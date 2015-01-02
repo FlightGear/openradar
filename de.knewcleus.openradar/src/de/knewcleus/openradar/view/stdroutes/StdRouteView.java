@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -37,6 +37,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -48,10 +49,12 @@ import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
 import de.knewcleus.openradar.view.IBoundedView;
 import de.knewcleus.openradar.view.IViewVisitor;
+import de.knewcleus.openradar.view.groundnet.ISelectable;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
+import de.knewcleus.openradar.view.map.IProjection;
 import de.knewcleus.openradar.view.map.ProjectionNotification;
 
-public class StdRouteView implements IBoundedView, INotificationListener {
+public class StdRouteView implements IBoundedView, INotificationListener,ISelectable {
     protected final IMapViewerAdapter mapViewAdapter;
     protected final GuiMasterController master;
     protected final StdRoute route;
@@ -75,7 +78,7 @@ public class StdRouteView implements IBoundedView, INotificationListener {
 	}
 
     @Override
-    public Rectangle2D getDisplayExtents() {
+    public synchronized Rectangle2D getDisplayExtents() {
         if(displayExtents == null || mapViewAdapter.getViewerExtents().getHeight()>0) {
             displayExtents = mapViewAdapter.getViewerExtents();
         }
@@ -83,16 +86,16 @@ public class StdRouteView implements IBoundedView, INotificationListener {
     }
 
     @Override
-    public void accept(IViewVisitor visitor) {
+    public synchronized void accept(IViewVisitor visitor) {
         visitor.visitView(this);
     }
 
     @Override
-    public boolean isVisible() {
+    public synchronized boolean isVisible() {
         return visible;
     }
 
-    public void setVisible(boolean visible) {
+    public synchronized void setVisible(boolean visible) {
         if (this.visible == visible) {
             return;
         }
@@ -101,7 +104,7 @@ public class StdRouteView implements IBoundedView, INotificationListener {
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
+    public synchronized void paint(Graphics2D g2d) {
 
         boolean isVisible = route.isVisible(master);
         if(isVisible) {
@@ -113,7 +116,7 @@ public class StdRouteView implements IBoundedView, INotificationListener {
             Font origFont = g2d.getFont();
             for(AStdRouteElement e : route.getElements()) {
                 g2d.setStroke(route.getStroke());
-                g2d.setColor(route.getColor());
+                g2d.setColor( route.isRouteAssigned(master) ? route.getSelectedColor() : route.getColor());
                 if(displayExtents==null) {
                     displayExtents = e.paint(g2d, mapViewAdapter);
                 } else {
@@ -126,11 +129,12 @@ public class StdRouteView implements IBoundedView, INotificationListener {
     }
 
     @Override
-    public void validate() {
+    public synchronized void validate() {
+        mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
     }
 
     @Override
-    public void acceptNotification(INotification notification) {
+    public synchronized void acceptNotification(INotification notification) {
         if (notification instanceof ProjectionNotification) {
             updateLogicalPosition();
         }
@@ -139,17 +143,42 @@ public class StdRouteView implements IBoundedView, INotificationListener {
         }
     }
 
-    protected void updateLogicalPosition() {
+    protected synchronized void updateLogicalPosition() {
+        final IProjection projection = mapViewAdapter.getProjection();
+        logicalPosition = projection.toLogical(geoPosition);
         updateDisplayPosition();
     }
 
-    protected void updateDisplayPosition() {
+    protected synchronized void updateDisplayPosition() {
         final AffineTransform logical2display = mapViewAdapter.getLogicalToDeviceTransform();
         displayPosition = logical2display.transform(logicalPosition, null);
+        if(displayExtents!=null) {
+            mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
+        }
     }
 
     @Override
     public String getTooltipText(Point p) {
         return null;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return master.getRadarContactManager().isRouteAssigned(route.getName());
+    }
+    
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if(e.getClickCount()==1 && route.isVisible(master)) {
+            for(AStdRouteElement re : route.getElements()) {
+                if(re.contains(e.getPoint())) {
+                    master.getRadarContactManager().assignRoute(route.getName());
+                    //route.setSelected(!route.isSelected());
+                    e.consume();
+                    break;
+                }
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -33,6 +33,7 @@
 package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
@@ -40,7 +41,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import com.sun.istack.internal.logging.Logger;
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.view.Converter2D;
@@ -73,7 +74,7 @@ public class StdRouteIntercept extends AStdRouteElement {
         this.geoStartPoint = start!=null ? route.getPoint(start,previous) : null;
         this.geoStartBowPoint = startBow!=null ? route.getPoint(startBow,previous) : null;
         if(geoStartPoint!=null && geoStartBowPoint!=null) {
-            Logger.getLogger(this.getClass()).warning("start and startBow is given, do not check if first line is a tangent to the bow");
+            Logger.getLogger(this.getClass()).info("start and startBow is given, do not check if first line is a tangent to the bow");
         }
         this.startOffSet = startOffset !=null ? Double.parseDouble(startOffset) : 0 ;
         this.startHeading = Line.normalizeLineAngle180(90-Double.parseDouble(startHeading)); // magnetic to screen angles
@@ -81,14 +82,14 @@ public class StdRouteIntercept extends AStdRouteElement {
             this.radius = radius !=null ? Double.parseDouble(radius) : 1.16d ;
         } else {
             if(radius!=null) {
-                Logger.getLogger(this.getClass()).warning("radius and speed is given to define intercept turn rate. Ignoring radius...");
+                Logger.getLogger(this.getClass()).info("radius and speed is given to define intercept turn rate. Ignoring radius...");
             }
             double dSpeed = Double.parseDouble(speed) / 60; // miles per minute
             double circumference = dSpeed * 2;
             this.radius = circumference / 2 / Math.PI;
         }
         if(geoStartPoint!=null && geoStartBowPoint==null && radius==null) {
-            Logger.getLogger(this.getClass()).warning("start given but no radius nor startBow, assuming radius of 1.16 NM");
+            Logger.getLogger(this.getClass()).info("start given but no radius nor startBow, assuming radius of 1.16 NM");
         }
         this.geoEndPoint = route.getPoint(end,previous);
         if(endHeading!=null) {
@@ -327,4 +328,8 @@ public class StdRouteIntercept extends AStdRouteElement {
         return geoEndPoint;
     }
 
+    @Override
+    public boolean contains(Point p) {
+        return false;
+    }
 }

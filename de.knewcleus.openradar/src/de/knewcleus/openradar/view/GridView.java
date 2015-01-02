@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -35,6 +36,7 @@ package de.knewcleus.openradar.view;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -123,4 +125,7 @@ public class GridView implements IView, INotificationListener {
     public String getTooltipText(Point p) {
         return null;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent p) {  }
 }

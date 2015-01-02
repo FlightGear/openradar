@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+	
+	<route name="Reporting points" color="0,0,0">
+		<text position="7.9NM310@LEQ" text="N"/>
+		<text position="11.6NM259@LEQ" text="W"/>
+		<text position="7.7NM216@LEQ" text="SW"/>
+		<text position="3.1NM333@LEQ" text="SA"/>
+		<text position="7.6NM136@LEQ" text="SE"/>
+	</route>
+	
+</routes>

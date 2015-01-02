@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -177,6 +177,10 @@ public class RadarDataBlockHelper {
 
     public Color getColor(GuiRadarContact guiContact) {
         return datablockLayoutManager.getActiveLayout().getColor(guiContact);
+    }
+
+    public Color getDataBlockColor(GuiRadarContact guiContact) {
+        return datablockLayoutManager.getActiveLayout().getDataBlockColor(guiContact);
     }
 
     public Font getFont() {

@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -39,5 +40,7 @@ public interface IGeodataLayer {
 	public abstract FeatureDefinition getFeatureDefinition();
 
 	public abstract Feature getNextFeature() throws GeodataException;
+
+    public abstract boolean hasNext();
 
 }

@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -37,6 +38,4 @@ package de.knewcleus.openradar.notify;
  * 
  * @author Ralf Gerlich
  */
-public interface INotification {
-	public INotifier getSource();
-}
+public interface INotification {}

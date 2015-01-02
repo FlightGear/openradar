@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 Wolfram Wagner
+ * Copyright (C) 2014,2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -91,6 +91,14 @@ public class Lenny64Controller {
             dialog.setData(c);
             dialog.saveData();
         }
+    }
+
+    public void closeFlightPlan(GuiRadarContact contact) {
+        lenny64Connector.closeFlightPlan(master, contact);
+    }
+
+    public synchronized Lenny64FlightplanServerConnector getLenny64Connector() {
+        return lenny64Connector;
     }
 
 }

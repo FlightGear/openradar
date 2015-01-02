@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2014 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -149,6 +149,8 @@ public class GuiMasterController {
         SoundManager.init(airportData);
         fpExchangeManager.start();
 
+        airportData.storeAirportData(this); // to store initially set data
+        
         // ready, so display it
         mainFrame.setDividerPosition();
         mainFrame.setVisible(true);
@@ -172,7 +174,8 @@ public class GuiMasterController {
                                                      geodToCartTransformation.forward(clientPosition),
                                                      airportData.getMpServer(),
                                                      airportData.getMpServerPort(),
-                                                     airportData.getMpLocalPort());
+                                                     airportData.getMpLocalPort(),
+                                                     airportData.getAntennaRotationTime());
 
 
         radarProvider.setCallsign(airportData.getCallSign());

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -37,6 +37,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -78,15 +79,13 @@ public class GeodataView implements IBoundedView, INotificationListener {
 		this.layerCode = layerCode;
 		mapViewAdapter.registerListener(this);
 		Feature feature;
-		while ((feature=geodataLayer.getNextFeature())!=null) {
-//		    Geometry g = feature.getGeometry();
-//		    if(   bounds.getMinX()<g.getXMin()
-//		       && bounds.getMaxX()>g.getXMax()
-//		       && bounds.getMinY()<g.getYMin()
-//               && bounds.getMaxY()>g.getYMax()) {
-//		        // only features inside range
-		        geometries.add(feature.getGeometry());
-//		    }
+		while (geodataLayer.hasNext()) {
+		    try  {
+		        feature=geodataLayer.getNextFeature();
+                if(feature!=null) geometries.add(feature.getGeometry());
+		    } catch(Exception e) {
+		        log.warn("Problem while reading "+layerCode+": "+e.getMessage());
+		    }
 		}
 		updateLogicalShapes();
 	}
@@ -213,4 +212,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
     public String getTooltipText(Point p) {
         return null;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent p) {  }
 }

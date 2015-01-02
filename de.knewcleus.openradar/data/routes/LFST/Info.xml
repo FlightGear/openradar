@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+  <route name="LFST Infos">
+    <screenText screenPos="200,30" font="Arial" fontSize="22" color="10,10,100" text="Strasbourg Entzheim"/>
+    <screenText screenPos="200,50" font="Arial" fontSize="16" color="10,10,100" text="TA 7000 - APP 119.575 - GND 121.800"/>
+    <screenText screenPos="200,70" font="Arial" fontSize="16" color="10,10,100" text="VFR TMA enter 3000 ft QNH, pattern 1500, final 1000"/>
+    <screenText screenPos="650,750" font="Arial" fontSize="14" color="150,150,150" text="EPL/Epinal, STR/Strasbourg, LUL/Luxueil, GTQ/Grostenquin, SAV/Saverne, SUL/Sulz"/>
+  </route>
+
+  <route name="LFST ILS North">
+    <activeLandingRunways>05</activeLandingRunways>
+    <screenText screenPos="200,90" font="Arial" fontSize="16" color="10,10,100" text="ILS 05: 108.55"/>
+  </route>
+
+  <route name="LFST ILS South">
+    <activeLandingRunways>23</activeLandingRunways>
+    <screenText screenPos="200,90" font="Arial" fontSize="16" color="10,10,100" text="ILS 23: 109.55"/>
+  </route>
+</routes>

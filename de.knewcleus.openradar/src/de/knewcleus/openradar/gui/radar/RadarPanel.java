@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -40,6 +40,8 @@ import java.awt.GridBagConstraints;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
@@ -197,6 +199,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
 //        gridBagConstraints.anchor=GridBagConstraints.WEST;
+        gridBagConstraints.weightx=1;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         filterPanel.add(menuBar,gridBagConstraints);
 
@@ -304,6 +307,68 @@ public class RadarPanel extends JPanel {
             mItemDbLayout.addActionListener(master.getAirportData().getDatablockLayoutManager().getActionListener(master));
             menuDataMode.add(mItemDbLayout);
         }
+
+        // submenu update speed
+
+        JMenu menuMapUpdates = new JMenu("update frequency");
+        menuMapUpdates.setFont(menuMap.getFont().deriveFont(Font.BOLD));
+        menuMap.add(menuMapUpdates);
+        ButtonGroup bgUpdateSpeed = new ButtonGroup();
+
+        JCheckBoxMenuItem mItemFast = new JCheckBoxMenuItem();
+        bgUpdateSpeed.add(mItemFast);
+        mItemFast.setText("1 s");
+        mItemFast.setName("UPDATE_1");
+        mItemFast.setSelected(master.getAirportData().getAntennaRotationTime()==1000);
+        mItemFast.addActionListener(new MenuListenerMapUpdate());
+        menuMapUpdates.add(mItemFast);
+
+        JCheckBoxMenuItem mItemMiddle = new JCheckBoxMenuItem();
+        bgUpdateSpeed.add(mItemMiddle);
+        mItemMiddle.setText("3 s");
+        mItemMiddle.setName("UPDATE_3");
+        mItemMiddle.setSelected(master.getAirportData().getAntennaRotationTime()==3000);
+        mItemMiddle.addActionListener(new MenuListenerMapUpdate());
+        menuMapUpdates.add(mItemMiddle);
+
+        JCheckBoxMenuItem mItemSlow = new JCheckBoxMenuItem();
+        bgUpdateSpeed.add(mItemSlow);
+        mItemSlow.setText("5 s");
+        mItemSlow.setName("UPDATE_5");
+        mItemSlow.setSelected(master.getAirportData().getAntennaRotationTime()==5000);
+        mItemSlow.addActionListener(new MenuListenerMapUpdate());
+        menuMapUpdates.add(mItemSlow);
+        
+        // submenu aircraft tail
+        
+        JMenu menuTailLength = new JMenu("contact tail");
+        menuTailLength.setFont(menuMap.getFont().deriveFont(Font.BOLD));
+        menuMap.add(menuTailLength);
+        ButtonGroup bgTailLength = new ButtonGroup();
+
+        JCheckBoxMenuItem mItemTLOff = new JCheckBoxMenuItem();
+        bgTailLength.add(mItemTLOff);
+        mItemTLOff.setText("no tail");
+        mItemTLOff.setName("TAIL_OFF");
+        mItemTLOff.setSelected(master.getAirportData().getContactTailLength()==0);
+        mItemTLOff.addActionListener(new MenuListenerTailLength());
+        menuTailLength.add(mItemTLOff);
+
+        JCheckBoxMenuItem mItemTLShort = new JCheckBoxMenuItem();
+        bgTailLength.add(mItemTLShort);
+        mItemTLShort.setText("5");
+        mItemTLShort.setName("TAIL_5");
+        mItemTLShort.setSelected(master.getAirportData().getContactTailLength()==5);
+        mItemTLShort.addActionListener(new MenuListenerTailLength());
+        menuTailLength.add(mItemTLShort);
+
+        JCheckBoxMenuItem mItemTLLong = new JCheckBoxMenuItem();
+        bgTailLength.add(mItemTLLong);
+        mItemTLLong.setText("10");
+        mItemTLLong.setName("TAIL_10");
+        mItemTLLong.setSelected(master.getAirportData().getContactTailLength()==10);
+        mItemTLLong.addActionListener(new MenuListenerTailLength());
+        menuTailLength.add(mItemTLLong);
 
         // submenu layers
 
@@ -620,13 +685,13 @@ public class RadarPanel extends JPanel {
 
         @Override
         public void dragEnter(DropTargetDragEvent e) { 
-//            if (((DropTarget) e.getSource()).getComponent() == master.getRadarContactManager().getGuiList()) {
+            
             GuiRadarContact contact=null;
             try {
                 String callsign = (String) e.getTransferable().getTransferData(new DataFlavor(java.lang.String.class,"text/plain"));
                 contact = master.getRadarContactManager().getContactFor(callsign);
             } catch (Exception e1) {
-                log.error("Exception while reading drag and drop data", e1);
+                log.error("Handled exception while reading drag and drop data"+ e1.getMessage());
             } 
 
             if(contact!=null && contact.getFlightPlan().isOwnedByMe()) {
@@ -639,4 +704,41 @@ public class RadarPanel extends JPanel {
             }
         }
     }
+    
+    private class MenuListenerMapUpdate implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JMenuItem item = (JMenuItem)e.getSource();
+            if(item.getName().equals("UPDATE_1")) {
+                master.getMpChatManager().getMpBackend().setAntennaRotationTime(1*1000);
+                master.getAirportData().setAntennaRotationTime(1000);
+            } else if(item.getName().equals("UPDATE_3")) {
+                master.getMpChatManager().getMpBackend().setAntennaRotationTime(3*1000);
+                master.getAirportData().setAntennaRotationTime(3000);
+            } else if(item.getName().equals("UPDATE_5")) {
+                master.getMpChatManager().getMpBackend().setAntennaRotationTime(5*1000);
+                master.getAirportData().setAntennaRotationTime(5000);
+            }
+            master.getAirportData().storeAirportData(master); // save it!
+        }
+    }
+
+    private class MenuListenerTailLength implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JMenuItem item = (JMenuItem)e.getSource();
+            if(item.getName().equals("TAIL_OFF")) {
+                radarView.setMaxTailLength(0);
+                master.getAirportData().setContactTailLength(0);
+            } else if(item.getName().equals("TAIL_5")) {
+                radarView.setMaxTailLength(5);
+                master.getAirportData().setContactTailLength(5);
+            } else if(item.getName().equals("TAIL_10")) {
+                    radarView.setMaxTailLength(10);
+                    master.getAirportData().setContactTailLength(10);
+            }
+            master.getAirportData().storeAirportData(master); // save it!
+        }
+    }
+
 }

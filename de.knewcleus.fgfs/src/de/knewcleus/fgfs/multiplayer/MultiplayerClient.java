@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -193,28 +193,29 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
                     bdFreq = bdFreq.divide(new BigDecimal(1000000));
                     frequency = String.format("%1.3f", bdFreq);
                 }
-                // transponder data
-                Integer transponderSquawkCode = (Integer) positionMessage.getProperty("instrumentation/transponder/id-code");
-//                transponderSquawkCode=1235;
-                player.setTranspSquawkCode(transponderSquawkCode);
-                Integer transponderAltitude = (Integer) positionMessage.getProperty("instrumentation/transponder/altitude");
-//                transponderAltitude=null;
-                player.setTranspAltitude(transponderAltitude);
-//                for(String key : positionMessage.getProperties().keySet()) {
-//                    if(key.contains("ident")) {
-//                        System.out.println(positionMessage.getProperty(key));
-//                    }
-//                }
-                Boolean b = positionMessage.getProperty("instrumentation/transponder/ident");
-                if(b!=null && b==true) {
-                    player.startTranspIdent();
-                }
-                String transponderMode = positionMessage.getProperty("instrumentation/transponder/inputs/mode");
-                if(transponderMode!=null) {
-                    player.setTranspMode(transponderMode);
-                }
 
                 notifyChatListeners(mppacket.getCallsign(), frequency, chatMessage);
+            }
+            // transponder data
+            Integer transponderSquawkCode = (Integer) positionMessage.getProperty("instrumentation/transponder/id-code");
+//            transponderSquawkCode=1235;
+            player.setTranspSquawkCode(transponderSquawkCode);
+            Integer transponderAltitude = (Integer) positionMessage.getProperty("instrumentation/transponder/altitude");
+//            transponderAltitude=null;
+            player.setTranspAltitude(transponderAltitude);
+//            System.out.println(transponderAltitude);
+//            for(String key : positionMessage.getProperties().keySet()) {
+//                if(key.contains("ident")) {
+//                    System.out.println(positionMessage.getProperty(key));
+//                }
+//            }
+            Boolean b = positionMessage.getProperty("instrumentation/transponder/ident");
+            if(b!=null && b==true) {
+                player.startTranspIdent();
+            }
+            String transponderMode = positionMessage.getProperty("instrumentation/transponder/inputs/mode");
+            if(transponderMode!=null) {
+                player.setTranspMode(transponderMode);
             }
 
             player.updatePosition(System.currentTimeMillis(), positionMessage);

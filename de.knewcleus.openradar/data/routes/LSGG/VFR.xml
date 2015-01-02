@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+  <route name="VFR Geneve" displayMode="always" color="201,85,96">
+
+    <text position="N46°21'16'',E6°09'09''" font="Arial" fontSize="18" text="N" color="201,85,96" />
+    <text position="N46°20'50'',E6°21'47''" font="Arial" fontSize="18" text="E" color="201,85,96" />
+    <text position="N46°13'43'',E5°59'42''" font="Arial" fontSize="18" text="W" color="201,85,96" />
+    <text position="N46°08'01'',E6°05'58''" font="Arial" fontSize="18" text="S" color="201,85,96" />
+
+    <text position="N46°07'19'',E5°53'57''" font="Arial" fontSize="18" text="SW" color="201,85,96" />
+    <text position="N46°12'46'',E6°10'21''" font="Arial" fontSize="18" text="SE" color="201,85,96" />
+    <text position="N46°16'09'',E6°01'24''" font="Arial" fontSize="18" text="NW" color="201,85,96" />
+
+    <text position="N46°15'32'',E6°03'31''" font="Arial" fontSize="18" text="GW" color="201,85,96" />
+    <text position="N46°13'34'',E6°08'28''" font="Arial" fontSize="18" text="GE" color="201,85,96" />
+
+  </route>
+</routes>

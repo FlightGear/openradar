@@ -1,6 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
- * Copyright (C) 2014 Wolfram Wagner
+ * Copyright (C) 2013-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -52,6 +51,24 @@ public class SquawkCodeManager {
     
     private Map<String, SquawkRange> ranges = Collections.synchronizedMap(new TreeMap<String, SquawkRange>());
 //    private AirportData data;
+    private int ifrCode = 2000;  
+    private int vfrCode = 1200; // Europe, US 7000
+
+    public synchronized int getIfrCode() {
+        return ifrCode;
+    }
+
+    public synchronized void setIfrCode(int ifrCode) {
+        this.ifrCode = ifrCode;
+    }
+
+    public synchronized int getVfrCode() {
+        return vfrCode;
+    }
+
+    public synchronized void setVfrCode(int vfrCode) {
+        this.vfrCode = vfrCode;
+    }
 
     public SquawkCodeManager(AirportData data) {
 //        this.data = data;
@@ -107,6 +124,9 @@ public class SquawkCodeManager {
     }
 
     public synchronized void addSquawkRangeTo(Properties p) {
+        p.setProperty("squawk.ifrCode",""+ifrCode);
+        p.setProperty("squawk.v.frCode",""+vfrCode);
+
         for(SquawkRange sqRange : ranges.values()) {
             sqRange.addValuesToProperties(p);
         }
@@ -114,6 +134,9 @@ public class SquawkCodeManager {
 
     public synchronized void restoreSquawkRangeFrom(Properties p) {
         ranges.clear();
+        ifrCode = Integer.parseInt(p.getProperty("squawk.ifrCode","2000"));
+        vfrCode = Integer.parseInt(p.getProperty("squawk.vfrCode","1200"));
+        
         for(Object o : p.keySet() ) {
             String key = (String)o;
             if(key.startsWith("squawk.") && key.contains("first")) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -485,5 +485,9 @@ public class RadarMapPanel extends JComponent {
     public void showMap() {
         radarMapViewAdapter.centerMap();
         rootView.setVisible(true);
+    }
+
+    public synchronized void setMaxTailLength(int maxTailLength) {
+        radarMapViewAdapter.setMaxTailLength(maxTailLength);
     }
 }

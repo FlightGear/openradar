@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -58,6 +58,9 @@ public abstract class ADatablockLayout {
     public abstract Color getBackgroundColor(GuiRadarContact contact, boolean highlighted);
 
     public abstract Color getColor(GuiRadarContact contact);
+
+    public abstract Color getDataBlockColor(GuiRadarContact c) ;
+
     /** Returns the text that will be displayed in data block. Lines separated by newline...*/
     public abstract String getDataBlockText(GuiMasterController master, GuiRadarContact contact);
 

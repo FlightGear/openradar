@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -72,8 +72,11 @@ public class TrackManager extends Notifier implements ITrackManager, IRadarDataR
 		}
 		
 		track.addState(radarData);
+		notify(new TrackUpdateNotification()); // tell listeners about new track
+		
 		if (radarData.wasSeenOnLastScan()) {
 			track.setLost(false);
+			notify(new TrackLossStatusNotification(track)); // tell listeners about lost track
 		}
 		track.setLastUpdateTimestamp(System.currentTimeMillis());
 		

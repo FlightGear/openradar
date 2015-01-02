@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -45,7 +45,7 @@ import de.knewcleus.openradar.view.ViewerAdapter;
 public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter {
 	private final IProjection projection;
 	protected volatile Point2D originalOrigin = null;
-
+    protected volatile int maxTailLength = 10;
 	
 	public MapViewerAdapter(ICanvas canvas, IUpdateManager updateManager, IProjection projection, Point2D center) {
 		super(canvas, updateManager);
@@ -145,5 +145,13 @@ public class MapViewerAdapter extends ViewerAdapter implements IMapViewerAdapter
 
    public void forceRepaint() {
        updateTransforms(true);
+   }
+
+   public synchronized void setMaxTailLength(int maxTailLength) {
+       this.maxTailLength = maxTailLength;
+   }
+
+   public synchronized int getMaxTailLength() {
+       return maxTailLength;
    }
 }

@@ -1,6 +1,7 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- *
+ * Copyright (C) 2015 Wolfram Wagner
+ * 
  * This file is part of OpenRadar.
  *
  * OpenRadar is free software: you can redistribute it and/or modify it under
@@ -37,6 +38,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
@@ -145,10 +147,14 @@ public class TextView implements IBoundedView, ILayoutPart {
 	}
 
 	@Override
-	public void validate() {}
+	public void validate() {
+	}
 
     @Override
     public String getTooltipText(Point p) {
         return null;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent p) {  }
 }

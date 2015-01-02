@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -85,6 +85,7 @@ public class RunwayEndIlsCone extends AViewObject {
 
     @Override
     public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mva) {
+        
         if ( ! runwayEnd.isLandingActive()) { //  || runwayEnd.getGlideslope()==null){
             path=null;
             rightVectoringTextOrigin=null;
@@ -94,6 +95,7 @@ public class RunwayEndIlsCone extends AViewObject {
             heightTextPositions.clear();
             return;
         }
+
         boolean activeGS = data.getRunways().get(runwayEnd.getRunwayID()).getGlideslope()!=null;
         setColor(activeGS ? Palette.GLIDESLOPE : new Color(150,150,255));
 
@@ -174,7 +176,7 @@ public class RunwayEndIlsCone extends AViewObject {
 
         // major marker lines
         double currentDistance = 0;
-        Point2D centerPoint = currentDisplayPosition;
+        Point2D centerPoint;
         int i=0;
         do {
             currentDistance = rwd.getMajorDMStart() + i * rwd.getMajorDMInterval();
@@ -272,8 +274,6 @@ public class RunwayEndIlsCone extends AViewObject {
             leftVectoringTextOrigin=null;
             leftBaselegTextOrigin=null;
         }
-
-
     }
 
     private double ftd(double feet, IMapViewerAdapter mapViewerAdapter) {
@@ -282,6 +282,7 @@ public class RunwayEndIlsCone extends AViewObject {
 
     @Override
     public void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
+        
         super.paint(g2d, mapViewAdapter);
         g2d.setColor(color);
         //double currentScale = mapViewAdapter.getLogicalScale();
@@ -315,6 +316,7 @@ public class RunwayEndIlsCone extends AViewObject {
                 Rectangle2D b = g2d.getFontMetrics().getStringBounds(text, g2d);
                 g2d.drawString(text, (float)(point.getX()-b.getWidth()/2), (float) (point.getY()+b.getHeight()/2-2));
             }
+
         }
     //}
 

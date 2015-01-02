@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2014,2015 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -32,110 +33,81 @@
  */
 package de.knewcleus.openradar.tracks;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.knewcleus.openradar.notify.Notifier;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
 
-public class Track extends Notifier implements ITrack {
-	protected final static int historySize = 10;//2000;
-	protected final IRadarDataPacket history[] = new IRadarDataPacket[historySize];
+public class Track implements ITrack {
+	protected final static int historySize = 1000;//2000;
+	protected final ArrayList<IRadarDataPacket> history = new ArrayList<IRadarDataPacket>(historySize);
 	protected int headIndex = historySize-1;
 	protected int size = 0;
 	protected long lastUpdateTimestamp = 0;
 	protected boolean lost = false;
 	
 	protected int age = 0;
+    private volatile int tailOffset=0;
 
 	@Override
-	public IRadarDataPacket getCurrentState() {
+	public synchronized IRadarDataPacket getCurrentState() {
 		assert(size>0);
-		return history[headIndex];
+		return history.get(0);
 	}
 
 	@Override
-	public IRadarDataPacket getState(int index) {
-		if (index>=size) {
+	public synchronized IRadarDataPacket getState(int index) {
+		if (index>=history.size()) {
 			throw new IndexOutOfBoundsException();
 		}
-		return history[(headIndex + index) % historySize];
+		return history.get(index);
 	}
 
 	@Override
-	public Iterator<IRadarDataPacket> iterator() {
-		return new HistoryIterator();
-	}
-
-	@Override
-	public int size() {
-		return size;
+	public synchronized int size() {
+		return history.size();
 	}
 	
 	@Override
-	public boolean isLost() {
+	public synchronized boolean isLost() {
 		return lost;
 	}
 	
-	public void setLost(boolean lost) {
+	public synchronized void setLost(boolean lost) {
 		if (this.lost==lost) {
 			return;
 		}
 		this.lost = lost;
-		notify(new TrackLossStatusNotification(this));
 	}
 	
-	public void addState(IRadarDataPacket state) {
+	public synchronized void addState(IRadarDataPacket state) {
 		assert(state!=null);
-		if (headIndex==0) {
-			headIndex = historySize - 1;
-		} else {
-			headIndex--;
+		history.add(0, state);
+		if(history.size()>historySize) {
+		    history.remove(historySize-1);
 		}
-		if (size<historySize) {
-			size++;
-		}
-		history[headIndex]=state;
 		++age;
-		notify(new TrackUpdateNotification(this));
+        tailOffset++;
 	}
 	
-	public void setLastUpdateTimestamp(long lastUpdateTimestamp) {
+	public synchronized void setLastUpdateTimestamp(long lastUpdateTimestamp) {
 		this.lastUpdateTimestamp = lastUpdateTimestamp;
 	}
 	
-	public long getLastUpdateTimestamp() {
+	public synchronized long getLastUpdateTimestamp() {
 		return lastUpdateTimestamp;
 	}
 	
-	protected class HistoryIterator implements Iterator<IRadarDataPacket> {
-		protected final int age = Track.this.age;
-		protected int index = 0;
-		
-		@Override
-		public boolean hasNext() {
-			if (age != Track.this.age) {
-				throw new ConcurrentModificationException();
-			}
-			return index < size;
-		}
-		
-		@Override
-		public IRadarDataPacket next() {
-			if (age != Track.this.age) {
-				throw new ConcurrentModificationException();
-			}
-			if (index >= size) {
-				throw new NoSuchElementException();
-			}
-			return getState(index++);
-		}
-		
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-	}
-
+    public synchronized int getTailOffset() {
+        return tailOffset;
+    }
+    @Override
+    public synchronized void resetTailOffset() {
+        tailOffset=0;
+        
+    }
+    
+    public synchronized List<IRadarDataPacket> getCopyOfHistory() {
+        return new ArrayList<IRadarDataPacket>(history);
+    }
 }

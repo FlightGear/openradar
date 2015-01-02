@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2008-2009 Ralf Gerlich
+ * Copyright (C) 2015 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -33,7 +34,6 @@
 package de.knewcleus.openradar.view.mouse;
 
 import de.knewcleus.openradar.notify.INotification;
-import de.knewcleus.openradar.notify.INotifier;
 
 /**
  * A focus change notification is issued by the {@link IFocusManager}
@@ -53,11 +53,6 @@ public class FocusChangeNotification implements INotification {
 		this.source = source;
 		this.previousOwner = previousOwner;
 		this.newOwner = newOwner;
-	}
-
-	@Override
-	public INotifier getSource() {
-		return source;
 	}
 	
 	public IFocusableView getPreviousOwner() {

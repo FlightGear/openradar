@@ -5,6 +5,7 @@ A todos os pilotos:
 %s: Bem-vindo a %s, Por favor informe a ATC das suas intencoes, FGCOM %s
 %s: Contacto do radar a %3.0f mi de distancia, QNH %s, Esta a abandonar a nossa area, FGCOM %s
 
+
 %s: Pode trocar a frequencia - Boa viagem!
 
 

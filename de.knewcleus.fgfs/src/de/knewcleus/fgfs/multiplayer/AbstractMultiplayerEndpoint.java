@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -75,13 +75,8 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		this.playerRegistry=playerRegistry;
 	}
 
-	protected int getUpdateMillis() {
-		return getPlayerTimeoutMillis();
-	}
-
-	protected int getPlayerTimeoutMillis() {
-		return 30*60*1000;
-	}
+	// see FGMPClient
+	protected abstract int getPlayerTimeoutMillis();
 
 	public InetAddress getAddress() {
 		return datagramSocket.getLocalAddress();
@@ -193,6 +188,8 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 		}
 		player.setLastMessageTime(System.currentTimeMillis());
 		processPacket(player,mppacket);
+		
+		expirePlayers();
 	}
 
 	protected void expirePlayers() {
@@ -200,6 +197,9 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 			Set<T> expiredPlayers=new HashSet<T>();
 			long oldestExpireTime=System.currentTimeMillis()-getPlayerTimeoutMillis();
 			for (T player: playerRegistry.getPlayers()) {
+//			    if(player.getCallsign().equals("D-W794")) {
+//			        System.out.println(player.getCallsign()+" "+ oldestExpireTime+" "+player.getLastMessageTime()+" "+ (player.getLastMessageTime()-oldestExpireTime));
+//			    }
 				if (player.getLastMessageTime()<=oldestExpireTime) {
 					expiredPlayers.add(player);
 				}

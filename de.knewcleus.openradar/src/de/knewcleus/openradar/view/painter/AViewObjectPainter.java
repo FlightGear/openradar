@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -33,6 +33,7 @@
 package de.knewcleus.openradar.view.painter;
 
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -139,8 +140,11 @@ public abstract class AViewObjectPainter<T> {
                 }
             }
         }
-        if(displayExtents==null) displayExtents = new Rectangle2D.Double(0,0,0,0);
-        mapViewAdapter.getUpdateManager().markRegionDirty(getDisplayExtents());
+        if(displayExtents==null) {
+            displayExtents = new Rectangle2D.Double(0,0,0,0);
+        } else {
+            mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
+        }
     }
 
     public synchronized void paint(Graphics2D g2d) {
@@ -173,4 +177,10 @@ public abstract class AViewObjectPainter<T> {
     public String getTooltipText() {
         return null;
     }
+
+    public boolean hasToBePainted() {
+        return viewObjectList.size()>0;
+    }
+
+    public void mouseClicked(MouseEvent e) {  }
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -41,7 +41,6 @@ import de.knewcleus.fgfs.navdata.model.INavDataStream;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
-import de.knewcleus.openradar.view.IView;
 import de.knewcleus.openradar.view.LayeredView;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
@@ -60,7 +59,7 @@ public class NavPointProvider {
 		this.data = master.getAirportData();
 	}
 
-	public IView provideNavPoint(INavPoint point) {
+	public NavPointView provideNavPoint(INavPoint point) {
 		return new NavPointView(mapViewerAdapter, master, point);
 	}
 
@@ -76,10 +75,14 @@ public class NavPointProvider {
 	}
     public void addViews(List<INavPoint> navpointList) {
         for(INavPoint point : navpointList) {
-            navPointLayer.pushView(provideNavPoint(point));
+            NavPointView NavPointView = provideNavPoint(point);
+            // there are some with dummy implementations
+            if(NavPointView.hasToBePainted()) {
+                navPointLayer.pushView(NavPointView);
 
-            for(INavPointListener l : navPointListeners) {
-                l.navPointAdded(point);
+                for(INavPointListener l : navPointListeners) {
+                    l.navPointAdded(point);
+                }
             }
         }
     }

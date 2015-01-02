@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2014 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -127,6 +128,9 @@ public class AirportData implements INavPointListener {
     private String chatAliasPrefix = ".";
 
     private volatile String callSign = null;
+    
+    private boolean altRadioTextEnabled = false;
+    private String altRadioText = "";
 
     private Map<String, Boolean> toggleObjectsMap = new HashMap<String, Boolean>();
     private Map<String, Boolean> visibleLayerMap;
@@ -135,6 +139,10 @@ public class AirportData implements INavPointListener {
     private StPView directionMessageView;
     
     private String lenny64Url="http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans";
+    
+    private int contactTailLength = 10;
+    
+    private int antennaRotationTime = 1000;
 
     private final AircraftCodeConverter aircraftCodeConverter = new AircraftCodeConverter();
 
@@ -395,6 +403,22 @@ public class AirportData implements INavPointListener {
         this.chatAliasPrefix = chatAliasPrefix;
     }
 
+    public synchronized boolean isAltRadioTextEnabled() {
+        return altRadioTextEnabled;
+    }
+
+    public synchronized void setAltRadioTextEnabled(boolean altRadioTextEnabled) {
+        this.altRadioTextEnabled = altRadioTextEnabled;
+    }
+
+    public synchronized String getAltRadioText() {
+        return altRadioText;
+    }
+
+    public synchronized void setAltRadioText(String altRadioText) {
+        this.altRadioText = altRadioText;
+    }
+
     /**
      * This method is called when the navdata files are read. We use it to
      * gather additional information
@@ -560,7 +584,7 @@ public class AirportData implements INavPointListener {
         return visibleLayerMap.get(name) != null ? visibleLayerMap.get(name) : false;
     }
 
-    public synchronized void loadAirportData(GuiMasterController master) {
+    public synchronized void loadLastCallSign() {
         Properties p = new Properties();
         File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
         try {
@@ -572,7 +596,27 @@ public class AirportData implements INavPointListener {
         if(callSign==null) {
             callSign = getInitialATCCallSign();
         }
+    }
+    
+    public synchronized void loadAirportData(GuiMasterController master) {
         
+        Properties p = new Properties();
+        File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
+        try {
+            p.load(new FileReader(propertyFile));
+        } catch (IOException e) {
+        }
+
+        
+        if(callSign==null) {
+            // for some reason the callsign was not set in setup dialog
+            callSign = p.getProperty("lastCallsign");
+            if(callSign==null) {
+                // pilot has never been here
+                callSign = getInitialATCCallSign();
+            }
+        }
+
         String sTA = p.getProperty("transitionAlt");
         if(sTA!=null) {
             transitionAlt = Integer.parseInt( sTA );
@@ -617,9 +661,18 @@ public class AirportData implements INavPointListener {
                     r.setRestoredFrequency(savedFrequency);
                 }
             }
+            
+            // restore alternative radio data
+            altRadioText = p.getProperty("altRadioText.text","");
+            
+            contactTailLength = Integer.parseInt(p.getProperty("contact.tailLength", "10"));
+
+            antennaRotationTime = Integer.parseInt(p.getProperty("antennaRotationTime", "1000"));
+
         }
         // calculate magnetic declination
         setMagneticDeclination(CoreMag.calc_magvarDeg(getLat(), getLon(), getElevationM(), System.currentTimeMillis()));
+        
     }
     
     public void restoreRunwaySettings() {
@@ -679,7 +732,14 @@ public class AirportData implements INavPointListener {
         // add layout
         datablockLayoutManager.addSelectedLayoutTo(p);
 
+        // add alternative radio data
+        p.setProperty("altRadioText.text", altRadioText);
+        
         squawkCodeManager.addSquawkRangeTo(p);
+        
+        p.setProperty("contact.tailLength", ""+contactTailLength);
+
+        p.setProperty("antennaRotationTime", ""+antennaRotationTime);
 
         File propertiesFile = new File("settings" + File.separator + getAirportCode() + ".properties");
 
@@ -731,7 +791,9 @@ public class AirportData implements INavPointListener {
         }
         for(GuiRunway rw : runways.values()) {
             if(rw.getRunwayData().isEnabledAtAll()) {
-                cbModel.addElement(rw.getCode());
+                if(rw.isLandingActive() || rw.isStartingActive()) {
+                    cbModel.addElement(rw.getCode());
+                }
             }
         }
         return cbModel;
@@ -748,6 +810,16 @@ public class AirportData implements INavPointListener {
             }
         }
         return cbModel;
+    }
+    
+    public HashSet<String> getActiveRunways() {
+        HashSet<String> activeRWs = new HashSet<String>();
+        for(GuiRunway rw : runways.values()) {
+            if(rw.isLandingActive() || rw.isStartingActive()) {
+                activeRWs.add(rw.getCode());
+            }
+        }
+        return activeRWs;
     }
     
     @Override
@@ -781,6 +853,26 @@ public class AirportData implements INavPointListener {
 
     public synchronized void setLenny64Url(String lenny64Url) {
         this.lenny64Url = lenny64Url;
+    }
+
+    public boolean isLenny64Enabled() {
+        return lenny64Url!=null && !lenny64Url.isEmpty();
+    }
+
+    public synchronized int getContactTailLength() {
+        return contactTailLength;
+    }
+
+    public synchronized void setContactTailLength(int contactTailLength) {
+        this.contactTailLength = contactTailLength;
+    }
+
+    public synchronized int getAntennaRotationTime() {
+        return antennaRotationTime;
+    }
+
+    public synchronized void setAntennaRotationTime(int antennaRotationTime) {
+        this.antennaRotationTime = antennaRotationTime;
     }
 
 }

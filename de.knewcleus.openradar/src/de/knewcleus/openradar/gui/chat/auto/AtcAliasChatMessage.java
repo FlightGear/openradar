@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012-2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -131,7 +131,8 @@ public class AtcAliasChatMessage {
         argumentsToRemember.clear();
 
         /*
-            <icao>               Local departing airport
+            <icao>               Local departing airport ICAO code
+            <aptname>            Local departing airport name
             <icao-altitude>      Local departing airport altitude
             <transitionAlt>      TransitionAlt for this airport
             <transitionFL>       TransitionAlt for this airport
@@ -139,25 +140,27 @@ public class AtcAliasChatMessage {
             <distance>           Aircraft's current distance to local airport
             <callsign>           ATC callsign.
             <aircraft>           Aircraft's callsign
-            <com1>               ATC primary frequency
-            <com2>               ATC secondary frequency
+            <com0>               ATC primary frequency
+            <com1>               ATC secondary frequency
             <winds>              Current winds
             <wind-direction>     Current winds direction
             <wind-speed>         Current winds speed
             <metar>              Raw METAR of the local airport
             <atis>               Current ATIS of the local airport
-            <qnh>                Current QNH of the local airport
+            <hPa>                Current QNH of the local airport in hPa
+            <mmHg>               Current QNH of the local airport in mmHg
             <runways>            Current active runways
-
-            <expected-runway>    Runway the pilot can expect for his aircraft
+            <runways-land>       Current active LANDING runways
+            
             <assigned-runway>    Runway the pilot can expect for his aircraft
             <cruise-altitude>    Aircraft's filed cruise altitude
-            <destination>        Aircraft's destination airport
+            <destination>        Aircraft's destination airport ICAO code
             <squawk>             Assigned squawk code
-            <route>              Code of assigned ATIS/STAR
+            <route>              Code of assigned SID/STAR
          */
 
         text = replaceAllInsensitive(text,"<icao>",data.getAirportCode());
+        text = replaceAllInsensitive(text,"<aptname>",data.getAirportName());
         text = replaceAllInsensitive(text,"<icao-altitude>",String.format("%03.0f",data.getElevationFt()));
         text = replaceAllInsensitive(text,"<transitionAlt>",String.format("%dft",data.getTransitionAlt()));
         text = replaceAllInsensitive(text,"<transitionFL>",String.format("FL%03d",data.getTransitionFL(master)));
@@ -165,6 +168,19 @@ public class AtcAliasChatMessage {
         text = replaceAllInsensitive(text,"<distance>",contact!=null ? contact.getRadarContactDistance():"");
         text = replaceAllInsensitive(text,"<callsign>",contact!=null ? contact.getCallSign() : "");
         text = replaceAllInsensitive(text,"<aircraft>",contact!=null ? contact.getAircraftCode() : "");
+        if(text.contains("<com_all>")) {
+            String v;
+            if(master.getRadioManager().getModels().isEmpty()) {
+                v="n/a";
+            } else {
+                v = master.getRadioManager().getActiveFrequenciesForDisplay();
+            }
+            if(master.getAirportData().isAltRadioTextEnabled()) {
+                v+="; "+master.getAirportData().getAltRadioText();
+            }
+            text = replaceAllInsensitive(text,"<com_all>",v);
+        }
+            
         if(master.getRadioManager().getModels().isEmpty()) {
             text = replaceAllInsensitive(text,"<com0>","");
         } else {
@@ -252,15 +268,23 @@ public class AtcAliasChatMessage {
             for(String key : argumentsToRemember.keySet()) {
                 if(key.equals("ALT")) {
                     selectedContact.getFlightPlan().setAssignedAltitude(argumentsToRemember.get(key));
+                    selectedContact.getFlightPlan().setReadyForTransmission();
+                    master.getFlightPlanExchangeManager().triggerTransmission();
                 } else if(key.equals("RWY")) {
                     selectedContact.getFlightPlan().setAssignedRunway(argumentsToRemember.get(key));
+                    selectedContact.getFlightPlan().setReadyForTransmission();
+                    master.getFlightPlanExchangeManager().triggerTransmission();
                 } else if(key.equals("ROUTE")) {
                     selectedContact.getFlightPlan().setAssignedRoute(argumentsToRemember.get(key));
+                    selectedContact.getFlightPlan().setReadyForTransmission();
+                    master.getFlightPlanExchangeManager().triggerTransmission();
                 } else if(key.equals("SQUAWK")) {
                     try {
                         int s = Integer.parseInt(argumentsToRemember.get(key));
                         if(s>0 && s%10<8 && s/1000<8) {
                             selectedContact.getFlightPlan().setSquawk(""+s);
+                            selectedContact.getFlightPlan().setReadyForTransmission();
+                            master.getFlightPlanExchangeManager().triggerTransmission();
                         }
                     } catch(Exception e) {}
                 } else {

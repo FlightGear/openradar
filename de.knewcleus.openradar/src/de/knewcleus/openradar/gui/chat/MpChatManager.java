@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -116,6 +116,9 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     private volatile AtcMenuChatMessage autoAtcMessage = null;
     private volatile AtcAliasChatMessage aliasAtcMessage = null;
+    
+    private List<String> ownChatHistory = new ArrayList<String>();
+    private volatile int currentHistoryIndex = -1;
 
     public MpChatManager(GuiMasterController master) {
         this.master = master;
@@ -199,7 +202,8 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         // add msg to lists
         globalList.add(0, msg);
         callSignList.add(0, msg);
-
+        currentHistoryIndex = -1;
+        
         // shrink lists to max size
         if (globalList.size() == MAX_MSG_COUNT) {
             GuiChatMessage lastMessage = globalList.remove(MAX_MSG_COUNT - 1);
@@ -367,7 +371,44 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
                     chatPanel.setChatMsgColor(Color.black);
                 }
                 e.consume();
-            }
+            } 
+        }
+    }
+
+    private void displayPrevMsg() {
+        if(currentHistoryIndex > 0) {
+            currentHistoryIndex-=1;
+        } else {
+            return;
+        }
+        String newChatMessage = ownChatHistory.get(currentHistoryIndex);
+        chatPanel.setChatMessage(newChatMessage);
+        if(newChatMessage.contains(":")) {
+            newChatMessage = newChatMessage.substring(newChatMessage.indexOf(":")+1).trim();
+        }
+        GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
+        if(selectedContact!=null) {
+            chatPanel.setChatMessage(selectedContact.getCallSign()+": "+newChatMessage);
+        } else {
+            chatPanel.setChatMessage(newChatMessage);
+        }
+    }
+
+    private void displayNextMsg() {
+        if(currentHistoryIndex < ownChatHistory.size()-1) {
+            currentHistoryIndex+=1;
+        } else {
+            return;
+        }
+        String newChatMessage = ownChatHistory.get(currentHistoryIndex);
+        if(newChatMessage.contains(":")) {
+            newChatMessage = newChatMessage.substring(newChatMessage.indexOf(":")+1).trim();
+        }
+        GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
+        if(selectedContact!=null) {
+            chatPanel.setChatMessage(selectedContact.getCallSign()+": "+newChatMessage);
+        } else {
+            chatPanel.setChatMessage(newChatMessage);
         }
     }
 
@@ -383,7 +424,11 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            displayNextMsg();
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            displayPrevMsg();
+        }
 
     }
 
@@ -478,7 +523,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         }
     }
 
-    private void resolveAliasMessage(String sMessage) {
+    public void resolveAliasMessage(String sMessage) {
 
         aliasAtcMessage = new AtcAliasChatMessage(master,sMessage);
 
@@ -524,8 +569,13 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     private void processOutGoingMessage(String message, boolean resetChatField) {
         String ownFrequency = master.getRadioManager().getModels().size()>0 ? master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency() : "";
+        message = checkMessage(message);
         mpBackend.sendChatMessage(ownFrequency, message); // send to MP Server
         // add to own chat history
+        ownChatHistory.add(0,message);
+        if(ownChatHistory.size()>20) {
+            ownChatHistory = ownChatHistory.subList(0, 19);
+        }
         addMessage(new GuiChatMessage(master, new Date(), master.getCurrentATCCallSign(), ownFrequency , message));
 
         if(resetChatField) {
@@ -537,6 +587,28 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         }
     }
 
+    /**
+     * Checks if the text is the same as before and adds a dot.
+     * This is necessary because the messages are sent via UDP and the receiver needs to know, if he has got this message already.
+     * 
+     * @param the original message
+     * @return the reworked message
+     */
+    private String checkMessage(String message) {
+        if(ownChatHistory.isEmpty()) return message;
+        String lastMsg = ownChatHistory.get(0);
+        message = message.trim();
+        if(message.equals(lastMsg)) {
+            if(message.endsWith(".")) {
+                // remove the dot
+                message = message.substring(0, message.length()-1);
+            } else {
+                // add a dot
+                message = message + ".";
+            }
+        }
+        return message;
+    }
 
     public void cancelAutoAtcMessage() {
         autoAtcMessage=null;
@@ -545,6 +617,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
 
     public void resetChatField() {
+        currentHistoryIndex=-1;
         GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
         if(selectedContact!=null) {
             chatPanel.setChatMessage(selectedContact.getCallSign()+": ");
