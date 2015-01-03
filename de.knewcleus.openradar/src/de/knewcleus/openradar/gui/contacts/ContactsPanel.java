@@ -33,7 +33,9 @@
 package de.knewcleus.openradar.gui.contacts;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -44,7 +46,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.Scrollable;
 import javax.swing.ToolTipManager;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -298,10 +303,11 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         
         // to avoid the clicking below the list selects the last contact
         // I shrink the list to match the required size.
-        JPanel pnlHelper = new JPanel();
+        JPanel pnlHelper = new ContactViewPanel(spRadarContacs, this.liRadarContacts);
         pnlHelper.setBackground(Palette.DESKTOP);
         pnlHelper.setLayout(new BorderLayout());
         pnlHelper.add(liRadarContacts, BorderLayout.NORTH);
+        spRadarContacs.getViewport().setBackground(Palette.DESKTOP);
         spRadarContacs.getViewport().setView(pnlHelper);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -437,5 +443,57 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         lbAssignSquawkVFR.setVisible(newLayout.supportsSquawk());
         lbAssignSquawkIFR.setVisible(newLayout.supportsSquawk());
         lbRevokeSquawk.setVisible(newLayout.supportsSquawk());
+    }
+    
+    /** This panel helps to shrink the JList to its minimum size */
+    private static final class ContactViewPanel extends JPanel implements Scrollable {
+
+        private static final long serialVersionUID = 1L;
+
+        private final JList<GuiRadarContact> contactList;
+        private final JScrollPane scrollpane;
+        
+        public ContactViewPanel(JScrollPane scrollpane, JList<GuiRadarContact> contactList) {
+            this.contactList = contactList;
+            this.scrollpane = scrollpane;
+        }
+        
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension liDim = contactList.getPreferredSize();
+            if(contactList.getModel().getSize()>0) {
+                // with content
+                return new Dimension((int)scrollpane.getViewport().getWidth(), (int)liDim.getHeight());
+            } else {
+                // empty
+                return new Dimension((int)liDim.getWidth(), (int)liDim.getHeight());
+            }
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return contactList.getScrollableBlockIncrement(visibleRect, orientation, direction);
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return contactList.getScrollableTracksViewportHeight();
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return contactList.getScrollableTracksViewportWidth();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return contactList.getScrollableUnitIncrement(visibleRect, orientation, direction);
+        }
+        
     }
 }
