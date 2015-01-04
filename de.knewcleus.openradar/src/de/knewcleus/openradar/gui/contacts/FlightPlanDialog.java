@@ -88,6 +88,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     private JPanel jPnlOnwerShip;
 
     private JButton btReset;
+    private JButton btSave;
     private JTextField tfFlightCode;
     private JComboBox<String> cbFlightPlanTypes;
     private JTextField tfAircraft;
@@ -181,7 +182,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         gridBagConstraints.gridwidth = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 8, 4);
         add(jPnlContact, gridBagConstraints);
 
         initContactData(jPnlContact);
@@ -191,12 +192,12 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         JPanel jPnlControl = new JPanel();
         jPnlControl.setOpaque(false);
         jPnlControl.setLayout(new GridBagLayout());
-
+        
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 8);
         add(jPnlControl, gridBagConstraints);
 
         jPnlOnwerShip = new JPanel();
@@ -208,18 +209,29 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 4);
         jPnlControl.add(jPnlOnwerShip, gridBagConstraints);
 
-
-        btReset = new JButton("Reset Flightplan");
-        btReset.setName("RESET");
-        btReset.addMouseListener(fpMouseListener);
+        btSave = new JButton("Save");
+        btSave.setToolTipText("Save and Transmit data");
+        btSave.setName("SAVE");
+        btSave.addMouseListener(fpMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = GridBagConstraints.EAST;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 4);
+        jPnlControl.add(btSave, gridBagConstraints);
+
+        btReset = new JButton("Reset FP");
+        btReset.setName("RESET");
+        btReset.addMouseListener(fpMouseListener);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 0.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlControl.add(btReset, gridBagConstraints);
 
@@ -907,9 +919,22 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
             gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
             jPnlOnwerShip.add(lbControlledBy, gridBagConstraints);
 
-            JLabel lbHandover = new JLabel("Handover to:");
+            JButton btReleaseControl = new JButton("UnControl");
+            btReleaseControl.setName("RELEASE_CONTROL");
+            btReleaseControl.setToolTipText("Release the contact from control.");
+            btReleaseControl.addMouseListener(fpMouseListener);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.weightx=0.0;
+            gridBagConstraints.anchor = GridBagConstraints.WEST;
+            gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+            jPnlOnwerShip.add(btReleaseControl, gridBagConstraints);
+
+            JLabel lbHandover = new JLabel("H/O to:");
+            lbHandover.setToolTipText("Hand over to");
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 2;
             gridBagConstraints.gridy = 0;
             gridBagConstraints.anchor = GridBagConstraints.WEST;
             gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
@@ -919,29 +944,19 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
             Dimension dim = cbAssignedRunway.getPreferredSize();
             cbHandoverATCs.setPreferredSize(new Dimension(100, (int) dim.getHeight()));
             gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 2;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.anchor = GridBagConstraints.WEST;
-            gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
-            jPnlOnwerShip.add(cbHandoverATCs, gridBagConstraints);
-
-            JButton btReleaseControl = new JButton("UnControl");
-            btReleaseControl.setName("RELEASE_CONTROL");
-            btReleaseControl.setToolTipText("Release the contact from control.");
-            btReleaseControl.addMouseListener(fpMouseListener);
-            gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 3;
             gridBagConstraints.gridy = 0;
+            gridBagConstraints.anchor = GridBagConstraints.WEST;
             gridBagConstraints.weightx=1.0;
-            gridBagConstraints.anchor = GridBagConstraints.EAST;
+            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
             gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 4);
-            jPnlOnwerShip.add(btReleaseControl, gridBagConstraints);
+            jPnlOnwerShip.add(cbHandoverATCs, gridBagConstraints);
 
             cbHandoverATCs.setSelectedItem(fpd.getHandover());
 
         } else if(fpd.isOfferedToMe()) {
             // offered to me
-            JLabel lbControlledBy = new JLabel("Offered to my by: " + fpd.getOwner());
+            JLabel lbControlledBy = new JLabel("Offered to me by: " + fpd.getOwner());
             lbControlledBy.setFont(lbControlledBy.getFont().deriveFont(Font.ITALIC).deriveFont(Font.BOLD));
             GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
@@ -950,15 +965,15 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
             gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
             jPnlOnwerShip.add(lbControlledBy, gridBagConstraints);
 
-            JButton btTakeOver = new JButton("Take over");
+            JButton btTakeOver = new JButton("Take over contact");
             btTakeOver.setName("TAKE_OVER");
             btTakeOver.addMouseListener(fpMouseListener);
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 1;
             gridBagConstraints.gridy = 0;
             gridBagConstraints.weightx=1.0;
-            gridBagConstraints.anchor = GridBagConstraints.EAST;
-            gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 4);
+            gridBagConstraints.anchor = GridBagConstraints.WEST;
+            gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 4);
             jPnlOnwerShip.add(btTakeOver, gridBagConstraints);
 
 
@@ -1003,14 +1018,16 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
             gridBagConstraints.gridy = 0;
             gridBagConstraints.weightx=1.0;
             gridBagConstraints.anchor = GridBagConstraints.WEST;
-            gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 4);
+            gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 4);
             jPnlOnwerShip.add(btControl, gridBagConstraints);
 
         }
+        jPnlOnwerShip.invalidate();
     }
 
     private void setFpReadable(boolean b) {
         
+        btSave.setEnabled(b);
         btReset.setEnabled(b);
         tfFlightCode.setEditable(b);
         btResetSquawk.setEnabled(b);
@@ -1183,6 +1200,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
             if("RESET".equals(source.getName())) {
                 contact.getFlightPlan().reset();
+                setData(contact);
+            } if("SAVE".equals(source.getName())) {
+                saveData();
                 setData(contact);
             } else if("START_HERE".equals(source.getName())) {
                 contact.getFlightPlan().startFromHere(master.getAirportData());

@@ -1107,7 +1107,12 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 
             } else if(newAlignment.equals(Alignment.RIGHT)) {
                 deselectContact();
-                if(//formerAlignment.equals(Alignment.LEFT) &&  // was owned by me AND
+                if(flightPlan.isOfferedToMe()) {
+                    // reject handover => does not work at server yet TODO
+//                    flightPlan.setHandover(null);
+//                    flightPlan.setReadyForTransmission();
+//                    master.getFlightPlanExchangeManager().triggerTransmission();
+                } else if(//formerAlignment.equals(Alignment.LEFT) &&  // was owned by me AND
                      !flightPlan.isOwnedBySomeoneElse()) { // no other ATC has taken over
                         
                     //master.getFlightPlanExchangeManager().sendReleaseMessage(c);
@@ -1124,7 +1129,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     }
 
     public void releaseFromControl(GuiRadarContact c) {
-        setContactsAlignment(selectedContact, Alignment.RIGHT);
+        setContactsAlignment(c, Alignment.RIGHT);
     }
 
     public void setContactHandover(GuiRadarContact contact, String handover) {
