@@ -1053,7 +1053,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
                 // HANDOVER finalization contact is not owned by me anymore
                 setContactsAlignment(c,Alignment.RIGHT);
                 if(!newFlightPlan.isOwnedBySomeoneElse()) {
-                    master.getFlightPlanExchangeManager().sendReleaseMessage(c);
+                    //master.getFlightPlanExchangeManager().sendReleaseMessage(c);
                     existingFp.releaseControl();
                     existingFp.setReadyForTransmission();
                 }
