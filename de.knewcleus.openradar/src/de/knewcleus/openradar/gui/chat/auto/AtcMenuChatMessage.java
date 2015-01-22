@@ -116,12 +116,15 @@ public class AtcMenuChatMessage {
             } else if("/openradar/comm/frequencies".equals(varName)) {
                 String v;
                 if(master.getRadioManager().getModels().isEmpty()) {
-                    v="n/a";
+                    v="";
                 } else {
-                    v = master.getRadioManager().getActiveFrequenciesForDisplay();
+                    v = " FGCOM " + master.getRadioManager().getActiveFrequenciesForDisplay();
                 }
                 if(master.getAirportData().isAltRadioTextEnabled()) {
-                    v+="; "+master.getAirportData().getAltRadioText();
+                    if(v.length()>0) {
+                       v+="; ";
+                    }
+                    v+=master.getAirportData().getAltRadioText();
                 }
                 values.add(v);
             } else if("/openradar/transitionAlt".equals(varName)) {

@@ -11,6 +11,7 @@
 <distance>           Aircraft's current distance to local airport
 <callsign>           ATC callsign.
 <aircraft>           Aircraft's callsign
+<com_all>            All active radio frequencies + additional radio text
 <com0>               ATC primary frequency
 <com1>               ATC secondary frequency
 <winds>              Current winds

@@ -1,13 +1,13 @@
 A todos los hombres del aire:
 %s
 
-%s: Bienvenido a %s - ¿  vuela con destino a %s ? FGCOM %s
-%s: Bienvenido a %s - por favor informe al ATC sobre sus intenciones, FGCOM %s
-%s: Contacto Radar a %3.0f mi, QNH %s, espere pista: %s, FGCOM %s
+%s: Bienvenido a %s - ¿  vuela con destino a %s? %s
+%s: Bienvenido a %s - por favor informe al ATC sobre sus intenciones, %s
+%s: Contacto Radar a %3.0f mi, QNH %s, espere pista: %s, %s
 
 
 %s: Esta abandonando mi area - Autorizado a cambiar frecuencia - Que tenga buen viaje
-ATIS en %s a %2.0f ft: QNH %s  viento %3.0f. Pista en uso %s  FGCOM %s
+ATIS en %s a %2.0f ft: QNH %s  viento %3.0f. Pista en uso %s  %s
 
 
 %s: Autorizado a Arrancar Motores
@@ -17,7 +17,7 @@ ATIS en %s a %2.0f ft: QNH %s  viento %3.0f. Pista en uso %s  FGCOM %s
 
 %s: Entre en pista Alinie y Mantenga espera, informe cuando este listo para Salir
 %s: mantenga rumbo de pista, ascienda a:
-%s: viento %03.0f Grados a %2.0f Nudos, autorizado despegue pista:
+%s: viento %s, autorizado despegue pista:
 
 %s: Gire a la Izquierda rumbo:
 %s: Gire a la Derecha rumbo:
@@ -27,11 +27,11 @@ ATIS en %s a %2.0f ft: QNH %s  viento %3.0f. Pista en uso %s  FGCOM %s
 
 %s: esta a %3.0f millas , mantenga rumbo hasta interceptar el localizador, autorizado aproximacion ILS pista:
 %s: se encuentra a %3.0f millas informe con pista a la vista
-%s: esta a %3.0f millas , viento %03.0f Grados a %2.0f Nudos, autorizado a aterrizar pista:
+%s: esta a %3.0f millas , viento %s, autorizado a aterrizar pista:
 %s: Bienvenido a %s -- abandone la pista hacia la:
 %s: ruede a punto Terminal:
 
-Por favor usa solo FGCOM %s para hablar con el ATC, los hombres del aire no chatean!
+Por favor usa solo %s para hablar con el ATC, los hombres del aire no chatean!
 %s: Sin darte cuenta estas perturbando nuestro entrenamiento ATC (Air Traffic Control) --> por favor usa otro Aeropuerto para vuelos no controlados
 %s: Por favor no inicies tu session en la pista activa.
 Por ejemplo para EDDF fija tu posicion de salida en Linea de comandos CMD o en el asistente: --parkpos=B45 o A10..25, B42..48, etc.

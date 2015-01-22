@@ -1,13 +1,13 @@
 
 %s
 
-%s: Dobro pozjalovat' v %s - Vi napravlyaetes' v %s ? FGCOM %s
-%s: Dobro pozjalovat' v %s - pozhaluista, soobs4ite dispet4eru o vashih namereniyah, FGCOM %s
-%s: Dalnost' obnaruzheniya radara %3.0f morskih mil', davlenie na urovne morya %s, ozhidaite polosu %s, FGCOM %s
+%s: Dobro pozjalovat' v %s - Vi napravlyaetes' v %s? %s
+%s: Dobro pozjalovat' v %s - pozhaluista, soobs4ite dispet4eru o vashih namereniyah, %s
+%s: Dalnost' obnaruzheniya radara %3.0f morskih mil', davlenie na urovne morya %s, ozhidaite polosu %s, %s
 
 %s: Vi pokidaete moe vozdushnoe prostranstvo - razreshau smenit' 4astotu - priyatnogo poleta
 %s: Vi ostavlyaete moe vozdushnoe prostranstvo. Razreshau izmenit' 4astotu radara. Obsluzhivanie ATC zakon4eno. S4astlivogo poleta
-ATIS dlya %s na visote %2.0f futov: davlenie %s, veter %s, aktivnaya polosa  %s,  FGCOM %s
+ATIS dlya %s na visote %2.0f futov: davlenie %s, veter %s, aktivnaya polosa  %s,  %s
 ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"3">>"6"
 
 %s: Razreshau start dvigatelei
@@ -17,7 +17,7 @@ ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"
 
 %s: Zanimaete poziciu, dolozhite o gotovnosti k vzletu
 %s: sohranyaite napravlenie polosi, nabiraite visotu:
-%s: veter %03.0f so skorost'u %2.0f uzlov, razreshau vzlet s polosi:
+%s: veter %s, razreshau vzlet s polosi:
 
 %s: povernite nalevo, napravlenie:
 %s: povernite napravo, napravlenie:
@@ -27,11 +27,11 @@ ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"
 
 %s: %3.0f mil' do polosi, sohranyite napravlenie do zahvata glissadi, razreshau zahod na posadku po KGS:
 %s: %3.0f mil' do polosi, dolozhite o vizualnom kontakte
-%s: %3.0f mil' do polosi, veter %03.0f so skorost'u %2.0f uzlov, razreshau posadku na polosu:
+%s: %3.0f mil' do polosi, veter %s, razreshau posadku na polosu:
 %s: viezd %s polosi:
 %s: Dobro pozhalovat' v %s - svernite s vzletno-posado4noi polosi:
 
-pozhaluista ispolzuite FGCOM %s tol'ko dly razgovorov s dispet4erom, NE dly razgovorov mezhdu pilotami!
+pozhaluista ispolzuite %s tol'ko dly razgovorov s dispet4erom, NE dly razgovorov mezhdu pilotami!
 %s: Vi narushaete trenirovku kontroly vozdushnogo dvizheniya --> pozhaluista ispolzuite drugoi aeroport dlya nekontroliruemih poletov
 %s: Pozhaluista, ne na4inaite sessiu na polose, ili, kak minimum, o4istite ee srazu , ne vzletaite srazu zhe.
 Ustanovite na4alnuu poziciu EDDF v komandnoi stroke ili Wizard'е: --parkpos= B42..48, or A10..25, etc.

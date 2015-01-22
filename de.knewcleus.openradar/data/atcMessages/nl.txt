@@ -1,13 +1,13 @@
 Aan alle piloten:
 %s
 
-%s: Welkom in %s - ben je inkomend op %s ? FGCOM %s
-%s: Welkom in %s - Geef uw vliegplan aan bij de luchtverkeerdleiding, FGCOM %s
-%s: Radar contact op %3.0f nm, QNH %s, verwacht landingsbaan %s, FGCOM %s
+%s: Welkom in %s - ben je inkomend op %s? %s
+%s: Welkom in %s - Geef uw vliegplan aan bij de luchtverkeerdleiding, %s
+%s: Radar contact op %3.0f nm, QNH %s, verwacht landingsbaan %s, %s
 
 
 %s: U verlaat mijn luchtruim - U mag van frequentie wisselen - Goede reis!
-ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  FGCOM %s
+ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  %s
 
 
 %s: Motoren opstarten toegestaan
@@ -17,7 +17,7 @@ ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  FGCOM %s
 
 %s: Taxi in positie en stop, meld gereed voor vertrek
 %s: Houd startbaan richting, en klim naar:
-%s: wind uit %03.0f %2.0f kt, Klaar voor vertrek op baan:
+%s: wind %s, Klaar voor vertrek op baan:
 
 %s: Draai naar links, richting:
 %s: Draai naar rechts, richting:
@@ -27,11 +27,11 @@ ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  FGCOM %s
 
 %s: %3.0f nm van luchthaven, behoud richting totdat ILS indicatie zichtbaar is, u mag ILS volgen naar landingsbaan:
 %s: %3.0f nm van luchthaven, rapporteer landingsbaan in zicht
-%s: %3.0f nm van luchthaven, wind uit %03.0f %2.0f kt, u mag landen op:
+%s: %3.0f nm van luchthaven, wind %s, u mag landen op:
 %s: Welkome in %s -- verlaat landingsbaan:
 %s: taxi naar de Gate/Terminal:
 
-Gebruik FGCOM %s alleen indien u met de luchtverkeersleiding spreekt. Gebruik FGCOM NIET tussen piloten!!!
+Gebruik %s alleen indien u met de luchtverkeersleiding spreekt. Gebruik NIET tussen piloten!!!
 %s: U verstoord onze ATC (Air Traffic Control, Luchtverkeersleiding) training --> Gebruik alstublieft een andere luchthaven voor ongecontroleerd vliegen!
 %s: Start uw sessie NIET op een actieve baan - maak de baan direct vrij! - Niet opstijgen!!!!
 Zet de startpositie op bijvoorbeeld EHBK in de cmd-line of wizard: --parkpos= B42..48, or A10..25, enz om een start positie op te geven.

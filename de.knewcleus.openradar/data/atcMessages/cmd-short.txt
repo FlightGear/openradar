@@ -1,37 +1,37 @@
 (To All: empty)
 (Target: empty)
 
-<span style="color:rgb(48,97,48);">Welcome outside</span>
-<span style="color:rgb(48,97,48);">Welcome to the airport</span>
-<span style="color:rgb(48,97,48);">Radar contact + QNH + RW</span>
+<span style="color:rgb(48,97,48);">Welcome outside (.in)</span>
+<span style="color:rgb(48,97,48);">Welcome to the airport (.out)</span>
+<span style="color:rgb(48,97,48);">Radar contact + QNH + RW (.radar)</span>
 
-<span style="color:rgb(117,0,0);">Follow FlightPlan</span>
-<span style="color:rgb(117,0,0);">Leaving Area</span>
-ATIS
+<span style="color:rgb(117,0,0);">Follow FlightPlan (.own)</span>
+<span style="color:rgb(117,0,0);">Leaving Area (.end)</span>
+ATIS (.atis)
 Help Contact ATC
 
-<span style="color:rgb(116,69,23);">Start Up Engine</span>
-<span style="color:rgb(116,69,23);">Push Back</span>
-<span style="color:rgb(116,69,23);">Taxi To</span>
-<span style="color:rgb(116,69,23);">Hold Short</span>
+<span style="color:rgb(116,69,23);"><b>Start Up</b> Engine (.en)</span>
+<span style="color:rgb(116,69,23);"><b>Push Back</b> (.pb #)</span>
+<span style="color:rgb(116,69,23);"><b>Taxi</b> To (.tx #)</span>
+<span style="color:rgb(116,69,23);"><b>Hold Short</b> (.hs #)</span>
 
-<span style="color:rgb(48,97,48);">Line Up and wait on runway</span>
-<span style="color:rgb(48,97,48);">Maintain Hdg + Climb</span>
-<span style="color:rgb(48,97,48);">Take Off</span>
+<span style="color:rgb(48,97,48);"><b>Line Up</b> and wait on runway (.lw)</span>
+<span style="color:rgb(48,97,48);"><b>Maintain</b> Hdg + Climb (.mc #)</span>
+<span style="color:rgb(48,97,48);"><b>Take Off (.to #)</b></span>
 
-<span style="color:rgb(22,66,88);">left turn</span>
-<span style="color:rgb(22,66,88);">right turn</span>
-<span style="color:rgb(22,66,88);">climb</span>
-<span style="color:rgb(22,66,88);">descent</span>
-<span style="color:rgb(22,66,88);">reduce speed</span>
+<span style="color:rgb(22,66,88);"><b>left</b> turn (.tl #)</span>
+<span style="color:rgb(22,66,88);"><b>right</b> turn (.tr #)</span>
+<span style="color:rgb(22,66,88);"><b>climb</b> (.cm #)</span>
+<span style="color:rgb(22,66,88);"><b>descent</b> (.dm #)</span>
+<span style="color:rgb(22,66,88);"><b>reduce speed</b> (.rs #)</span>
 
-<span style="color:rgb(117,0,0);">ILS intercept clearance</span>
-<span style="color:rgb(117,0,0);">RW inSight</span>
-<span style="color:rgb(117,0,0);">Land</span>
-<span style="color:rgb(117,0,0);">Exit runway (left/right)</span>
-<span style="color:rgb(117,0,0);">Cleared to cross</span>
+<span style="color:rgb(117,0,0);"><b>ILS</b> intercept clearance (.ils #)</span>
+<span style="color:rgb(117,0,0);"><b>RW in sight</b> (.ris)</span>
+<span style="color:rgb(117,0,0);"><b>Land</b> (.lan #)</span>
+<span style="color:rgb(117,0,0);"><b>Exit</b> runway (left/right) (.vac #)</span>
+<span style="color:rgb(117,0,0);">Cleared to <b>cross</b> (.csr #)</span>
 
-FGCOM only for ATC
-uncontrolled flying
-do not start on RW
+FGCOM only for ATC (.chat)
+uncontrolled flying (.disturb)
+do not start on RW (.getoff)
 how to set startpos

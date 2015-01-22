@@ -252,6 +252,7 @@ public class RadioPanel extends JPanel {
             if(e.getKeyChar() == '\n') {
                 master.getAirportData().setAltRadioText(tfAltRadioText.getText());
                 master.getAirportData().storeAirportData(master);
+                master.getMpChatManager().requestFocusForInput();
                 e.consume();
             }
             if(tfAltRadioText.getText().length()>40) {

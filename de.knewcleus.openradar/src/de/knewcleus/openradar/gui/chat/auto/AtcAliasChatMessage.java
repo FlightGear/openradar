@@ -171,9 +171,9 @@ public class AtcAliasChatMessage {
         if(text.contains("<com_all>")) {
             String v;
             if(master.getRadioManager().getModels().isEmpty()) {
-                v="n/a";
+                v="";
             } else {
-                v = master.getRadioManager().getActiveFrequenciesForDisplay();
+                v = "; FGCOM "+master.getRadioManager().getActiveFrequenciesForDisplay();
             }
             if(master.getAirportData().isAltRadioTextEnabled()) {
                 v+="; "+master.getAirportData().getAltRadioText();

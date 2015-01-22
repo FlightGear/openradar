@@ -159,8 +159,31 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
      */
     public synchronized void sendChatMessage(String f, String message) {
         // chatQueue is synchronized itself
-        chatQueue.add(new OutgoingMessage(message));
+        while(message!=null) {
+            if(message.length()>128) {
+                // message too long, send next line
+                int sep = findSeparator(message);
+                String nextLine = message.substring(0,sep);
+                chatQueue.add(new OutgoingMessage(nextLine));
+                message = message.substring(sep).trim();
+            } else {
+                // message is short enough / send the rest
+                chatQueue.add(new OutgoingMessage(message.trim()));
+                message=null; // end while loop
+            }
+        }
         setFrequency(f);
+    }
+    
+
+    private int findSeparator(String message) {
+        String line = message.substring(0,128);
+        int sep = line.lastIndexOf(" ");
+        if(sep<100) {
+            // hard line break
+            sep=128;
+        }
+        return sep;
     }
 
     public synchronized void setFrequency(String f) {

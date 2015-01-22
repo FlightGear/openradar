@@ -17,7 +17,7 @@
 
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
-/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target,/sim/atc/wind-from-display,/environment/wind-speed-kt
+/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target,/openradar/metar/wind
 
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
@@ -27,7 +27,7 @@
 
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target,/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target,/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range
-/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target,/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range,/sim/atc/wind-from-display,/environment/wind-speed-kt
+/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target,/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target-range,/openradar/metar/wind
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target,/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-APname
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
 

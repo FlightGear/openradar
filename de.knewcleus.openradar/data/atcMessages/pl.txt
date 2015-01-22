@@ -1,13 +1,13 @@
 Do wszystkich pilotow:
 %s
 
-%s: Tu radar %s - Czy ladujesz w %s ? FGCOM %s
-%s: Tu radar %s - prosze o informacje o twoich zamiarach. FGCOM %s
-%s: Kontakt radarowy - %3.0f mil, QNH %s, aktywny pas %s, FGCOM %s
+%s: Tu radar %s - Czy ladujesz w %s? %s
+%s: Tu radar %s - prosze o informacje o twoich zamiarach. %s
+%s: Kontakt radarowy - %3.0f mil, QNH %s, aktywny pas %s, %s
 
 
 %s: Opuszczasz moja strefe kontroli - milego lotu.
-Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotliwosc FGCOM %s
+Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotliwosc %s
 
 
 %s: Zgoda na uruchomienie silnikow
@@ -17,7 +17,7 @@ Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotl
 
 %s: Zajmij pas, zglos gotowosc do startu.
 %s: Utrzymuj kurs, wejdz na wysokosc
-%s: Kierunek wiatru %03.0f z sila %2.0f, Zgoda na start z pasa:
+%s: Kierunek %s, Zgoda na start z pasa:
 
 %s: Zmien kurs w lewo na
 %s: Zmien kurs w prawo na
@@ -27,11 +27,11 @@ Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotl
 
 %s: Odleglosc %3.0f mil, utrzymuj kurs do przechwycenia sciezki podejscia, zgoda na podejscie ILS na pas
 %s: Odleglosc %3.0f mil, zglos widocznosc pasa.
-%s: Odleglosc %3.0f mil, kierunek wiatru %03.0f z sila %2.0f, zgoda na ladowanie na pasie:
+%s: Odleglosc %3.0f mil, kierunek %s, zgoda na ladowanie na pasie:
 %s: Mile widziany w %s -- Zwolnij pas skrecajac w
 %s: Koluj do stanowiska
 
-Prosze uzywac FGCOM %s tylko do komunikacji z wieza, nie do rozmow pomiedzy pilotami!
+Prosze uzywac %s tylko do komunikacji z wieza, nie do rozmow pomiedzy pilotami!
 %s: Przeszkadzasz w naszym treningu Kontroli Ruchu Powietrznego --> prosze uzyj innego lotniska do swobodnego lotu
 %s: Prosze nie rozpoczynaj swojej sesji na aktywnym pasie lub zwolnij go jak najszybciej - nie startuj bezposrednio!
 Ustaw pozycje staryowa np. dla EDDF w cmd-line lub oknie programu: --parkpos=B45 or A10..25, B42..48, etc.

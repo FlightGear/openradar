@@ -180,7 +180,7 @@ public class MetarReader implements Runnable {
             } catch (InterruptedException e) {
             }
             synchronized(this) {
-                metars.clear();
+                //metars.clear();
                 for(String code : new ArrayList<String>(activeWeatherStationList)) {
                     if(code.startsWith("_")) {
                         activeWeatherStationList.remove(code);
