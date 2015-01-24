@@ -13,6 +13,7 @@ Contact-ATC-Aide: pour ARRIVEE touche: "-">>"3">>"3">>"3"  pour DEPART touche: "
 %s: Mise en route moteur approuvee
 %s: Repoussage approuve
 %s: Roulez jusqu'au point d'arret piste :
+
 %s: Maintenez votre position avant la piste :
 
 %s: Roulez au point d'arret piste et rappelez quand pret au depart

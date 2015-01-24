@@ -131,6 +131,7 @@ public class HandoverTargetDialog extends JDialog {
         pnlHandoverAtcs.setDropTarget(new HandoverDropTarget());
 
         doLayout();
+        pack();
     }
 
     private void reloadAtcs() {

@@ -13,6 +13,7 @@ ATIS en %s a %2.0f ft: QNH %s  viento %3.0f. Pista en uso %s  %s
 %s: Autorizado a Arrancar Motores
 %s: Autorizado a Remolcado
 %s: Autorizado Rodaje a Pista:
+
 %s: Mantenga Punto de Espera Pista:
 
 %s: Entre en pista Alinie y Mantenga espera, informe cuando este listo para Salir

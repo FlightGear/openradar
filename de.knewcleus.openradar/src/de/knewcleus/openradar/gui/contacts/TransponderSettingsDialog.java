@@ -251,6 +251,7 @@ public class TransponderSettingsDialog extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlSquawk.add(tfSquawkToIFR, gridBagConstraints);
         
+        pack();
     }
 
     public void show(MouseEvent e) {

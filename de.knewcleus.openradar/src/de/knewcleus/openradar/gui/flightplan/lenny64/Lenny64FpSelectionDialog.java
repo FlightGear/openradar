@@ -164,7 +164,7 @@ public class Lenny64FpSelectionDialog extends JDialog  implements FocusListener 
             pnlMessages.add(lb, gridBagConstraints);
         }
         pnlMessages.setOpaque(false);
-
+        pack();
         doLayout();
     }
     

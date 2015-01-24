@@ -13,6 +13,7 @@ ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"
 %s: Cleared for engine startup, please indicate planned destination
 %s: Cleared to push back facing:
 %s: Cleared to taxi to holding-point, runway:
+%s: Cleared to cross runway:
 %s: Hold short rwy:
 
 %s: Line up and wait on runway, report when ready for departure
@@ -29,7 +30,7 @@ ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"
 %s: %3.0f mi out, report when runway in sight
 %s: %3.0f mi out, wind %s, cleared to land runway:
 %s: Welcome to %s -- exit runway to the:
-%s: Cleared to cross runway:
+%s: Move to Gate/Terminal:
 
 Please use %s only to talk to ATC, NOT to chat between airmen!
 %s: You are disturbing our ATC training --> please use another airport for uncontrolled flying

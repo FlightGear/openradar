@@ -331,6 +331,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPnlPrivateComment.add(spPrivateDetails, gridBagConstraints);
+        
+        pack();
     }
 
     private void initContactData(JPanel jPnlContact) {

@@ -157,7 +157,7 @@ public class AtcMessageDialog extends JDialog {
             }
         }
         pnlMessages.setOpaque(false);
-
+        pack();
         doLayout();
     }
 
@@ -196,8 +196,9 @@ public class AtcMessageDialog extends JDialog {
             p = new Point2D.Double(p.getX(), maxBounds.getHeight()-getHeight() - lowerDistanceToScreenBorder);
         }
         setLocation(new Point((int) p.getX(), (int) p.getY()));
-        setVisible(true);
+
         invalidate();
+        setVisible(true);
     }
 
     private class TextMouseListener extends MouseAdapter {

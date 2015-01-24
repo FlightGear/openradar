@@ -150,6 +150,7 @@ public class MetarSettingsDialog extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(8, 4, 4, 8);
         add(tfAddWeatherStation, gridBagConstraints);
 
+        pack();
     }
 
     public void show(MouseEvent e) {

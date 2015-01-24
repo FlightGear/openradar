@@ -13,6 +13,7 @@ ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  %s
 %s: Motoren opstarten toegestaan
 %s: Terug duwen toegestaan
 %s: Permissie om te taxiën naar
+
 %s: Wacht bij baan:
 
 %s: Taxi in positie en stop, meld gereed voor vertrek

@@ -13,6 +13,7 @@ Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotl
 %s: Zgoda na uruchomienie silnikow
 %s: Zgoda na wypychanie
 %s: Zgoda na kolowanie na pas:
+
 %s: Zajmij punkt przed pasem:
 
 %s: Zajmij pas, zglos gotowosc do startu.

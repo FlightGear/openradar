@@ -13,6 +13,7 @@ Aiuto contatto ATC: tasti per l'ARRIVO: "-">>"3">>"3">>"3"  tasti per la PARTENZ
 %s: Autorizzato alla messa in moto, indichi la destinazione pianificata
 %s: Autorizzato al push back rivolti a:
 %s: Autorizzato al rullaggio al punto di attesa pista:
+%s: Autorizzato ad attraversare la pista:
 %s: Attenda vicino alla pista:
 
 %s: Si allinei sulla pista, riporti pronto a decollare
@@ -29,7 +30,7 @@ Aiuto contatto ATC: tasti per l'ARRIVO: "-">>"3">>"3">>"3"  tasti per la PARTENZ
 %s: A %3.0f miglia, riporti pista visibile
 %s: A %3.0f miglia, vento %s, autorizzato all'atterraggio pista:
 %s: Benvenuto a %s -- liberi la pista sulla:
-%s: Autorizzato ad attraversare la pista:
+
 
 Utilizzi %s solo per parlare con l'ATC, NON per parlare tra piloti!
 %s: Sta disturbando il nostro training ATC --> utilizzi un altro aeroporto per volare in condizioni non controllate

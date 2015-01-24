@@ -721,6 +721,7 @@ public class RunwaySettingsDialog extends JDialog {
         jPnlVectoring.add(space4, gridBagConstraints);
 
         doLayout();
+        pack();
     }
 
     public void showData(String rwCode) {

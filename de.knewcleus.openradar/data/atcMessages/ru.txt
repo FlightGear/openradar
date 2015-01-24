@@ -13,6 +13,7 @@ ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"
 %s: Razreshau start dvigatelei
 %s: Razreshau buksirovku
 %s: Razreshau rulezhku na polosu:
+
 %s: Budte gotovi viehat' na polosu:
 
 %s: Zanimaete poziciu, dolozhite o gotovnosti k vzletu
@@ -28,8 +29,8 @@ ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"
 %s: %3.0f mil' do polosi, sohranyite napravlenie do zahvata glissadi, razreshau zahod na posadku po KGS:
 %s: %3.0f mil' do polosi, dolozhite o vizualnom kontakte
 %s: %3.0f mil' do polosi, veter %s, razreshau posadku na polosu:
-%s: viezd %s polosi:
 %s: Dobro pozhalovat' v %s - svernite s vzletno-posado4noi polosi:
+
 
 pozhaluista ispolzuite %s tol'ko dly razgovorov s dispet4erom, NE dly razgovorov mezhdu pilotami!
 %s: Vi narushaete trenirovku kontroly vozdushnogo dvizheniya --> pozhaluista ispolzuite drugoi aeroport dlya nekontroliruemih poletov

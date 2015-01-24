@@ -13,6 +13,7 @@ A todos os pilotos:
 %s: Ordem para ligar os motores
 %s: Ordem para marcha atras
 %s: Ordem para se deslocar para a pista:
+
 %s: Aguarde a entrada da pista:
 
 %s: Va ate a posicao de arranque e aguarde. Avise quando estiver pronto para partir.

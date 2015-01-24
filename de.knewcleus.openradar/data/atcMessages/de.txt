@@ -13,6 +13,7 @@ An alle Piloten:
 %s: Freigabe zum Starten der Motoren, bitte geben Sie Ihr geplantes Ziel an
 %s: Freigabe zum Zuruecksetzen fuer Richtung:
 %s: Freigabe zur Landebahn:
+%s: Freigabe zum Ueberqueren von RW:
 %s: Halten Sie vor dem Eingang zur Runway:
 
 %s: Rollen Sie in Startposition, Ausrichten etc. Melden Sie wenn fertig zum Start

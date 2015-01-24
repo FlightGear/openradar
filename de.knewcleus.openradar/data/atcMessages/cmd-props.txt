@@ -14,6 +14,7 @@
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
+/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
 
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
 /sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target
