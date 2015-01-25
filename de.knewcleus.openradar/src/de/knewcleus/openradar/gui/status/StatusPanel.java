@@ -250,7 +250,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 0);
         weatherPanel.add(lbFlightConditions, gridBagConstraints);
 
         lbWind.setForeground(Palette.LIGHTBLUE);
@@ -262,7 +262,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 0);
         weatherPanel.add(lbWind, gridBagConstraints);
 
         lbPressure.setForeground(Palette.DESKTOP_TEXT);
@@ -274,7 +274,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 10, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 0);
         weatherPanel.add(lbPressure, gridBagConstraints);
 
         lbVisibility.setForeground(Palette.DESKTOP_TEXT);
