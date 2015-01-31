@@ -4,11 +4,10 @@ A tous les pilotes:
 %s: Bienvenue dans la region de %s - etes-vous en approche de %s? %s
 %s: Bienvenue a %s - Merci d'informez le controleur de vos intentions, %s
 %s: Contact radar %3.0f nm, QNH %s, piste en service %s, %s
-
-
 %s: Vous quittez mon espace aerien - vous pouvez quitter la frequence - bon vol
 ATIS de %s sur %2.0f ft: QNH %s, vent %s, piste(s) en service %s,  %s
 Contact-ATC-Aide: pour ARRIVEE touche: "-">>"3">>"3">>"3"  pour DEPART touche: "-">>"3">>"6"
+
 
 %s: Mise en route moteur approuvee
 %s: Repoussage approuve
@@ -30,7 +29,6 @@ Contact-ATC-Aide: pour ARRIVEE touche: "-">>"3">>"3">>"3"  pour DEPART touche: "
 %s: %3.0f nm, rappelez quand la piste est en vue
 %s: A %3.0f nm, vent %s, autorise a atterrir piste:
 %s: Bienvenue a %s -- degagez la piste par la:
-%s: Roulez vers Porte/Terminal:
 
 SVP utilisez %s seulement pour communiquer avec l'ATC, et PAS pour discuter entre pilotes!
 %s: Vous perturbez l'entrainement ATC (Air Traffic Control) --> SVP pour les vols non controles, utilisez un autre aeroport

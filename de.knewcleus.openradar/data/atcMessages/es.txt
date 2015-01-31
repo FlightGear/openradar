@@ -4,10 +4,9 @@ A todos los hombres del aire:
 %s: Bienvenido a %s - ¿  vuela con destino a %s? %s
 %s: Bienvenido a %s - por favor informe al ATC sobre sus intenciones, %s
 %s: Contacto Radar a %3.0f mi, QNH %s, espere pista: %s, %s
-
-
 %s: Esta abandonando mi area - Autorizado a cambiar frecuencia - Que tenga buen viaje
 ATIS en %s a %2.0f ft: QNH %s  viento %3.0f. Pista en uso %s  %s
+
 
 
 %s: Autorizado a Arrancar Motores
@@ -30,7 +29,6 @@ ATIS en %s a %2.0f ft: QNH %s  viento %3.0f. Pista en uso %s  %s
 %s: se encuentra a %3.0f millas informe con pista a la vista
 %s: esta a %3.0f millas , viento %s, autorizado a aterrizar pista:
 %s: Bienvenido a %s -- abandone la pista hacia la:
-%s: ruede a punto Terminal:
 
 Por favor usa solo %s para hablar con el ATC, los hombres del aire no chatean!
 %s: Sin darte cuenta estas perturbando nuestro entrenamiento ATC (Air Traffic Control) --> por favor usa otro Aeropuerto para vuelos no controlados

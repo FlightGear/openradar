@@ -5,7 +5,6 @@ A todos os pilotos:
 %s: Bem-vindo a %s, Por favor informe a ATC das suas intencoes, %s
 %s: Contacto do radar a %3.0f mi de distancia, QNH %s, Esta a abandonar a nossa area, %s
 
-
 %s: Pode trocar a frequencia - Boa viagem!
 
 
@@ -30,7 +29,6 @@ A todos os pilotos:
 
 %s: %3.0f mi Distancia, Vento %s, Ordem para aterrar na pista:
 %s: Boas-vindas in %s -- Abandone a pista para o:
-%s: Va ate a porta e\ou terminal:
 
 Por favor use %s apenas para falar com o ATC - NAO entre pilotos!
 %s: Voce esta a interferir com o nosso ATC (Air Traffic Control) Simulacao --> Por favor utilize um aeroporto alternativo para o voo descontrolado!

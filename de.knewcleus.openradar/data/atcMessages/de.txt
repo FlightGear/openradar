@@ -4,7 +4,6 @@ An alle Piloten:
 %s: Willkommen im Gebiet: %s - beabsichtigen Sie in %s zu landen? %s
 %s: Willkommen in %s, bitte informieren Sie ATC ueber Ihre Plaene, %s
 %s: Radar-Kontakt in %3.0f mi Entfernung, Hoehenmesser %s, planen Sie mit Landebahn %s, %s
-
 %s: Folgen Sie Ihrem Flugplan - Radar-Ueberwachung bleibt aktiv
 %s: Sie verlassen meine Zone - Sie koennen nun die Frequenz wechseln - RADAR Service wird beendet - Guten Flug!
 
@@ -30,7 +29,6 @@ An alle Piloten:
 %s: %3.0f mi entfernt, melden sie wenn "Landebahn in Sicht"
 %s: %3.0f mi entfernt, Wind %s, Freigabe zur Landung auf RW:
 %s: Willkommen in %s -- Verlassen Sie die Landbahn nach:
-%s: Rollen Sie zu Gate und/oder Terminal:
 
 Bitte benutzen Sie %s nur fuer Gespräche mit ATC - NICHT zwischen Piloten!
 %s: Sie stoeren unsere ATC Simulation --> bitte benutzen Sie einen anderen Flughafen fuer unkontrolliertes Fliegen!

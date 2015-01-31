@@ -5,10 +5,9 @@ Do wszystkich pilotow:
 %s: Tu radar %s - prosze o informacje o twoich zamiarach. %s
 %s: Kontakt radarowy - %3.0f mil, QNH %s, aktywny pas %s, %s
 
-
 %s: Opuszczasz moja strefe kontroli - milego lotu.
-Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotliwosc %s
 
+Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotliwosc %s
 
 %s: Zgoda na uruchomienie silnikow
 %s: Zgoda na wypychanie
@@ -30,7 +29,6 @@ Informacja ATIS dla %s na %2.0f ft: QNH %s  wiatru %s, aktywny pas: %s  Czestotl
 %s: Odleglosc %3.0f mil, zglos widocznosc pasa.
 %s: Odleglosc %3.0f mil, kierunek %s, zgoda na ladowanie na pasie:
 %s: Mile widziany w %s -- Zwolnij pas skrecajac w
-%s: Koluj do stanowiska
 
 Prosze uzywac %s tylko do komunikacji z wieza, nie do rozmow pomiedzy pilotami!
 %s: Przeszkadzasz w naszym treningu Kontroli Ruchu Powietrznego --> prosze uzyj innego lotniska do swobodnego lotu

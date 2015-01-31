@@ -4,12 +4,11 @@
 <span style="color:rgb(48,97,48);">Welcome outside (.in)</span>
 <span style="color:rgb(48,97,48);">Welcome to the airport (.out)</span>
 <span style="color:rgb(48,97,48);">Radar contact + QNH + RW (.radar)</span>
-
 <span style="color:rgb(117,0,0);">Follow FlightPlan (.own)</span>
 <span style="color:rgb(117,0,0);">Leaving Area (.end)</span>
+
 ATIS (.atis)
 Help Contact ATC
-
 <span style="color:rgb(116,69,23);"><b>Start Up</b> Engine (.en)</span>
 <span style="color:rgb(116,69,23);"><b>Push Back</b> (.pb #)</span>
 <span style="color:rgb(116,69,23);"><b>Taxi</b> To (.tx #)</span>
@@ -30,7 +29,6 @@ Help Contact ATC
 <span style="color:rgb(117,0,0);"><b>RW in sight</b> (.ris)</span>
 <span style="color:rgb(117,0,0);"><b>Land</b> (.lan #)</span>
 <span style="color:rgb(117,0,0);"><b>Exit</b> runway (left/right) (.vac #)</span>
-<span style="color:rgb(117,0,0);">Move to <b>terminal</b> (.csr #)</span>
 
 FGCOM only for ATC (.chat)
 uncontrolled flying (.disturb)

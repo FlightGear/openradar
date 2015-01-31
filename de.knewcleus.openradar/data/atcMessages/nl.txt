@@ -5,10 +5,9 @@ Aan alle piloten:
 %s: Welkom in %s - Geef uw vliegplan aan bij de luchtverkeerdleiding, %s
 %s: Radar contact op %3.0f nm, QNH %s, verwacht landingsbaan %s, %s
 
-
 %s: U verlaat mijn luchtruim - U mag van frequentie wisselen - Goede reis!
-ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  %s
 
+ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  %s
 
 %s: Motoren opstarten toegestaan
 %s: Terug duwen toegestaan
@@ -30,7 +29,6 @@ ATIS op %s, hoogte %2.0f ft, QNH %s, wind %s, actieve baan/banen %s,  %s
 %s: %3.0f nm van luchthaven, rapporteer landingsbaan in zicht
 %s: %3.0f nm van luchthaven, wind %s, u mag landen op:
 %s: Welkome in %s -- verlaat landingsbaan:
-%s: taxi naar de Gate/Terminal:
 
 Gebruik %s alleen indien u met de luchtverkeersleiding spreekt. Gebruik NIET tussen piloten!!!
 %s: U verstoord onze ATC (Air Traffic Control, Luchtverkeersleiding) training --> Gebruik alstublieft een andere luchthaven voor ongecontroleerd vliegen!
