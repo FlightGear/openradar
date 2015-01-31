@@ -37,8 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
+import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 
 public class Track implements ITrack {
+    private final TargetStatus identifier;
 	protected final static int historySize = 1000;//2000;
 	protected final ArrayList<IRadarDataPacket> history = new ArrayList<IRadarDataPacket>(historySize);
 	protected int headIndex = historySize-1;
@@ -49,6 +51,14 @@ public class Track implements ITrack {
 	protected int age = 0;
     private volatile int tailOffset=0;
 
+    public Track(TargetStatus identifier) {
+        this.identifier = identifier;
+    }
+    
+    public TargetStatus getIdentifier() {
+        return identifier;
+    }
+    
 	@Override
 	public synchronized IRadarDataPacket getCurrentState() {
 		assert(size>0);

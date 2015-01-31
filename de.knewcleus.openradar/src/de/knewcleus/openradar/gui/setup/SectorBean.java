@@ -47,15 +47,16 @@ public class SectorBean {
     private double magneticDeclination;
     private boolean sectorDownloaded = false;
 
-    public SectorBean(String airportCode, String airportDescription, boolean sectorDownloaded) {
+    public SectorBean(String airportCode, String airportDescription,  Point2D position, boolean sectorDownloaded) {
         this.airportCode=airportCode;
         this.airportDescription= airportDescription;
+        this.position = position;
         this.sectorDownloaded = sectorDownloaded;
     }
 
     public SectorBean(String airportCode, String airportDescription, Point2D position, double magneticDeclination, boolean sectorDownloaded) {
-        this(airportCode,airportDescription,sectorDownloaded);
-        this.position=position;
+        this(airportCode,airportDescription,position,sectorDownloaded);
+        this.position=position!=null?position:this.position;
         this.magneticDeclination=magneticDeclination;
     }
 

@@ -54,7 +54,11 @@ public class RadarDataPacket implements IRadarDataPacket {
 		trueCourse=(float)targetStatus.getTrueCourse();
 	}
 	
-	@Override
+    public TargetStatus getTargetStatus() {
+        return targetStatus;
+    }
+
+    @Override
 	public Object getTrackingIdentifier() {
 		return targetStatus;
 	}

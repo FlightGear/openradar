@@ -3,32 +3,28 @@
  *
  * This file is part of OpenRadar.
  *
- * OpenRadar is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
+ * OpenRadar is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
  *
- * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with
- * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with OpenRadar. If not, see
+ * <http://www.gnu.org/licenses/>.
  *
  * Diese Datei ist Teil von OpenRadar.
  *
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
- * General Public License, wie von der Free Software Foundation, Version 3 der
- * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU General Public License, wie von der Free
+ * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
- * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
- * Public License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne
+ * die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
+ * License für weitere Details.
  *
- * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
- * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+ * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
+ * <http://www.gnu.org/licenses/>.
  */
 package de.knewcleus.openradar.gui.setup;
 
@@ -95,8 +91,8 @@ public class SetupController {
     private static Logger log = LogManager.getLogger(SetupController.class);
 
     public SetupController(String propertiesFile, String autoStartAirport) {
-        this.propertiesFilename=propertiesFile;
-        this.autoStartAirport=autoStartAirport;
+        this.propertiesFilename = propertiesFile;
+        this.autoStartAirport = autoStartAirport;
         data = new AirportData();
         parseSectorDir(); // fills existing airport list
         showDialog();
@@ -111,7 +107,8 @@ public class SetupController {
         mapExistingSectors.clear();
         mapExistingSectors = new TreeMap<String, SectorBean>();
         File dataDir = new File("data");
-        if(!dataDir.exists()) dataDir.mkdir();
+        if (!dataDir.exists())
+            dataDir.mkdir();
         File[] content = dataDir.listFiles();
         for (File f : content) {
             if (f.isDirectory() && f.getName().length() == 4) {
@@ -123,22 +120,22 @@ public class SetupController {
                 if (propertyFile.exists()) {
                     Properties p = loadSectorProperties(airportCode);
                     airportName = p.getProperty("airportName", "");
-                    if(p.getProperty("lat")!=null && p.getProperty("lon")!=null) {
+                    if (p.getProperty("lat") != null && p.getProperty("lon") != null) {
                         double lon = Double.parseDouble(p.getProperty("lon", ""));
                         double lat = Double.parseDouble(p.getProperty("lat", ""));
                         position = new Point2D.Double(lon, lat);
                     }
-                 // not needed anymore, replaced by fgfs model
-//                  if(p.getProperty("magneticDeclination")==null) {
-//                      log.severe("Error: Property 'magneticDeclination' not found in "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
-//                      System.exit(99);
-//                  }
-//                  magneticDeclination = Double.parseDouble(p.getProperty("magneticDeclination", "0"));
+                    // not needed anymore, replaced by fgfs model
+                    // if(p.getProperty("magneticDeclination")==null) {
+                    // log.severe("Error: Property 'magneticDeclination' not found in "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
+                    // System.exit(99);
+                    // }
+                    // magneticDeclination = Double.parseDouble(p.getProperty("magneticDeclination", "0"));
                 }
                 SectorBean sb = new SectorBean(airportCode, airportName, position, magneticDeclination, true);
                 mapExistingSectors.put(airportCode, sb);
-                if(sb.getAirportCode().equalsIgnoreCase(autoStartAirport)) {
-                    preselectedAirport=sb;
+                if (sb.getAirportCode().equalsIgnoreCase(autoStartAirport)) {
+                    preselectedAirport = sb;
                 }
             }
         }
@@ -169,17 +166,13 @@ public class SetupController {
             JComponent jSource = (JComponent) e.getSource();
             if (jSource.getName().equals("SearchButton") || jSource.getName().equals("SearchBox")) {
                 searchAirport(setupDialog.getSearchTerm());
-            } else
-            if (jSource.getName().equals("ShowExistingButton")) {
+            } else if (jSource.getName().equals("ShowExistingButton")) {
                 parseSectorDir();
-            } else
-            if (jSource.getName().equals("DownloadButton")) {
+            } else if (jSource.getName().equals("DownloadButton")) {
                 downloadSector(setupDialog.getSelectedSector());
-            } else
-            if (jSource.getName().equals("StartButton")) {
+            } else if (jSource.getName().equals("StartButton")) {
                 startApplication();
-            } else
-            if (jSource.getName().equals("CheckButton")) {
+            } else if (jSource.getName().equals("CheckButton")) {
                 setupDialog.readInputs(data);
                 checkSettings();
             }
@@ -194,7 +187,7 @@ public class SetupController {
 
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            if(e.getValueIsAdjusting()==false) {
+            if (e.getValueIsAdjusting() == false) {
                 setupDialog.sectorSelected(data);
             }
         }
@@ -207,11 +200,11 @@ public class SetupController {
     private class SectorListMouseListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(e.getClickCount()==2) {
+            if (e.getClickCount() == 2) {
                 @SuppressWarnings("unchecked")
-                JList<SectorBean> jList = (JList<SectorBean>)e.getSource();
+                JList<SectorBean> jList = (JList<SectorBean>) e.getSource();
                 SectorBean sb = jList.getSelectedValue();
-                if(sb.isSectorDownloaded()) {
+                if (sb.isSectorDownloaded()) {
                     startApplication();
                 } else {
                     downloadSector(setupDialog.getSelectedSector());
@@ -241,17 +234,36 @@ public class SetupController {
                         name.append(st.nextToken());
                     }
                     if(airportCode.toUpperCase().contains(searchTerm.toUpperCase()) || name.toString().toUpperCase().contains(searchTerm.toUpperCase())) {
-                        if(!mapExistingSectors.containsKey(airportCode)) {
-                            // the base for a new download
-                            SectorBean sb = new SectorBean(airportCode, name.toString(), mapExistingSectors.containsKey(airportCode));
-                            mapFindings.put(airportCode, sb);
-                        } else {
-                            // add the existing
-                            mapFindings.put(airportCode, mapExistingSectors.get(airportCode));
+                        
+                        // seach runway
+                        line = ir.readLine();
+                        while(line!=null) {
+                            if(line.startsWith("100 ")) {
+                                Point2D position = getRunwayPosition(line);
+                                if(!mapExistingSectors.containsKey(airportCode)) {
+                                    // the base for a new download
+                                    SectorBean sb = new SectorBean(airportCode, name.toString(), position, mapExistingSectors.containsKey(airportCode));
+                                    mapFindings.put(airportCode, sb);
+                                } else {
+                                    // add the existing
+                                    mapFindings.put(airportCode, mapExistingSectors.get(airportCode));
+                                }
+                            }
+                            else if(line.startsWith("1 ")) {
+                                // next airport
+                                break;
+                            }
+                            // next line
+                            line = ir.readLine();
                         }
+                    } else {
+                        // airport name did not match
+                        line = ir.readLine();
                     }
                 }
-                line = ir.readLine();
+                if(!line.startsWith("1 ")) {
+                    line = ir.readLine();
+                }
             }
             searchResultsModel.clear();
             for (SectorBean sb : mapFindings.values()) {
@@ -275,6 +287,45 @@ public class SetupController {
 
     }
 
+    /**
+     * Parses the line and extracts the position
+     * 
+     * @param line
+     * @return
+     */
+    private Point2D getRunwayPosition(String line) {
+        Point2D result;
+        
+        StringTokenizer st = new StringTokenizer(line," \t");
+        st.nextElement(); // 1 code "100"
+        st.nextElement(); // 2
+        st.nextElement(); // 3
+        st.nextElement(); // 4
+        st.nextElement(); // 5
+        st.nextElement(); // 6
+        st.nextElement(); // 7
+        st.nextElement(); // 8
+        st.nextElement(); // 9
+        float lon1 = Float.parseFloat(st.nextToken());
+        float lat1 = Float.parseFloat(st.nextToken());
+        try {
+            st.nextElement(); // 1
+            st.nextElement(); // 2
+            st.nextElement(); // 3
+            st.nextElement(); // 4
+            st.nextElement(); // 5
+            st.nextElement(); // 6
+            st.nextElement(); // 7
+            float lon2 = Float.parseFloat(st.nextToken());
+            float lat2 = Float.parseFloat(st.nextToken());
+            result = new Point2D.Float((lat1+lat2)/2, (lon1+lon2)/2);
+        } catch(Exception e) {
+            // one way runway
+            result = new Point2D.Float(lat1, lon1);
+        }
+        return result;
+    }
+
     private void checkSettings() {
         setupDialog.readInputs(data);
     }
@@ -286,7 +337,7 @@ public class SetupController {
             SectorCreator.downloadData(data, setupDialog);
             parseSectorDir(); // to find results
         } catch (IOException e) {
-            log.error("Error while downloading sector!",e);
+            log.error("Error while downloading sector!", e);
         }
     }
 
@@ -299,7 +350,7 @@ public class SetupController {
                 manager.start(setupDialog);
                 setupDialog.dispose();
             } catch (Exception e) {
-                log.error("Error while starting application!",e);            
+                log.error("Error while starting application!", e);
             }
         }
     }
@@ -308,9 +359,9 @@ public class SetupController {
         final File inputFile = new File("data/AptNav.zip");
         zif = new ZipFile(inputFile);
         Enumeration<? extends ZipEntry> entries = zif.entries();
-        while(entries.hasMoreElements()) {
+        while (entries.hasMoreElements()) {
             ZipEntry zipentry = entries.nextElement();
-            if(zipentry.getName().equals("apt.dat")) {
+            if (zipentry.getName().equals("apt.dat")) {
                 return new InputStreamReader(zif.getInputStream(zipentry));
             }
         }
@@ -354,15 +405,15 @@ public class SetupController {
     }
 
     public String getPropertiesFile() {
-        if(propertiesFilename==null) {
+        if (propertiesFilename == null) {
             propertiesFilename = "user.properties";
         }
 
         return propertiesFilename;
     }
-    
+
     // FGCOM 3
-    
+
     /**
      * Loads the radio frequencies from fgcoms positions file.
      *
@@ -377,69 +428,71 @@ public class SetupController {
             ir = new BufferedReader(openFgComPositionsTxt(data));
             // now search the airport
             String line = ir.readLine();
-            while(line!=null) {
-                StringTokenizer st = new StringTokenizer(line,",");
+            while (line != null) {
+                StringTokenizer st = new StringTokenizer(line, ",");
                 String ac = st.nextToken().trim();
-                
-                if(ac!=null && airportCode.equals(ac)) {
+
+                if (ac != null && airportCode.equals(ac)) {
                     String freq = st.nextToken();
                     st.nextToken(); // lat
                     st.nextToken(); // lon
                     String code = st.nextToken();
-                    if(!code.contains("ATIS") && frequencyIsNotKnownYet(radioFrequencies,freq)) {
+                    if (!code.contains("ATIS") && frequencyIsNotKnownYet(radioFrequencies, freq)) {
                         radioFrequencies.add(new RawFrequency(code, freq));
                     }
                 }
                 line = ir.readLine();
             }
         } catch (IOException e) {
-            log.error("Error while reading positions.txt zipfile!",e);
+            log.error("Error while reading positions.txt zipfile!", e);
         } finally {
-            if(fgcomPositionsFile!=null) {
+            if (fgcomPositionsFile != null) {
                 try {
                     fgcomPositionsFile.close();
-                } catch (IOException e) { }
+                } catch (IOException e) {
+                }
             }
-            if(ir!=null) {
+            if (ir != null) {
                 try {
                     ir.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
             }
         }
         return radioFrequencies;
-            
+
     }
 
     private static boolean frequencyIsNotKnownYet(Set<RawFrequency> radioFrequencies, String freq) {
         BigDecimal newFreq = new BigDecimal(freq);
-        for(RawFrequency rf : radioFrequencies) {
+        for (RawFrequency rf : radioFrequencies) {
             try {
                 BigDecimal existingFreq = new BigDecimal(rf.getFrequency());
                 BigDecimal existingPlus = existingFreq.add(new BigDecimal("0.005"));
                 BigDecimal existingMinus = existingFreq.add(new BigDecimal("-0.005"));
-                if(newFreq.compareTo(existingPlus) == 0 || newFreq.compareTo(existingMinus) == 0) {
+                if (newFreq.compareTo(existingPlus) == 0 || newFreq.compareTo(existingMinus) == 0) {
                     return false;
                 }
             } catch (Exception e) {
                 return true;
             }
-            
+
         }
         return true;
     }
 
     private static Reader openFgComPositionsTxt(AirportData data) throws IOException {
         String pathToFgComExec = data.getFgComPath();
-        if (data.getFgComMode()==FgComMode.Auto) {
+        if (data.getFgComMode() == FgComMode.Auto) {
             // AUTO mode
-            pathToFgComExec = System.getProperty("user.dir")+File.separator+"fgcom"+File.separator+"bin";
+            pathToFgComExec = System.getProperty("user.dir") + File.separator + "fgcom" + File.separator + "bin";
         }
         final File inputFile = new File(FgComController.getFgComPositionsPath(data, pathToFgComExec));
-        if(!inputFile.exists()) {
-            log.error("FgCcom frequency file not found at "+inputFile.getAbsolutePath());
-            throw new FileNotFoundException("FgCcom frequency file not found at "+inputFile.getAbsolutePath());
+        if (!inputFile.exists()) {
+            log.error("FgCcom frequency file not found at " + inputFile.getAbsolutePath());
+            throw new FileNotFoundException("FgCcom frequency file not found at " + inputFile.getAbsolutePath());
         }
-        fgcomPositionsFile = new FileReader(inputFile); 
+        fgcomPositionsFile = new FileReader(inputFile);
         return fgcomPositionsFile;
     }
 

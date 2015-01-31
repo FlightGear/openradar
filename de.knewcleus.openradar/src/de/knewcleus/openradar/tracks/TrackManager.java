@@ -33,20 +33,22 @@
  */
 package de.knewcleus.openradar.tracks;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import de.knewcleus.openradar.notify.Notifier;
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
 import de.knewcleus.openradar.radardata.IRadarDataProvider;
 import de.knewcleus.openradar.radardata.IRadarDataRecipient;
+import de.knewcleus.openradar.radardata.fgmp.RadarDataPacket;
+import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 import de.knewcleus.openradar.tracks.TrackLifetimeNotification.LifetimeState;
 
 public class TrackManager extends Notifier implements ITrackManager, IRadarDataRecipient {
-	protected final Map<Object, Track> trackMap=new HashMap<Object, Track>();
+	protected final Map<TargetStatus, Track> trackMap=Collections.synchronizedMap(new HashMap<TargetStatus, Track>());
 	/**
 	 * The length of the time in milliseconds to wait between the last signal and
 	 * the assumption of loss of target.
@@ -60,23 +62,24 @@ public class TrackManager extends Notifier implements ITrackManager, IRadarDataR
 	protected long trackRetirementTimeoutMsecs = 15*1000; // 30 * 60 * 1000;
 
 	@Override
-	public void acceptRadarData(IRadarDataProvider provider, IRadarDataPacket radarData) {
-		final Object trackIdentifier = radarData.getTrackingIdentifier();
+	public synchronized void acceptRadarData(IRadarDataProvider provider, IRadarDataPacket radarData) {
+		final TargetStatus trackIdentifier = ((RadarDataPacket)radarData).getTargetStatus();
 		final Track track;
 		final boolean isNewTrack = !trackMap.containsKey(trackIdentifier);
 		if (isNewTrack) {
-			track = new Track();
+			track = new Track(trackIdentifier);
 			trackMap.put(trackIdentifier, track);
 		} else {
 			track = trackMap.get(trackIdentifier);
 		}
-		
+
 		track.addState(radarData);
 		notify(new TrackUpdateNotification()); // tell listeners about new track
 		
-		if (radarData.wasSeenOnLastScan()) {
+		if (track.isLost() && radarData.wasSeenOnLastScan()) {
+		    // track came back
 			track.setLost(false);
-			notify(new TrackLossStatusNotification(track)); // tell listeners about lost track
+			notify(new TrackLossStatusNotification(track)); // tell listeners about re-appeared track
 		}
 		track.setLastUpdateTimestamp(System.currentTimeMillis());
 		
@@ -90,9 +93,8 @@ public class TrackManager extends Notifier implements ITrackManager, IRadarDataR
 	 * 
 	 * This method should be called on regular basis.
 	 */
-	public void checkForLossOrRetirement() {
-		final Set<Track> retiredTracks = new HashSet<Track>();
-		final Iterator<Track> trackIterator = trackMap.values().iterator();
+	public synchronized void checkForLossOrRetirement() {
+		final Iterator<Track> trackIterator = new ArrayList<Track>(trackMap.values()).iterator();
 		final long currentTime = System.currentTimeMillis();
 		
 		while (trackIterator.hasNext()) {
@@ -100,17 +102,14 @@ public class TrackManager extends Notifier implements ITrackManager, IRadarDataR
 			final long trackAge = currentTime - track.getLastUpdateTimestamp();
 			if (trackAge > trackRetirementTimeoutMsecs) {
 				/* retire track */
-				retiredTracks.add(track);
-				trackIterator.remove();
+                trackMap.remove(track.getIdentifier());
+				notify(new TrackLifetimeNotification(this, track, LifetimeState.RETIRED));
 			} else if (trackAge > lossOfTrackTimeoutMsecs) {
-				/* consider track lost */
+				/* consider track lost*/
 				track.setLost(true);
 			}
 		}
 		
-		for (Track track: retiredTracks) {
-			notify(new TrackLifetimeNotification(this, track, LifetimeState.RETIRED));
-		}
 	}
 	
 	@Override
@@ -119,7 +118,7 @@ public class TrackManager extends Notifier implements ITrackManager, IRadarDataR
 	}
 	
 	protected class TrackIterator implements Iterator<ITrack> {
-		protected final Iterator<Track> parentIterator = trackMap.values().iterator();
+		protected final Iterator<Track> parentIterator = new ArrayList<Track>(trackMap.values()).iterator();
 
 		public boolean hasNext() {
 			return parentIterator.hasNext();

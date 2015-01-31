@@ -207,6 +207,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         synchronized(chatMessageLock) {
             if(!tfMPChatInput.getForeground().equals(color)) {
                 tfMPChatInput.setForeground(color);
+                tfMPChatInput.invalidate();
             }
         }
     }

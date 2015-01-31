@@ -147,25 +147,27 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
 
     public void setSelectedCallSign(String callSign, boolean exclusive) {
-        String newPrefix = "";
+//        String newPrefix = "";
         if(filter==Filter.FILTER_SELECTED_USER) setFilter(Filter.FILTER_NONE);
         if(callSign!= null) {
-            newPrefix = callSign + ":";
+//            newPrefix = callSign + ":";
             setFilter(exclusive ? Filter.FILTER_SELECTED_USER : filter);
         }
-        synchronized(chatPanel.getChatMessageLock()) {
+        resetChatField();
+/*        synchronized(chatPanel.getChatMessageLock()) {
             String currentText = (String) chatPanel.getChatMessage();
             if (currentText.isEmpty()) {
                 currentText = newPrefix + " ";
             } else if (currentText.contains(":")) {
                 currentText = currentText.replaceFirst(".*:", newPrefix);
             } else {
-                currentText = newPrefix + " " + currentText.trim();
+                currentText = newPrefix + " " + currentText.trim(); 
             }
             chatPanel.setChatMessage(currentText);
             validateTextLength(currentText);
         }
         requestGuiUpdate();
+*/
     }
 
     public void setFilter(Filter filter) {
@@ -412,6 +414,10 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         }
     }
 
+    public void validateTextLength() {
+        validateTextLength(chatPanel.getChatMessage());
+    }
+    
     public void validateTextLength(String msg) {
         if(msg.length()>128) {
             chatPanel.setChatMsgColor(Color.red);

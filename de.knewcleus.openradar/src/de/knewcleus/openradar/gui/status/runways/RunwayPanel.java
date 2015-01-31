@@ -412,33 +412,39 @@ public class RunwayPanel extends JPanel {
         if(c==null) return;
 //        double altAboveAirport = c.getAltitude() - master.getDataRegistry().getElevationFt();
         double speed = c.getGroundSpeedD();
-
+//
         boolean isInAir =  speed > 45; // altAboveAirport > 300 &
-        boolean isOnGround = speed <= 45;
-
-        boolean rwLandingEnabled = master.getAirportData().getRunways().get(rwId).isLandingActive();
-        boolean rwStartingEnabled = master.getAirportData().getRunways().get(rwId).isStartingActive();
+//        boolean isOnGround = speed <= 45;
+//
+//        boolean rwLandingEnabled = master.getAirportData().getRunways().get(rwId).isLandingActive();
+//        boolean rwStartingEnabled = master.getAirportData().getRunways().get(rwId).isStartingActive();
 
         if(!rwId.equals(c.getFlightPlan().getAssignedRunway())) {
 
             // change
         
             AtcMenuChatMessage msg = new AtcMenuChatMessage("Assign runway");
-    
-            if (isInAir && rwLandingEnabled) {
-                msg.addTranslation("en", "%s: Expect landing on runway " + getRunwayInformation(rwId, true));
-                msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
-                master.getMpChatManager().setAutoAtcMessage(c, msg);
-                c.getFlightPlan().setAssignedRunway(rwId);
-            } else if (isOnGround && rwStartingEnabled) {
-                msg.addTranslation("en", "%s: Expect departure runway " + getRunwayInformation(rwId, false));
-                msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
-                master.getMpChatManager().setAutoAtcMessage(c, msg);
-                c.getFlightPlan().setAssignedRunway(rwId);
-            }
+
+            msg.addTranslation("en", "%s: Expect runway " + getRunwayInformation(rwId, isInAir));
+            msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
+            master.getMpChatManager().setAutoAtcMessage(c, msg);
+            c.getFlightPlan().setAssignedRunway(rwId);
+
+//            if (isInAir && rwLandingEnabled) {
+//                msg.addTranslation("en", "%s: Expect landing on runway " + getRunwayInformation(rwId, true));
+//                msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
+//                master.getMpChatManager().setAutoAtcMessage(c, msg);
+//                c.getFlightPlan().setAssignedRunway(rwId);
+//            } else if (isOnGround && rwStartingEnabled) {
+//                msg.addTranslation("en", "%s: Expect departure runway " + getRunwayInformation(rwId, false));
+//                msg.setVariables("/sim/gui/dialogs/ATC-ML/ATC-MP/CMD-target");
+//                master.getMpChatManager().setAutoAtcMessage(c, msg);
+//                c.getFlightPlan().setAssignedRunway(rwId);
+//            }
         } else {
             // revoke
             c.getFlightPlan().setAssignedRunway(null);
+            master.getMpChatManager().resetChatField();
         }
     }
 

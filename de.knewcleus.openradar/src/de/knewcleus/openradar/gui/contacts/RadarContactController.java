@@ -249,11 +249,11 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             notifyListenersListChange(formerSize);
         }
         if (displayChatAsEnabled) {
-            master.getMpChatManager().setChatMsgColor(Color.black);
+            master.getMpChatManager().validateTextLength();
         }
         if (displayChatAsDisabled) {
             //master.getMpChatManager().setSelectedCallSign(null, false); // lock
-            master.getMpChatManager().setChatMsgColor(Color.gray);
+            master.getMpChatManager().setChatMsgColor(Color.red); // gray
         }
     }
 

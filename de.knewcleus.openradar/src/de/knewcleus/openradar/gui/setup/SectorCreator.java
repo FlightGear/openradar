@@ -96,7 +96,7 @@ public abstract class SectorCreator {
 
     public static void downloadData(AirportData data, SetupDialog setupDialog) throws IOException {
 
-        data.setAirportPosition(findLocationOf(data.getAirportCode())); // find lon and lat of airport
+        //data.setAirportPosition(findLocationOf(data.getAirportCode())); // find lon and lat of airport
 
         // 2x2 degrees
         Point2D upperLeftCorner = new Point2D.Double(data.getLon() - mapWidth / 2, data.getLat() - mapHeight / 2);

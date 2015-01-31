@@ -65,7 +65,7 @@ public interface IRadarDataPacket {
 	 * @return the geographic position of the radar target.
 	 */
 	public abstract Point2D getPosition();
-
+	
 	/**
 	 * @return the tracking identifier.
 	 */
