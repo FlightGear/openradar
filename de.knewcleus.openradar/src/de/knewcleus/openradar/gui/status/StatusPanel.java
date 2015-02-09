@@ -55,6 +55,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import de.knewcleus.openradar.fgfscontroller.CameraPresetControlPanel;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
@@ -82,8 +83,8 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     private javax.swing.JLabel lbAirport;
     private javax.swing.JLabel lbPressure;
     private javax.swing.JLabel lbVisibility;
-    private javax.swing.JLabel lbPtS;
-    private javax.swing.JLabel lbSelection;
+//    private javax.swing.JLabel lbPtS;
+//    private javax.swing.JLabel lbSelection;
     private javax.swing.JLabel lbFlightConditions;
     private javax.swing.JLabel lbWind;
     private javax.swing.JLabel lbWeatherPhaenomena;
@@ -132,13 +133,13 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         tfCurrentCallSign = new JTextField();
         lbTime = new javax.swing.JLabel();
         lbAirport = new javax.swing.JLabel();
-        lbSelection = new javax.swing.JLabel();
+//        lbSelection = new javax.swing.JLabel();
         lbPressure = new javax.swing.JLabel();
         lbVisibility = new javax.swing.JLabel();
         lbFlightConditions = new javax.swing.JLabel();
         lbWind = new javax.swing.JLabel();
         lbWeatherPhaenomena = new javax.swing.JLabel();
-        lbPtS = new javax.swing.JLabel();
+//        lbPtS = new javax.swing.JLabel();
         sep1 = new javax.swing.JSeparator();
         sep2 = new javax.swing.JSeparator();
       //  sep3 = new javax.swing.JSeparator();
@@ -182,7 +183,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridwidth=3;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 4);
+        gridBagConstraints.insets = new java.awt.Insets(4, 10, 10, 4);
         headerPanel.add(lbAirport, gridBagConstraints);
 
         tfCurrentCallSign.setOpaque(true);
@@ -200,29 +201,29 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(4, 10, 0, 10);
         headerPanel.add(tfCurrentCallSign, gridBagConstraints);
 
-        lbSelection.setForeground(Palette.LIGHTBLUE);
-        lbSelection.setText("-nobody-");
-        lbSelection.setToolTipText("Callsign of selected contact");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(8, 10, 5, 0);
-        headerPanel.add(lbSelection, gridBagConstraints);
-
-        lbPtS.setForeground(Palette.LIGHTBLUE);
-        lbPtS.setText("(Please select a contact)");
-        lbPtS.setToolTipText("magnetic, wind compensated direction Selection => Pointer, back, distance, time needed");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-//        gridBagConstraints.ipadx = 17;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(8, 4, 5, 4);
-        headerPanel.add(lbPtS, gridBagConstraints);
+//        lbSelection.setForeground(Palette.LIGHTBLUE);
+//        lbSelection.setText("-nobody-");
+//        lbSelection.setToolTipText("Callsign of selected contact");
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 0;
+//        gridBagConstraints.gridy = 2;
+//        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+//        gridBagConstraints.insets = new java.awt.Insets(8, 10, 5, 0);
+//        headerPanel.add(lbSelection, gridBagConstraints);
+//
+//        lbPtS.setForeground(Palette.LIGHTBLUE);
+//        lbPtS.setText("(Please select a contact)");
+//        lbPtS.setToolTipText("magnetic, wind compensated direction Selection => Pointer, back, distance, time needed");
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 1;
+//        gridBagConstraints.gridy = 2;
+//        gridBagConstraints.gridwidth = 2;
+//        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+////        gridBagConstraints.ipadx = 17;
+//        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+//        gridBagConstraints.weightx = 1.0;
+//        gridBagConstraints.insets = new java.awt.Insets(8, 4, 5, 4);
+//        headerPanel.add(lbPtS, gridBagConstraints);
 
         weatherPanel = new JPanel();
         weatherPanel.setLayout(new GridBagLayout());
@@ -242,6 +243,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 
         lbFlightConditions.setForeground(Color.white);
         lbFlightConditions.setText("VFR");
+        lbFlightConditions.setName(master.getAirportData().getAirportCode());
         lbFlightConditions.setOpaque(true);
         lbFlightConditions.setFont(lbFlightConditions.getFont().deriveFont(Font.BOLD));
         lbFlightConditions.setForeground(Color.white);
@@ -369,6 +371,16 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 //        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
 //        add(sep3, gridBagConstraints);
 
+        if(master.getAirportData().isFgfsCameraEnabled()) {
+            CameraPresetControlPanel cameraPresetControlPanel = new CameraPresetControlPanel(master);
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 5;
+            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+            add(cameraPresetControlPanel, gridBagConstraints);
+        }        
         updateTime();
         doLayout();
 
@@ -404,8 +416,8 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     }
 
     public void setSelectedCallSign(String callsign) {
-        lbSelection.setText(callsign);
-        lbSelection.invalidate();
+//        lbSelection.setText(callsign);
+//        lbSelection.invalidate();
     }
 
     @Override
@@ -485,14 +497,14 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         }
     }
 
-    public void setSelectionToPointer(Long degreesToPointer, Long degreesToSelection, Double distanceMiles, Integer timeMinutes, Integer timeSeconds) {
-        String dTP = degreesToPointer==null ? "n/a" : String.format("%03d",degreesToPointer);
-        String dTS = degreesToSelection==null ? "n/a" : String.format("%03d",degreesToSelection);
-        String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
-        String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);
-
-        lbPtS.setText(dTP+"° ("+dTS+"°)   "+dist+" NM   ETA "+min);
-    }
+//    public void setSelectionToPointer(Long degreesToPointer, Long degreesToSelection, Double distanceMiles, Integer timeMinutes, Integer timeSeconds) {
+//        String dTP = degreesToPointer==null ? "n/a" : String.format("%03d",degreesToPointer);
+//        String dTS = degreesToSelection==null ? "n/a" : String.format("%03d",degreesToSelection);
+//        String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
+//        String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);
+//
+//        lbPtS.setText(dTP+"° ("+dTS+"°)   "+dist+" NM   ETA "+min);
+//    }
 
     public String getActiveRunways() {
         return runwayPanel.getActiveRunways();

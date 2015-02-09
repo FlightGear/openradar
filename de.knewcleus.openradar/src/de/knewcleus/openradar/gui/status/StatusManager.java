@@ -40,21 +40,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Point2D;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import de.knewcleus.fgfs.location.Vector2D;
 import de.knewcleus.fgfs.navdata.model.INavPoint;
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.status.runways.RunwayPanel;
 import de.knewcleus.openradar.gui.status.runways.RunwaySettingsDialog;
-import de.knewcleus.openradar.view.Converter2D;
-import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.navdata.INavPointListener;
-import de.knewcleus.openradar.weather.MetarData;
 
 /**
  * The controller for the status info panel
@@ -99,7 +93,7 @@ public class StatusManager implements INavPointListener {
 //    }
 
     public void setSelectedCallSign(String callsign) {
-        this.statusPanel.setAirport(master.getAirportData().getAirportCode()+" / "+ (master.getAirportData().getAirportName()));
+        statusPanel.setAirport(master.getAirportData().getAirportCode()+" / "+ (master.getAirportData().getAirportName()));
         statusPanel.setSelectedCallSign(callsign);
     }
 
@@ -114,37 +108,37 @@ public class StatusManager implements INavPointListener {
 
     }
 
-    public void updateMouseRadarMoved(GuiRadarContact contact, MouseEvent e) {
-        IMapViewerAdapter mapViewerAdapter = contact.getMapViewerAdapter();
-        double milesPerHour = contact.getAirSpeedD();
-        Point2D currSelectionPoint = contact.getCenterViewCoordinates();
-
-        double dx = e.getX()-currSelectionPoint.getX();
-        double dy = currSelectionPoint.getY()-e.getY();
-        Vector2D vDistance = new Vector2D(dx, dy);
-        double distance = vDistance.getLength();
-        Double angle = vDistance.getAngle();
-        // angle corrections
-        // 1. magnetic
-        angle = angle + Math.round(master.getAirportData().getMagneticDeclination());
-        // 2. wind
-        MetarData metar = master.getAirportMetar();
-        Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD());
-        Vector2D vWind = Vector2D.createVector2D((double)90-metar.getWindDirectionI(),metar.getWindSpeed());
-        Vector2D vResult = vOriginalAngle.add(vWind);
-        Long lAngle = vResult.getAngleL();
-
-        Long degreesToPointer = lAngle!=null ? ( lAngle<=0 ? lAngle+360 : lAngle) : null;
-        Long degreesToSelection = lAngle!=null ? (degreesToPointer<180 ? degreesToPointer+180 : degreesToPointer-180) : null;
-        // distances
-        Double distanceMiles = distance*Converter2D.getMilesPerDot(mapViewerAdapter);
-        Integer timeMinutes = milesPerHour>10 ? (int)Math.floor(60*distanceMiles/(double)milesPerHour) : null;
-        Integer timeSeconds = milesPerHour>10 ? (int)Math.floor(60*60*distanceMiles/(double)milesPerHour) - timeMinutes * 60 : null;
-
-        boolean hasChanged = true;
-        //System.out.println("orig "+angle+" vOA: "+vOriginalAngle.getAngleL()+" vW "+vWind.getAngleL()+" result "+lAngle);
-        if(hasChanged)statusPanel.setSelectionToPointer(degreesToPointer,degreesToSelection,distanceMiles, timeMinutes,timeSeconds);
-    }
+//    public void updateMouseRadarMoved(GuiRadarContact contact, MouseEvent e) {
+//        IMapViewerAdapter mapViewerAdapter = contact.getMapViewerAdapter();
+//        double milesPerHour = contact.getAirSpeedD();
+//        Point2D currSelectionPoint = contact.getCenterViewCoordinates();
+//
+//        double dx = e.getX()-currSelectionPoint.getX();
+//        double dy = currSelectionPoint.getY()-e.getY();
+//        Vector2D vDistance = new Vector2D(dx, dy);
+//        double distance = vDistance.getLength();
+//        Double angle = vDistance.getAngle();
+//        // angle corrections
+//        // 1. magnetic
+//        angle = angle + Math.round(master.getAirportData().getMagneticDeclination());
+//        // 2. wind
+//        MetarData metar = master.getAirportMetar();
+//        Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD());
+//        Vector2D vWind = Vector2D.createVector2D((double)90-metar.getWindDirectionI(),metar.getWindSpeed());
+//        Vector2D vResult = vOriginalAngle.add(vWind);
+//        Long lAngle = vResult.getAngleL();
+//
+//        Long degreesToPointer = lAngle!=null ? ( lAngle<=0 ? lAngle+360 : lAngle) : null;
+//        Long degreesToSelection = lAngle!=null ? (degreesToPointer<180 ? degreesToPointer+180 : degreesToPointer-180) : null;
+//        // distances
+//        Double distanceMiles = distance*Converter2D.getMilesPerDot(mapViewerAdapter);
+//        Integer timeMinutes = milesPerHour>10 ? (int)Math.floor(60*distanceMiles/(double)milesPerHour) : null;
+//        Integer timeSeconds = milesPerHour>10 ? (int)Math.floor(60*60*distanceMiles/(double)milesPerHour) - timeMinutes * 60 : null;
+//
+//        boolean hasChanged = true;
+//        //System.out.println("orig "+angle+" vOA: "+vOriginalAngle.getAngleL()+" vW "+vWind.getAngleL()+" result "+lAngle);
+//        if(hasChanged)statusPanel.setSelectionToPointer(degreesToPointer,degreesToSelection,distanceMiles, timeMinutes,timeSeconds);
+//    }
 
     public CallSignActionListener getCallSignActionListener() {
         return callSignActionListener;

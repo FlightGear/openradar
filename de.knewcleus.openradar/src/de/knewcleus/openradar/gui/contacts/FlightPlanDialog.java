@@ -367,8 +367,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 4);
         jPnlLine1.add(cbLanguages, gridBagConstraints);
 
-        chbFgComSupport = new JCheckBox("FgCom");
-        chbFgComSupport.setToolTipText("This contact uses FgCom.");
+        chbFgComSupport = new JCheckBox("Radio");
+        chbFgComSupport.setToolTipText("This contact uses a radio.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;

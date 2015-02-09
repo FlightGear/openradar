@@ -36,6 +36,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
@@ -91,6 +92,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     }
 
     public void start() {
+        radarPanel.getRadarMapPanel().addMouseListener(master.getFgfsController().getSetPosMouseListener());
         validateToggles();
         addRadarViewListener(master.getMpChatManager()); // forwards Zoom and center changes to MPChat
     }
@@ -265,6 +267,10 @@ public class GuiRadarBackend implements IRadarDataRecipient {
 
     }
 
+    public Point2D getGeoLocationOfMouse(MouseEvent e) {
+        return viewerAdapter.getGeoLocationOf(e.getPoint());
+    }
+    
     public void copyZoomLevelToClipboard() {
         StringSelection selection = new StringSelection(String.format("%1.1f",viewerAdapter.getLogicalScale()));
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

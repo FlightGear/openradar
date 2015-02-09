@@ -126,7 +126,8 @@ public class MouseFocusManager extends MouseAdapter {
 
 	    GuiRadarContact contact = guiInteractionManager.getRadarContactManager().getSelectedContact();
 	    if(contact!=null) {
-	        guiInteractionManager.getStatusManager().updateMouseRadarMoved(contact,e);
+	        //guiInteractionManager.getStatusManager().updateMouseRadarMoved(contact,e);
+	        // TODO the view should not be stored in airport data
 	        guiInteractionManager.getAirportData().updateMouseRadarMoved(contact,e);
 	    }
 	}

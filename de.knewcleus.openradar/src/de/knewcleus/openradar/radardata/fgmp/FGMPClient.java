@@ -67,8 +67,9 @@ public class FGMPClient<T extends TargetStatus> extends MultiplayerClient<T> imp
 	
 	protected final Set<IRadarDataRecipient> recipients=new HashSet<IRadarDataRecipient>();
 
-	public FGMPClient(IPlayerRegistry<T> playerRegistry, String callsign, String model, Position position, String mpServer, int mpServerPort, int mpLocalPort, int antennaRotationTimeMsecs) throws IOException {
-		super(playerRegistry, mpServer, mpServerPort, mpLocalPort);
+	public FGMPClient(IPlayerRegistry<T> playerRegistry, String callsign, String model, Position position, String mpServer, int mpServerPort, int mpLocalPort, int antennaRotationTimeMsecs,
+	                  boolean packetForward, String packetForwardHost, int packetForwardPort) throws IOException {
+		super(playerRegistry, mpServer, mpServerPort, mpLocalPort, packetForward, packetForwardHost, packetForwardPort);
 		//this.callsign=callsign;
 		this.position=position;
 		this.model=model;

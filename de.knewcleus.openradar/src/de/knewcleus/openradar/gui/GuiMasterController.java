@@ -42,6 +42,7 @@ import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.multiplayer.IPlayerRegistry;
+import de.knewcleus.openradar.fgfscontroller.FGFSController;
 import de.knewcleus.openradar.gui.chat.MpChatManager;
 import de.knewcleus.openradar.gui.contacts.RadarContactController;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanExchangeManager;
@@ -84,7 +85,8 @@ public class GuiMasterController {
     private MainFrame mainFrame = null;
     private FlightPlanExchangeManager fpExchangeManager;
     private final SoundManager soundManager = new SoundManager() ;
-
+    private FGFSController fgfsController;
+    
     public synchronized SoundManager getSoundManager() {
         return soundManager;
     }
@@ -108,6 +110,7 @@ public class GuiMasterController {
         statusManager = new StatusManager(this);
         mpChatManager = new MpChatManager(this);
         fpExchangeManager = new FlightPlanExchangeManager(this);
+        fgfsController = new FGFSController(this);
     }
 
     public LogWindow getLogWindow() {
@@ -152,8 +155,8 @@ public class GuiMasterController {
         airportData.storeAirportData(this); // to store initially set data
         
         // ready, so display it
-        mainFrame.setDividerPosition();
         mainFrame.setVisible(true);
+        mainFrame.setDividerPosition();
         
         mainFrame.getRadarScreen().showMap(); // move map and display it
     }
@@ -175,7 +178,10 @@ public class GuiMasterController {
                                                      airportData.getMpServer(),
                                                      airportData.getMpServerPort(),
                                                      airportData.getMpLocalPort(),
-                                                     airportData.getAntennaRotationTime());
+                                                     airportData.getAntennaRotationTime(),
+                                                     airportData.isFgfsLocalMPPacketForward(),
+                                                     airportData.getFgfsLocalMPPacketHost(),
+                                                     airportData.getFgfsLocalMPPacketPort());
 
 
         radarProvider.setCallsign(airportData.getCallSign());
@@ -383,5 +389,9 @@ public class GuiMasterController {
     
     public boolean isVisible() {
         return mainFrame.isVisible();
+    }
+    
+    public FGFSController getFgfsController() {
+        return fgfsController;
     }
 }

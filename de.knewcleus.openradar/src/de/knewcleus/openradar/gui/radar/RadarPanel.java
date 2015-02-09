@@ -87,7 +87,7 @@ public class RadarPanel extends JPanel {
     private JCheckBoxMenuItem mItemPPN;
     private JLabel mItemPPN2;
     private JCheckBoxMenuItem mItemGSH;
-    private JCheckBoxMenuItem mItemSTP;
+//    private JCheckBoxMenuItem mItemSTP;
     private JLabel mItemSTP2;
     private JCheckBoxMenuItem mItemSTARSID;
     private JLabel mItemSTARSID2;
@@ -214,12 +214,12 @@ public class RadarPanel extends JPanel {
         menuMap.setForeground(Palette.DESKTOP_TEXT);
         menuBar.add(menuMap);
 
-        mItemSTP = new JCheckBoxMenuItem();
-        mItemSTP.setText("STP: Mousetip measuring");
-        mItemSTP.setName("STP");
-        mItemSTP.setToolTipText("Toggle display of distance data near mousetip");
-        mItemSTP.addActionListener(master.getRadarManager().getObjectFilterListener());
-        menuMap.add(mItemSTP);
+//        mItemSTP = new JCheckBoxMenuItem();
+//        mItemSTP.setText("STP: Mousetip measuring");
+//        mItemSTP.setName("STP");
+//        mItemSTP.setToolTipText("Toggle display of distance data near mousetip");
+//        mItemSTP.addActionListener(master.getRadarManager().getObjectFilterListener());
+//        menuMap.add(mItemSTP);
 
         mItemSTARSID = new JCheckBoxMenuItem();
         mItemSTARSID.setText("STAR/SID");
@@ -624,14 +624,15 @@ public class RadarPanel extends JPanel {
 
     public void setObjectFilter(JComponent l, boolean state) {
         if(l instanceof JMenuItem) ((JMenuItem)l).setSelected(state);
-        if(l.getName().equals("STP")) {
-            mItemSTP.setSelected(state);
-            if(state) {
-                mItemSTP2.setForeground(Color.white);
-            } else {
-                mItemSTP2.setForeground(Color.gray);
-            }
-        } else if(l.getName().equals("PPN")) {
+//        if(l.getName().equals("STP")) {
+//            mItemSTP.setSelected(state);
+//            if(state) {
+//                mItemSTP2.setForeground(Color.white);
+//            } else {
+//                mItemSTP2.setForeground(Color.gray);
+//            }
+//        } else 
+        if(l.getName().equals("PPN")) {
             mItemPPN.setSelected(state);
             if(state) {
                 mItemPPN2.setForeground(Color.white);
@@ -659,7 +660,7 @@ public class RadarPanel extends JPanel {
         setObjectFilter(mItemPPN,master.getAirportData().getRadarObjectFilterState("PPN"));
         setObjectFilter(mItemPPN2,master.getAirportData().getRadarObjectFilterState("PPN"));
         setObjectFilter(mItemGSH,master.getAirportData().getRadarObjectFilterState("GSH"));
-        setObjectFilter(mItemSTP,master.getAirportData().getRadarObjectFilterState("STP"));
+//        setObjectFilter(mItemSTP,master.getAirportData().getRadarObjectFilterState("STP"));
         setObjectFilter(mItemSTP2,master.getAirportData().getRadarObjectFilterState("STP"));
         setObjectFilter(mItemSTARSID,master.getAirportData().getRadarObjectFilterState("STARSID"));
         setObjectFilter(mItemSTARSID2,master.getAirportData().getRadarObjectFilterState("STARSID"));

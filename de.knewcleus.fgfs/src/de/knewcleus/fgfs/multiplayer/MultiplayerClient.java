@@ -56,14 +56,22 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
     protected final List<OutgoingMessage> chatQueue = Collections.synchronizedList(new ArrayList<OutgoingMessage>());
     protected volatile OutgoingMessage activeChatMessage = null;
     protected String frequency = "000.00";
-
+    protected final boolean packetForward;
+    protected final InetAddress packetForwardHost;
+    protected final int packetForwardPort;
+    
+    
     protected volatile long lastPositionUpdateTimeMillis;
 
-    public MultiplayerClient(IPlayerRegistry<T> playerRegistry, String mpServer, int mpServerPort, int mpLocalPort) throws IOException {
+    public MultiplayerClient(IPlayerRegistry<T> playerRegistry, String mpServer, int mpServerPort, int mpLocalPort,
+                             boolean packetForward, String packetForwardHost, int packetForwardPort) throws IOException {
         super(playerRegistry, mpLocalPort);
         this.serverAddress = InetAddress.getByName(mpServer);
         this.serverPort = mpServerPort;
         this.localPort = mpLocalPort;
+        this.packetForward = packetForward;
+        this.packetForwardHost = InetAddress.getByName(packetForwardHost);
+        this.packetForwardPort = packetForwardPort;
         lastPositionUpdateTimeMillis = System.currentTimeMillis();
     }
 
@@ -248,6 +256,12 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
             // notifyChatListeners(mppacket.getCallsign(),
             // chatMessage.getMessage());
         }
+
+        // send to view only client, if reception mirroring is enabled
+        if(packetForward) {
+            sendPacket(packetForwardHost, packetForwardPort, mppacket);
+        }
+
     }
 
     public abstract String getModel();
