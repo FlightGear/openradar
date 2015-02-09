@@ -122,13 +122,15 @@ public class Lenny64XmlParser {
                         fpd.setPilotName(pilotName);
                        // fpd.setRemarks(messages.toString());
                         fpd.setRoute(waypoints);
-                        fpd.setSoulsOnBoard(Integer.parseInt(soulsOnBoard));
+                        if(null!=soulsOnBoard && !"".equals(soulsOnBoard)) {
+                            fpd.setSoulsOnBoard(Integer.parseInt(soulsOnBoard));
+                        }
                         trueAirspeed = trueAirspeed.equals("TAS")?"":trueAirspeed;
                         fpd.setTrueAirspeed(trueAirspeed);
                         fpd.setType(category);
                         result.add(fpd);
                     } catch(Exception e) {
-                        log.error("Error while parsing flightplan #"+flightNumber+" for "+callsign);
+                        log.error("Error while parsing flightplan #"+flightNumber+" for "+callsign,e);
                     }
                 } else {
                     log.trace("Skipping flightplan, it is for another airport: #"+flightNumber+" from:"+airportFrom+" to:"+airportTo);
