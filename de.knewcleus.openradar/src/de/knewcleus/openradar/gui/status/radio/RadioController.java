@@ -40,6 +40,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,7 +86,7 @@ public class RadioController implements Runnable {
     public void init() {
         AirportData data = master.getAirportData();
         if(data.getFgComMode()!=FgComMode.Off) {
-            fgComController = new FgComController(master, data.getModel(), data.getLon(), data.getLat());
+            fgComController = new FgComController(master, data.getModel(), data.getLon(), data.getLat(), data.getElevationFt());
 
             int i = 0;
             for (Radio r : data.getRadios().values()) {
@@ -359,10 +361,34 @@ public class RadioController implements Runnable {
         return result.toString();
     }
 
-//    private Object replaceFunctions(String code) {
-//        if(code.contains("GND")) return "GND";
-//        if(code.contains("TWR")) return "TWR";
-//        if(code.contains("APP")) return "APP";
-//        return code;
-//    }
+    public void registerLabel(String radioKey, JLabel lbVolume) {
+        Radio r = master.getAirportData().getRadios().get(radioKey);
+        lbVolume.setText(""+r.getVolume());
+        lbVolume.addMouseWheelListener(new RadioVolumeListener(r.getKey(),lbVolume));
+    }
+
+    private class RadioVolumeListener implements MouseWheelListener {
+        final String radioKey;
+        final JLabel lbVolume;
+        
+        
+        public RadioVolumeListener(String r, JLabel lbVolume) {
+            this.radioKey=r;
+            this.lbVolume=lbVolume;
+        }
+        
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            if(e.getWheelRotation()<0) {
+                fgComController.getRadio(radioKey).increaseVolume();
+            }
+            if(e.getWheelRotation()>0) {
+                fgComController.getRadio(radioKey).decreaseVolume();
+            }
+            lbVolume.setText(""+fgComController.getRadio(radioKey).getVolume());
+            lbVolume.invalidate();
+            e.consume();
+        }
+        
+    }
 }

@@ -85,7 +85,8 @@ public class GuiMasterController {
     private MainFrame mainFrame = null;
     private FlightPlanExchangeManager fpExchangeManager;
     private final SoundManager soundManager = new SoundManager() ;
-    private FGFSController fgfsController;
+    private FGFSController fgfsController1 = null;
+    private FGFSController fgfsController2 = null;
     
     public synchronized SoundManager getSoundManager() {
         return soundManager;
@@ -97,6 +98,8 @@ public class GuiMasterController {
 
     private String airportCode = null;
     private volatile FGMPClient<TargetStatus> radarProvider;
+    
+    private volatile long lastEscPressed = 0;
 
     public GuiMasterController(AirportData data) {
         this.airportData = data;
@@ -110,7 +113,16 @@ public class GuiMasterController {
         statusManager = new StatusManager(this);
         mpChatManager = new MpChatManager(this);
         fpExchangeManager = new FlightPlanExchangeManager(this);
-        fgfsController = new FGFSController(this);
+        fgfsController1 = new FGFSController(this, data.getFgfsCamera1Host(), data.getFgfsCamera1Port());
+        if(data.isFgfsCamera2Enabled()) {
+            fgfsController2 = new FGFSController(this, data.getFgfsCamera2Host(), data.getFgfsCamera2Port());
+            // link them
+            fgfsController1.setOtherInstance(fgfsController2);
+            fgfsController2.setOtherInstance(fgfsController1);
+            if(data.isFgfsSlave2To1()) {
+                fgfsController1.setSlave(fgfsController2);
+            }
+        }
     }
 
     public LogWindow getLogWindow() {
@@ -151,7 +163,10 @@ public class GuiMasterController {
         initShortCuts();
         SoundManager.init(airportData);
         fpExchangeManager.start();
-
+        if(airportData.isFgfsCamera1Enabled()) {
+                fgfsController1.start();
+        }
+        
         airportData.storeAirportData(this); // to store initially set data
         
         // ready, so display it
@@ -179,9 +194,12 @@ public class GuiMasterController {
                                                      airportData.getMpServerPort(),
                                                      airportData.getMpLocalPort(),
                                                      airportData.getAntennaRotationTime(),
-                                                     airportData.isFgfsLocalMPPacketForward(),
-                                                     airportData.getFgfsLocalMPPacketHost(),
-                                                     airportData.getFgfsLocalMPPacketPort());
+                                                     airportData.isFgfsLocalMPPacketForward1(),
+                                                     airportData.getFgfsCamera1Host(),
+                                                     airportData.getFgfsLocalMPPacketPort1(),
+                                                     airportData.isFgfsLocalMPPacketForward2(),
+                                                     airportData.getFgfsCamera2Host(),
+                                                     airportData.getFgfsLocalMPPacketPort2());
 
 
         radarProvider.setCallsign(airportData.getCallSign());
@@ -240,14 +258,26 @@ public class GuiMasterController {
                 
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
 
-                    if (e.getKeyCode() == 76 && e.isAltDown()) { // ALT + l
-                        logWindow.setVisible(true);
-                        e.consume();
-                        return true;
-                    }
                     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                         mpChatManager.cancelAutoAtcMessage();
                         closeDialogs(false);
+                        e.consume();
+                        if(lastEscPressed==0) {
+                            lastEscPressed = System.currentTimeMillis();
+                        } else {
+                            if(System.currentTimeMillis()-lastEscPressed < 2000) {
+                                // double ESC press => deselect contact
+                                radarContactManager.deselectContact();
+                            }
+                            lastEscPressed=0;
+                        }
+                        return true;
+                    } else {
+                        // other key, not ESC, pressed
+                        lastEscPressed=0;
+                    }
+                    if (e.getKeyCode() == 76 && e.isAltDown()) { // ALT + l
+                        logWindow.setVisible(true);
                         e.consume();
                         return true;
                     }
@@ -391,7 +421,10 @@ public class GuiMasterController {
         return mainFrame.isVisible();
     }
     
-    public FGFSController getFgfsController() {
-        return fgfsController;
+    public FGFSController getFgfsController1() {
+        return fgfsController1;
+    }
+    public FGFSController getFgfsController2() {
+        return fgfsController2;
     }
 }

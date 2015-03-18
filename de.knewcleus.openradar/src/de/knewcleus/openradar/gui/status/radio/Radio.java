@@ -46,6 +46,7 @@ public class Radio {
     private String restoredFrequency = null;
     private volatile RadioFrequency frequency = null;
     private volatile boolean pttActive = false;
+    private volatile int volume = 9;
     private volatile boolean connectedToServer = true;
 
     public Radio(String key, String fgComHost, int fgComPort) {
@@ -110,5 +111,20 @@ public class Radio {
     public String getRestoredFrequency() {
         return restoredFrequency;
     }
-
+    public synchronized int getVolume() {
+        return volume;
+    }
+    public synchronized double getVolumeF() {
+        return ((double)volume+1)/10.0;
+    }
+    public synchronized void increaseVolume() {
+        if(volume<9) {
+            volume++;
+        }
+    }
+    public synchronized void decreaseVolume() {
+        if(volume>0) {
+            volume--;
+        }
+    }
 }

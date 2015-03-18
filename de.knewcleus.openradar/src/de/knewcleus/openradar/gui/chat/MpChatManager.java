@@ -370,7 +370,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
             if (e.getKeyChar() == KeyEvent.VK_ENTER) {
                 if(inputText.length()<129) {
                     sendChatMessage();
-                    chatPanel.setChatMsgColor(Color.black);
+                    chatPanel.resetChatMsgColor();
                 }
                 e.consume();
             } 
@@ -424,7 +424,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
         } else if(msg.length()>120) {
             chatPanel.setChatMsgColor(Color.blue);
         } else {
-            chatPanel.setChatMsgColor(Color.black);
+            chatPanel.resetChatMsgColor();
         }
     }
 

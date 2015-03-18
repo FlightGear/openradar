@@ -56,22 +56,29 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
     protected final List<OutgoingMessage> chatQueue = Collections.synchronizedList(new ArrayList<OutgoingMessage>());
     protected volatile OutgoingMessage activeChatMessage = null;
     protected String frequency = "000.00";
-    protected final boolean packetForward;
-    protected final InetAddress packetForwardHost;
-    protected final int packetForwardPort;
+    protected final boolean packetForward1;
+    protected final InetAddress packetForwardHost1;
+    protected final int packetForwardPort1;
+    protected final boolean packetForward2;
+    protected final InetAddress packetForwardHost2;
+    protected final int packetForwardPort2;
     
     
     protected volatile long lastPositionUpdateTimeMillis;
 
     public MultiplayerClient(IPlayerRegistry<T> playerRegistry, String mpServer, int mpServerPort, int mpLocalPort,
-                             boolean packetForward, String packetForwardHost, int packetForwardPort) throws IOException {
+                             boolean packetForward1, String packetForwardHost1, int packetForwardPort1,
+                             boolean packetForward2, String packetForwardHost2, int packetForwardPort2) throws IOException {
         super(playerRegistry, mpLocalPort);
         this.serverAddress = InetAddress.getByName(mpServer);
         this.serverPort = mpServerPort;
         this.localPort = mpLocalPort;
-        this.packetForward = packetForward;
-        this.packetForwardHost = InetAddress.getByName(packetForwardHost);
-        this.packetForwardPort = packetForwardPort;
+        this.packetForward1 = packetForward1;
+        this.packetForwardHost1 = InetAddress.getByName(packetForwardHost1);
+        this.packetForwardPort1 = packetForwardPort1;
+        this.packetForward2 = packetForward2;
+        this.packetForwardHost2 = InetAddress.getByName(packetForwardHost2);
+        this.packetForwardPort2 = packetForwardPort2;
         lastPositionUpdateTimeMillis = System.currentTimeMillis();
     }
 
@@ -229,10 +236,8 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
             }
             // transponder data
             Integer transponderSquawkCode = (Integer) positionMessage.getProperty("instrumentation/transponder/id-code");
-//            transponderSquawkCode=1235;
             player.setTranspSquawkCode(transponderSquawkCode);
             Integer transponderAltitude = (Integer) positionMessage.getProperty("instrumentation/transponder/altitude");
-//            transponderAltitude=null;
             player.setTranspAltitude(transponderAltitude);
 //            System.out.println(transponderAltitude);
 //            for(String key : positionMessage.getProperties().keySet()) {
@@ -244,8 +249,8 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
             if(b!=null && b==true) {
                 player.startTranspIdent();
             }
-            String transponderMode = positionMessage.getProperty("instrumentation/transponder/inputs/mode");
-            if(transponderMode!=null) {
+            if(positionMessage.getProperty("instrumentation/transponder/inputs/mode")!=null) {
+                int transponderMode = (Integer) positionMessage.getProperty("instrumentation/transponder/inputs/mode");
                 player.setTranspMode(transponderMode);
             }
 
@@ -258,10 +263,12 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
         }
 
         // send to view only client, if reception mirroring is enabled
-        if(packetForward) {
-            sendPacket(packetForwardHost, packetForwardPort, mppacket);
+        if(packetForward1) {
+            sendPacket(packetForwardHost1, packetForwardPort1, mppacket);
         }
-
+        if(packetForward2) {
+            sendPacket(packetForwardHost2, packetForwardPort2, mppacket);
+        }
     }
 
     public abstract String getModel();

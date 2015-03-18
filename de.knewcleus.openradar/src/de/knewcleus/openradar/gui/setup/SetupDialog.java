@@ -3,32 +3,28 @@
  *
  * This file is part of OpenRadar.
  *
- * OpenRadar is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
+ * OpenRadar is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
  *
- * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with
- * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with OpenRadar. If not, see
+ * <http://www.gnu.org/licenses/>.
  *
  * Diese Datei ist Teil von OpenRadar.
  *
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
- * General Public License, wie von der Free Software Foundation, Version 3 der
- * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU General Public License, wie von der Free
+ * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
- * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
- * Public License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne
+ * die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
+ * License für weitere Details.
  *
- * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
- * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+ * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
+ * <http://www.gnu.org/licenses/>.
  */
 package de.knewcleus.openradar.gui.setup;
 
@@ -128,6 +124,7 @@ public class SetupDialog extends JFrame {
     private JButton btStart;
     private JButton btCheckSettings;
     private JButton btCheckSettings2;
+    private JButton btCheckSettings3;
     private JPanel jPnlSettings;
     private JPanel jPnlFlightPlans;
     private JLabel lbLennysServer;
@@ -149,33 +146,40 @@ public class SetupDialog extends JFrame {
     private JCheckBox cbTarmac;
     private JCheckBox cbGroundnet;
 
-    private JCheckBox cbFgfsCameraEnabled;
-    private JTextField tfFgfsCameraHost;
-    private JTextField tfFgfsCameraPort;
-    private JCheckBox cbFgfsLocalMPPacketForward;
-    private JTextField tfFgfsLocalMPPacketHost;
-    private JTextField tfFgfsLocalMPPacketPort;
-    
+    private JCheckBox cbFgfsCamera1Enabled;
+    private JTextField tfFgfsCamera1Host;
+    private JTextField tfFgfsCamera1Port;
+    private JCheckBox cbFgfsLocalMPPacketForward1;
+    private JTextField tfFgfsLocalMPPacketPort1;
+
+    private JCheckBox cbFgfsCamera2Enabled;
+    private JCheckBox cbFgfsCamera2SlavedTo1;
+    private JTextField tfFgfsCamera2Host;
+    private JTextField tfFgfsCamera2Port;
+    private JCheckBox cbFgfsLocalMPPacketForward2;
+    private JTextField tfFgfsLocalMPPacketPort2;
+
     private FgComMode fgComMode = FgComMode.Internal;
-    private String[] modeModel = new String[]{"Auto: Use the internal fgcom","Internal: OR starts and controls a fgcom client","External: Control external fgcom client instance", "OFF: No FgCom support"};
+    private String[] modeModel = new String[] { "Auto: Use the internal fgcom", "Internal: OR starts and controls a fgcom client",
+            "External: Control external fgcom client instance", "OFF: No FgCom support" };
 
     private List<Image> icons = new ArrayList<Image>();
 
     private final static Logger log = LogManager.getLogger(SetupDialog.class);
-    
+
     public SetupDialog(SetupController setupManager) {
         this.setupManager = setupManager;
 
         File iconDir = new File("res/icons");
-        if(iconDir.exists()) {
+        if (iconDir.exists()) {
             File[] files = iconDir.listFiles();
-            for(File f : files) {
-                if(f.getName().matches("OpenRadar.*\\.ico") || f.getName().matches("OpenRadar.*\\.png")
-                  || f.getName().matches("OpenRadar.*\\.gif") || f.getName().matches("OpenRadar.*\\.jpg")) {
+            for (File f : files) {
+                if (f.getName().matches("OpenRadar.*\\.ico") || f.getName().matches("OpenRadar.*\\.png") || f.getName().matches("OpenRadar.*\\.gif")
+                        || f.getName().matches("OpenRadar.*\\.jpg")) {
                     icons.add(new ImageIcon(f.getAbsolutePath()).getImage());
                 }
             }
-            if(!icons.isEmpty()) {
+            if (!icons.isEmpty()) {
                 setIconImages(icons);
             }
         }
@@ -195,8 +199,8 @@ public class SetupDialog extends JFrame {
         setTitle("OpenRadar - Welcome!");
         Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
 
-        this.setLocation((int) maxBounds.getWidth() / 2 - 300, 100);//(int) maxBounds.getHeight() / 2 - 200);
-        //this.setSize(400,600);
+        this.setLocation((int) maxBounds.getWidth() / 2 - 300, 100);// (int) maxBounds.getHeight() / 2 - 200);
+        // this.setSize(400,600);
 
         JPanel jPnlContentPane = new JPanel();
         jPnlContentPane.setLayout(new GridBagLayout());
@@ -206,25 +210,25 @@ public class SetupDialog extends JFrame {
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.weightx=1;
-        gridBagConstraints.weighty=1;
-        gridBagConstraints.fill=GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0,0, 0, 0);
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 1;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlContentPane.add(jtpMain, gridBagConstraints);
 
         cbStatusMessages = new JComboBox<String>();
         cbStatusModel = new StatusMessageComboboxModel();
         cbStatusMessages.setEditable(false);
-        //cbStatusMessages.setEnabled(false);
+        // cbStatusMessages.setEnabled(false);
         cbStatusMessages.setFont(cbStatusMessages.getFont().deriveFont(7));
         cbStatusMessages.setModel(cbStatusModel);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.weightx=1;
-        gridBagConstraints.weighty=0;
-        gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0,0, 0, 0);
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlContentPane.add(cbStatusMessages, gridBagConstraints);
 
         jProgressBar = new JProgressBar();
@@ -233,10 +237,10 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.weightx=1;
-        gridBagConstraints.weighty=0;
-        gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0,0, 0, 0);
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         jPnlContentPane.add(jProgressBar, gridBagConstraints);
 
         // TAB SELECT/CREATE AIRPORT
@@ -476,17 +480,17 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlFgCom.add(tfFgComExec, gridBagConstraints);
 
-//        JButton btBrowseFgComServer = new JButton();
-//        btBrowseFgComServer.setText("Search...");
-//        btBrowseFgComServer.setName("SearchFgCom");
-//        btBrowseFgComServer.addActionListener(setupManager.getActionListener());
-//        gridBagConstraints = new java.awt.GridBagConstraints();
-//        gridBagConstraints.gridx = 2;
-//        gridBagConstraints.gridy = 1;
-//        gridBagConstraints.anchor = GridBagConstraints.WEST;
-//        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-//        jPnlFgCom.add(btBrowseFgComServer, gridBagConstraints);
-        
+        // JButton btBrowseFgComServer = new JButton();
+        // btBrowseFgComServer.setText("Search...");
+        // btBrowseFgComServer.setName("SearchFgCom");
+        // btBrowseFgComServer.addActionListener(setupManager.getActionListener());
+        // gridBagConstraints = new java.awt.GridBagConstraints();
+        // gridBagConstraints.gridx = 2;
+        // gridBagConstraints.gridy = 1;
+        // gridBagConstraints.anchor = GridBagConstraints.WEST;
+        // gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        // jPnlFgCom.add(btBrowseFgComServer, gridBagConstraints);
+
         // server
 
         lbFgComServer = new JLabel();
@@ -560,7 +564,7 @@ public class SetupDialog extends JFrame {
         jPnlFgCom.add(tfFgComPorts, gridBagConstraints);
 
         // alternative radios
-        
+
         JPanel jPnlAltRadio = new JPanel();
         jPnlAltRadio.setLayout(new GridBagLayout());
         jPnlAltRadio.setBorder(new TitledBorder("Alternative radios (like Mumble)"));
@@ -574,7 +578,6 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
         jPnlSettings.add(jPnlAltRadio, gridBagConstraints);
 
-
         cbEnableAltRadioText = new JCheckBox();
         cbEnableAltRadioText.setText("Enable alternative radio text (for mumble etc.)");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -585,7 +588,6 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlAltRadio.add(cbEnableAltRadioText, gridBagConstraints);
-
 
         // Multiplayer
 
@@ -618,7 +620,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth=3;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -667,7 +669,6 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlMultiplayer.add(tfMpLocalPort, gridBagConstraints);
-
 
         // CHAT ALIASES
 
@@ -767,7 +768,6 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(12, 2, 2, 2);
         jPnlSettings.add(btCheckSettings, gridBagConstraints);
 
-
         // TAB Flightplans
 
         jPnlFlightPlans = new JPanel();
@@ -816,7 +816,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth=3;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
@@ -863,7 +863,7 @@ public class SetupDialog extends JFrame {
         jPnlFlightPlanExchange.add(tfFpServerPassword, gridBagConstraints);
 
         // Flightplan download
-        
+
         JPanel jPnlLenny = new JPanel();
         jPnlLenny.setLayout(new GridBagLayout());
         jPnlLenny.setBorder(new TitledBorder("Flightplan Download"));
@@ -894,12 +894,11 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth=3;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlLenny.add(tfLennysFpServer , gridBagConstraints);
-
+        jPnlLenny.add(tfLennysFpServer, gridBagConstraints);
 
         btCheckSettings2 = new JButton();
         btCheckSettings2.setText("Check Settings");
@@ -913,7 +912,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.NORTH;
         gridBagConstraints.insets = new java.awt.Insets(12, 2, 2, 2);
         jPnlFlightPlans.add(btCheckSettings2, gridBagConstraints);
-        
+
         // TAB Layers
 
         JPanel jPnlTweaks = new JPanel();
@@ -953,7 +952,7 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
         jPnlTweaks.add(cbNiceShapes, gridBagConstraints);
-        
+
         JPanel jPnlLayerInput = new JPanel();
         jPnlLayerInput.setLayout(new GridBagLayout());
         jPnlLayerInput.setBorder(new TitledBorder("Visible background layers"));
@@ -1044,13 +1043,13 @@ public class SetupDialog extends JFrame {
 
         JPanel jPnlFGFSRemote = new JPanel();
         jPnlFGFSRemote.setLayout(new GridBagLayout());
-        jtpMain.add("FGFS Interface", jPnlFGFSRemote);
+        jtpMain.add("FGFS ORCAM", jPnlFGFSRemote);
 
-        // fgfs cam
-        
-        JPanel jPnlFgfsCamControl = new JPanel();
-        jPnlFgfsCamControl.setLayout(new GridBagLayout());
-        jPnlFgfsCamControl.setBorder(new TitledBorder("FGFS as Camera"));
+        // fgfs cam 1
+
+        JPanel jPnlFgfsCam1 = new JPanel();
+        jPnlFgfsCam1.setLayout(new GridBagLayout());
+        jPnlFgfsCam1.setBorder(new TitledBorder("FGFS Camera 1"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -1059,9 +1058,10 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.weighty = 0;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
-        jPnlFGFSRemote.add(jPnlFgfsCamControl, gridBagConstraints);
+        jPnlFGFSRemote.add(jPnlFgfsCam1, gridBagConstraints);
 
-        JTextArea taCam = new JTextArea("OR can use the aircraft ATC-cam to give you a view onto the airport. \nIt supports view presets, different view locations and more.");
+        JTextArea taCam = new JTextArea(
+                "OR can use the aircraft ORCAM to give you a view onto the airport. \nIt supports view presets, different view locations and more.\nSee http://wiki.flightgear.org/OpenRadar_FGFS_ORCAM");
         taCam.setEditable(false);
         taCam.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1071,10 +1071,10 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jPnlFgfsCamControl.add(taCam, gridBagConstraints);
-        
-        cbFgfsCameraEnabled = new JCheckBox();
-        cbFgfsCameraEnabled.setText("Enable FGFS Cam Control");
+        jPnlFgfsCam1.add(taCam, gridBagConstraints);
+
+        cbFgfsCamera1Enabled = new JCheckBox();
+        cbFgfsCamera1Enabled.setText("Enable FGFS Cam Control");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -1082,21 +1082,21 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
-        jPnlFgfsCamControl.add(cbFgfsCameraEnabled, gridBagConstraints);
-        
-        JLabel lbFgfsCameraHost = new JLabel();
-        lbFgfsCameraHost.setText("Client host");
+        jPnlFgfsCam1.add(cbFgfsCamera1Enabled, gridBagConstraints);
+
+        JLabel lbFgfsCamera1Host = new JLabel();
+        lbFgfsCamera1Host.setText("FGFS host");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlFgfsCamControl.add(lbFgfsCameraHost, gridBagConstraints);
+        jPnlFgfsCam1.add(lbFgfsCamera1Host, gridBagConstraints);
 
-        tfFgfsCameraHost = new JTextField();
-        tfFgfsCameraHost.setName("FGFS host");
-        tfFgfsCameraHost.setToolTipText("The machine that runs the telnet enabled FGFS ('localhost')");
-        tfFgfsCameraHost.setText("localhost");
+        tfFgfsCamera1Host = new JTextField();
+        tfFgfsCamera1Host.setName("FGFS host");
+        tfFgfsCamera1Host.setToolTipText("The machine that runs the telnet enabled FGFS ('localhost')");
+        tfFgfsCamera1Host.setText("localhost");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -1104,21 +1104,21 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlFgfsCamControl.add(tfFgfsCameraHost, gridBagConstraints);
+        jPnlFgfsCam1.add(tfFgfsCamera1Host, gridBagConstraints);
 
-        JLabel lbFgfsCameraPort = new JLabel();
-        lbFgfsCameraPort.setText("FGFS telnet port (TCP):");
+        JLabel lbFgfsCamera1Port = new JLabel();
+        lbFgfsCamera1Port.setText("FGFS telnet port (TCP):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlFgfsCamControl.add(lbFgfsCameraPort, gridBagConstraints);
+        jPnlFgfsCam1.add(lbFgfsCamera1Port, gridBagConstraints);
 
-        tfFgfsCameraPort = new JTextField(5);
-        tfFgfsCameraPort.setName("FGFSPort");
-        tfFgfsCameraPort.setToolTipText("The port that listens for telnet commands ('5000')");
-        tfFgfsCameraPort.setText("5000");
+        tfFgfsCamera1Port = new JTextField(5);
+        tfFgfsCamera1Port.setName("FGFSPort");
+        tfFgfsCamera1Port.setToolTipText("The port that listens for telnet commands ('5000')");
+        tfFgfsCamera1Port.setText("5010");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -1126,61 +1126,93 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlFgfsCamControl.add(tfFgfsCameraPort, gridBagConstraints);
+        jPnlFgfsCam1.add(tfFgfsCamera1Port, gridBagConstraints);
 
-        // packet forwarding
-        // fgfs cam
-        
-        JPanel jPnlFgfsMpForward = new JPanel();
-        jPnlFgfsMpForward.setLayout(new GridBagLayout());
-        jPnlFgfsMpForward.setBorder(new TitledBorder("Forward MP data to FGFS"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 1;
-        gridBagConstraints.weightx = 1;
-        gridBagConstraints.weighty = 1;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
-        jPnlFGFSRemote.add(jPnlFgfsMpForward, gridBagConstraints);
-
-        JTextArea taMPForward= new JTextArea("OR can forward all MP packets that it receives from MP server \nto a local FGFS instance to reduce the required internet bandwidth.\nSide effect: This instance can only be used to view things in the\n OR world. All MP actions are not sent to the MP Server.");
-        taMPForward.setEditable(false);
-        taMPForward.setOpaque(false);
+        cbFgfsLocalMPPacketForward1 = new JCheckBox();
+        cbFgfsLocalMPPacketForward1.setText("Enable MP Forwarding");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.weightx = 1;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jPnlFgfsMpForward.add(taMPForward, gridBagConstraints);
-
-        cbFgfsLocalMPPacketForward = new JCheckBox();
-        cbFgfsLocalMPPacketForward.setText("Enable MP Forwarding");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 0;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
-        jPnlFgfsMpForward.add(cbFgfsLocalMPPacketForward, gridBagConstraints);
-        
-        JLabel lbFgfsLocalMPPacketHost = new JLabel();
-        lbFgfsLocalMPPacketHost.setText("FGFS Host");
+        jPnlFgfsCam1.add(cbFgfsLocalMPPacketForward1, gridBagConstraints);
+
+        JLabel lbFgfsLocalMPPacketPort1 = new JLabel();
+        lbFgfsLocalMPPacketPort1.setText("FGFS MP Port (UDP)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFgfsCam1.add(lbFgfsLocalMPPacketPort1, gridBagConstraints);
+
+        tfFgfsLocalMPPacketPort1 = new JTextField(5);
+        tfFgfsLocalMPPacketPort1.setName("FgComHost");
+        tfFgfsLocalMPPacketPort1.setToolTipText("The UDP Port at which FGFS receives UDP MP data usually '5000'");
+        tfFgfsLocalMPPacketPort1.setText("5010");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFgfsCam1.add(tfFgfsLocalMPPacketPort1, gridBagConstraints);
+
+        // fgfs cam 2
+
+        JPanel jPnlFgfsCam2 = new JPanel();
+        jPnlFgfsCam2.setLayout(new GridBagLayout());
+        jPnlFgfsCam2.setBorder(new TitledBorder("FGFS Camera 2"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 0;
+        gridBagConstraints.weighty = 1;
+        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
+        jPnlFGFSRemote.add(jPnlFgfsCam2, gridBagConstraints);
+
+        cbFgfsCamera2Enabled = new JCheckBox();
+        cbFgfsCamera2Enabled.setText("Enable ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
+        jPnlFgfsCam2.add(cbFgfsCamera2Enabled, gridBagConstraints);
+
+        cbFgfsCamera2SlavedTo1 = new JCheckBox();
+        cbFgfsCamera2SlavedTo1.setText("Slave to Cam1");
+        cbFgfsCamera2SlavedTo1.setToolTipText("One control line will control two cams");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
+        jPnlFgfsCam2.add(cbFgfsCamera2SlavedTo1, gridBagConstraints);
+
+        JLabel lbFgfsCamera2Host = new JLabel();
+        lbFgfsCamera2Host.setText("FGFS host");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlFgfsMpForward.add(lbFgfsLocalMPPacketHost, gridBagConstraints);
+        jPnlFgfsCam2.add(lbFgfsCamera2Host, gridBagConstraints);
 
-        tfFgfsLocalMPPacketHost = new JTextField();
-        tfFgfsLocalMPPacketHost.setName("");
-        tfFgfsLocalMPPacketHost.setToolTipText("The machine that runs FGFS, usually 'localhost'");
-        tfFgfsLocalMPPacketHost.setText("localhost");
+        tfFgfsCamera2Host = new JTextField();
+        tfFgfsCamera2Host.setName("FGFS host");
+        tfFgfsCamera2Host.setToolTipText("The machine that runs the telnet enabled FGFS ('localhost')");
+        tfFgfsCamera2Host.setText("localhost");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -1188,22 +1220,21 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlFgfsMpForward.add(tfFgfsLocalMPPacketHost, gridBagConstraints);
+        jPnlFgfsCam2.add(tfFgfsCamera2Host, gridBagConstraints);
 
-
-        JLabel lbFgfsLocalMPPacketPort = new JLabel();
-        lbFgfsLocalMPPacketPort.setText("FGFS MP Port (UDP)");
+        JLabel lbFgfsCamera2Port = new JLabel();
+        lbFgfsCamera2Port.setText("FGFS telnet port (TCP):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlFgfsMpForward.add(lbFgfsLocalMPPacketPort, gridBagConstraints);
+        jPnlFgfsCam2.add(lbFgfsCamera2Port, gridBagConstraints);
 
-        tfFgfsLocalMPPacketPort = new JTextField(5);
-        tfFgfsLocalMPPacketPort.setName("FgComHost");
-        tfFgfsLocalMPPacketPort.setToolTipText("The UDP Port at which FGFS receives UDP MP data usually '5000'");
-        tfFgfsLocalMPPacketPort.setText("5000");
+        tfFgfsCamera2Port = new JTextField(5);
+        tfFgfsCamera2Port.setName("FGFSPort");
+        tfFgfsCamera2Port.setToolTipText("The port that listens for telnet commands ('5000')");
+        tfFgfsCamera2Port.setText("5020");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -1211,30 +1242,77 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlFgfsMpForward.add(tfFgfsLocalMPPacketPort, gridBagConstraints);
-        
-//        JTextArea taFGFSURL = new JTextArea();
-//        taFGFSURL.setText("fgfs --aircraft=OR-Cam --callsign=dummy --airport=LFSB --telnet=,,10,,5000, --multiplay=in,100,,5010 --multiplay=out,100,localhost,5010");
-//        gridBagConstraints = new java.awt.GridBagConstraints();
-//        gridBagConstraints.gridx = 0;
-//        gridBagConstraints.gridy = 2;
-//        gridBagConstraints.gridwidth = 1;
-//        gridBagConstraints.weightx = 1;
-//        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-//        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-//        jPnlFGFSRemote.add(taFGFSURL, gridBagConstraints);
-//        
+        jPnlFgfsCam2.add(tfFgfsCamera2Port, gridBagConstraints);
+
+        cbFgfsLocalMPPacketForward2 = new JCheckBox();
+        cbFgfsLocalMPPacketForward2.setText("Enable MP Forwarding");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
+        jPnlFgfsCam2.add(cbFgfsLocalMPPacketForward2, gridBagConstraints);
+
+        JLabel cbFgfsLocalMPPacketForward2 = new JLabel();
+        cbFgfsLocalMPPacketForward2.setText("FGFS MP Port (UDP)");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFgfsCam2.add(cbFgfsLocalMPPacketForward2, gridBagConstraints);
+
+        tfFgfsLocalMPPacketPort2 = new JTextField(5);
+        tfFgfsLocalMPPacketPort2.setName("FgComHost");
+        tfFgfsLocalMPPacketPort2.setToolTipText("The UDP Port at which FGFS receives UDP MP data usually '5000'");
+        tfFgfsLocalMPPacketPort2.setText("5020");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlFgfsCam2.add(tfFgfsLocalMPPacketPort2, gridBagConstraints);
+
+        // JTextArea taFGFSURL = new JTextArea();
+        // taFGFSURL.setText("fgfs --aircraft=OR-Cam --callsign=dummy --airport=LFSB --telnet=,,10,,5000, --multiplay=in,100,,5010 --multiplay=out,100,localhost,5010");
+        // gridBagConstraints = new java.awt.GridBagConstraints();
+        // gridBagConstraints.gridx = 0;
+        // gridBagConstraints.gridy = 2;
+        // gridBagConstraints.gridwidth = 1;
+        // gridBagConstraints.weightx = 1;
+        // gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        // gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        // jPnlFGFSRemote.add(taFGFSURL, gridBagConstraints);
+        //
+
+        btCheckSettings3 = new JButton();
+        btCheckSettings3.setText("Check Settings");
+        btCheckSettings3.setName("CheckButton");
+        btCheckSettings3.addActionListener(setupManager.getActionListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.weighty = 1;
+        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagConstraints.insets = new java.awt.Insets(12, 2, 2, 2);
+        jPnlFGFSRemote.add(btCheckSettings3, gridBagConstraints);
+
         
         doLayout();
-        this.setSize((int)jPnlContentPane.getPreferredSize().getWidth(), (int)jPnlContentPane.getPreferredSize().getHeight()+30);
+        this.setSize((int) jPnlContentPane.getPreferredSize().getWidth(), (int) jPnlContentPane.getPreferredSize().getHeight() + 30);
         doLayout();
     }
 
     void preselectAirport(String code, SectorBean autostartAirport) {
-        if(autostartAirport!=null) {
+        if (autostartAirport != null) {
             liSearchResults.setSelectedValue(autostartAirport, true);
             btStart.requestFocus();
-        } else if(code!=null) {
+        } else if (code != null) {
             tfSearchBox.setText(code.trim().toUpperCase());
         }
     }
@@ -1258,7 +1336,7 @@ public class SetupDialog extends JFrame {
 
         List<Integer> list = null;
 
-        if (fgComMode!=FgComMode.Internal) {
+        if (fgComMode != FgComMode.Internal) {
             lbfgComPath.setForeground(Color.black);
         } else {
             // internal
@@ -1270,13 +1348,12 @@ public class SetupDialog extends JFrame {
                 dataOk = false;
             }
         }
-        
-        if (fgComMode!=FgComMode.Internal) {
+
+        if (fgComMode != FgComMode.Internal) {
             lbfgComExec.setForeground(Color.black);
         } else {
             // internal
-            if (!tfFgComExec.getText().trim().isEmpty() &&
-                checkPath(tfFgComPath.getText().trim()+File.separator+tfFgComExec.getText().trim())) {
+            if (!tfFgComExec.getText().trim().isEmpty() && checkPath(tfFgComPath.getText().trim() + File.separator + tfFgComExec.getText().trim())) {
                 lbfgComExec.setForeground(Color.black);
                 data.setFgComExec(tfFgComExec.getText().trim());
             } else {
@@ -1284,15 +1361,15 @@ public class SetupDialog extends JFrame {
                 dataOk = false;
             }
         }
-                
-        if(fgComMode!=FgComMode.Internal) {
-            if(fgComMode==FgComMode.Auto) {
+
+        if (fgComMode != FgComMode.Internal) {
+            if (fgComMode == FgComMode.Auto) {
                 lbFgComHost.setText("localhost");
             }
             lbFgComHost.setForeground(Color.black);
         } else {
             // auto + internal
-            if(checkHost(tfFgComHost.getText().trim())) {
+            if (checkHost(tfFgComHost.getText().trim())) {
                 lbFgComHost.setForeground(Color.black);
                 data.setFgComHost(tfFgComHost.getText().trim());
             } else {
@@ -1301,16 +1378,16 @@ public class SetupDialog extends JFrame {
             }
         }
 
-        if (fgComMode==FgComMode.Off ||
-                ((list = checkPorts(tfFgComPorts.getText().trim())).size() > 0 &&
-                 (list = checkPorts(tfFgComPorts.getText().trim())).size() < 5)) {
+        if (fgComMode == FgComMode.Off
+                || ((list = checkPorts(tfFgComPorts.getText().trim())).size() > 0 && (list = checkPorts(tfFgComPorts.getText().trim())).size() < 5)) {
             lbFgComPorts.setForeground(Color.black);
-            if(fgComMode!=FgComMode.Off) data.setFgComPorts(list);
+            if (fgComMode != FgComMode.Off)
+                data.setFgComPorts(list);
         } else {
             lbFgComPorts.setForeground(Color.red);
             dataOk = false;
         }
-        if (fgComMode==FgComMode.Off || checkHost(tfFgComServer.getText())) {
+        if (fgComMode == FgComMode.Off || checkHost(tfFgComServer.getText())) {
             lbFgComServer.setForeground(Color.black);
             data.setFgComServer(tfFgComServer.getText().trim());
         } else {
@@ -1318,9 +1395,9 @@ public class SetupDialog extends JFrame {
             dataOk = false;
         }
         data.setAltRadioTextEnabled(cbEnableAltRadioText.isSelected());
-        
+
         if (cbEnableFpExchange.isSelected()) {
-            if(checkUrl(tfFpServer.getText().trim())) {
+            if (checkUrl(tfFpServer.getText().trim())) {
                 lbFpServer.setForeground(Color.black);
                 data.setFpServerUrl(tfFpServer.getText().trim());
                 data.setFpServerUser(tfFpServerUser.getText().trim());
@@ -1340,7 +1417,7 @@ public class SetupDialog extends JFrame {
             lbMetarUrl.setForeground(Color.red);
             dataOk = false;
         }
-        if((list = checkPorts(tfMpLocalPort.getText().trim())).size() > 0) {
+        if ((list = checkPorts(tfMpLocalPort.getText().trim())).size() > 0) {
             lbMpLocalPort.setForeground(Color.black);
             data.setMpLocalPort(list.get(0));
         } else {
@@ -1368,7 +1445,7 @@ public class SetupDialog extends JFrame {
             lbMpLocalPort.setForeground(Color.red);
             dataOk = false;
         }
-        if(checkUrl(tfLennysFpServer.getText().trim())) {
+        if (checkUrl(tfLennysFpServer.getText().trim())) {
             lbLennysServer.setForeground(Color.black);
             data.setLenny64Url(tfLennysFpServer.getText().trim());
         } else {
@@ -1378,7 +1455,7 @@ public class SetupDialog extends JFrame {
 
         data.setChatAliasesEnabled(cbEnableChatAliases.isSelected());
         String alias = tfChatPrefix.getText().trim();
-        if(!alias.isEmpty()) {
+        if (!alias.isEmpty()) {
             data.setChatAliasPrefix(alias);
         }
 
@@ -1393,37 +1470,71 @@ public class SetupDialog extends JFrame {
         data.setVisibleLayerMap(visibleLayerMap);
 
         // fgfs remove control
-        data.setFgfsCameraEnabled(cbFgfsCameraEnabled.isSelected());
-        if (checkHost(tfFgfsCameraHost.getText().trim())) {
-            tfFgfsCameraHost.setForeground(Color.black);
-            data.setFgfsCameraHost(tfFgfsCameraHost.getText().trim());
-        }  else {
-            tfFgfsCameraHost.setForeground(Color.red);
-            dataOk = false;
-        }
-        if ((list = checkPorts(tfFgfsCameraPort.getText().trim())).size() == 1) {
-            tfFgfsCameraPort.setForeground(Color.black);
-            data.setFgfsCameraPort(list.get(0));
+        data.setFgfsCamera1Enabled(cbFgfsCamera1Enabled.isSelected());
+        if (checkHost(tfFgfsCamera1Host.getText().trim())) {
+            tfFgfsCamera1Host.setForeground(Color.black);
+            data.setFgfsCamera1Host(tfFgfsCamera1Host.getText().trim());
         } else {
-            tfFgfsCameraPort.setForeground(Color.red);
+            tfFgfsCamera1Host.setForeground(Color.red);
             dataOk = false;
         }
-        data.setFgfsLocalMPPacketForward(cbFgfsLocalMPPacketForward.isSelected());
-        if (checkHost(tfFgfsCameraHost.getText().trim())) {
-            tfFgfsLocalMPPacketHost.setForeground(Color.black);
-            data.setFgfsLocalMPPacketHost(tfFgfsLocalMPPacketHost.getText().trim());
-        }  else {
-            tfFgfsLocalMPPacketHost.setForeground(Color.red);
-            dataOk = false;
-        }
-        if ((list = checkPorts(tfFgfsLocalMPPacketPort.getText().trim())).size() == 1) {
-            tfFgfsLocalMPPacketPort.setForeground(Color.black);
-            data.setFgfsLocalMPPacketPort(list.get(0));
+        if ((list = checkPorts(tfFgfsCamera1Port.getText().trim())).size() == 1) {
+            tfFgfsCamera1Port.setForeground(Color.black);
+            data.setFgfsCamera1Port(list.get(0));
         } else {
-            tfFgfsLocalMPPacketPort.setForeground(Color.red);
+            tfFgfsCamera1Port.setForeground(Color.red);
             dataOk = false;
         }
-        
+        data.setFgfsLocalMPPacketForward1(cbFgfsLocalMPPacketForward1.isSelected());
+        if ((list = checkPorts(tfFgfsLocalMPPacketPort1.getText().trim())).size() == 1) {
+            tfFgfsLocalMPPacketPort1.setForeground(Color.black);
+            data.setFgfsLocalMPPacketPort1(list.get(0));
+        } else {
+            tfFgfsLocalMPPacketPort1.setForeground(Color.red);
+            dataOk = false;
+        }
+        if ((tfFgfsCamera1Host.getText().trim().equalsIgnoreCase("localhost") || tfFgfsCamera1Host.getText().trim().equalsIgnoreCase("127.0.0.1"))
+                && tfFgfsLocalMPPacketPort1.getText().trim().equalsIgnoreCase(tfMpLocalPort.getText().trim())) {
+            // same port as OR local MP port => Loop
+            tfFgfsLocalMPPacketPort1.setForeground(Color.red);
+            dataOk = false;
+        } else {
+            tfFgfsLocalMPPacketPort1.setForeground(Color.black);
+        }
+        // cam 2
+        data.setFgfsCamera2Enabled(cbFgfsCamera2Enabled.isSelected());
+        data.setFgfsSlave2To1(cbFgfsCamera2SlavedTo1.isSelected());
+        if (checkHost(tfFgfsCamera2Host.getText().trim())) {
+            tfFgfsCamera2Host.setForeground(Color.black);
+            data.setFgfsCamera2Host(tfFgfsCamera2Host.getText().trim());
+        } else {
+            tfFgfsCamera2Host.setForeground(Color.red);
+            dataOk = false;
+        }
+        if ((list = checkPorts(tfFgfsCamera2Port.getText().trim())).size() == 1) {
+            tfFgfsCamera2Port.setForeground(Color.black);
+            data.setFgfsCamera2Port(list.get(0));
+        } else {
+            tfFgfsCamera2Port.setForeground(Color.red);
+            dataOk = false;
+        }
+        data.setFgfsLocalMPPacketForward2(cbFgfsLocalMPPacketForward2.isSelected());
+        if ((list = checkPorts(tfFgfsLocalMPPacketPort2.getText().trim())).size() == 1) {
+            tfFgfsLocalMPPacketPort2.setForeground(Color.black);
+            data.setFgfsLocalMPPacketPort2(list.get(0));
+        } else {
+            tfFgfsLocalMPPacketPort2.setForeground(Color.red);
+            dataOk = false;
+        }
+        if ((tfFgfsCamera2Host.getText().trim().equalsIgnoreCase("localhost") || tfFgfsCamera2Host.getText().trim().equalsIgnoreCase("127.0.0.1"))
+                && tfFgfsLocalMPPacketPort2.getText().trim().equalsIgnoreCase(tfMpLocalPort.getText().trim())) {
+            // same port as OR local MP port => Loop
+            tfFgfsLocalMPPacketPort2.setForeground(Color.red);
+            dataOk = false;
+        } else {
+            tfFgfsLocalMPPacketPort2.setForeground(Color.black);
+        }
+
         btCheckSettings.setText("Check Settings & Save");
         btCheckSettings.setEnabled(true);
         btCheckSettings.setForeground(Color.black);
@@ -1440,7 +1551,8 @@ public class SetupDialog extends JFrame {
     }
 
     private boolean checkUrl(String sUrl) {
-        if(sUrl.isEmpty()) return false;
+        if (sUrl.isEmpty())
+            return false;
         try {
             URL url = new URL(sUrl);
             return checkHost(url.getHost());
@@ -1466,19 +1578,21 @@ public class SetupDialog extends JFrame {
     }
 
     private boolean checkPath(String text) {
-        if(text.isEmpty()) return true;
+        if (text.isEmpty())
+            return true;
         return new File(text).exists();
     }
 
     private boolean checkHost(String hostname) {
-        if(hostname.isEmpty()) return true;
+        if (hostname.isEmpty())
+            return true;
         try {
             InetAddress address = Inet4Address.getByName(hostname);
             return address != null;
         } catch (UnknownHostException e) {
             return false;
         } catch (Exception e) {
-            log.error("Error while checking host!",e);
+            log.error("Error while checking host!", e);
         }
         return false;
     }
@@ -1507,18 +1621,24 @@ public class SetupDialog extends JFrame {
                 if (defReader != null) {
                     try {
                         defReader.close();
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+                    }
                 }
                 if (userReader != null) {
                     try {
                         userReader.close();
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+                    }
                 }
                 fgComMode = FgComMode.valueOf(p.getProperty("fgCom.mode", FgComMode.Internal.toString()));
-                if(fgComMode == FgComMode.Auto) cbFgComMode.setSelectedIndex(0);
-                if(fgComMode == FgComMode.Internal) cbFgComMode.setSelectedIndex(1);
-                if(fgComMode == FgComMode.External) cbFgComMode.setSelectedIndex(2);
-                if(fgComMode == FgComMode.Off) cbFgComMode.setSelectedIndex(3);
+                if (fgComMode == FgComMode.Auto)
+                    cbFgComMode.setSelectedIndex(0);
+                if (fgComMode == FgComMode.Internal)
+                    cbFgComMode.setSelectedIndex(1);
+                if (fgComMode == FgComMode.External)
+                    cbFgComMode.setSelectedIndex(2);
+                if (fgComMode == FgComMode.Off)
+                    cbFgComMode.setSelectedIndex(3);
 
                 tfFgComPath.setText(p.getProperty("fgCom.path", ""));
                 tfFgComPath.setText(p.getProperty("fgCom.path", ""));
@@ -1526,9 +1646,9 @@ public class SetupDialog extends JFrame {
                 tfFgComServer.setText(p.getProperty("fgCom.server", ""));
                 tfFgComHost.setText(p.getProperty("fgCom.host", "localhost"));
                 tfFgComPorts.setText(p.getProperty("fgCom.clientPorts", "16661,16662"));
-                
+
                 cbEnableAltRadioText.setSelected("true".equals(p.getProperty("altRadioText.enable", "false")));
-                
+
                 tfMpServer.setText(p.getProperty("mp.server", "mpserver01.flightgear.org"));
                 tfMpPort.setText(p.getProperty("mp.serverPort", "5000"));
                 tfMpLocalPort.setText(p.getProperty("mp.clientPort", "5001"));
@@ -1545,35 +1665,40 @@ public class SetupDialog extends JFrame {
                 tfChatPrefix.setText(p.getProperty("chat.alias.prefix", "."));
                 tfChatPrefix.setEnabled(cbEnableChatAliases.isSelected());
 
-
                 tfMetarUrl.setText(p.getProperty("metar.url", "http://weather.noaa.gov/pub/data/observations/metar/stations/"));
 
                 cbDataboxLayout.setSelectedIndex(setupManager.getDatablockLayoutManager().getIndexOfActiveLayout());
 
                 tfLennysFpServer.setText(p.getProperty("fpLenny.server", "http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5"));
-                
+
                 {
                     String name = p.getProperty("radar.datablockLayout");
-                    if(name!=null) {
+                    if (name != null) {
                         setupManager.getDatablockLayoutManager().setActiveLayout(null, name);
                         cbDataboxLayout.setSelectedItem(setupManager.getDatablockLayoutManager().getActiveLayout());
                     }
                 }
                 cbNiceShapes.setSelected(!"false".equals(p.getProperty(GeometryToShapeProjector.TOGGLE_STATE)));
-                
+
                 cbLandmass.setSelected(!"false".equals(p.getProperty("layer.landmass")));
                 cbUrban.setSelected(!"false".equals(p.getProperty("layer.urban")));
                 cbLake.setSelected(!"false".equals(p.getProperty("layer.lake")));
                 cbStream.setSelected("true".equals(p.getProperty("layer.stream")));
                 cbTarmac.setSelected(!"false".equals(p.getProperty("layer.tarmac")));
                 cbGroundnet.setSelected(!"false".equals(p.getProperty("layer.groundnet")));
-                
-                cbFgfsCameraEnabled.setSelected("true".equals(p.getProperty("fgfs.cameraEnabled")));
-                tfFgfsCameraHost.setText(p.getProperty("fgfs.cameraHost", "localhost"));
-                tfFgfsCameraPort.setText(p.getProperty("fgfs.cameraPort", "5000"));
-                cbFgfsLocalMPPacketForward.setSelected("true".equals(p.getProperty("fgfs.localMPPacketForward")));
-                tfFgfsLocalMPPacketHost.setText(p.getProperty("fgfs.localMPPacketHost", "localhost"));
-                tfFgfsLocalMPPacketPort.setText(p.getProperty("fgfs.localMPPacketPort", "5000"));
+
+                cbFgfsCamera1Enabled.setSelected("true".equals(p.getProperty("fgfs.cameraEnabled")));
+                tfFgfsCamera1Host.setText(p.getProperty("fgfs.cameraHost", "localhost"));
+                tfFgfsCamera1Port.setText(p.getProperty("fgfs.cameraPort", "5010"));
+                cbFgfsLocalMPPacketForward1.setSelected("true".equals(p.getProperty("fgfs.localMPPacketForward")));
+                tfFgfsLocalMPPacketPort1.setText(p.getProperty("fgfs.localMPPacketPort", "5010"));
+
+                cbFgfsCamera2Enabled.setSelected("true".equals(p.getProperty("fgfs.camera2Enabled")));
+                cbFgfsCamera2SlavedTo1.setSelected("true".equals(p.getProperty("fgfs.camera2SlavedTo1")));
+                tfFgfsCamera2Host.setText(p.getProperty("fgfs.camera2Host", "localhost"));
+                tfFgfsCamera2Port.setText(p.getProperty("fgfs.camera2Port", "5020"));
+                cbFgfsLocalMPPacketForward2.setSelected("true".equals(p.getProperty("fgfs.localMPPacketForward2")));
+                tfFgfsLocalMPPacketPort2.setText(p.getProperty("fgfs.localMPPacketPort2", "5020"));
             }
 
         }
@@ -1593,37 +1718,42 @@ public class SetupDialog extends JFrame {
         p.put("mp.serverPort", tfMpPort.getText().trim());
         p.put("mp.clientPort", tfMpLocalPort.getText().trim());
 
-        p.put("fpExchange.enable", ""+cbEnableFpExchange.isSelected());
+        p.put("fpExchange.enable", "" + cbEnableFpExchange.isSelected());
         p.put("fpExchange.server", tfFpServer.getText().trim());
         p.put("fpExchange.user", tfFpServerUser.getText().trim());
         p.put("fpExchange.password", new String(tfFpServerPassword.getPassword()));
 
-        p.put("altRadioText.enable", ""+cbEnableAltRadioText.isSelected());
+        p.put("altRadioText.enable", "" + cbEnableAltRadioText.isSelected());
 
-        p.put("chat.alias.enabled",""+cbEnableChatAliases.isSelected());
+        p.put("chat.alias.enabled", "" + cbEnableChatAliases.isSelected());
         p.put("chat.alias.prefix", tfChatPrefix.getText().trim());
 
         p.put("metar.url", tfMetarUrl.getText().trim());
 
         p.put("fpLenny.server", tfLennysFpServer.getText().trim());
-        
-        p.put("radar.datablockLayout", ((ADatablockLayout)cbDataboxLayout.getSelectedItem()).getName());
 
-        p.put(GeometryToShapeProjector.TOGGLE_STATE, ""+cbNiceShapes.isSelected());
+        p.put("radar.datablockLayout", ((ADatablockLayout) cbDataboxLayout.getSelectedItem()).getName());
 
-        p.put("layer.landmass", ""+cbLandmass.isSelected());
-        p.put("layer.urban", ""+cbUrban.isSelected());
-        p.put("layer.lake", ""+cbLake.isSelected());
-        p.put("layer.stream", ""+cbStream.isSelected());
-        p.put("layer.tarmac", ""+cbTarmac.isSelected());
-        p.put("layer.groundnet", ""+cbGroundnet.isSelected());
+        p.put(GeometryToShapeProjector.TOGGLE_STATE, "" + cbNiceShapes.isSelected());
 
-        p.put("fgfs.cameraEnabled", ""+cbFgfsCameraEnabled.isSelected());
-        p.put("fgfs.cameraHost", tfFgfsCameraHost.getText());
-        p.put("fgfs.cameraPort", tfFgfsCameraPort.getText());
-        p.put("fgfs.localMPPacketForward", ""+cbFgfsLocalMPPacketForward.isSelected());
-        p.put("fgfs.localMPPacketHost", tfFgfsLocalMPPacketHost.getText());
-        p.put("fgfs.localMPPacketPort", tfFgfsLocalMPPacketPort.getText());
+        p.put("layer.landmass", "" + cbLandmass.isSelected());
+        p.put("layer.urban", "" + cbUrban.isSelected());
+        p.put("layer.lake", "" + cbLake.isSelected());
+        p.put("layer.stream", "" + cbStream.isSelected());
+        p.put("layer.tarmac", "" + cbTarmac.isSelected());
+        p.put("layer.groundnet", "" + cbGroundnet.isSelected());
+
+        p.put("fgfs.cameraEnabled", "" + cbFgfsCamera1Enabled.isSelected());
+        p.put("fgfs.cameraHost", tfFgfsCamera1Host.getText());
+        p.put("fgfs.cameraPort", tfFgfsCamera1Port.getText());
+        p.put("fgfs.localMPPacketForward", "" + cbFgfsLocalMPPacketForward1.isSelected());
+        p.put("fgfs.localMPPacketPort", tfFgfsLocalMPPacketPort1.getText());
+        p.put("fgfs.camera2Enabled", "" + cbFgfsCamera2Enabled.isSelected());
+        p.put("fgfs.camera2SlavedTo1", "" + cbFgfsCamera2SlavedTo1.isSelected());
+        p.put("fgfs.camera2Host", tfFgfsCamera2Host.getText());
+        p.put("fgfs.camera2Port", tfFgfsCamera2Port.getText());
+        p.put("fgfs.localMPPacketForward2", "" + cbFgfsLocalMPPacketForward2.isSelected());
+        p.put("fgfs.localMPPacketPort2", tfFgfsLocalMPPacketPort2.getText());
 
         FileWriter userWriter = null;
         try {
@@ -1638,15 +1768,16 @@ public class SetupDialog extends JFrame {
             if (userWriter != null) {
                 try {
                     userWriter.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
             }
         }
     }
 
     public void sectorSelected(AirportData data) {
         SectorBean sb = liSearchResults.getSelectedValue();
-        if(sb!=null) {
-            if(sb.isSectorDownloaded()) {
+        if (sb != null) {
+            if (sb.isSectorDownloaded()) {
                 data.setAirportCode(sb.getAirportCode());
                 data.setAirportPosition(sb.getPosition());
                 data.setAirportName(sb.getAirportName());
@@ -1654,10 +1785,10 @@ public class SetupDialog extends JFrame {
                 btStart.setEnabled(readInputs(data));
                 btCreateSector.setEnabled(false);
                 data.loadLastCallSign();
-                if(data.getCallSign()!=null) {
+                if (data.getCallSign() != null) {
                     tfCallSign.setText(data.getCallSign());
                 } else {
-                    tfCallSign.setText(data.getAirportCode()+"_TW");
+                    tfCallSign.setText(data.getAirportCode() + "_TW");
                 }
             } else {
                 data.setAirportCode(sb.getAirportCode());
@@ -1674,25 +1805,25 @@ public class SetupDialog extends JFrame {
 
     public void setStatus(int progress, String message) {
         jProgressBar.setValue(progress);
-        jProgressBar.setString(""+progress+"%");
+        jProgressBar.setString("" + progress + "%");
         Rectangle rect = jProgressBar.getBounds();
         rect.x = 0;
         rect.y = 0;
-        jProgressBar.paintImmediately( rect );
+        jProgressBar.paintImmediately(rect);
         cbStatusModel.addNewStatusMessage(message);
         cbStatusMessages.setSelectedItem(message);
         rect = cbStatusMessages.getBounds();
         rect.x = 0;
         rect.y = 0;
-        cbStatusMessages.paintImmediately( rect );
+        cbStatusMessages.paintImmediately(rect);
 
     }
 
     private class FgComModeActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource()==cbFgComMode) {
-                if(cbFgComMode.getSelectedIndex()==0) {
+            if (e.getSource() == cbFgComMode) {
+                if (cbFgComMode.getSelectedIndex() == 0) {
                     fgComMode = FgComMode.Auto;
                     cbFgComMode.setToolTipText("OpenRadar will start FGCom internally and control it!");
                     // internal
@@ -1702,7 +1833,7 @@ public class SetupDialog extends JFrame {
                     tfFgComHost.setEnabled(false);
                     tfFgComHost.setText("localhost");
                     tfFgComServer.setEnabled(true);
-                } else if(cbFgComMode.getSelectedIndex()==1) {
+                } else if (cbFgComMode.getSelectedIndex() == 1) {
                     fgComMode = FgComMode.Internal;
                     cbFgComMode.setToolTipText("OpenRadar will start FGCom internally and control it!");
                     // internal
@@ -1711,7 +1842,7 @@ public class SetupDialog extends JFrame {
                     tfFgComPorts.setEnabled(true);
                     tfFgComHost.setEnabled(true);
                     tfFgComServer.setEnabled(true);
-                } else if(cbFgComMode.getSelectedIndex()==2) {
+                } else if (cbFgComMode.getSelectedIndex() == 2) {
                     fgComMode = FgComMode.External;
                     cbFgComMode.setToolTipText("You will start FGCom or FgComGui yourself and OpenRadar will control it!");
                     // external
@@ -1720,7 +1851,7 @@ public class SetupDialog extends JFrame {
                     tfFgComPorts.setEnabled(true);
                     tfFgComHost.setEnabled(true);
                     tfFgComServer.setEnabled(false);
-                } else if(cbFgComMode.getSelectedIndex()==3) {
+                } else if (cbFgComMode.getSelectedIndex() == 3) {
                     fgComMode = FgComMode.Off;
                     cbFgComMode.setToolTipText("FGCom will not be controlled by OpenRadar");
                     // off

@@ -48,17 +48,24 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import org.apache.log4j.Logger;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.flightplan.SquawkCodeManagerOld;
 import de.knewcleus.openradar.gui.setup.AirportData;
+import de.knewcleus.openradar.util.RegexTextField;
+//import de.knewcleus.openradar.util.BetterTextField;
 
 public class TransponderSettingsDialog extends JDialog {
 
@@ -66,8 +73,13 @@ public class TransponderSettingsDialog extends JDialog {
     private final GuiMasterController master;
 //    private final RadarContactController controller;
 
-    private JLabel lbTransitionAlt = new JLabel("TransitionAlt");
-    private JTextField tfTransitionAlt = new JTextField(5);
+    private JLabel lbTransitionAlt = new JLabel("Transition Altitude");
+    private RegexTextField tfTransitionAlt;
+    private JLabel lbTransitionLayerWidth = new JLabel("Min. Width of Transition Layer");
+    private RegexTextField tfTransitionLayerWidth ;
+    private JCheckBox cbManualTL = new JCheckBox("Manual TL");
+    private JLabel lbManualTransitionLevel = new JLabel("Manual, fix Transition Level (TL)");
+    private RegexTextField tfFixTransitionLevel;
     private JLabel lbVFRCode = new JLabel("VFR code");
     private JLabel lbIFRCode = new JLabel("IFR code");
     private JLabel lbVFR = new JLabel("VFR range");
@@ -82,10 +94,19 @@ public class TransponderSettingsDialog extends JDialog {
     private SquawkCodeListener squawkCodeListener = new SquawkCodeListener();
     private SquawkCodeManagerOld squawkCodeManager;
 
+    private Logger log = Logger.getLogger(TransponderSettingsDialog.class);
+    
     public TransponderSettingsDialog(GuiMasterController master, RadarContactController controller) {
         this.master = master;
 //        this.controller = controller;
         this.squawkCodeManager = master.getAirportData().getSquawkCodeManager();
+        try {
+            tfTransitionAlt = new RegexTextField(3, "^\\d{0,3}$");
+            tfTransitionLayerWidth = new RegexTextField(2, "^\\d{0,2}$");
+            tfFixTransitionLevel = new RegexTextField(3, "^\\d{0,3}$");
+        } catch(Exception e) {
+            log.error(e.getMessage());
+        }
         initComponents();
     }
 
@@ -120,6 +141,8 @@ public class TransponderSettingsDialog extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         add(jPnlTransition, gridBagConstraints);
 
+        // ---------------------------
+        
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -128,17 +151,107 @@ public class TransponderSettingsDialog extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
         jPnlTransition.add(lbTransitionAlt, gridBagConstraints);
         
-        tfTransitionAlt.setToolTipText("Altitude to switch between ATIS airpressure and standard pressure");
+        tfTransitionAlt.setToolTipText("Altitude to switch from ATIS airpressure to standard pressure while climbing.");
         tfTransitionAlt.addKeyListener(squawkCodeListener);
         tfTransitionAlt.setHorizontalAlignment(JTextField.RIGHT);
         
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth=0;
-        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.gridwidth=1;
+        gridBagConstraints.weightx=1.0;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
         jPnlTransition.add(tfTransitionAlt, gridBagConstraints);
+
+        JLabel lbFt1 = new JLabel("00 ft");
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth=1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlTransition.add(lbFt1, gridBagConstraints);
+        
+
+        // ---------------------------
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlTransition.add(lbTransitionLayerWidth, gridBagConstraints);
+        
+        tfTransitionLayerWidth.setToolTipText("The minimum separation between a plane flying TA and another flying TL (at least 500 or better 1000 ft)");
+        tfTransitionLayerWidth.addKeyListener(squawkCodeListener);
+        tfTransitionLayerWidth.setHorizontalAlignment(JTextField.RIGHT);
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth=1;
+        gridBagConstraints.weightx=1.0;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlTransition.add(tfTransitionLayerWidth, gridBagConstraints);
+        
+        JLabel lbFt2 = new JLabel("00 ft");
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth=1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlTransition.add(lbFt2, gridBagConstraints);
+        
+        // ---------------------------
+        
+        cbManualTL.setToolTipText("Disables automatic update for every air pressure change. Use it only, if the airport really uses a fixed TL!");
+        cbManualTL.addChangeListener(new ManualTLListener());
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlTransition.add(cbManualTL, gridBagConstraints);
+
+        // ---------------------------
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlTransition.add(lbManualTransitionLevel, gridBagConstraints);
+        
+        JLabel lbFL = new JLabel("FL");
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth=1;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlTransition.add(lbFL, gridBagConstraints);
+        
+        tfFixTransitionLevel.setToolTipText("The minimum usable flightlevel above TA. Be aware, that YOU ARE RESPONSIBLE to define this correctly, if you disable automatic update!");
+        tfFixTransitionLevel.addKeyListener(squawkCodeListener);
+        tfFixTransitionLevel.setHorizontalAlignment(JTextField.RIGHT);
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth=1;
+        gridBagConstraints.anchor = GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 0);
+        jPnlTransition.add(tfFixTransitionLevel, gridBagConstraints);
 
         // squawk
         
@@ -256,7 +369,22 @@ public class TransponderSettingsDialog extends JDialog {
 
     public void show(MouseEvent e) {
 
-        tfTransitionAlt.setText(""+master.getAirportData().getTransitionAlt());
+        tfTransitionAlt.setText(""+master.getAirportData().getTransitionAlt()/100);
+        tfTransitionLayerWidth.setValue(""+master.getAirportData().getTransitionLayerWidth()/100);
+        tfFixTransitionLevel.setText(""+master.getAirportData().getTransitionLevelFix());
+        if(master.getAirportData().isManualTransitionLevel()) {
+            cbManualTL.setSelected(true);
+            lbTransitionLayerWidth.setEnabled(false);
+            tfTransitionLayerWidth.setEnabled(false);
+            lbManualTransitionLevel.setEnabled(true);
+            tfFixTransitionLevel.setEnabled(true);
+        } else {
+            cbManualTL.setSelected(false);
+            lbTransitionLayerWidth.setEnabled(true);
+            tfTransitionLayerWidth.setEnabled(true);
+            lbManualTransitionLevel.setEnabled(false);
+            tfFixTransitionLevel.setEnabled(false);
+        }
         
         tfVFRCode.setText(""+squawkCodeManager.getVfrCode());
         tfIFRCode.setText(""+squawkCodeManager.getIfrCode());
@@ -304,7 +432,15 @@ public class TransponderSettingsDialog extends JDialog {
     public void closeDialog() {
         if(isVisible()) {
             try {
-                master.getAirportData().setTransitionAlt(master,Integer.parseInt(tfTransitionAlt.getText()));
+                master.getAirportData().setTransitionAlt(master,Integer.parseInt(tfTransitionAlt.getText())*100);
+                if(cbManualTL.isSelected()) {
+                    master.getAirportData().setManualTransitionLevel(true);
+                    master.getAirportData().setTransitionLevelFix(Integer.parseInt(tfFixTransitionLevel.getText()));
+                } else {
+                    master.getAirportData().setManualTransitionLevel(false);
+                    master.getAirportData().setTransitionLayerWidth(Integer.parseInt(tfTransitionLayerWidth.getText())*100);
+                }
+                
                 master.getStatusManager().updateTransitionValues();
             } catch(Exception e) {
                 return;
@@ -363,10 +499,12 @@ public class TransponderSettingsDialog extends JDialog {
                 closeDialog();
             } 
 
-            if(((JTextField)e.getSource()).getText().length()>=4 || !(""+e.getKeyChar()).matches("[0-7]")) {
-                e.consume();
-            } 
-            verifyRange(e.getKeyChar());
+            if(tfVFRCode.equals(e.getSource()) || tfIFRCode.equals(e.getSource()) || tfSquawkFromVFR.equals(e.getSource()) || tfSquawkToVFR.equals(e.getSource()) || tfSquawkFromIFR.equals(e.getSource()) || tfSquawkToIFR.equals(e.getSource())) {
+                if(((JTextField)e.getSource()).getText().length()>=4 || !(""+e.getKeyChar()).matches("[0-7]")) {
+                    e.consume();
+                } 
+                verifyRange(e.getKeyChar());
+            }
         }
     }
 
@@ -458,4 +596,23 @@ public class TransponderSettingsDialog extends JDialog {
             return false;
         }
     }
+    
+    class ManualTLListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent arg0) {
+            if(cbManualTL.isSelected()) {
+                lbTransitionLayerWidth.setEnabled(false);
+                tfTransitionLayerWidth.setEnabled(false);
+                lbManualTransitionLevel.setEnabled(true);
+                tfFixTransitionLevel.setEnabled(true);
+            } else {
+                lbTransitionLayerWidth.setEnabled(true);
+                tfTransitionLayerWidth.setEnabled(true);
+                lbManualTransitionLevel.setEnabled(false);
+                tfFixTransitionLevel.setEnabled(false);
+            }
+        }
+
+    }
+
 }

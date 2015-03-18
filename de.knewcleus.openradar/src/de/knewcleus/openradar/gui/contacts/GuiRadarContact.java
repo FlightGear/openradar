@@ -420,6 +420,7 @@ public class GuiRadarContact {
         if(view==null) return 0d;
         Point2D apPos = view.convertToDeviceLocation(airportData.getAirportPosition());
         Point2D plPos = view.getPlayersMapPosition();
+
         return Math.sqrt( Math.pow(plPos.getX()-apPos.getX(),2) + Math.pow(plPos.getY()-apPos.getY(),2) ) * Converter2D.getMilesPerDot(getMapViewerAdapter());
     }
 
@@ -493,7 +494,7 @@ public class GuiRadarContact {
     }
 
     public synchronized String getTranspMode() {
-        return player.getTranspMode();
+        return player.getTranspModeS();
     }
 
     public synchronized boolean isIdentActive() {

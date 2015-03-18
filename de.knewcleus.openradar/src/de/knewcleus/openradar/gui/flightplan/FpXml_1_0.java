@@ -79,7 +79,8 @@ public class FpXml_1_0 {
         String assignedRoute = eFlightPlan.getChild("header").getChildText("assignedRoute");        
         String state = eFlightPlan.getChild("header").getChildText("status");
         boolean fgcomSupport = "true".equals(eFlightPlan.getChild("header").getChildText("fgcom"));
-
+        String flags = eFlightPlan.getChild("header").getChildText("flags");
+        
         String type = eFlightPlan.getChild("data").getChildText("type");
         String aircraft = eFlightPlan.getChild("data").getChildText("aircraft");
         String trueAirspeed = eFlightPlan.getChild("data").getChildText("trueAirspeed");
@@ -124,7 +125,7 @@ public class FpXml_1_0 {
 //            fp=existingFp;
 //        } else {
         {
-            fp = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedRunway, assignedAlt, assignedRoute, state, type, aircraft, trueAirspeed, departure, departureTime,
+            fp = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedRunway, assignedAlt, assignedRoute, state, flags, type, aircraft, trueAirspeed, departure, departureTime,
                                     cruisingAlt, route, destination, alternateDest, estFlightTime, fuelTime, pilot, soulsOnBoard, remarks);
         }
         contact.setFgComSupport(fgcomSupport);
@@ -213,6 +214,12 @@ public class FpXml_1_0 {
             Element eFgCom = new Element("fgcom");
             eFgCom.setText(contact.hasFgComSupport()?"true":"false");
             eFpHeader.addContent(eFgCom);
+
+            Element eFlags = new Element("flags");
+            if (fp.getFlags() != null) {
+                eFlags.setText(fp.getFlags());
+            }
+            eFpHeader.addContent(eFlags);
 
             // data
 
@@ -313,11 +320,12 @@ public class FpXml_1_0 {
         List<FpAtc> result = new ArrayList<FpAtc>();
         for(Element eAtc : eAtcsInRange.getChildren("atc")) {
             String callsign = eAtc.getChildText("callsign");
+            String username = eAtc.getChildText("username");
             String frequency = eAtc.getChildText("frequency");
             double lon = Double.parseDouble(eAtc.getChildText("lon"));
             double lat = Double.parseDouble(eAtc.getChildText("lat"));
             double distance =  Double.parseDouble(eAtc.getChildText("dist"));
-            result.add(new FpAtc(callsign, frequency, new Point2D.Double(lon,lat),distance));
+            result.add(new FpAtc(callsign, username, frequency, new Point2D.Double(lon,lat),distance));
         }
         
         return result;

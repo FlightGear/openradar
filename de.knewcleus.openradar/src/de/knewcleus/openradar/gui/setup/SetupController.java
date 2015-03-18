@@ -293,7 +293,7 @@ public class SetupController {
      * @param line
      * @return
      */
-    private Point2D getRunwayPosition(String line) {
+    public static Point2D getRunwayPosition(String line) {
         Point2D result;
         
         StringTokenizer st = new StringTokenizer(line," \t");

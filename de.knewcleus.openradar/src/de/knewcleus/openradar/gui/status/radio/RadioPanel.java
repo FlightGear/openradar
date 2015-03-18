@@ -121,11 +121,24 @@ public class RadioPanel extends JPanel {
             cbFrequencies.addActionListener(radioManager.getActionListener());
             cbFrequencies.addMouseListener(radioManager.getRadioModeMouseListener());
 
+            JLabel lbVolume = new JLabel();
+            lbVolume.setToolTipText("Volume");
+            lbVolume.setForeground(Color.lightGray);
+            radioManager.registerLabel(model.getRadioKey(),lbVolume);
+            lbVolume.setFont(lbVolume.getFont().deriveFont(8));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 2;
+            gridBagConstraints.gridy = i;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+            gridBagConstraints.insets = new java.awt.Insets(6, 4, 0, 0);
+            this.add(lbVolume,gridBagConstraints);
+
+            
             JButton btPTT = new JButton();
             btPTT.setText("PTT");
             btPTT.setName("ptt-"+model.getRadioKey());
             gridBagConstraints = new GridBagConstraints();
-            gridBagConstraints.gridx = 2;
+            gridBagConstraints.gridx = 3;
             gridBagConstraints.gridy = i;
             gridBagConstraints.weightx = isFgComRestartable ? 0 : 1;
             gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;

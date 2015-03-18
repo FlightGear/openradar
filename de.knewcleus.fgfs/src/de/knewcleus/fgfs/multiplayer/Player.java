@@ -56,9 +56,15 @@ public class Player {
 	protected volatile String frequency="";
     protected volatile Integer transpSquawkCode=null;
 	protected volatile Integer transpAltitude=null;
-	protected volatile String transpMode=null;
+	protected volatile int transpMode=0;
 	protected volatile long transpLastIdentStart=0;
-
+   /*
+    *  0 = transponder mode A
+    *  1 = transponder mode C
+    *  2 = transponder mode S
+    */
+	public enum TransponderModes {A,C,S};
+	
 	public Player(String callsign) {
 		this.callsign=callsign;
 	}
@@ -135,11 +141,15 @@ public class Player {
         this.transpAltitude = transpAltitude;
     }
 
-    public synchronized String getTranspMode() {
-        return transpMode == null ? (transpAltitude!=null ? "C" : null) : transpMode;
+    public synchronized int getTranspMode() {
+        return transpMode;
     }
 
-    public synchronized void setTranspMode(String transpMode) {
+    public synchronized String getTranspModeS() {
+        return transpAltitude!=null && -1<transpMode && 3>transpMode ? TransponderModes.values()[transpAltitude].toString() : null;// : transpMode;
+    }
+
+    public synchronized void setTranspMode(int transpMode) {
         this.transpMode = transpMode;
     }
 

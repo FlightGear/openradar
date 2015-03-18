@@ -51,6 +51,7 @@ public class MpChatPanel extends javax.swing.JPanel {
 
     // private javax.swing.JTextArea taMPChatInput;
     private javax.swing.JTextField tfMPChatInput;
+    private Color chatFieldDefaultForegroundColor;
     private final static Object chatMessageLock = new Object();
 
     private javax.swing.JLabel lbMpShowAll;
@@ -155,6 +156,7 @@ public class MpChatPanel extends javax.swing.JPanel {
 
         tfMPChatInput.setEditable(true);
         tfMPChatInput.setColumns(1);
+        chatFieldDefaultForegroundColor = tfMPChatInput.getForeground();
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 0;
@@ -212,6 +214,15 @@ public class MpChatPanel extends javax.swing.JPanel {
         }
     }
 
+    public void resetChatMsgColor() {
+        synchronized(chatMessageLock) {
+            if(!tfMPChatInput.getForeground().equals(chatFieldDefaultForegroundColor)) {
+                tfMPChatInput.setForeground(chatFieldDefaultForegroundColor);
+                tfMPChatInput.invalidate();
+            }
+        }
+    }
+    
     public void requestFocusForInput() {
         tfMPChatInput.requestFocus();
     }

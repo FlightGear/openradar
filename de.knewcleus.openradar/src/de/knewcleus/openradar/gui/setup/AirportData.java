@@ -94,7 +94,14 @@ public class AirportData implements INavPointListener {
     private volatile Point2D towerPosition = null;
     /** given in METER */
     private double elevation = 0f;
+    /** the transition altitude */
     private int transitionAlt = 5000;
+    /** the minimum width of the transition layer */
+    private int transitionLayerWidth = 500;
+    /** the fix transition FL, if defined. If defined disables the FL calculation */
+    private boolean manualTransitionLevel = false;
+    private Integer transitionLevelFix;
+    /** the value of the calculated transition (flight) level */
     private Integer transitionFL = null;
     private double magneticDeclination = 0f;
 
@@ -150,13 +157,19 @@ public class AirportData implements INavPointListener {
 
     private final SquawkCodeManagerOld squawkCodeManager = new SquawkCodeManagerOld(this);
 
-    private boolean fgfsCameraEnabled = true;
-    private String fgfsCameraHost = "localhost";
-    private int fgfsCameraPort = 5000;
-    private boolean fgfsLocalMPPacketForward = true;
-    private String fgfsLocalMPPacketHost = "localhost";
-    private int fgfsLocalMPPacketPort = 5000;
+    private boolean fgfsCamera1Enabled = false;
+    private String fgfsCamera1Host = "localhost";
+    private int fgfsCamera1Port = 5010;
+    private boolean fgfsLocalMPPacketForward1 = false;
+    private int fgfsLocalMPPacketPort1 = 5010;
     
+    private boolean fgfsCamera2Enabled = false;
+    private boolean fgfsSlave2To1 = false;
+    private String fgfsCamera2Host = "localhost";
+    private int fgfsCamera2Port = 5020;
+    private boolean fgfsLocalMPPacketForward2 = false;
+    private int fgfsLocalMPPacketPort2 = 5020;
+
     private static Logger log = LogManager.getLogger(AirportData.class);
 
     static {
@@ -676,7 +689,7 @@ public class AirportData implements INavPointListener {
 
             antennaRotationTime = Integer.parseInt(p.getProperty("antennaRotationTime", "1000"));
 
-            master.getFgfsController().loadData(p);
+            master.getFgfsController1().loadData(p);
         }
         // calculate magnetic declination
         setMagneticDeclination(CoreMag.calc_magvarDeg(getLat(), getLon(), getElevationM(), System.currentTimeMillis()));
@@ -749,7 +762,7 @@ public class AirportData implements INavPointListener {
 
         p.setProperty("antennaRotationTime", ""+antennaRotationTime);
 
-        master.getFgfsController().storeData(p);
+        master.getFgfsController1().storeData(p);
         
         File propertiesFile = new File("settings" + File.separator + getAirportCode() + ".properties");
 
@@ -846,8 +859,43 @@ public class AirportData implements INavPointListener {
         updateTransitionFl(master);
     }
 
+    public synchronized int getTransitionLayerWidth() {
+        return transitionLayerWidth;
+    }
+
+    public synchronized void setTransitionLayerWidth(int transitionLayerWidth) {
+        this.transitionLayerWidth = transitionLayerWidth;
+    }
+
+    public synchronized boolean isManualTransitionLevel() {
+        return manualTransitionLevel;
+    }
+
+    public synchronized void setManualTransitionLevel(boolean manualTransitionLevel) {
+        this.manualTransitionLevel = manualTransitionLevel;
+    }
+
+    public synchronized Integer getTransitionLevelFix() {
+        return transitionLevelFix;
+    }
+
+    public synchronized void setTransitionLevelFix(Integer transitionLevelFix) {
+        this.transitionLevelFix = transitionLevelFix;
+    }
+
     public synchronized void updateTransitionFl(GuiMasterController master) {
-        this.transitionFL = ((int)Math.floor((transitionAlt + 30 * (1013 - master.getAirportMetar().getPressureHPa()))/500) + 1) * 5;
+        // initial value
+        if(transitionLevelFix==null && master.getAirportMetar().getPressureHPa()>0) { // first call comes before metar is loaded... 
+            this.transitionLevelFix = ((int)Math.ceil((transitionAlt + 27 * (1013 - master.getAirportMetar().getPressureHPa()))/transitionLayerWidth) + 1) * transitionLayerWidth/100;
+        }
+
+        if(!manualTransitionLevel) { 
+            // calculate it
+            this.transitionFL = ((int)Math.ceil((transitionAlt + 27 * (1013 - master.getAirportMetar().getPressureHPa()))/transitionLayerWidth) + 1) * transitionLayerWidth/100;
+        } else {
+            // manual case        
+            this.transitionFL = transitionLevelFix;
+        }
     }
 
     public synchronized int getTransitionFL(GuiMasterController master) {
@@ -885,53 +933,91 @@ public class AirportData implements INavPointListener {
         this.antennaRotationTime = antennaRotationTime;
     }
 
-    public synchronized boolean isFgfsCameraEnabled() {
-        return fgfsCameraEnabled;
+    public synchronized boolean isFgfsCamera1Enabled() {
+        return fgfsCamera1Enabled;
     }
 
-    public synchronized String getFgfsCameraHost() {
-        return fgfsCameraHost;
+    public synchronized String getFgfsCamera1Host() {
+        return fgfsCamera1Host;
     }
 
-    public synchronized void setFgfsCameraHost(String fgfsCameraHost) {
-        this.fgfsCameraHost = fgfsCameraHost;
+    public synchronized void setFgfsCamera1Host(String fgfsCameraHost) {
+        this.fgfsCamera1Host = fgfsCameraHost;
     }
 
-    public synchronized int getFgfsCameraPort() {
-        return fgfsCameraPort;
+    public synchronized int getFgfsCamera1Port() {
+        return fgfsCamera1Port;
     }
 
-    public synchronized void setFgfsCameraPort(int fgfsCameraPort) {
-        this.fgfsCameraPort = fgfsCameraPort;
+    public synchronized void setFgfsCamera1Port(int fgfsCameraPort) {
+        this.fgfsCamera1Port = fgfsCameraPort;
     }
 
-    public synchronized void setFgfsCameraEnabled(boolean fgfsCameraEnabled) {
-        this.fgfsCameraEnabled = fgfsCameraEnabled;
+    public synchronized void setFgfsCamera1Enabled(boolean fgfsCameraEnabled) {
+        this.fgfsCamera1Enabled = fgfsCameraEnabled;
     }
 
-    public synchronized boolean isFgfsLocalMPPacketForward() {
-        return fgfsLocalMPPacketForward;
+    public synchronized boolean isFgfsLocalMPPacketForward1() {
+        return fgfsLocalMPPacketForward1;
     }
 
-    public synchronized void setFgfsLocalMPPacketForward(boolean fgfsLocalMPPacketForward) {
-        this.fgfsLocalMPPacketForward = fgfsLocalMPPacketForward;
+    public synchronized void setFgfsLocalMPPacketForward1(boolean fgfsLocalMPPacketForward) {
+        this.fgfsLocalMPPacketForward1 = fgfsLocalMPPacketForward;
     }
 
-    public synchronized String getFgfsLocalMPPacketHost() {
-        return fgfsLocalMPPacketHost;
+    public synchronized int getFgfsLocalMPPacketPort1() {
+        return fgfsLocalMPPacketPort1;
     }
 
-    public synchronized void setFgfsLocalMPPacketHost(String fgfsLocalMPPacketHost) {
-        this.fgfsLocalMPPacketHost = fgfsLocalMPPacketHost;
+    public synchronized void setFgfsLocalMPPacketPort1(int fgfsLocalMPPacketPort) {
+        this.fgfsLocalMPPacketPort1 = fgfsLocalMPPacketPort;
     }
 
-    public synchronized int getFgfsLocalMPPacketPort() {
-        return fgfsLocalMPPacketPort;
+    public synchronized boolean isFgfsCamera2Enabled() {
+        return fgfsCamera2Enabled;
     }
 
-    public synchronized void setFgfsLocalMPPacketPort(int fgfsLocalMPPacketPort) {
-        this.fgfsLocalMPPacketPort = fgfsLocalMPPacketPort;
+    public synchronized boolean isFgfsSlave2To1() {
+        return fgfsSlave2To1;
     }
 
+    public synchronized void setFgfsSlave2To1(boolean fgfsSlave2To1) {
+        this.fgfsSlave2To1 = fgfsSlave2To1;
+    }
 
+    public synchronized String getFgfsCamera2Host() {
+        return fgfsCamera2Host;
+    }
+
+    public synchronized void setFgfsCamera2Host(String fgfsCameraHost) {
+        this.fgfsCamera2Host = fgfsCameraHost;
+    }
+
+    public synchronized int getFgfsCamera2Port() {
+        return fgfsCamera2Port;
+    }
+
+    public synchronized void setFgfsCamera2Port(int fgfsCameraPort) {
+        this.fgfsCamera2Port = fgfsCameraPort;
+    }
+
+    public synchronized void setFgfsCamera2Enabled(boolean fgfsCameraEnabled) {
+        this.fgfsCamera2Enabled = fgfsCameraEnabled;
+    }
+
+    public synchronized boolean isFgfsLocalMPPacketForward2() {
+        return fgfsLocalMPPacketForward2;
+    }
+
+    public synchronized void setFgfsLocalMPPacketForward2(boolean fgfsLocalMPPacketForward) {
+        this.fgfsLocalMPPacketForward2 = fgfsLocalMPPacketForward;
+    }
+
+    public synchronized int getFgfsLocalMPPacketPort2() {
+        return fgfsLocalMPPacketPort2;
+    }
+
+    public synchronized void setFgfsLocalMPPacketPort2(int fgfsLocalMPPacketPort) {
+        this.fgfsLocalMPPacketPort2 = fgfsLocalMPPacketPort;
+    }
 }

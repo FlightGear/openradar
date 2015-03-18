@@ -36,7 +36,6 @@ import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,8 +44,13 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class bundles the code to find an airport location and download
@@ -61,37 +65,80 @@ public abstract class SectorCreator {
     private static String[] layers = { "v0_landmass", "cs_urban", "cs_lake", "osm_river", "apt_airfield", "apt_runway", "apt_tarmac" };
     private static double mapWidth = 10; // degrees
     private static double mapHeight = 10; // degrees
-
-    public static Point2D findLocationOf(String airportCode) {
-        File fgAirportIndexFile = new File("data/AirportIndex.txt");
-        if (!fgAirportIndexFile.exists()) {
-            throw new IllegalArgumentException("Path to flightgear seems to be wrong. Cannot find " + fgAirportIndexFile.getAbsolutePath());
-        }
-
-        BufferedReader br = null;
-
+    private static final Logger log = Logger.getLogger(SectorCreator.class);
+    
+    public static Point2D findLocationOf(String searchTerm) {
+        ZipFile zif = null;;
+        BufferedReader ir = null;
+        Point2D position = null;
+        
         try {
-            br = new BufferedReader(new FileReader(fgAirportIndexFile));
-            String nextLine = br.readLine();
-            while (nextLine != null) {
-                if (nextLine.startsWith(airportCode)) {
-                    StringTokenizer st = new StringTokenizer(nextLine, "|");
-                    st.nextElement(); // skip airport code
-                    return new Point2D.Double(Double.parseDouble(st.nextToken()), Double.parseDouble(st.nextToken()));
+            final File inputFile = new File("data/AptNav.zip");
+            zif = new ZipFile(inputFile);
+            Enumeration<? extends ZipEntry> entries = zif.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry zipentry = entries.nextElement();
+                if (zipentry.getName().equals("apt.dat")) {
+                    ir = new BufferedReader(new InputStreamReader(zif.getInputStream(zipentry)));
+                    break;
                 }
-                nextLine = br.readLine();
+            } 
+            if(ir==null) return null;
+            
+            String line = ir.readLine();
+            while(line!=null) {
+                if(line.startsWith("1 ")) {
+                    StringTokenizer st = new StringTokenizer(line," \t");
+                    st.nextElement(); // code "1"
+                    st.nextElement(); //
+                    st.nextElement(); //
+                    st.nextElement(); //
+                    String airportCode = st.nextToken();
+                    StringBuilder name = new StringBuilder();
+                    while(st.hasMoreElements()) {
+                        if(name.length()>0) name.append(" ");
+                        name.append(st.nextToken());
+                    }
+                    if(airportCode.equalsIgnoreCase(searchTerm)) {
+                        
+                        // seach runway
+                        line = ir.readLine();
+                        while(line!=null) {
+                            if(line.startsWith("100 ")) {
+                                position = SetupController.getRunwayPosition(line);
+                                return position;
+                            }
+                            else if(line.startsWith("1 ")) {
+                                // next airport
+                                break;
+                            }
+                            // next line
+                            line = ir.readLine();
+                        }
+                    } else {
+                        // airport name did not match
+                        line = ir.readLine();
+                    }
+                }
+                if(!line.startsWith("1 ")) {
+                    line = ir.readLine();
+                }
             }
         } catch (IOException e) {
-            throw new IllegalArgumentException("Problems to read " + fgAirportIndexFile.getAbsolutePath());
+            log.error("Error while reading xplane aptdat file!",e);
         } finally {
-            if (br != null) {
+            if(zif!=null) {
                 try {
-                    br.close();
-                } catch (IOException e) {
-                }
+                    zif.close();
+                } catch (IOException e) { }
+            }
+            if(ir!=null) {
+                try {
+                    ir.close();
+                } catch (IOException e) {}
             }
         }
-        return null;
+        return position;
     }
 
     public static void downloadData(AirportData data, SetupDialog setupDialog) throws IOException {
@@ -242,4 +289,5 @@ public abstract class SectorCreator {
         }
         return declination;
     }
+
 }

@@ -36,24 +36,18 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.apache.log4j.Logger;
-
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 
 public class CameraPresetControlPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private final GuiMasterController master;
+//    private final GuiMasterController master;
     private final FGFSController fgfsController;
     
     private JLabel lbP1;
@@ -65,17 +59,17 @@ public class CameraPresetControlPanel extends JPanel {
     private JLabel lbFollow;
     private JLabel lbSetPos;
     
-    private Logger log = Logger.getLogger(CameraPresetControlPanel.class);
+//    private Logger log = Logger.getLogger(CameraPresetControlPanel.class);
     
-    public CameraPresetControlPanel(GuiMasterController master) {
-        this.master=master;
-        this.fgfsController = master.getFgfsController();
+    public CameraPresetControlPanel(GuiMasterController master, FGFSController fgfsController) {
+//        this.master=master;
+        this.fgfsController = fgfsController;
         this.fgfsController.setCameraPresetControlPanel(this);
-        this.setDropTarget(new CamDropTarget());
+        
+        //this.setDropTarget(new CamDropTarget());
         
         this.setLayout(new GridBagLayout());
-        this.setToolTipText("<html><body>CamControl: Click on 'follow' to follow the selected contact,<br>"+
-                                        "or drag a contact onto this line to follow this contact.</body></html>");
+        this.setToolTipText("<html><body>CamControl: Click on 'follow' to follow the selected contact</body></html>");
         
         FgFsMouseListener fsMouseListener = new FgFsMouseListener();
         
@@ -87,7 +81,7 @@ public class CameraPresetControlPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = java.awt.GridBagConstraints.WEST;
-        gbc.insets = new java.awt.Insets(0, 6, 0, 0);
+        gbc.insets = new java.awt.Insets(4, 6, 4, 0);
         add(lbP1, gbc);
 
         lbP2 = new JLabel("P2");
@@ -147,7 +141,7 @@ public class CameraPresetControlPanel extends JPanel {
         add(lbFollow, gbc);
 
         
-        lbSetPos = new JLabel("MoveViewpoint");
+        lbSetPos = new JLabel("MoveCam");
         lbSetPos.setToolTipText("Move viewpoint of current preset: Zoom to GND level, click this button, click on the map");
         lbSetPos.setName("SETPOS");
         lbSetPos.addMouseListener(fsMouseListener);
@@ -159,6 +153,8 @@ public class CameraPresetControlPanel extends JPanel {
         gbc.weightx=1.0;
         gbc.insets = new java.awt.Insets(0, 6, 0, 6);
         add(lbSetPos, gbc);
+        
+        displaySelectedPreset(lbP1);
     }
     
     private class FgFsMouseListener extends MouseAdapter {
@@ -179,22 +175,22 @@ public class CameraPresetControlPanel extends JPanel {
                         displaySelectedPreset((JLabel) e.getSource());
                     }
                 } else if("FOLLOW".equals(sourceName)) {
-                    if(!fgfsController.isFollowing()) {
-                        lbFollow.setText("F: selected");
+                    if(fgfsController.followSelectedContact()) {
+                        lbFollow.setText("F: "+fgfsController.getFollowContact());
                         lbFollow.setToolTipText("Following the selected contact");
                         lbFollow.setFont(lbFollow.getFont().deriveFont(Font.BOLD));
                         lbFollow.setForeground(Color.blue);
                         lbFollow.repaint();
-                        fgfsController.setFollow(true);
+                        //fgfsController.setFollow(true);
                     } else {
-                        // stop following the contact
+                        // stop following
                         lbFollow.setText("Follow");
-                        lbFollow.setToolTipText("Click to follow the selected contact, drag a contact to this line to follow this contact");
+                       // lbFollow.setToolTipText("Click to follow the selected contact, drag a contact to this line to follow this contact");
                         lbFollow.setFont(lbFollow.getFont().deriveFont(Font.PLAIN));
                         lbFollow.setForeground(Color.black);
                         lbFollow.repaint();
-                        fgfsController.setFollow(false);
-                        fgfsController.followContact(null);
+                        //fgfsController.setFollow(false);
+                        //fgfsController.followContact(null);
                     }
                 } else if("SETPOS".equals(sourceName)) {
                     if(!fgfsController.isSetposActive()) {
@@ -209,23 +205,24 @@ public class CameraPresetControlPanel extends JPanel {
             }
         }
 
-        private void displaySelectedPreset(JLabel lbToActivate) {
-            lbP1.setFont(lbP1.getFont().deriveFont(Font.PLAIN));
-            lbP2.setFont(lbP2.getFont().deriveFont(Font.PLAIN));
-            lbP3.setFont(lbP3.getFont().deriveFont(Font.PLAIN));
-            lbP4.setFont(lbP4.getFont().deriveFont(Font.PLAIN));
-            lbP5.setFont(lbP5.getFont().deriveFont(Font.PLAIN));
-            
-            lbP1.setForeground(Color.black);
-            lbP2.setForeground(Color.black);
-            lbP3.setForeground(Color.black);
-            lbP4.setForeground(Color.black);
-            lbP5.setForeground(Color.black);
-            
-            if(lbToActivate!=null) {
-                lbToActivate.setFont(lbToActivate.getFont().deriveFont(Font.BOLD));
-                lbToActivate.setForeground(Color.blue);
-            }
+    }
+
+    protected void displaySelectedPreset(JLabel lbToActivate) {
+        lbP1.setFont(lbP1.getFont().deriveFont(Font.PLAIN));
+        lbP2.setFont(lbP2.getFont().deriveFont(Font.PLAIN));
+        lbP3.setFont(lbP3.getFont().deriveFont(Font.PLAIN));
+        lbP4.setFont(lbP4.getFont().deriveFont(Font.PLAIN));
+        lbP5.setFont(lbP5.getFont().deriveFont(Font.PLAIN));
+        
+        lbP1.setForeground(Color.black);
+        lbP2.setForeground(Color.black);
+        lbP3.setForeground(Color.black);
+        lbP4.setForeground(Color.black);
+        lbP5.setForeground(Color.black);
+        
+        if(lbToActivate!=null) {
+            lbToActivate.setFont(lbToActivate.getFont().deriveFont(Font.BOLD));
+            lbToActivate.setForeground(Color.blue);
         }
     }
 
@@ -234,28 +231,28 @@ public class CameraPresetControlPanel extends JPanel {
         lbSetPos.setForeground(Color.black);
     }
     
-   private class CamDropTarget extends DropTarget {
-        
-        private static final long serialVersionUID = -1L;
-
-        @Override
-        public synchronized void drop(DropTargetDropEvent dtde) {
-            String callsign=null;
-            GuiRadarContact contact=null;
-            try {
-                callsign = (String) dtde.getTransferable().getTransferData(new DataFlavor(java.lang.String.class,"text/plain"));
-                contact = master.getRadarContactManager().getContactFor(callsign);
-            } catch (Exception e1) {
-                log.error("Handled exception while reading drag and drop data"+ e1.getMessage());
-            } 
-            if(callsign!=null && contact!=null) { // is it a callsign? or any other text
-                // set as follow contact
-                lbFollow.setText("F: "+callsign);
-                lbFollow.setToolTipText("Manually defined by drag and drop");
-                lbFollow.setFont(lbFollow.getFont().deriveFont(Font.BOLD));
-                lbFollow.setForeground(Color.blue);
-                fgfsController.followContact(callsign);
-            }
-        }
-    }
+//   private class CamDropTarget extends DropTarget {
+//        
+//        private static final long serialVersionUID = -1L;
+//
+//        @Override
+//        public synchronized void drop(DropTargetDropEvent dtde) {
+//            String callsign=null;
+//            GuiRadarContact contact=null;
+//            try {
+//                callsign = (String) dtde.getTransferable().getTransferData(new DataFlavor(java.lang.String.class,"text/plain"));
+//                contact = master.getRadarContactManager().getContactFor(callsign);
+//            } catch (Exception e1) {
+//                log.error("Handled exception while reading drag and drop data"+ e1.getMessage());
+//            } 
+//            if(callsign!=null && contact!=null) { // is it a callsign? or any other text
+//                // set as follow contact
+//                lbFollow.setText("F: "+callsign);
+//                lbFollow.setToolTipText("Manually defined by drag and drop");
+//                lbFollow.setFont(lbFollow.getFont().deriveFont(Font.BOLD));
+//                lbFollow.setForeground(Color.blue);
+//                fgfsController.followContact(callsign);
+//            }
+//        }
+//    }
 }

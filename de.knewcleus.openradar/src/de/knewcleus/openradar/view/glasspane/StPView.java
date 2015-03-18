@@ -197,6 +197,8 @@ public class StPView implements IBoundedView, INotificationListener {
     }
 
     public synchronized void updateMouseRadarMoved(GuiRadarContact contact, MouseEvent e) {
+        if(!contact.isActive()) return;
+        
         currentPosition = e.getPoint();
         if(displayExtents.equals(new Rectangle2D.Double())) {
             // initially we need to paint everything

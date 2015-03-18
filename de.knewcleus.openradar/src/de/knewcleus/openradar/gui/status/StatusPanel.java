@@ -371,8 +371,8 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
 //        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 4);
 //        add(sep3, gridBagConstraints);
 
-        if(master.getAirportData().isFgfsCameraEnabled()) {
-            CameraPresetControlPanel cameraPresetControlPanel = new CameraPresetControlPanel(master);
+        if(master.getAirportData().isFgfsCamera1Enabled()) {
+            CameraPresetControlPanel cameraPresetControlPanel = new CameraPresetControlPanel(master, master.getFgfsController1());
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = 5;
             gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -380,7 +380,18 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
             gridBagConstraints.weightx = 1.0;
             gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
             add(cameraPresetControlPanel, gridBagConstraints);
+        }
+        if(master.getAirportData().isFgfsCamera2Enabled() && !master.getAirportData().isFgfsSlave2To1()) {
+            CameraPresetControlPanel cameraPresetControlPanel = new CameraPresetControlPanel(master, master.getFgfsController2());
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 6;
+            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+            gridBagConstraints.weightx = 1.0;
+            gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
+            add(cameraPresetControlPanel, gridBagConstraints);
         }        
+
         updateTime();
         doLayout();
 

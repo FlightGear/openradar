@@ -180,7 +180,6 @@ public class MetarData {
             while (true) {
                 if (t.matches("^[\\d]{4}$") || t.matches("^[\\d/]{1,4}SM$") || t.matches("^[\\d]{1,4}/[\\d]{1,4}SM$")) {
                     parseVisibility(t);
-                    t = st.nextToken();
                 }
                 if (t.matches("^[\\d]{4}.*$")) {
                     parseDirectionalVisibility(t);

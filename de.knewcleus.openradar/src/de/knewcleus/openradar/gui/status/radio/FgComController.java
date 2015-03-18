@@ -78,7 +78,7 @@ public class FgComController implements Runnable, IRadioBackend {
     private GuiMasterController master = null;
     private volatile double lon;
     private volatile double lat;
-    private volatile String model = "Aircraft/ATC/Moddels/atc.xml";
+    private volatile double alt;
     private Map<String, Process> fgComProcesses = Collections.synchronizedMap(new TreeMap<String, Process>());
     private List<LogWriterThread> logWriters = Collections.synchronizedList(new ArrayList<LogWriterThread>());
     
@@ -94,11 +94,11 @@ public class FgComController implements Runnable, IRadioBackend {
     public FgComController() {
     }
 
-    public FgComController(GuiMasterController master, String aircraftModel, double lon, double lat) {
+    public FgComController(GuiMasterController master, String aircraftModel, double lon, double lat, double alt) {
         this.master = master;
-        this.model = aircraftModel;
         this.lon = lon;
         this.lat = lat;
+        this.alt = alt;
 
         thread.setDaemon(true);
 
@@ -205,23 +205,20 @@ public class FgComController implements Runnable, IRadioBackend {
     private String composeMessage(Radio r) {
         // COM1_FRQ=120.500,COM1_SRV=1,COM2_FRQ=118.300,COM2_SRV=1,NAV1_FRQ=115.800,NAV1_SRV=1,NAV2_FRQ=116.800,NAV2_SRV=1,PTT=0,TRANSPONDER=0,IAS=09.8,GS=00.0,LON=-122.357193,LAT=37.613548,ALT=00004,HEAD=269.9,CALLSIGN=D-W794,MODEL=Aircraft/c172p/Models/c172p.xml
         StringBuilder sb = new StringBuilder();
-        sb.append("COM1_FRQ=");
-        sb.append(r.getFrequency());
-        sb.append("0,COM1_SRV=1,COM2_FRQ=118.300,COM2_SRV=0,NAV1_FRQ=115.800,NAV1_SRV=0,NAV2_FRQ=116.800,NAV2_SRV=0");
-        sb.append(",PTT=");
+        sb.append("PTT=");
         sb.append(r.isPttActive() ? "1" : "0");
-        sb.append(",TRANSPONDER=0,IAS=00.0,GS=00.0");
-        sb.append(",LON=");
-        sb.append(String.format("%.6f", this.lon).replaceAll(",", "."));
-        sb.append(",LAT=");
-        sb.append(String.format("%.6f", this.lat).replaceAll(",", "."));
-        sb.append(",ALT=00000,HEAD=0.0");
+        sb.append(String.format(",LAT=%.6f",lat));
+        sb.append(String.format(",LON=%.6f",lon)); //.replaceAll(",", ".")
+        sb.append(String.format(",ALT=%1.0f",alt));
+        sb.append(",COM1_FRQ=");
+        sb.append(r.getFrequency());
+        sb.append(",COM2_FRQ=118.300");
+        sb.append(String.format(",OUTPUT_VOL=%.1f",r.getVolumeF()));//.replaceAll(",", ".")
+        sb.append(",SILENCE_THD=-60.0");
         sb.append(",CALLSIGN=");
         sb.append(master.getCurrentATCCallSign());
-        sb.append(",MODEL=");
-        sb.append(this.model);
 
-        // System.out.println(sb.toString());
+        //System.out.println(sb.toString());
         return sb.toString();
     }
 
@@ -230,9 +227,10 @@ public class FgComController implements Runnable, IRadioBackend {
         thread.interrupt();
     }
 
-    public void setLocation(float lon, float lat) {
+    public void setLocation(float lon, float lat, float alt) {
         this.lon = lon;
         this.lat = lat;
+        this.alt = alt;
     }
 
     public synchronized void addRadio(String pathToFgComExec, String fgComExec, String key, String fgComServer, String fgComHost, int localFgComPort,
@@ -295,7 +293,7 @@ public class FgComController implements Runnable, IRadioBackend {
             // AUTO mode
             
             // set path and exec
-            pathToFgComExec = System.getProperty("user.dir")+File.separator+"fgcom"+File.separator+"bin";
+            pathToFgComExec = System.getProperty("user.dir")+File.separator+"fgcom";
             if(os.toLowerCase().contains("win")) {
                 if(arch.toLowerCase().contains("32")) {
                     fgComExec = "fgcom_win32.exe";
@@ -327,8 +325,8 @@ public class FgComController implements Runnable, IRadioBackend {
         
         // determine pathes
 
-        String posPath = getFgComPositionsPath(master.getAirportData(), pathToFgComExec);
-        String specialsPath = getFgComSpecialsPath(master.getAirportData(), pathToFgComExec);
+//        String posPath = getFgComPositionsPath(master.getAirportData(), pathToFgComExec);
+//        String specialsPath = getFgComSpecialsPath(master.getAirportData(), pathToFgComExec);
         
         // build the command
         
@@ -350,8 +348,8 @@ public class FgComController implements Runnable, IRadioBackend {
             arguments.append(" --port=" + localPort);
             arguments.append(" --voipserver=" + fgComServer);
             arguments.append(" --callsign=" + master.getCurrentATCCallSign());
-            arguments.append(" --positions=" + posPath);
-            arguments.append(" --special=" + specialsPath);
+//            arguments.append(" --positions=" + posPath);
+//            arguments.append(" --special=" + specialsPath);
         }
         command.add(arguments.toString());
 

@@ -35,7 +35,6 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
 import de.knewcleus.fgfs.location.GeoUtil;
-import de.knewcleus.fgfs.location.GeoUtil.GeoUtilInfo;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.setup.SectorCreator;
@@ -71,6 +70,7 @@ public class FlightPlanData {
     private String handover;
     private String squawk;
     private String fpStatus;
+    private String flags;
     private String type;
     private String aircraft;
     private String trueAirspeed;
@@ -107,6 +107,7 @@ public class FlightPlanData {
         this.handover = null;
         this.squawk = contact.getAssignedSquawk()!=null?"" + contact.getAssignedSquawk():null;
         this.fpStatus = FlightPlanStatus.ACTIVE.toString();
+        this.flags="";
         this.type = FlightType.IFR.toString();
         this.aircraft = contact.getAircraftCode();
         this.trueAirspeed = null;
@@ -127,7 +128,7 @@ public class FlightPlanData {
     }
 
     public FlightPlanData(AirportData airportData, GuiRadarContact contact, String flightCode, String callSign, String owner, String handover, String squawk,
-            String assignedRunway, String assignedAltitude, String assignedRoute, String fpStatus, String type, String aircraft, String trueAirspeed, String departureAirport, String departureTime,
+            String assignedRunway, String assignedAltitude, String assignedRoute, String fpStatus, String flags, String type, String aircraft, String trueAirspeed, String departureAirport, String departureTime,
             String cruisingAltitude, String route, String destinationAirport, String alternativeDestinationAirports, String estimatedFlightTime,
             String estimatedFuelTime, String pilotName, String soulsOnBoard, String remarks) {
 
@@ -144,6 +145,7 @@ public class FlightPlanData {
         this.handover = handover;
         this.squawk = squawk;
         this.fpStatus = fpStatus;
+        this.flags=flags;
         this.type = type;
         this.aircraft = aircraft;
         this.trueAirspeed = trueAirspeed;
@@ -212,6 +214,7 @@ public class FlightPlanData {
         this.handover = newFp.getHandover();
         this.squawk = newFp.getSquawk();
         this.fpStatus = newFp.getFpStatus();
+        this.flags=newFp.getFlags();
         this.type = newFp.getType();
         this.aircraft = newFp.getAircraft();
         this.trueAirspeed = newFp.getTrueAirspeed();
@@ -234,7 +237,7 @@ public class FlightPlanData {
     
     public synchronized FlightPlanData copy() {
         FlightPlanData c = new FlightPlanData(airportData, contact, flightCode, callsign, owner, handover, squawk, assignedRunway, assignedAltitude, assignedRoute,
-                fpStatus, type, aircraft, trueAirspeed, departureAirport, departure, cruisingAltitude, route, destinationAirport,
+                fpStatus, flags, type, aircraft, trueAirspeed, departureAirport, departure, cruisingAltitude, route, destinationAirport,
                 alternativeDestinationAirports, estimatedFlightTime, estimatedFuelTime, pilotName, "" + soulsOnBoard, remarks);
         c.updateStatus=UpdateStatus.CHANGED;
 
@@ -341,6 +344,15 @@ public class FlightPlanData {
         this.updateStatus=UpdateStatus.CHANGED;
     }
 
+    public synchronized String getFlags() {
+        return flags;
+    }
+
+    public synchronized void setFlags(String flags) {
+        this.flags=flags;
+        this.updateStatus=UpdateStatus.CHANGED;
+    }
+
     public synchronized String getType() {
         return type;
     }
@@ -435,10 +447,11 @@ public class FlightPlanData {
                    (this.dirToDestination==null || System.currentTimeMillis() - lastUpdatelocDestAirport > 3000)) {
                     lastUpdatelocDestAirport = System.currentTimeMillis();
                     Point2D locContact = getContact().getCenterGeoCoordinates();
-                    GeoUtilInfo gi = GeoUtil.getDistance(locContact.getX(), locContact.getY(), locDestinationAirport.getX(), locDestinationAirport.getY());
-                    float angle = gi.angle;
+                    //GeoUtilInfo gi = GeoUtil.getDistance(locContact.getX(), locContact.getY(), locDestinationAirport.getX(), locDestinationAirport.getY());
+                    //float angle = gi.angle;
+                    double angle = GeoUtil.getInitialAngle(locContact.getX(), locContact.getY(), locDestinationAirport.getX(), locDestinationAirport.getY())-airportData.getMagneticDeclination();
                     
-                    dirToDestination = String.format("%03d°",Math.round(angle/10)*10);
+                    dirToDestination = String.format("%03d°",Math.round(angle));//Math.round(angle/10)*10);
                 } 
   //          }
         } catch(Exception e) {

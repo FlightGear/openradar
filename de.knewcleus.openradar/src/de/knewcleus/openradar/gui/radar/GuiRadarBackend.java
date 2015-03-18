@@ -92,7 +92,12 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     }
 
     public void start() {
-        radarPanel.getRadarMapPanel().addMouseListener(master.getFgfsController().getSetPosMouseListener());
+        if(master.getAirportData().isFgfsCamera1Enabled()) {
+            radarPanel.getRadarMapPanel().addMouseListener(master.getFgfsController1().getSetPosMouseListener());
+        }
+        if(master.getAirportData().isFgfsCamera2Enabled()) {
+            radarPanel.getRadarMapPanel().addMouseListener(master.getFgfsController2().getSetPosMouseListener());
+        }
         validateToggles();
         addRadarViewListener(master.getMpChatManager()); // forwards Zoom and center changes to MPChat
     }

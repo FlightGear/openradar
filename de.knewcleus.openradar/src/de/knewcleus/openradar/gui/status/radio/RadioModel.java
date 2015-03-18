@@ -160,6 +160,4 @@ public class RadioModel extends AbstractListModel<RadioFrequency> implements Com
     public RadioFrequency get(String frequency) {
         return mapFrequencies.get(frequency);
     }
-
-
 }

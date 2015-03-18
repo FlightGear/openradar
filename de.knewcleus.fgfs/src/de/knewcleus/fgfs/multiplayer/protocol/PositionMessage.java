@@ -172,7 +172,7 @@ public class PositionMessage implements IMultiplayerMessage {
 			MPUtils.writeFloatPosition(outputStream,linearAcceleration); // 4th 4 byte
 			MPUtils.writeFloatPosition(outputStream,angularAcceleration); // 5th 4 byte
 //			// add 4 bytes padding are missing pad them
-//			outputStream.write(new byte[] {0,0,0,0}); // 6th 4 byte
+			//outputStream.write(new byte[] {0,0,0,0}); // 6th 4 byte
 			// => 200 byte
 			encodeProperties(outputStream);
 		} catch (IOException e) {

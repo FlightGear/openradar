@@ -74,7 +74,6 @@ import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.GeoUtil;
-import de.knewcleus.fgfs.location.GeoUtil.GeoUtilInfo;
 import de.knewcleus.fgfs.multiplayer.IPlayerListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.SoundManager;
@@ -970,8 +969,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             Point2D currentPos = contact.getCenterGeoCoordinates();
             Point2D airportPos = SectorCreator.findLocationOf(destAirport.trim());
             
-            GeoUtilInfo gi = GeoUtil.getDistance(currentPos.getX(), currentPos.getY(), airportPos.getX(), airportPos.getY());
-            double distance = gi.length;
+            //GeoUtilInfo gi = GeoUtil.getDistanceHaversine(currentPos.getX(), currentPos.getY(), airportPos.getX(), airportPos.getY());
+            double distance = GeoUtil.getDistanceHaversine(currentPos.getX(), currentPos.getY(), airportPos.getX(), airportPos.getY());;
 
             double time = distance / (speed*Units.KNOTS); // => seconds
         

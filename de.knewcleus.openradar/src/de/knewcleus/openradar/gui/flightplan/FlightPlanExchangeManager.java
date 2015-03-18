@@ -38,9 +38,7 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -65,7 +63,7 @@ public class FlightPlanExchangeManager implements Runnable {
     private final RadarContactController radarContactController;
     private volatile boolean isRunning = true;
     private int sleeptime = 2 * 1000;
-    private volatile long lastCheck = 0;
+    private volatile boolean initial = true;
     private volatile boolean connectedToServer = false;
     private static Logger log = LogManager.getLogger(FlightPlanExchangeManager.class.getName());
     
@@ -129,14 +127,16 @@ public class FlightPlanExchangeManager implements Runnable {
 
 //        if (callSignList.length() > 0) {
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            String sLastCheck = sdf.format(lastCheck);
-
             try {
                 StringBuilder result = new StringBuilder();
                 String line = null;
-                URL url = new URL(baseUrl + "/getFlightplans");
+                URL url;
+                if(initial) {
+                    url = new URL(baseUrl + "/getAllFlightplans");
+                    initial=false;
+                } else {
+                    url = new URL(baseUrl + "/getFlightplans");
+                }
                 
                 String frequency = "000.00";
                 if(!master.getRadioManager().getModels().isEmpty()) {
@@ -145,14 +145,15 @@ public class FlightPlanExchangeManager implements Runnable {
                 
                 
                 String parameters = "user=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8") 
-                        + "&password=" + URLEncoder.encode(data.getFpServerPassword(), "UTF-8") 
+                        + "&password=" + URLEncoder.encode(data.getFpServerPassword(), "UTF-8")
+                        + "&username=" + URLEncoder.encode("John Doe", "UTF-8") // todo
                         + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") 
                         + "&airport=" + URLEncoder.encode(data.getAirportCode(), "UTF-8")
                         + "&lon="+Double.toString(data.getAirportPosition().getX())
                         + "&lat="+Double.toString(data.getAirportPosition().getY())
                         + "&frequency="+frequency
                         + "&xmlVersion=1.0"
-                        + "&lastCheckUTC=" + sLastCheck + "&contacts=" + URLEncoder.encode(callSignList.toString(), "UTF-8");
+                        + "&contacts=" + URLEncoder.encode(callSignList.toString(), "UTF-8");
 
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
@@ -198,7 +199,6 @@ public class FlightPlanExchangeManager implements Runnable {
                             }
                             log.info("Got FP update for: " + callsign);
                         }
-                        lastCheck = System.currentTimeMillis();
                         connectedToServer=true;
                     } catch (IOException e) {
                         log.error("Error while parsing flightplan!", e);

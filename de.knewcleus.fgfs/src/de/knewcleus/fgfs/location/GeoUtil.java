@@ -42,6 +42,8 @@ import de.knewcleus.fgfs.location.GeodesicUtils.GeodesicInformation;
  */
 public class GeoUtil {
 
+    public final static double radiusEarthMean = 6372797.560856; // meters
+    
     public static GeoUtilInfo getDistance(double lon1, double lat1, double lon2, double lat2) {
 
         double deltaX = lon2 - lon1;
@@ -59,6 +61,28 @@ public class GeoUtil {
         return result;
     }
 
+    /** Calculates the distance if you can flight straight around the earth */ 
+    public static double getDistanceHaversine(double lon1, double lat1, double lon2, double lat2) {  
+        double dLat = Math.toRadians(lat2-lat1);  
+        double dLon = Math.toRadians(lon2-lon1);  
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);  
+        double c = 2 * Math.asin(Math.sqrt(a));  
+        return radiusEarthMean * c;  
+    }  
+    /** calculates the initial angle if you want to fly straight from point1 to point2 */
+    public static double getInitialAngle(double lon1, double lat1, double lon2, double lat2) {
+        double lon1R =   Math.toRadians(lon1);
+        double lon2R =   Math.toRadians(lon2);
+        double lat1R =   Math.toRadians(lat1);
+        double lat2R =   Math.toRadians(lat2);
+        double dLon = lon2R-lon1R;  
+        double y = Math.sin(dLon) * Math.cos(lat2R);
+        double x = Math.cos(lat1R)*Math.sin(lat2R) - Math.sin(lat1R)*Math.cos(lat2R)*Math.cos(dLon);
+        double angle = Math.toDegrees(Math.atan2(y, x));
+        angle = (angle+360)%360;
+        return angle;
+    }
+    
     
     // long 100 60.05 2 0 0.00 1 2 1 15 47.61770400 007.50985600 0.00 0.00 5 4 1 1 33 47.58594200 007.53195400 1120.14 0.00 5 0 0 1
     // short 100 58.83 2 2 0.00 0 2 1 08 47.58795100 007.51691900 0.00 0.00 3 0 0 0 26 47.59164500 007.54049300 220.07 0.00 3 0 0 0

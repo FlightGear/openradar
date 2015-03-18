@@ -246,6 +246,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         add(lbRevokeSquawk, gridBagConstraints);
 
         JLabel lbDeselect = new JLabel("Deselect");
+        lbDeselect.setToolTipText("Shortcut: press ESC twice"); 
         lbDeselect.setName("DESELECT");
         lbDeselect.setFont(lbDeselect.getFont().deriveFont(Font.BOLD));
         lbDeselect.setForeground(Palette.DESKTOP_FILTER_SELECTED);
