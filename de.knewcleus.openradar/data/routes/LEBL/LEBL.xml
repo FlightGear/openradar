@@ -1,0 +1,2768 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+    <!-- Points and navaids not already defined -->
+    <addPoint code="NEMUM" point="42.00916667,3.39305556" />
+    <addPoint code="VLA" point="41.34250000,1.54777777" />
+    <!-- Taxiways and holding points -->
+    <route name="LEBL taxiways" zoomMax="12" displayMode="optional" color="160,160,80">
+        <multiPointLine close="false">
+            <point>41.290891230,2.062743430</point>
+            <point>41.292117000,2.062012000</point>
+            <point>41.293267750,2.061323890</point>
+            <point>41.293442570,2.061279370</point>
+            <point>41.294147870,2.061287280</point>
+            <point>41.294273710,2.061287790</point>
+            <point>41.294399000,2.061329000</point>
+            <point>41.294512440,2.061487220</point>
+            <point>41.297959230,2.071517900</point>
+            <point>41.298061000,2.071905000</point>
+            <point>41.298159260,2.072281510</point>
+            <point>41.304044320,2.089465270</point>
+            <point>41.304160000,2.089712000</point>
+            <point>41.304272950,2.089944600</point>
+            <point>41.308435300,2.102111870</point>
+            <point>41.308456000,2.102300000</point>
+            <point>41.308428410,2.102464710</point>
+            <point>41.308161840,2.103400480</point>
+            <point>41.308069000,2.103570000</point>
+            <point>41.307965680,2.103664940</point>
+            <point>41.306957830,2.104272350</point>
+            <point>41.305217090,2.105308140</point>
+        </multiPointLine>
+        <text position="41.292613,2.061764" text="S14" angle="335" />
+        <text position="41.294798,2.062340" text="S13" angle="335" />
+        <text position="41.296088,2.066102" text="S12" angle="335" />
+        <text position="41.297422,2.069997" text="S11" angle="335" />
+        <text position="41.298653,2.073753" text="S10" angle="335" />
+        <text position="41.299511,2.076253" text="S9" angle="335" />
+        <text position="41.300251,2.078419" text="S8" angle="335" />
+        <text position="41.301096,2.080880" text="S7" angle="335" />
+        <text position="41.301940,2.083380" text="S6" angle="335" />
+        <text position="41.303153,2.086892" text="S5" angle="335" />
+        <text position="41.304587,2.090878" text="S4" angle="335" />
+        <text position="41.305985,2.094987" text="S3" angle="335" />
+        <text position="41.307611,2.099740" text="S2" angle="335" />
+        <text position="41.307488,2.103976" text="S1" angle="335" />
+        <multiPointLine close="false">
+            <point>41.296371,2.058854</point>
+            <point>41.294268220,2.060108690</point>
+            <point>41.294161,2.060277</point>
+            <point>41.294164440,2.060469180</point>
+            <point>41.294512440,2.061487220</point>
+        </multiPointLine>
+        <text position="41.296371,2.058854" text="LW" angle="335" />
+        <line start="41.296694,2.059794" end="41.294406,2.061172" />
+        <text position="41.296694,2.059794" text="L" angle="335" />
+        <line start="41.297220,2.061060" end="41.294854,2.062472" />
+        <text position="41.297220,2.061060" text="LE" angle="335" />
+        <line start="41.297687,2.062417" end="41.295330,2.063859" />
+        <text position="41.297687,2.062417" text="KW" angle="335" />
+        <line start="41.298076,2.063961" end="41.295832,2.065320" />
+        <text position="41.298076,2.063961" text="KE" angle="335" />
+        <multiPointLine close="false">
+            <point>41.296730,2.067932</point>
+            <point>41.296994600,2.067731140</point>
+            <point>41.297570760,2.067382440</point>
+            <point>41.297615720,2.067361120</point>
+            <point>41.297909870,2.067343430</point>
+            <point>41.298140080,2.067424550</point>
+            <point>41.298273320,2.067588920</point>
+            <point>41.299312720,2.070654360</point>
+            <point>41.299308280,2.070954210</point>
+            <point>41.299250820,2.071090180</point>
+            <point>41.299157960,2.071226880</point>
+            <point>41.299106100,2.071271480</point>
+            <point>41.298061000,2.071905000</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.300559,2.070194</point>
+            <point>41.299977860,2.070205570</point>
+            <point>41.299157960,2.071226880</point>
+        </multiPointLine>
+        <text position="41.296981,2.067681" text="J" angle="335" />
+        <text position="41.298232,2.071741" text="H" angle="335" />
+        <multiPointLine close="false">
+            <point>41.298312230,2.071752520</point>
+            <point>41.298554,2.071749</point>
+            <point>41.298706170,2.071956730</point>
+            <point>41.302842850,2.084011590</point>
+            <point>41.302846,2.084307</point>
+            <point>41.302407,2.084683</point>
+        </multiPointLine>
+        <text position="41.299207,2.073421" text="B10" angle="335" />
+        <text position="41.300018,2.075800" text="B9" angle="335" />
+        <text position="41.300765,2.077969" text="B8" angle="335" />
+        <text position="41.301648,2.080543" text="B7" angle="335" />
+        <text position="41.302433,2.082825" text="B6" angle="335" />
+        <line start="41.299781,2.075085" end="41.299237,2.075420" />
+        <text position="41.299458,2.075247" text="G" angle="335" />
+        <line start="41.300347,2.076733" end="41.299801,2.077074" />
+        <text position="41.300034,2.076902" text="F" angle="335" />
+        <line start="41.301257,2.079383" end="41.300708,2.079718" />
+        <text position="41.300933,2.079553" text="E" angle="335" />
+        <line start="41.302042,2.081674" end="41.301491,2.082003" />
+        <text position="41.301718,2.081841" text="D" angle="335" />
+        <line start="41.303815440,2.083835640" end="41.302846,2.084307" />
+        <text position="41.303815440,2.083835640" text="C" angle="335" />
+        <line start="41.305580320,2.084117440" end="41.302799,2.085805" />
+        <text position="41.305580320,2.084117440" text="BW" angle="335" />
+        <line start="41.305913560,2.085265610" end="41.303177,2.086931" />
+        <text position="41.305913560,2.085265610" text="BE" angle="335" />
+        <multiPointLine close="false">
+            <point>41.306704980,2.086349660</point>
+            <point>41.306638970,2.086373880</point>
+            <point>41.306500370,2.086387370</point>
+            <point>41.306421940,2.086416150</point>
+            <point>41.305392120,2.087039800</point>
+            <point>41.305265,2.087210</point>
+            <point>41.305225780,2.087407820</point>
+            <point>41.305210320,2.087585080</point>
+            <point>41.305176,2.087724</point>
+            <point>41.305036530,2.087874960</point>
+            <point>41.304647950,2.088104760</point>
+            <point>41.304475,2.088271</point>
+            <point>41.304389610,2.088455930</point>
+            <point>41.304310,2.088615</point>
+            <point>41.304139000,2.088743830</point>
+            <point>41.303857,2.088913</point>
+        </multiPointLine>
+        <text position="41.304040,2.088725" text="A" angle="335" />
+        <multiPointLine close="false">
+            <point>41.305012000,2.087889250</point>
+            <point>41.305405460,2.087703020</point>
+            <point>41.305591970,2.087678580</point>
+            <point>41.305757810,2.087838720</point>
+            <point>41.306243720,2.089259370</point>
+            <point>41.306300920,2.089553620</point>
+            <point>41.306274850,2.089769770</point>
+            <point>41.306063,2.090569</point>
+        </multiPointLine>
+        <line start="41.306849980,2.087684730" end="41.305902,2.088247" />
+        <multiPointLine close="false">
+            <point>41.308081830,2.088007740</point>
+            <point>41.307112930,2.088588150</point>
+            <point>41.307069,2.088676</point>
+            <point>41.306994870,2.088767410</point>
+            <point>41.306433340,2.089105990</point>
+            <point>41.306237,2.089233</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.306288,2.089722</point>
+            <point>41.308072000,2.090598570</point>
+            <point>41.308128,2.090613</point>
+            <point>41.308198960,2.090595310</point>
+            <point>41.308888790,2.090179230</point>
+        </multiPointLine>
+        <text position="41.306180,2.090152" text="AN" angle="20" />
+        <multiPointLine close="false">
+            <point>41.303240,2.089245</point>
+            <point>41.309017210,2.091932760</point>
+            <point>41.309134,2.092009</point>
+            <point>41.309208960,2.092128100</point>
+            <point>41.309621730,2.093319900</point>
+            <point>41.309703,2.093445</point>
+            <point>41.309792110,2.093514030</point>
+            <point>41.311712820,2.094431910</point>
+            <point>41.311926390,2.095082420</point>
+            <point>41.311499490,2.096674120</point>
+            <point>41.311064,2.097211</point>
+            <point>41.310633990,2.098010600</point>
+            <point>41.310642940,2.099665400</point>
+            <point>41.310790900,2.100300750</point>
+            <point>41.312448440,2.105094790</point>
+        </multiPointLine>
+        <text position="41.305281,2.090204" text="U1" angle="285" />
+        <text position="41.307554,2.091257" text="U2" angle="285" />
+        <text position="41.306758,2.091570" text="UB" angle="30" />
+        <text position="41.309468,2.092881" text="U3L" angle="335" />
+        <text position="41.309037,2.093152" text="U3R" angle="335" />
+        <text position="41.311694,2.095937" text="U4" angle="20" />
+        <text position="41.310708,2.100018" text="U5" angle="345" />
+        <multiPointLine close="false">
+            <point>41.308347780,2.091623770</point>
+            <point>41.308539,2.091709</point>
+            <point>41.308640440,2.092006980</point>
+            <point>41.309285940,2.093865230</point>
+            <point>41.309300,2.094173</point>
+            <point>41.309202540,2.094371230</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.309621730,2.093319900</point>
+            <point>41.309689920,2.093516030</point>
+            <point>41.309714,2.093700</point>
+            <point>41.309642100,2.093846160</point>
+            <point>41.309202540,2.094371230</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.306545980,2.090792250</point>
+            <point>41.306851,2.091314</point>
+            <point>41.306686810,2.091779620</point>
+            <point>41.305959930,2.092605550</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.310972,2.100813</point>
+            <point>41.308792100,2.102120420</point>
+            <point>41.308512,2.102303</point>
+            <point>41.308428410,2.102464710</point>
+        </multiPointLine>
+        <text position="41.309042,2.101976" text="P1" angle="335" />
+        <multiPointLine close="false">
+            <point>41.308328230,2.101792150</point>
+            <point>41.308541,2.102073</point>
+            <point>41.308792100,2.102120420</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.291206000,2.063682000</point>
+            <point>41.292885000,2.062595000</point>
+            <point>41.293404480,2.062285060</point>
+            <point>41.293844000,2.062287000</point>
+            <point>41.294141520,2.062690430</point>
+            <point>41.307641500,2.102099430</point>
+            <point>41.307638000,2.102570000</point>
+            <point>41.307414330,2.102946300</point>
+            <point>41.306660950,2.103399580</point>
+            <point>41.304917190,2.104436680</point>
+        </multiPointLine>
+        <text position="41.292889,2.062613" text="T14" angle="335" />
+        <text position="41.294356,2.063357" text="T13" angle="335" />
+        <text position="41.295446,2.066562" text="T12" angle="335" />
+        <text position="41.296662,2.070102" text="T11" angle="335" />
+        <text position="41.298054,2.074164" text="T10" angle="335" />
+        <text position="41.298905,2.076646" text="T9" angle="335" />
+        <text position="41.299596,2.078655" text="T8" angle="335" />
+        <text position="41.300552,2.081458" text="T7" angle="335" />
+        <text position="41.301267,2.083537" text="T6" angle="335" />
+        <text position="41.302440,2.086951" text="T5" angle="335" />
+        <text position="41.303917,2.091271" text="T4" angle="335" />
+        <text position="41.305327,2.095403" text="T3" angle="335" />
+        <text position="41.306969,2.100190" text="T2" angle="335" />
+        <text position="41.307184,2.103096" text="T1" angle="335" />
+        <multiPointLine close="false">
+            <point>41.294147870,2.061287280</point>
+            <point>41.293908530,2.061436520</point>
+            <point>41.293860390,2.061881050</point>
+            <point>41.294141520,2.062690430</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.293267750,2.061323890</point>
+            <point>41.293601,2.061366</point>
+            <point>41.293756710,2.061582100</point>
+            <point>41.293860390,2.061881050</point>
+        </multiPointLine>
+        <line start="41.295469,2.064265" end="41.293148170,2.065683440" />
+        <text position="41.293332,2.065601" text="KB" angle="335" />
+        <line start="41.293708490,2.067763680" end="41.293718960,2.066300660" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.293718960,2.066300660</point>
+            <point>41.293769730,2.065636980</point>
+            <point>41.293829,2.065392</point>
+            <point>41.294035910,2.065145430</point>
+        </multiPointLine>
+        <text position="41.293705,2.066732" text="KA" angle="0" />
+        <line start="41.296730,2.067932" end="41.296084,2.068354" />
+        <line start="41.296288,2.068950" end="41.294612050,2.069964130" />
+        <text position="41.295355,2.069537" text="W3" angle="335" />
+        <line start="41.296536,2.069676" end="41.294862060,2.070691070" />
+        <text position="41.295618,2.070248" text="W2" angle="335" />
+        <line start="41.296792,2.070424" end="41.295109810,2.071417670" />
+        <text position="41.295882,2.070973" text="W1" angle="335" />
+        <line start="41.296589,2.075375" end="41.296631120,2.074591450" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.296631120,2.074591450</point>
+            <point>41.296971410,2.073018260</point>
+            <point>41.297430,2.072283</point>
+        </multiPointLine>
+        <line start="41.297497,2.078368" end="41.297500350,2.077789540" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.297500350,2.077789540</point>
+            <point>41.297581030,2.076742070</point>
+            <point>41.297808910,2.076271730</point>
+            <point>41.298136120,2.076075100</point>
+            <point>41.298628,2.075787</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.298439,2.080958</point>
+            <point>41.299683960,2.080363530</point>
+            <point>41.300107,2.080101</point>
+        </multiPointLine>
+        <text position="41.298441,2.080965" text="DA" angle="345" />
+        <line start="41.298061000,2.071905000" end="41.297430,2.072283" />
+        <line start="41.299237,2.075420" end="41.298628,2.075787" />
+        <line start="41.299801,2.077074" end="41.299197,2.077451" />
+        <line start="41.300708,2.079718" end="41.300107,2.080101" />
+        <line start="41.299268,2.083337" end="41.299284570,2.082930550" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.299683960,2.080363530</point>
+            <point>41.299486,2.080590</point>
+            <point>41.299438050,2.080796310</point>
+            <point>41.299284570,2.082930550</point>
+        </multiPointLine>
+        <text position="41.299344,2.082027" text="EB" angle="5" />
+        <line start="41.301491,2.082003" end="41.300877,2.082366" />
+        <line start="41.300877,2.082366" end="41.299268,2.083337" />
+        <text position="41.300296,2.082726" text="DB" angle="335" />
+        <line start="41.302407,2.084683" end="41.301665690,2.084651660" />
+        <line start="41.299517,2.084166" end="41.299803270,2.084485140" />
+        <line start="41.299803270,2.084485140" end="41.300449750,2.085080690" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.301665690,2.084651660</point>
+            <point>41.300881460,2.085148900</point>
+            <point>41.300654,2.085177</point>
+            <point>41.300449750,2.085080690</point>
+        </multiPointLine>
+        <text position="41.300025,2.084693" text="CA" angle="305" />
+        <line start="41.300546,2.087355" end="41.300556560,2.086647020" />
+        <line start="41.300556560,2.086647020" end="41.300642050,2.085603270" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.300881460,2.085148900</point>
+            <point>41.300715,2.085346</point>
+            <point>41.300642050,2.085603270</point>
+        </multiPointLine>
+        <text position="41.300592,2.086182" text="CB" angle="5" />
+        <line start="41.300546,2.087355" end="41.301759360,2.088472540" arrows="end" />
+        <line start="41.301759360,2.088472540" end="41.303240,2.089245" />
+        <text position="41.301126,2.087903" text="BA" angle="305" />
+        <line start="41.303222470,2.094638400" end="41.302957,2.094322" />
+        <line start="41.303222470,2.094638400" end="41.303939820,2.095320080" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.304997070,2.094379970</point>
+            <point>41.305001,2.094808</point>
+            <point>41.304842380,2.095066850</point>
+            <point>41.304351990,2.095364960</point>
+            <point>41.304149,2.095409</point>
+            <point>41.303939820,2.095320080</point>
+        </multiPointLine>
+        <text position="41.303532,2.094941" text="ZA" angle="305" />
+        <line start="41.306437,2.096254" end="41.304106020,2.097672850" />
+        <text position="41.304994,2.097140" text="Z1" angle="335" />
+        <line start="41.306681,2.096971" end="41.304352930,2.098398200" />
+        <text position="41.305245,2.097857" text="Z2" angle="335" />
+        <line start="41.306934,2.097710" end="41.304601970,2.099120720" />
+        <text position="41.305498,2.098586" text="Z3" angle="335" />
+        <line start="41.293883980,2.070410730" end="41.292683,2.071132" />
+        <text position="41.293637,2.070571" text="V3" angle="335" />
+        <line start="41.294128500,2.071134200" end="41.292928,2.071848" />
+        <text position="41.293883,2.071288" text="V2" angle="335" />
+        <line start="41.294376250,2.071860800" end="41.293175,2.072569" />
+        <text position="41.294124,2.072015" text="V1" angle="335" />
+        <line start="41.297182840,2.079637150" end="41.296543610,2.078868230" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.296543610,2.078868230</point>
+            <point>41.295726360,2.078096560</point>
+            <point>41.295327,2.077915</point>
+            <point>41.295029,2.077977</point>
+        </multiPointLine>
+        <text position="41.296182,2.078530" text="R6" angle="305" />
+        <line start="41.297770,2.081320" end="41.296450,2.082125" />
+        <text position="41.297337,2.081592" text="E5" angle="335" />
+        <line start="41.298474300,2.083427510" end="41.297835080,2.082658590" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.297835080,2.082658590</point>
+            <point>41.297128980,2.081990690</point>
+            <point>41.296922,2.081897</point>
+            <point>41.296772980,2.081929320</point>
+        </multiPointLine>
+        <text position="41.297810,2.082635" text="R5" angle="305" />
+        <line start="41.298061300,2.082199580" end="41.298065950,2.083454780" arrows="end" />
+        <line start="41.298065950,2.083454780" end="41.298018,2.084092" />
+        <text position="41.298062,2.082673" text="R4" />
+        <line start="41.298590,2.083750" end="41.297276,2.084538" />
+        <text position="41.298189,2.084007" text="D4" angle="335" />
+        <line start="41.299601790,2.086715100" end="41.298962560,2.085946180" arrows="end" />
+        <line start="41.298962560,2.085946180" end="41.297188,2.084285" />
+        <text position="41.298497,2.085516" text="R3" angle="305" />
+        <line start="41.299166220,2.085455070" end="41.299177030,2.086709790" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.299177030,2.086709790</point>
+            <point>41.299123520,2.087484810</point>
+            <point>41.298761,2.087972</point>
+            <point>41.298338920,2.087645490</point>
+        </multiPointLine>
+        <text position="41.299147,2.087112" text="R2" angle="5" />
+        <line start="41.301519670,2.092282020" end="41.301343230,2.093656920" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.301343230,2.093656920</point>
+            <point>41.301255270,2.093970120</point>
+            <point>41.301149,2.094171</point>
+            <point>41.301053750,2.094250090</point>
+            <point>41.300679,2.094476</point>
+        </multiPointLine>
+        <text position="41.301421,2.093045" text="R1" angle="5" />
+        <line start="41.303372450,2.098110830" end="41.301292,2.099364" />
+        <text position="41.303131,2.098264" text="Y1" angle="335" />
+        <line start="41.303619370,2.098836180" end="41.301541,2.100088" />
+        <line start="41.303868410,2.099558700" end="41.301786,2.100809" />
+        <text position="41.303625,2.099708" text="Y3" angle="335" />
+        <multiPointLine close="false">
+            <point>41.305158110,2.103245880</point>
+            <point>41.304286590,2.103770960</point>
+            <point>41.304000,2.103773</point>
+            <point>41.303762930,2.103479900</point>
+        </multiPointLine>
+        <text position="41.304377,2.103724" text="Q1" angle="335" />
+        <multiPointLine close="false">
+            <point>41.290763490,2.065157820</point>
+            <point>41.290442290,2.066290700</point>
+            <point>41.290421,2.066457</point>
+            <point>41.290455110,2.066689200</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.290614,2.067144</point>
+            <point>41.290278540,2.067347000</point>
+            <point>41.290139,2.067628</point>
+            <point>41.290159590,2.067842810</point>
+            <point>41.290442790,2.068671550</point>
+            <point>41.290517970,2.068811280</point>
+            <point>41.290565210,2.068857780</point>
+            <point>41.290619030,2.068971430</point>
+            <point>41.292977,2.075818</point>
+        </multiPointLine>
+        <text position="41.290987,2.070091" text="L14" angle="335" />
+        <text position="41.291835,2.072555" text="L13" angle="335" />
+        <text position="41.292652,2.074922" text="L12" angle="335" />
+        <text position="41.292289,2.076237" text="L11" angle="335" />
+        <text position="41.292226,2.078950" text="L10" angle="335" />
+        <text position="41.292639,2.080161" text="L9" angle="335" />
+        <text position="41.293094,2.081479" text="L8" angle="335" />
+        <line start="41.291750,2.068407" end="41.290658,2.069077" />
+        <text position="41.291478,2.068575" text="AS" angle="335" />
+        <line start="41.292437,2.070383" end="41.291338,2.071054" />
+        <text position="41.292172,2.070546" text="BS" angle="335" />
+        <line start="41.293433,2.073320" end="41.292347,2.073980" />
+        <text position="41.293178,2.073477" text="CS" angle="335" />
+        <multiPointLine close="false">
+            <point>41.294061,2.075155</point>
+            <point>41.291796530,2.076531600</point>
+            <point>41.291627,2.076792</point>
+            <point>41.291620390,2.077156400</point>
+        </multiPointLine>
+        <line start="41.291620390,2.077156400" end="41.293687800,2.083191550" arrows="end" />
+        <multiPointLine close="false">
+            <point>41.293687800,2.083191550</point>
+            <point>41.293714,2.083556</point>
+            <point>41.293489980,2.083908880</point>
+        </multiPointLine>
+        <text position="41.293786,2.075323" text="DS" angle="335" />
+        <line start="41.294595,2.076709" end="41.291996,2.078250" />
+        <text position="41.294336,2.076864" text="ES" angle="335" />
+        <line start="41.295036,2.077978" end="41.292431,2.079520" />
+        <text position="41.294766,2.078138" text="FS" angle="335" />
+        <line start="41.295463,2.079250" end="41.292868,2.080796" />
+        <text position="41.295196,2.079417" text="GS" angle="335" />
+        <line start="41.295912,2.080557" end="41.293315,2.082101" />
+        <text position="41.295632,2.080726" text="HS" angle="335" />
+        <line start="41.296450,2.082125" end="41.288487,2.086919" />
+        echo
+        <text position="41.296013,2.082391" text="E4" angle="335" />
+        <text position="41.293848,2.083695" text="E3" angle="335" />
+        <text position="41.291363,2.085188" text="E2" angle="335" />
+        <text position="41.289023,2.086597" text="E1" angle="335" />
+        <line start="41.297276,2.084538" end="41.289309,2.089316" />
+        <text position="41.296851,2.084794" text="D3" angle="335" />
+        <text position="41.295026,2.085895" text="D2" angle="335" />
+        <text position="41.290567,2.088567" text="D1" angle="335" />
+        <multiPointLine close="false">
+            <point>41.292490060,2.084511920</point>
+            <point>41.292291,2.084566</point>
+            <point>41.292156140,2.084534850</point>
+            <point>41.286961360,2.082176880</point>
+            <point>41.286871,2.082103</point>
+            <point>41.286782130,2.081951480</point>
+        </multiPointLine>
+        <text position="41.289114,2.083165" text="J7" angle="15" />
+        <multiPointLine close="false">
+            <point>41.290569,2.083816</point>
+            <point>41.288852860,2.078898160</point>
+            <point>41.288561,2.078576</point>
+            <point>41.288240220,2.078590110</point>
+            <point>41.286222990,2.079845980</point>
+            <point>41.286094,2.079941</point>
+        </multiPointLine>
+        <line start="41.289634,2.081128" end="41.287676,2.082295" />
+        <text position="41.288582,2.081763" text="LS" angle="335" />
+        <line start="41.289191,2.079862" end="41.287234,2.081020" />
+        <text position="41.288148,2.080482" text="MS" angle="335" />
+        <line start="41.287117,2.079288" end="41.284956200,2.072856380" />
+        <text position="41.285206,2.073630" text="Q11" angle="335" />
+        <text position="41.285954,2.075848" text="Q10" angle="335" />
+        <text position="41.286682,2.078013" text="Q9" angle="335" />
+        <multiPointLine close="false">
+            <point>41.288039540,2.082672210</point>
+            <point>41.287817,2.082511</point>
+            <point>41.287647770,2.082224960</point>
+            <point>41.286806450,2.079796680</point>
+            <point>41.286670010,2.079565550</point>
+            <point>41.286530710,2.079219250</point>
+            <point>41.285150,2.075128</point>
+        </multiPointLine>
+        <text position="41.285471,2.076104" text="J10" angle="335" />
+        <text position="41.286222,2.078350" text="J9" angle="335" />
+        <text position="41.287140,2.080798" text="J8" angle="335" />
+        <multiPointLine close="false">
+            <point>41.285533780,2.074577120</point>
+            <point>41.285393,2.074446</point>
+            <point>41.285279990,2.074469720</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.285418320,2.074232070</point>
+            <point>41.285270,2.074098</point>
+            <point>41.285167790,2.074121650</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.285305510,2.073897830</point>
+            <point>41.285187,2.073770</point>
+            <point>41.285053780,2.073787410</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.285188060,2.073547650</point>
+            <point>41.285054,2.073415</point>
+            <point>41.284935450,2.073437820</point>
+        </multiPointLine>
+        <line start="41.284301960,2.073830270" end="41.284064,2.073975" />
+        <line start="41.284418720,2.074181650" end="41.284181,2.074323" />
+        <line start="41.284533550,2.074512240" end="41.284293,2.074656" />
+        <line start="41.284652500,2.074857120" end="41.284408,2.075000" />
+        <line start="41.285624,2.074845" end="41.284568,2.075474" />
+        <text position="41.284886,2.075289" text="QS" angle="335" />
+        <line start="41.286287,2.076817" end="41.285231,2.077419" />
+        <text position="41.285553,2.077242" text="PS" angle="335" />
+        <text position="41.289010,2.079395" text="Q8" angle="335" />
+        <text position="41.289624,2.081143" text="Q7" angle="335" />
+        <text position="41.290234,2.082889" text="KS" angle="335" />
+        <multiPointLine close="false">
+            <point>41.282568710,2.073805820</point>
+            <point>41.283230210,2.073405600</point>
+            <point>41.283333,2.073367</point>
+            <point>41.283446710,2.073371340</point>
+            <point>41.283922,2.073644</point>
+            <point>41.284003230,2.073799630</point>
+            <point>41.293607920,2.101873770</point>
+            <point>41.293627,2.102040</point>
+            <point>41.293612170,2.102170020</point>
+            <point>41.293530290,2.102445850</point>
+            <point>41.293449,2.102596</point>
+            <point>41.293358180,2.102682460</point>
+            <point>41.292612560,2.103131870</point>
+        </multiPointLine>
+        <text position="41.283129,2.073472" text="G12" angle="335" />
+        <text position="41.284227,2.074484" text="K11" angle="335" />
+        <text position="41.284925,2.076525" text="K10" angle="335" />
+        <text position="41.285666,2.078687" text="K9" angle="335" />
+        <text position="41.286522,2.081190" text="K8" angle="335" />
+        <text position="41.287227,2.083263" text="K7" angle="335" />
+        <text position="41.288091,2.085791" text="K6" angle="335" />
+        <text position="41.288914,2.088183" text="K5" angle="335" />
+        <text position="41.290103,2.091666" text="K4" angle="335" />
+        <text position="41.291182,2.094876" text="K3" angle="335" />
+        <text position="41.292211,2.097830" text="K2" angle="335" />
+        <text position="41.293208,2.100734" text="K1" angle="335" />
+        <text position="41.293133,2.102821" text="G1" angle="335" />
+        <multiPointLine close="false">
+            <point>41.282653,2.074040</point>
+            <point>41.282750,2.074019</point>
+            <point>41.282883630,2.074050380</point>
+            <point>41.284166510,2.074691370</point>
+            <point>41.284303,2.074807</point>
+            <point>41.284422140,2.075045350</point>
+        </multiPointLine>
+        <text position="41.283455,2.074350" text="G11" angle="20" />
+        <multiPointLine close="false">
+            <point>41.282716,2.074218</point>
+            <point>41.282846,2.074277</point>
+            <point>41.282944360,2.074444430</point>
+            <point>41.283103210,2.074908140</point>
+            <point>41.283196,2.075075</point>
+            <point>41.283286630,2.075161080</point>
+            <point>41.284574010,2.075809810</point>
+            <point>41.284679,2.075896</point>
+            <point>41.284760220,2.076047090</point>
+        </multiPointLine>
+        <text position="41.283878,2.075480" text="G10" angle="20" />
+        <multiPointLine close="false">
+            <point>41.284811,2.076188</point>
+            <point>41.284458990,2.076398160</point>
+            <point>41.284292,2.076550</point>
+            <point>41.284208620,2.076821120</point>
+        </multiPointLine>
+        <line start="41.284157750,2.077605480" end="41.284208620,2.076821120" arrows="end" />
+        <line start="41.284157750,2.077605480" end="41.284139,2.078376" />
+        <text position="41.284169,2.077344" text="G9" angle="10" />
+        <multiPointLine close="false">
+            <point>41.286094,2.079941</point>
+            <point>41.285971860,2.080046240</point>
+            <point>41.285736830,2.080202330</point>
+            <point>41.285614,2.080312</point>
+            <point>41.285500940,2.080642060</point>
+        </multiPointLine>
+        <line start="41.285442320,2.081423840" end="41.285500940,2.080642060" arrows="end" />
+        <line start="41.285442320,2.081423840" end="41.285429,2.082136" />
+        <text position="41.285461,2.081120" text="G8" angle="10" />
+        <multiPointLine close="false">
+            <point>41.286716050,2.081754220</point>
+            <point>41.286756,2.081945</point>
+            <point>41.286751040,2.082063450</point>
+            <point>41.286619560,2.083888930</point>
+        </multiPointLine>
+        <line start="41.286574870,2.084701310" end="41.286619560,2.083888930" arrows="end" />
+        <line start="41.286557,2.085434" end="41.286574870,2.084701310" />
+        <text position="41.286580,2.084445" text="G7" angle="10" />
+        <line start="41.288710,2.091721" end="41.289027880,2.092089090" />
+        <line start="41.289027880,2.092089090" end="41.289632010,2.092667250" arrows="end" />
+        <text position="41.289301,2.092363" text="G6" angle="300" />
+        <multiPointLine close="false">
+            <point>41.289632010,2.092667250</point>
+            <point>41.290056,2.092739</point>
+            <point>41.290230430,2.092011100</point>
+        </multiPointLine>
+        <line start="41.289827,2.094980" end="41.290154880,2.095363520" />
+        <line start="41.290154880,2.095363520" end="41.290767150,2.095942860" arrows="end" />
+        <text position="41.290494,2.095701" text="G5" angle="300" />
+        <multiPointLine close="false">
+            <point>41.290767150,2.095942860</point>
+            <point>41.291159,2.096003</point>
+            <point>41.291368860,2.095333490</point>
+        </multiPointLine>
+        <line start="41.291142,2.098808" end="41.291452380,2.099166510" />
+        <line start="41.291452380,2.099166510" end="41.292073690,2.099767110" arrows="end" />
+        <text position="41.291761,2.099477" text="G4" angle="300" />
+        <multiPointLine close="false">
+            <point>41.292073690,2.099767110</point>
+            <point>41.292442,2.099818</point>
+            <point>41.292676050,2.099148250</point>
+        </multiPointLine>
+        <multiPointLine close="false">
+            <point>41.292809760,2.099538280</point>
+            <point>41.292846,2.099751</point>
+            <point>41.292822150,2.099911820</point>
+            <point>41.292360990,2.101563530</point>
+            <point>41.292333,2.101774</point>
+            <point>41.292357910,2.101941140</point>
+            <point>41.292532550,2.102447860</point>
+            <point>41.292557,2.102642</point>
+            <point>41.292503,2.102805</point>
+        </multiPointLine>
+        <text position="41.292576,2.100790" text="G3" angle="20" />
+        <multiPointLine close="false">
+            <point>41.293176680,2.100610980</point>
+            <point>41.293219,2.100846</point>
+            <point>41.293192470,2.101040820</point>
+            <point>41.292701390,2.102782730</point>
+            <point>41.292636,2.102917</point>
+            <point>41.292567,2.102989</point>
+        </multiPointLine>
+        <text position="41.292939,2.101930" text="G2" angle="20" />
+        <multiPointLine close="false">
+            <point>41.290891230,2.062743430</point>
+            <point>41.290677000,2.062923000</point>
+            <point>41.290565740,2.063132270</point>
+            <point>41.290012170,2.065084510</point>
+            <point>41.289997000,2.065271000</point>
+            <point>41.290023760,2.065435110</point>
+            <point>41.293372810,2.075176040</point>
+            <point>41.293448000,2.075516000</point>
+            <point>41.293545050,2.075936380</point>
+            <point>41.295653950,2.082129890</point>
+            <point>41.295678000,2.082588000</point>
+            <point>41.295728720,2.083141150</point>
+            <point>41.303194780,2.104918940</point>
+            <point>41.303321000,2.105148000</point>
+            <point>41.303427180,2.105231850</point>
+            <point>41.304344240,2.105689670</point>
+            <point>41.304477000,2.105709000</point>
+            <point>41.304612650,2.105671610</point>
+            <point>41.305217090,2.105308140</point>
+        </multiPointLine>
+        <text position="41.290375,2.063047" text="M14" angle="335" />
+        <text position="41.290569,2.067035" text="M13" angle="335" />
+        <text position="41.291505,2.069767" text="M12" angle="335" />
+        <text position="41.292348,2.072217" text="M11" angle="335" />
+        <text position="41.293172,2.074603" text="M10" angle="335" />
+        <text position="41.293888,2.076989" text="M9" angle="335" />
+        <text position="41.294818,2.079705" text="M8" angle="335" />
+        <text position="41.295514,2.081748" text="M7" angle="335" />
+        <text position="41.295971,2.083874" text="M6" angle="335" />
+        <text position="41.297019,2.086929" text="M5" angle="335" />
+        <text position="41.298992,2.092707" text="M4" angle="335" />
+        <text position="41.300539,2.097225" text="M3" angle="335" />
+        <text position="41.302404,2.102664" text="M2" angle="335" />
+        <text position="41.304956,2.105477" text="M1" angle="335" />
+        <multiPointLine close="false">
+            <point>41.291206000,2.063682000</point>
+            <point>41.291131400,2.063856210</point>
+            <point>41.290763490,2.065157820</point>
+            <point>41.290739000,2.065358000</point>
+            <point>41.290776330,2.065568180</point>
+            <point>41.304061990,2.104355670</point>
+            <point>41.304288000,2.104646000</point>
+            <point>41.304590210,2.104638160</point>
+            <point>41.304917190,2.104436680</point>
+        </multiPointLine>
+        <text position="41.291316,2.063960" text="N14" angle="335" />
+        <text position="41.291144,2.066661" text="N13" angle="335" />
+        <text position="41.292080,2.069409" text="N12" angle="335" />
+        <text position="41.292924,2.071873" text="N11" angle="335" />
+        <text position="41.293744,2.074242" text="N10" angle="335" />
+        <text position="41.294638,2.076864" text="N9" angle="335" />
+        <text position="41.295471,2.079301" text="N8" angle="335" />
+        <text position="41.296173,2.081356" text="N7" angle="335" />
+        <text position="41.296858,2.083348" text="N6" angle="335" />
+        <text position="41.298080,2.086942" text="N5" angle="335" />
+        <text position="41.300086,2.092793" text="N4" angle="335" />
+        <text position="41.301422,2.096687" text="N3" angle="335" />
+        <text position="41.303282,2.102118" text="N2" angle="335" />
+        <text position="41.304672,2.104593" text="N1" angle="335" />
+    </route>
+    <route name="LEBL runway holding points" zoomMax="12" displayMode="optional" color="255,0,0">
+        <!-- Runway 02/20 -->
+        <line start="41.310856540,2.097796570" end="41.310576790,2.097643240" />
+        <line start="41.309639890,2.093012960" end="41.309434690,2.093135490" />
+        <line start="41.309227960,2.093277500" end="41.309022770,2.093400030" />
+        <line start="41.306443440,2.092238440" end="41.306312720,2.092023910" />
+        <line start="41.304856990,2.091303080" end="41.304651800,2.091425600" />
+        <line start="41.303938850,2.090856320" end="41.303703920,2.090996690" />
+        <line start="41.305861310,2.094229170" end="41.305659450,2.094352080" />
+        <line start="41.304932150,2.093805480" end="41.304725510,2.093933230" />
+        <line start="41.298806620,2.088345140" end="41.298441850,2.088563690" />
+        <line start="41.297500170,2.087927780" end="41.297290470,2.088056960" />
+        <line start="41.299883040,2.091499400" end="41.299528590,2.091715170" />
+        <line start="41.298508630,2.090833310" end="41.298293250,2.090963970" />
+        <line start="41.294022890,2.086337820" end="41.294121210,2.086605760" />
+        <line start="41.291272090,2.085084280" end="41.291363630,2.085351320" />
+        <line start="41.291651300,2.087762830" end="41.291749620,2.088030770" />
+        <line start="41.288781970,2.086459430" end="41.288945160,2.086935200" />
+        <!-- TODO: adjust the next holding point once it is drawn in the apt.dat layout -->
+        <line start="41.287316000,2.083191000" end="41.287011000,2.083377000" />
+        <line start="41.288496720,2.086301450" end="41.288217400,2.086463050" />
+        <!-- Runway 07L/25R -->
+        <line start="41.292539365,2.061600502" end="41.292630380,2.061867440" />
+        <line start="41.292801869,2.062455644" end="41.292936404,2.062847306" />
+        <line start="41.292248000,2.063218000" end="41.292361000,2.065836000" />
+        <line start="41.291614000,2.063604000" end="41.293004000,2.065443000" />
+        <line start="41.308099510,2.100749340" end="41.307894130,2.100878840" color="80,20,20" />
+        <line start="41.307437770,2.101150090" end="41.307240600,2.101274130" color="80,20,20" />
+        <line start="41.306612600,2.103252270" end="41.306706050,2.103526620" />
+        <line start="41.306911530,2.104125990" end="41.307004990,2.104397430" />
+        <line start="41.294169860,2.064856210" end="41.294286360,2.065196680" color="80,20,20" />
+        <line start="41.293595440,2.065238470" end="41.293691170,2.065523640" />
+        <line start="41.293647920,2.065907720" end="41.293875620,2.065937130" stroke="dots" />
+        <line start="41.295655500,2.069175390" end="41.295747290,2.069443960" color="80,20,20" />
+        <line start="41.295900140,2.069908240" end="41.295997190,2.070188510" color="80,20,20" />
+        <line start="41.296152570,2.070647690" end="41.296240840,2.070906900" color="80,20,20" />
+        <line start="41.295054760,2.069536320" end="41.295660350,2.071272280" />
+        <line start="41.296899890,2.072904660" end="41.297099390,2.073003970" stroke="dots" />
+        <line start="41.298154820,2.075823280" end="41.298285840,2.076214570" stroke="dots" />
+        <line start="41.298879,2.077194" end="41.297928,2.078442" />
+        <line start="41.299084,2.077913" end="41.297719,2.077784" />
+        <line start="41.299644,2.079537" end="41.297832,2.079204" />
+        <line start="41.299466,2.080119" end="41.298018,2.078680" />
+        <line start="41.298866120,2.080591760" end="41.298942720,2.080869310" />
+        <line start="41.299310820,2.081042070" end="41.299527850,2.081070390" stroke="dots" />
+        <line start="41.299662880,2.082939640" end="41.299755090,2.083206000" />
+        <line start="41.301192440,2.084720820" end="41.301320810,2.085105080" stroke="dots" />
+        <line start="41.302493890,2.088729570" end="41.302428040,2.088990710" stroke="dots" />
+        <line start="41.304699030,2.094940710" end="41.304816860,2.095292200" stroke="dots" />
+        <line start="41.305147190,2.096898200" end="41.305233700,2.097152730" color="80,20,20" />
+        <line start="41.305395340,2.097617010" end="41.305481850,2.097871540" color="80,20,20" />
+        <line start="41.305640740,2.098335400" end="41.305727250,2.098589920" color="80,20,20" />
+        <line start="41.304540370,2.097243180" end="41.305137980,2.098959980" />
+        <!-- TODO: adjust the next holding point once it is drawn in the apt.dat layout -->
+        <line start="41.309401000,2.101606000" end="41.309482000,2.101854000" color="80,20,20" />
+        <line start="41.290476340,2.063030560" end="41.290746230,2.063188010" />
+        <line start="41.291060790,2.063683910" end="41.291310040,2.063914280" />
+        <line start="41.293320200,2.070540700" end="41.293934120,2.072339430" />
+        <multiPointLine close="false" stroke="dots">
+            <point>41.295868570,2.078049640</point>
+            <point>41.295798310,2.078161460</point>
+            <point>41.295767460,2.078521120</point>
+        </multiPointLine>
+        <line start="41.297078040,2.081580290" end="41.297168960,2.081840330" />
+        <line start="41.297198640,2.081957960" end="41.297113800,2.082322600" stroke="dots" />
+        <line start="41.297921980,2.083981430" end="41.298012900,2.084241470" />
+        <multiPointLine close="false" stroke="dots">
+            <point>41.298265720,2.085100070</point>
+            <point>41.298199870,2.085226960</point>
+            <point>41.298216860,2.085586550</point>
+        </multiPointLine>
+        <multiPointLine close="false" stroke="dots">
+            <point>41.298872200,2.087592880</point>
+            <point>41.299037440,2.087771180</point>
+            <point>41.299216130,2.087816200</point>
+        </multiPointLine>
+        <multiPointLine close="false" stroke="dots">
+            <point>41.301089310,2.093869290</point>
+            <point>41.301224760,2.094047600</point>
+            <point>41.301341750,2.094106770</point>
+        </multiPointLine>
+        <line start="41.302807490,2.098238710" end="41.303429150,2.100058030" />
+        <line start="41.304558730,2.103385960" end="41.304686370,2.103760810" />
+        <line start="41.304858490,2.104261430" end="41.304972640,2.104595080" />
+        <line start="41.305154430,2.105130230" end="41.305261980,2.105444530" />
+        <line start="41.302947670,2.103814060" end="41.302744690,2.103941960" color="80,20,20" />
+        <!-- Runway 07R/25L -->
+        <line start="41.283018880,2.073373570" end="41.283107150,2.073630160" />
+        <line start="41.283454290,2.074188570" end="41.283379130,2.074452160" />
+        <line start="41.283824960,2.075286570" end="41.283752440,2.075555170" />
+        <line start="41.284859160,2.075955720" end="41.284649660,2.076089800" color="80,20,20" />
+        <line start="41.284339130,2.076977200" end="41.284088800,2.076947970" stroke="dots" />
+        <line start="41.285624010,2.080779710" end="41.285386940,2.080736290" stroke="dots" />
+        <line start="41.286747830,2.084040110" end="41.286502210,2.084005810" stroke="dots" />
+        <line start="41.289654960,2.092462930" end="41.289511540,2.092728300" stroke="dots" />
+        <line start="41.290773670,2.095723790" end="41.290629020,2.095990800" stroke="dots" />
+        <line start="41.292066490,2.099542280" end="41.291919030,2.099799590" stroke="dots" />
+        <line start="41.292773900,2.099089540" end="41.292569370,2.099211730" color="80,20,20" />
+        <line start="41.292439930,2.100864540" end="41.292644270,2.100966520" />
+        <line start="41.292814560,2.101983580" end="41.293018910,2.102085570" />
+        <line start="41.293064400,2.102706880" end="41.293150050,2.102959850" />
+    </route>
+    <route name="LEBL taxiway holding points" zoomMax="8" displayMode="optional" color="240,240,0">
+        <!-- On taxiways S and T -->
+        <line start="41.295346610,2.063593550" end="41.295150970,2.063710910" />
+        <line start="41.294707550,2.063936720" end="41.294448540,2.064088220" />
+        <line start="41.295784390,2.064854180" end="41.295594390,2.064967550" />
+        <line start="41.295183840,2.065190010" end="41.294881080,2.065369080" />
+        <line start="41.296625280,2.067290770" end="41.296429640,2.067408130" />
+        <line start="41.296028210,2.067628540" end="41.295744490,2.067797450" />
+        <line start="41.297074250,2.068578680" end="41.296884250,2.068692050" />
+        <line start="41.296494540,2.068810840" end="41.296167070,2.069001520" />
+        <line start="41.297972970,2.071203080" end="41.297777330,2.071320440" />
+        <line start="41.297220580,2.071254620" end="41.296977530,2.071393270" />
+        <line start="41.298359570,2.072530710" end="41.298169580,2.072644080" />
+        <line start="41.297765700,2.072821660" end="41.297513800,2.072973650" />
+        <line start="41.299107580,2.074692800" end="41.298911940,2.074810160" />
+        <line start="41.298526500,2.075028440" end="41.298273150,2.075173950" />
+        <line start="41.299564800,2.076029610" end="41.299374810,2.076142980" />
+        <line start="41.298970800,2.076296650" end="41.298697930,2.076462780" />
+        <line start="41.299673170,2.076338650" end="41.299477530,2.076456010" />
+        <line start="41.299128420,2.076760480" end="41.298880360,2.076906910" />
+        <line start="41.300137510,2.077684490" end="41.299947520,2.077797860" />
+        <line start="41.299550340,2.077980880" end="41.299308610,2.078132650" />
+        <line start="41.300583470,2.078986040" end="41.300387820,2.079103400" />
+        <line start="41.299940050,2.079139970" end="41.299710930,2.079277900" />
+        <line start="41.301038560,2.080329270" end="41.300848570,2.080442640" />
+        <line start="41.300574880,2.081010320" end="41.300345890,2.081156750" />
+        <line start="41.301358620,2.081278000" end="41.301172000,2.081389900" />
+        <line start="41.300801300,2.081670170" end="41.300572190,2.081808090" />
+        <line start="41.301815860,2.082615120" end="41.301625870,2.082728490" />
+        <line start="41.301232710,2.082920690" end="41.300990970,2.083072460" />
+        <line start="41.302270550,2.083948880" end="41.302079290,2.084063810" />
+        <line start="41.301568340,2.083922130" end="41.301314610,2.084074090" />
+        <line start="41.302736110,2.085296480" end="41.302546120,2.085409850" />
+        <line start="41.302043100,2.085269510" end="41.301798540,2.085421280" />
+        <line start="41.303724290,2.088187040" end="41.303528650,2.088304400" />
+        <line start="41.303061040,2.088310520" end="41.302831920,2.088448450" />
+        <line start="41.304508630,2.090262600" end="41.304297570,2.090385320" />
+        <line start="41.306324330,2.095580840" end="41.306054690,2.095742170" />
+        <line start="41.305666890,2.095980460" end="41.305400770,2.096139450" />
+        <line start="41.307251960,2.098283400" end="41.306997300,2.098439010" />
+        <line start="41.306599400,2.098672280" end="41.306331660,2.098837560" />
+        <line start="41.308389510,2.101598040" end="41.308119880,2.101759370" />
+        <line start="41.307724080,2.101999790" end="41.307483540,2.102143880" />
+        <!-- On taxiways M, N and L -->
+        <line start="41.290947400,2.067612110" end="41.290678300,2.067771000" />
+        <line start="41.291707920,2.067603760" end="41.291327250,2.067834720" />
+        <line start="41.291068730,2.068049740" end="41.290826710,2.068195760" />
+        <line start="41.292162410,2.068918610" end="41.291785410,2.069157320" />
+        <line start="41.291512060,2.069349800" end="41.291273040,2.069499990" />
+        <line start="41.290984300,2.069610680" end="41.290745290,2.069760870" />
+        <line start="41.292413020,2.069645270" end="41.292029220,2.069870660" />
+        <line start="41.291744800,2.070015680" end="41.291501950,2.070165760" />
+        <line start="41.291247200,2.070366870" end="41.291004360,2.070516950" />
+        <line start="41.292832880,2.070902990" end="41.292471930,2.071119330" />
+        <line start="41.292204240,2.071309490" end="41.291947930,2.071462000" />
+        <line start="41.291666190,2.071590940" end="41.291409870,2.071743440" />
+        <line start="41.293398590,2.072596560" end="41.293042380,2.072804670" />
+        <line start="41.292756870,2.072954700" end="41.292518380,2.073100920" />
+        <line start="41.292254650,2.073280720" end="41.292016160,2.073426940" />
+        <line start="41.293838660,2.073830990" end="41.293467840,2.074059200" />
+        <line start="41.293205660,2.074247160" end="41.292964190,2.074394130" />
+        <line start="41.292677910,2.074522200" end="41.292436440,2.074669170" />
+        <line start="41.294043870,2.074429690" end="41.293683710,2.074645330" />
+        <line start="41.293392770,2.074795220" end="41.293146230,2.074942280" />
+        <line start="41.292890550,2.075138230" end="41.292644010,2.075285290" />
+        <line start="41.294439320,2.075582060" end="41.294068490,2.075810270" />
+        <line start="41.293766910,2.076125260" end="41.293516410,2.076275830" />
+        <line start="41.294693530,2.076331280" end="41.294227820,2.076607130" />
+        <line start="41.294949350,2.077088740" end="41.294578530,2.077316950" />
+        <line start="41.295044730,2.077337090" end="41.294673900,2.077565300" />
+        <line start="41.294271870,2.077652280" end="41.294021380,2.077802850" />
+        <line start="41.295390290,2.078376690" end="41.295019470,2.078604910" />
+        <line start="41.295485210,2.078639310" end="41.295114390,2.078867520" />
+        <line start="41.294714190,2.078941530" end="41.294463690,2.079092100" />
+        <line start="41.295881030,2.079818360" end="41.295517240,2.080034870" />
+        <line start="41.295152200,2.080208110" end="41.294901710,2.080358680" />
+        <line start="41.296316930,2.081060400" end="41.295946110,2.081288620" />
+        <line start="41.295599510,2.081511200" end="41.295349020,2.081661770" />
+        <line start="41.296423460,2.081379660" end="41.296052630,2.081607870" />
+        <line start="41.295693200,2.081781380" end="41.295442700,2.081931950" />
+        <line start="41.296864620,2.082629620" end="41.296483160,2.082857830" />
+        <line start="41.295948750,2.083186780" end="41.295624290,2.083378820" />
+        <line start="41.297247970,2.083798910" end="41.296881400,2.084027130" />
+        <line start="41.296339570,2.084365860" end="41.296009370,2.084573480" />
+        <line start="41.297680300,2.085071620" end="41.297298840,2.085299840" />
+        <line start="41.296767990,2.085624030" end="41.296438250,2.085821340" />
+        <line start="41.300651022,2.093732715" end="41.300289722,2.093958585" />
+        <line start="41.299701630,2.094322400" end="41.299487490,2.094455110" />
+        <line start="41.301076940,2.094985610" end="41.300715300,2.095205030" />
+        <line start="41.300138600,2.095551560" end="41.299913240,2.095690840" />
+        <line start="41.302140730,2.098094770" end="41.301776810,2.098317710" />
+        <line start="41.301248190,2.098635330" end="41.300981410,2.098800730" />
+        <line start="41.303070400,2.100804770" end="41.302701720,2.101024470" />
+        <line start="41.302170300,2.101352960" end="41.301909260,2.101506300" />
+        <line start="41.303907390,2.103243170" end="41.303544690,2.103466230" />
+        <line start="41.290984300,2.069610680" end="41.290745290,2.069760870" />
+        <line start="41.291247200,2.070366870" end="41.291004360,2.070516950" />
+        <line start="41.291666190,2.071590940" end="41.291409870,2.071743440" />
+        <line start="41.292254650,2.073280720" end="41.292016160,2.073426940" />
+        <line start="41.292677910,2.074522200" end="41.292436440,2.074669170" />
+        <line start="41.292890550,2.075138230" end="41.292644010,2.075285290" />
+        <!-- TODO: adjust the next two holding points once they are drawn in the apt.dat layout -->
+        <line start="41.292568000,2.075812000" end="41.292715000,2.076248000" />
+        <line start="41.293157000,2.075434000" end="41.293312000,2.075888000" />
+        <line start="41.293768730,2.083049210" end="41.293545850,2.083182200" />
+        <!-- On taxiway U -->
+        <line start="41.310791410,2.093757440" end="41.310696760,2.094116930" />
+        <line start="41.310726880,2.098728930" end="41.310478730,2.098731190" />
+        <line start="41.310779270,2.099503780" end="41.310490340,2.099604640" />
+        <line start="41.310989210,2.100199070" end="41.310640860,2.100411980" />
+        <line start="41.311392450,2.101152510" end="41.311014260,2.101382820" />
+        <!-- On taxiway P -->
+        <line start="41.310430710,2.100915290" end="41.310539140,2.101255850" />
+        <!-- On taxiway E -->
+        <line start="41.295877240,2.082076930" end="41.296060420,2.082640180" />
+        <line start="41.288903760,2.086408110" end="41.289049070,2.086847510" />
+        <!-- On taxiway D -->
+        <line start="41.296713790,2.084619170" end="41.296872180,2.085081030" />
+        <line start="41.289701930,2.088825410" end="41.289848140,2.089273220" />
+        <!-- On taxiways Q and K -->
+        <line start="41.290255350,2.082689340" end="41.290128570,2.082758380" />
+        <!-- TODO: adjust the next four holding points once they are drawn in the apt.dat layout -->
+        <line start="41.289819,2.081396" end="41.289667,2.081488" />
+        <line start="41.289620,2.080821" end="41.289459,2.080923" />
+        <line start="41.289340,2.080017" end="41.289171,2.080122" />
+        <line start="41.289202,2.079614" end="41.289029,2.079722" />
+        <line start="41.287109260,2.079102620" end="41.287210470,2.079396180" />
+        <line start="41.287062370,2.078681750" end="41.286819110,2.078828680" />
+        <line start="41.286538380,2.077136650" end="41.286295130,2.077283570" />
+        <line start="41.286257460,2.076307410" end="41.286014210,2.076454340" />
+        <line start="41.285882950,2.075220320" end="41.285639700,2.075367250" />
+        <line start="41.285583350,2.074332580" end="41.285340090,2.074479500" />
+        <!-- On taxiway J -->
+        <line start="41.285477150,2.075723590" end="41.285267800,2.075845850" />
+        <line start="41.285704190,2.076374600" end="41.285494850,2.076496860" />
+        <line start="41.286140610,2.077665000" end="41.285931270,2.077787270" />
+        <line start="41.286537290,2.078872860" end="41.286327950,2.078995120" />
+        <line start="41.287051130,2.080110250" end="41.286841790,2.080232520" />
+        <line start="41.287546120,2.081592220" end="41.287336780,2.081714490" />
+        <!-- On taxiway K -->
+        <line start="41.284517470,2.074991590" end="41.284324510,2.075107630" />
+        <line start="41.284831740,2.075855140" end="41.284588480,2.076002070" />
+        <line start="41.285192450,2.076930390" end="41.284949200,2.077077320" />
+        <line start="41.285503460,2.077806480" end="41.285283780,2.077936380" />
+        <line start="41.286016710,2.079344870" end="41.285773450,2.079491800" />
+        <line start="41.286380770,2.080460730" end="41.286089120,2.080636250" />
+        <line start="41.286839180,2.081748290" end="41.286595930,2.081895220" />
+        <line start="41.287530510,2.083699970" end="41.287207000,2.083893300" />
+        <line start="41.288872480,2.087446830" end="41.288612750,2.087605350" />
+        <line start="41.289271930,2.088596540" end="41.289005820,2.088752830" />
+        <line start="41.289700470,2.089852170" end="41.289437060,2.090009660" />
+        <line start="41.290724290,2.093077130" end="41.290486460,2.093219730" />
+        <line start="41.291848750,2.096369960" end="41.291610930,2.096512560" />
+    </route>
+    <route name="Forbidden areas" displayMode="always" color="255,0,0">
+    </route>
+    <!-- FIXME: set these as parking positions -->
+    <!-- FIXME: the text zoomMax should be set to 4 -->
+    <route name="LEBL parking positions" zoomMax="8" displayMode="optional" color="20,20,80">
+        <line start="41.29643843,2.0590608" end="41.2966259,2.05960718" />
+        <text position="41.29653903,2.05935339" text="189" angle="335" zoomMax="4" />
+        <line start="41.29602597,2.05924605" end="41.29624653,2.05988937" />
+        <text position="41.2963443,2.05947006" text="188" angle="335" />
+        <line start="41.29622453,2.0591277" end="41.2964451,2.05977102" />
+        <text position="41.29614458,2.0595895" text="187" angle="335" />
+        <line start="41.295831460,2.059362090" end="41.296052030,2.060005410" />
+        <text position="41.29595263,2.05970895" text="186" angle="335" />
+        <line start="41.295778600,2.059393420" end="41.295999160,2.060036740" stroke="dashed" />
+        <text position="41.29588025,2.05968918" text="185A" angle="335" />
+        <line start="41.295633560,2.059479290" end="41.295854130,2.060122610" />
+        <text position="41.29575292,2.05982839" text="185" angle="335" />
+        <line start="41.295480930,2.059571400" end="41.295701490,2.060214720" stroke="dashed" />
+        <text position="41.29558376,2.05986903" text="184A" angle="335" />
+        <line start="41.295436200,2.059597740" end="41.295656770,2.060241060" />
+        <text position="41.29555688,2.05994837" text="184" angle="335" />
+        <line start="41.295235580,2.059716700" end="41.295456150,2.060360020" />
+        <text position="41.29535657,2.06006834" text="183" angle="335" />
+        <line start="41.295161050,2.059761740" end="41.295381620,2.060405060" stroke="dashed" />
+        <text position="41.2952644,2.06006073" text="182A" angle="335" />
+        <line start="41.295048530,2.059828560" end="41.295269100,2.060471880" />
+        <text position="41.29516987,2.06018554" text="182" angle="335" />
+        <line start="41.294845270,2.059949390" end="41.295065840,2.060592710" />
+        <text position="41.29496768,2.0603067" text="181" angle="335" />
+        <line start="41.296698240,2.060129840" end="41.296969090,2.060906130" />
+        <text position="41.29680174,2.06042594" text="175" angle="335" />
+        <line start="41.296359710,2.060332010" end="41.296630560,2.061108300" />
+        <text position="41.29646563,2.06062872" text="174" angle="335" />
+        <line start="41.296026780,2.060532380" end="41.296297630,2.061308670" />
+        <text position="41.29613449,2.0608348" text="173" angle="335" />
+        <line start="41.295667500,2.060747500" end=" 41.295938350,2.061523790" />
+        <text position="41.29577367,2.06105094" text="172" angle="335" />
+        <line start="41.295293630,2.060961000" end="41.295565840,2.061743610" />
+        <text position="41.29540261,2.06127422" text="171" angle="335" />
+        <line start="41.297311200,2.061325190" end="41.297608290,2.062180530" />
+        <text position="41.29747868,2.06180344" text="165" angle="335" />
+        <line start="41.296934060,2.061551030" end="41.297232890,2.062405390" />
+        <text position="41.29710368,2.0620279" text="164" angle="335" />
+        <line start="41.296555820,2.061778300" end="41.296854650,2.062632670" />
+        <text position="41.2967259,2.06226229" text="163" angle="335" />
+        <line start="41.296166660,2.062010860" end="41.296465490,2.062865230" />
+        <text position="41.29633995,2.06250022" text="162" angle="335" />
+        <line start="41.295729230,2.062273000" end="41.296028070,2.063127370" />
+        <text position="41.29590434,2.06276058" text="161" angle="335" />
+        <line start="41.297658530,2.062770120" end="41.297990150,2.063707010" />
+        <text position="41.2977896,2.06314142" text="155" angle="335" />
+        <line start="41.297295600,2.062991440" end="41.297627210,2.063937060" />
+        <text position="41.29742849,2.06336087" text="154" angle="335" />
+        <line start="41.296940150,2.063209520" end="41.297263050,2.064159010" />
+        <text position="41.29706737,2.06358083" text="153" angle="335" />
+        <line start="41.296577330,2.063431390" end="41.296900220,2.064384840" />
+        <text position="41.2967026,2.0637999" text="152" angle="335" />
+        <line start="41.296215990,2.063650580" end="41.296538880,2.064600060" />
+        <text position="41.29634213,2.064022" text="151" angle="335" />
+        <line start="41.298160840,2.064203460" end="41.298659250,2.065650260" stroke="dashed" />
+        <text position="41.2984847,2.06513242" text="144A" angle="335" />
+        <line start="41.298082370,2.064373630" end="41.298519310,2.065648630" />
+        <text position="41.29833236,2.06509047" text="143" angle="335" />
+        <line start="41.297765750,2.064590860" end="41.298189960,2.065825190" stroke="dashed" />
+        <text position="41.29801844,2.06532508" text="143A" angle="335" />
+        <line start="41.297489100,2.064757970" end="41.297876380,2.065877600" />
+        <text position="41.29772987,2.06545175" text="142" angle="335" />
+        <line start="41.297273740,2.064888830" end="41.297696130,2.066108170" stroke="dashed" />
+        <text position="41.29752714,2.06561463" text="142A" angle="335" />
+        <line start="41.296865960,2.065135600" end="41.297393760,2.066642980" />
+        <text position="41.29710044,2.0657918" text="141" angle="335" />
+        <line start="41.296787610,2.065184550" end="41.297315420,2.066691920" stroke="dashed" />
+        <text position="41.29704578,2.06591069" text="141A" angle="335" />
+        <line start="41.298941430,2.066717470" end="41.298492800,2.067018540" />
+        <text position="41.298970,2.066702" text="139" angle="335" />
+        <line start="41.299234270,2.067243510" end="41.298683870,2.067570810" stroke="dashed" />
+        <text position="41.299249,2.067239" text="138A" angle="335" />
+        <line start="41.299182140,2.067366040" end="41.298708990,2.067643490" />
+        <text position="41.299217,2.067353" text="138" angle="335" />
+        <line start="41.299501130,2.068031810" end="41.298950730,2.068359110" />
+        <text position="41.299516,2.068029" text="137" angle="335" />
+        <line start="41.299766350,2.068813250" end="41.299215950,2.069140560" />
+        <text position="41.299782,2.068811" text="136" angle="335" />
+        <line start="41.298017410,2.068037260" end="41.297217120,2.068518170" />
+        <text position="41.297146,2.068569" text="135" angle="335" />
+        <line start="41.298065710,2.068180360" end="41.297264860,2.068667010" stroke="dashed" />
+        <text position="41.297194,2.068724" text="134A" angle="335" />
+        <line start="41.298169470,2.068485290" end="41.297371580,2.068970410" />
+        <text position="41.297295,2.069024" text="134" angle="335" />
+        <line start="41.298283810,2.068822110" end="41.297487100,2.069303250" stroke="dashed" />
+        <text position="41.297408,2.069360" text="133A" angle="335" />
+        <line start="41.298319290,2.068928010" end="41.297520930,2.069405910" />
+        <text position="41.297441,2.069465" text="133" angle="335" />
+        <line start="41.298545210,2.069594930" end="41.297748500,2.070078830" />
+        <text position="41.297666,2.070144" text="132" angle="335" />
+        <line start="41.298773480,2.070269480" end="41.297980910,2.070747870" />
+        <text position="41.297904,2.070807" text="131" angle="335" />
+        <line start="41.300700180,2.070571000" end="41.300764210,2.071122810" />
+        <text position="41.30072952,2.07081817" text="129" angle="349" />
+        <line start="41.300521180,2.070750310" end="41.300740390,2.071438690" />
+        <text position="41.30061899,2.07105542" text="128A" angle="337" />
+        <line start="41.300228260,2.070656520" end="41.300679720,2.071481900" />
+        <text position="41.30054896,2.07123855" text="128" angle="324" />
+        <line start="41.299992450,2.071023610" end="41.300378140,2.071716310" />
+        <text position="41.30027425,2.07152413" text="127" angle="327" />
+        <line start="41.299847800,2.071257620" end="41.300474090,2.072065480" stroke="dashed" />
+        <text position="41.30024105,2.07176404" text="126A" angle="313" />
+        <line start="41.299464850,2.071362830" end="41.300437300,2.072119780" />
+        <text position="41.30024573,2.0719674" text="126" angle="303" />
+        <line start="41.299156640,2.071821750" end="41.300365530,2.072700220" />
+        <text position="41.30012775,2.0725288" text="125" angle="299" />
+        <line start="41.299112090,2.071858240" end="41.300461510,2.073015010" stroke="dashed" />
+        <text position="41.30020611,2.07279807" text="124A" angle="303" />
+        <line start="41.300526630,2.072900960" end="41.299626220,2.073217780" />
+        <text position="41.3003067,2.07298244" text="124" angle="68" />
+        <line start="41.300669520,2.073467160" end="41.300921550,2.073776360" />
+        <text position="41.30079237,2.07361952" text="123" angle="313" />
+        <line start="41.300236660,2.073764490" end="41.300740380,2.074094060" />
+        <text position="41.30056386,2.07397655" text="122" angle="300" />
+        <line start="41.299919180,2.074302250" end="41.300603880,2.074549680" />
+        <text position="41.30037263,2.07446862" text="121" angle="286" />
+        <line start="41.300915250,2.074976500" end="41.300319300,2.075340980" />
+        <text position="41.30059365,2.07517178" text="120" angle="66" />
+        <line start="41.301176650,2.075270170" end="41.300108720,2.075585780" stroke="dashed" />
+        <text position="41.300716,2.075424" text="119A" angle="75" />
+        <line start="41.301142200,2.075108320" end="41.300633380,2.076089170" />
+        <text position="41.300909,2.075552" text="119" angle="32" />
+        <line start="41.301434830,2.075017990" end="41.301373620,2.075610210" />
+        <text position="41.30140789,2.07528531" text="118" angle="4" />
+        <line start="41.301575110,2.076093710" end="41.301836560,2.076385660" />
+        <text position="41.30166518,2.07619542" text="117" angle="309" />
+        <line start="41.301001390,2.076280170" end="41.301664260,2.076722520" />
+        <text position="41.30145011,2.07658063" text="116" angle="300" />
+        <line start="41.300703830,2.076930980" end="41.301575140,2.077283680" />
+        <text position="41.30129514,2.07717324" text="115" angle="286" />
+        <line start="41.301491960,2.077809750" end="41.301768600,2.077768870" />
+        <text position="41.30154119,2.077802" text="114" angle="263" />
+        <line start="41.301316810,2.078117860" end="41.302080770,2.077864380" stroke="dashed" />
+        <text position="41.301404,2.078088" text="113A" angle="255" />
+        <line start="41.302011240,2.077771840" end="41.301539040,2.078781480" />
+        <text position="41.30187907,2.07805978" text="113" angle="32" />
+        <line start="41.302335310,2.077591750" end="41.302279380,2.078186300" />
+        <text position="41.30230263,2.07793784" text="112" angle="4" />
+        <line start="41.302451620,2.078691380" end="41.302744730,2.078976320" />
+        <text position="41.30255626,2.078797" text="111" angle="305" />
+        <line start="41.301809780,2.078916160" end="41.302513880,2.079386550" />
+        <text position="41.30230859,2.07925114" text="110" angle="293" />
+        <line start="41.302080620,2.079762330" end="41.302416050,2.079879000" />
+        <text position="41.30217671,2.07979811" text="109" angle="284" />
+        <line start="41.302193750,2.080356850" end="41.302631330,2.080406890" />
+        <text position="41.30236984,2.08037789" text="108" angle="273" />
+        <line start="41.302932890,2.080396620" end="41.302391040,2.081298100" />
+        <text position="41.30278696,2.08064324" text="107" angle="40" />
+        <line start="41.303228910,2.080235260" end="41.303172980,2.080810470" />
+        <text position="41.30319955,2.08054737" text="106" angle="4" />
+        <line start="41.303333600,2.081298130" end="41.303616700,2.081618850" />
+        <text position="41.30344734,2.08142768" text="105" angle="309" />
+        <line start="41.302712080,2.081548680" end="41.303423930,2.081993310" />
+        <text position="41.30318914,2.0818457" text="104" angle="300" />
+        <line start="41.302847590,2.082319660" end="41.303302440,2.082474550" />
+        <text position="41.30305508,2.08239096" text="103" angle="284" />
+        <line start="41.302980980,2.083007490" end="41.303516050,2.082943370" />
+        <text position="41.30327023,2.08297016" text="102" angle="265" />
+        <line start="41.303086970,2.083241380" end="41.303841110,2.083035480" stroke="dashed" />
+        <text position="41.303127,2.083230" text="101A" angle="255" />
+        <line start="41.303778340,2.082979900" end="41.303303850,2.083857680" />
+        <text position="41.30364237,2.08323728" text="101" angle="32" />
+        <line start="41.304101640,2.082826930" end="41.304049790,2.083425380" />
+        <text position="41.30407368,2.08314206" text="100" angle="4" />
+        <line start="41.305353910,2.083467820" end="41.305493300,2.083897190" />
+        <text position="41.30538875,2.08355297" text="96" angle="335" />
+        <line start="41.304947800,2.083718970" end="41.305087200,2.084148340" />
+        <text position="41.30498449,2.08379855" text="95" angle="335" />
+        <line start="41.304372370,2.083905110" end="41.304544330,2.084436610" />
+        <text position="41.30446365,2.08419309" text="94" angle="335" />
+        <line start="41.304003340,2.084111370" end="41.304181080,2.084652570" />
+        <text position="41.30410028,2.08441277" text="93" angle="335" />
+        <line start="41.303600610,2.084248180" end="41.303812700,2.084884470" />
+        <text position="41.3037249,2.08462112" text="92" angle="335" />
+        <line start="41.303158190,2.084519280" end="41.303370280,2.085155560" />
+        <text position="41.30328917,2.08490304" text="91" angle="335" />
+        <line start="41.305802030,2.084218340" end="41.306021270,2.084859260" />
+        <text position="41.30594124,2.0846255" text="88" angle="335" />
+        <line start="41.305463510,2.084474040" end="41.305672570,2.085076260" />
+        <text position="41.30557332,2.08478674" text="87" angle="335" />
+        <line start="41.305110500,2.084688470" end="41.305319570,2.085290680" />
+        <text position="41.30522325,2.08500778" text="86" angle="335" />
+        <line start="41.304758190,2.084902220" end="41.304967260,2.085504430" />
+        <text position="41.30488291,2.08526138" text="85" angle="335" />
+        <line start="41.304420670,2.085106990" end="41.304629740,2.085709210" />
+        <text position="41.30454505,2.08546115" text="84" angle="335" />
+        <line start="41.304090880,2.085308210" end="41.304299940,2.085910430" />
+        <text position="41.30418154,2.08557224" text="83" angle="335" />
+        <line start="41.303792420,2.085489170" end="41.304001490,2.086091380" />
+        <text position="41.30388388,2.08575293" text="82" angle="335" />
+        <line start="41.303494790,2.085669470" end="41.303703860,2.086271680" />
+        <text position="41.30358726,2.08593513" text="81" angle="335" />
+        <line start="41.305927190,2.085541960" end="41.306167920,2.086247390" />
+        <text position="41.30605316,2.08590791" text="77" angle="335" />
+        <line start="41.305553260,2.085768220" end="41.305794000,2.086473650" />
+        <text position="41.30567604,2.08612569" text="76" angle="335" />
+        <line start="41.305181820,2.085994850" end="41.305405080,2.086633400" />
+        <text position="41.30530659,2.08635122" text="75" angle="335" />
+        <line start="41.304847130,2.086195720" end="41.305208810,2.087253300" stroke="dashed" />
+        <text position="41.30496361,2.08652935" text="74" angle="335" />
+        <line start="41.304691610,2.086290530" end="41.305107950,2.087497430" />
+        <text position="41.30486361,2.08678148" text="73" angle="335" />
+        <line start="41.304445180,2.086445120" end="41.304867190,2.087670870" stroke="dashed" />
+        <text position="41.30461308,2.08692314" text="72A" angle="335" />
+        <line start="41.304303560,2.086531840" end="41.304722740,2.087753820" />
+        <text position="41.30445702,2.08697126" text="72" angle="335" />
+        <line start="41.303986600,2.086719550" end="41.304458920,2.088094330" stroke="dashed" />
+        <text position="41.30415738,2.0871974" text="71A" angle="335" />
+        <line start="41.303910180,2.086764560" end="41.304388390,2.088155020" />
+        <text position="41.30406813,2.0872173" text="71" angle="335" />
+        <line start="41.306595500,2.086568450" end="41.306864320,2.087364250" />
+        <text position="41.30673813,2.08698568" text="63" angle="335" />
+        <line start="41.306265230,2.086771680" end="41.306534060,2.087567480" />
+        <text position="41.30641145,2.0871921" text="62" angle="335" />
+        <line start="41.305925620,2.086979060" end="41.306202180,2.087782590" />
+        <text position="41.30607024,2.08738934" text="61" angle="335" />
+        <line start="41.307843390,2.087409190" end="41.307974680,2.087796000" />
+        <text position="41.30790844,2.08759774" text="57" angle="335" />
+        <line start="41.307606930,2.087550960" end="41.307738220,2.087937770" />
+        <text position="41.30767255,2.0877407" text="56" angle="335" />
+        <line start="41.307376670,2.087697790" end="41.307507960,2.088084600" />
+        <text position="41.30743922,2.08787739" text="55" angle="335" />
+        <line start="41.307137140,2.087817430" end="41.307273960,2.088221540" />
+        <text position="41.30721356,2.0880406" text="54" angle="335" />
+        <line start="41.306891670,2.087921710" end="41.307039080,2.088362060" />
+        <text position="41.30697442,2.08816043" text="53" angle="335" />
+        <line start="41.306628800,2.088077520" end="41.306807440,2.088589960" />
+        <text position="41.30672069,2.08833353" text="52" angle="335" />
+        <line start="41.306347610,2.088247520" end="41.306526540,2.088761350" />
+        <text position="41.30643922,2.08850078" text="51" angle="335" />
+        <line start="41.308172760,2.088268260" end="41.308302720,2.088661830" />
+        <text position="41.30826453,2.08854523" text="49" angle="335" />
+        <line start="41.308080890,2.088344750" end="41.308207470,2.088719280" stroke="dashed" />
+        <text position="41.308167990,2.088602820" text="49A" angle="335" />
+        <line start="41.307983880,2.088382060" end="41.308113830,2.088775630" />
+        <text position="41.30807469,2.08865745" text="48" angle="335" />
+        <line start="41.307795290,2.088497200" end="41.307925240,2.088890770" />
+        <text position="41.3078858,2.08877134" text="47" angle="335" />
+        <line start="41.307707300,2.088570230" end="41.307831030,2.088946020" stroke="dashed" />
+        <text position="41.307792390,2.088823270" text="46A" angle="335" />
+        <line start="41.307605490,2.088610740" end="41.307739050,2.089002710" />
+        <text position="41.30769691,2.08888112" text="46" angle="335" />
+        <line start="41.307416540,2.088725080" end="41.307550090,2.089117050" />
+        <text position="41.30750802,2.0889909" text="45" angle="335" />
+        <line start="41.30736600,2.08889600" end="41.307457730,2.089172050" stroke="dashed" />
+        <text position="41.307415900,2.089045480" text="44A" angle="335" />
+        <line start="41.307241170,2.088875580" end="41.307361140,2.089231390" />
+        <text position="41.30731882,2.08910274" text="44" angle="335" />
+        <line start="41.307079750,2.089070020" end="41.307173280,2.089343770" />
+        <text position="41.30712993,2.08921457" text="43" angle="335" />
+        <line start="41.306894660,2.089185150" end="41.306986050,2.089456570" />
+        <text position="41.30694104,2.08932568" text="42" angle="335" />
+        <line start="41.306724510,2.089293170" end="41.306814370,2.089560120" />
+        <text position="41.30677006,2.08942591" text="41" angle="335" />
+        <line start="41.306571830,2.089388160" end="41.306659830,2.089652010" />
+        <text position="41.30661574,2.08951902" text="40" angle="335" />
+        <line start="41.308345350,2.088773020" end="41.308431870,2.089043940" />
+        <text position="41.30839081,2.08890917" text="38" angle="335" />
+        <line start="41.308156470,2.088886820" end="41.308242980,2.089157740" />
+        <text position="41.30820063,2.08902409" text="37" angle="335" />
+        <line start="41.307966480,2.089001030" end="41.308054390,2.089272880" />
+        <text position="41.30801174,2.0891359" text="36" angle="335" />
+        <line start="41.307778080,2.089115500" end="41.307869400,2.089384820" />
+        <text position="41.30782254,2.0892457" text="35" angle="335" />
+        <line start="41.307589120,2.089229840" end="41.307680440,2.089499160" />
+        <text position="41.30763365,2.08935959" text="34" angle="335" />
+        <line start="41.307400170,2.089344180" end="41.307491490,2.089613490" />
+        <text position="41.30744322,2.0894701" text="33" angle="335" />
+        <line start="41.307213740,2.089456560" end="41.307305060,2.089725870" />
+        <text position="41.30725741,2.08958326" text="32" angle="335" />
+        <line start="41.307025080,2.089569360" end="41.307116400,2.089838680" />
+        <text position="41.30706852,2.08969437" text="31" angle="335" />
+        <line start="41.308575360,2.089398290" end="41.308657550,2.089654030" />
+        <text position="41.30861852,2.08951841" text="26" angle="335" />
+        <line start="41.308409400,2.089495370" end="41.308496280,2.089749640" />
+        <text position="41.30844999,2.08961358" text="25" angle="335" />
+        <line start="41.308245110,2.089598750" end="41.308331770,2.089852740" />
+        <text position="41.30828456,2.08971286" text="24" angle="335" />
+        <line start="41.308082020,2.089697930" end="41.308168680,2.089951930" />
+        <text position="41.30811913,2.08980875" text="23" angle="335" />
+        <line start="41.307917780,2.089794680" end="41.308004440,2.090048680" />
+        <text position="41.30795524,2.08991213" text="22" angle="335" />
+        <line start="41.307752080,2.089893370" end="41.307837290,2.090151230" />
+        <text position="41.30778857,2.09000597" text="21" angle="335" />
+        <line start="41.308707690,2.089766700" end="41.308792140,2.090017190" />
+        <text position="41.30875307,2.08990096" text="15" angle="335" />
+        <line start="41.308549820,2.089857520" end="41.308637610,2.090114120" />
+        <text position="41.30859751,2.08999309" text="14" angle="335" />
+        <line start="41.308394760,2.089954930" end="41.308479380,2.090208150" />
+        <text position="41.3084394,2.09008645" text="13" angle="335" />
+        <line start="41.308236600,2.090047560" end="41.308323050,2.090300790" />
+        <text position="41.30828512,2.0901792" text="12" angle="335" />
+        <line start="41.308082520,2.090140440" end="41.308167520,2.090393660" />
+        <text position="41.30812829,2.09027534" text="11" angle="335" />
+        <line start="41.308911420,2.090369000" end="41.308995980,2.090620180" />
+        <text position="41.30896234,2.09051825" text="04" angle="335" />
+        <line start="41.308753720,2.090466940" end="41.308838290,2.090722930" />
+        <text position="41.30880308,2.09061343" text="03" angle="335" />
+        <line start="41.308599070,2.090557280" end="41.308683630,2.090808470" />
+        <text position="41.30865,2.09070448" text="02" angle="335" />
+        <line start="41.308443250,2.090652600" end="41.308524910,2.090899920" />
+        <text position="41.30849074,2.09079832" text="01" angle="335" />
+        <line start="41.311751180,2.100255690" end="41.311221130,2.100595160" />
+        <text position="41.311751180,2.100255690" text="900" angle="335" />
+        <line start="41.312103500,2.101292780" end="41.311579130,2.101630790" />
+        <text position="41.312103500,2.101292780" text="902" angle="335" />
+        <line start="41.312536790,2.102581630" end="41.312012430,2.102919640" />
+        <text position="41.312536790,2.102581630" text="904" angle="335" />
+        <line start="41.313080870,2.104022380" end="41.312526530,2.104378020" />
+        <text position="41.313080870,2.104022380" text="906" angle="335" />
+        <text position="41.29874444,2.07206111" text="X1" angle="335" />
+        <text position="41.300070,2.075949" text="X2" angle="335" />
+        <text position="41.30088333,2.07829444" text="X3" angle="335" />
+        <text position="41.29025284,2.06810703" text="200R" angle="335" />
+        <line start="41.290247000,2.068841880" end="41.289785730,2.069109210" />
+        <text position="41.289785730,2.069109210" text="200" angle="335" />
+        <line start="41.290468210,2.069477770" end="41.290008550,2.069744300" />
+        <text position="41.290008550,2.069744300" text="202" angle="335" />
+        <line start="41.290682910,2.070118460" end="41.290238780,2.070396430" />
+        <text position="41.290238780,2.070396430" text="204" angle="335" />
+        <line start="41.290902390,2.070763080" end="41.290458260,2.071041040" />
+        <text position="41.290458260,2.071041040" text="206" angle="335" />
+        <line start="41.291189780,2.071594700" end="41.290745650,2.071866280" />
+        <text position="41.290745650,2.071866280" text="208" angle="335" />
+        <line start="41.291407070,2.072229720" end="41.290961340,2.072501300" />
+        <text position="41.290961340,2.072501300" text="210" angle="335" />
+        <line start="41.291626420,2.072864580" end="41.291179380,2.073138670" />
+        <text position="41.291179380,2.073138670" text="212" angle="335" />
+        <line start="41.291844570,2.073496100" end="41.291396080,2.073766320" />
+        <text position="41.291396080,2.073766320" text="214" angle="335" />
+        <line start="41.291625000,2.074569440" end="41.292532810,2.075462300" />
+        <text position="41.29171669,2.07465757" text="216" angle="307" />
+        <line start="41.291577510,2.074660980" end="41.292286150,2.075731160" stroke="dashed" />
+        <text position="41.291979,2.075277" text="217" angle="320" />
+        <line start="41.291580560,2.075080550" end="41.291882030,2.075970200" />
+        <text position="41.29162301,2.07519128" text="218" angle="335" />
+        <line start="41.290930550,2.075208330" end="41.291766940,2.076040440" />
+        <text position="41.29105111,2.07532358" text="220" angle="308" />
+        <line start="41.290866660,2.075138890" end="41.291166260,2.076291260" />
+        <text position="41.29097057,2.07552831" text="221" angle="338" />
+        <line start="41.290788800,2.075580560" end="41.291081300,2.076448000" />
+        <text position="41.29083802,2.07571886" text="222" angle="335" />
+        <line start="41.291069700,2.076523520" end="41.290413890,2.076927780" />
+        <text position="41.290413890,2.076927780" text="224" angle="335" />
+        <line start="41.291280830,2.077126980" end="41.290650000,2.077508330" />
+        <text position="41.290650000,2.077508330" text="226" angle="335" />
+        <line start="41.291472420,2.077679100" end="41.290896450,2.078022960" />
+        <text position="41.290896450,2.078022960" text="228" angle="335" />
+        <line start="41.291640700,2.078178970" end="41.291068890,2.078522820" />
+        <text position="41.291068890,2.078522820" text="230" angle="335" />
+        <line start="41.291813250,2.078676610" end="41.291238890,2.079022220" />
+        <text position="41.291238890,2.079022220" text="232" angle="335" />
+        <line start="41.291985250,2.079174130" end="41.291405120,2.079520750" />
+        <text position="41.291405120,2.079520750" text="234" angle="335" />
+        <line start="41.292222380,2.079852960" end="41.291642250,2.080199580" />
+        <text position="41.291642250,2.080199580" text="236" angle="335" />
+        <line start="41.292398300,2.080366730" end="41.291816670,2.080713890" />
+        <text position="41.291816670,2.080713890" text="238" angle="335" />
+        <line start="41.292571500,2.080866790" end="41.291988800,2.081216670" />
+        <text position="41.291988800,2.081216670" text="240" angle="335" />
+        <line start="41.292777140,2.081612190" end="41.292172220,2.081577770" />
+        <text position="41.292217,2.081583" text="242" angle="274" />
+        <line start="41.292950730,2.082120200" end="41.292300000,2.082080560" />
+        <text position="41.29249518,2.08209423" text="244" angle="273" />
+        <line start="41.293037600,2.082579770" end="41.292197220,2.082097220" />
+        <text position="41.292608,2.082327" text="245" angle="290" />
+        <line start="41.292363890,2.082427780" end="41.292970940,2.083251070" />
+        <text position="41.29249949,2.08260552" text="246" angle="310" />
+        <line start="41.292089,2.082962" end="41.292563,2.083416" />
+        <text position="41.292146,2.083015" text="247" angle="305" />
+        <line start="41.291589850,2.082952000" end="41.291779740,2.083860810" />
+        <text position="41.29164786,2.08322083" text="248" angle="345" />
+        <line start="41.291226930,2.082587410" end="41.290662650,2.082925780" />
+        <text position="41.291226930,2.082587410" text="250" angle="335" />
+        <line start="41.290989750,2.082065660" end="41.290470740,2.082376000" />
+        <text position="41.290989750,2.082065660" text="252" angle="335" />
+        <line start="41.290813650,2.081556790" end="41.290291460,2.081865770" />
+        <text position="41.290813650,2.081556790" text="254" angle="335" />
+        <line start="41.290642620,2.081060860" end="41.290118320,2.081369440" />
+        <text position="41.290642620,2.081060860" text="256" angle="335" />
+        <line start="41.290409490,2.080447370" end="41.289896950,2.080752510" />
+        <text position="41.290409490,2.080447370" text="258" angle="335" />
+        <line start="41.290247290,2.079964090" end="41.289730030,2.080278300" />
+        <text position="41.290247290,2.079964090" text="260" angle="335" />
+        <line start="41.290067990,2.079477860" end="41.289557810,2.079771340" />
+        <text position="41.290067990,2.079477860" text="262" angle="335" />
+        <line start="41.289916050,2.078950850" end="41.289383290,2.079258020" />
+        <text position="41.289916050,2.078950850" text="264" angle="335" />
+        <line start="41.289732920,2.078397790" end="41.289187550,2.078706170" />
+        <text position="41.289732920,2.078397790" text="266" angle="335" />
+        <line start="41.289534810,2.077796480" end="41.288987,2.078107" />
+        <text position="41.289534810,2.077796480" text="268" angle="335" />
+        <line start="41.289052780,2.076491670" end="41.288773740,2.077790390" />
+        <text position="41.28898498,2.07681979" text="270" angle="16" />
+        <line start="41.288258330,2.076886110" end="41.288512010,2.077949330" />
+        <text position="41.2883267,2.07715178" text="272" angle="340" />
+        <line start="41.288102780,2.076855550" end="41.288463290,2.077976200" />
+        <text position="41.28823131,2.07724495" text="273" angle="333" />
+        <line start="41.287986110,2.077225000" end="41.288181400,2.078123040" />
+        <text position="41.2880408,2.07746883" text="274" angle="345" />
+        <line start="41.287733000,2.077436110" end="41.287605400,2.078445060" />
+        <text position="41.28771112,2.07767266" text="276" angle="8" />
+        <line start="41.287669440,2.077344440" end="41.287095950,2.078316290" />
+        <text position="41.287369,2.077863" text="277" angle="35" />
+        <line start="41.287472220,2.077458330" end="41.286926650,2.077948240" />
+        <text position="41.287089,2.077815" text="278" angle="54" />
+        <line start="41.287191670,2.076916670" end="41.286682990,2.077221450" />
+        <text position="41.287191670,2.076916670" text="280" angle="335" />
+        <line start="41.286894800,2.076506560" end="41.286432830,2.076468330" />
+        <text position="41.28679822,2.0764993" text="282" angle="275" />
+        <line start="41.286730700,2.076043420" end="41.286273500,2.075997590" />
+        <text position="41.28663645,2.07603341" text="284" angle="275" />
+        <line start="41.286573250,2.075578650" end="41.286116870,2.075528950" />
+        <text position="41.2864754,2.07556824" text="286" angle="275" />
+        <line start="41.286430770,2.075098830" end="41.285958960,2.075049130" />
+        <text position="41.28633746,2.07508902" text="288" angle="275" />
+        <line start="41.286267730,2.074513900" end="41.285779900,2.074520980" />
+        <text position="41.28615995,2.07451532" text="290" angle="275" />
+        <line start="41.286086180,2.073984200" end="41.285606710,2.073992450" />
+        <text position="41.2859784,2.07398612" text="292" angle="275" />
+        <line start="41.285908150,2.073456310" end="41.285427270,2.073463280" />
+        <text position="41.28579519,2.07345797" text="294" angle="275" />
+        <line start="41.285733690,2.072932620" end="41.285250340,2.072937270" />
+        <text position="41.28561602,2.07293394" text="296" angle="275" />
+        <line start="41.285116830,2.072534770" end="41.285582400,2.072404090" />
+        <text position="41.28545351,2.07240162" text="298" angle="265" />
+        <!-- FIXME: in real life stands 504-506 were removed and stands 500-502 were rearranged.
+             Update the layout if the latest apt.dat reflects those modifications -->
+        <line start="41.284935450,2.073437820" end="41.284301960,2.073830270" />
+        <text position="41.28467294,2.07360277" text="506" angle="245" />
+        <line start="41.285053780,2.073787410" end="41.284418720,2.074181650" />
+        <text position="41.28479148,2.07394942" text="504" angle="245" />
+        <line start="41.285167790,2.074121650" end="41.284533550,2.074512240" />
+        <text position="41.28490814,2.0742864" text="502" angle="245" />
+        <line start="41.285279990,2.074469720" end="41.284652500,2.074857120" />
+        <text position="41.285023430,2.074628824" text="500" angle="245" />
+        <line start="41.288038920,2.079274790" end="41.288679920,2.079601560" />
+        <text position="41.28832166,2.07941511" text="421" angle="290" />
+        <line start="41.287668960,2.079498540" end="41.287448120,2.080304120" />
+        <text position="41.28756445,2.0798907" text="425" angle="20" />
+        <line start="41.288671710,2.080496260" end="41.288921230,2.081229150" />
+        <text position="41.28880011,2.08086701" text="410" angle="335" />
+        <line start="41.288244060,2.080751200" end="41.288493590,2.081484100" />
+        <text position="41.28836328,2.08109663" text="412" angle="335" />
+        <line start="41.287894660,2.080955740" end="41.288144190,2.081688630" />
+        <text position="41.28801548,2.08130721" text="414" angle="335" />
+        <line start="41.288927570,2.081882070" end="41.289183540,2.082580130" />
+        <text position="41.28908536,2.0823117" text="400" angle="335" />
+        <line start="41.292743560,2.076517040" end="41.293490910,2.077112630" />
+        <text position="41.29308372,2.07678983" text="300" angle="300" />
+        <line start="41.292401510,2.076793220" end="41.292220940,2.077772470" />
+        <text position="41.29232387,2.07721362" text="302" angle="10" />
+        <line start="41.293466790,2.077719350" end="41.293706510,2.078422210" />
+        <text position="41.29359224,2.07808462" text="310" angle="335" />
+        <line start="41.293141420,2.077913630" end="41.293381140,2.078616500" />
+        <text position="41.29326454,2.07827645" text="312" angle="335" />
+        <line start="41.292694700,2.078175800" end="41.292934420,2.078878660" />
+        <text position="41.29281911,2.07853638" text="314" angle="335" />
+        <line start="41.293898400,2.078974740" end="41.294135030,2.079668470" />
+        <text position="41.29402452,2.07933511" text="320" angle="335" />
+        <line start="41.293573830,2.079169930" end="41.293810460,2.079863660" />
+        <text position="41.29369861,2.07952985" text="322" angle="335" />
+        <line start="41.294336820,2.080255000" end="41.294576540,2.080957860" />
+        <text position="41.29446078,2.08061795" text="330" angle="335" />
+        <line start="41.294012250,2.080450780" end="41.294251970,2.081153640" />
+        <text position="41.29413673,2.08081517" text="332" angle="335" />
+        <line start="41.293564570,2.080721030" end="41.293804300,2.081423890" />
+        <text position="41.29368578,2.08107717" text="334" angle="335" />
+        <line start="41.295005150,2.081805280" end="41.294814310,2.082486600" />
+        <text position="41.29495887,2.08198015" text="340" angle="20" />
+        <line start="41.294304630,2.082654550" end="41.293838560,2.082421270" />
+        <text position="41.29419076,2.08259648" text="342" angle="290" />
+    </route>
+    <!-- Minimum safe altitudes -->
+    <route name="Minimum safe altitudes">
+        <minAlt position="42.127325,0.850607" value="13.2" />
+        <minAlt position="42.224517,1.714747" value="12.4" />
+        <minAlt position="42.225907,2.343110" value="11.6" />
+        <minAlt position="41.758757,2.345189" value="6.6" />
+        <minAlt position="42.204446,3.718200" value="4.7" />
+        <minAlt position="41.388289,3.605511" value="2.7" />
+        <minAlt position="40.897276,3.594916" value="1.8" />
+        <minAlt position="40.522443,2.564115" value="1.0" />
+        <minAlt position="40.500245,1.487992" value="1.0" />
+        <minAlt position="40.710828,0.366852" value="5.8" />
+        <minAlt position="41.328536,0.328776" value="5.6" />
+        <minAlt position="41.323604,1.328613" value="5.1" />
+    </route>
+    <!-- Restricted/prohibited areas -->
+    <route name="Prohibited areas" color="255,0,0">
+        <!-- LEP136 -->
+        <bow center="N41°12'10'',E0°34'07''" radius="3" startAngle="0" extentAngle="360" />
+        <minAlt position="N41°12'10'',E0°34'07''" value="4.0" color="255,0,0" />
+        <!-- LEP137 -->
+        <bow center="N40°57'09'',E0°51'59''" radius="3" startAngle="0" extentAngle="360" />
+        <minAlt position="N40°57'09'',E0°51'59''" value="3.5" color="255,0,0" />
+    </route>
+    <route name="Restricted/dangerous areas" color="255,208,0">
+        <!-- LER152 -->
+        <multiPointLine close="false">
+            <point>N42°42'18'',E0°04'19''</point>
+            <point>N42°36'56'',E0°09'52''</point>
+            <point>N42°37'40'',W0°05'23''</point>
+            <point>N42°39'49'',W0°08'22''</point>
+            <point>N42°41'44'',W0°04'39''</point>
+            <point>N42°42'18'',E0°04'19''</point>
+        </multiPointLine>
+        <minAlt position="42.661498,0.007420" value="13.5" color="255,208,0" />
+        <!-- LER153 -->
+        <multiPointLine close="false">
+            <point>N42°36'56'',E0°09'52''</point>
+            <point>N42°34'42'',E0°06'02''</point>
+            <point>N42°29'29'',E0°07'03''</point>
+            <point>N42°37'40'',W0°05'23''</point>
+            <point>N42°36'56'',E0°09'52''</point>
+        </multiPointLine>
+        <minAlt position="42.583535,0.038759" value="10.5" color="255,208,0" />
+        <!-- LER112 -->
+        <multiPointLine close="false">
+            <point>N42°38'05'',E0°52'43''</point>
+            <point>N42°36'03'',E1°03'47''</point>
+            <point>N42°31'39'',E1°04'46''</point>
+            <point>N42°30'06'',E0°51'17''</point>
+            <point>N42°34'59'',E0°46'52''</point>
+            <point>N42°38'05'',E0°52'43''</point>
+        </multiPointLine>
+        <minAlt position="42.568116,0.935378" value="11.0" color="255,208,0" />
+        <!-- LED67 -->
+        <multiPointLine close="false">
+            <point>N42°26'38'',E2°56'43''</point>
+            <point>N42°26'34'',E3°00'45''</point>
+            <point>N42°20'20'',E3°00'45''</point>
+            <point>N42°20'18'',E2°56'43''</point>
+            <point>N42°26'38'',E2°56'43''</point>
+        </multiPointLine>
+        <minAlt position="42.389089,2.978625" value="6.5" color="255,208,0" />
+        <!-- LER101 -->
+        <multiPointLine close="false">
+            <point>N42°18'17'',E3°06'42''</point>
+            <point>N42°15'38'',E3°09'01''</point>
+            <point>N42°14'56'',E3°08'13''</point>
+            <point>N42°17'22'',E3°04'57''</point>
+            <point>N42°18'17'',E3°06'42''</point>
+        </multiPointLine>
+        <minAlt position="42.275241,3.120362" value="1.0" color="255,208,0" />
+        <!-- LED134 -->
+        <bow center="N42°15'36'',E3°06'36''" radius="4" startAngle="0" extentAngle="360" />
+        <minAlt position="N42°15'36'',E3°06'36''" value="17.5" color="255,208,0" />
+        <!-- LER101 -->
+        <multiPointLine close="false">
+            <point>N42°14'51'',E3°04'37''</point>
+            <point>N42°14'19'',E3°07'38''</point>
+            <point>N42°08'19'',E3°07'11''</point>
+            <point>N42°07'58'',E3°06'12''</point>
+            <point>N42°11'25'',E3°06'32''</point>
+            <point>N42°10'38'',E3°05'05''</point>
+            <point>N42°10'50'',E3°03'44''</point>
+            <point>N42°12'14'',E3°06'32''</point>
+            <point>N42°12'24'',E3°04'28''</point>
+            <point>N42°14'51'',E3°04'37''</point>
+        </multiPointLine>
+        <minAlt position="42.222070,3.099057" value="1.0" color="255,208,0" />
+        <!-- LED45 -->
+        <multiPointLine close="false">
+            <point>N41°48'00'',E1°51'00''</point>
+            <point>N41°48'00'',E1°55'00''</point>
+            <point>N41°44'00'',E1°55'00''</point>
+            <point>N41°44'00'',E1°51'00''</point>
+            <point>N41°48'00'',E1°51'00''</point>
+        </multiPointLine>
+        <minAlt position="41.765844,1.882804" value="5.0" color="255,208,0" />
+        <!-- LED46 -->
+        <multiPointLine close="false">
+            <point>N41°33'00'',E2°03'00''</point>
+            <point>N41°33'00'',E2°07'00''</point>
+            <point>N41°29'00'',E2°07'00''</point>
+            <point>N41°29'00'',E2°03'00''</point>
+            <point>N41°33'00'',E2°03'00''</point>
+        </multiPointLine>
+        <minAlt position="41.515176,2.083171" value="2.5" color="255,208,0" />
+        <!-- LER30 -->
+        <multiPointLine close="false">
+            <point>N40°50'00'',E0°42'00''</point>
+            <point>N40°44'00'',E0°56'00''</point>
+            <point>N40°33'00'',E0°42'00''</point>
+            <point>N40°32'00'',E0°37'00''</point>
+            <point>N40°43'00'',E0°34'00''</point>
+            <point>N40°50'00'',E0°42'00''</point>
+        </multiPointLine>
+        <minAlt position="40.701491,0.730339" value="0.7" color="255,208,0" />
+    </route>
+    <!-- SIDs for runway 02 -->
+    <route name="AGENA1E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,SALON,AGENA</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="140" />
+        <intercept start="41.32563243,2.1435519" startHeading="159" radius="1" direction="left" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="77" end="SALON" />
+        <line start="SALON" end="AGENA" arrows="end" text="AGENA1E" />
+    </route>
+    <route name="CLE1E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,CLE</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="70" />
+        <intercept start="41.33631245,2.122477265" startHeading="89" radius="1" direction="left" endHeading="47" end="CLE" text="CLE1E" arrows="end" />
+    </route>
+    <route name="DALIN1E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,FEVIK,DALIN</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="140" />
+        <intercept start="41.32563243,2.1435519" startHeading="159" radius="1" direction="left" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="65" end="FEVIK" />
+        <line start="FEVIK" end="DALIN" arrows="end" text="DALIN1E" />
+    </route>
+    <route name="DUNES1E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,DUNES</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="140" />
+        <intercept start="41.32563243,2.1435519" startHeading="159" radius="1" direction="left" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="DUNES" text="DUNES1E" arrows="end" />
+    </route>
+    <route name="GRAUS5E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,GRAUS</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="70" />
+        <intercept start="41.33631245,2.122477265" startHeading="89" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="GRAUS" text="GRAUS5E" arrows="end" />
+    </route>
+    <route name="LARPA1E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,LARPA</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="140" />
+        <intercept start="41.32563243,2.1435519" startHeading="159" radius="1" direction="left" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="LARPA" text="LARPA1E" arrows="end" />
+    </route>
+    <route name="LOBAR4E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,CLE,LOBAR</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="70" />
+        <intercept start="41.33631245,2.122477265" startHeading="89" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="274" end="10NM274@CLE" />
+        <line start="10NM274@CLE" end="LOBAR" text="LOBAR4E" arrows="end" />
+    </route>
+    <route name="LOTOS1E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,VILGA,PEXOT,LOTOS</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="140" />
+        <intercept start="41.32563243,2.1435519" startHeading="159" radius="1" direction="left" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="40.695382,2.368099" />
+        <intercept start="40.695382,2.368099" startHeading="192" radius="1" direction="right" endHeading="285" end="VILGA" />
+        <line start="VILGA" end="PEXOT" />
+        <intercept start="PEXOT" startHeading="271" radius="1" direction="left" endHeading="208" end="LOTOS" text="LOTOS1E" arrows="end" />
+    </route>
+    <route name="MOPAS5E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,MOPAS</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="70" />
+        <intercept start="41.33631245,2.122477265" startHeading="89" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="35NM319@SLL" />
+        <line start="35NM319@SLL" end="MOPAS" text="MOPAS5E" arrows="end" />
+    </route>
+    <route name="OKABI5E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,OKABI</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="70" />
+        <intercept start="41.33631245,2.122477265" startHeading="89" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="35NM319@SLL" />
+        <intercept start="35NM319@SLL" startHeading="319" radius="1" direction="right" endHeading="353" end="OKABI" text="OKABI5E" arrows="end" />
+    </route>
+    <route name="SENIA3E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,VILGA,PEXOT,SENIA</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="140" />
+        <intercept start="41.32563243,2.1435519" startHeading="159" radius="1" direction="left" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="40.695382,2.368099" />
+        <intercept start="40.695382,2.368099" startHeading="192" radius="1" direction="right" endHeading="285" end="VILGA" />
+        <line start="VILGA" end="PEXOT" />
+        <line start="PEXOT" end="SENIA" text="SENIA3E" arrows="end" />
+    </route>
+    <route name="VERSO1E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,VERSO</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="140" />
+        <intercept start="41.32563243,2.1435519" startHeading="159" radius="1" direction="left" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="90" end="40NM090@BCN" />
+        <intercept start="40NM090@BCN" startHeading="90" radius="1" direction="right" endHeading="120" end="VERSO" text="VERSO1E" arrows="end" />
+    </route>
+    <route name="VLA1E" displayMode="sid">
+        <activeStartRunways>02</activeStartRunways>
+        <navaids>BCN,CLE,VLA</navaids>
+        <line start="LEBL-RW02" end="41.32508667,2.10191166" />
+        <bow center="41.319666,2.122864" radius="1" startAngle="289" extentAngle="70" />
+        <intercept start="41.33631245,2.122477265" startHeading="89" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="274" end="10NM274@CLE" />
+        <intercept start="10NM274@CLE" startHeading="274" radius="1" direction="left" endHeading="210" end="VLA" text="VLA1E" arrows="end" />
+    </route>
+    <!-- FIXME: RNAV SIDs for runway 02 -->
+    <!-- SIDs for runway 07L -->
+    <route name="AGENA2B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,SALON,AGENA</navaids>
+        <line start="LEBL-RW07L" end="10NM066@BCN" />
+        <intercept start="10NM066@BCN" startHeading="66" radius="1" direction="right" endHeading="158" end="12NM071@BCN" />
+        <bow center="BCN" radius="12" startAngle="71" extentAngle="21" />
+        <intercept start="12NM092@BCN" startHeading="183" radius="1" direction="left" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="77" end="SALON" />
+        <line start="SALON" end="AGENA" arrows="end" text="AGENA2B" />
+    </route>
+    <route name="CLE1B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,CLE</navaids>
+        <line start="LEBL-RW07L" end="5NM066@BCN" />
+        <intercept start="5NM066@BCN" startHeading="66" radius="1" direction="left" endHeading="47" end="CLE" text="CLE1B" arrows="end" />
+    </route>
+    <route name="DALIN2B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,FEVIK,DALIN</navaids>
+        <line start="LEBL-RW07L" end="10NM066@BCN" />
+        <intercept start="10NM066@BCN" startHeading="66" radius="1" direction="right" endHeading="158" end="12NM071@BCN" />
+        <bow center="BCN" radius="12" startAngle="71" extentAngle="21" />
+        <intercept start="12NM092@BCN" startHeading="183" radius="1" direction="left" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="65" end="FEVIK" />
+        <line start="FEVIK" end="DALIN" arrows="end" text="DALIN2B" />
+    </route>
+    <route name="DUNES2B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,DUNES</navaids>
+        <line start="LEBL-RW07L" end="10NM066@BCN" />
+        <intercept start="10NM066@BCN" startHeading="66" radius="1" direction="right" endHeading="158" end="12NM071@BCN" />
+        <bow center="BCN" radius="12" startAngle="71" extentAngle="21" />
+        <intercept start="12NM092@BCN" startHeading="183" radius="1" direction="left" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="DUNES" text="DUNES2B" arrows="end" />
+    </route>
+    <route name="GRAUS5B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,GRAUS</navaids>
+        <line start="LEBL-RW07L" end="5NM066@BCN" />
+        <intercept start="5NM066@BCN" startHeading="66" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="GRAUS" text="GRAUS5B" arrows="end" />
+    </route>
+    <route name="LARPA2B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,LARPA</navaids>
+        <line start="LEBL-RW07L" end="10NM066@BCN" />
+        <intercept start="10NM066@BCN" startHeading="66" radius="1" direction="right" endHeading="158" end="12NM071@BCN" />
+        <bow center="BCN" radius="12" startAngle="71" extentAngle="21" />
+        <intercept start="12NM092@BCN" startHeading="183" radius="1" direction="left" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="LARPA" text="LARPA2B" arrows="end" />
+    </route>
+    <route name="LOBAR4B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,CLE,LOBAR</navaids>
+        <line start="LEBL-RW07L" end="5NM066@BCN" />
+        <intercept start="5NM066@BCN" startHeading="66" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="274" end="10NM274@CLE" />
+        <line start="10NM274@CLE" end="LOBAR" text="LOBAR4B" arrows="end" />
+    </route>
+    <route name="LOTOS2B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,VILGA,PEXOT,LOTOS</navaids>
+        <line start="LEBL-RW07L" end="10NM066@BCN" />
+        <intercept start="10NM066@BCN" startHeading="66" radius="1" direction="right" endHeading="158" end="12NM071@BCN" />
+        <bow center="BCN" radius="12" startAngle="71" extentAngle="21" />
+        <intercept start="12NM092@BCN" startHeading="183" radius="1" direction="left" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="40.695382,2.368099" />
+        <intercept start="40.695382,2.368099" startHeading="192" radius="1" direction="right" endHeading="285" end="VILGA" />
+        <line start="VILGA" end="PEXOT" />
+        <intercept start="PEXOT" startHeading="271" radius="1" direction="left" endHeading="208" end="LOTOS" text="LOTOS2B" arrows="end" />
+    </route>
+    <route name="MOPAS5B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,MOPAS</navaids>
+        <line start="LEBL-RW07L" end="5NM066@BCN" />
+        <intercept start="5NM066@BCN" startHeading="66" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="35NM319@SLL" />
+        <line start="35NM319@SLL" end="MOPAS" text="MOPAS5B" arrows="end" />
+    </route>
+    <route name="OKABI5B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,OKABI</navaids>
+        <line start="LEBL-RW07L" end="5NM066@BCN" />
+        <intercept start="5NM066@BCN" startHeading="66" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="35NM319@SLL" />
+        <intercept start="35NM319@SLL" startHeading="319" radius="1" direction="right" endHeading="353" end="OKABI" text="OKABI5B" arrows="end" />
+    </route>
+    <route name="SENIA4B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,VILGA,PEXOT,SENIA</navaids>
+        <line start="LEBL-RW07L" end="10NM066@BCN" />
+        <intercept start="10NM066@BCN" startHeading="66" radius="1" direction="right" endHeading="158" end="12NM071@BCN" />
+        <bow center="BCN" radius="12" startAngle="71" extentAngle="21" />
+        <intercept start="12NM092@BCN" startHeading="183" radius="1" direction="left" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="40.695382,2.368099" />
+        <intercept start="40.695382,2.368099" startHeading="192" radius="1" direction="right" endHeading="285" end="VILGA" />
+        <line start="VILGA" end="PEXOT" />
+        <line start="PEXOT" end="SENIA" text="SENIA4B" arrows="end" />
+    </route>
+    <route name="VERSO2B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,VERSO</navaids>
+        <line start="LEBL-RW07L" end="10NM066@BCN" />
+        <intercept start="10NM066@BCN" startHeading="66" radius="1" direction="right" endHeading="158" end="12NM071@BCN" />
+        <bow center="BCN" radius="12" startAngle="71" extentAngle="21" />
+        <intercept start="12NM092@BCN" startHeading="183" radius="1" direction="left" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="90" end="40NM090@BCN" />
+        <intercept start="40NM090@BCN" startHeading="90" radius="1" direction="right" endHeading="120" end="VERSO" text="VERSO2B" arrows="end" />
+    </route>
+    <route name="VLA1B" displayMode="sid">
+        <activeStartRunways>07L</activeStartRunways>
+        <navaids>BCN,CLE,VLA</navaids>
+        <line start="LEBL-RW07L" end="5NM066@BCN" />
+        <intercept start="5NM066@BCN" startHeading="66" radius="1" direction="left" endHeading="47" end="2NM227@CLE" />
+        <intercept start="2NM227@CLE" startHeading="47" radius="1" direction="left" endHeading="274" end="10NM274@CLE" />
+        <intercept start="10NM274@CLE" startHeading="274" radius="1" direction="left" endHeading="210" end="VLA" text="VLA1B" arrows="end" />
+    </route>
+    <!-- FIXME: RNAV SIDs for runway 07L -->
+    <!-- SIDs for runway 07R -->
+    <route name="AGENA1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,SALON,AGENA</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="77" end="SALON" />
+        <line start="SALON" end="AGENA" arrows="end" text="AGENA1G" />
+    </route>
+    <route name="CLE1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,CLE</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="12NM097@BCN" />
+        <intercept start="12NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="26" end="CLE" text="CLE1G" arrows="end" />
+    </route>
+    <route name="DALIN1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,FEVIK,DALIN</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="65" end="FEVIK" />
+        <line start="FEVIK" end="DALIN" arrows="end" text="DALIN1G" />
+    </route>
+    <route name="DUNES1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,DUNES</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="DUNES" text="DUNES1G" arrows="end" />
+    </route>
+    <route name="GRAUS1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,GRAUS</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="12NM097@BCN" />
+        <intercept start="12NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="26" end="2NM206@CLE" />
+        <intercept start="2NM206@CLE" startHeading="26" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="GRAUS" text="GRAUS1G" arrows="end" />
+    </route>
+    <route name="LARPA1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,LARPA</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="LARPA" text="LARPA1G" arrows="end" />
+    </route>
+    <route name="LOBAR1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,CLE,LOBAR</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="12NM097@BCN" />
+        <intercept start="12NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="26" end="2NM206@CLE" />
+        <intercept start="2NM206@CLE" startHeading="26" radius="1" direction="left" endHeading="274" end="10NM274@CLE" />
+        <line start="10NM274@CLE" end="LOBAR" text="LOBAR1G" arrows="end" />
+    </route>
+    <route name="LOTOS1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,VILGA,PEXOT,LOTOS</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="40.695382,2.368099" />
+        <intercept start="40.695382,2.368099" startHeading="192" radius="1" direction="right" endHeading="285" end="VILGA" />
+        <line start="VILGA" end="PEXOT" />
+        <intercept start="PEXOT" startHeading="271" radius="1" direction="left" endHeading="208" end="LOTOS" text="LOTOS1G" arrows="end" />
+    </route>
+    <route name="MOPAS1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,MOPAS</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="12NM097@BCN" />
+        <intercept start="12NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="26" end="2NM206@CLE" />
+        <intercept start="2NM206@CLE" startHeading="26" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="35NM319@SLL" />
+        <line start="35NM319@SLL" end="MOPAS" text="MOPAS1G" arrows="end" />
+    </route>
+    <route name="OKABI1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,CLE,POBIL,OKABI</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="12NM097@BCN" />
+        <intercept start="12NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="26" end="2NM206@CLE" />
+        <intercept start="2NM206@CLE" startHeading="26" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="35NM319@SLL" />
+        <intercept start="35NM319@SLL" startHeading="319" radius="1" direction="right" endHeading="353" end="OKABI" text="OKABI1G" arrows="end" />
+    </route>
+    <route name="SENIA1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,VILGA,PEXOT,SENIA</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="17NM097@BCN" />
+        <intercept start="17NM097@BCN" startHeading="97" radius="1" direction="right" endHeading="129" end="41.192562,2.617088" />
+        <intercept start="41.192562,2.617088" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="40.695382,2.368099" />
+        <intercept start="40.695382,2.368099" startHeading="192" radius="1" direction="right" endHeading="285" end="VILGA" />
+        <line start="VILGA" end="PEXOT" />
+        <line start="PEXOT" end="SENIA" text="SENIA1G" arrows="end" />
+    </route>
+    <route name="VERSO1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,VERSO</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="27NM097@BCN" />
+        <intercept start="27NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="90" end="40NM090@BCN" />
+        <intercept start="40NM090@BCN" startHeading="90" radius="1" direction="right" endHeading="120" end="VERSO" text="VERSO1G" arrows="end" />
+    </route>
+    <route name="VLA1G" displayMode="sid">
+        <activeStartRunways>07R</activeStartRunways>
+        <navaids>BCN,CLE,VLA</navaids>
+        <intercept start="LEBL-RW07R" startHeading="65" radius="1" direction="right" endHeading="97" end="12NM097@BCN" />
+        <intercept start="12NM097@BCN" startHeading="97" radius="1" direction="left" endHeading="26" end="2NM206@CLE" />
+        <intercept start="2NM206@CLE" startHeading="26" radius="1" direction="left" endHeading="274" end="10NM274@CLE" />
+        <intercept start="10NM274@CLE" startHeading="274" radius="1" direction="left" endHeading="210" end="VLA" text="VLA1G" arrows="end" />
+    </route>
+    <!-- FIXME: SIDs for runway 07R -->
+    <!-- SIDs for runway 20 -->
+    <route name="AGENA1A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,SALON,AGENA</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <line start="CORVA" end="27NM099@PRA" />
+        <intercept start="27NM099@PRA" startHeading="90" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="77" end="SALON" />
+        <line start="SALON" end="AGENA" arrows="end" text="AGENA1A" />
+    </route>
+    <route name="CLE1A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,CLE</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <intercept start="CORVA" startHeading="90" radius="1" direction="left" endHeading="32" end="CLE" text="CLE1A" arrows="end" />
+    </route>
+    <route name="DALIN1A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,FEVIK,DALIN</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <line start="CORVA" end="27NM099@PRA" />
+        <intercept start="27NM099@PRA" startHeading="90" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="65" end="FEVIK" />
+        <line start="FEVIK" end="DALIN" arrows="end" text="DALIN1A" />
+    </route>
+    <route name="DUNES1A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,DUNES</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <line start="CORVA" end="22NM101.15@PRA" />
+        <intercept start="22NM101.15@PRA" startHeading="90" radius="1" direction="right" endHeading="129" end="DUNES" text="DUNES1A" arrows="end" />
+    </route>
+    <route name="GRAUS5A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,CLE,POBIL,GRAUS</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <intercept start="CORVA" startHeading="90" radius="1" direction="left" endHeading="32" end="2NM212@CLE" />
+        <intercept start="2NM212@CLE" startHeading="32" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="GRAUS" text="GRAUS5A" arrows="end" />
+    </route>
+    <route name="LARPA1A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,SLL,LARPA</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <line start="CORVA" end="22NM101.15@PRA" />
+        <intercept start="22NM101.15@PRA" startHeading="90" radius="1" direction="right" endHeading="129" end="34NM130.45@SLL" />
+        <intercept start="34NM130.45@SLL" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="LARPA" text="LARPA1A" arrows="end" />
+    </route>
+    <route name="LOBAR4A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,CLE,AKOPA,LOBAR</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <intercept start="CORVA" startHeading="90" radius="1" direction="left" endHeading="32" end="2.5NM212@CLE" />
+        <intercept start="2.5NM212@CLE" startHeading="32" radius="1" direction="left" endHeading="274" end="AKOPA" />
+        <line start="AKOPA" end="LOBAR" text="LOBAR4A" arrows="end" />
+    </route>
+    <route name="LOTOS1A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,SLL,VILGA,PEXOT,LOTOS</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <line start="CORVA" end="22NM101.15@PRA" />
+        <intercept start="22NM101.15@PRA" startHeading="90" radius="1" direction="right" endHeading="129" end="34NM130.45@SLL" />
+        <intercept start="34NM130.45@SLL" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="40.695382,2.368099" />
+        <intercept start="40.695382,2.368099" startHeading="192" radius="1" direction="right" endHeading="285" end="VILGA" />
+        <line start="VILGA" end="PEXOT" />
+        <intercept start="PEXOT" startHeading="271" radius="1" direction="left" endHeading="208" end="LOTOS" text="LOTOS1A" arrows="end" />
+    </route>
+    <route name="MOPAS5A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,CLE,POBIL,MOPAS</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <intercept start="CORVA" startHeading="90" radius="1" direction="left" endHeading="32" end="2NM212@CLE" />
+        <intercept start="2NM212@CLE" startHeading="32" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="35NM319@SLL" />
+        <line start="35NM319@SLL" end="MOPAS" text="MOPAS5A" arrows="end" />
+    </route>
+    <route name="OKABI5A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,CLE,POBIL,OKABI</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <intercept start="CORVA" startHeading="90" radius="1" direction="left" endHeading="32" end="2NM212@CLE" />
+        <intercept start="2NM212@CLE" startHeading="32" radius="1" direction="left" endHeading="282" end="POBIL" />
+        <line start="POBIL" end="35NM319@SLL" />
+        <intercept start="35NM319@SLL" startHeading="319" radius="1" direction="right" endHeading="353" end="OKABI" text="OKABI5A" arrows="end" />
+    </route>
+    <route name="SENIA3A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,SLL,VILGA,PEXOT,CAMBY,SENIA</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <line start="CORVA" end="22NM101.15@PRA" />
+        <intercept start="22NM101.15@PRA" startHeading="90" radius="1" direction="right" endHeading="129" end="34NM130.45@SLL" />
+        <intercept start="34NM130.45@SLL" startHeading="129" radius="1" direction="right" endHeading="219" end="36NM132@SLL" />
+        <bow center="SLL" radius="36" startAngle="132" extentAngle="21" />
+        <intercept start="36NM153@SLL" startHeading="243" radius="1" direction="left" endHeading="192" end="40.695382,2.368099" />
+        <intercept start="40.695382,2.368099" startHeading="192" radius="1" direction="right" endHeading="285" end="VILGA" />
+        <line start="VILGA" end="PEXOT" />
+        <line start="PEXOT" end="CAMBY" />
+        <line start="CAMBY" end="SENIA" text="SENIA3A" arrows="end" />
+    </route>
+    <route name="VERSO1A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,VERSO</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <line start="CORVA" end="27NM099@PRA" />
+        <intercept start="27NM099@PRA" startHeading="90" radius="1" direction="left" endHeading="27" end="46NM207@BGR" />
+        <intercept start="46NM207@BGR" startHeading="27" radius="1" direction="right" endHeading="90" end="40NM090@BCN" />
+        <intercept start="40NM090@BCN" startHeading="90" radius="1" direction="right" endHeading="120" end="VERSO" text="VERSO1A" arrows="end" />
+    </route>
+    <route name="VLA1A" displayMode="sid">
+        <activeStartRunways>20</activeStartRunways>
+        <navaids>CORVA,CLE,VLA</navaids>
+        <line start="LEBL-RW20" end="2NM195@PRA" />
+        <intercept start="2NM195@PRA" startHeading="195" radius="1" direction="left" endHeading="90" end="CORVA" />
+        <intercept start="CORVA" startHeading="90" radius="1" direction="left" endHeading="32" end="2.5NM212@CLE" />
+        <intercept start="2.5NM212@CLE" startHeading="32" radius="1" direction="left" endHeading="274" end="10NM270.87@CLE" />
+        <intercept start="10NM270.87@CLE" startHeading="274" radius="1" direction="left" endHeading="210" end="VLA" text="VLA1A" arrows="end" />
+    </route>
+    <!-- FIXME: RNAV SIDs for runway 20 -->
+    <!-- SIDs for runway 25L/20 -->
+    <route name="AGENA3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,BCN,SALON,AGENA</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <intercept start="1NM225@PRA" startHeading="156" radius="0.5" direction="right" endHeading="199" end="1.75NM199@PRA" />
+        <line start="1.75NM199@PRA" end="16NM199@PRA" />
+        <intercept start="16NM199@PRA" startHeading="199" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="left" endHeading="76" end="40.726979,2.30822" />
+        <bow center="BCN" radius="36" startAngle="107" extentAngle="58.5" />
+        <intercept start="36NM107@BCN" startHeading="17" radius="1" direction="right" endHeading="77" end="SALON" />
+        <line start="SALON" end="AGENA" arrows="end" text="AGENA3W" />
+    </route>
+    <route name="CLE3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,VNV,SLL,CLE</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <line start="1NM225@PRA" end="8NM209@PRA" />
+        <intercept start="8NM209@PRA" startHeading="209" radius="1" direction="right" endHeading="287" end="VNV" />
+        <intercept start="VNV" startHeading="353" radius="1" direction="right" endHeading="68" end="SLL" />
+        <line start="SLL" end="CLE" text="CLE3W" arrows="end" />
+    </route>
+    <route name="DALIN3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,BCN,FEVIK,DALIN</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <intercept start="1NM225@PRA" startHeading="156" radius="0.5" direction="right" endHeading="199" end="1.75NM199@PRA" />
+        <line start="1.75NM199@PRA" end="16NM199@PRA" />
+        <intercept start="16NM199@PRA" startHeading="199" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="left" endHeading="76" end="40.726979,2.30822" />
+        <bow center="BCN" radius="36" startAngle="107" extentAngle="58.5" />
+        <intercept start="36NM107@BCN" startHeading="17" radius="1" direction="right" endHeading="65" end="FEVIK" />
+        <line start="FEVIK" end="DALIN" arrows="end" text="DALIN3W" />
+    </route>
+    <route name="DUNES3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,BCN,DUNES</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <intercept start="1NM225@PRA" startHeading="156" radius="0.5" direction="right" endHeading="199" end="1.75NM199@PRA" />
+        <line start="1.75NM199@PRA" end="16NM199@PRA" />
+        <intercept start="16NM199@PRA" startHeading="199" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="left" endHeading="76" end="40.726979,2.30822" />
+        <bow center="BCN" radius="36" startAngle="107" extentAngle="58.5" />
+        <intercept start="36NM123@BCN" startHeading="33" radius="1" direction="right" endHeading="119" end="DUNES" text="DUNES3W" arrows="end" />
+    </route>
+    <route name="GRAUS3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,VNV,BCN,RILUK,LRD,GRAUS</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <line start="1NM225@PRA" end="8NM209@PRA" />
+        <intercept start="8NM209@PRA" startHeading="209" radius="1" direction="right" endHeading="287" end="VNV" />
+        <intercept start="VNV" startHeading="353" radius="1" direction="left" endHeading="283" end="RILUK" />
+        <line start="RILUK" end="LRD" />
+        <line start="LRD" end="GRAUS" text="GRAUS3W" arrows="end" />
+    </route>
+    <route name="LARPA3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,BCN,LARPA</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <intercept start="1NM225@PRA" startHeading="156" radius="0.5" direction="right" endHeading="199" end="1.75NM199@PRA" />
+        <line start="1.75NM199@PRA" end="16NM199@PRA" />
+        <intercept start="16NM199@PRA" startHeading="199" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="right" endHeading="163" end="LARPA" text="LARPA3W" arrows="end" />
+    </route>
+    <route name="LOBAR3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,VNV,BCN,RILUK,LRD,LOBAR</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <line start="1NM225@PRA" end="8NM209@PRA" />
+        <intercept start="8NM209@PRA" startHeading="209" radius="1" direction="right" endHeading="287" end="VNV" />
+        <intercept start="VNV" startHeading="353" radius="1" direction="left" endHeading="283" end="RILUK" />
+        <line start="RILUK" end="LRD" />
+        <line start="LRD" end="LOBAR" text="LOBAR3W" arrows="end" />
+    </route>
+    <route name="LOTOS4W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,RES,BANBU,LOTOS</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <line start="1NM225@PRA" end="16NM208@PRA" />
+        <intercept start="16NM208@PRA" startHeading="208" radius="1" direction="right" endHeading="283" end="23NM235@PRA" />
+        <intercept start="23NM235@PRA" startHeading="283" radius="1" direction="left" endHeading="238" end="BANBU" />
+        <intercept start="BANBU" startHeading="238" radius="1" direction="left" endHeading="208" end="LOTOS" text="LOTOS4W" arrows="end" />
+    </route>
+    <route name="MOPAS3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,VNV,KARDO,MOPAS</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <line start="1NM225@PRA" end="8NM209@PRA" />
+        <intercept start="8NM209@PRA" startHeading="209" radius="1" direction="right" endHeading="287" end="VNV" />
+        <line start="VNV" end="KARDO" />
+        <intercept start="KARDO" startHeading="353" radius="1" direction="left" endHeading="319" end="MOPAS" text="MOPAS3W" arrows="end" />
+    </route>
+    <route name="OKABI3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,VNV,KARDO,OKABI</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <line start="1NM225@PRA" end="8NM209@PRA" />
+        <intercept start="8NM209@PRA" startHeading="209" radius="1" direction="right" endHeading="287" end="VNV" />
+        <line start="VNV" end="KARDO" />
+        <line start="KARDO" end="OKABI" text="OKABI3W" arrows="end" />
+    </route>
+    <route name="SENIA3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,RES,KUGAX,SENIA</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <line start="1NM225@PRA" end="16NM208@PRA" />
+        <intercept start="16NM208@PRA" startHeading="208" radius="1" direction="right" endHeading="283" end="23NM235@PRA" />
+        <line start="23NM235@PRA" end="KUGAX" />
+        <intercept start="KUGAX" startHeading="283" radius="1" direction="left" endHeading="247.4" end="SENIA" text="SENIA3W" arrows="end" />
+    </route>
+    <route name="VERSO3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,BCN,SADEM,VERSO</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <intercept start="1NM225@PRA" startHeading="156" radius="0.5" direction="right" endHeading="199" end="1.75NM199@PRA" />
+        <line start="1.75NM199@PRA" end="16NM199@PRA" />
+        <intercept start="16NM199@PRA" startHeading="199" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="left" endHeading="76" end="40.726979,2.30822" />
+        <bow center="BCN" radius="36" startAngle="107" extentAngle="58.5" />
+        <intercept start="36NM107@BCN" startHeading="17" radius="1" direction="right" endHeading="97" end="SADEM" />
+        <line start="SADEM" end="VERSO" text="VERSO3W" arrows="end" />
+    </route>
+    <route name="VLA3W" displayMode="sid">
+        <activeStartRunways>25L,20</activeStartRunways>
+        <navaids>PRA,VNV,VLA</navaids>
+        <line start="LEBL-RW20" end="1NM225@PRA" />
+        <line start="LEBL-RW20" end="1.75NM199@PRA" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.5" direction="left" endHeading="156" end="1NM225@PRA" />
+        <line start="1NM225@PRA" end="8NM209@PRA" />
+        <intercept start="8NM209@PRA" startHeading="209" radius="1" direction="right" endHeading="287" end="VNV" />
+        <line start="VNV" end="VLA" text="VLA3W" arrows="end" />
+    </route>
+    <!-- FIXME: RNAV SIDs for runway 25L -->
+    <!-- SIDs for runway 25R -->
+    <route name="AGENA3D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,BCN,SALON,AGENA</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="left" endHeading="76" end="40.726979,2.30822" />
+        <bow center="BCN" radius="36" startAngle="107" extentAngle="58.5" />
+        <intercept start="36NM107@BCN" startHeading="17" radius="1" direction="right" endHeading="77" end="SALON" />
+        <line start="SALON" end="AGENA" arrows="end" text="AGENA3D" />
+    </route>
+    <route name="CLE2D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,VNV,SLL,CLE</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="right" endHeading="261" end="VNV" />
+        <intercept start="VNV" startHeading="353" radius="1" direction="right" endHeading="68" end="SLL" />
+        <line start="SLL" end="CLE" text="CLE2D" arrows="end" />
+    </route>
+    <route name="DALIN3D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,BCN,FEVIK,DALIN</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="left" endHeading="76" end="40.726979,2.30822" />
+        <bow center="BCN" radius="36" startAngle="107" extentAngle="58.5" />
+        <intercept start="36NM107@BCN" startHeading="17" radius="1" direction="right" endHeading="65" end="FEVIK" />
+        <line start="FEVIK" end="DALIN" arrows="end" text="DALIN3D" />
+    </route>
+    <route name="DUNES3D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,BCN,DUNES</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="left" endHeading="76" end="40.726979,2.30822" />
+        <bow center="BCN" radius="36" startAngle="107" extentAngle="58.5" />
+        <intercept start="36NM123@BCN" startHeading="33" radius="1" direction="right" endHeading="119" end="DUNES" text="DUNES3D" arrows="end" />
+    </route>
+    <route name="GRAUS6D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,VNV,BCN,RILUK,LRD,GRAUS</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="right" endHeading="261" end="VNV" />
+        <intercept start="VNV" startHeading="353" radius="1" direction="left" endHeading="283" end="RILUK" />
+        <line start="RILUK" end="LRD" />
+        <line start="LRD" end="GRAUS" text="GRAUS6D" arrows="end" />
+    </route>
+    <route name="LARPA3D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,BCN,LARPA</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="right" endHeading="163" end="LARPA" text="LARPA3D" arrows="end" />
+    </route>
+    <route name="LOBAR5D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,VNV,BCN,RILUK,LRD,LOBAR</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="right" endHeading="261" end="VNV" />
+        <intercept start="VNV" startHeading="353" radius="1" direction="left" endHeading="283" end="RILUK" />
+        <line start="RILUK" end="LRD" />
+        <line start="LRD" end="LOBAR" text="LOBAR5D" arrows="end" />
+    </route>
+    <route name="LOTOS4D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,RES,BANBU,LOTOS</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="left" endHeading="208" end="18.1NM244@BCN" />
+        <intercept start="18.1NM244@BCN" startHeading="208" radius="1" direction="right" endHeading="238" end="22.7NM100@RES" />
+        <line start="22.7NM100@RES" end="BANBU" />
+        <intercept start="BANBU" startHeading="238" radius="1" direction="left" endHeading="208" end="LOTOS" text="LOTOS4D" arrows="end" />
+    </route>
+    <route name="MOPAS7D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,VNV,KARDO,MOPAS</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="right" endHeading="261" end="VNV" />
+        <line start="VNV" end="KARDO" />
+        <intercept start="KARDO" startHeading="353" radius="1" direction="left" endHeading="319" end="MOPAS" text="MOPAS7D" arrows="end" />
+    </route>
+    <route name="OKABI6D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,VNV,KARDO,OKABI</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="right" endHeading="261" end="VNV" />
+        <line start="VNV" end="KARDO" />
+        <line start="KARDO" end="OKABI" text="OKABI6D" arrows="end" />
+    </route>
+    <route name="SENIA6D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,RES,KUGAX,SENIA</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="left" endHeading="208" end="18.1NM244@BCN" />
+        <intercept start="18.1NM244@BCN" startHeading="208" radius="1" direction="right" endHeading="238" end="22.7NM100@RES" />
+        <intercept start="22.7NM100@RES" startHeading="238" radius="1" direction="right" endHeading="283" end="KUGAX" />
+        <intercept start="KUGAX" startHeading="283" radius="1" direction="left" endHeading="247.5" end="SENIA" text="SENIA6D" arrows="end" />
+    </route>
+    <route name="VERSO3D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,BCN,SADEM,VERSO</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="left" endHeading="138" end="47NM138@VLA" />
+        <intercept start="47NM138@VLA" startHeading="138" radius="1" direction="left" endHeading="76" end="40.726979,2.30822" />
+        <bow center="BCN" radius="36" startAngle="107" extentAngle="58.5" />
+        <intercept start="36NM107@BCN" startHeading="17" radius="1" direction="right" endHeading="97" end="SADEM" />
+        <line start="SADEM" end="VERSO" text="VERSO3D" arrows="end" />
+    </route>
+    <route name="VLA2D" displayMode="sid">
+        <activeStartRunways>25R</activeStartRunways>
+        <navaids>PRA,VNV,VLA</navaids>
+        <line start="LEBL-RW25R" end="12.5NM246@BCN" />
+        <intercept start="12.5NM246@BCN" startHeading="246" radius="1" direction="right" endHeading="261" end="VNV" />
+        <line start="VNV" end="VLA" text="VLA3W" arrows="end" />
+    </route>
+    <!-- FIXME: RNAV SIDs for runway 25R -->
+    <!-- STARs -->
+    <!-- FIXME: add altitudes -->
+    <!-- FIXME: add missing STARs -->
+    <route name="ALBER1N" displayMode="star">
+        <activeLandingRunways>02</activeLandingRunways>
+        <navaids>ALBER,GIR,SLL</navaids>
+        <line start="ALBER" end="GIR" text="ALBER1N" />
+        <loop navpoint="GIR" inboundHeading="185" right="true" minHeight="8000" maxHeight="15000" arrows="both" />
+        <line start="GIR" end="SLL" />
+        <loop navpoint="SLL" inboundHeading="175" right="true" minHeight="10000" maxHeight="13000" arrows="both" />
+        <line start="SLL" end="VIBIM" stroke="dashed" arrows="end" />
+    </route>
+    <route name="ALBER1S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>ALBER,GIR,SLL</navaids>
+        <line start="ALBER" end="GIR" text="ALBER1S" />
+        <loop navpoint="GIR" inboundHeading="185" right="true" minHeight="8000" maxHeight="15000" arrows="both" />
+        <line start="GIR" end="SLL" arrows="end" />
+    </route>
+    <route name="ALBER1T" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>ALBER,CLE</navaids>
+        <line start="ALBER" end="CLE" text="ALBER1T" arrows="end" />
+        <loop navpoint="30NM010.6@CLE" inboundHeading="190" length="5" right="false" maxHeight="13000" arrows="both" />
+        <loop navpoint="CLE" inboundHeading="190" right="false" minHeight="7000" maxHeight="10000" arrows="end" />
+    </route>
+    <route name="BISBA2Z" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>BISBA,NEMUM,BL038,BL012,VIBIM</navaids>
+        <line start="BISBA" end="NEMUM" text="BISBA4S/BISBA2Z" />
+        <line start="NEMUM" end="BL038" text="BISBA2Z" stroke="dashed" />
+        <loop navpoint="BL038" inboundHeading="286" right="true" minHeight="4000" maxHeight="13000" arrows="end" />
+        <line start="BL038" end="BL012" stroke="21-10,3" />
+        <line start="BL012" end="VIBIM" arrows="end" />
+    </route>
+    <route name="BISBA3N" displayMode="star">
+        <activeLandingRunways>02</activeLandingRunways>
+        <navaids>BISBA,BGR,SLL</navaids>
+        <line start="BISBA" end="BGR" text="BISBA3N" />
+        <loop navpoint="BGR" inboundHeading="243" right="true" minHeight="7000" maxHeight="15000" arrows="both" />
+        <line start="BGR" end="SLL" />
+        <loop navpoint="SLL" inboundHeading="175" right="true" minHeight="10000" maxHeight="13000" arrows="both" />
+        <line start="SLL" end="VIBIM" stroke="dashed" arrows="end" />
+    </route>
+    <route name="BISBA3T" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>BISBA,BGR,CLL</navaids>
+        <line start="BISBA" end="BGR" text="BISBA3T/BISBA4V" />
+        <loop navpoint="BGR" inboundHeading="246" right="true" maxHeight="13000" arrows="both" />
+        <line start="BGR" end="CLE" text="BISBA3T" stroke="dashed" />
+    </route>
+    <route name="BISBA3Y" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>BISBA,BL045,XAMUR,LESBA</navaids>
+        <line start="BISBA" end="BL045" text="BISBA3Y" stroke="21-10,3" />
+        <line start="BL045" end="XAMUR" stroke="dashed" />
+        <intercept start="XAMUR" startHeading="205" radius="3" direction="right" endHeading="277" end="LESBA" arrows="end" />
+    </route>
+    <route name="BISBA4S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>BISBA,NEMUM,BGR,SLL</navaids>
+        <line start="BISBA" end="NEMUM" text="BISBA4S/BISBA2Z" />
+        <line start="NEMUM" end="BGR" />
+        <loop navpoint="BGR" inboundHeading="246" right="true" minHeight="7000" maxHeight="15000" arrows="both" />
+        <line start="BGR" end="SLL" text="BISBA4S" arrows="end" />
+    </route>
+    <route name="BISBA4V" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>BISBA,BGR,BL045,XAMUR,LESBA</navaids>
+        <line start="BISBA" end="BGR" text="BISBA3T/BISBA4V" />
+        <loop navpoint="BGR" inboundHeading="246" right="true" maxHeight="13000" arrows="both" />
+        <line start="BGR" end="BL045" text="BISBA4V" stroke="dashed" />
+        <line start="BL045" end="XAMUR" stroke="dashed" />
+        <intercept start="XAMUR" startHeading="205" radius="3" direction="right" endHeading="277" end="LESBA" arrows="end" />
+    </route>
+    <route name="CASPE1U" displayMode="star">
+        <activeLandingRunways>02,07L,07R</activeLandingRunways>
+        <navaids>CASPE,RES,RUBOT</navaids>
+        <line start="CASPE" end="RES" text="CASPE1U" />
+        <loop navpoint="RES" inboundHeading="100" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <intercept start="RES" startHeading="129" radius="1" direction="left" endHeading="29" end="RUBOT" arrows="end" />
+    </route>
+    <route name="CASPE2S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>CASPE,RES,VLA</navaids>
+        <line start="CASPE" end="RES" text="CASPE2S/CASPE1U" />
+        <loop navpoint="RES" inboundHeading="100" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="RES" end="VLA" text="CASPE2S/MARTA2S/MATEX1S" stroke="dashed" arrows="end" />
+    </route>
+    <route name="CASPE3Y" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>CASPE,RES,RAVAX,RULOS</navaids>
+        <line start="CASPE" end="RES" text="CASPE3Y" stroke="dashed" />
+        <line start="RES" end="RAVAX" text="CASPE3Y" stroke="dashed" />
+        <line start="RAVAX" end="RULOS" arrows="end" />
+    </route>
+    <route name="CASPE4T" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>CASPE,VLA,SLL</navaids>
+        <line start="CASPE" end="VLA" text="CASPE4T" />
+        <loop navpoint="VLA" inboundHeading="86" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="VLA" end="SLL" text="CASPE4T/MARTA2T/MATEX1T" arrows="end" />
+    </route>
+    <route name="GRAUS1U" displayMode="star">
+        <activeLandingRunways>02,07L,07R</activeLandingRunways>
+        <navaids>GRAUS,LRD,RES,RUBOT</navaids>
+        <line start="GRAUS" end="LRD" text="GRAUS3S/GRAUS1U" />
+        <loop navpoint="LRD" inboundHeading="129" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="LRD" end="RES" text="GRAUS1U/LOBAR1U" stroke="dashed" />
+        <loop navpoint="RES" inboundHeading="100" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="RES" end="19NM129@RES" text="CASPE1U/GRAUS1U/LOBAR1U" />
+        <intercept start="19NM129@RES" startHeading="129" radius="1" direction="left" end="RUBOT" endHeading="29" arrows="end" />
+    </route>
+    <route name="GRAUS3S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>GRAUS,LRD,VLA</navaids>
+        <line start="GRAUS" end="LRD" text="GRAUS3S/GRAUS1U" />
+        <loop navpoint="LRD" inboundHeading="129" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="LRD" end="VLA" text="GRAUS3S/LOBAR3S" arrows="end" />
+    </route>
+    <route name="GRAUS4T" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>GRAUS,TIRGO,SLL</navaids>
+        <line start="GRAUS" end="TIRGO" text="GRAUS4T" />
+        <loop navpoint="TIRGO" inboundHeading="110" right="false" minHeight="8000" maxHeight="15000" arrows="end" />
+        <line start="TIRGO" end="SLL" arrows="end" />
+    </route>
+    <route name="LOBAR1U" displayMode="star">
+        <activeLandingRunways>02,07L,07R</activeLandingRunways>
+        <navaids>LOBAR,LRD,RES,RUBOT</navaids>
+        <line start="LOBAR" end="LRD" text="LOBAR3S/LOBAR1U" />
+        <loop navpoint="LRD" inboundHeading="129" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="LRD" end="RES" text="GRAUS1U/LOBAR1U" stroke="dashed" arrows="end" />
+        <loop navpoint="RES" inboundHeading="100" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="RES" end="19NM129@RES" text="CASPE1U/GRAUS1U/LOBAR1U" />
+        <intercept start="19NM129@RES" startHeading="129" radius="1" direction="left" end="RUBOT" endHeading="29" arrows="end" />
+    </route>
+    <route name="LOBAR3S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>LOBAR,LRD,VLA</navaids>
+        <line start="LOBAR" end="LRD" text="LOBAR3S/LOBAR1U" />
+        <loop navpoint="LRD" inboundHeading="129" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="LRD" end="VLA" text="GRAUS3S/LOBAR3S" arrows="end" />
+    </route>
+    <route name="LOBAR3T" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>LOBAR,PEKIS,SLL</navaids>
+        <line start="LOBAR" end="PEKIS" text="LOBAR3T" />
+        <loop navpoint="PEKIS" inboundHeading="100" right="false" minHeight="8000" maxHeight="15000" arrows="end" />
+        <line start="PEKIS" end="SLL" arrows="end" />
+    </route>
+    <route name="MARTA2S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>MARTA,EBROX,RES,VLA</navaids>
+        <line start="MARTA" end="EBROX" text="MARTA2S" stroke="dashed" />
+        <line start="EBROX" end="RES" text="MARTA2S" stroke="dashed" />
+        <loop navpoint="RES" inboundHeading="100" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="RES" end="VLA" text="CASPE2S/MARTA2S/MATEX1S" stroke="dashed" arrows="end" />
+    </route>
+    <route name="MARTA2T" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>MARTA,EBROX,RES,VLA,SLL</navaids>
+        <line start="MARTA" end="EBROX" text="MARTA2T" stroke="dashed" />
+        <line start="EBROX" end="RES" text="MARTA2T" stroke="dashed" />
+        <line start="RES" end="VLA" text="MARTA2T/MATEX1T" stroke="dashed" />
+        <loop navpoint="VLA" inboundHeading="86" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="VLA" end="SLL" text="CASPE4T/MARTA2T/MATEX1T" stroke="dashed" arrows="end" />
+    </route>
+    <route name="MARTA2Z" displayMode="star">
+        <activeLandingRunways>02,07L,07R</activeLandingRunways>
+        <navaids>MARTA,PAPOS,BL028,RUBOT</navaids>
+        <line start="MARTA" end="PAPOS" text="MARTA2Z" stroke="21-10,3" />
+        <loop navpoint="PAPOS" inboundHeading="29" right="false" minHeight="4000" maxHeight="13000" arrows="end" />
+        <line start="PAPOS" end="BL028" stroke="21-10,3" />
+        <line start="BL028" end="NEPAL" arrows="end" />
+    </route>
+    <route name="MARTA5Y" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>MARTA,NEPAL,RAVAX,RULOS</navaids>
+        <line start="MARTA" end="NEPAL" text="MARTA5Y" stroke="21-10,3" />
+        <loop navpoint="NEPAL" inboundHeading="30" right="true" minHeight="4000" maxHeight="13000" arrows="end" />
+        <line start="NEPAL" end="RAVAX" text="MARTA5Y/NEPAL2V" />
+        <line start="RAVAX" end="RULOS" arrows="end" />
+    </route>
+    <route name="MATEX1S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>MATEX,SENIA,RES,VLA</navaids>
+        <line start="MATEX" end="SENIA" text="MATEX1S" stroke="dashed" />
+        <line start="SENIA" end="RES" text="MATEX1S" stroke="dashed" />
+        <loop navpoint="RES" inboundHeading="100" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="RES" end="VLA" text="CASPE2S/MARTA2S/MATEX1S" stroke="dashed" arrows="end" />
+    </route>
+    <route name="MATEX1T" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>MATEX,SENIA,RES,VLA,SLL</navaids>
+        <line start="MATEX" end="SENIA" text="MATEX1T" stroke="dashed" />
+        <line start="SENIA" end="RES" text="MATEX1T" stroke="dashed" />
+        <line start="RES" end="VLA" text="MARTA2T/MATEX1T" stroke="dashed" />
+        <loop navpoint="VLA" inboundHeading="86" right="true" minHeight="6000" maxHeight="13000" arrows="end" />
+        <line start="VLA" end="SLL" text="CASPE4T/MARTA2T/MATEX1T" arrows="end" />
+    </route>
+    <route name="MATEX2Y" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>MATEX,TUNDI,RAVAX,RULOS</navaids>
+        <line start="MATEX" end="TUNDI" text="MATEX2Y" stroke="21-10,3" />
+        <loop navpoint="TUNDI" inboundHeading="40" right="true" minHeight="5000" maxHeight="13000" arrows="end" />
+        <line start="TUNDI" end="RAVAX" text="MATEX2Y" stroke="21-10,3" />
+        <line start="RAVAX" end="RULOS" arrows="end" />
+    </route>
+    <route name="MATEX2Z" displayMode="star">
+        <activeLandingRunways>02,07L,07R</activeLandingRunways>
+        <navaids>MATEX,BL028,RUBOT</navaids>
+        <line start="MATEX" end="BL028" text="MATEX2Z" stroke="21-10,3" />
+        <line start="BL028" end="RUBOT" arrows="end" />
+    </route>
+    <route name="NEPAL1U" displayMode="star">
+        <activeLandingRunways>02,07L,07R</activeLandingRunways>
+        <navaids>NEPAL,RES,RUBOT</navaids>
+        <loop navpoint="NEPAL" inboundHeading="309" right="true" minHeight="4000" maxHeight="13000" arrows="end" />
+        <line start="NEPAL" end="30NM129@RES" text="NEPAL1U" />
+        <intercept start="30NM129@RES" startHeading="309" radius="1" direction="right" endHeading="29" end="RUBOT" arrows="end" />
+    </route>
+    <route name="NEPAL2V" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>NEPAL,RAVAX,RULOS</navaids>
+        <loop navpoint="NEPAL" inboundHeading="30" right="true" minHeight="4000" maxHeight="13000" arrows="end" />
+        <line start="NEPAL" end="RAVAX" text="MARTA5Y/NEPAL2V" />
+        <line start="RAVAX" end="RULOS" arrows="end" />
+    </route>
+    <route name="OSTUR1U" displayMode="star">
+        <activeLandingRunways>02,07L,07R</activeLandingRunways>
+        <navaids>OSTUR,BL012,VIBIM</navaids>
+        <loop navpoint="OSTUR" inboundHeading="311" right="false" minHeight="5000" maxHeight="13000" arrows="end" />
+        <line start="OSTUR" end="BL012" text="OSTUR1U" />
+        <line start="BL012" end="VIBIM" arrows="end" />
+    </route>
+    <route name="OSTUR1V" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>OSTUR,LESBA</navaids>
+        <loop navpoint="OSTUR" inboundHeading="311" right="false" minHeight="4000" maxHeight="13000" arrows="both" />
+        <intercept start="OSTUR" startHeading="347" radius="1" direction="left" endHeading="277" end="LESBA" text="OSTUR1V" arrows="end" />
+    </route>
+    <route name="PUMAL2N" displayMode="star">
+        <activeLandingRunways>02</activeLandingRunways>
+        <navaids>PUMAL,BERGA,KOSIT,SLL</navaids>
+        <line start="PUMAL" end="BERGA" text="PUMAL2N" />
+        <line start="BERGA" end="KOSIT" />
+        <loop navpoint="KOSIT" inboundHeading="175" right="false" minHeight="10000" maxHeight="13000" arrows="both" />
+        <line start="KOSIT" end="SLL" />
+        <loop navpoint="SLL" inboundHeading="175" right="true" minHeight="10000" maxHeight="13000" arrows="both" />
+        <line start="SLL" end="VIBIM" stroke="dashed" arrows="end" />
+    </route>
+    <route name="PUMAL2Z" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>PUMAL,BERGA,KOSIT,VLA</navaids>
+        <line start="PUMAL" end="BERGA" />
+        <line start="BERGA" end="KOSIT" />
+        <loop navpoint="KOSIT" inboundHeading="175" right="false" minHeight="10000" maxHeight="13000" arrows="both" />
+        <line start="KOSIT" end="VLA" text="PUMAL2Z" stroke="dashed" arrows="end" />
+    </route>
+    <route name="PUMAL3T" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>PUMAL,CLE</navaids>
+        <line start="PUMAL" end="CLE" text="PUMAL3T" arrows="end" />
+        <loop navpoint="35NM327@CLE" inboundHeading="148" right="true" length="5" maxHeight="13000" arrows="end" />
+    </route>
+    <route name="PUMAL4S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>PUMAL,BERGA,KOSIT,SLL</navaids>
+        <line start="PUMAL" end="BERGA" />
+        <line start="BERGA" end="KOSIT" />
+        <loop navpoint="KOSIT" inboundHeading="175" right="false" minHeight="10000" maxHeight="13000" arrows="both" />
+        <line start="KOSIT" end="SLL" text="PUMAL4S" arrows="end" />
+    </route>
+    <route name="VERSO1N" displayMode="star">
+        <activeLandingRunways>02</activeLandingRunways>
+        <navaids>VERSO,CLE,SLL</navaids>
+        <line start="VERSO" end="CLE" text="VERSO1N" />
+        <line start="CLE" end="SLL" />
+        <loop navpoint="SLL" inboundHeading="175" right="true" minHeight="10000" maxHeight="13000" arrows="both" />
+        <line start="SLL" end="VIBIM" stroke="dashed" arrows="end" />
+    </route>
+    <route name="VERSO1S" displayMode="star">
+        <activeLandingRunways>07L,07R</activeLandingRunways>
+        <navaids>VERSO,CLE,SLL</navaids>
+        <line start="VERSO" end="CLE" text="VERSO1S" stroke="dashed" />
+        <line start="CLE" end="SLL" stroke="dashed" />
+    </route>
+    <route name="VERSO1V" displayMode="star">
+        <activeLandingRunways>25L,25R</activeLandingRunways>
+        <navaids>VERSO,SADEM,LESBA</navaids>
+        <line start="VERSO" end="SADEM" text="VERSO1V" />
+        <loop navpoint="SADEM" inboundHeading="277" right="false" minHeight="5000" maxHeight="13000" arrows="end" />
+        <line start="SADEM" end="LESBA" arrows="end" />
+    </route>
+    <route name="VERSO2Z" displayMode="star">
+        <activeLandingRunways>02,07L,07R</activeLandingRunways>
+        <navaids>VERSO,BL038,BL012,VIBIM</navaids>
+        <line start="VERSO" end="BL038" text="VERSO2Z" stroke="21-10,3" />
+        <loop navpoint="BL038" inboundHeading="286" right="true" minHeight="4000" maxHeight="13000" arrows="end" />
+        <line start="BL038" end="BL012" stroke="21-10,3" />
+        <line start="BL012" end="VIBIM" arrows="end" />
+    </route>
+    <!-- ILS approach for runway 02 -->
+    <route name="ILS 02" color="255,242,0">
+        <activeLandingRunways>02</activeLandingRunways>
+        <navaids>RUBOT,SANIS,VIBIM,PRA</navaids>
+        <loop navpoint="RUBOT" inboundHeading="029" length="6.5" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <intercept start="RUBOT" startHeading="29" radius="1" direction="right" endHeading="116" end="35NM207@SLL" />
+        <bow center="SLL" radius="35" startAngle="196" extentAngle="11" />
+        <intercept start="35NM196@SLL" startHeading="106" radius="1" direction="left" endHeading="15" end="SANIS" />
+        <line start="SANIS" end="LEBL-RW20" arrows="end" />
+        <loop navpoint="VIBIM" inboundHeading="299" length="5" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <intercept start="VIBIM" startHeading="259" radius="1" direction="right" endHeading="304" end="30NM124@VLA" />
+        <intercept start="30NM124@VLA" startHeading="304" radius="2" direction="right" endHeading="14.5" end="1NM014.5@SANIS" arrows="end" />
+        <intercept start="LEBL-RW02" startHeading="19" radius="0.5" direction="right" endHeading="135" end="41.316430,2.116323" color="255,128,128" stroke="dashed" />
+        <intercept start="41.316430,2.116323" startHeading="135" radius="0.5" direction="left" endHeading="54" end="9NM054@PRA" color="255,128,128" stroke="dashed" arrows="end" />
+        <loop navpoint="SLL" inboundHeading="175" right="false" minHeight="5000" color="255,128,128" stroke="dashed" arrows="both" />
+        <line start="SLL" end="20NM210@SLL" color="255,128,128" stroke="dashed" />
+        <intercept start="20NM210@SLL" startHeading="210" radius="1" direction="left" endHeading="124" end="20NM124@VLA" color="255,128,128" stroke="dashed" />
+        <intercept start="20NM124@VLA" startHeading="124" radius="1" direction="left" endHeading="15" end="1NM014.5@SANIS" color="255,128,128" stroke="dashed" arrows="end" />
+    </route>
+    <!-- FIXME LOC approach for runway 02 -->
+    <!-- ILS approach for runway 07L -->
+    <route name="ILS 07L" color="255,242,0">
+        <activeLandingRunways>07L</activeLandingRunways>
+        <navaids>RUBOT,ASTEK,VIBIM,VLA,SLL</navaids>
+        <loop navpoint="RUBOT" inboundHeading="029" length="6.5" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <intercept start="RUBOT" startHeading="360" radius="1" direction="right" endHeading="66" end="ASTEK" />
+        <line start="ASTEK" end="LEBL-RW25R" arrows="end" />
+        <loop navpoint="VIBIM" inboundHeading="299" length="5" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <intercept start="VIBIM" startHeading="299" radius="1" direction="left" endHeading="260" end="14NM170@BCN" />
+        <bow center="BCN" radius="14" startAngle="170" extentAngle="70" />
+        <intercept start="14NM240@BCN" startHeading="332" radius="1" direction="right" endHeading="65.39" end="LEBL-RW25R" arrows="end" />
+        <loop navpoint="VLA" inboundHeading="107" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <intercept start="VLA" startHeading="124" radius="1" direction="left" endHeading="65.39" end="LEBL-RW25R" arrows="end" />
+        <loop navpoint="SLL" inboundHeading="175" right="true" minHeight="7000" maxHeight="10000" arrows="both" />
+        <intercept start="SLL" startHeading="229" radius="1" direction="left" endHeading="164" end="14NM254@BCN" />
+        <intercept start="14NM254@BCN" startHeading="164" radius="1" direction="left" endHeading="65.39" end="LEBL-RW25R" arrows="end" />
+        <line start="LEBL-RW07L" end="10NM059@BCN" color="255,128,128" stroke="dashed" arrows="end" />
+        <loop navpoint="SLL" inboundHeading="175" right="false" minHeight="7000" maxHeight="10000" color="255,128,128" stroke="dashed" arrows="both" />
+    </route>
+    <!-- FIXME LOC approach for runway 07L -->
+    <!-- ILS approach for runway 07R -->
+    <route name="ILS 07R" color="255,242,0">
+        <activeLandingRunways>07R</activeLandingRunways>
+        <navaids>RUBOT,PERUK,VIBIM,VLA,SLL</navaids>
+        <loop navpoint="RUBOT" inboundHeading="029" length="6.5" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <intercept start="RUBOT" startHeading="360" radius="1" direction="right" endHeading="66" end="PERUK" />
+        <line start="PERUK" end="LEBL-RW25L" arrows="end" />
+        <loop navpoint="VIBIM" inboundHeading="299" length="5" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <intercept start="VIBIM" startHeading="299" radius="1" direction="left" endHeading="255" end="13NM165@PRA" />
+        <bow center="PRA" radius="13" startAngle="165" extentAngle="72" />
+        <intercept start="13NM237@PRA" startHeading="327" radius="1" direction="right" endHeading="65.463" end="LEBL-RW25L" />
+        <loop navpoint="VLA" inboundHeading="107" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="VLA" end="14NM256@PRA" />
+        <loop navpoint="SLL" inboundHeading="175" right="true" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="SLL" end="18NM229@SLL" />
+        <intercept start="18NM229@SLL" startHeading="229" radius="2" direction="left" endHeading="180" end="14NM270@PRA" />
+        <bow center="PRA" radius="14" startAngle="256" extentAngle="14" />
+        <intercept start="14NM256@PRA" startHeading="166" radius="1" direction="left" endHeading="66" end="PERUK" />
+        <intercept start="LEBL-RW07R" startHeading="66" radius="1" direction="right" endHeading="229" end="2.25NM150@PRA" color="255,128,128" stroke="dashed" />
+        <intercept start="2.25NM150@PRA" startHeading="229" radius="1" direction="left" endHeading="179" end="10NM179@PRA" color="255,128,128" stroke="dashed" arrows="end" />
+        <loop navpoint="VIBIM" inboundHeading="299" length="5" right="false" arrows="both" color="255,128,128" stroke="dashed" />
+    </route>
+    <!-- FIXME LOC approach for runway 07R -->
+    <!-- ILS approach for runway 25L -->
+    <route name="ILS 25L" color="255,242,0">
+        <activeLandingRunways>25L</activeLandingRunways>
+        <navaids>SLL,CLE,LESBA,RULOS</navaids>
+        <loop navpoint="RULOS" inboundHeading="030" length="5" right="true" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="RULOS" end="29NM209.8@CLE" />
+        <intercept start="29NM209.8@CLE" startHeading="30" radius="1" direction="left" endHeading="360" end="12NM92@PRA" />
+        <bow center="PRA" radius="12" startAngle="73" extentAngle="19" />
+        <intercept start="12NM073@PRA" startHeading="343" radius="1" direction="left" endHeading="246" end="41.3291666,2.2116666" />
+        <line start="41.3291666,2.2116666" end="LEBL-RW07R" arrows="end" />
+        <loop navpoint="LESBA" inboundHeading="277" length="5.7" right="true" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="LESBA" end="16NM122@SLL" />
+        <intercept start="16NM122@SLL" startHeading="302" radius="1" direction="left" endHeading="246" end="41.3291666,2.2116666" />
+        <loop navpoint="CLE" inboundHeading="190" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="CLE" end="11NM222@CLE" />
+        <intercept start="11NM222@CLE" startHeading="222" radius="1" direction="right" endHeading="246" end="41.3291666,2.2116666" />
+        <loop navpoint="SLL" inboundHeading="100" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="SLL" end="11NM131@SLL" />
+        <intercept start="11NM131@SLL" startHeading="131" radius="1.5" direction="right" endHeading="246" end="41.3291666,2.2116666" />
+        <intercept start="LEBL-RW25L" startHeading="246" radius="0.85" direction="left" endHeading="85" end="2NM190@PRA" color="255,128,128" stroke="dashed" />
+        <intercept start="2NM190@PRA" startHeading="85" radius="0.8" direction="right" endHeading="169" end="10NM169@PRA" color="255,128,128" stroke="dashed" arrows="end" />
+        <loop navpoint="RULOS" inboundHeading="030" length="5" right="true" color="255,128,128" stroke="dashed" arrows="both" />
+    </route>
+    <!-- FIXME LOC approach for runway 25L -->
+    <!-- ILS approach for runway 25R -->
+    <route name="ILS 25R" color="255,242,0">
+        <activeLandingRunways>25R</activeLandingRunways>
+        <navaids>SLL,CLE,LESBA,RULOS,TEBLA</navaids>
+        <loop navpoint="RULOS" inboundHeading="030" length="5" right="true" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="RULOS" end="26NM210@CLE" />
+        <intercept start="26NM210@CLE" startHeading="30" radius="1" direction="left" endHeading="360" end="12NM090@BCN" />
+        <bow center="BCN" radius="12" startAngle="72" extentAngle="18" />
+        <intercept start="12NM072@BCN" startHeading="342" radius="1" direction="left" endHeading="246" end="TEBLA" />
+        <line start="TEBLA" end="41.3530556,2.2425" />
+        <line start="41.3530556,2.2425" end="LEBL-RW07L" arrows="end" />
+        <loop navpoint="LESBA" inboundHeading="277" length="5.7" right="true" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="LESBA" end="16NM122@SLL" />
+        <intercept start="16NM122@SLL" startHeading="302" radius="1" direction="left" endHeading="246" end="TEBLA" />
+        <loop navpoint="CLE" inboundHeading="190" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="CLE" end="TEBLA" />
+        <loop navpoint="SLL" inboundHeading="100" right="false" minHeight="7000" maxHeight="10000" arrows="both" />
+        <line start="SLL" end="11NM131@SLL" />
+        <intercept start="11NM131@SLL" startHeading="131" radius="1" direction="right" endHeading="245.6" end="41.3530556,2.2425" />
+        <line start="LEBL-RW25R" end="5NM246@BCN" color="255,128,128" stroke="dashed" />
+        <intercept start="5NM246@BCN" startHeading="246" radius="0.5" direction="left" endHeading="212" end="5.5NM244@BCN" color="255,128,128" stroke="dashed" />
+        <intercept start="5.5NM244@BCN" startHeading="212" radius="0.5" direction="right" endHeading="242" end="10NM242@BCN" color="255,128,128" stroke="dashed" arrows="end" />
+        <loop navpoint="SLL" inboundHeading="100" right="false" arrows="both" color="255,128,128" stroke="dashed" />
+    </route>
+    <!-- FIXME LOC approach for runway 25R -->
+</routes>

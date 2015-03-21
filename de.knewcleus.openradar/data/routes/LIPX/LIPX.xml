@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FIXME: check TACAN vs VIL VOR -->
+<routes>
+    <addPoint code="PX502" point="45.3417917,10.7706222" />
+    <addPoint code="PX501" point="45.3204639,11.1615861" />
+    <addPoint code="PX503" point="45.3359639,11.1165083" />
+    <addPoint code="DER04" point="45.4076417,10.9058972" />
+    <addPoint code="VABOK" point="45.2936111,11.2780556" />
+    <addPoint code="NEVNI" point="45.6483333,10.4225" />
+    <addPoint code="IDREK" point="45.6336111,10.7930555" />
+    <addPoint code="ODRAL" point="12.6NM225.75@(TACAN)VIL" />
+    <addPoint code="PEVIK" point="10.3NM225.75@(VOR)VIL" />
+    <addPoint code="UNKAV" point="11NM160@(VOR)VIL" />
+    <!-- SIDs for runway 22 -->
+    <route name="LEGLO 7U" displayMode="sid">
+        <activeStartRunways>22</activeStartRunways>
+        <navaids>PX502,LEGLO</navaids>
+        <line start="LIPX-RW22" end="PX502" text="237°" arrows="end" stroke="dashed" />
+        <intercept start="PX502" startHeading="238.5" radius="1.16" direction="right" endHeading="295.5" end="LEGLO" arrows="end" text="LEGLO 7U, 293°" />
+        <minAlt position="PX502" value="2.0" />
+        <minAlt position="45.5872222,9.9852778" value="6.0" />
+        <minAlt position="LEGLO" value="11.0" />
+    </route>
+    <route name="FER 7U" displayMode="sid">
+        <activeStartRunways>22</activeStartRunways>
+        <navaids>PX502,FER</navaids>
+        <line start="LIPX-RW22" end="PX502" text="237°" arrows="end" stroke="dashed" />
+        <intercept start="PX502" startHeading="238.5" radius="2.75" direction="left" endHeading="90" end="10.2NM155@LIPX" text="090°" />
+        <intercept start="10.2NM155@LIPX" startHeading="90" radius="1" direction="right" endHeading="141" end="FER" arrows="end" text="FER 7U, 138°" />
+        <minAlt position="PX502" value="2.0" />
+        <minAlt position="10.2NM155@LIPX" value="5.5" />
+        <minAlt position="FER" value="11.0" />
+    </route>
+    <route name="BOA 7U" displayMode="sid">
+        <activeStartRunways>22</activeStartRunways>
+        <navaids>PX502,(VOR)BOA</navaids>
+        <line start="LIPX-RW22" end="PX502" text="237°" arrows="end" stroke="dashed" />
+        <intercept start="PX502" startHeading="238.5" radius="2.75" direction="left" endHeading="90" end="10.2NM155@LIPX" text="090°" />
+        <intercept start="10.2NM155@LIPX" startHeading="90" radius="1" direction="right" endHeading="169" end="(VOR)BOA" arrows="end" stroke="dashed" text="BOA 7U, 169°" />
+        <minAlt position="PX502" value="2.0" />
+        <minAlt position="10.2NM155@LIPX" value="5.5" />
+    </route>
+    <route name="PAR 7U" displayMode="sid">
+        <activeStartRunways>22</activeStartRunways>
+        <navaids>PX502,PAR</navaids>
+        <line start="LIPX-RW22" end="PX502" text="237°" arrows="end" stroke="dashed" />
+        <intercept start="PX502" startHeading="238.5" radius="3" direction="left" endHeading="185" end="12.5NM224@VIL" text="185°" />
+        <intercept start="12.5NM224@VIL" startHeading="185" radius="1" direction="right" endHeading="215" end="PAR" arrows="end" text="PAR 7U, 215°" />
+        <minAlt position="PX502" value="2.0" />
+        <minAlt position="PAR" value="9.0" />
+    </route>
+    <route name="KOPER 7U" displayMode="sid">
+        <activeStartRunways>22</activeStartRunways>
+        <navaids>PX502,PX503,PX501,KOPER</navaids>
+        <line start="LIPX-RW22" end="PX502" text="237°" arrows="end" stroke="dashed" />
+        <intercept start="PX502" startHeading="238.5" radius="2.75" direction="left" endHeading="90" end="11.1NM207@VIL" />
+        <intercept start="11.1NM207@VIL" startHeading="90" radius="3" direction="left" endHeading="67" end="2NM247@PX503" text="067°" />
+        <intercept start="2NM247@PX503" startHeading="67" radius="2" direction="right" endHeading="116" end="PX501" text="114°" />
+        <line start="PX501" end="KOPER" arrows="end" stroke="dashed" text="KOPER 7U, 114°" />
+        <minAlt position="PX502" value="2.0" />
+        <minAlt position="PX501" value="6.0/7.0/9.0" />
+        <minAlt position="KOPER" value="9.0" />
+    </route>
+    <route name="ADOSA 5U" displayMode="sid">
+        <activeStartRunways>22</activeStartRunways>
+        <navaids>PX502,PX503,PX501,ADOSA</navaids>
+        <line start="LIPX-RW22" end="PX502" text="237°" arrows="end" stroke="dashed" />
+        <intercept start="PX502" startHeading="238.5" radius="2.75" direction="left" endHeading="90" end="11.1NM207@VIL" />
+        <intercept start="11.1NM207@VIL" startHeading="90" radius="3" direction="left" endHeading="67" end="2NM247@PX503" text="067°" />
+        <intercept start="2NM247@PX503" startHeading="67" radius="2" direction="right" endHeading="116" end="PX501" text="114°" />
+        <intercept start="PX501" startHeading="116" radius="2" direction="left" endHeading="332" end="ADOSA" arrows="end" text="ADOSA 5U, 332°" />
+        <minAlt position="PX502" value="2.0" />
+        <minAlt position="PX501" value="6.0/7.0/9.0" />
+        <minAlt position="ADOSA" value="14.0/16.0" />
+    </route>
+    <route name="VIC 5U" displayMode="sid">
+        <activeStartRunways>22</activeStartRunways>
+        <navaids>PX502,PX503,PX501,(NDB)VIC</navaids>
+        <line start="LIPX-RW22" end="PX502" text="237°" arrows="end" stroke="dashed" />
+        <intercept start="PX502" startHeading="238.5" radius="2.75" direction="left" endHeading="90" end="11.1NM207@VIL" />
+        <intercept start="11.1NM207@VIL" startHeading="90" radius="3" direction="left" endHeading="67" end="2NM247@PX503" text="067°" />
+        <intercept start="2NM247@PX503" startHeading="67" radius="2" direction="right" endHeading="116" end="PX501" text="114°" />
+        <intercept start="PX501" startHeading="116" radius="1.16" direction="left" endHeading="47" end="(NDB)VIC" arrows="end" stroke="dashed" text="VIC 5U, 047°" />
+        <minAlt position="PX502" value="2.0" />
+        <minAlt position="PX501" value="6.0/7.0/9.0" />
+    </route>
+    <route name="VABOK 5U" displayMode="sid">
+        <activeStartRunways>22</activeStartRunways>
+        <navaids>PX502,PX503,PX501,VABOK</navaids>
+        <line start="LIPX-RW22" end="PX502" text="237°" arrows="end" stroke="dashed" />
+        <intercept start="PX502" startHeading="238.5" radius="2.75" direction="left" endHeading="90" end="11.1NM207@VIL" />
+        <intercept start="11.1NM207@VIL" startHeading="90" radius="3" direction="left" endHeading="67" end="2NM247@PX503" text="067°" />
+        <intercept start="2NM247@PX503" startHeading="67" radius="2" direction="right" endHeading="116" end="PX501" text="114°" />
+        <intercept start="PX501" startHeading="116" radius="1.16" direction="left" endHeading="106" end="VABOK" arrows="end" text="VABOK 5U, 106°" />
+        <minAlt position="PX502" value="2.0" />
+        <minAlt position="PX501" value="6.0/7.0/9.0" />
+        <minAlt position="VABOK" value="11.0" />
+    </route>
+    <!-- SIDs for runway 04 -->
+    <route name="KOPER 7S" displayMode="sid">
+        <activeStartRunways>04</activeStartRunways>
+        <navaids>DER04,PX501,KOPER</navaids>
+        <line start="LIPX-RW04" end="DER04" arrows="end" stroke="dashed" />
+        <intercept start="DER04" startHeading="44" radius="3" direction="right" endHeading="154" end="6NM90@VIL" text="154°" />
+        <intercept start="6NM90@VIL" startHeading="154" radius="3" direction="left" endHeading="114" end="PX501" text="114°" />
+        <line start="PX501" end="KOPER" arrows="end" stroke="dashed" text="KOPER 7S, 114°" />
+        <minAlt position="PX501" value="5.0/6.0/9.0" />
+        <minAlt position="KOPER" value="9.0" />
+    </route>
+    <route name="BOA 7A" displayMode="sid">
+        <activeStartRunways>04</activeStartRunways>
+        <navaids>DER04,(VOR)BOA</navaids>
+        <line start="LIPX-RW04" end="DER04" arrows="end" stroke="dashed" />
+        <intercept start="DER04" startHeading="44" radius="3" direction="right" endHeading="154" end="6NM90@VIL" text="154°" />
+        <intercept start="6NM90@VIL" startHeading="154" radius="3" direction="right" endHeading="173" end="(VOR)BOA" stroke="dashed" arrows="end" text="BOA 7A, 169°" />
+        <minAlt position="45NM353@(VOR)BOA" value="5.5" />
+    </route>
+    <route name="FER 7S" displayMode="sid">
+        <activeStartRunways>04</activeStartRunways>
+        <navaids>DER04,FER</navaids>
+        <line start="LIPX-RW04" end="DER04" arrows="end" stroke="dashed" />
+        <intercept start="DER04" startHeading="44" radius="3" direction="right" endHeading="154" end="6NM90@VIL" text="154°" />
+        <intercept start="6NM90@VIL" startHeading="172" radius="3" direction="left" endHeading="138" end="FER" arrows="end" text="FER 7S, 172°" />
+        <minAlt position="12NM138@VIL" value="5.5" />
+        <minAlt position="FER" value="11.0" />
+    </route>
+    <route name="PAR 7S" displayMode="sid">
+        <activeStartRunways>04</activeStartRunways>
+        <navaids>DER04,PAR</navaids>
+        <line start="LIPX-RW04" end="DER04" arrows="end" stroke="dashed" />
+        <intercept start="DER04" startHeading="44" radius="3" direction="right" endHeading="154" end="6NM90@VIL" text="154°" />
+        <intercept start="6NM90@VIL" startHeading="172" radius="3" direction="right" endHeading="245" end="5.7NM160@VIL" text="245°" />
+        <intercept start="5.7NM160@VIL" startHeading="245" radius="3" direction="left" endHeading="220" end="PAR" arrows="end" text="PAR 7S, 220°" />
+        <minAlt position="PAR" value="9.0" />
+    </route>
+    <route name="LEGLO 5S" displayMode="sid">
+        <activeStartRunways>04</activeStartRunways>
+        <navaids>DER04,LEGLO</navaids>
+        <line start="LIPX-RW04" end="DER04" arrows="end" stroke="dashed" />
+        <intercept start="DER04" startHeading="44" radius="3" direction="right" endHeading="154" end="6NM90@VIL" text="154°" />
+        <intercept start="6NM90@VIL" startHeading="172" radius="3" direction="right" endHeading="245" end="5.7NM160@VIL" text="245°" />
+        <intercept start="5.7NM160@VIL" startHeading="245" radius="3" direction="right" endHeading="293" end="LEGLO" arrows="end" text="LEGLO 5S, 293°" />
+        <minAlt position="30NM113@BEG" value="6.0" />
+        <minAlt position="LEGLO" value="11.0" />
+    </route>
+    <route name="ADOSA 5S" displayMode="sid">
+        <activeStartRunways>04</activeStartRunways>
+        <navaids>DER04,PX501,ADOSA</navaids>
+        <line start="LIPX-RW04" end="DER04" arrows="end" stroke="dashed" />
+        <intercept start="DER04" startHeading="44" radius="3" direction="right" endHeading="154" end="6NM90@VIL" text="154°" />
+        <intercept start="6NM90@VIL" startHeading="154" radius="3" direction="left" endHeading="114" end="PX501" text="114°" />
+        <intercept start="PX501" startHeading="116" radius="2" direction="left" endHeading="332" end="ADOSA" arrows="end" text="ADOSA 5S, 332°" />
+        <minAlt position="PX501" value="5.0/6.0/9.0" />
+        <minAlt position="ADOSA" value="14.0/16.0" />
+    </route>
+    <route name="VIC 5S" displayMode="sid">
+        <activeStartRunways>04</activeStartRunways>
+        <navaids>DER04,PX501,(NDB)VIC</navaids>
+        <line start="LIPX-RW04" end="DER04" arrows="end" stroke="dashed" />
+        <intercept start="DER04" startHeading="44" radius="3" direction="right" endHeading="154" end="6NM90@VIL" text="154°" />
+        <intercept start="6NM90@VIL" startHeading="154" radius="3" direction="left" endHeading="114" end="PX501" text="114°" />
+        <intercept start="PX501" startHeading="116" radius="2" direction="left" endHeading="47" end="(NDB)VIC" arrows="end" text="VIC 5S, 047°" />
+        <minAlt position="PX501" value="5.0/6.0/9.0" />
+    </route>
+    <route name="VABOK 5S" displayMode="sid">
+        <activeStartRunways>04</activeStartRunways>
+        <navaids>DER04,PX501,VABOK</navaids>
+        <line start="LIPX-RW04" end="DER04" arrows="end" stroke="dashed" />
+        <intercept start="DER04" startHeading="44" radius="3" direction="right" endHeading="154" end="6NM90@VIL" text="154°" />
+        <intercept start="6NM90@VIL" startHeading="154" radius="3" direction="left" endHeading="114" end="PX501" text="114°" />
+        <line start="PX501" end="VABOK" arrows="end" text="VABOK 5S, 106°" />
+        <minAlt position="VABOK" value="11.0" />
+    </route>
+    <!-- STARs -->
+    <route name="VIC 3A" displayMode="star" arrows="end" stroke="dashed">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>(VOR)VIC,VIL,GAZ</navaids>
+        <line start="(VOR)VIC" end="VIL" text="VIC 3A, 246°" arrows="end" />
+        <line start="VIL" end="GAZ" text="224°" arrows="end" />
+        <minAlt position="VIL" value="6.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="ADOSA 3A" displayMode="star" arrows="end" stroke="dashed">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>ADOSA,VIL,GAZ</navaids>
+        <line start="ADOSA" end="VIL" text="ADOSA 3A, 198°" arrows="end" />
+        <line start="VIL" end="GAZ" text="224°" arrows="end" />
+        <minAlt position="10NM018@VIL" value="9.0" />
+        <minAlt position="VIL" value="6.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="ELTAR 1A" displayMode="star" arrows="end" stroke="dashed">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>ELTAR,GAZ</navaids>
+        <line start="ELTAR" end="GAZ" text="ELTAR 1A, 181°" arrows="end" />
+        <minAlt position="45.4733333,10.6108333" value="11.0" />
+        <minAlt position="45.4075,10.6091667" value="6.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="PAR 1A" displayMode="star" arrows="end">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>PAR,GAZ</navaids>
+        <line start="PAR" end="GAZ" text="PAR 1A, 029°" arrows="end" />
+        <minAlt position="44.9816667,10.4180556" value="11.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="BOA 3A" displayMode="star" arrows="end">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>(VOR)BOA,GAZ</navaids>
+        <line start="(VOR)BOA" end="GAZ" text="BOA 3A, 322°" arrows="end" />
+        <minAlt position="20NM322@(VOR)BOA" value="10.0" />
+        <minAlt position="33NM322@(VOR)BOA" value="9.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="BOA 3B" displayMode="star" arrows="end">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>(NDB)BOA,GAZ</navaids>
+        <line start="(NDB)BOA" end="GAZ" text="BOA 3B, 325°" arrows="end" />
+        <minAlt position="44.8202778,10.95" value="10.0" />
+        <minAlt position="45.0061111,10.7647222" value="9.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="FER 2A" displayMode="star" arrows="end">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>FER,OSTEG,GAZ</navaids>
+        <line start="FER" end="45.1541667,11.3380556" text="FER 2A, 330°" arrows="end" />
+        <intercept start="45.1541667,11.3380556" startHeading="330" radius="1.16" direction="left" endHeading="273.5" end="OSTEG" text="272°" />
+        <line start="OSTEG" end="GAZ" arrows="end" />
+        <minAlt position="OSTEG" value="6.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="OSTEG 1A" displayMode="star" arrows="end">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>OSTEG,GAZ</navaids>
+        <line start="OSTEG" end="GAZ" text="OSTEG 1A, 272°" arrows="end" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="IDREK 1A" displayMode="star" arrows="end">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>IDREK,GAZ</navaids>
+        <line start="IDREK" end="GAZ" text="IDREK 1A, 197°" arrows="end" />
+        <minAlt position="45.4925,10.7308333" value="11.0" />
+        <minAlt position="45.4077778,10.6938889" value="6.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <route name="NEVNI 1A" displayMode="star" arrows="end">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>NEVNI,GAZ</navaids>
+        <line start="NEVNI" end="GAZ" text="NEVNI 1A, 162°" arrows="end" />
+        <minAlt position="45.4536111,10.4875" value="11.0" />
+        <minAlt position="45.4072222,10.5088889" value="6.0" />
+        <minAlt position="GAZ" value="4.0" />
+    </route>
+    <!-- FIXME: should the ILS-Y 04 procedure be included? -->
+    <route name="ILS-Z 04" displayMode="optional" arrows="end">
+        <activeLandingRunways>04</activeLandingRunways>
+        <navaids>ODRAL,PEVIK,UNKAV</navaids>
+        <line start="GAZ" end="PEVIK" text="044°" arrows="end" color="255,242,0" />
+        <line start="PEVIK" end="LIPX-RW22" text="044°" arrows="end" color="255,242,0" />
+        <minAlt position="PEVIK" value="3.0" />
+        <!-- Holding patterns -->
+        <intercept start="PEVIK" startHeading="044" speed="210" direction="right" endHeading="224" end="12.6NM209@VIL" arrows="end" text="224°, max 210 kts" stroke="dashed" color="255,255,128" />
+        <intercept start="12.6NM209@VIL" startHeading="224" speed="210" direction="right" endHeading="044" end="ODRAL" arrows="end" stroke="dashed" color="255,255,128" />
+        <intercept start="PEVIK" startHeading="044" speed="210" direction="right" endHeading="224" end="12.6NM216@VIL" arrows="end" text="224°, max 140 kts" stroke="dots" color="255,255,128" />
+        <intercept start="12.6NM216@VIL" startHeading="224" speed="210" direction="right" endHeading="044" end="ODRAL" arrows="end" stroke="dots" color="255,255,128" />
+        <minAlt position="12.6NM209@VIL" value="3.0" />
+        <!-- Missed approach procedure -->
+        <intercept start="LIPX-RW04" startHeading="044" radius="1.87" direction="right" endHeading="200" end="7NM160@(VOR)VIL" arrows="end" text="200°" stroke="dashed" color="255,128,128" />
+        <intercept start="UNKAV" startHeading="160" speed="185" direction="right" endHeading="340" end="7NM180@(VOR)VIL" arrows="end" text="340°" stroke="dashed" color="255,128,128" />
+        <intercept start="7NM180@(VOR)VIL" startHeading="340" speed="185" direction="right" endHeading="160" end="UNKAV" arrows="end" text="160°, max 185 kts" stroke="dashed" color="255,128,128" />        
+        <intercept start="UNKAV" startHeading="160" radius="2" direction="right" endHeading="250" end="13NM170@VIL" arrows="end" stroke="dashed" color="255,128,128" />        
+        <bow center="VIL" radius="13" startAngle="170" extentAngle="50" arrows="end" text="13 NM radius" stroke="dashed" color="255,128,128" />
+        <intercept start="13NM220@VIL" startHeading="310" speed="210" direction="right" endHeading="044" end="11.85NM225.75@(VOR)VIL" arrows="end" stroke="dashed" color="255,128,128" />
+    </route>
+    <!-- FIXME Complete the ground network -->
+</routes>
