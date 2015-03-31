@@ -1,6 +1,0 @@
-
-Icons will be used if their name starts with "OpenRadar" and ends with ".ico",".png",".gif" or ".jpg"
-
-Please note: If there are different icons, Java selects the one with the best matching resolution for its purpose.
-
-So better add different sizes of the same motive, at least an 48x48 image.

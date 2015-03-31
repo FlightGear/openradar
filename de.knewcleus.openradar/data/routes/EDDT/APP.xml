@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- This file contains the approaches, visible everytime the zoomlevel is above 100 -->
-<routes>
-	<route name="EDDT HIGHLIGHT">
-		<navaids>FLD,GOLBO,RENKI,LWB,TGL,FWE,AKUDI,NUKRO,MILGU,RUDAK,KLF,VIBIS,BATEL</navaids>
-	</route>
-</routes>

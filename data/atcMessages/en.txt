@@ -1,0 +1,37 @@
+To All Airmen:
+%s
+
+%s: Welcome to the %s area -- are you inbound %s? %s
+%s: Welcome to %s - please advise ATC of your intentions, %s
+%s: Radar Contact range %3.0f mi, QNH %s, expect runway %s, %s
+%s: Resume your OWN navigation - Radar surveillance is active
+%s: You are leaving my airspace - frequency change approved - radar service terminated
+
+ATIS for %s at %2.0f ft: QNH %s wind %s active rwy(s) %s; %s
+ATC-Contact-Help: for ARRIVAL key: "-">>"3">>"3">>"3"  for DEPARTURE key: "-">>"3">>"6"
+%s: Cleared for engine startup, please indicate planned destination
+%s: Cleared to push back facing:
+%s: Cleared to taxi to holding-point, runway:
+%s: Cleared to cross runway:
+%s: Hold short rwy:
+
+%s: Line up and wait on runway, report when ready for departure
+%s: Maintain runway heading, climb to:
+%s: Wind %s, clear for takeoff runway:
+
+%s: Turn left heading:
+%s: Turn right heading:
+%s: Climb and maintain:
+%s: Descend and maintain:
+%s: Reduce speed to:
+
+%s: %3.0f mi out, maintain hdg until intercepting localizer, cleared for ILS appr rwy:
+%s: %3.0f mi out, report when runway in sight
+%s: %3.0f mi out, wind %s, cleared to land runway:
+%s: Welcome to %s -- exit runway to the:
+
+Please use %s only to talk to ATC, NOT to chat between airmen!
+%s: You are disturbing our ATC training --> please use another airport for uncontrolled flying
+%s: Please do not start your session on an active runway - please get OFF RUNWAY fast
+%s: To define Startpositions see: http://www.emmerich-j.de/HB/EN/Intro  (or /DE/Intro)
+

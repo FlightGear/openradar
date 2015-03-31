@@ -1,0 +1,36 @@
+A tutti i piloti:
+%s
+
+%s: Benvenuto nell'area di %s -- è diretto a %s? %s
+%s: Benvenuto a %s - comunichi all'ATC le Sue intenzioni, %s
+%s: Contatto radar range %3.0f miglia, QNH %s, pista in uso %s, %s
+%s: Riprenda la SUA navigazione - sorveglianza radar attiva
+%s: Sta lasciando il mio spazio aereo - autorizzato a cambiare frequenza - servizio radar terminato
+
+ATIS per %s a %2.0f piedi: QNH %s vento %s pista/e in uso %s %s
+Aiuto contatto ATC: tasti per l'ARRIVO: "-">>"3">>"3">>"3"  tasti per la PARTENZA: "-">>"3">>"6"
+%s: Autorizzato alla messa in moto, indichi la destinazione pianificata
+%s: Autorizzato al push back rivolti a:
+%s: Autorizzato al rullaggio al punto di attesa pista:
+%s: Autorizzato ad attraversare la pista:
+%s: Attenda vicino alla pista:
+
+%s: Si allinei sulla pista, riporti pronto a decollare
+%s: Mantenga la prua della pista, salga a:
+%s: Vento %s, autorizzato al decollo pista:
+
+%s: Viri a sinistra prua:
+%s: Viri a destra prua:
+%s: Salga a:
+%s: Scenda a:
+%s: Riduca velocità a:
+
+%s: A %3.0f miglia, mantenga la prua fino a intercettare il localizzatore, autorizzato all'avvicinamento ILS pista:
+%s: A %3.0f miglia, riporti pista visibile
+%s: A %3.0f miglia, vento %s, autorizzato all'atterraggio pista:
+%s: Benvenuto a %s -- liberi la pista sulla:
+
+Utilizzi %s solo per parlare con l'ATC, NON per parlare tra piloti!
+%s: Sta disturbando il nostro training ATC --> utilizzi un altro aeroporto per volare in condizioni non controllate
+%s: Non avvii la sessione su una pista attiva - LIBERI LA PISTA velocemente
+%s: Per definire le posizioni di avvio veda: http://www.emmerich-j.de/HB/EN/Intro  (o /DE/Intro)

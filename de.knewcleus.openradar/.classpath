@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry excluding="de/knewcleus/radar/ui/vehicles/ClearedLevelLabelElement.java" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/de.knewcleus.fgfs"/>
-	<classpathentry exported="true" kind="lib" path="lib/jdom-2.0.4.jar"/>
-	<classpathentry kind="lib" path="/home/wolfram/Dokumente/projects/OpenRadarWS/openradar/de.knewcleus.openradar/lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
