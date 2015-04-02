@@ -1,7 +1,10 @@
 *.class
-.metadata
+/.metadata
 .directory
 .settings
-bin/
-logs/
-data/[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]/*
+/settings/[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9].properties
+/settings/user.properties
+/bin/
+/logs/
+/data/[A-Z0-9][A-Z0-9][A-Z0-9][A-Z0-9]/*
+/data/routes/*

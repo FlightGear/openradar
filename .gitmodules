@@ -1,3 +1,0 @@
-[submodule "data/routes"]
-	path = data/routes
-	url = ssh://wwagner@git.code.sf.net/p/openradar-routes/code
