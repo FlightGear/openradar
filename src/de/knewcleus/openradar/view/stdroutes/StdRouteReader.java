@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.LogManager;
@@ -76,7 +77,10 @@ public class StdRouteReader {
         }
 
         List<File> files = new ArrayList<File>(Arrays.asList(dir.listFiles()));
-
+        // sort them to allow cross file include reference like this;
+        // <include routeName="sharedRouteName" />
+        Collections.sort(files);
+        
         data.getNavaidDB().clearAddPoints();
 
         while (files.size()>0) {
