@@ -222,6 +222,9 @@ public class StatusManager implements INavPointListener {
     public String getActiveLandingRunways() {
         return statusPanel.getActiveLandingRunways();
     }
+    public String getActiveStartingRunways() {
+        return statusPanel.getActiveStartingRunways();
+    }
 
     public void hideRunwayDialog() {
         runwaySettingDialog.setVisible(false);

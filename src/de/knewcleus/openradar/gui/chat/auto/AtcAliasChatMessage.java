@@ -114,7 +114,8 @@ public class AtcAliasChatMessage {
         if(pos!=-1) {
             if(pos+1==msg.length()) return false;
     
-            if(msg.substring(pos+1).contains(prefix)) return false; // URLs ... 
+            
+            if(msg.matches(".*https?:.*")) return false; // URLs ... 
             
             if(!msg.substring(pos+1, pos+2).matches("[\\d\\s]") ) return true; // a dot may be followed by a digit, \D means anything but a digit
         }

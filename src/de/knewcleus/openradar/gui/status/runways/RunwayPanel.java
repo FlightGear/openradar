@@ -365,6 +365,23 @@ public class RunwayPanel extends JPanel {
         return sb.toString();
     }
 
+    public String getActiveStartingRunways() {
+        StringBuilder sb = new StringBuilder();
+        boolean initial = true;
+        for (GuiRunway rw : master.getAirportData().getRunways().values()) {
+            if (rw.isStartingActive()) {
+                if (initial) {
+                    initial=false;
+                } else {
+                    sb.append(",");
+                }
+
+                sb.append(rw.getCode());
+            }
+        }
+        return sb.toString();
+    }
+
     public String getActiveRunways() {
         StringBuilder sb = new StringBuilder();
         boolean initial = true;

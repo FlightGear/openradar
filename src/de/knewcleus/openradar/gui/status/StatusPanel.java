@@ -523,6 +523,9 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
     public String getActiveLandingRunways() {
         return runwayPanel.getActiveLandingRunways();
     }
+    public String getActiveStartingRunways() {
+        return runwayPanel.getActiveStartingRunways();
+    }
     public void updateRunways() {
         runwayPanel.refreshRunways(master.getAirportMetar());
     }

@@ -139,6 +139,9 @@ public class AtcMenuChatMessage {
             } else if("/openradar/activeLandingRW".equals(varName)) {
                 values.add(master.getStatusManager().getActiveLandingRunways());
 
+            } else if("/openradar/activeStartingRW".equals(varName)) {
+                values.add(master.getStatusManager().getActiveLandingRunways());
+
             } else if("/sim/atc/wind-from-display".equals(varName)) {
                 values.add((float)metar.getWindDirectionI());
 
