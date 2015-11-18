@@ -15,13 +15,13 @@
  *
  * Diese Datei ist Teil von OpenRadar.
  *
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU General Public License, wie von der Free
- * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * OpenRadar ist Freie Software: Sie kï¿½nnen es unter den Bedingungen der GNU General Public License, wie von der Free
+ * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder spï¿½teren verï¿½ffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne
- * die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
- * License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nï¿½tzlich sein wird, aber OHNE JEDE GEWï¿½HELEISTUNG, bereitgestellt; sogar ohne
+ * die implizite Gewï¿½hrleistung der MARKTFï¿½HIGKEIT oder EIGNUNG Fï¿½R EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
+ * License fï¿½r weitere Details.
  *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
  * <http://www.gnu.org/licenses/>.
@@ -80,7 +80,7 @@ public class StdRouteReader {
         // sort them to allow cross file include reference like this;
         // <include routeName="sharedRouteName" />
         Collections.sort(files);
-        
+
         data.getNavaidDB().clearAddPoints();
 
         while (files.size()>0) {
@@ -235,6 +235,20 @@ public class StdRouteReader {
                                             color);
                                     previous = line;
                                     route.addElement(line);
+                                } else if (element.getName().equalsIgnoreCase("restriction")) {
+                                	String position = element.getAttributeValue("position");
+                                	String maxspeed = element.getAttributeValue("maxspeed");
+                                	String notabove = element.getAttributeValue("notabove");
+                                	String notbelow = element.getAttributeValue("notbelow");
+                                    String font = element.getAttributeValue("font");
+                                    String fontSize = element.getAttributeValue("fontSize");
+                                    stroke = element.getAttributeValue("stroke");
+                                    lineWidth = element.getAttributeValue("lineWidth");
+                                    color = element.getAttributeValue("color");
+                                    StdRouteRestriction restriction = new StdRouteRestriction(route, mapViewAdapter, previous, position, maxspeed, notabove,
+                                    		notbelow, font, fontSize, stroke, color);
+                                    previous = restriction;
+                                    route.addElement(restriction);
                                 } else if (element.getName().equalsIgnoreCase("text")) {
                                     String position = element.getAttributeValue("position");
                                     String angle = element.getAttributeValue("angle");
