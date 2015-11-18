@@ -67,10 +67,7 @@ public class StdRouteRestriction extends AStdRouteElement {
     private final String maxspeed;
     private final String notabove;
     private final String notbelow;
-    private volatile Rectangle2D slot2Bounds;
-    private volatile Rectangle2D slot4Bounds;
     private volatile Rectangle2D bounds;
-    private volatile Rectangle2D extBounds;
     private static Logger log = LogManager.getLogger(StdRouteRestriction.class);
 
     public StdRouteRestriction(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
@@ -259,8 +256,8 @@ public class StdRouteRestriction extends AStdRouteElement {
         Float linewidth = bs.getLineWidth();
 
         FontMetrics fm = g2d.getFontMetrics();
-        slot2Bounds = fm.getStringBounds(slot2Text, g2d);
-        slot4Bounds = fm.getStringBounds(slot4Text, g2d);
+        Rectangle2D slot2Bounds = fm.getStringBounds(slot2Text, g2d);
+        Rectangle2D slot4Bounds = fm.getStringBounds(slot4Text, g2d);
 
         Point2D displayPoint = getDisplayPoint(geoReferencePoint);
         int midlineY = (int)(displayPoint.getY());						// y co-ord of the middle line of the object
@@ -309,16 +306,15 @@ public class StdRouteRestriction extends AStdRouteElement {
 
     @Override
     public synchronized boolean contains(Point e) {
-        // ! route.isVisible(master) ||
         if(bounds==null) return false;
         return bounds.contains(e);
     }
 
     private int altInFeet (String alt) {
     	if (alt != null) {
-    		alt=alt.replace("AMSL","");
-    		alt=alt.replace(",","");
-    		alt=alt.replace("SFC","0");										//assuming the surface and
+    		alt=alt.replace("AMSL","");										//Remove some common clutter to get a numeric
+    		alt=alt.replace(",","");										// that we can parse
+    		alt=alt.replace("SFC","0");										//Assuming the surface and
     		alt=alt.replace("GND","0");										// the ground are 0ft is wrong,
     																		// but in the unlikely event that your ground
     																		// is below 0ft _and_ you're trying to mark a
