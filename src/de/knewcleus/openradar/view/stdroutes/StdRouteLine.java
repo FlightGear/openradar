@@ -34,13 +34,13 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 /**
@@ -69,10 +69,10 @@ public class StdRouteLine extends AStdRouteElement {
     private final Double endOffSet;
     private final String text;
 
-    public StdRouteLine(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+    public StdRouteLine(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
                         String start, String end, String angle, String length, String startOffset, String endOffset,
-                        String stroke, String lineWidth, String arrows, String color, String text) {
-        super(mapViewAdapter, route.getPoint(start,previous),stroke,lineWidth,arrows,color);
+                        String arrows, String text,StdRouteAttributes attributes) {
+        super(data, mapViewAdapter, route.getPoint(start,previous),arrows,attributes);
 
         this.geoStartPoint = route.getPoint(start,previous);
         if(end==null) {
@@ -86,7 +86,7 @@ public class StdRouteLine extends AStdRouteElement {
         } else {
             geoEndPoint = route.getPoint(end, previous);
         }
-        this.angle = angle !=null ? Double.parseDouble(angle) : null;
+        this.angle = angle !=null ? Double.parseDouble(angle)+magDeclination : null;
         this.length = length !=null ? Double.parseDouble(length) : null;
         this.startOffSet = startOffset !=null ? Double.parseDouble(startOffset) : 0 ;
         this.endOffSet = endOffset !=null ? Double.parseDouble(endOffset) : 0 ;
@@ -113,15 +113,11 @@ public class StdRouteLine extends AStdRouteElement {
             endPoint = Converter2D.getMapDisplayPoint(endPoint, angle-180, Converter2D.getFeetToDots(endOffSet*Units.NM/Units.FT, mapViewAdapter));
         }
 
-        if(color!=null) {
-            g2d.setColor(color);
-        }
         Path2D path = new Path2D.Double();
         if(text==null) {
             path.append(new Line2D.Double(startPoint, endPoint),false);
         } else {
             double length = startPoint.distance(endPoint);
-            g2d.setFont(g2d.getFont().deriveFont(10.0f));
             Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
 
             double direction = Converter2D.getDirection(startPoint, endPoint);
@@ -152,10 +148,6 @@ public class StdRouteLine extends AStdRouteElement {
                 path.append(new Line2D.Double(startPoint, endPoint),false);
             }
         }
-        Stroke origStroke = g2d.getStroke();
-        if(stroke!=null) {
-            g2d.setStroke(stroke);
-        }
         g2d.draw(path);
 
 
@@ -167,7 +159,6 @@ public class StdRouteLine extends AStdRouteElement {
             double heading = angle!=null ? angle : Converter2D.getDirection(startPoint,endPoint);
             this.paintArrow(g2d, endPoint, heading, arrowSize, true);
         }
-        g2d.setStroke(origStroke);
 
         return path.getBounds2D();
     }

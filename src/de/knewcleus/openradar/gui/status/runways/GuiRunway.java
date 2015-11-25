@@ -291,6 +291,7 @@ public class GuiRunway implements ActionListener {
         } else if("LANDINGROUTE".equals(name) && e.getID()==ActionEvent.ACTION_PERFORMED ) {
             setLandingRouteEnabled(!isLandingRouteEnabled());
         }
+        data.refreshRunwayDefinitions();
         runwayPanel.updateRunways();
     }
 

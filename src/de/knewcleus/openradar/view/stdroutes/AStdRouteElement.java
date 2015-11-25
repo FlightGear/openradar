@@ -23,7 +23,7 @@
  * weiterverbreiten und/oder modifizieren.
  *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
+ * GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
  *
@@ -32,78 +32,31 @@
  */
 package de.knewcleus.openradar.view.stdroutes;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public abstract class AStdRouteElement {
 
+    protected final double magDeclination;
     protected final Point2D geoReferencePoint;
     protected final IMapViewerAdapter mapViewerAdapter;
-    protected final Stroke stroke;
     protected final String arrows;
     protected final int arrowSize;
-    protected final Color color;
+    protected final StdRouteAttributes attributes;
     
-    public AStdRouteElement(IMapViewerAdapter mapViewAdapter, Point2D geoReferencePoint, String stroke, String sLineWidth, String arrows, String color) {
+    public AStdRouteElement(AirportData data, IMapViewerAdapter mapViewAdapter, Point2D geoReferencePoint, String arrows, StdRouteAttributes attributes) {
         this.mapViewerAdapter = mapViewAdapter;
         this.geoReferencePoint= geoReferencePoint;
-
-        Float lineWidth = sLineWidth !=null ? Float.parseFloat(sLineWidth) : 2 ;
-        if(stroke!=null) {
-            if(stroke.contains(",")) {
-                // after the comma follows the linewith of the stroke, we need to parse and remove it
-                int sep = stroke.indexOf(",");
-                lineWidth = Float.parseFloat(stroke.substring(sep+1));
-                stroke = stroke.substring(0,sep);
-            }
-            if("line".equalsIgnoreCase(stroke)) {
-                this.stroke = new BasicStroke(lineWidth);
-
-            } else if("dashed".equalsIgnoreCase(stroke)) {
-                float[] dashPattern = { 10, 10 };
-                this.stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT,
-                                              BasicStroke.JOIN_MITER, 10,
-                                              dashPattern, 0);
-            } else if("dots".equalsIgnoreCase(stroke)) {
-                    float[] dashPattern = { lineWidth, 2 * lineWidth};
-                    this.stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT,
-                                                  BasicStroke.JOIN_MITER, 10,
-                                                  dashPattern, 0);
-            } else if(stroke!=null && stroke.contains("-")) {
-                // this variant allows to define own patterns like 10-5-2-5
-
-                StringTokenizer st = new StringTokenizer(stroke,"-");
-                ArrayList<Float> pattern = new ArrayList<Float>();
-                while(st.hasMoreElements()) {
-                    pattern.add(Float.parseFloat(st.nextToken().trim()));
-                }
-                float[] patternArray=new float[pattern.size()];
-                for (int i = 0; i < pattern.size(); i++) {
-                    Float f = pattern.get(i);
-                    patternArray[i] = (f != null ? f : 0);
-                }
-                this.stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT,
-                        BasicStroke.JOIN_MITER, 10,
-                        patternArray, 0);
-            } else {
-                this.stroke = null;
-            }
-        } else {
-            this.stroke = null;
-        }
+        this.magDeclination = data.getMagneticDeclination();
 
         if(arrows!=null) {
             if(arrows.contains(",")) {
@@ -119,16 +72,7 @@ public abstract class AStdRouteElement {
             this.arrowSize = 15;
         }
 
-        if(color != null) {
-            StringTokenizer rgb = new StringTokenizer(color,",");
-            int r = Integer.parseInt(rgb.nextToken());
-            int g = Integer.parseInt(rgb.nextToken());
-            int b = Integer.parseInt(rgb.nextToken());
-            this.color = new Color(r,g,b);
-        } else {
-            this.color=null;
-        }
-
+        this.attributes=attributes;
     }
 
     public Point2D getGeoReferencePoint() {
@@ -136,6 +80,13 @@ public abstract class AStdRouteElement {
     }
 
     public abstract Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter);
+
+    public Rectangle2D doPaint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter, Boolean selected) {
+        attributes.applyAttributes(g2d, selected);
+        Rectangle2D extent = paint(g2d, mapViewAdapter);
+        attributes.restoreAttributes(g2d);
+        return extent;
+    }
 
     public Point2D getDisplayPoint(Point2D geoPoint) {
         Point2D logicalPoint = mapViewerAdapter.getProjection().toLogical(geoPoint);

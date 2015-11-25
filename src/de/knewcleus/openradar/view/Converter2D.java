@@ -113,4 +113,9 @@ public abstract class Converter2D {
     public static int toDisplayAngle(long l) {
         return l==0 ? 360 : (int)l;
     }
+
+    public static Point2D getMapDisplayPoint(Point2D geographical, IMapViewerAdapter mva) {
+        Point2D logical = mva.getProjection().toLogical(geographical);
+        return mva.getLogicalToDeviceTransform().transform(logical,null);
+    }
 }

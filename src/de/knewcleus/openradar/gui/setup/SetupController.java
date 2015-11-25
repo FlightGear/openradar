@@ -55,6 +55,7 @@ import java.util.zip.ZipFile;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -127,7 +128,8 @@ public class SetupController {
                     }
                     // not needed anymore, replaced by fgfs model
                     // if(p.getProperty("magneticDeclination")==null) {
-                    // log.severe("Error: Property 'magneticDeclination' not found in "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
+                    // log.severe("Error: Property 'magneticDeclination' not found in
+                    // "+propertyFile.getAbsolutePath()+"! Please delete the airport and download it again!");
                     // System.exit(99);
                     // }
                     // magneticDeclination = Double.parseDouble(p.getProperty("magneticDeclination", "0"));
@@ -170,6 +172,9 @@ public class SetupController {
                 parseSectorDir();
             } else if (jSource.getName().equals("DownloadButton")) {
                 downloadSector(setupDialog.getSelectedSector());
+            } else if (jSource.getName().equals("DeleteAirport")) {
+                SectorCreator.deleteDir(setupDialog.getSelectedSector());
+                parseSectorDir();
             } else if (jSource.getName().equals("StartButton")) {
                 startApplication();
             } else if (jSource.getName().equals("CheckButton")) {
@@ -214,33 +219,38 @@ public class SetupController {
     }
 
     private void searchAirport(String searchTerm) {
-        Map<String,SectorBean> mapFindings = new TreeMap<String, SectorBean>();
+        if(searchTerm.trim().isEmpty()) {
+            return;
+        }
+        
+        Map<String, SectorBean> mapFindings = new TreeMap<String, SectorBean>();
         BufferedReader ir = null;
 
         try {
             ir = new BufferedReader(openXPlaneAptDat());
             String line = ir.readLine();
-            while(line!=null) {
-                if(line.startsWith("1 ")) {
-                    StringTokenizer st = new StringTokenizer(line," \t");
+            while (line != null) {
+                if (line.startsWith("1 ")) {
+                    StringTokenizer st = new StringTokenizer(line, " \t");
                     st.nextElement(); // code "1"
                     st.nextElement(); //
                     st.nextElement(); //
                     st.nextElement(); //
                     String airportCode = st.nextToken();
                     StringBuilder name = new StringBuilder();
-                    while(st.hasMoreElements()) {
-                        if(name.length()>0) name.append(" ");
+                    while (st.hasMoreElements()) {
+                        if (name.length() > 0)
+                            name.append(" ");
                         name.append(st.nextToken());
                     }
-                    if(airportCode.toUpperCase().contains(searchTerm.toUpperCase()) || name.toString().toUpperCase().contains(searchTerm.toUpperCase())) {
-                        
+                    if (airportCode.toUpperCase().contains(searchTerm.toUpperCase()) || name.toString().toUpperCase().contains(searchTerm.toUpperCase())) {
+
                         // seach runway
                         line = ir.readLine();
-                        while(line!=null) {
-                            if(line.startsWith("100 ")) {
+                        while (line != null) {
+                            if (line.startsWith("100 ")) {
                                 Point2D position = getRunwayPosition(line);
-                                if(!mapExistingSectors.containsKey(airportCode)) {
+                                if (!mapExistingSectors.containsKey(airportCode)) {
                                     // the base for a new download
                                     SectorBean sb = new SectorBean(airportCode, name.toString(), position, mapExistingSectors.containsKey(airportCode));
                                     mapFindings.put(airportCode, sb);
@@ -248,8 +258,7 @@ public class SetupController {
                                     // add the existing
                                     mapFindings.put(airportCode, mapExistingSectors.get(airportCode));
                                 }
-                            }
-                            else if(line.startsWith("1 ")) {
+                            } else if (line.startsWith("1 ")) {
                                 // next airport
                                 break;
                             }
@@ -261,7 +270,7 @@ public class SetupController {
                         line = ir.readLine();
                     }
                 }
-                if(!line.startsWith("1 ")) {
+                if (line!=null && !line.startsWith("1 ")) {
                     line = ir.readLine();
                 }
             }
@@ -271,17 +280,19 @@ public class SetupController {
             }
 
         } catch (IOException e) {
-            log.error("Error while reading xplane aptdat file!",e);
+            log.error("Error while reading xplane aptdat file!", e);
         } finally {
-            if(zif!=null) {
+            if (zif != null) {
                 try {
                     zif.close();
-                } catch (IOException e) { }
+                } catch (IOException e) {
+                }
             }
-            if(ir!=null) {
+            if (ir != null) {
                 try {
                     ir.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
             }
         }
 
@@ -295,8 +306,8 @@ public class SetupController {
      */
     public static Point2D getRunwayPosition(String line) {
         Point2D result;
-        
-        StringTokenizer st = new StringTokenizer(line," \t");
+
+        StringTokenizer st = new StringTokenizer(line, " \t");
         st.nextElement(); // 1 code "100"
         st.nextElement(); // 2
         st.nextElement(); // 3
@@ -318,8 +329,8 @@ public class SetupController {
             st.nextElement(); // 7
             float lon2 = Float.parseFloat(st.nextToken());
             float lat2 = Float.parseFloat(st.nextToken());
-            result = new Point2D.Float((lat1+lat2)/2, (lon1+lon2)/2);
-        } catch(Exception e) {
+            result = new Point2D.Float((lat1 + lat2) / 2, (lon1 + lon2) / 2);
+        } catch (Exception e) {
             // one way runway
             result = new Point2D.Float(lat1, lon1);
         }
@@ -335,10 +346,12 @@ public class SetupController {
             data.setAirportName(selectedSector.getAirportName());
             data.setAirportPosition(selectedSector.getPosition());
             SectorCreator.downloadData(data, setupDialog);
-            parseSectorDir(); // to find results
         } catch (IOException e) {
-            log.error("Error while downloading sector!", e);
+            JOptionPane.showMessageDialog(null, "Error while downloading scenery for airport " + selectedSector.getAirportCode() + "! (" + e.getMessage() + ")",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            SectorCreator.deleteDir(selectedSector);
         }
+        parseSectorDir(); // to find results
     }
 
     private void startApplication() {

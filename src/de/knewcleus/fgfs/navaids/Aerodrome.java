@@ -41,7 +41,7 @@ import de.knewcleus.fgfs.location.Position;
 
 public class Aerodrome extends AbstractNamedFix {
 	protected final String name;
-	protected final List<Runway> runways=new ArrayList<Runway>();
+	protected final List<Pavement> pavements=new ArrayList<>();
 
 	public Aerodrome(String id, String name, Position position) {
 		super(id, position);
@@ -52,11 +52,11 @@ public class Aerodrome extends AbstractNamedFix {
 		return name;
 	}
 	
-	public void addRunway(Runway runway) {
-		runways.add(runway);
+	public void addPavements(List<Pavement> pavements) {
+		this.pavements.addAll(pavements);
 	}
 	
-	public List<Runway> getRunways() {
-		return Collections.unmodifiableList(runways);
+	public List<Pavement> getPavements() {
+		return Collections.unmodifiableList(pavements);
 	}
 }

@@ -34,7 +34,6 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -44,6 +43,7 @@ import java.awt.geom.Rectangle2D;
 import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
  /*
@@ -66,18 +66,18 @@ public class StdRouteIntercept extends AStdRouteElement {
 
     private final Double turnAngle;
 
-    public StdRouteIntercept(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+    public StdRouteIntercept(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
                         String start, String startOffset, String startHeading, String startBow, String radius, String speed, String end, String radial, String endHeading, String direction, String endOffset,
-                        String stroke, String lineWidth, String arrows, String color, String text) {
-        super(mapViewAdapter, route.getPoint((start != null ? start : startBow),previous),stroke,lineWidth,arrows,color);
+                        String arrows, String text,StdRouteAttributes attributes) {
+        super(data, mapViewAdapter, route.getPoint((start != null ? start : startBow),previous),arrows, attributes);
 
         this.geoStartPoint = start!=null ? route.getPoint(start,previous) : null;
         this.geoStartBowPoint = startBow!=null ? route.getPoint(startBow,previous) : null;
         if(geoStartPoint!=null && geoStartBowPoint!=null) {
-            Logger.getLogger(this.getClass()).info("start and startBow is given, do not check if first line is a tangent to the bow");
+            Logger.getLogger(this.getClass()).trace("start and startBow is given, do not check if first line is a tangent to the bow");
         }
         this.startOffSet = startOffset !=null ? Double.parseDouble(startOffset) : 0 ;
-        this.startHeading = Line.normalizeLineAngle180(90-Double.parseDouble(startHeading)); // magnetic to screen angles
+        this.startHeading = Line.normalizeLineAngle180(90-(Double.parseDouble(startHeading)+magDeclination)); // magnetic to screen angles
         if(speed==null) {
             this.radius = radius !=null ? Double.parseDouble(radius) : 1.16d ;
         } else {
@@ -89,14 +89,14 @@ public class StdRouteIntercept extends AStdRouteElement {
             this.radius = circumference / 2 / Math.PI;
         }
         if(geoStartPoint!=null && geoStartBowPoint==null && radius==null) {
-            Logger.getLogger(this.getClass()).info("start given but no radius nor startBow, assuming radius of 1.16 NM");
+            Logger.getLogger(this.getClass()).trace("start given but no radius nor startBow, assuming radius of 1.16 NM");
         }
         this.geoEndPoint = route.getPoint(end,previous);
         if(endHeading!=null) {
-            this.endHeading = Line.normalizeLineAngle180(90-Double.parseDouble(endHeading)); // magnetic to screen angles
+            this.endHeading = Line.normalizeLineAngle180(90-(Double.parseDouble(endHeading)+magDeclination)); // magnetic to screen angles
             this.radial = Line.normalizeLineAngle180(this.endHeading+180);
         } else {
-            this.radial = Line.normalizeLineAngle180(90-Double.parseDouble(radial)); // magnetic to screen angles
+            this.radial = Line.normalizeLineAngle180(90-(Double.parseDouble(radial)+magDeclination)); // magnetic to screen angles
             this.endHeading = Line.normalizeLineAngle180(this.radial+180);
         }
         this.direction = direction!=null && !direction.equalsIgnoreCase("auto") ? direction : determineDirection();
@@ -244,10 +244,6 @@ public class StdRouteIntercept extends AStdRouteElement {
         // we have all we need: the bow center, its radius, the begin and end angles of the bow,
         // and the point at the end of the bow, the start point of the line to the radial
 
-        if(color!=null) {
-            g2d.setColor(color);
-        }
-
         Path2D path = new Path2D.Double();
 
 //path.append(new Line2D.Double(bowStartPoint, bowCenter),false);
@@ -268,7 +264,6 @@ public class StdRouteIntercept extends AStdRouteElement {
         if(text==null) {
             path.append(new Line2D.Double(bowEndPoint, secondLineEndPoint),false);
         } else {
-            g2d.setFont(g2d.getFont().deriveFont(10.0f));
             Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
 
             double direction = Converter2D.getDirection(bowEndPoint, secondLineEndPoint);
@@ -302,10 +297,6 @@ public class StdRouteIntercept extends AStdRouteElement {
                 path.append(new Line2D.Double(bowEndPoint, secondLineEndPoint),false);
             }
         }
-        Stroke origStroke = g2d.getStroke();
-        if(stroke!=null) {
-            g2d.setStroke(stroke);
-        }
         g2d.draw(path);
 
         if("both".equalsIgnoreCase(arrows) || "start".equalsIgnoreCase(arrows)) {
@@ -318,8 +309,7 @@ public class StdRouteIntercept extends AStdRouteElement {
         if("both".equalsIgnoreCase(arrows) || "end".equalsIgnoreCase(arrows)) {
             this.paintArrow(g2d, secondLineEndPoint,  90-radial+180, arrowSize, true);
         }
-        g2d.setStroke(origStroke);
-
+        
         return path.getBounds2D();
     }
 

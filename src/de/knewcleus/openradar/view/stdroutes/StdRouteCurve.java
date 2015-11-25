@@ -34,12 +34,12 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.QuadCurve2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
@@ -48,10 +48,10 @@ public class StdRouteCurve extends AStdRouteElement {
     private final Point2D geoEndPoint;
     private final Point2D geoControlPoint;
 
-    public StdRouteCurve(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
-                       String start, String end, String controlPoint,String stroke, String lineWidth, String color, String arrows) {
+    public StdRouteCurve(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+                       String start, String end, String controlPoint, String arrows, StdRouteAttributes attributes) {
 
-        super(mapViewAdapter, route.getPoint(start,previous),stroke,lineWidth,arrows,color);
+        super(data, mapViewAdapter, route.getPoint(start,previous),arrows,attributes);
         this.geoEndPoint = route.getPoint(end,previous);
         this.geoControlPoint = route.getPoint(controlPoint,previous);
     }
@@ -65,15 +65,8 @@ public class StdRouteCurve extends AStdRouteElement {
 
         Path2D path = new Path2D.Double();
         path.append(new QuadCurve2D.Double(bowStartPoint.getX(),bowStartPoint.getY(),bowControlPoint.getX(),bowControlPoint.getY(),bowEndPoint.getX(),bowEndPoint.getY()),false);
-        if(color!=null) {
-            g2d.setColor(color);
-        }
-        Stroke origStroke = g2d.getStroke();
-        if(stroke!=null) {
-            g2d.setStroke(stroke);
-        }
+
         g2d.draw(path);
-        g2d.setStroke(origStroke);
 
         if("both".equalsIgnoreCase(arrows) || "start".equalsIgnoreCase(arrows)) {
             double heading = Converter2D.getDirection(bowControlPoint,bowStartPoint);

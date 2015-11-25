@@ -39,10 +39,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
 import org.apache.log4j.LogManager;
@@ -245,83 +243,82 @@ public class NavaidDB {
         return aerodromeList;
     }
 
-    public ComboBoxModel<String> getRoutesCbModel(GuiMasterController master, boolean addEmptyEntry) {
-        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
-        if(addEmptyEntry) {
-            cbModel.addElement("");
-        }
-        HashSet<String> activeRunways = master.getAirportData().getActiveRunways();
-        
-        for(StdRoute r : stdRoutes) {
-            if(r.getDisplayMode().equals(StdRoute.DisplayMode.sid)) {
-                StringTokenizer st = new StringTokenizer(r.getActiveStartingRunways(),",;");
-                while(st.hasMoreElements()) {
-                    if(activeRunways.contains(st.nextToken())) {
-                        cbModel.addElement(r.getName());
-                        break;
+    public void updateRoutesCbModel(DefaultComboBoxModel<String> cbModel, GuiMasterController master, boolean addEmptyEntry) {
+        synchronized(cbModel) {
+            cbModel.removeAllElements();
+            if(addEmptyEntry) {
+                cbModel.addElement("");
+            }
+            HashSet<String> activeRunways = master.getAirportData().getActiveRunways();
+            
+            for(StdRoute r : stdRoutes) {
+                if(r.getDisplayMode().equals(StdRoute.DisplayMode.sid)) {
+                    for(String rw:r.getActiveStartingRunways()) {
+                        if(activeRunways.contains(rw)) {
+                            cbModel.addElement(r.getName());
+                            break;
+                        }
                     }
                 }
             }
-        }
-//        for(StdRoute r : stdRoutes) {
-//            if(r.getDisplayMode().equals(StdRoute.DisplayMode.dep)) {
-//                StringTokenizer st = new StringTokenizer(r.getActiveStartingRunways(),",;");
-//                while(st.hasMoreElements()) {
-//                    if(activeRunways.contains(st.nextToken())) {
-//                        cbModel.addElement(r.getName());
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-        for(StdRoute r : stdRoutes) {
-            if(r.getDisplayMode().equals(StdRoute.DisplayMode.star)) {
-                StringTokenizer st = new StringTokenizer(r.getActiveLandingRunways(),",;");
-                while(st.hasMoreElements()) {
-                    if(activeRunways.contains(st.nextToken())) {
-                        cbModel.addElement(r.getName());
-                        break;
+    //        for(StdRoute r : stdRoutes) {
+    //            if(r.getDisplayMode().equals(StdRoute.DisplayMode.dep)) {
+    //                StringTokenizer st = new StringTokenizer(r.getActiveStartingRunways(),",;");
+    //                while(st.hasMoreElements()) {
+    //                    if(activeRunways.contains(st.nextToken())) {
+    //                        cbModel.addElement(r.getName());
+    //                        break;
+    //                    }
+    //                }
+    //            }
+    //        }
+            for(StdRoute r : stdRoutes) {
+                if(r.getDisplayMode().equals(StdRoute.DisplayMode.star)) {
+                    for(String rw:r.getActiveLandingRunways()) {
+                        if(activeRunways.contains(rw)) {
+                            cbModel.addElement(r.getName());
+                            break;
+                        }
                     }
                 }
             }
+    //        for(StdRoute r : stdRoutes) {
+    //            if(r.getDisplayMode().equals(StdRoute.DisplayMode.app)) {
+    //                StringTokenizer st = new StringTokenizer(r.getActiveLandingRunways(),",;");
+    //                while(st.hasMoreElements()) {
+    //                    if(activeRunways.contains(st.nextToken())) {
+    //                        cbModel.addElement(r.getName());
+    //                        break;
+    //                    }
+    //                }
+    //            }
+    //        }
         }
+    }
+
+//    public ComboBoxModel<String> getSIDCbModel(boolean addEmptyEntry) {
+//        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
+//        if(addEmptyEntry) {
+//            cbModel.addElement("");
+//        }
 //        for(StdRoute r : stdRoutes) {
-//            if(r.getDisplayMode().equals(StdRoute.DisplayMode.app)) {
-//                StringTokenizer st = new StringTokenizer(r.getActiveLandingRunways(),",;");
-//                while(st.hasMoreElements()) {
-//                    if(activeRunways.contains(st.nextToken())) {
-//                        cbModel.addElement(r.getName());
-//                        break;
-//                    }
-//                }
+//            if(r.getDisplayMode().equals(StdRoute.DisplayMode.sid)) {
+//                cbModel.addElement(r.getName());
 //            }
 //        }
+//        return cbModel;
+//    }
+//    public ComboBoxModel<String> getSTARCbModel(boolean addEmptyEntry) {
+//        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
+//        if(addEmptyEntry) {
+//            cbModel.addElement("");
+//        }
+//        for(StdRoute r : stdRoutes) {
+//            if(r.getDisplayMode().equals(StdRoute.DisplayMode.star)) {
+//                cbModel.addElement(r.getName());
+//            }
+//        }
+//        return cbModel;
+//    }
 
-        return cbModel;
-    }
-
-    public ComboBoxModel<String> getSIDCbModel(boolean addEmptyEntry) {
-        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
-        if(addEmptyEntry) {
-            cbModel.addElement("");
-        }
-        for(StdRoute r : stdRoutes) {
-            if(r.getDisplayMode().equals(StdRoute.DisplayMode.sid)) {
-                cbModel.addElement(r.getName());
-            }
-        }
-        return cbModel;
-    }
-    public ComboBoxModel<String> getSTARCbModel(boolean addEmptyEntry) {
-        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
-        if(addEmptyEntry) {
-            cbModel.addElement("");
-        }
-        for(StdRoute r : stdRoutes) {
-            if(r.getDisplayMode().equals(StdRoute.DisplayMode.star)) {
-                cbModel.addElement(r.getName());
-            }
-        }
-        return cbModel;
-    }
 }

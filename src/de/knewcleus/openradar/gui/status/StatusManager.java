@@ -182,7 +182,7 @@ public class StatusManager implements INavPointListener {
                 ((RunwayPanel)((JLabel)e.getSource()).getParent()).sendRunwayMessage(runwayID);
             }
             // runway panel
-            if(e.getButton()==MouseEvent.BUTTON1 && e.getClickCount()==2 && e.getSource() instanceof RunwayPanel) {
+            if(e.getButton()==MouseEvent.BUTTON1 && e.getClickCount()==1 && e.getSource() instanceof RunwayPanel) {
                 ((RunwayPanel)e.getSource()).toggleActiveRunwayVisibility();
             }
             // dialog

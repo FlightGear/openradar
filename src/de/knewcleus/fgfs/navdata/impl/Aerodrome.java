@@ -34,12 +34,15 @@
 package de.knewcleus.fgfs.navdata.impl;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.fgfs.navaids.Pavement;
 import de.knewcleus.fgfs.navdata.model.IAerodrome;
 import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.fgfs.navdata.xplane.RawFrequency;
+import de.knewcleus.fgfs.navdata.xplane.Runway;
 
 public class Aerodrome implements IAerodrome, IIntersection {
 	protected final Point2D geographicPosition;
@@ -51,6 +54,8 @@ public class Aerodrome implements IAerodrome, IIntersection {
 	protected final String name;
 	protected final Type type;
 	protected volatile List<RawFrequency> frequencies;
+	protected final List<Pavement> pavements = new ArrayList<Pavement>();
+	protected final List<Runway> runways = new ArrayList<Runway>();
 	
 	public Aerodrome(Point2D geographicPosition, Point2D towerPosition, float elevation,
 			String identification, String name, Type type) {
@@ -119,5 +124,23 @@ public class Aerodrome implements IAerodrome, IIntersection {
     @Override
     public List<RawFrequency> getFrequencies() {
         return frequencies;
+    }
+    
+    public void setPavements(List<Pavement> list) {
+        pavements.addAll(list);
+    }
+    
+    public List<Pavement> getPavements() {
+        return pavements;
+    }
+    public void addRunway(Runway rwy) {
+        runways.add(rwy);
+    }
+    public void setRunways(List<Runway> list) {
+        runways.addAll(list);
+    }
+    
+    public List<Runway> getRunways() {
+        return runways;
     }
 }

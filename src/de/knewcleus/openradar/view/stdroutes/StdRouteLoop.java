@@ -35,7 +35,6 @@ package de.knewcleus.openradar.view.stdroutes;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -43,12 +42,14 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class StdRouteLoop extends AStdRouteElement {
 
     private final double inboundHeading;
+    private final double inboundHeadingMag;
     private Double length = null;
     private Double width = null;
     private final boolean right;
@@ -57,12 +58,13 @@ public class StdRouteLoop extends AStdRouteElement {
     private String maxHeight = null;
     private String misapHeight = null;
 
-    public StdRouteLoop(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+    public StdRouteLoop(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
                            String geoReferencPoint, String inboundHeading, String length, String width, String right, String arrows,
-                           String minHeight, String maxHeight, String misapHeight, String stroke, String lineWidth, String color) {
-        super(mapViewAdapter, route.getPoint(geoReferencPoint,previous),stroke,lineWidth,arrows,color);
+                           String minHeight, String maxHeight, String misapHeight, StdRouteAttributes attributes) {
+        super(data, mapViewAdapter, route.getPoint(geoReferencPoint,previous),arrows,attributes);
 
-        this.inboundHeading = Double.parseDouble(inboundHeading);
+        this.inboundHeadingMag = Double.parseDouble(inboundHeading);
+        this.inboundHeading = inboundHeadingMag +magDeclination;
         this.length = length !=null ? Double.parseDouble(length) : null;
         this.width = width !=null ? Double.parseDouble(width) : null;
         this.right = !"false".equalsIgnoreCase(right);
@@ -78,9 +80,8 @@ public class StdRouteLoop extends AStdRouteElement {
         double currentLength =  length !=null ? Converter2D.getFeetToDots(length * Units.NM / Units.FT,mapViewAdapter) : Converter2D.getFeetToDots(2*220/60*Units.NM/Units.FT, mapViewAdapter); // 2min * 220 mph/60h/min
         double currentWidth = width!=null ? Converter2D.getFeetToDots(width * Units.NM / Units.FT,mapViewAdapter) : currentLength * 0.92 ;
 
-        g2d.setFont(g2d.getFont().deriveFont(10f));
-        String sInboundHeading = String.format("%03.0f",Converter2D.normalizeAngle(inboundHeading));
-        String sOtherHeading = String.format("%03.0f",Converter2D.normalizeAngle(inboundHeading+180));
+        String sInboundHeading = String.format("%03.0f",Converter2D.normalizeAngle(inboundHeadingMag));
+        String sOtherHeading = String.format("%03.0f",Converter2D.normalizeAngle(inboundHeadingMag+180));
         Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(sInboundHeading, g2d);
 
         Point2D line1EndPoint = getDisplayPoint(geoReferencePoint);
@@ -106,16 +107,9 @@ public class StdRouteLoop extends AStdRouteElement {
         path.append(new Line2D.Double(line1MiddlePoint2,line1EndPoint),false);
         path.closePath();
 
-        if(color!=null) {
-            g2d.setColor(color);
-        }
         g2d.drawString(sInboundHeading, (int)(line1TextPoint.getX()-bounds.getWidth()/2), (int)(line1TextPoint.getY()+(bounds.getHeight()/2-2)));
         g2d.drawString(sOtherHeading, (int)(line2TextPoint.getX()-bounds.getWidth()/2), (int)(line2TextPoint.getY()+(bounds.getHeight()/2-2)));
 
-        Stroke origStroke = g2d.getStroke();
-        if(stroke!=null) {
-            g2d.setStroke(stroke);
-        }
         g2d.draw(path);
 
         if(minHeight!=null) {
@@ -156,8 +150,6 @@ public class StdRouteLoop extends AStdRouteElement {
             this.paintArrow(g2d, line1EndPoint, inboundHeading, arrowSize, true);
             this.paintArrow(g2d, line2EndPoint, inboundHeading-180, arrowSize, true);
         }
-
-        g2d.setStroke(origStroke);
 
         return path.getBounds2D();
     }

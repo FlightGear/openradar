@@ -287,10 +287,20 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.fill=GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx=1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 6, 0, 4);
         weatherPanel.add(lbVisibility, gridBagConstraints);
 
+//        JPanel spacer = new JPanel();
+//        spacer.setOpaque(false);
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 4;
+//        gridBagConstraints.gridy = 0;
+//        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+//        gridBagConstraints.weightx = 100.0;
+//        weatherPanel.add(spacer, gridBagConstraints);
+        
         lbWeatherPhaenomena.setForeground(Palette.DESKTOP_TEXT);
         lbWeatherPhaenomena.setText("");
         lbWeatherPhaenomena.setName(master.getAirportData().getAirportCode());
@@ -310,7 +320,7 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 0);
         weatherPanel.add(addWeatherStationPanel, gridBagConstraints);

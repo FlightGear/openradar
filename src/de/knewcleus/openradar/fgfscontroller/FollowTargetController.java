@@ -63,7 +63,7 @@ public class FollowTargetController implements Runnable {
     public void run() {
         while (true) {
             try {
-                if (isActive()) {
+                if (isActive() && fgfsController.isOnline()) {
                     focusOnTarget();
                 }
                 Thread.sleep(500);
@@ -78,6 +78,10 @@ public class FollowTargetController implements Runnable {
     }
 
     private void focusOnTarget() {
+        if(!fgfsController.isOnline()) {
+            return;
+        }
+        
         String camFollowCallsign = fgfsController.getFollowContact();
         GuiRadarContact selectedContact;
         if (camFollowCallsign == null) {
@@ -86,7 +90,7 @@ public class FollowTargetController implements Runnable {
             selectedContact = master.getRadarContactManager().getContactFor(camFollowCallsign);
         }
 
-        if (selectedContact != null && selectedContact.isActive()) {
+        if (selectedContact != null && selectedContact.isActive() ) {
 
             Point2D playerPos = selectedContact.getCenterGeoCoordinates();
             Position cameraPos = fgfsController.getCameraPosition();
@@ -130,7 +134,7 @@ public class FollowTargetController implements Runnable {
                         }
                     }
                 } catch (IOException e) {
-                    log.error("Problem to follow contact " + callsign, e);
+                    log.error("Problem to follow contact " + callsign+" (telnet to OrCam) Cause: "+e.getMessage());
                 }
 
                 // double heading = info.angle - master.getAirportData().getMagneticDeclination();

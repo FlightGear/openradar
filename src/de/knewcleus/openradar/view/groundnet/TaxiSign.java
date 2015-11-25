@@ -34,7 +34,7 @@ package de.knewcleus.openradar.view.groundnet;
 
 import java.awt.geom.Point2D;
 
-public class TaxiSign implements TaxiWayObjext {
+public class TaxiSign implements ITaxiWayObject {
 
     private double lat;
     private double lon;

@@ -32,11 +32,9 @@
  */
 package de.knewcleus.openradar.view.stdroutes;
 
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
@@ -66,6 +64,7 @@ public class StdRouteView implements IBoundedView, INotificationListener,ISelect
     protected Point2D displayPosition = new Point2D.Double();
     protected Path2D displayShape = null;
     protected Rectangle2D displayExtents;
+    protected final StdRouteAttributes attributes;
 
 
 	public StdRouteView(IMapViewerAdapter mapViewAdapter, StdRoute route, GuiMasterController master) {
@@ -73,6 +72,8 @@ public class StdRouteView implements IBoundedView, INotificationListener,ISelect
 		this.master=master;
 		this.route=route;
 		geoPosition = route.getSize()>0 ? route.getElements().get(0).getGeoReferencePoint() : master.getAirportData().getAirportPosition();
+        StdRouteAttributes defaultAttributes = new StdRouteAttributes ();
+		this.attributes = new StdRouteAttributes (defaultAttributes, "line,1", "255,255,255","Arial","4");
 		mapViewAdapter.registerListener(this);
         updateLogicalPosition();
 	}
@@ -109,22 +110,20 @@ public class StdRouteView implements IBoundedView, INotificationListener,ISelect
         boolean isVisible = route.isVisible(master);
         if(isVisible) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setFont(new Font("Arial", Font.PLAIN, 4));
+            this.attributes.applyAttributes(g2d, false);
+
+            Boolean selected = route.isRouteAssigned(master);
 
             displayExtents = null;
-            Stroke origStroke = g2d.getStroke();
-            Font origFont = g2d.getFont();
             for(AStdRouteElement e : route.getElements()) {
-                g2d.setStroke(route.getStroke());
-                g2d.setColor( route.isRouteAssigned(master) ? route.getSelectedColor() : route.getColor());
                 if(displayExtents==null) {
-                    displayExtents = e.paint(g2d, mapViewAdapter);
+                    displayExtents = e.doPaint(g2d, mapViewAdapter, selected);
                 } else {
-                    Rectangle2D.union(displayExtents, e.paint(g2d, mapViewAdapter), displayExtents);
+                    Rectangle2D.union(displayExtents, e.doPaint(g2d, mapViewAdapter, selected), displayExtents);
                 }
             }
-            g2d.setFont(origFont);
-            g2d.setStroke(origStroke);
+            this.attributes.restoreAttributes(g2d);
+
         }
     }
 
@@ -166,7 +165,6 @@ public class StdRouteView implements IBoundedView, INotificationListener,ISelect
     public boolean isSelected() {
         return master.getRadarContactManager().isRouteAssigned(route.getName());
     }
-    
     
     @Override
     public void mouseClicked(MouseEvent e) {

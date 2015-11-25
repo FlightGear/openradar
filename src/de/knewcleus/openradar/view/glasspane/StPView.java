@@ -216,10 +216,10 @@ public class StPView implements IBoundedView, INotificationListener {
         Double angle = vDistance.getAngle();
         // angle corrections
         // 1. magnetic
-        angle = angle + Math.round(master.getAirportData().getMagneticDeclination());
+        angle = angle - Math.round(master.getAirportData().getMagneticDeclination());
         // 2. wind
         MetarData metar = master.getAirportMetar();
-        Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD());
+        Vector2D vOriginalAngle = Vector2D.createScreenVector2D(angle,contact.getAirSpeedD()==0.0? 1 : contact.getAirSpeedD());
         Vector2D vWind = Vector2D.createVector2D((double)90-metar.getWindDirectionI(),metar.getWindSpeed());
         Vector2D vResult = contact.getAirSpeedD()>1 ? vOriginalAngle.add(vWind) : vOriginalAngle;
         Long lAngle = vResult.getAngleL();
@@ -231,7 +231,7 @@ public class StPView implements IBoundedView, INotificationListener {
         timeMinutes = milesPerHour>10 ? (int)Math.floor(60*distanceMiles/(double)milesPerHour) : null;
         timeSeconds = milesPerHour>10 ? (int)Math.floor(60*60*distanceMiles/(double)milesPerHour) - timeMinutes * 60 : null;
 
-        //    System.out.println("orig "+angle+" vOA: "+vOriginalAngle.getAngleL()+" vW "+vWind.getAngleL()+" result "+lAngle);
+//  System.out.println("orig "+angle+" AS"+contact.getAirSpeedD()+" vOA: "+vOriginalAngle.getAngleL()+" vW "+vWind.getAngleL()+" result "+lAngle);
         constructBackgroundShapes();
         Rectangle2D.union(displayExtents,background.getBounds2D(),displayExtents); // old and new position need to be painted
         mapViewAdapter.getUpdateManager().markViewportDirty();

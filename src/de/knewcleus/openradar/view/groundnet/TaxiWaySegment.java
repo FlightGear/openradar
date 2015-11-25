@@ -37,7 +37,7 @@ import java.awt.geom.Point2D;
 import de.knewcleus.fgfs.location.Vector2D;
 
 
-public class TaxiWaySegment implements TaxiWayObjext{
+public class TaxiWaySegment implements ITaxiWayObject{
 
     private String name;
     private TaxiPoint begin;

@@ -3,32 +3,28 @@
  *
  * This file is part of OpenRadar.
  *
- * OpenRadar is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
+ * OpenRadar is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
  *
- * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * OpenRadar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with
- * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with OpenRadar. If not, see
+ * <http://www.gnu.org/licenses/>.
  *
  * Diese Datei ist Teil von OpenRadar.
  *
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
- * General Public License, wie von der Free Software Foundation, Version 3 der
- * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU General Public License, wie von der Free
+ * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
- * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
- * Public License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne
+ * die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
+ * License für weitere Details.
  *
- * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
- * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+ * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
+ * <http://www.gnu.org/licenses/>.
  */
 package de.knewcleus.openradar.gui.setup;
 
@@ -41,6 +37,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -51,7 +48,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
 import org.apache.log4j.LogManager;
@@ -107,7 +103,10 @@ public class AirportData implements INavPointListener {
 
     private List<RadioFrequency> radioFrequencies = new ArrayList<RadioFrequency>();
     private Map<String, Radio> radios = new TreeMap<String, Radio>();
-    public Map<String, GuiRunway> runways = Collections.synchronizedMap(new TreeMap<String, GuiRunway>());
+    private Map<String, GuiRunway> runways = Collections.synchronizedMap(new TreeMap<String, GuiRunway>());
+
+    private HashSet<String> activeLandingRouteRunways = new HashSet<>();
+    private HashSet<String> activeStartingRouteRunways = new HashSet<>();
 
     public enum FgComMode {
         Auto, Internal, External, Off
@@ -135,7 +134,7 @@ public class AirportData implements INavPointListener {
     private String chatAliasPrefix = ".";
 
     private volatile String callSign = null;
-    
+
     private boolean altRadioTextEnabled = false;
     private String altRadioText = "";
 
@@ -144,11 +143,11 @@ public class AirportData implements INavPointListener {
 
     private NavaidDB navaidDB = new NavaidDB();
     private StPView directionMessageView;
-    
-    private String lenny64Url="http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans";
-    
+
+    private String lenny64Url = "http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans";
+
     private int contactTailLength = 10;
-    
+
     private int antennaRotationTime = 1000;
 
     private final AircraftCodeConverter aircraftCodeConverter = new AircraftCodeConverter();
@@ -162,7 +161,7 @@ public class AirportData implements INavPointListener {
     private int fgfsCamera1Port = 5010;
     private boolean fgfsLocalMPPacketForward1 = false;
     private int fgfsLocalMPPacketPort1 = 5010;
-    
+
     private boolean fgfsCamera2Enabled = false;
     private boolean fgfsSlave2To1 = false;
     private String fgfsCamera2Host = "localhost";
@@ -176,8 +175,9 @@ public class AirportData implements INavPointListener {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         MAX_WINDOW_SIZE = env.getMaximumWindowBounds();
     }
-    
-    public AirportData() {}
+
+    public AirportData() {
+    }
 
     public synchronized void setDirectionMessageView(StPView dmv) {
         this.directionMessageView = dmv;
@@ -186,6 +186,7 @@ public class AirportData implements INavPointListener {
     public synchronized StPView getDirectionMessageView() {
         return directionMessageView;
     }
+
     public synchronized String getAirportCode() {
         return airportCode;
     }
@@ -286,7 +287,6 @@ public class AirportData implements INavPointListener {
         this.fgComExec = fgComExec;
     }
 
-    
     public synchronized String getFgComHost() {
         return fgComHost;
     }
@@ -440,15 +440,14 @@ public class AirportData implements INavPointListener {
     }
 
     /**
-     * This method is called when the navdata files are read. We use it to
-     * gather additional information
+     * This method is called when the navdata files are read. We use it to gather additional information
      */
     @Override
     public synchronized void navPointAdded(INavPoint point) {
         if (point instanceof Aerodrome) {
             Aerodrome aerodrome = (Aerodrome) point;
             if (aerodrome.getIdentification().equals(getAirportCode())) {
-                if(aerodrome.getTowerPosition()!=null) {
+                if (aerodrome.getTowerPosition() != null) {
                     checkTowerPosition(aerodrome.getTowerPosition());
                 } else {
                     // some airports have no specified tower position
@@ -459,9 +458,9 @@ public class AirportData implements INavPointListener {
 
                 // load fgcom phonebook
                 Set<RawFrequency> frequencies;
-                boolean includeFgCom = getFgComMode()!=FgComMode.Off;
-                if(includeFgCom) {
-                    //fgcom3
+                boolean includeFgCom = getFgComMode() != FgComMode.Off;
+                if (includeFgCom) {
+                    // fgcom3
                     frequencies = SetupController.loadRadioFrequenciesFgCom3(this, getAirportCode()); // fgcom 3
 
                     for (RawFrequency f : frequencies) {
@@ -516,17 +515,15 @@ public class AirportData implements INavPointListener {
     }
 
     /**
-     * The tower position is initially loaded from xplane files, but saved in
-     * sector.properties file to allow easy correction.
-     * In this method we check if the value is already in sectors.properties file and
-     * save it if not...
+     * The tower position is initially loaded from xplane files, but saved in sector.properties file to allow easy
+     * correction. In this method we check if the value is already in sectors.properties file and save it if not...
      *
      * @param towerPosition2
      */
     private void checkTowerPosition(Point2D towerPos) {
         Properties p = SetupController.loadSectorProperties(getAirportCode());
         try {
-            if(p.getProperty("tower.lat")!=null && p.getProperty("tower.lon")!=null) {
+            if (p.getProperty("tower.lat") != null && p.getProperty("tower.lon") != null) {
                 double lon = Double.parseDouble(p.getProperty("tower.lon", ""));
                 double lat = Double.parseDouble(p.getProperty("tower.lat", ""));
                 // value found and parsed
@@ -536,11 +533,11 @@ public class AirportData implements INavPointListener {
                 p.put("tower.lon", Double.toString(towerPos.getX()));
                 p.put("tower.lat", Double.toString(towerPos.getY()));
                 SetupController.saveSectorProperties(getAirportCode(), p);
-                this.towerPosition= towerPos;
+                this.towerPosition = towerPos;
             }
-        } catch(Exception e) {
-            log.fatal("Error: could not parse tower position in file sectors.properties for airport "+airportCode);
-            this.towerPosition= towerPos;
+        } catch (Exception e) {
+            log.fatal("Error: could not parse tower position in file sectors.properties for airport " + airportCode);
+            this.towerPosition = towerPos;
         }
 
     }
@@ -561,19 +558,21 @@ public class AirportData implements INavPointListener {
             return null;
         return runways.get(runwayCode).getRunwayData();
     }
+
     /** master can be null, but settings will not be saved in this case */
     public synchronized void setRadarObjectFilter(GuiMasterController master, String objectName) {
         boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
         toggleObjectsMap.put(objectName, !oldState);
-        if(master!=null) {
+        if (master != null) {
             storeAirportData(master);
         }
     }
+
     /** master can be null, but settings will not be saved in this case */
     public synchronized void changeToggle(GuiMasterController master, String objectName, boolean defaultValue) {
         boolean oldState = toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : defaultValue;
         toggleObjectsMap.put(objectName, !oldState);
-        if(master!=null) {
+        if (master != null) {
             storeAirportData(master);
         }
     }
@@ -588,7 +587,7 @@ public class AirportData implements INavPointListener {
     }
 
     public synchronized boolean getToggleState(String objectName, boolean defaultValue) {
-        if(toggleObjectsMap.get(objectName) != null) {
+        if (toggleObjectsMap.get(objectName) != null) {
             return toggleObjectsMap.get(objectName);
         } else {
             toggleObjectsMap.put(objectName, defaultValue);
@@ -597,7 +596,7 @@ public class AirportData implements INavPointListener {
     }
 
     public synchronized void setVisibleLayerMap(Map<String, Boolean> visibleLayerMap) {
-        this.visibleLayerMap=visibleLayerMap;
+        this.visibleLayerMap = visibleLayerMap;
     }
 
     public synchronized boolean isLayerVisible(String name) {
@@ -613,13 +612,13 @@ public class AirportData implements INavPointListener {
         }
 
         callSign = p.getProperty("lastCallsign");
-        if(callSign==null) {
+        if (callSign == null) {
             callSign = getInitialATCCallSign();
         }
     }
-    
+
     public synchronized void loadAirportData(GuiMasterController master) {
-        
+
         Properties p = new Properties();
         File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
         try {
@@ -627,28 +626,27 @@ public class AirportData implements INavPointListener {
         } catch (IOException e) {
         }
 
-        
-        if(callSign==null) {
+        if (callSign == null) {
             // for some reason the callsign was not set in setup dialog
             callSign = p.getProperty("lastCallsign");
-            if(callSign==null) {
+            if (callSign == null) {
                 // pilot has never been here
                 callSign = getInitialATCCallSign();
             }
         }
 
         String sTA = p.getProperty("transitionAlt");
-        if(sTA!=null) {
-            transitionAlt = Integer.parseInt( sTA );
+        if (sTA != null) {
+            transitionAlt = Integer.parseInt(sTA);
         } else {
-            transitionAlt =  getInitialTransitionAlt();
+            transitionAlt = getInitialTransitionAlt();
         }
-        
+
         // metar
         MetarReader metarReader = master.getMetarReader();
         metarSource = p.getProperty("metarSource");
-        if(metarSource==null) {
-            metarSource = "_"+getAirportCode(); // The underscore marks it as initial setting
+        if (metarSource == null) {
+            metarSource = "_" + getAirportCode(); // The underscore marks it as initial setting
         }
         addMetarSources = p.getProperty("addMetarSources");
         metarReader.changeMetarSources(metarSource, addMetarSources);
@@ -681,10 +679,10 @@ public class AirportData implements INavPointListener {
                     r.setRestoredFrequency(savedFrequency);
                 }
             }
-            
+
             // restore alternative radio data
-            altRadioText = p.getProperty("altRadioText.text","");
-            
+            altRadioText = p.getProperty("altRadioText.text", "");
+
             contactTailLength = Integer.parseInt(p.getProperty("contact.tailLength", "10"));
 
             antennaRotationTime = Integer.parseInt(p.getProperty("antennaRotationTime", "1000"));
@@ -693,47 +691,47 @@ public class AirportData implements INavPointListener {
         }
         // calculate magnetic declination
         setMagneticDeclination(CoreMag.calc_magvarDeg(getLat(), getLon(), getElevationM(), System.currentTimeMillis()));
-        
-    }
-    
-    public void restoreRunwaySettings() {
-            Properties p = new Properties();
-            File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
-            try {
-                p.load(new FileReader(propertyFile));
-            } catch (IOException e) {
-            }
 
-            if (propertyFile.exists()) {
-                // restore runwaydata
-                for (GuiRunway rw : runways.values()) {
-                    rw.getRunwayData().setValuesFromProperties(p);
-                }
-            }        
+    }
+
+    public void restoreRunwaySettings() {
+        Properties p = new Properties();
+        File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
+        try {
+            p.load(new FileReader(propertyFile));
+        } catch (IOException e) {
+        }
+
+        if (propertyFile.exists()) {
+            // restore runwaydata
+            for (GuiRunway rw : runways.values()) {
+                rw.getRunwayData().setValuesFromProperties(p);
+            }
+        }
     }
 
     private int getInitialTransitionAlt() {
-        if(towerPosition.getX()<-13) {
+        if (towerPosition.getX() < -13) {
             // america
             return 8000;
         } else {
-            return Math.max(5000, (int)(elevation/Units.FT+3000));
+            return Math.max(5000, (int) (elevation / Units.FT + 3000));
         }
     }
 
     public synchronized void storeAirportData(GuiMasterController master) {
         Properties p = new Properties();
-        if(master.getCurrentATCCallSign()!=null) {
+        if (master.getCurrentATCCallSign() != null) {
             p.setProperty("lastCallsign", master.getCurrentATCCallSign());
         }
-        
-        p.setProperty("transitionAlt",""+transitionAlt);
-        
-        if(metarSource!=null) {
-            p.setProperty("metarSource",metarSource);
+
+        p.setProperty("transitionAlt", "" + transitionAlt);
+
+        if (metarSource != null) {
+            p.setProperty("metarSource", metarSource);
         }
-        if(addMetarSources !=null) {
-            p.setProperty("addMetarSources",addMetarSources);
+        if (addMetarSources != null) {
+            p.setProperty("addMetarSources", addMetarSources);
         }
         // add runway data
         for (GuiRunway rw : runways.values()) {
@@ -755,15 +753,15 @@ public class AirportData implements INavPointListener {
 
         // add alternative radio data
         p.setProperty("altRadioText.text", altRadioText);
-        
-        squawkCodeManager.addSquawkRangeTo(p);
-        
-        p.setProperty("contact.tailLength", ""+contactTailLength);
 
-        p.setProperty("antennaRotationTime", ""+antennaRotationTime);
+        squawkCodeManager.addSquawkRangeTo(p);
+
+        p.setProperty("contact.tailLength", "" + contactTailLength);
+
+        p.setProperty("antennaRotationTime", "" + antennaRotationTime);
 
         master.getFgfsController1().storeData(p);
-        
+
         File propertiesFile = new File("settings" + File.separator + getAirportCode() + ".properties");
 
         FileWriter writer = null;
@@ -774,7 +772,7 @@ public class AirportData implements INavPointListener {
 
             p.store(writer, "Open Radar Airport Properties");
         } catch (IOException e) {
-            log.error("Error while storing airport properties!",e);
+            log.error("Error while storing airport properties!", e);
         } finally {
             if (writer != null) {
                 try {
@@ -785,13 +783,12 @@ public class AirportData implements INavPointListener {
         }
     }
 
-
     public NavaidDB getNavaidDB() {
         return navaidDB;
     }
 
     public void updateMouseRadarMoved(GuiRadarContact contact, MouseEvent e) {
-        directionMessageView.updateMouseRadarMoved(contact,e);
+        directionMessageView.updateMouseRadarMoved(contact, e);
 
     }
 
@@ -807,47 +804,49 @@ public class AirportData implements INavPointListener {
         return squawkCodeManager;
     }
 
-    public ComboBoxModel<String> getRunwayModel(boolean addEmptyEntry) {
-        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
-        if(addEmptyEntry) {
-            cbModel.addElement("");
+    public void updateRunwayModel(DefaultComboBoxModel<String> cbModel, boolean addEmptyEntry) {
+        synchronized (cbModel) {
+            cbModel.removeAllElements();
+            if (addEmptyEntry) {
+                cbModel.addElement("");
+            }
+            for (GuiRunway rw : runways.values()) {
+                if (rw.getRunwayData().isEnabledAtAll()) {
+                    if (rw.isLandingActive() || rw.isStartingActive()) {
+                        cbModel.addElement(rw.getCode());
+                    }
+                }
+            }
         }
-        for(GuiRunway rw : runways.values()) {
-            if(rw.getRunwayData().isEnabledAtAll()) {
-                if(rw.isLandingActive() || rw.isStartingActive()) {
+    }
+
+    public void updateGeneralArrivalRunwayModel(DefaultComboBoxModel<String> cbModel, boolean addEmptyEntry) {
+        synchronized (cbModel) {
+            cbModel.removeAllElements();
+            if (addEmptyEntry) {
+                cbModel.addElement("");
+            }
+            for (GuiRunway rw : runways.values()) {
+                if (rw.getRunwayData().isLandingEnabled()) {
                     cbModel.addElement(rw.getCode());
                 }
             }
         }
-        return cbModel;
     }
 
-    public ComboBoxModel<String> getGeneralArrivalRunwayModel(boolean addEmptyEntry) {
-        DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>();
-        if(addEmptyEntry) {
-            cbModel.addElement("");
-        }
-        for(GuiRunway rw : runways.values()) {
-            if(rw.getRunwayData().isLandingEnabled()) {
-                cbModel.addElement(rw.getCode());
-            }
-        }
-        return cbModel;
-    }
-    
-    public HashSet<String> getActiveRunways() {
+    public synchronized HashSet<String> getActiveRunways() {
         HashSet<String> activeRWs = new HashSet<String>();
-        for(GuiRunway rw : runways.values()) {
-            if(rw.isLandingActive() || rw.isStartingActive()) {
+        for (GuiRunway rw : runways.values()) {
+            if (rw.isLandingActive() || rw.isStartingActive()) {
                 activeRWs.add(rw.getCode());
             }
         }
         return activeRWs;
     }
-    
+
     @Override
     public String toString() {
-        return "AirportData: "+getAirportCode();
+        return "AirportData: " + getAirportCode();
     }
 
     public synchronized int getTransitionAlt() {
@@ -885,21 +884,24 @@ public class AirportData implements INavPointListener {
 
     public synchronized void updateTransitionFl(GuiMasterController master) {
         // initial value
-        if(transitionLevelFix==null && master.getAirportMetar().getPressureHPa()>0) { // first call comes before metar is loaded... 
-            this.transitionLevelFix = ((int)Math.ceil((transitionAlt + 27 * (1013 - master.getAirportMetar().getPressureHPa()))/transitionLayerWidth) + 1) * transitionLayerWidth/100;
+        if (transitionLevelFix == null && master.getAirportMetar().getPressureHPa() > 0) { // first call comes before
+                                                                                           // metar is loaded...
+            this.transitionLevelFix = ((int) Math.ceil((transitionAlt + 27 * (1013 - master.getAirportMetar().getPressureHPa())) / transitionLayerWidth) + 1)
+                    * transitionLayerWidth / 100;
         }
 
-        if(!manualTransitionLevel) { 
+        if (!manualTransitionLevel) {
             // calculate it
-            this.transitionFL = ((int)Math.ceil((transitionAlt + 27 * (1013 - master.getAirportMetar().getPressureHPa()))/transitionLayerWidth) + 1) * transitionLayerWidth/100;
+            this.transitionFL = ((int) Math.ceil((transitionAlt + 27 * (1013 - master.getAirportMetar().getPressureHPa())) / transitionLayerWidth) + 1)
+                    * transitionLayerWidth / 100;
         } else {
-            // manual case        
+            // manual case
             this.transitionFL = transitionLevelFix;
         }
     }
 
     public synchronized int getTransitionFL(GuiMasterController master) {
-        if(transitionFL==null) {
+        if (transitionFL == null) {
             updateTransitionFl(master);
         }
         return transitionFL;
@@ -914,7 +916,7 @@ public class AirportData implements INavPointListener {
     }
 
     public boolean isLenny64Enabled() {
-        return lenny64Url!=null && !lenny64Url.isEmpty();
+        return lenny64Url != null && !lenny64Url.isEmpty();
     }
 
     public synchronized int getContactTailLength() {
@@ -1020,4 +1022,43 @@ public class AirportData implements INavPointListener {
     public synchronized void setFgfsLocalMPPacketPort2(int fgfsLocalMPPacketPort) {
         this.fgfsLocalMPPacketPort2 = fgfsLocalMPPacketPort;
     }
+
+    public void refreshRunwayDefinitions() {
+        synchronized (activeLandingRouteRunways) {
+            activeLandingRouteRunways.clear();
+            for (GuiRunway rw : runways.values()) {
+                if (rw.isLandingActive() && rw.isLandingRouteEnabled()) {
+                    activeLandingRouteRunways.add(rw.getCode());
+                }
+            }
+        }
+        synchronized (activeStartingRouteRunways) {
+            activeStartingRouteRunways.clear();
+            for (GuiRunway rw : runways.values()) {
+                if (rw.isStartingActive() && rw.isStartRouteEnabled()) {
+                    activeStartingRouteRunways.add(rw.getCode());
+                }
+            }
+        }
+    }
+
+    public boolean isActiveRouteRunwayContained(Collection<String> routeStartingSettings, Collection<String> routeLandingSettings) {
+        synchronized (activeLandingRouteRunways) {
+            for (String code : activeLandingRouteRunways) {
+                if (routeLandingSettings.contains(code)) {
+                    return true;
+                }
+            }
+        }
+
+        synchronized (activeStartingRouteRunways) {
+            for (String code : activeStartingRouteRunways) {
+                if (routeStartingSettings.contains(code)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

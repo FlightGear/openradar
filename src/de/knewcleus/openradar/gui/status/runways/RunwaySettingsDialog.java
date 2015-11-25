@@ -859,7 +859,7 @@ public class RunwaySettingsDialog extends JDialog {
         private void copyToAll(String sourceCode) {
             RunwayData SourceRwd = data.getRunwayData(sourceCode);
 
-            for(GuiRunway rw : data.runways.values()) {
+            for(GuiRunway rw : data.getRunways().values()) {
                 if(!rw.getCode().equals(sourceCode)) {
                     RunwayData rwd = rw.getRunwayData();
                     rwd.copyDataFrom(SourceRwd);
@@ -871,7 +871,7 @@ public class RunwaySettingsDialog extends JDialog {
         }
 
         private String getNextRw() {
-            ArrayList<String> runways = new ArrayList<String>(data.runways.keySet());
+            ArrayList<String> runways = new ArrayList<String>(data.getRunways().keySet());
             int currentRwIndex = runways.indexOf(lbRWNumber.getText());
 
             if (currentRwIndex < runways.size() - 1) {
@@ -883,7 +883,7 @@ public class RunwaySettingsDialog extends JDialog {
         }
 
         private String getPreviousRw() {
-            ArrayList<String> runways = new ArrayList<String>(data.runways.keySet());
+            ArrayList<String> runways = new ArrayList<String>(data.getRunways().keySet());
             int currentRwIndex = runways.indexOf(lbRWNumber.getText());
 
             if (currentRwIndex > 0) {

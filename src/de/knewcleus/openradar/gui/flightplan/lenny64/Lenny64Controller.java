@@ -67,7 +67,7 @@ public class Lenny64Controller {
      * 
      * @param callsign
      */
-    public void downloadFlightPlansFor(MouseEvent e, String callsign) {
+    public synchronized void downloadFlightPlansFor(MouseEvent e, String callsign) {
 //        dialog.saveData();
         GuiRadarContact c = master.getRadarContactManager().getContactFor(callsign);
         List<FlightPlanData> existingFPs = lenny64Connector.checkForFlightplan(airportData, c);
@@ -83,7 +83,7 @@ public class Lenny64Controller {
     /**
      * Merges the data from lenny64 into the existing flightplan
      */
-    public void mergeFlightplans(FlightPlanData lenny64Flightplan) {
+    public synchronized void mergeFlightplans(FlightPlanData lenny64Flightplan) {
         GuiRadarContact c = master.getRadarContactManager().getContactFor(lenny64Flightplan.getCallsign());
         synchronized (c) {
             c.setFlightPlan(lenny64Flightplan);
@@ -93,7 +93,7 @@ public class Lenny64Controller {
         }
     }
 
-    public void closeFlightPlan(GuiRadarContact contact) {
+    public synchronized void closeFlightPlan(GuiRadarContact contact) {
         lenny64Connector.closeFlightPlan(master, contact);
     }
 

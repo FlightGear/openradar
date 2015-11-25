@@ -59,7 +59,7 @@ public class GroundnetView implements IBoundedView, INotificationListener {
     protected final GuiMasterController master; 
     protected final AirportData data;
     protected GroundnetReader groundnetReader;
-    protected final TaxiWayObjext obj;
+    protected final ITaxiWayObject obj;
 
     protected boolean visible = true;
 
@@ -71,7 +71,7 @@ public class GroundnetView implements IBoundedView, INotificationListener {
 
     protected AViewObjectPainter<?> viewObjectPainter;
 
-	public GroundnetView(IMapViewerAdapter mapViewAdapter, TaxiWayObjext obj, GuiMasterController master) {
+	public GroundnetView(IMapViewerAdapter mapViewAdapter, ITaxiWayObject obj, GuiMasterController master) {
 		this.mapViewAdapter = mapViewAdapter;
 		this.master=master;
 		this.data=master.getAirportData();

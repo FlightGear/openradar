@@ -111,6 +111,7 @@ public abstract class AViewObjectPainter<T> {
             // registration is done when new points are read in, to allow direct usage in the stdroutes...
             // so this is not needed here: data.getNavaidDB().registerNavaid((AdditionalFix) navPoint);
         }
+
         else if(navPoint instanceof TaxiWaySegment) viewObjectPainter = new TaxiWayPainter(data,mapViewAdapter, (TaxiWaySegment) navPoint);
         else if(navPoint instanceof TaxiSign) viewObjectPainter = new TaxiSignPainter(mapViewAdapter, (TaxiSign) navPoint);
 

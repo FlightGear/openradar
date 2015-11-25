@@ -90,6 +90,10 @@ public class GeodataView implements IBoundedView, INotificationListener {
 		updateLogicalShapes();
 	}
 
+	public synchronized boolean hasContent() {
+	    return logicalShapes.size()>0;
+	}
+	
 	public synchronized Color getColor() {
 		return color;
 	}

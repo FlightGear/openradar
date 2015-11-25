@@ -158,6 +158,7 @@ public class AtcAliasChatMessage {
             <destination>        Aircraft's destination airport ICAO code
             <squawk>             Assigned squawk code
             <route>              Code of assigned SID/STAR
+            <assigned-route>     Code of assigned SID/STAR
          */
 
         text = replaceAllInsensitive(text,"<icao>",data.getAirportCode());
@@ -223,7 +224,7 @@ public class AtcAliasChatMessage {
         }
 
         text = replaceAllInsensitive(text,"<route>", contact!=null ? contact.getFlightPlan().getRoute():"");
-
+        text = replaceAllInsensitive(text,"<assigned-route>", contact!=null ? contact.getFlightPlan().getAssignedRoute():"");
         // replace the dynamic variables
         int pos = -1;
 

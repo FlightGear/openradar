@@ -30,7 +30,6 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -38,6 +37,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 /**
@@ -51,9 +51,9 @@ public class StdRouteMultipointLine extends AStdRouteElement {
     private final Point2D geoEndPoint;
     private final boolean close;
 
-    public StdRouteMultipointLine(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous, List<String> points, String close,
-            String stroke, String lineWidth, String color) {
-        super(mapViewAdapter, route.getPoint(points.get(0), previous), stroke, lineWidth, null, color);
+    public StdRouteMultipointLine(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous, List<String> points, String close,
+            StdRouteAttributes attributes) {
+        super(data, mapViewAdapter, route.getPoint(points.get(0), previous), null,attributes);
 
         for (String point : points) {
             Point2D geoPoint = route.getPoint(point, previous);
@@ -70,9 +70,6 @@ public class StdRouteMultipointLine extends AStdRouteElement {
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
         Point2D lastDisplayPoint = null;
-        if (color != null) {
-            g2d.setColor(color);
-        }
         Path2D path = new Path2D.Double();
 
         for (Point2D geoPoint : geoPoints) {
@@ -87,14 +84,7 @@ public class StdRouteMultipointLine extends AStdRouteElement {
             path.closePath();
         }
 
-        Stroke origStroke = g2d.getStroke();
-        if(stroke!=null) {
-            g2d.setStroke(stroke);
-        }
-
         g2d.draw(path);
-
-        g2d.setStroke(origStroke);
 
         return path.getBounds2D();
     }

@@ -146,7 +146,7 @@ public class FlightPlanExchangeManager implements Runnable {
                 
                 String parameters = "user=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8") 
                         + "&password=" + URLEncoder.encode(data.getFpServerPassword(), "UTF-8")
-                        + "&username=" + URLEncoder.encode("John Doe", "UTF-8") // todo
+                        + "&username=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8") // todo
                         + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") 
                         + "&airport=" + URLEncoder.encode(data.getAirportCode(), "UTF-8")
                         + "&lon="+Double.toString(data.getAirportPosition().getX())
@@ -320,7 +320,7 @@ public class FlightPlanExchangeManager implements Runnable {
         master.getMpChatManager().setAutoAtcMessage(c, msg);
     }
 
-    public boolean isFpExchangeEnabledAndActive() {
+    public synchronized boolean isFpExchangeEnabledAndActive() {
         return data.isFpExchangeEnabled() && connectedToServer;
     }
 

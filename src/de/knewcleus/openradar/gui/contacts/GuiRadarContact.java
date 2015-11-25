@@ -71,7 +71,6 @@ public class GuiRadarContact {
 
     private volatile boolean newContact = true;
     private volatile boolean neglect = false;
-    private volatile boolean onEmergency = false;
 
     private RadarContactController manager = null;
     private volatile TargetStatus player = null;
@@ -86,6 +85,7 @@ public class GuiRadarContact {
     protected final double airportElevationFt;
     protected final AirportData airportData;
     protected volatile double lastHeading=-1;
+    protected volatile double lastHeadingMag=-1;
     protected volatile String atcLanguage = "en";
     private volatile boolean fgComSupport = false;
 
@@ -309,10 +309,10 @@ public class GuiRadarContact {
     }
 
     public synchronized double getMagnCourseD() {
-        if(getGroundSpeedD()>0.5 || lastHeading==-1) {
-            lastHeading = player.getTrueCourse() ;//- airportData.getMagneticDeclination();
+        if(getGroundSpeedD()>0.5 || lastHeadingMag==-1) {
+            lastHeadingMag = player.getTrueCourse() - airportData.getMagneticDeclination();
         }
-        return lastHeading;
+        return lastHeadingMag;
     }
     /**
      * Returns the model name that the contact uses.
@@ -369,11 +369,7 @@ public class GuiRadarContact {
 
 
     public synchronized boolean isOnEmergency() {
-        return onEmergency;
-    }
-
-    public synchronized void setOnEmergency(boolean b) {
-        onEmergency=b;
+        return getTranspSquawkCode() != null && (7700 == getTranspSquawkCode() || 7600 == getTranspSquawkCode() || 7500 == getTranspSquawkCode());
     }
 
     public synchronized double getAirSpeedD() {
@@ -381,7 +377,7 @@ public class GuiRadarContact {
         if(metar==null) return -1;
 
 
-        if(airportElevationFt+50<getElevationFt()) {
+        if(airportElevationFt+200<getElevationFt()) {
             // in air
             Vector3D v = player.getLinearVelocityGlobal();
             double windFromNorth = metar.getWindNorthComponent()*Units.KNOTS;

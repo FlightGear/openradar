@@ -34,6 +34,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
@@ -68,6 +69,9 @@ public class FGFSController {
 
     private volatile FGFSController slave = null;
     private volatile FGFSController otherInstance = null;
+    
+    private boolean online = true;
+    private volatile long lastCheck = 0; 
 
     public FGFSController(GuiMasterController master, String telnetHost, int telnetPort) {
         this.master = master;
@@ -77,6 +81,10 @@ public class FGFSController {
         followTargetController = new FollowTargetController(master, this);
     }
 
+    public synchronized boolean isOnline() {
+        return online || System.currentTimeMillis() - lastCheck>5000;
+    }
+    
     public void start() {
         activatePreset("P1");
         pointCameraIntoPresetHeading();
@@ -106,9 +114,20 @@ public class FGFSController {
     }
 
     public synchronized FGFSConnection getFgfsConnection() throws IOException {
+        if(!isOnline()) {
+            throw new IOException("Offline, because FGFS telnet not found. Last Check: "+(new Date(lastCheck)));
+        }
+        
         // todo re-init the FGFSConnection, if it exists, close and re-establish it
         if (fgfsConnection == null || !fgfsConnection.isAlive()) {
-            fgfsConnection = new FGFSConnection(telnetHost, telnetPort);
+            try {
+                fgfsConnection = new FGFSConnection(telnetHost, telnetPort);
+            } catch(IOException e) {
+                online=false;
+                lastCheck = System.currentTimeMillis();
+                throw e;
+            }
+            online=true;
             fgfsConnection.setBoolean("/sim/panel/visibility", false);
             fgfsConnection.setDouble("instrumentation/radar/range", 1024); // radar contacts are filtered
             fgfsConnection.setDouble("/position/altitude-ft", (data.getElevationM() + 30) / Units.FT);

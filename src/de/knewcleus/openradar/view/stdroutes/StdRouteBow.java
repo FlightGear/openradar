@@ -34,13 +34,13 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
@@ -53,13 +53,13 @@ public class StdRouteBow extends AStdRouteElement {
     private Point2D endPoint=null;
     private final String text;
 
-    public StdRouteBow(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+    public StdRouteBow(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
                              String center, String radius, String startAngle, String extentAngle,
-                             String stroke, String lineWidth, String color, String arrows, String text) {
+                             String arrows, String text, StdRouteAttributes attributes) {
 
-        super(mapViewAdapter, route.getPoint(center,previous),stroke,lineWidth,arrows,color);
+        super(data, mapViewAdapter, route.getPoint(center,previous),arrows,attributes);
         this.radius = Double.parseDouble(radius);
-        this.startAngle = 90-Double.parseDouble(startAngle);
+        this.startAngle = 90-(Double.parseDouble(startAngle)+(float)magDeclination);
         this.extentAngle = -1 * Double.parseDouble(extentAngle);
         this.arrows = arrows;
         this.text = text;
@@ -72,14 +72,10 @@ public class StdRouteBow extends AStdRouteElement {
         double radiusDots = Converter2D.getFeetToDots(radius * Units.NM / Units.FT, mapViewAdapter);
         endPoint = mapViewAdapter.getProjection().toGeographical(mapViewAdapter.getDeviceToLogicalTransform().transform(Converter2D.getMapDisplayPoint(center, startAngle+extentAngle, radiusDots),null));
 
-        if(color!=null) {
-            g2d.setColor(color);
-        }
         Path2D path = new Path2D.Double();
         if(text==null) {
             path.append(new Arc2D.Double(center.getX()-radiusDots, center.getY()-radiusDots,radiusDots*2,radiusDots*2,startAngle,extentAngle,Arc2D.OPEN), false);
         } else {
-            g2d.setFont(g2d.getFont().deriveFont(10.0f));
             Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
             double direction = startAngle + extentAngle/2+90;
             double gapPix =  ( bounds.getHeight() + (bounds.getWidth()-bounds.getHeight()) * Math.cos(Math.toRadians(direction)) / 2 ) + 8;
@@ -97,10 +93,6 @@ public class StdRouteBow extends AStdRouteElement {
             }
         }
 
-        Stroke origStroke = g2d.getStroke();
-        if(stroke!=null) {
-            g2d.setStroke(stroke);
-        }
         g2d.draw(path);
 
         if("both".equalsIgnoreCase(arrows) || "start".equalsIgnoreCase(arrows)) {
@@ -111,8 +103,6 @@ public class StdRouteBow extends AStdRouteElement {
             double heading = 90 - (startAngle + extentAngle) - 90 * Math.signum(extentAngle);
             this.paintArrow(g2d, Converter2D.getMapDisplayPoint(center, 90-startAngle-extentAngle, Converter2D.getFeetToDots(radius*Units.NM/Units.FT,mapViewAdapter)), heading, arrowSize, true);
         }
-
-        g2d.setStroke(origStroke);
 
         return path.getBounds2D();
     }

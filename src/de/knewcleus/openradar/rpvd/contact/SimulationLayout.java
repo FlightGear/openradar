@@ -81,13 +81,10 @@ public class SimulationLayout extends ADatablockLayout {
     public synchronized Color getColor(GuiRadarContact c) {
         Color color = Palette.RADAR_UNCONTROLLED;
 
-//        boolean assignedSquawkTunedIn = c.getAssignedSquawk() == null
-//                || (c.getTranspSquawkCode() != null && c.getAssignedSquawk() != null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
-
         if (c.isIdentActive()) {
             color = Color.black;
             c.setHighlighted();
-        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
+        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
             // Emergency
             color = new Color(255,100,0);
 
@@ -99,8 +96,6 @@ public class SimulationLayout extends ADatablockLayout {
             // BAD GUYS
             color = Palette.RADAR_GHOST;
 
-//        } else if (!assignedSquawkTunedIn) {
-//            color = new Color(80, 0, 160);
         } else if (c.getState() == State.IMPORTANT) {
             // CONTROLLED left column
             color = Palette.RADAR_CONTROLLED;
@@ -120,20 +115,13 @@ public class SimulationLayout extends ADatablockLayout {
     public synchronized Color getDataBlockColor(GuiRadarContact c) {
         Color color = Palette.RADAR_UNCONTROLLED;
 
-//      boolean assignedSquawkTunedIn = c.getAssignedSquawk() == null
-//              || (c.getTranspSquawkCode() != null && c.getAssignedSquawk() != null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
-
       if (c.isIdentActive()) {
           color = Color.black;
           c.setHighlighted();
-      } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
+      } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
           // Emergency
           color = new Color(255,100,0);
 
-      } else if (c.isSelected()) {
-          // SELECTED
-          //color = Palette.RADAR_SELECTED;
-          color = Palette.WHITE;
       } else if (!c.isActive()) {
           // INCACTIVE GHOSTS
           color = Palette.RADAR_GHOST;
@@ -142,8 +130,6 @@ public class SimulationLayout extends ADatablockLayout {
           // BAD GUYS
           color = Palette.RADAR_GHOST;
 
-//      } else if (!assignedSquawkTunedIn) {
-//          color = new Color(80, 0, 160);
       } else if (c.getState() == State.IMPORTANT) {
           // CONTROLLED left column
           color = Palette.RADAR_CONTROLLED;

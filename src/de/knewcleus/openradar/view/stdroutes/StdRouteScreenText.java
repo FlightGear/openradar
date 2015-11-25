@@ -32,13 +32,13 @@
  */
 package de.knewcleus.openradar.view.stdroutes;
 
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 /**
  * A text that appears on top of the map, but does not pan, nor zoom with it.
@@ -50,33 +50,20 @@ public class StdRouteScreenText extends AStdRouteElement {
 
     private String screenPos;
     private Double angle;
-    private final String font;
-    private final Float fontSize;
     private final String text;
 
-    public StdRouteScreenText(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
-                        String screenPos, String angle, String font, String fontSize,
-                        String color, String text) {
-        super(mapViewAdapter, new Point2D.Double(0,0),null,null,null,color);
+    public StdRouteScreenText(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+                        String screenPos, String angle, String text,StdRouteAttributes attributes) {
+        super(data, mapViewAdapter, new Point2D.Double(0,0),null,attributes);
 
         this.screenPos = screenPos;
 
-        this.angle = angle !=null ? Double.parseDouble(angle) : 0;
-        this.font = font!=null ? font : "Arial";
-        this.fontSize = fontSize !=null ? Float.parseFloat(fontSize) : 10;
+        this.angle = angle !=null ? Double.parseDouble(angle)+magDeclination : 0;
         this.text=text;
     }
 
     @Override
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
-
-        if(color!=null) {
-            g2d.setColor(color);
-        }
-        Font origFont = g2d.getFont();
-        if(font != null) {
-            g2d.setFont(new Font(font,Font.PLAIN,Math.round(fontSize)));
-        }
 
         Point2D displayPoint = getDisplayPoint(mapViewAdapter, screenPos);
         AffineTransform oldTransform = g2d.getTransform();
@@ -87,7 +74,6 @@ public class StdRouteScreenText extends AStdRouteElement {
         Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
         g2d.drawString(text, (int)(displayPoint.getX()-bounds.getWidth()/2), (int)(displayPoint.getY()+bounds.getHeight()/2-2));
 
-        g2d.setFont(origFont);
         g2d.setTransform(oldTransform);
 
         bounds.setRect(displayPoint.getX(), displayPoint.getY(),bounds.getWidth(),bounds.getHeight());
@@ -134,7 +120,7 @@ public class StdRouteScreenText extends AStdRouteElement {
     }
 
     @Override
-    public boolean contains(Point p) {
+    public synchronized boolean contains(Point p) {
         return false;
     }
 }

@@ -33,8 +33,11 @@
 package de.knewcleus.fgfs.navaids.xplane;
 
 import java.awt.Shape;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.Position;
@@ -42,7 +45,7 @@ import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.fgfs.navaids.Aerodrome;
 import de.knewcleus.fgfs.navaids.DBParserException;
 import de.knewcleus.fgfs.navaids.NamedFixDB;
-import de.knewcleus.fgfs.navaids.Runway;
+import de.knewcleus.fgfs.navaids.Pavement;
 
 public class AerodromeParser extends AbstractXPlaneParser {
 	protected final NamedFixDB namedFixDB;
@@ -50,8 +53,12 @@ public class AerodromeParser extends AbstractXPlaneParser {
 	protected double lastElevation;
 	protected double runwayArea;
 	protected Vector3D runwayMoment;
-	protected List<Runway> runways=new ArrayList<Runway>();
+//	protected List<Runway> runways=new ArrayList<Runway>();
+	protected List<Pavement> pavements = new ArrayList<>();
+	protected Pavement currentPavement = null;
 
+	private final Logger log = Logger.getLogger(AerodromeParser.class);
+	
 	public AerodromeParser(NamedFixDB namedFixDB, Shape geographicBounds) {
 		super(geographicBounds);
 		this.namedFixDB=namedFixDB;
@@ -65,12 +72,37 @@ public class AerodromeParser extends AbstractXPlaneParser {
 			processAerodrome(tokens[0],tokens[1].split("\\s+",5));
 		}
 		
-		if (tokens[0].equals("10")) {
-			processPavement(tokens[1].split("\\s+",15));
-		}
+        if (tokens[0].equals("110") || tokens[0].equals("111")||tokens[0].equals("112")||tokens[0].equals("113")||tokens[0].equals("114")||tokens[0].equals("115")||tokens[0].equals("116")) {
+            processPavement(tokens[1].split("\\s+",15));
+        }
 	}
 	
-	protected void processAerodrome(String code, String tokens[]) {
+	private void processPavement(String[] def) {
+        if(def[0].equals("110")) {
+            // pavement header
+            currentPavement = new Pavement(def);
+        } else {
+            // node
+            if(currentPavement==null) {
+                log.fatal("Trying to add a node to a not existing pavement!");
+            } else {
+                currentPavement.addNode(def);
+                Point2D position = currentPavement.getNodes().get(0)!=null?currentPavement.getNodes().get(0).point : null;
+                
+                if(position==null || !isInRange(position.getX(),position.getY())) {
+                    // not in range
+                    return;
+                }
+                if(def[0].equals("113")||def[0].equals("114")||def[0].equals("115")||def[0].equals("116")) {
+                    // close loop or end lines
+                    pavements.add(currentPavement);
+                    currentPavement=null;
+                }
+            }
+        }
+    }
+
+    protected void processAerodrome(String code, String tokens[]) {
 		if (runwayMoment!=null) {
 			runwayMoment=runwayMoment.scale(1.0/runwayArea);
 			
@@ -78,42 +110,17 @@ public class AerodromeParser extends AbstractXPlaneParser {
 				runwayMoment=runwayMoment.add(new Vector3D(0,0,lastElevation));
 				Position arp=new Position(runwayMoment);
 				Aerodrome aerodrome=new Aerodrome(lastID,lastName,arp);
-				for (Runway runway: runways)
-					aerodrome.addRunway(runway);
+				aerodrome.addPavements(pavements);
 				namedFixDB.addFix(aerodrome);
 			}
 		}
 		
-		runways.clear();
+//		runways.clear();
 		lastElevation=Double.parseDouble(tokens[0])*Units.FT;
 		lastID=tokens[3];
 		lastName=tokens[4];
 		runwayMoment=new Position(0,0,0);
 		runwayArea=0.0;
-	}
-	
-	protected void processPavement(String tokens[]) {
-		if (tokens[2].equals("xxx"))
-			return; // skip taxiways
-		
-		double lat=Double.parseDouble(tokens[0]);
-		double lon=Double.parseDouble(tokens[1]);
-		double length=Double.parseDouble(tokens[4])*Units.FT;
-		double width=Double.parseDouble(tokens[7])*Units.FT;
-		double area=length*width;
-		
-		String designation=tokens[2];
-		if (designation.charAt(designation.length()-1)=='x') {
-			designation=designation.substring(0, designation.lastIndexOf('x'));
-		}
-		Position center=new Position(lon,lat,0.0);
-		double trueHeading=Double.parseDouble(tokens[3])*Units.DEG;
-		
-		runwayMoment=runwayMoment.add(new Vector3D(lon*area, lat*area, 0));
-		runwayArea+=area;
-		
-		Runway runway=new Runway(center,designation,trueHeading,length);
-		runways.add(runway);
 	}
 	
 	@Override

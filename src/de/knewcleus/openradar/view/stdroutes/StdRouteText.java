@@ -32,13 +32,13 @@
  */
 package de.knewcleus.openradar.view.stdroutes;
 
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 /**
  * line
@@ -59,25 +59,20 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 public class StdRouteText extends AStdRouteElement {
 
     private Double angle;
-    private final String font;
-    private final Float fontSize;
     private final String text;
     private final boolean clickable;
     private volatile Rectangle2D bounds;
     private volatile Rectangle2D extBounds;
 
-    public StdRouteText(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
-                        String position, String angle, String alignHeading, String font, String fontSize,
-                        String color, boolean clickable, String text) {
-        super(mapViewAdapter, route.getPoint(position,previous),null,null,null,color);
+    public StdRouteText(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+                        String position, String angle, String alignHeading, boolean clickable, String text, StdRouteAttributes attributes) {
+        super(data, mapViewAdapter, route.getPoint(position,previous),null,attributes);
 
         if(alignHeading!=null) {
-            this.angle = adaptAngle(Double.parseDouble(alignHeading));
+            this.angle = adaptAngle(Double.parseDouble(alignHeading)+magDeclination);
         } else {
-            this.angle = angle !=null ? Double.parseDouble(angle) : 0;
+            this.angle = angle !=null ? Double.parseDouble(angle)+magDeclination : 0;
         }
-        this.font = font!=null ? font : "Arial";
-        this.fontSize = fontSize !=null ? Float.parseFloat(fontSize) : 10;
         this.clickable=clickable;
         this.text=text;
     }
@@ -96,14 +91,6 @@ public class StdRouteText extends AStdRouteElement {
     @Override
     public synchronized Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
-        if(color!=null) {
-            g2d.setColor(color);
-        }
-        Font origFont = g2d.getFont();
-        if(font != null) {
-            g2d.setFont(new Font(font,Font.PLAIN,Math.round(fontSize)));
-        }
-
         Point2D displayPoint = getDisplayPoint(geoReferencePoint);
         AffineTransform oldTransform = g2d.getTransform();
         AffineTransform newTransform = new AffineTransform();
@@ -113,7 +100,6 @@ public class StdRouteText extends AStdRouteElement {
         bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
         g2d.drawString(text, (int)(displayPoint.getX()-bounds.getWidth()/2), (int)(displayPoint.getY()-2));
 
-        g2d.setFont(origFont);
         g2d.setTransform(oldTransform);
 
         bounds.setRect(displayPoint.getX(), displayPoint.getY(),bounds.getWidth(),bounds.getHeight());

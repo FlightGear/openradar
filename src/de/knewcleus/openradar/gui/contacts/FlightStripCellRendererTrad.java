@@ -98,7 +98,8 @@ public class FlightStripCellRendererTrad extends JComponent implements ListCellR
     private Color defaultColor = Color.BLACK;
     private Color incativeColor = Color.GRAY;
     private Color selectionColor = Color.BLUE;
-    private Color emergencyColor = Color.RED;
+    private Color emergencyColor = new Color(255,150,100);
+    private Color emergencyColorSelected = new Color(255,200,150);
     private Color newContactColor = new Color(0,200,0);
 
     public static int STRIP_WITDH = 250;
@@ -372,34 +373,24 @@ public class FlightStripCellRendererTrad extends JComponent implements ListCellR
             newContactColor = new Color(0,110,0);
 
             FlightPlanData fpd = value.getFlightPlan();
-            
             if (value.isOnEmergency()) {
-                // font = activeFont;
-                foreground = emergencyColor;
+                if (value.isSelected()) {
+                    background = emergencyColorSelected;
+                } else {
+                    background = emergencyColor;
+                }
 
             } else if (value.isSelected()) {
-                // font = activeFont;
                 foreground = selectionColor;
 
             } else if (fpd!=null && fpd.isOfferedToMe()) {
-//                int seconds = (int) System.currentTimeMillis()/1000;
                 foreground = Color.black;
                 background = new Color(255,255,203);
-//                if(seconds%2==0) {
-//                    foreground = newContactColor;
-//                } else {
-//                    foreground = Color.blue;
-//                }
+
             } else if (value.isNew()) {
-//                int seconds = (int) System.currentTimeMillis()/1000;
                 foreground = newContactColor;
                 foreground = Color.black;
                 background = new Color(215,255,215);
-//                if(seconds%2==0) {
-//                    foreground = newContactColor;
-//                } else {
-//                    foreground = new Color(0,40,0);;
-//                }
 
             } else if(!value.isActive() || value.isNeglect()) {
                 foreground=incativeColor;

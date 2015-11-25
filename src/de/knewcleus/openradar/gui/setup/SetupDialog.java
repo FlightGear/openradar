@@ -130,6 +130,7 @@ public class SetupDialog extends JFrame {
     private JLabel lbLennysServer;
     private JTextField tfLennysFpServer;
     private JButton btCreateSector;
+    private JButton btDeleteSector;
     private JComboBox<String> cbStatusMessages;
     private JProgressBar jProgressBar;
     private StatusMessageComboboxModel cbStatusModel;
@@ -349,15 +350,27 @@ public class SetupDialog extends JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.weightx = 1;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 2);
         jPnlButtons.add(btCreateSector, gridBagConstraints);
 
+        btDeleteSector = new JButton();
+        btDeleteSector.setText("Delete Airport");
+        btDeleteSector.setName("DeleteAirport");
+        btDeleteSector.setEnabled(false);
+        btDeleteSector.addActionListener(setupManager.getActionListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 2);
+        jPnlButtons.add(btDeleteSector, gridBagConstraints);
+
         lbCallSign = new JLabel();
         lbCallSign.setText("CallSign:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.anchor = GridBagConstraints.EAST;
@@ -369,7 +382,7 @@ public class SetupDialog extends JFrame {
         tfCallSign.setText("");
         tfCallSign.setToolTipText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 2);
@@ -381,7 +394,7 @@ public class SetupDialog extends JFrame {
         btStart.setEnabled(false);
         btStart.addActionListener(setupManager.getActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 4);
@@ -1784,6 +1797,7 @@ public class SetupDialog extends JFrame {
                 data.setMagneticDeclination(sb.getMagneticDeclination());
                 btStart.setEnabled(readInputs(data));
                 btCreateSector.setEnabled(false);
+                btDeleteSector.setEnabled(true);
                 data.loadLastCallSign();
                 if (data.getCallSign() != null) {
                     tfCallSign.setText(data.getCallSign());
@@ -1795,11 +1809,13 @@ public class SetupDialog extends JFrame {
                 data.setAirportName(sb.getAirportName());
                 btStart.setEnabled(false);
                 btCreateSector.setEnabled(true);
+                btDeleteSector.setEnabled(false);
             }
         } else {
             data.setAirportCode(null);
             btStart.setEnabled(false);
             btCreateSector.setEnabled(false);
+            btDeleteSector.setEnabled(true);
         }
     }
 

@@ -88,22 +88,30 @@ public class TraditionalLayout extends ADatablockLayout {
     }
 
     @Override
-    public Color getColor(GuiRadarContact contact) {
+    public Color getColor(GuiRadarContact c) {
         Color color = Palette.RADAR_UNCONTROLLED;
 
-        if(!contact .isActive()) {
+        if (c.isIdentActive()) {
+            color = Color.black;
+            c.setHighlighted();
+
+        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
+            // Emergency
+            color = new Color(255,100,0);
+
+        } else if(!c .isActive()) {
             // INCACTIVE GHOSTS
             color=Palette.RADAR_GHOST;
 
-        } else if(contact.isNeglect()) {
+        } else if(c.isNeglect()) {
             // BAD GUYS
             color=Palette.RADAR_GHOST;
 
-        } else if(contact.getState()==State.IMPORTANT) {
+        } else if(c.getState()==State.IMPORTANT) {
             // CONTROLLED left column
             color=Palette.RADAR_CONTROLLED;
 
-        } else if(contact.getState()==State.CONTROLLED) {
+        } else if(c.getState()==State.CONTROLLED) {
             // WATCHED middle column
             color=Palette.RADAR_IMPORTANT;
         } else {
@@ -115,26 +123,33 @@ public class TraditionalLayout extends ADatablockLayout {
     }
 
     @Override
-    public Color getDataBlockColor(GuiRadarContact contact) {
+    public Color getDataBlockColor(GuiRadarContact c) {
         Color color = Palette.RADAR_UNCONTROLLED;
 
-        if(contact.isSelected()) {
+        if (c.isIdentActive()) {
+            color = Color.black;
+            c.setHighlighted();
+        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
+            // Emergency
+            color = new Color(255,100,0);
+
+        } else if(c.isSelected()) {
             // SELECTED
             color=Palette.RADAR_SELECTED;
 
-        } else if(!contact .isActive()) {
+        } else if(!c .isActive()) {
             // INCACTIVE GHOSTS
             color=Palette.RADAR_GHOST;
 
-        } else if(contact.isNeglect()) {
+        } else if(c.isNeglect()) {
             // BAD GUYS
             color=Palette.RADAR_GHOST;
 
-        } else if(contact.getState()==State.IMPORTANT) {
+        } else if(c.getState()==State.IMPORTANT) {
             // CONTROLLED left column
             color=Palette.RADAR_CONTROLLED;
 
-        } else if(contact.getState()==State.CONTROLLED) {
+        } else if(c.getState()==State.CONTROLLED) {
             // WATCHED middle column
             color=Palette.RADAR_IMPORTANT;
         } else {

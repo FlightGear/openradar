@@ -132,7 +132,7 @@ public class RadarContactTextPainter {
             ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f);
             g2d.setComposite(ac);
 
-            g2d.setColor(textHelper.getColor(trackDisplayState.getGuiContact()));
+//            g2d.setColor(textHelper.getColor(trackDisplayState.getGuiContact()));
 
             double dx = anchor.getX()-currentDevicePosition.getX();
             double dy = currentDevicePosition.getY() - anchor.getY();
@@ -142,7 +142,11 @@ public class RadarContactTextPainter {
             
             Point2D newStartPoint = Converter2D.getMapDisplayPoint(currentDevicePosition, angle, 10);
 
-            g2d.setColor(textHelper.getDataBlockColor(trackDisplayState.getGuiContact()));
+            Color dbColor = textHelper.getDataBlockColor(trackDisplayState.getGuiContact());
+            if(trackDisplayState.isSelected()) {
+                dbColor = dbColor.brighter().brighter();
+            }
+            g2d.setColor(dbColor);
             
             line = new Line2D.Double(newStartPoint.getX(),newStartPoint.getY(),anchor.getX(),anchor.getY());
             g2d.draw(line);

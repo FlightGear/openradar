@@ -32,13 +32,13 @@
  */
 package de.knewcleus.openradar.view.stdroutes;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 /**
  * line
@@ -58,18 +58,13 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
  */
 public class StdRouteMinAltitude extends AStdRouteElement {
 
-    private final String font;
-    private final Float fontSize;
     private final String major;
     private final String minor;
 
-    public StdRouteMinAltitude(StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
-                        String position, String value, String font, String fontSize,
-                        String color) {
-        super(mapViewAdapter, route.getPoint(position,previous),null,null,null,color);
+    public StdRouteMinAltitude(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
+                        String position, String value, StdRouteAttributes attributes) {
+        super(data, mapViewAdapter, route.getPoint(position,previous),null,attributes);
 
-        this.font = font!=null ? font : "Arial";
-        this.fontSize = fontSize !=null ? Float.parseFloat(fontSize) : 18;
         this.major=value.substring(0,value.indexOf("."));
         this.minor=value.substring(value.indexOf(".")+1);
     }
@@ -77,22 +72,18 @@ public class StdRouteMinAltitude extends AStdRouteElement {
     @Override
     public Rectangle2D paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
 
-        if(color!=null) {
-            g2d.setColor(color);
-        } else {
-            g2d.setColor(new Color(114,162,210));
-        }
-
         Point2D displayPoint = getDisplayPoint(geoReferencePoint);
 
-        g2d.setFont(new Font(font,Font.BOLD,Math.round(fontSize)));
+        Font boldFont = g2d.getFont().deriveFont(Font.BOLD);
+        g2d.setFont(boldFont);
         Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(major+" "+minor, g2d);
         Rectangle2D majorBounds = g2d.getFontMetrics().getStringBounds(major, g2d);
         int globalX = (int)(displayPoint.getX()-bounds.getWidth()/2);
 
         g2d.drawString(major, globalX, (int)(displayPoint.getY()+bounds.getHeight()/2-2));
 
-        g2d.setFont(new Font(font,Font.BOLD,Math.round(fontSize*0.6f)));
+        int fontSize = boldFont.getSize();
+        g2d.setFont(boldFont.deriveFont(Math.round(fontSize*0.6f)));
         g2d.drawString(minor, (int)(globalX+majorBounds.getWidth()+2), (int)(displayPoint.getY()+bounds.getHeight()/2 - fontSize*0.4));
 
         bounds.setRect(displayPoint.getX(), displayPoint.getY(),bounds.getWidth(),bounds.getHeight());

@@ -28,12 +28,11 @@
  */
 package de.knewcleus.openradar.view.stdroutes;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +50,9 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class StdRoute {
 
-    public enum DisplayMode { always, optional, star, sid, runway }
+    public enum DisplayMode {
+        always, optional, star, sid, runway
+    }
 
     private final IMapViewerAdapter mapViewerAdapter;
 
@@ -60,17 +61,13 @@ public class StdRoute {
     private final AirportData data;
     private final float zoomMin;
     private final float zoomMax;
-    protected final Stroke stroke;
-    private final Color color;
-    private final Color colorSelected;
 
-    private String activeLandingRunways = null;
-    private String activeStartingRunways = null;
+    private HashSet<String> activeLandingRunways = new HashSet<>();
+    private HashSet<String> activeStartingRunways = new HashSet<>();
 
-//    private volatile boolean selected = false; 
-    
-//    private final Set<String> navaids = new HashSet<String>();
-//    private Color navaidColor = null;
+    // private volatile boolean selected = false;
+    // private final Set<String> navaids = new HashSet<String>();
+    // private Color navaidColor = null;
 
     private final Set<NavaidList> navaids = new HashSet<NavaidList>();
 
@@ -78,19 +75,18 @@ public class StdRoute {
     /** The list of routes, that use this route as an include */
     private final List<StdRoute> parentRoutes = Collections.synchronizedList(new ArrayList<StdRoute>());
 
-    private final Logger log = Logger.getLogger(StdRoute.class);    
-    
-    public StdRoute(AirportData data, IMapViewerAdapter mapViewerAdapter, String name, String displayMode, String zoomMin, String zoomMax, String stroke, String sLineWidth,
-            String color) {
+    private final Logger log = Logger.getLogger(StdRoute.class);
+
+    public StdRoute(AirportData data, IMapViewerAdapter mapViewerAdapter, String name, String displayMode, String zoomMin, String zoomMax) {
         this.mapViewerAdapter = mapViewerAdapter;
 
         this.name = name;
 
         try {
             this.displayMode = DisplayMode.valueOf(displayMode);
-        } catch(Exception e) {
-            if(displayMode!=null) {
-                Logger.getLogger(this.getClass()).info("Unrecognized display mode "+displayMode);
+        } catch (Exception e) {
+            if (displayMode != null) {
+                Logger.getLogger(this.getClass()).info("Unrecognized display mode " + displayMode);
             }
             this.displayMode = DisplayMode.runway;
         }
@@ -98,64 +94,15 @@ public class StdRoute {
         this.zoomMin = zoomMin != null ? Float.parseFloat(zoomMin) : 0;
         this.zoomMax = zoomMax != null ? Float.parseFloat(zoomMax) : Integer.MAX_VALUE;
 
-        Float lineWidth = sLineWidth != null ? Float.parseFloat(sLineWidth) : 2;
-
-        if (stroke != null) {
-            if (stroke.contains(",")) {
-                // after the comma follows the linewith of the stroke, we need to parse and remove it
-                int sep = stroke.indexOf(",");
-                lineWidth = Float.parseFloat(stroke.substring(sep + 1));
-                stroke = stroke.substring(0, sep);
-            }
-            if ("line".equalsIgnoreCase(stroke)) {
-                this.stroke = new BasicStroke(lineWidth);
-
-            } else if ("dashed".equalsIgnoreCase(stroke)) {
-                float[] dashPattern = { 10, 10 };
-                this.stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, dashPattern, 0);
-            } else if ("dots".equalsIgnoreCase(stroke)) {
-                float[] dashPattern = { lineWidth, 2 * lineWidth };
-                this.stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, dashPattern, 0);
-            } else if (stroke != null && stroke.contains("-")) {
-                // this variant allows to define own patterns like 10-5-2-5
-
-                StringTokenizer st = new StringTokenizer(stroke, "-");
-                ArrayList<Float> pattern = new ArrayList<Float>();
-                while (st.hasMoreElements()) {
-                    pattern.add(Float.parseFloat(st.nextToken().trim()));
-                }
-                float[] patternArray = new float[pattern.size()];
-                for (int i = 0; i < pattern.size(); i++) {
-                    Float f = pattern.get(i);
-                    patternArray[i] = (f != null ? f : 0);
-                }
-                this.stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, patternArray, 0);
-            } else {
-                this.stroke = new BasicStroke(lineWidth);
-            }
-        } else {
-            this.stroke = new BasicStroke(lineWidth);
-        }
-
-        if (color != null) {
-            StringTokenizer rgb = new StringTokenizer(color, ",");
-            int r = Integer.parseInt(rgb.nextToken());
-            int g = Integer.parseInt(rgb.nextToken());
-            int b = Integer.parseInt(rgb.nextToken());
-            this.color = new Color(r, g, b);
-        } else {
-            this.color = Color.gray;
-        }
-        this.colorSelected=this.color.brighter();
     }
 
-//    public synchronized boolean isSelected() {
-//        return selected;
-//    }
+    // public synchronized boolean isSelected() {
+    // return selected;
+    // }
 
-//    public synchronized void setSelected(boolean selected) {
-//        this.selected = selected;
-//    }
+    // public synchronized void setSelected(boolean selected) {
+    // this.selected = selected;
+    // }
 
     public String getName() {
         return name;
@@ -169,64 +116,44 @@ public class StdRoute {
         return data;
     }
 
-    public synchronized Stroke getStroke() {
-        return stroke;
-    }
-
-    public synchronized Color getColor() {
-        return color;
-    }
-
-    public synchronized Color getSelectedColor() {
-        return colorSelected;
-    }
-
-    public String getActiveLandingRunways() {
+    public Set<String> getActiveLandingRunways() {
         return activeLandingRunways;
     }
 
-    public void setActiveLandingRunways(String activeLandingRunways) {
-        this.activeLandingRunways = activeLandingRunways;
+    public void setActiveLandingRunways(String cs) {
+        String[] array = cs.split(",");
+        this.activeLandingRunways.addAll(Arrays.asList(array));
     }
 
-    public String getActiveStartingRunways() {
+    public Set<String> getActiveStartingRunways() {
         return activeStartingRunways;
     }
 
-    public void setActiveStartingRunways(String activeStartingRunways) {
-        this.activeStartingRunways = activeStartingRunways;
+    public void setActiveStartingRunways(String cs) {
+        String[] array = cs.split(",");
+        this.activeStartingRunways.addAll(Arrays.asList(array));
     }
 
     public synchronized boolean contains(Point p) {
-        for(AStdRouteElement e : elements) {
-            if(e.contains(p)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public synchronized boolean containsNavaid(IIntersection navPoint) {
-        for(NavaidList nl : navaids) {
-            if(nl.containsNavaid(navPoint)) {
+        for (AStdRouteElement e : elements) {
+            if (e.contains(p)) {
                 return true;
             }
         }
         return false;
     }
 
-    public synchronized void setNavaids(String navaids, String navaidColor) {
-        Color color;
-        if (navaidColor != null) {
-            StringTokenizer rgb = new StringTokenizer(navaidColor, ",");
-            int r = Integer.parseInt(rgb.nextToken());
-            int g = Integer.parseInt(rgb.nextToken());
-            int b = Integer.parseInt(rgb.nextToken());
-            color = new Color(r, g, b);
-        } else {
-            color = this.getColor();
+    public synchronized boolean containsNavaid(IIntersection navPoint) {
+        for (NavaidList nl : navaids) {
+            if (nl.containsNavaid(navPoint)) {
+                return true;
+            }
         }
-        NavaidList nlist = new NavaidList(color);
+        return false;
+    }
+
+    public synchronized void setNavaids(String navaids, StdRouteAttributes attributes) {
+        NavaidList nlist = new NavaidList(attributes);
         this.navaids.add(nlist);
         StringTokenizer st = new StringTokenizer(navaids, ",");
         while (st.hasMoreElements()) {
@@ -236,22 +163,19 @@ public class StdRoute {
 
     public synchronized Color getNavaidColor(IIntersection navPoint) {
 
-        for(NavaidList nList : navaids) {
-            if(nList.containsNavaid(navPoint)) {
-                return nList.getColor();
+        for (NavaidList nList : navaids) {
+            if (nList.containsNavaid(navPoint)) {
+                return nList.getAttributes().getColor();
             }
         }
-        return getColor();
+        return Color.gray;
     }
 
     public boolean isVisible(GuiMasterController master) {
-        
         if(isParentRouteVisible(master)) {
             // this means, this route is included into another route which is visible.
             return true;
         }
-        
-        
         AirportData data = master.getAirportData();
 
         if (mapViewerAdapter.getLogicalScale() < zoomMin || mapViewerAdapter.getLogicalScale() > zoomMax) {
@@ -267,24 +191,18 @@ public class StdRoute {
                 }
             }
         }
-        
         if(displayMode.equals(DisplayMode.always)
            || ( displayMode.equals(DisplayMode.optional) && data.getRadarObjectFilterState("STARSID")==true)) {
             return true;
         }
 
         // display mode runway
-
-        if (activeLandingRunways != null || activeStartingRunways != null) {
-            for (GuiRunway rw : data.getRunways().values()) {
-                if (activeLandingRunways != null && rw.isLandingActive() && activeLandingRunways.contains(rw.getCode()) && rw.isLandingRouteEnabled()) {
-                    return true;
-                }
-                if (activeStartingRunways != null && rw.isStartingActive() && activeStartingRunways.contains(rw.getCode()) && rw.isStartRouteEnabled()) {
-                    return true;
-                }
+  
+        // SPEED optimization: Get the list from data and remove all runways that are not in the route definitions
+        if(!(activeStartingRunways.isEmpty() && activeLandingRunways.isEmpty())) { 
+            if ( data.isActiveRouteRunwayContained(activeStartingRunways,activeLandingRunways) ) {
+                return true;
             }
-            return false;
         }
 
         // main switch off
@@ -293,12 +211,12 @@ public class StdRoute {
         }
 
         // no runways defined + main switch is on
-        return true;
+        return false;
     }
 
     private boolean isParentRouteVisible(GuiMasterController master) {
-        for(StdRoute parentRoute : parentRoutes) {
-            if(parentRoute.isVisible(master)) {
+        for (StdRoute parentRoute : parentRoutes) {
+            if (parentRoute.isVisible(master)) {
                 return true;
             }
         }
@@ -314,21 +232,22 @@ public class StdRoute {
     }
 
     public Point2D getPoint(String pointDescr, AStdRouteElement previous) {
-        return getPoint(data,mapViewerAdapter,pointDescr,previous);
+        return getPoint(data, mapViewerAdapter, pointDescr, previous);
     }
 
     public static Point2D getPoint(AirportData data, IMapViewerAdapter mapViewerAdapter, String pointDescr, AStdRouteElement previous) {
 
         if (pointDescr.matches("[A-Z0-9]*-RW[A-Z0-9]*")) {
-            String airportCode = pointDescr.substring(0,pointDescr.indexOf("-"));
+            String airportCode = pointDescr.substring(0, pointDescr.indexOf("-"));
             if (!data.getAirportCode().equals(airportCode)) {
-                throw new IllegalArgumentException("Wrong airport referenced in "+pointDescr+"!");
+                throw new IllegalArgumentException("Wrong airport referenced in " + pointDescr + "!");
             }
 
-            String runwayCode = pointDescr.substring(pointDescr.indexOf("-")+1+2); // +2 is for the prefix 'RW' in front of the number
+            String runwayCode = pointDescr.substring(pointDescr.indexOf("-") + 1 + 2); // +2 is for the prefix 'RW' in
+                                                                                       // front of the number
             GuiRunway rw = data.getRunways().get(runwayCode);
-            if (rw==null) {
-                throw new IllegalArgumentException("Runway end for definition "+pointDescr+" not found!");
+            if (rw == null) {
+                throw new IllegalArgumentException("Runway end for definition " + pointDescr + " not found!");
             }
             Point2D point = rw.getRunwayEnd().getOppositeEnd().getGeographicPosition();
             return point;
@@ -339,19 +258,20 @@ public class StdRoute {
             int pos = pointDescr.indexOf("NM");
             float distance = Float.parseFloat(pointDescr.substring(0, pos));
             int pos2 = pointDescr.indexOf("@");
-            float angle = Float.parseFloat(pointDescr.substring(pos + 2, pos2));
+            float angle = Float.parseFloat(pointDescr.substring(pos + 2, pos2)) + (float) data.getMagneticDeclination();
             String id = pointDescr.substring(pos2 + 1);
-            
-            Point2D navaidPoint;
-            if (id.contains("@")) {
-                // another recursive redirection 
-                navaidPoint = getPoint(data, mapViewerAdapter, id, previous);
-            } else {
+
+            Point2D navaidPoint = null;
+            if (data.getNavaidDB().getNavaid(id) != null) {
                 // search the referenced navaid
-                if (data.getNavaidDB().getNavaid(id) == null) {
+                navaidPoint = data.getNavaidDB().getNavaid(id).getGeographicPosition();
+            }
+            if (navaidPoint == null) {
+                // another recursive redirection
+                navaidPoint = getPoint(data, mapViewerAdapter, id, previous);
+                if (navaidPoint == null) {
                     throw new IllegalArgumentException("Navaid " + pointDescr + " not found!");
                 }
-                navaidPoint = data.getNavaidDB().getNavaid(id).getGeographicPosition();
             }
             Point2D point = new IndirectPoint2D(mapViewerAdapter, navaidPoint, angle, distance);
             return point;
@@ -373,7 +293,8 @@ public class StdRoute {
     }
 
     /**
-     * This method can read the point coordinates ("lat,lon") directly as decimals as well as in degree, minute and seconds format.
+     * This method can read the point coordinates ("lat,lon") directly as decimals as well as in degree, minute and
+     * seconds format.
      *
      * @param pointDescr
      * @return
@@ -381,42 +302,41 @@ public class StdRoute {
     private static Point2D parsePoint(String pointDescr) {
         String lat = pointDescr.substring(0, pointDescr.indexOf(","));
         double latD = 0;
-        if(lat.contains("°") && lat.contains("'") && lat.contains("''")) {
+        if (lat.contains("°") && lat.contains("'") && lat.contains("''")) {
             // N47°54'26
-            int sign = lat.substring(0,1).equalsIgnoreCase("N") ? 1 : -1;
-            Double degrees = Double.parseDouble(lat.substring(1,lat.indexOf("°")).trim()) ;
-            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("°")+1,lat.indexOf("'")).trim()) ;
-            Double seconds = Double.parseDouble(lat.substring(lat.indexOf("'")+1,lat.indexOf("''")).trim()) ;
+            int sign = lat.substring(0, 1).equalsIgnoreCase("N") ? 1 : -1;
+            Double degrees = Double.parseDouble(lat.substring(1, lat.indexOf("°")).trim());
+            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("°") + 1, lat.indexOf("'")).trim());
+            Double seconds = Double.parseDouble(lat.substring(lat.indexOf("'") + 1, lat.indexOf("''")).trim());
             latD = (degrees + minutes / 60d + seconds / 3600d) * sign;
 
-        } else if(lat.contains("°") && lat.contains("'")) {
+        } else if (lat.contains("°") && lat.contains("'")) {
             // N47°54.26
-            int sign = lat.substring(0,1).equalsIgnoreCase("N") ? 1 : -1;
-            Double degrees = Double.parseDouble(lat.substring(1,lat.indexOf("°")).trim()) ;
-            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("°")+1,lat.indexOf("'")).trim()) ;
+            int sign = lat.substring(0, 1).equalsIgnoreCase("N") ? 1 : -1;
+            Double degrees = Double.parseDouble(lat.substring(1, lat.indexOf("°")).trim());
+            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("°") + 1, lat.indexOf("'")).trim());
             latD = (degrees + minutes / 60) * sign;
 
         } else {
             latD = Double.parseDouble(lat);
         }
 
-
         String lon = pointDescr.substring(pointDescr.indexOf(",") + 1);
         double lonD = 0;
-        if(lon.contains("°") && lon.contains("'") && lon.contains("''")) {
+        if (lon.contains("°") && lon.contains("'") && lon.contains("''")) {
             // E7°54'15
-            int sign = lon.substring(0,1).equalsIgnoreCase("E") ? 1 : -1;
-            Double degrees = Double.parseDouble(lon.substring(1,lon.indexOf("°")).trim()) ;
-            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("°")+1,lon.indexOf("'")).trim()) ;
-            Double seconds = Double.parseDouble(lon.substring(lon.indexOf("'")+1,lon.indexOf("''")).trim()) ;
+            int sign = lon.substring(0, 1).equalsIgnoreCase("E") ? 1 : -1;
+            Double degrees = Double.parseDouble(lon.substring(1, lon.indexOf("°")).trim());
+            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("°") + 1, lon.indexOf("'")).trim());
+            Double seconds = Double.parseDouble(lon.substring(lon.indexOf("'") + 1, lon.indexOf("''")).trim());
 
             lonD = (degrees + minutes / 60d + seconds / 3600d) * sign;
 
-        } else if(lon.contains("°") && lon.contains("'")) {
+        } else if (lon.contains("°") && lon.contains("'")) {
             // E7°54.15
-            int sign = lon.substring(0,1).equalsIgnoreCase("E") ? 1 : -1;
-            Double degrees = Double.parseDouble(lon.substring(1,lon.indexOf("°")).trim()) ;
-            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("°")+1,lon.indexOf("'")).trim()) ;
+            int sign = lon.substring(0, 1).equalsIgnoreCase("E") ? 1 : -1;
+            Double degrees = Double.parseDouble(lon.substring(1, lon.indexOf("°")).trim());
+            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("°") + 1, lon.indexOf("'")).trim());
 
             lonD = (degrees + minutes / 60) * sign;
         } else {
@@ -433,15 +353,15 @@ public class StdRoute {
 
     public void includeRoute(List<StdRoute> stdRoutes, String routeName) {
         StdRoute routeToInclude = null;
-        for(StdRoute r : stdRoutes) {
-            if(r.getName().equals(routeName)) {
+        for (StdRoute r : stdRoutes) {
+            if (r.getName().equals(routeName)) {
                 routeToInclude = r;
             }
         }
-        if(routeToInclude!=null) {
+        if (routeToInclude != null) {
             routeToInclude.registerParentRoute(this);
         } else {
-            log.warn(getName() + ": Could not find route '"+routeName+"' to include it.");
+            log.warn(getName() + ": Could not find route '" + routeName + "' to include it.");
         }
     }
 
@@ -449,17 +369,18 @@ public class StdRoute {
         parentRoutes.add(stdRoute);
     }
 
-    /** checks if this route is assigned to the selected contact or 
-     * if it is implicitelly assigned, because it is included into an assigned route.
-     *  
+    /**
+     * checks if this route is assigned to the selected contact or if it is implicitelly assigned, because it is
+     * included into an assigned route.
+     * 
      * @param master
      * @return true if assigned
      */
     public boolean isRouteAssigned(GuiMasterController master) {
         boolean result = master.getRadarContactManager().isRouteAssigned(getName());
-        if(result==false) {
-            for(StdRoute parentRoute : parentRoutes) {
-                if(parentRoute.isRouteAssigned(master)) {
+        if (result == false) {
+            for (StdRoute parentRoute : parentRoutes) {
+                if (parentRoute.isRouteAssigned(master)) {
                     return true;
                 }
             }

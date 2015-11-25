@@ -85,9 +85,12 @@ public class PureSimulationLayout extends ADatablockLayout {
 
 //        boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
 
-        if(c.getTranspSquawkCode()!=null && 7700==c.getTranspSquawkCode()) {
+        if (c.isIdentActive()) {
+            color = Color.black;
+            c.setHighlighted();
+        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
             // Emergency
-            color=Color.red;
+            color = new Color(255,100,0);
 
         } else if(!c .isActive()) {
             // INCACTIVE GHOSTS
@@ -97,8 +100,6 @@ public class PureSimulationLayout extends ADatablockLayout {
             // BAD GUYS
             color=Palette.RADAR_GHOST;
 
-//        } else if(c.getTranspSquawkCode()!=null && !assignedSquawkTunedIn) {
-//            color = new Color(80,0,160);
         } else if(c.getState()==State.IMPORTANT) {
             // CONTROLLED left column
             color=Palette.RADAR_CONTROLLED;
@@ -120,13 +121,12 @@ public class PureSimulationLayout extends ADatablockLayout {
 
 //        boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
 
-        if(c.getTranspSquawkCode()!=null && 7700==c.getTranspSquawkCode()) {
+        if (c.isIdentActive()) {
+            color = Color.black;
+            c.setHighlighted();
+        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
             // Emergency
-            color=Color.red;
-
-        } else if(c.isSelected()) {
-            // SELECTED
-            color=Palette.RADAR_SELECTED;
+            color = new Color(255,100,0);
 
         } else if(!c .isActive()) {
             // INCACTIVE GHOSTS
@@ -136,8 +136,6 @@ public class PureSimulationLayout extends ADatablockLayout {
             // BAD GUYS
             color=Palette.RADAR_GHOST;
 
-//        } else if(c.getTranspSquawkCode()!=null && !assignedSquawkTunedIn) {
-//            color = new Color(80,0,160);
         } else if(c.getState()==State.IMPORTANT) {
             // CONTROLLED left column
             color=Palette.RADAR_CONTROLLED;

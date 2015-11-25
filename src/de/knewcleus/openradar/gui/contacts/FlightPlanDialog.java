@@ -50,6 +50,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -827,6 +828,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         this.contact = contact;
 
         setData(contact);
+        if(master.getAirportData().isLenny64Enabled()) {
+            (new Thread(new Lenny64FpExistsChecker(master, contact, this,this.lenny64Controller.getLenny64Connector()),"OpenRadar - Lenny64 Flightplan exists checker")).start();
+        }
 
         Dimension innerSize = getPreferredSize();
         setSize(new Dimension((int) innerSize.getWidth() + 8, (int) innerSize.getHeight() + 8));
@@ -856,9 +860,6 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     public void setData(GuiRadarContact contact) {
         
         btRetrieveFp.setForeground(Color.black);
-        if(master.getAirportData().isLenny64Enabled()) {
-            (new Thread(new Lenny64FpExistsChecker(master, contact, this,this.lenny64Controller.getLenny64Connector()),"OpenRadar - Lenny64 Flightplan exists checker")).start();
-        }
 
         tbContacts.setTitle("<html><body>Contact <b>"+contact.getCallSign()+"</b></body></html>");
         chbFgComSupport.setSelected(contact.hasFgComSupport());
@@ -884,9 +885,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         tfFpAltitude.setText(fpd.getCruisingAltitude());
         tfFpTAS.setText(fpd.getTrueAirspeed());
         
-        cbAssignedRunway.setModel(master.getAirportData().getRunwayModel(true));
+        master.getAirportData().updateRunwayModel((DefaultComboBoxModel<String>) cbAssignedRunway.getModel(),true);
         cbAssignedRunway.getEditor().setItem(fpd.getAssignedRunway());
-        cbAssignedRoute.setModel(master.getAirportData().getNavaidDB().getRoutesCbModel(master,true));
+        master.getAirportData().getNavaidDB().updateRoutesCbModel((DefaultComboBoxModel<String>) cbAssignedRoute.getModel(),master,true);
         cbAssignedRoute.getEditor().setItem(fpd.getAssignedRoute());
 
         tfAssignedAltitude.setText(fpd.getAssignedAltitude());
@@ -1095,7 +1096,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     }
 
     public void saveData() {
-
+System.out.println("saveData");
         FlightPlanData fpd = contact.getFlightPlan();
 
         contact.setFgComSupport(chbFgComSupport.isSelected());
@@ -1117,8 +1118,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         // estimatedFlightTime+
         // estimatedFuelTime
         
-        fpd.setAssignedRunway((String)cbAssignedRunway.getEditor().getItem());//.getSelectedItem());
-        fpd.setAssignedRoute((String)cbAssignedRoute.getEditor().getItem());//getSelectedItem());
+        fpd.setAssignedRunway((String)cbAssignedRunway.getEditor().getItem());
+        fpd.setAssignedRoute((String)cbAssignedRoute.getEditor().getItem());
         fpd.setAssignedAltitude(tfAssignedAltitude.getText());
 
         if(contact.getFlightPlan().isOwnedByMe()) {
@@ -1151,25 +1152,24 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
             JTextPane ta = (JTextPane) e.getSource();
             String currentText = ta.getText();
 //            if(ta.equals(tpPrivateDetails)) {
-                if (e.getKeyChar() == KeyEvent.VK_ENTER && !e.isControlDown()) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER && !e.isControlDown()&&!e.isShiftDown()) {
                     int carretPos = ta.getCaretPosition() - 1;
                     currentText = new StringBuilder(currentText).deleteCharAt(carretPos).toString();
                     // master.getRadarContactManager().setAtcComment(currentText);
                     saveData();
-                    ta.setText(currentText); // remove newline
+                    ta.setText(currentText); // remove newlinesa
                     ta.setCaretPosition(carretPos);
                     e.consume();
     
                     closeDialog(true);
                 }
-                if (e.getKeyChar() == KeyEvent.VK_ENTER && e.isControlDown()) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER && e.isControlDown() &&!e.isShiftDown()) {
                     int carretPos = ta.getCaretPosition();
                     currentText = new StringBuilder(currentText).insert(carretPos, "\n").toString();
-                    //master.getRadarContactManager().setAtcComment(currentText); // save and continue
-                    saveData();
                     ta.setText(currentText);
-                    ta.setCaretPosition(carretPos + 1);
-                    ta.requestFocus();
+                    ta.setCaretPosition(carretPos+1);
+                    saveData();
+                    //ta.requestFocus();
                 }
 //            }
 //            if(ta.equals(tpPrivateDetails)) {

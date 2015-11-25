@@ -181,6 +181,6 @@ public class ZippedShapefileLayer implements IGeodataLayer {
 
     @Override
     public boolean hasNext() {
-        return shpFileReader.getLastFeatureID()<recordCount;
+        return shpFileReader!=null && shpFileReader.getLastFeatureID()<recordCount;
     }
 }
