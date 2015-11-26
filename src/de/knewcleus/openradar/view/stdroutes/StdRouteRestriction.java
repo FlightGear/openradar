@@ -17,15 +17,15 @@
  *
  * Diese Datei ist Teil von OpenRadar.
  * 
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
+ * OpenRadar ist Freie Software: Sie kÃ¶nnen es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
- * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * Lizenz oder (nach Ihrer Option) jeder spÃ¤teren verÃ¶ffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  * 
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
- * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
- * Public License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nÃ¼tzlich sein wird, aber OHNE JEDE
+ * GEWÃ„HELEISTUNG, bereitgestellt; sogar ohne die implizite GewÃ¤hrleistung der
+ * MARKTFÃ„HIGKEIT oder EIGNUNG FÃœR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
+ * Public License fÃ¼r weitere Details.
  * 
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
@@ -33,13 +33,12 @@
 package de.knewcleus.openradar.view.stdroutes;
 
 import java.awt.BasicStroke;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

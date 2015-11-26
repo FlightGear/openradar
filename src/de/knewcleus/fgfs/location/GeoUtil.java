@@ -17,15 +17,15 @@
  * 
  * Diese Datei ist Teil von OpenRadar.
  * 
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
+ * OpenRadar ist Freie Software: Sie kÃ¶nnen es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
- * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * Lizenz oder (nach Ihrer Option) jeder spÃ¤teren verÃ¶ffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  * 
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
- * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
- * Public License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nÃ¼tzlich sein wird, aber OHNE JEDE
+ * GEWÃ„HELEISTUNG, bereitgestellt; sogar ohne die implizite GewÃ¤hrleistung der
+ * MARKTFÃ„HIGKEIT oder EIGNUNG FÃœR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
+ * Public License fÃ¼r weitere Details.
  * 
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
@@ -92,7 +92,7 @@ public class GeoUtil {
         double x2 = 7.5319540;
         double y2 = 47.58594200;
         GeoUtilInfo result1 = getDistance(x1, y1, x2, y2);
-        System.out.println(result1.length / Units.FT+"\" "+result1.angle+"°");
+        System.out.println(result1.length / Units.FT+"\" "+result1.angle+"Â°");
         GeodesicUtils geodesicUtils = new GeodesicUtils(Ellipsoid.WGS84);
         GeodesicInformation result = geodesicUtils.inverse(x1, y1, x2, y2);
         System.out.println(">" + result.getLength() / Units.FT);
@@ -102,7 +102,7 @@ public class GeoUtil {
         x2 = 7.54049300;
         y2 = 47.59164500;
         result1 = getDistance(x1, y1, x2, y2);
-        System.out.println(result1.length / Units.FT+"\" "+result1.angle+"°");
+        System.out.println(result1.length / Units.FT+"\" "+result1.angle+"Â°");
         result = geodesicUtils.inverse(x1, y1, x2, y2);
         System.out.println(">" + result.getLength() / Units.FT);
 

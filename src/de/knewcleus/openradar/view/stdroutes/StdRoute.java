@@ -15,13 +15,13 @@
  *
  * Diese Datei ist Teil von OpenRadar.
  *
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU General Public License, wie von der Free
- * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * OpenRadar ist Freie Software: Sie kÃ¶nnen es unter den Bedingungen der GNU General Public License, wie von der Free
+ * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder spÃ¤teren verÃ¶ffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne
- * die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
- * License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nÃ¼tzlich sein wird, aber OHNE JEDE GEWÃ„HELEISTUNG, bereitgestellt; sogar ohne
+ * die implizite GewÃ¤hrleistung der MARKTFÃ„HIGKEIT oder EIGNUNG FÃœR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
+ * License fÃ¼r weitere Details.
  *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
  * <http://www.gnu.org/licenses/>.
@@ -302,19 +302,19 @@ public class StdRoute {
     private static Point2D parsePoint(String pointDescr) {
         String lat = pointDescr.substring(0, pointDescr.indexOf(","));
         double latD = 0;
-        if (lat.contains("°") && lat.contains("'") && lat.contains("''")) {
-            // N47°54'26
+        if (lat.contains("Â°") && lat.contains("'") && lat.contains("''")) {
+            // N47Â°54'26
             int sign = lat.substring(0, 1).equalsIgnoreCase("N") ? 1 : -1;
-            Double degrees = Double.parseDouble(lat.substring(1, lat.indexOf("°")).trim());
-            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("°") + 1, lat.indexOf("'")).trim());
+            Double degrees = Double.parseDouble(lat.substring(1, lat.indexOf("Â°")).trim());
+            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("Â°") + 1, lat.indexOf("'")).trim());
             Double seconds = Double.parseDouble(lat.substring(lat.indexOf("'") + 1, lat.indexOf("''")).trim());
             latD = (degrees + minutes / 60d + seconds / 3600d) * sign;
 
-        } else if (lat.contains("°") && lat.contains("'")) {
-            // N47°54.26
+        } else if (lat.contains("Â°") && lat.contains("'")) {
+            // N47Â°54.26
             int sign = lat.substring(0, 1).equalsIgnoreCase("N") ? 1 : -1;
-            Double degrees = Double.parseDouble(lat.substring(1, lat.indexOf("°")).trim());
-            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("°") + 1, lat.indexOf("'")).trim());
+            Double degrees = Double.parseDouble(lat.substring(1, lat.indexOf("Â°")).trim());
+            Double minutes = Double.parseDouble(lat.substring(lat.indexOf("Â°") + 1, lat.indexOf("'")).trim());
             latD = (degrees + minutes / 60) * sign;
 
         } else {
@@ -323,20 +323,20 @@ public class StdRoute {
 
         String lon = pointDescr.substring(pointDescr.indexOf(",") + 1);
         double lonD = 0;
-        if (lon.contains("°") && lon.contains("'") && lon.contains("''")) {
-            // E7°54'15
+        if (lon.contains("Â°") && lon.contains("'") && lon.contains("''")) {
+            // E7Â°54'15
             int sign = lon.substring(0, 1).equalsIgnoreCase("E") ? 1 : -1;
-            Double degrees = Double.parseDouble(lon.substring(1, lon.indexOf("°")).trim());
-            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("°") + 1, lon.indexOf("'")).trim());
+            Double degrees = Double.parseDouble(lon.substring(1, lon.indexOf("Â°")).trim());
+            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("Â°") + 1, lon.indexOf("'")).trim());
             Double seconds = Double.parseDouble(lon.substring(lon.indexOf("'") + 1, lon.indexOf("''")).trim());
 
             lonD = (degrees + minutes / 60d + seconds / 3600d) * sign;
 
-        } else if (lon.contains("°") && lon.contains("'")) {
-            // E7°54.15
+        } else if (lon.contains("Â°") && lon.contains("'")) {
+            // E7Â°54.15
             int sign = lon.substring(0, 1).equalsIgnoreCase("E") ? 1 : -1;
-            Double degrees = Double.parseDouble(lon.substring(1, lon.indexOf("°")).trim());
-            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("°") + 1, lon.indexOf("'")).trim());
+            Double degrees = Double.parseDouble(lon.substring(1, lon.indexOf("Â°")).trim());
+            Double minutes = Double.parseDouble(lon.substring(lon.indexOf("Â°") + 1, lon.indexOf("'")).trim());
 
             lonD = (degrees + minutes / 60) * sign;
         } else {

@@ -17,15 +17,15 @@
  *
  * Diese Datei ist Teil von OpenRadar.
  *
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
+ * OpenRadar ist Freie Software: Sie kÃ¶nnen es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
- * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * Lizenz oder (nach Ihrer Option) jeder spÃ¤teren verÃ¶ffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
- * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
- * Public License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nÃ¼tzlich sein wird, aber OHNE JEDE
+ * GEWÃ„HELEISTUNG, bereitgestellt; sogar ohne die implizite GewÃ¤hrleistung der
+ * MARKTFÃ„HIGKEIT oder EIGNUNG FÃœR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
+ * Public License fÃ¼r weitere Details.
  *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
@@ -150,7 +150,7 @@ public class StPView implements IBoundedView, INotificationListener {
             String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
             String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);;
 
-            String textLine1 = String.format("%s° (%2s°)",dTP,dTS);
+            String textLine1 = String.format("%sÂ° (%2sÂ°)",dTP,dTS);
             String textLine2 = String.format("%1s NM, ETA %2s", dist,min);
             boundsLine1 = fontMetrics.getStringBounds(textLine1, g2d);
             boundsLine2 = fontMetrics.getStringBounds(textLine2, g2d);

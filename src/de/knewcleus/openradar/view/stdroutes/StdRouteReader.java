@@ -15,13 +15,13 @@
  *
  * Diese Datei ist Teil von OpenRadar.
  *
- * OpenRadar ist Freie Software: Sie k�nnen es unter den Bedingungen der GNU General Public License, wie von der Free
- * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder sp�teren ver�ffentlichten Version,
+ * OpenRadar ist Freie Software: Sie kï¿½nnen es unter den Bedingungen der GNU General Public License, wie von der Free
+ * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder spï¿½teren verï¿½ffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es n�tzlich sein wird, aber OHNE JEDE GEW�HELEISTUNG, bereitgestellt; sogar ohne
- * die implizite Gew�hrleistung der MARKTF�HIGKEIT oder EIGNUNG F�R EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
- * License f�r weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nï¿½tzlich sein wird, aber OHNE JEDE GEWï¿½HELEISTUNG, bereitgestellt; sogar ohne
+ * die implizite Gewï¿½hrleistung der MARKTFï¿½HIGKEIT oder EIGNUNG Fï¿½R EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
+ * License fï¿½r weitere Details.
  *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
  * <http://www.gnu.org/licenses/>.

@@ -405,10 +405,10 @@ public class CoreMag {
     public static void main(String[] args) {
         // lat long height in km date
         long start = System.currentTimeMillis();
-        System.out.println("LFSB : " + calc_magvarDeg(47.5980133582781, 7.52314995456498, 270, System.currentTimeMillis()) + " (real 1.82°E)");
+        System.out.println("LFSB : " + calc_magvarDeg(47.5980133582781, 7.52314995456498, 270, System.currentTimeMillis()) + " (real 1.82Â°E)");
         System.out.println("in " + (System.currentTimeMillis() - start) + "ms");
         start = System.currentTimeMillis();
-        System.out.println("KSFO : " + calc_magvarDeg(37.712555, -122.214411, 0, System.currentTimeMillis()) + " (real 13,67°E)");
+        System.out.println("KSFO : " + calc_magvarDeg(37.712555, -122.214411, 0, System.currentTimeMillis()) + " (real 13,67Â°E)");
         System.out.println("in " + (System.currentTimeMillis() - start) + "ms");
     }
 

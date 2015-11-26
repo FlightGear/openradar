@@ -17,15 +17,15 @@
  *
  * Diese Datei ist Teil von OpenRadar.
  *
- * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
+ * OpenRadar ist Freie Software: Sie kÃ¶nnen es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
- * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
+ * Lizenz oder (nach Ihrer Option) jeder spÃ¤teren verÃ¶ffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
- * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
- * Public License für weitere Details.
+ * OpenRadar wird in der Hoffnung, dass es nÃ¼tzlich sein wird, aber OHNE JEDE
+ * GEWÃ„HELEISTUNG, bereitgestellt; sogar ohne die implizite GewÃ¤hrleistung der
+ * MARKTFÃ„HIGKEIT oder EIGNUNG FÃœR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
+ * Public License fÃ¼r weitere Details.
  *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
@@ -169,7 +169,7 @@ public class ActiveAtcSymbolView implements IBoundedView, INotificationListener 
                     g2d.fill(new RoundRectangle2D.Double(currentPosition2.getX()-bounds.getWidth()/2-2,currentPosition2.getY()-bounds.getHeight()/2-10, bounds.getWidth()+6,bounds.getHeight()+12,5d,5d));
                     g2d.setComposite(formerComposite);
                     g2d.setColor(new Color(0,230,0));         
-                    String line1 = atc.callSign+String.format(" %03.0f°", heading);
+                    String line1 = atc.callSign+String.format(" %03.0fÂ°", heading);
                     String line2 = atc.frequency+ String.format(" +%01.0fNM", atc.distance-100);
                     g2d.drawString(line1,(float)(currentPosition2.getX()-bounds.getWidth()/2),(float)(currentPosition2.getY()-10));
                     g2d.drawString(line2,(float)(currentPosition2.getX()-bounds.getWidth()/2),(float)(currentPosition2.getY()));
