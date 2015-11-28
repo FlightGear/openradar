@@ -16,17 +16,17 @@
  * OpenRadar. If not, see <http://www.gnu.org/licenses/>.
  *
  * Diese Datei ist Teil von OpenRadar.
- * 
+ *
  * OpenRadar ist Freie Software: Sie können es unter den Bedingungen der GNU
  * General Public License, wie von der Free Software Foundation, Version 3 der
  * Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
- * 
+ *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
  * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
- * 
+ *
  * Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  * Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
  */
@@ -46,13 +46,14 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 /**
- * restriction .position Navaid code or geo coordinates ("lat,long" or
- * point,angle,range) .maxspeed (optional) Maximum speed in kts to be displayed.
- * .notabove (optional) Maximum permitted altitude text (typically should be
- * FLxxx or xxxft) .notbelow (optional) Minimum permitted altitude text .font
- * (optional) default if unspecified is Ariel .fontSize (optional) default if
- * unspecified is 10 .stroke (optional) default is normal line alternatives:
- * "dashed","dots", or a numeric spec
+ * restriction
+ * .position   Navaid code or geo coordinates ("lat,long" or point,angle,range)
+ * .maxspeed   (optional) Maximum speed in kts to be displayed.
+ * .notabove   (optional) Maximum permitted altitude text (typically should be FLxxx or xxxft)
+ * .notbelow   (optional) Minimum permitted altitude text
+ * .font       (optional) default if unspecified is Ariel
+ * .fontSize   (optional) default if unspecified is 10
+ * .stroke     (optional) default is normal line alternatives: "dashed","dots", or a numeric spec
  *
  *
  * @author Tim Wootton
@@ -88,48 +89,101 @@ public class StdRouteRestriction extends AStdRouteElement {
 		boolean slot5Line = false;
 		boolean boxSides = false;
 
-		/*
-		 * The table below shows what appears in each of the 5 graphic component
-		 * areas (slots) of the restriction object depending on which of the 3
-		 * inputs, maxspeed, notabove and notbelow are provided, and also
-		 * dependent on how their values relate to each other. There are 11
-		 * supported combinations however the 1st and last are not particularly
-		 * useful, so in practice there are 9.
-		 * 
-		 * 
-		 * If nothing defined 1 2 3 4 5
-		 * 
-		 * If only maxspeed defined 1 |---------| 2 | MAX | 3 | | 4 | 240kt | 5
-		 * |---------|
-		 * 
-		 * If only notabove defined 1 2 3 --------- 4 3000ft 5
-		 * 
-		 * If only notbelow defined 1 2 FL120 3 --------- 4 5
-		 * 
-		 * If maxspeed and notabove defined 1 --------- 2 3000ft 3 4 240kt 5
-		 * 
-		 * If maxspeed and notbelow defined 1 2 FL120 3 --------- 4 240kt 5
-		 * 
-		 * If notabove and notbelow defined with notabove < notbelow restricted
-		 * between 3000ft and FL120 ok below 3000ft and above FL120 1 2 FL120 3
-		 * --------- 4 3000ft 5
-		 * 
-		 * 
-		 * If notabove and notbelow defined with notabove > notbelow ok between
-		 * 3000ft and FL120 restricted below 3000 and above FL120 1 --------- 2
-		 * FL120 3 4 3000ft 5 ---------
-		 * 
-		 * If notabove and notbelow defined with notabove == notbelow ok only at
-		 * exact altitude restricted above and below 1 --------- 2 FL120 3
-		 * --------- 4 5
-		 * 
-		 * If maxspeed and notabove and notbelow defined with notabove ==
-		 * notbelow ok only at exact altitude restricted above and below 1
-		 * --------- 2 FL120 3 --------- 4 240kt 5
-		 * 
-		 * If maxspeed and notabove and notbelow defined with notabove <>
-		 * notbelow Invalid combination 1 2 ERR ALL3&DIFF 3 4 IN RESTRICTION 5
-		 */
+    	/*
+   	 The table below shows what appears in each of the 5 graphic component areas (slots) of
+   	 the restriction object depending on which of the 3 inputs, maxspeed, notabove and
+   	 notbelow are provided, and also dependent on how their values relate to each other.
+   	 There are 11 supported combinations however the 1st and last are not particularly
+   	 useful, so in practice there are 9.
+
+
+   	 If nothing defined
+   	  1
+   	  2
+   	  3
+   	  4
+   	  5
+
+   	 If only maxspeed defined
+   	  1 |---------|
+   	  2 |   MAX   |
+   	  3 |         |
+   	  4 |  240kt  |
+   	  5 |---------|
+
+   	 If only notabove defined
+   	  1
+   	  2
+   	  3 ---------
+   	  4  3000ft
+   	  5
+
+   	 If only notbelow defined
+   	  1
+   	  2  FL120
+   	  3 ---------
+   	  4
+   	  5
+
+   	 If maxspeed and notabove defined
+   	  1 ---------
+   	  2  3000ft
+   	  3
+   	  4  240kt
+   	  5
+
+   	 If maxspeed and notbelow defined
+   	  1
+   	  2  FL120
+   	  3 ---------
+   	  4  240kt
+   	  5
+
+   	 If notabove and notbelow defined with notabove < notbelow
+   	 restricted between 3000ft and FL120
+   	 ok below 3000ft and above FL120
+   	  1
+   	  2  FL120
+   	  3 ---------
+   	  4  3000ft
+   	  5
+
+
+   	 If notabove and notbelow defined with notabove > notbelow
+   	 ok between 3000ft and FL120
+   	 restricted below 3000 and above FL120
+   	  1 ---------
+   	  2  FL120
+   	  3
+   	  4  3000ft
+   	  5 ---------
+
+   	 If notabove and notbelow defined with notabove == notbelow
+   	 ok only at exact altitude
+   	 restricted above and below
+   	  1 ---------
+   	  2  FL120
+   	  3 ---------
+   	  4
+   	  5
+
+   	 If maxspeed and notabove and notbelow defined with notabove == notbelow
+   	 ok only at exact altitude
+   	 restricted above and below
+   	  1 ---------
+   	  2  FL120
+   	  3 ---------
+   	  4  240kt
+   	  5
+
+   	 If maxspeed and notabove and notbelow defined with notabove <> notbelow
+   	  Invalid combination
+   	  1
+   	  2  ERR ALL3&DIFF
+   	  3
+   	  4  IN RESTRICTION
+   	  5
+   	 */
 
 		if (notabove != null) {
 			if (maxspeed != null) {
@@ -255,19 +309,15 @@ public class StdRouteRestriction extends AStdRouteElement {
 
 	private int altInFeet(String alt) {
 		if (alt != null) {
-			alt = alt.replace("AMSL", ""); // Remove some common clutter to get
-											// a numeric
-			alt = alt.replace(",", ""); // that we can parse
-			alt = alt.replace("SFC", "0"); // Assuming the surface and
-			alt = alt.replace("GND", "0"); // the ground are 0ft is wrong,
+			alt = alt.replace("AMSL", "");  // Remove some common clutter to get
+			alt = alt.replace("MAX", "");   // a numeric
+			alt = alt.replace(",", "");     // that we can parse
+			alt = alt.replace(" ", "");
+			alt = alt.replace("SFC", "0");  // Assuming the surface and
+			alt = alt.replace("GND", "0");  // the ground are 0ft is wrong,
 											// but in the unlikely event that
-											// your ground
-											// is below 0ft _and_ you're trying
-											// to mark a
-											// restriction there, the workaround
-											// is to
-											// specify the actual height in -ve
-											// feet
+			                                // your ground
+			                                // is below 0ft _and_ you're trying
 			try {
 				return Integer.parseInt(alt); // plain integer e.g. 3000
 			} catch (NumberFormatException e) {
