@@ -1558,7 +1558,9 @@ public class SetupDialog extends JFrame {
         } else {
             lbMessage.setText(null);
             saveProperties();
-            btStart.setEnabled(true);
+            if(liSearchResults.getSelectedValue() != null) {
+	            btStart.setEnabled(true);
+            }
             return true;
         }
     }
