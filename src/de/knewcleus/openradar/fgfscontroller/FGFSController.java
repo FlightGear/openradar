@@ -85,6 +85,10 @@ public class FGFSController {
         return online || System.currentTimeMillis() - lastCheck>5000;
     }
     
+    public synchronized boolean getLastOnlineStatus() {
+    	return online;
+    }
+    
     public void start() {
         activatePreset("P1");
         pointCameraIntoPresetHeading();
@@ -124,6 +128,7 @@ public class FGFSController {
                 fgfsConnection = new FGFSConnection(telnetHost, telnetPort);
             } catch(IOException e) {
                 online=false;
+                cameraPresetControlPanel.applyOnlineStatus();
                 lastCheck = System.currentTimeMillis();
                 throw e;
             }
@@ -131,6 +136,7 @@ public class FGFSController {
             fgfsConnection.setBoolean("/sim/panel/visibility", false);
             fgfsConnection.setDouble("instrumentation/radar/range", 1024); // radar contacts are filtered
             fgfsConnection.setDouble("/position/altitude-ft", (data.getElevationM() + 30) / Units.FT);
+            cameraPresetControlPanel.applyOnlineStatus();
         }
         return fgfsConnection;
     }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -42,109 +42,111 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class PavementObject extends AViewObject {
 
-    // private final Aerodrome aerodrome;
-    private final Pavement pavement;
+	// private final Aerodrome aerodrome;
+	private final Pavement pavement;
 
-    public PavementObject(Aerodrome aerodrome, Pavement pavement) {
-        super(Color.lightGray);
+	public PavementObject(Aerodrome aerodrome, Pavement pavement) {
+		super(Color.lightGray);
 
-        // this.aerodrome = aerodrome;
-        this.pavement = pavement;
+		// this.aerodrome = aerodrome;
+		this.pavement = pavement;
 
-        setMinScalePath(0);
-        setMaxScalePath(500);
+		setMinScalePath(0);
+		setMaxScalePath(500);
 
-        switch (pavement.getSurfaceType()) {
-        case Concrete:
-            setColor(new Color(115, 115, 110));
-            break;
-        case Asphalt:
-            setColor(Palette.TARMAC);
-            break;
-        case Dirt:
-            setColor(new Color(135, 115, 110));
-            break;
-        case DryLakebed:
-            setColor(new Color(135, 115, 110));
-            break;
-        case Gravel:
-            setColor(new Color(115, 115, 110));
-            break;
-        case SnowIce:
-            setColor(new Color(120, 120, 200));
-            break;
-        case Transparent:
-            setColor(new Color(135, 115, 110));
-            break;
-        case TurfGrass:
-            setColor(new Color(40, 70, 40));
-            break;
-        case Water:
-            setColor(new Color(20, 20, 80));
-            break;
-        default:
-            break;
-        }
-        fillPath = true;
-    }
+		switch (pavement.getSurfaceType()) {
+		case Concrete:
+			setColor(new Color(115, 115, 110));
+			break;
+		case Asphalt:
+			setColor(Palette.TARMAC);
+			break;
+		case Dirt:
+			setColor(new Color(135, 115, 110));
+			break;
+		case DryLakebed:
+			setColor(new Color(135, 115, 110));
+			break;
+		case Gravel:
+			setColor(new Color(115, 115, 110));
+			break;
+		case SnowIce:
+			setColor(new Color(120, 120, 200));
+			break;
+		case Transparent:
+			setColor(new Color(135, 115, 110));
+			break;
+		case TurfGrass:
+			setColor(new Color(40, 70, 40));
+			break;
+		case Water:
+			setColor(new Color(20, 20, 80));
+			break;
+		default:
+			break;
+		}
+		fillPath = true;
 
-    @Override
-    public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mva) {
-        setMaxScalePath(500);
-        //setColor(new Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255)));
-        // System.out.println(aerodrome+": "+pavement.getNodes().size());
-        path = new Path2D.Double();
-        PavementNode start = null;
-        for (PavementNode pn : pavement.getNodes()) {
-            PavementNode end = pn;
-            if (start != null) {
-                // Point2D dStart = Converter2D.getMapDisplayPoint(start.point,mva);
-                Point2D dControlStart = start.isBezierNode ? Converter2D.getMapDisplayPoint(start.bezierPoint, mva) : null;
-                Point2D dControlEnd = end.isBezierNode ? Converter2D.getMapDisplayPoint(end.bezierPoint, mva) : null;
-                Point2D dEnd = Converter2D.getMapDisplayPoint(end.point, mva);
+	}
 
-                if (start.isBezierNode && end.isBezierNode) {
-                    path.curveTo(dControlStart.getX(), dControlStart.getY(), dControlEnd.getX(), dControlEnd.getY(), dEnd.getX(), dEnd.getY());
-                } else {
-                    path.lineTo(dEnd.getX(), dEnd.getY());
-                }
-                // nicer but produces gaps
-                // if(!start.isBezierNode && !end.isBezierNode) {
-                // path.lineTo(dEnd.getX(),dEnd.getY());
-                // } else {
-                // if(!start.isBezierNode && end.isBezierNode) {
-                // path.curveTo(
-                // dStart.getX(),dStart.getY(),
-                // dControlEnd.getX(),dControlEnd.getY(),
-                // dEnd.getX(),dEnd.getY());
-                // } else {
-                // if(start.isBezierNode && end.isBezierNode) {
-                // path.curveTo(
-                // dControlStart.getX(),dControlStart.getY(),
-                // dControlEnd.getX(),dControlEnd.getY(),
-                // dEnd.getX(),dEnd.getY());
-                // }
-                // }
-                // }
-            } else {
-                Point2D dStart = Converter2D.getMapDisplayPoint(pn.point, mva);
-                path.moveTo(dStart.getX(), dStart.getY());
-            }
-            if (pn.isEndNode || pn.isCloseLoop) {
-                start = null;
-            } else {
-                start = end;
-            }
-            if (pn.isCloseLoop) {
-                path.closePath();
-            }
-        }
-    }
+	public void updateLogicalPosition(IMapViewerAdapter mapViewAdapter) {
+		for (PavementNode pn : pavement.getNodes()) {
+			pn.updateLogicalPoints(mapViewAdapter);
+		}
+	}
 
-    @Override
-    public synchronized void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
-        // TODO Auto-generated method stub
-        super.paint(g2d, mapViewAdapter);
-    }
+	@Override
+	public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mva) {
+		setMaxScalePath(500);
+		path = new Path2D.Double();
+		PavementNode start = null;
+		for (PavementNode pn : pavement.getNodes()) {
+			pn.updateDevicePoints(mva);
+			PavementNode end = pn;
+			if (start != null) {
+				if (start.isBezierNode && end.isBezierNode) {
+					path.curveTo(start.devBezierPoint.getX(), start.devBezierPoint.getY(), end.devBezierPoint.getX(), end.devBezierPoint.getY(),
+							end.devPoint.getX(), end.devPoint.getY());
+				} else {
+					path.lineTo(end.devPoint.getX(), end.devPoint.getY());
+				}
+				// nicer but produces gaps
+				// if(!start.isBezierNode && !end.isBezierNode) {
+				// path.lineTo(dEnd.getX(),dEnd.getY());
+				// } else {
+				// if(!start.isBezierNode && end.isBezierNode) {
+				// path.curveTo(
+				// dStart.getX(),dStart.getY(),
+				// dControlEnd.getX(),dControlEnd.getY(),
+				// dEnd.getX(),dEnd.getY());
+				// } else {
+				// if(start.isBezierNode && end.isBezierNode) {
+				// path.curveTo(
+				// dControlStart.getX(),dControlStart.getY(),
+				// dControlEnd.getX(),dControlEnd.getY(),
+				// dEnd.getX(),dEnd.getY());
+				// }
+				// }
+				// }
+			} else {
+				Point2D dStart = Converter2D.getMapDisplayPoint(pn.point, mva);
+				path.moveTo(dStart.getX(), dStart.getY());
+			}
+			if (pn.isEndNode || pn.isCloseLoop) {
+				start = null;
+			} else {
+				start = end;
+			}
+			if (pn.isCloseLoop) {
+				path.closePath();
+			}
+		}
+	}
+
+	@Override
+	public synchronized void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
+		// TODO Auto-generated method stub
+		super.paint(g2d, mapViewAdapter);
+	}
 
 }

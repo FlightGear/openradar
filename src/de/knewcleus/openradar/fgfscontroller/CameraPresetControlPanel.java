@@ -57,6 +57,7 @@ public class CameraPresetControlPanel extends JPanel {
     private JLabel lbP5;
     
     private JLabel lbFollow;
+    private JLabel lbOffline;
     private JLabel lbSetPos;
     
 //    private Logger log = Logger.getLogger(CameraPresetControlPanel.class);
@@ -140,6 +141,17 @@ public class CameraPresetControlPanel extends JPanel {
         gbc.insets = new java.awt.Insets(0, 10, 0, 0);
         add(lbFollow, gbc);
 
+        lbOffline = new JLabel("-Offline-");
+        lbOffline.setToolTipText("The connection to ORCam could not be established.");
+        lbOffline.setForeground(new Color(200,0,0));
+        lbOffline.setVisible(false);
+        
+        gbc = new GridBagConstraints();
+        gbc.gridx = 7;
+        gbc.gridy = 0;
+        gbc.anchor = java.awt.GridBagConstraints.CENTER;
+        gbc.insets = new java.awt.Insets(0, 10, 0, 0);
+        add(lbOffline, gbc);
         
         lbSetPos = new JLabel("MoveCam");
         lbSetPos.setToolTipText("Move viewpoint of current preset: Zoom to GND level, click this button, click on the map");
@@ -147,7 +159,7 @@ public class CameraPresetControlPanel extends JPanel {
         lbSetPos.addMouseListener(fsMouseListener);
         
         gbc = new GridBagConstraints();
-        gbc.gridx = 7;
+        gbc.gridx = 8;
         gbc.gridy = 0;
         gbc.anchor = java.awt.GridBagConstraints.EAST;
         gbc.weightx=1.0;
@@ -255,4 +267,14 @@ public class CameraPresetControlPanel extends JPanel {
 //            }
 //        }
 //    }
+    
+    public void applyOnlineStatus() {
+    	if(fgfsController.getLastOnlineStatus()) {
+            lbOffline.setVisible(false);
+            invalidate();
+    	} else {
+            lbOffline.setVisible(true);
+            invalidate();
+    	}
+    }
 }

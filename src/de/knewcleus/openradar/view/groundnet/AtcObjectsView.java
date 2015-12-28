@@ -23,7 +23,7 @@
  * weiterverbreiten und/oder modifizieren.
  *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
+ * GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
  *
@@ -102,10 +102,10 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
 
     @Override
     public synchronized  void paint(Graphics2D g2d) {
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setFont(new Font("Arial", Font.PLAIN, 4));
-    
-            viewObjectPainter.paint(g2d);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setFont(new Font("Arial", Font.PLAIN, 4));
+
+        viewObjectPainter.paint(g2d);
     }
 
     @Override
@@ -115,16 +115,17 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
 
     @Override
     public synchronized  void acceptNotification(INotification notification) {
-            if (notification instanceof ProjectionNotification) {
-                updateLogicalPosition();
-            } else if (notification instanceof CoordinateSystemNotification) {
-                updateDisplayPosition();
-            }
+        if (notification instanceof ProjectionNotification) {
+            updateLogicalPosition();
+        } else if (notification instanceof CoordinateSystemNotification) {
+            updateDisplayPosition();
+        }
     }
 
     protected synchronized void updateLogicalPosition() {
         final IProjection projection = mapViewAdapter.getProjection();
         logicalPosition = projection.toLogical(data.getAirportPosition());
+        viewObjectPainter.updateLogicalPosition();
         updateDisplayPosition();
     }
 

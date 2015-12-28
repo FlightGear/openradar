@@ -144,7 +144,7 @@ public class SetupDialog extends JFrame {
     private JCheckBox cbUrban;
     private JCheckBox cbLake;
     private JCheckBox cbStream;
-    private JCheckBox cbTarmac;
+//    private JCheckBox cbTarmac; // if needed again, uncomment all lines containing cbTarmac!
     private JCheckBox cbGroundnet;
 
     private JCheckBox cbFgfsCamera1Enabled;
@@ -1020,15 +1020,15 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlLayerInput.add(cbStream, gridBagConstraints);
 
-        cbTarmac = new JCheckBox();
-        cbTarmac.setText("tarmac");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 1;
-        gridBagConstraints.anchor = GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlLayerInput.add(cbTarmac, gridBagConstraints);
+//        cbTarmac = new JCheckBox();
+//        cbTarmac.setText("tarmac");
+//        gridBagConstraints = new java.awt.GridBagConstraints();
+//        gridBagConstraints.gridx = 0;
+//        gridBagConstraints.gridy = 4;
+//        gridBagConstraints.gridwidth = 1;
+//        gridBagConstraints.anchor = GridBagConstraints.WEST;
+//        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+//        jPnlLayerInput.add(cbTarmac, gridBagConstraints);
 
         cbGroundnet = new JCheckBox();
         cbGroundnet.setText("ground net / parkings");
@@ -1323,6 +1323,7 @@ public class SetupDialog extends JFrame {
 
     void preselectAirport(String code, SectorBean autostartAirport) {
         if (autostartAirport != null) {
+        	tfSearchBox.setText(autostartAirport.getAirportCode());
             liSearchResults.setSelectedValue(autostartAirport, true);
             btStart.requestFocus();
         } else if (code != null) {
@@ -1478,7 +1479,7 @@ public class SetupDialog extends JFrame {
         visibleLayerMap.put("urban", cbUrban.isSelected());
         visibleLayerMap.put("lake", cbLake.isSelected());
         visibleLayerMap.put("stream", cbStream.isSelected());
-        visibleLayerMap.put("tarmac", cbTarmac.isSelected());
+//        visibleLayerMap.put("tarmac", cbTarmac.isSelected());
         visibleLayerMap.put("groundnet", cbGroundnet.isSelected());
         data.setVisibleLayerMap(visibleLayerMap);
 
@@ -1699,7 +1700,7 @@ public class SetupDialog extends JFrame {
                 cbUrban.setSelected(!"false".equals(p.getProperty("layer.urban")));
                 cbLake.setSelected(!"false".equals(p.getProperty("layer.lake")));
                 cbStream.setSelected("true".equals(p.getProperty("layer.stream")));
-                cbTarmac.setSelected(!"false".equals(p.getProperty("layer.tarmac")));
+//                cbTarmac.setSelected(!"false".equals(p.getProperty("layer.tarmac")));
                 cbGroundnet.setSelected(!"false".equals(p.getProperty("layer.groundnet")));
 
                 cbFgfsCamera1Enabled.setSelected("true".equals(p.getProperty("fgfs.cameraEnabled")));
@@ -1755,7 +1756,7 @@ public class SetupDialog extends JFrame {
         p.put("layer.urban", "" + cbUrban.isSelected());
         p.put("layer.lake", "" + cbLake.isSelected());
         p.put("layer.stream", "" + cbStream.isSelected());
-        p.put("layer.tarmac", "" + cbTarmac.isSelected());
+//        p.put("layer.tarmac", "" + cbTarmac.isSelected());
         p.put("layer.groundnet", "" + cbGroundnet.isSelected());
 
         p.put("fgfs.cameraEnabled", "" + cbFgfsCamera1Enabled.isSelected());

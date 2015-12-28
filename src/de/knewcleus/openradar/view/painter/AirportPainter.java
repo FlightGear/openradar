@@ -31,6 +31,9 @@ package de.knewcleus.openradar.view.painter;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 import de.knewcleus.fgfs.navaids.Pavement;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
@@ -46,6 +49,9 @@ public class AirportPainter extends AViewObjectPainter<Aerodrome> {
 
     private final Aerodrome aerodrome;
     private AirportCode airportCode;
+	protected Rectangle2D displayExtents = null;
+	protected Rectangle2D logicalBounds = null;
+	protected List<Shape> logicalShapes = null;
 
     public AirportPainter(AirportData data, IMapViewerAdapter mapViewAdapter, Aerodrome aerodrome) {
         super(mapViewAdapter, aerodrome);
@@ -71,6 +77,15 @@ public class AirportPainter extends AViewObjectPainter<Aerodrome> {
         return "<html><body>" + aerodrome.getIdentification() + " " + aerodrome.getName() + "<br>" + aerodrome.getElevation() + " m</body></html>";
     }
 
+    @Override
+    public void updateLogicalPosition() {
+//        for (AViewObject o : viewObjectList) {
+//        	if(o instanceof PavementObject || o instanceof RunwayObject) {
+//        		((PavementObject)o).updateLogicalPosition(mapViewAdapter);
+//        	}
+//        }
+    }
+    
     @Override
     public synchronized void paint(Graphics2D g2d) {
         // paint active runways on top (last)

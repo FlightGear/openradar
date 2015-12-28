@@ -44,17 +44,12 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
@@ -145,7 +140,8 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
     private OrderMode orderMode = OrderMode.AUTO;
     private ArrayList<GuiRadarContact> orderList = new ArrayList<GuiRadarContact>(20);
 
-    private Map<String, String> mapAtcComments = new TreeMap<String, String>();
+//    private Map<String, String> mapAtcComments = new TreeMap<String, String>();
+    private AtcNotesStore atcNotesStore = new AtcNotesStore();
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
     
@@ -155,7 +151,7 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         this.master = master;
         this.radarBackend = radarBackend;
         guiUpdater.setDaemon(true);
-        loadAtcNotes();
+        atcNotesStore.loadStore();
         atcMessageDialog = new AtcMessageDialog(master, textManager);
         flightplanDialog = new FlightPlanDialog(master, this);
         transponderSettingsDialog = new TransponderSettingsDialog(master,this);
@@ -386,11 +382,14 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         GuiRadarContact c=null;
         if (!mapCallSignContact.containsKey(player.getCallsign()) && !mapExpiredCallSigns.containsKey(player.getCallsign())) {
             // add new player
-            String atcNote = mapAtcComments.containsKey(player.getCallsign()) ? mapAtcComments.get(player.getCallsign()) : mapAtcComments.get(player.getCallsign()+".atcNote");
-            // ^^^^ for backward compatibility: until 20130406 the atc note was saved directly under the callsign, now it is saved under callsign+".atcNote"
-            c = new GuiRadarContact(master, this, player, atcNote);
-            c.setFgComSupport("true".equals( mapAtcComments.get(player.getCallsign()+".fgComSupport")));
-
+// old code by 20151223        	
+//            String atcNote = mapAtcComments.containsKey(player.getCallsign()) ? mapAtcComments.get(player.getCallsign()) : mapAtcComments.get(player.getCallsign()+".atcNote");
+//            // ^^^^ for backward compatibility: until 20130406 the atc note was saved directly under the callsign, now it is saved under callsign+".atcNote"
+//            c = new GuiRadarContact(master, this, player, atcNote);
+//            c.setFgComSupport("true".equals( mapAtcComments.get(player.getCallsign()+".fgComSupport")));
+            c = new GuiRadarContact(master, this, player);
+            atcNotesStore.restoreStaticData(c);
+            
             addPlayerBeforeUncontrolled( c );
             mapCallSignContact.put(c.getCallSign(), c);
 
@@ -758,81 +757,14 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
         }
     }
 
-    public synchronized void loadAtcNotes() {
-        File atcCommentFile = new File("settings" + File.separator + "atcComments.xml");
-        if (atcCommentFile.exists()) {
-            FileInputStream fis = null;
-            ;
-            try {
-                fis = new FileInputStream(atcCommentFile);
-                Properties props = new Properties();
-                props.loadFromXML(fis);
-                for (Object op : props.keySet()) {
-                    String key = (String) op;
-                    String value = props.getProperty(key);
-                    mapAtcComments.put(key, value);
-                }
-            } catch (IOException e) {
-                log.error("Error while loading atc notes!",e);
-            } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Save the ATC comments of all active and expired contacts to a file, to be
-     * able to load them at restart
-     */
-    public synchronized void saveAtcNotes() {
-        for (GuiRadarContact c : mapCallSignContact.values()) {
-            if (c.getAtcComment() != null) {
-                mapAtcComments.put(c.getCallSign()+".atcNote", c.getAtcComment().trim());
-            }
-            mapAtcComments.put(c.getCallSign()+".fgComSupport", ""+c.hasFgComSupport());
-        }
-        for (GuiRadarContact c : mapExpiredCallSigns.values()) {
-            if (c.getAtcComment() != null && !c.getAtcComment().isEmpty()) {
-                mapAtcComments.put(c.getCallSign()+".atcNote", c.getAtcComment());
-            }
-            mapAtcComments.put(c.getCallSign()+".fgComSupport", ""+c.hasFgComSupport());
-        }
-
-        File atcCommentFile = new File("settings" + File.separator + "atcComments.xml");
-        Properties p = new Properties();
-        for (String key : mapAtcComments.keySet()) {
-            if (mapAtcComments.get(key) != null) {
-                p.put(key, mapAtcComments.get(key));
-            }
-        }
-        FileOutputStream fos = null;
-        try {
-            if (atcCommentFile.exists()) {
-                File backup = new File("settings" + File.separator + "atcComments.bak");
-                if (backup.exists())
-                    backup.delete();
-                atcCommentFile.renameTo(backup);
-            }
-            fos = new FileOutputStream(atcCommentFile);
-            p.storeToXML(fos, "OpenRadar ATC notes", "UTF-8");
-            // System.out.println("atcnotes saved.");
-        } catch (IOException e) {
-            log.error("Error while saving atc notes!",e);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                }
-            }
-        }
-
-    }
+	  /**
+	  * Save the ATC comments of all active and expired contacts to a file, to be
+	  * able to load them at restart
+	  */
+	 public synchronized void saveAtcNotes(GuiRadarContact c) {
+		 atcNotesStore.updateData(c);
+		 atcNotesStore.saveStore();
+	 }
 
     public TransponderSettingsDialog getTransponderSettingsDialog() {
         return transponderSettingsDialog; // todo
@@ -1178,5 +1110,4 @@ public class RadarContactController implements ListModel<GuiRadarContact>, ListS
             return selectedContact!=null && selectedContact.isActive() && newRouteName.equals(selectedContact.getFlightPlan().getAssignedRoute());
         }
     }
-
 }

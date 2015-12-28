@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2015 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -23,7 +23,7 @@
  * weiterverbreiten und/oder modifizieren.
  *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
+ * GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
  *
@@ -33,7 +33,6 @@
 package de.knewcleus.openradar.view.objects;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -62,58 +61,58 @@ public class RunwayObject extends AViewObject {
     }
 
     @Override
-    public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mva) {
+    public synchronized void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mva) {
 
-        activeRw=false;
-        GuiRunway grw = data.getRunways().get(rwy.getDesignation());
+        setMaxScalePath(500);
+
+        double runwayLength = rwy.getLength()/Units.FT;
+        double runwayWidth = rwy.getWidth()/Units.FT;
+        float runwayHeading = rwy.getTrueHeading();
+        double runwayHeadingOrtho = runwayHeading+90;
+
+        Point2D refPoint = Converter2D.getMapDisplayPoint(rwy.getGeographicCenter(),mva);
+
+        // logP1 requires two calculations, to get to one corner
+        Point2D devP1 = Converter2D.getMapDisplayPoint(refPoint, runwayHeadingOrtho, Converter2D.getFeetToDots(runwayWidth/2,mva));
+        devP1 = Converter2D.getMapDisplayPoint(devP1, runwayHeading+180,  Converter2D.getFeetToDots(runwayLength/2,mva));
+        Point2D devP2 = Converter2D.getMapDisplayPoint(devP1, runwayHeading,  Converter2D.getFeetToDots(runwayLength,mva));
+        Point2D devP3 = Converter2D.getMapDisplayPoint(devP2, runwayHeadingOrtho+180,  Converter2D.getFeetToDots(runwayWidth,mva));
+        Point2D devP4 = Converter2D.getMapDisplayPoint(devP3, runwayHeading+180,  Converter2D.getFeetToDots(runwayLength,mva));
+        
+        
+        this.fillPath=true;
+
+        path = new Path2D.Double();
+        path.append(new Line2D.Double(devP1, devP2), true);
+        path.append(new Line2D.Double(devP2, devP3), true);
+        path.append(new Line2D.Double(devP3, devP4), true);
+        path.append(new Line2D.Double(devP4, devP1), true);
+        path.closePath();
+    }
+
+    public synchronized boolean isActiveRw() {
         color = Palette.RUNWAY;
-        if(grw!=null) {
-            boolean landingActive = grw.isLandingActive();
-            boolean startingActive = grw.isStartingActive();
-
-            if(landingActive || startingActive) {
+    	activeRw=false;
+    	if(rwy.getAirportID().equals(data.getAirportCode())) {
+	        if(isActive(rwy.getEndA().getRunwayID()) || isActive(rwy.getEndB().getRunwayID())) {
                 color = new Color(60,60,80);
                 activeRw=true;
             }
-        }
-        setMaxScalePath(500);
-        double runwayLength = rwy.getLength()/Units.FT;
-        double runwayWidth = rwy.getWidth()/Units.FT; 
-        float runwayHeading = rwy.getTrueHeading();
-        double runwayHeadingOrtho = runwayHeading+90;
-        this.fillPath=true;
-        
-        path = new Path2D.Double();
-        Point2D refPoint = Converter2D.getMapDisplayPoint(rwy.getGeographicCenter(), mva);
-        
-        Point2D startPoint= Converter2D.getMapDisplayPoint(refPoint, runwayHeadingOrtho, Converter2D.getFeetToDots(runwayWidth/2,mva));
-        startPoint = Converter2D.getMapDisplayPoint(startPoint, runwayHeading-180, Converter2D.getFeetToDots(runwayLength/2,mva));
-        
-        Point2D endPoint = Converter2D.getMapDisplayPoint(startPoint, runwayHeading,  Converter2D.getFeetToDots(runwayLength,mva));
-        path.append(new Line2D.Double(startPoint, endPoint), true);
-        
-        startPoint = endPoint;
-        endPoint = Converter2D.getMapDisplayPoint(startPoint, runwayHeadingOrtho+180,  Converter2D.getFeetToDots(runwayWidth,mva));
-        path.append(new Line2D.Double(startPoint, endPoint), true);
-        
-        startPoint = endPoint;
-        endPoint = Converter2D.getMapDisplayPoint(startPoint, runwayHeading+180,  Converter2D.getFeetToDots(runwayLength,mva));
-        path.append(new Line2D.Double(startPoint, endPoint), true);
-        
-        startPoint = endPoint;
-        endPoint = Converter2D.getMapDisplayPoint(startPoint, runwayHeadingOrtho,  Converter2D.getFeetToDots(runwayWidth, mva));
-        path.append(new Line2D.Double(startPoint, endPoint), true);
-        
-        path.closePath();
-    }
-    public synchronized boolean isActiveRw() {
+// System.out.println(rwy.getAirportID()+" "+rwy.getDesignation()+" "+activeRw);
+    	}
         return activeRw;
     }
 
-    @Override
-        public synchronized void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
-            // TODO Auto-generated method stub
-            super.paint(g2d, mapViewAdapter);
-        }
-    
+    private boolean isActive(String runwayCode) {
+	    GuiRunway grw = data.getRunways().get(runwayCode);
+	    if(grw!=null) {
+	        boolean landingActive = grw.isLandingActive();
+	        boolean startingActive = grw.isStartingActive();
+	
+	        if(landingActive || startingActive) {
+	        	return true;
+	        }
+	    }
+	    return false;
+    }
 }

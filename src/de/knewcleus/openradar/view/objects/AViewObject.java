@@ -122,30 +122,7 @@ public abstract class AViewObject {
         this.stroke=stroke;
     }
 
-    public synchronized void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
-        g2d.setColor(color);
-        double currentScale = mapViewAdapter.getLogicalScale();
-        if (path != null && minScalePath < currentScale && maxScalePath > currentScale) {
-            Stroke originalStroke = g2d.getStroke();
-            if (stroke != null)
-                g2d.setStroke(stroke);
-            if (fillPath) {
-                g2d.fill(path);
-            } else {
-                g2d.draw(path);
-            }
-            g2d.setStroke(originalStroke);
-        }
-        if (text != null) {
-            if (font != null)
-                g2d.setFont(font);
-            FontMetrics fm = g2d.getFontMetrics();
-            textBounds = fm.getStringBounds(text, g2d);
-        }
-        if (text != null && minScaleText < currentScale && maxScaleText > currentScale) {
-            g2d.drawString(text, (float) textCoordinates.getX(), (float) textCoordinates.getY());
-        }
-    }
+	public synchronized void updateLogicalPosition() {}
 
     public synchronized Rectangle2D updateDisplayPosition(Point2D newDisplayPosition, IMapViewerAdapter mapViewAdapter) {
         // maybe path can be shifted from old to new position?
@@ -172,6 +149,31 @@ public abstract class AViewObject {
         }
 
         return displayExtents;
+    }
+
+    public synchronized void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
+        g2d.setColor(color);
+        double currentScale = mapViewAdapter.getLogicalScale();
+        if (path != null && minScalePath < currentScale && maxScalePath > currentScale) {
+            Stroke originalStroke = g2d.getStroke();
+            if (stroke != null)
+                g2d.setStroke(stroke);
+            if (fillPath) {
+                g2d.fill(path);
+            } else {
+                g2d.draw(path);
+            }
+            g2d.setStroke(originalStroke);
+        }
+        if (text != null) {
+            if (font != null)
+                g2d.setFont(font);
+            FontMetrics fm = g2d.getFontMetrics();
+            textBounds = fm.getStringBounds(text, g2d);
+        }
+        if (text != null && minScaleText < currentScale && maxScaleText > currentScale) {
+            g2d.drawString(text, (float) textCoordinates.getX(), (float) textCoordinates.getY());
+        }
     }
 
     public synchronized boolean contains(Point2D p) {

@@ -152,6 +152,7 @@ public abstract class AViewObjectPainter<T> {
         for(AViewObject vo : viewObjectList) {
             vo.paint(g2d, mapViewAdapter);
         }
+        //System.out.println("AViewObjectPainter: "+this+" painted");
     }
 
     public synchronized Rectangle2D getDisplayExtents() {
@@ -184,4 +185,10 @@ public abstract class AViewObjectPainter<T> {
     }
 
     public void mouseClicked(MouseEvent e) {  }
+
+	public void updateLogicalPosition() {
+        for(AViewObject vo : viewObjectList) {
+        	vo.updateLogicalPosition();
+        }
+	}
 }

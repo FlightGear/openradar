@@ -109,7 +109,33 @@ public class GuiRadarContact {
 
         flightPlan = new FlightPlanData(master.getAirportData(), this);
     }
+    /**
+     * New since 20151223
+     * 
+     * @param master
+     * @param manager
+     * @param player
+     * @param atcComment
+     */
+    public GuiRadarContact(GuiMasterController master, RadarContactController manager, TargetStatus player) {
+        this.manager=manager;
+        this.player=player;
+        this.airportData = master.getAirportData();
+        this.airportElevationFt = master.getAirportData().getElevationFt();
 
+        flightStates.add(new FlightState("","UNCONTROLLED","???","Uncontrolled/cold"));
+        flightStates.add(new FlightState("GND","PARKED","PRKNG","At Gate/Parking warm"));
+        flightStates.add(new FlightState("GND","TAXI_TO_RW","TXRW","Taxi to Runway"));
+        flightStates.add(new FlightState("TWR","START","START","Starting"));
+        flightStates.add(new FlightState("APP","DEPARTING","DEPART","Leaving aiport"));
+        flightStates.add(new FlightState("APP","TRANSITION","TRANS","Transition through area"));
+        flightStates.add(new FlightState("APP","APPROACH","APPRCH","Approaching airport"));
+        flightStates.add(new FlightState("TWR","LANDING","LNDNG","Landing"));
+        flightStates.add(new FlightState("GND","TAXI_TO_GATE","TXGT","Taxi to Gate/Parking"));
+        currentFlightState=flightStates.get(0);
+
+        flightPlan = new FlightPlanData(master.getAirportData(), this);
+    }
     public synchronized void setTargetStatus(TargetStatus player) {
         this.player=player;
     }
@@ -211,7 +237,7 @@ public class GuiRadarContact {
         if((this.atcComment==null && atcComment!=null) ||
                 !this.atcComment.equals(atcComment)) {
             this.atcComment = atcComment;
-            manager.saveAtcNotes();
+            manager.saveAtcNotes(this);
         }
     }
 
@@ -220,7 +246,10 @@ public class GuiRadarContact {
     }
 
     public synchronized void setFgComSupport(boolean fgComSupport) {
-        this.fgComSupport = fgComSupport;
+    	if(this.fgComSupport!=fgComSupport) {
+    		this.fgComSupport = fgComSupport;
+    		manager.saveAtcNotes(this);
+    	}
     }
 
     public String getCallSign() {
