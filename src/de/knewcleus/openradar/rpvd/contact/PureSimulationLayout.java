@@ -32,13 +32,10 @@
  */
 package de.knewcleus.openradar.rpvd.contact;
 
-import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
-import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
 import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 /**
  * This data block layout is even more strict.
@@ -49,10 +46,10 @@ import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 public class PureSimulationLayout extends ADatablockLayout {
 
     private final DatablockLayoutManager manager;
-    private final Font font = new Font("Courier", Font.PLAIN, 11);
 
     public PureSimulationLayout(DatablockLayoutManager manager) {
         this.manager = manager;
+        font = new Font("Courier", Font.PLAIN, 11);
     }
 
     @Override
@@ -65,91 +62,22 @@ public class PureSimulationLayout extends ADatablockLayout {
         return "Pure Simulation (Transponder enforced)";
     }
 
-    @Override
-    public Font getFont() {
-        return font;
-    }
+    // not overwritten 	
 
-    @Override
-    public Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
-        if(highlighted || contact.isIdentActive()) {
-            return Color.white;
-        }
-        return Palette.LANDMASS;
-    }
-
-
-    @Override
-    public Color getColor(GuiRadarContact c) {
-        Color color = Palette.RADAR_UNCONTROLLED;
-
-//        boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
-
-        if (c.isIdentActive()) {
-            color = Color.black;
-            c.setHighlighted();
-        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
-            // Emergency
-            color = new Color(255,100,0);
-
-        } else if(!c .isActive()) {
-            // INCACTIVE GHOSTS
-            color=Palette.RADAR_GHOST;
-
-        } else if(c.isNeglect()) {
-            // BAD GUYS
-            color=Palette.RADAR_GHOST;
-
-        } else if(c.getState()==State.IMPORTANT) {
-            // CONTROLLED left column
-            color=Palette.RADAR_CONTROLLED;
-
-        } else if(c.getState()==State.CONTROLLED) {
-            // WATCHED middle column
-            color=Palette.RADAR_IMPORTANT;
-        } else {
-            // UNCONTROLLED right column
-            color=Palette.RADAR_UNCONTROLLED;
-        }
-
-        return color;
-    }
-
-    @Override
-    public Color getDataBlockColor(GuiRadarContact c) {
-        Color color = Palette.RADAR_UNCONTROLLED;
-
-//        boolean assignedSquawkTunedIn = c.getAssignedSquawk()==null || (c.getTranspSquawkCode()!=null && c.getAssignedSquawk()!=null && c.getTranspSquawkCode().equals(c.getAssignedSquawk()));
-
-        if (c.isIdentActive()) {
-            color = Color.black;
-            c.setHighlighted();
-        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
-            // Emergency
-            color = new Color(255,100,0);
-
-        } else if(!c .isActive()) {
-            // INCACTIVE GHOSTS
-            color=Palette.RADAR_GHOST;
-
-        } else if(c.isNeglect()) {
-            // BAD GUYS
-            color=Palette.RADAR_GHOST;
-
-        } else if(c.getState()==State.IMPORTANT) {
-            // CONTROLLED left column
-            color=Palette.RADAR_CONTROLLED;
-
-        } else if(c.getState()==State.CONTROLLED) {
-            // WATCHED middle column
-            color=Palette.RADAR_IMPORTANT;
-        } else {
-            // UNCONTROLLED right column
-            color=Palette.RADAR_UNCONTROLLED;
-        }
-
-        return color;
-    }
+//  @Override
+//  public synchronized Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
+//  }
+//  
+//  @Override
+//  public Color getDataBlockColor(GuiRadarContact c) {
+//  	
+//  }
+//
+//  @Override
+//  public Color getDataBlockColor(GuiRadarContact c) {
+//  	
+//  }
+    
 
     @Override
     public String getDataBlockText(GuiMasterController master, GuiRadarContact c) {

@@ -53,10 +53,10 @@ import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 public class TraditionalLayout extends ADatablockLayout {
 
 //    private final DatablockLayoutManager manager;
-    private final Font font = new Font("Courier", Font.PLAIN, 11);
 
     public TraditionalLayout(DatablockLayoutManager manager) {
 //        this.manager = manager;
+    	font = new Font("Courier", Font.PLAIN, 11);
     }
 
     @Override
@@ -73,54 +73,22 @@ public class TraditionalLayout extends ADatablockLayout {
     public boolean supportsSquawk() {
         return false;
     }
+  
+    // not overwritten 	
 
-    @Override
-    public Font getFont() {
-        return font;
-    }
-
-    @Override
-    public Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
-        if(highlighted || contact.isIdentActive()) {
-            return Color.white;
-        }
-        return Palette.LANDMASS;
-    }
-
-    @Override
-    public Color getColor(GuiRadarContact c) {
-        Color color = Palette.RADAR_UNCONTROLLED;
-
-        if (c.isIdentActive()) {
-            color = Color.black;
-            c.setHighlighted();
-
-        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
-            // Emergency
-            color = new Color(255,100,0);
-
-        } else if(!c .isActive()) {
-            // INCACTIVE GHOSTS
-            color=Palette.RADAR_GHOST;
-
-        } else if(c.isNeglect()) {
-            // BAD GUYS
-            color=Palette.RADAR_GHOST;
-
-        } else if(c.getState()==State.IMPORTANT) {
-            // CONTROLLED left column
-            color=Palette.RADAR_CONTROLLED;
-
-        } else if(c.getState()==State.CONTROLLED) {
-            // WATCHED middle column
-            color=Palette.RADAR_IMPORTANT;
-        } else {
-            // UNCONTROLLED right column
-            color=Palette.RADAR_UNCONTROLLED;
-        }
-
-        return color;
-    }
+//  @Override
+//  public synchronized Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
+//  }
+//  
+//  @Override
+//  public Color getDataBlockColor(GuiRadarContact c) {
+//  	
+//  }
+//
+//  @Override
+//  public Color getDataBlockColor(GuiRadarContact c) {
+//  	
+//  }    
 
     @Override
     public Color getDataBlockColor(GuiRadarContact c) {
@@ -133,10 +101,10 @@ public class TraditionalLayout extends ADatablockLayout {
             // Emergency
             color = new Color(255,100,0);
 
-        } else if(c.isSelected()) {
+        } else if(c.isSelected()) { // this is the difference to the original implementation!
             // SELECTED
             color=Palette.RADAR_SELECTED;
-
+            						// end of difference
         } else if(!c .isActive()) {
             // INCACTIVE GHOSTS
             color=Palette.RADAR_GHOST;

@@ -36,51 +36,150 @@ import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
 
 public abstract class ADatablockLayout {
-    
-    protected volatile int altSpeedIndex = -1; 
-    
-    /**
-     * Returns a name of the layout that can be used as a key to store and load properties
-     * or identify menu items
-     */
-    public abstract String getName();
 
-    public boolean supportsSquawk() {
-        return true;
+	protected volatile int altSpeedIndex = -1;
+	protected volatile Font font = new Font("Courier", Font.PLAIN, 11);;
+
+	/**
+	 * Returns a name of the layout that can be used as a key to store and load
+	 * properties or identify menu items
+	 */
+	public abstract String getName();
+
+	public boolean supportsSquawk() {
+		return true;
+	}
+
+	/** Returns the text that should be displayed in menu */
+	public abstract String getMenuText();
+
+    public Font getFont() {
+        return font;
     }
 
-    /** Returns the text that should be displayed in menu */
-    public abstract String getMenuText();
-
-    public abstract Color getBackgroundColor(GuiRadarContact contact, boolean highlighted);
-
-    public abstract Color getColor(GuiRadarContact contact);
-
-    public abstract Color getDataBlockColor(GuiRadarContact c) ;
-
-    /** Returns the text that will be displayed in data block. Lines separated by newline...*/
-    public abstract String getDataBlockText(GuiMasterController master, GuiRadarContact contact);
-
-    public abstract Font getFont();
-    /** Returns the contact shape matching to the current layout mode and contact state... */
-    public abstract void modify(ContactShape shape, GuiRadarContact c);
-
-    public synchronized int getAltSpeedIndex() {
-        return altSpeedIndex;
+    public Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
+        if (highlighted || contact.isIdentActive()) {
+            return Color.white;
+        }
+        return Palette.LANDMASS;
     }
 
-    public synchronized void setAltSpeedIndex(int altSpeedIndex) {
-        this.altSpeedIndex = altSpeedIndex;
-    }
+	/**
+	 * This method defines the color of a radar contact in the layout mode. 
+	 * Override it to adapt it to individual settings! 
+	 * 
+	 * @param c the current contact
+	 * @return the Color
+	 */
+	public Color getColor(GuiRadarContact c) {
+		Color color = Palette.RADAR_UNCONTROLLED;
 
-    @Override
-    public String toString() {
-        return getMenuText();
-    }
+		if (c.isIdentActive()) {
+			color = Color.black;
+			c.setHighlighted();
+		} else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode()
+				|| 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode())) {
+			// Emergency
+			color = new Color(255, 100, 0);
 
-    public abstract boolean displayVSpeedArrow(GuiRadarContact c) ;
+		} else if (!c.isActive()) {
+			// INACCTIVE GHOSTS
+			color = Palette.RADAR_GHOST;
+
+		} else if (c.isNeglect()) {
+			// BAD GUYS
+			color = Palette.RADAR_GHOST;
+
+		} else if (c.getState() == State.IMPORTANT) {
+			// CONTROLLED left column
+			color = Palette.RADAR_CONTROLLED;
+
+		} else if (c.getState() == State.CONTROLLED) {
+			// WATCHED middle column
+			color = Palette.RADAR_IMPORTANT;
+		} else {
+			// UNCONTROLLED right column
+			color = Palette.RADAR_UNCONTROLLED;
+		}
+
+		return color;
+	}
+
+	/**
+	 * This method defines the data block color of a radar contact in the layout mode. 
+	 * Override it to adapt it to individual settings! 
+	 * 
+	 * @param c the current contact
+	 * @return the Color
+	 */
+	public Color getDataBlockColor(GuiRadarContact c) {
+		Color color = Palette.RADAR_UNCONTROLLED;
+
+		if (c.isIdentActive()) {
+			// IDENT sent
+			color = Color.black;
+			c.setHighlighted();
+		} else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode()
+				|| 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode())) {
+			// Emergency
+			color = new Color(255, 100, 0);
+
+		} else if (!c.isActive()) {
+			// INACTIVE GHOSTS
+			color = Palette.RADAR_GHOST;
+
+		} else if (c.isNeglect()) {
+			// BAD GUYS
+			color = Palette.RADAR_GHOST;
+
+		} else if (c.getState() == State.IMPORTANT) {
+			// CONTROLLED left column
+			color = Palette.RADAR_CONTROLLED;
+
+		} else if (c.getState() == State.CONTROLLED) {
+			// WATCHED middle column
+			color = Palette.RADAR_IMPORTANT;
+		} else {
+			// UNCONTROLLED right column
+			color = Palette.RADAR_UNCONTROLLED;
+		}
+
+		return color;
+	}
+	
+	/**
+	 * Returns the text that should be displayed in the data block
+	 * 
+	 * @param master
+	 * @param c
+	 * @return
+	 */
+	public abstract String getDataBlockText(GuiMasterController master, GuiRadarContact c);
+	
+	/**
+	 * Returns the contact shape matching to the current layout mode and contact
+	 * state...
+	 */
+	public abstract void modify(ContactShape shape, GuiRadarContact c);
+
+	public synchronized int getAltSpeedIndex() {
+		return altSpeedIndex;
+	}
+
+	public synchronized void setAltSpeedIndex(int altSpeedIndex) {
+		this.altSpeedIndex = altSpeedIndex;
+	}
+
+	@Override
+	public String toString() {
+		return getMenuText();
+	}
+
+	public abstract boolean displayVSpeedArrow(GuiRadarContact c);
 
 }

@@ -28,13 +28,10 @@
  */
 package de.knewcleus.openradar.rpvd.contact;
 
-import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
-import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 
@@ -48,10 +45,11 @@ import de.knewcleus.openradar.rpvd.contact.ContactShape.Symbol;
 public class SimulationLayout extends ADatablockLayout {
 
     private final DatablockLayoutManager manager;
-    private final Font font = new Font("Courier", Font.PLAIN, 11);
+    
 
     public SimulationLayout(DatablockLayoutManager manager) {
         this.manager = manager;
+        font = new Font("Courier", Font.PLAIN, 11);
     }
 
     @Override
@@ -64,89 +62,24 @@ public class SimulationLayout extends ADatablockLayout {
         return "Simulation (Transponder enabled)";
     }
 
-    @Override
-    public Font getFont() {
-        return font;
-    }
+    // not overwritten 	
+
+//    @Override
+//    public synchronized Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
+//    }
+//    
+//    @Override
+//    public Color getDataBlockColor(GuiRadarContact c) {
+//    	
+//    }
+//
+//    @Override
+//    public Color getDataBlockColor(GuiRadarContact c) {
+//    	
+//    }
 
     @Override
-    public synchronized Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
-        if (highlighted || contact.isIdentActive()) {
-            return Color.white;
-        }
-        return Palette.LANDMASS;
-    }
-
-    @Override
-    public synchronized Color getColor(GuiRadarContact c) {
-        Color color = Palette.RADAR_UNCONTROLLED;
-
-        if (c.isIdentActive()) {
-            color = Color.black;
-            c.setHighlighted();
-        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
-            // Emergency
-            color = new Color(255,100,0);
-
-        } else if (!c.isActive()) {
-            // INCACTIVE GHOSTS
-            color = Palette.RADAR_GHOST;
-
-        } else if (c.isNeglect()) {
-            // BAD GUYS
-            color = Palette.RADAR_GHOST;
-
-        } else if (c.getState() == State.IMPORTANT) {
-            // CONTROLLED left column
-            color = Palette.RADAR_CONTROLLED;
-
-        } else if (c.getState() == State.CONTROLLED) {
-            // WATCHED middle column
-            color = Palette.RADAR_IMPORTANT;
-        } else {
-            // UNCONTROLLED right column
-            color = Palette.RADAR_UNCONTROLLED;
-        }
-
-        return color;
-    }
-
-    @Override
-    public synchronized Color getDataBlockColor(GuiRadarContact c) {
-        Color color = Palette.RADAR_UNCONTROLLED;
-
-      if (c.isIdentActive()) {
-          color = Color.black;
-          c.setHighlighted();
-      } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
-          // Emergency
-          color = new Color(255,100,0);
-
-      } else if (!c.isActive()) {
-          // INCACTIVE GHOSTS
-          color = Palette.RADAR_GHOST;
-
-      } else if (c.isNeglect()) {
-          // BAD GUYS
-          color = Palette.RADAR_GHOST;
-
-      } else if (c.getState() == State.IMPORTANT) {
-          // CONTROLLED left column
-          color = Palette.RADAR_CONTROLLED;
-
-      } else if (c.getState() == State.CONTROLLED) {
-          // WATCHED middle column
-          color = Palette.RADAR_IMPORTANT;
-      } else {
-          // UNCONTROLLED right column
-          color = Palette.RADAR_UNCONTROLLED;
-      }
-
-      return color;
-    }
-
-    @Override
-    public synchronized String getDataBlockText(GuiMasterController master, GuiRadarContact c) {
+    public String getDataBlockText(GuiMasterController master, GuiRadarContact c) {
         if (c.isAtc()) {
             setAltSpeedIndex(-1);
             return String.format("%s\n%s", c.getCallSign(), c.getAircraftCode());
@@ -219,7 +152,7 @@ public class SimulationLayout extends ADatablockLayout {
     }
 
 
-    public synchronized String getAddData(GuiRadarContact c) {
+    public String getAddData(GuiRadarContact c) {
         FlightPlanData fp = c.getFlightPlan();
         StringBuffer sb = new StringBuffer();
 
@@ -290,7 +223,7 @@ public class SimulationLayout extends ADatablockLayout {
     }
 
     @Override
-    public synchronized void modify(ContactShape shape, GuiRadarContact c) {
+    public void modify(ContactShape shape, GuiRadarContact c) {
 
         int vfrCode = manager.getData().getSquawkCodeManager().getVfrCode();
 //      int ifrCode = manager.getData().getSquawkCodeManager().getIfrCode();
