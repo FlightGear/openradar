@@ -45,6 +45,9 @@ public abstract class Converter2D {
 	 * downwards, like our screen coordinates and a heading expressed in
 	 * relation to our north, growing clockwise.
 	 *
+	 * Author: Wolfram Wagner
+	 * Contributions: Andreas Vogel
+	 * 
 	 * @param origin
 	 * @param heading
 	 * @param distance
@@ -59,6 +62,28 @@ public abstract class Converter2D {
 		return addPoints(origin, new Point2D.Double(x, y));
 	}
 
+    public static Point2D getVectorFromHeading(double heading) {
+        double headingCorrected = (heading-90d)*2*Math.PI/360d ;
+        return new Point2D.Double(Math.cos(headingCorrected), Math.sin(headingCorrected));
+    }
+
+    public static Point2D getMapDisplayPointIntersect(Point2D origin1, double heading1, Point2D origin2, double heading2) {
+    	Point2D vector1 = getVectorFromHeading (heading1);
+    	Point2D vector2 = getVectorFromHeading (heading2);
+    	double dox = origin2.getX() - origin1.getX();
+    	double doy = origin2.getY() - origin1.getY();
+    	double v1x = vector1.getX();
+    	double v1y = vector1.getY();
+    	double v2x = vector2.getX();
+    	double v2y = vector2.getY();
+    	double qx = dox * v1x + doy * v1y;
+    	double qy = dox * (-v1y) + doy * v1x;
+    	double sx = v2x * v1x + v2y * v1y;
+    	double sy = v2x * (-v1y) + v2y * v1x;
+    	double d = qx - qy * sx / sy;
+    	return new Point2D.Double(origin1.getX() + d * v1x, origin1.getY() + d * v1y);
+    }
+    
 	public Point2D getGeographicPoint(Point2D origin, double heading, double distance) {
 		return null;
 	}

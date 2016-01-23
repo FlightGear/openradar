@@ -38,11 +38,17 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
+/**
+ * Author: Wolfram Wagner
+ * Contributions: Andreas Vogel
+ */
 public class IndirectPoint2D extends Point2D {
 
     private Point2D geoOrigPoint;
     private final double distance;
     private final double direction;
+    private Point2D geoOrigPoint2;
+    private final double direction2;
     private final IMapViewerAdapter viewerAdapter;
     
     public IndirectPoint2D(IMapViewerAdapter viewerAdapter, Point2D geoOrigPoint, double direction, double distance) {
@@ -50,24 +56,42 @@ public class IndirectPoint2D extends Point2D {
         this.geoOrigPoint = geoOrigPoint;
         this.distance=distance;
         this.direction = direction;
+        this.geoOrigPoint2 = null;
+        this.direction2 = 0;
     }
 
-    @Override
-    public double getX() {
+    public IndirectPoint2D(IMapViewerAdapter viewerAdapter, Point2D geoOrigPoint1, double direction1, Point2D geoOrigPoint2, double direction2) {
+        this.viewerAdapter = viewerAdapter;
+        this.geoOrigPoint = geoOrigPoint1;
+        this.distance = 0;
+        this.direction = direction1;
+        this.geoOrigPoint2 = geoOrigPoint2;
+        this.direction2 = direction2;
+    }
+
+    private Point2D CalculatedPoint () {
         Point2D logPoint = viewerAdapter.getProjection().toLogical(geoOrigPoint);
         Point2D devicePoint = viewerAdapter.getLogicalToDeviceTransform().transform(logPoint, null);
-        Point2D newDevPoint = Converter2D.getMapDisplayPoint(devicePoint, direction, Converter2D.getFeetToDots(distance * Units.NM /Units.FT, viewerAdapter));
+        Point2D newDevPoint;
+        if (geoOrigPoint2 == null) {
+            newDevPoint = Converter2D.getMapDisplayPoint(devicePoint, direction, Converter2D.getFeetToDots(distance * Units.NM /Units.FT, viewerAdapter));
+        } else {
+            logPoint = viewerAdapter.getProjection().toLogical(geoOrigPoint2);
+            Point2D devicePoint2 = viewerAdapter.getLogicalToDeviceTransform().transform(logPoint, null);
+            newDevPoint = Converter2D.getMapDisplayPointIntersect(devicePoint, direction, devicePoint2, direction2);
+        }
         Point2D newLogPoint = viewerAdapter.getDeviceToLogicalTransform().transform(newDevPoint, null);
-        return viewerAdapter.getProjection().toGeographical(newLogPoint).getX();
+        return viewerAdapter.getProjection().toGeographical(newLogPoint);
+    }
+    
+    @Override
+    public double getX() {
+        return CalculatedPoint().getX();
     }
 
     @Override
     public double getY() {
-        Point2D logPoint = viewerAdapter.getProjection().toLogical(geoOrigPoint);
-        Point2D devicePoint = viewerAdapter.getLogicalToDeviceTransform().transform(logPoint, null);
-        Point2D newDevPoint = Converter2D.getMapDisplayPoint(devicePoint, direction, Converter2D.getFeetToDots(distance * Units.NM /Units.FT, viewerAdapter));
-        Point2D newLogPoint = viewerAdapter.getDeviceToLogicalTransform().transform(newDevPoint, null);
-        return viewerAdapter.getProjection().toGeographical(newLogPoint).getY();
+        return CalculatedPoint().getY();
     }
 
     @Override

@@ -47,7 +47,10 @@ import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
-
+/**
+ * Author: Wolfram Wagner
+ * Contributions: Andreas Vogel
+ */
 public class StdRoute {
 
     public enum DisplayMode {
@@ -303,6 +306,34 @@ public class StdRoute {
                 throw new IllegalArgumentException("Runway end for definition " + pointDescr + " not found!");
             }
             Point2D point = rw.getRunwayEnd().getOppositeEnd().getGeographicPosition();
+            return point;
+        }
+        if (pointDescr.contains("*")) {
+        	// intersection point of two rays
+        	int pos_d = pointDescr.indexOf("*");
+
+        	// angle1, navaidPoint1
+        	int pos_a1 = pointDescr.indexOf("@");
+            if (pos_a1 < 0) {
+                throw new IllegalArgumentException("Wrong point definition! First ray, no '@' to separate angle and point found: " + pointDescr);
+            }
+            float angle1 = Float.parseFloat(pointDescr.substring(0, pos_a1));
+            String id1 = pointDescr.substring(pos_a1+1, pos_d);
+            Point2D navaidPoint1 = getPoint(data, mapViewerAdapter, id1, previous);
+
+            // angle2, navaidPoint2
+            int pos_a2 = pointDescr.indexOf("@",pos_d);
+            if (pos_a2 < 0) {
+                throw new IllegalArgumentException("Wrong point definition! Second ray, no '@' to separate angle and point found: " + pointDescr);
+            }
+            float angle2 = Float.parseFloat(pointDescr.substring(pos_d+1,pos_a2));
+            String id2 = pointDescr.substring(pos_a2 +1  + 1);
+            Point2D navaidPoint2 = getPoint(data, mapViewerAdapter, id2, previous);
+
+            // parallel rays?
+            if ((angle1 % 180) == (angle2 % 180))
+                throw new IllegalArgumentException("Wrong point definition (parallel rays): " + pointDescr);
+            Point2D point = new IndirectPoint2D(mapViewerAdapter, navaidPoint1, angle1, navaidPoint2, angle2);
             return point;
         }
         if (pointDescr.contains("@")) {
