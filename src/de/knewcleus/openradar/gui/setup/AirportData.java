@@ -144,7 +144,8 @@ public class AirportData implements INavPointListener {
     private NavaidDB navaidDB = new NavaidDB();
     private StPView directionMessageView;
 
-    private String lenny64Url = "http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans";
+    private boolean fpDownloadEnabled = false;
+    private String fpDownloadUrl = "http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans";
 
     private int contactTailLength = 10;
 
@@ -907,16 +908,20 @@ public class AirportData implements INavPointListener {
         return transitionFL;
     }
 
-    public synchronized String getLenny64Url() {
-        return lenny64Url;
+    public synchronized boolean isFpDownloadEnabled() {
+        return fpDownloadEnabled;
     }
 
-    public synchronized void setLenny64Url(String lenny64Url) {
-        this.lenny64Url = lenny64Url;
+    public synchronized void setFpDownloadEnabled(boolean fpDownloadEnabled) {
+        this.fpDownloadEnabled = fpDownloadEnabled;
     }
 
-    public boolean isLenny64Enabled() {
-        return lenny64Url != null && !lenny64Url.isEmpty();
+    public synchronized String getFpDownloadUrl() {
+        return fpDownloadUrl;
+    }
+
+    public synchronized void setFpDownloadUrl(String fpDownloadUrl) {
+        this.fpDownloadUrl = fpDownloadUrl;
     }
 
     public synchronized int getContactTailLength() {

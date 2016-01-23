@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -127,6 +127,7 @@ public class SetupDialog extends JFrame {
     private JButton btCheckSettings3;
     private JPanel jPnlSettings;
     private JPanel jPnlFlightPlans;
+    private JCheckBox cbEnableFpDownload;
     private JLabel lbLennysServer;
     private JTextField tfLennysFpServer;
     private JButton btCreateSector;
@@ -890,12 +891,23 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
         jPnlFlightPlans.add(jPnlLenny, gridBagConstraints);
 
+        cbEnableFpDownload = new JCheckBox();
+        cbEnableFpDownload.setText("Enable flightplan downloads");
+        cbEnableFpDownload.addActionListener(new FpDownloadActionListener());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLenny.add(cbEnableFpDownload, gridBagConstraints);
+        
         lbLennysServer = new JLabel();
         lbLennysServer.setText("FlightPlan Webserver");
         lbLennysServer.setToolTipText("The URL of Lenny's server");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlLenny.add(lbLennysServer, gridBagConstraints);
@@ -906,8 +918,8 @@ public class SetupDialog extends JFrame {
         tfLennysFpServer.setText("");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 1;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
@@ -919,7 +931,7 @@ public class SetupDialog extends JFrame {
         btCheckSettings2.addActionListener(setupManager.getActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.weighty = 1;
         gridBagConstraints.anchor = GridBagConstraints.NORTH;
@@ -1409,7 +1421,8 @@ public class SetupDialog extends JFrame {
             dataOk = false;
         }
         data.setAltRadioTextEnabled(cbEnableAltRadioText.isSelected());
-
+        
+        data.setFpExchangeEnabled(cbEnableFpExchange.isSelected());
         if (cbEnableFpExchange.isSelected()) {
             if (checkUrl(tfFpServer.getText().trim())) {
                 lbFpServer.setForeground(Color.black);
@@ -1423,7 +1436,7 @@ public class SetupDialog extends JFrame {
         } else {
             lbFpServer.setForeground(Color.black);
         }
-        data.setFpExchangeEnabled(cbEnableFpExchange.isSelected());
+        
         if (checkUrl(tfMetarUrl.getText().trim())) {
             lbMetarUrl.setForeground(Color.black);
             data.setMetarUrl(tfMetarUrl.getText().trim());
@@ -1459,12 +1472,18 @@ public class SetupDialog extends JFrame {
             lbMpLocalPort.setForeground(Color.red);
             dataOk = false;
         }
-        if (checkUrl(tfLennysFpServer.getText().trim())) {
-            lbLennysServer.setForeground(Color.black);
-            data.setLenny64Url(tfLennysFpServer.getText().trim());
+        
+        data.setFpDownloadEnabled(cbEnableFpDownload.isSelected());
+        if(cbEnableFpDownload.isEnabled()) {
+	        if (checkUrl(tfLennysFpServer.getText().trim())) {
+	            lbLennysServer.setForeground(Color.black);
+	            data.setFpDownloadUrl(tfLennysFpServer.getText().trim());
+	        } else {
+	            lbLennysServer.setForeground(Color.red);
+	            dataOk = false;
+	        }
         } else {
-            lbLennysServer.setForeground(Color.red);
-            dataOk = false;
+        	lbLennysServer.setForeground(Color.black);
         }
 
         data.setChatAliasesEnabled(cbEnableChatAliases.isSelected());
@@ -1685,8 +1704,10 @@ public class SetupDialog extends JFrame {
 
                 cbDataboxLayout.setSelectedIndex(setupManager.getDatablockLayoutManager().getIndexOfActiveLayout());
 
+                cbEnableFpDownload.setSelected("true".equals(p.getProperty("fpDownload.enable")));
                 tfLennysFpServer.setText(p.getProperty("fpLenny.server", "http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5"));
-
+                tfLennysFpServer.setEnabled(cbEnableFpDownload.isSelected());
+                
                 {
                     String name = p.getProperty("radar.datablockLayout");
                     if (name != null) {
@@ -1746,6 +1767,7 @@ public class SetupDialog extends JFrame {
 
         p.put("metar.url", tfMetarUrl.getText().trim());
 
+        p.put("fpDownload.enable", "" + cbEnableFpDownload.isSelected());
         p.put("fpLenny.server", tfLennysFpServer.getText().trim());
 
         p.put("radar.datablockLayout", ((ADatablockLayout) cbDataboxLayout.getSelectedItem()).getName());
@@ -1893,6 +1915,13 @@ public class SetupDialog extends JFrame {
         }
     }
 
+    private class FpDownloadActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tfLennysFpServer.setEnabled(cbEnableFpDownload.isSelected());
+        }
+    }
+    
     private class ChatEnabledActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

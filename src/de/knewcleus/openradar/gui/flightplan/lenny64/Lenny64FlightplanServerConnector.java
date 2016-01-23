@@ -71,7 +71,7 @@ public class Lenny64FlightplanServerConnector {
         String callsign = contact.getCallSign();
         // http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans&callsign=
         // http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5
-        String baseUrl = data.getLenny64Url();
+        String baseUrl = data.getFpDownloadUrl();
         List<FlightPlanData> result = new ArrayList<FlightPlanData>();
 
         log.warn("Flightplan: " + data.getCallSign() + " Going to download existing flightplans for " + callsign + " from " + baseUrl);
@@ -160,7 +160,7 @@ public class Lenny64FlightplanServerConnector {
         String callsign = contact.getCallSign();
         // http://lenny64.free.fr/dev2014_01_13.php5?closeFlightplans&callsign=
         // http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5
-        String baseUrl = master.getAirportData().getLenny64Url();
+        String baseUrl = master.getAirportData().getFpDownloadUrl();
         AirportData data = master.getAirportData();
         String code = contact.getFlightPlan().getFlightPlanId();
         
