@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Wolfram Wagner
+ * Copyright (C) 2015,2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -223,7 +223,7 @@ public class AtcNotesStore {
 
 	}
 
-	public void restoreStaticData(GuiRadarContact c) {
+	public synchronized void restoreStaticData(GuiRadarContact c) {
 		AtcSettings s = store.get(c.getCallSign());
 		if(s!=null) {
 			c.setAtcComment(s.getAtcComment());
@@ -255,7 +255,7 @@ public class AtcNotesStore {
 
 		public AtcSettings(GuiRadarContact c) {
 			this.callSign = c.getCallSign();
-			this.atcComment = c.getAtcComment();
+			this.atcComment = c.getAtcComment()!=null ? c.getAtcComment() : "";
 			this.radioSupport = c.hasFgComSupport();
 			this.lastChange = new Date();
 		}

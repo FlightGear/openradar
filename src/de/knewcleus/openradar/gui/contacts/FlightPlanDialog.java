@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -39,6 +39,8 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -62,7 +64,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+
+import org.apache.log4j.Logger;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
@@ -127,6 +132,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
     
     private final String FPCLOSE_BUTTON_DEFAULT = "Close FP";
     private final String FPCLOSE_BUTTON_ASK = "Really Close?";
+
+    
+	private static final Logger log = Logger.getLogger(FlightPlanDialog.class);
     
     public FlightPlanDialog(GuiMasterController master, RadarContactController controller) {
         this.master = master;
@@ -481,6 +489,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
         cbAssignedRunway = new JComboBox<String>();
         cbAssignedRunway.setEditable(true);
+        cbAssignedRunway.addActionListener(new CbRunwayActionListener());
         Dimension dim = cbAssignedRunway.getPreferredSize();
         cbAssignedRunway.setPreferredSize(new Dimension(80, (int) dim.getHeight()));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -824,11 +833,19 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
     }
 
-    public void show(GuiRadarContact contact, MouseEvent e) {
+    public synchronized void show(GuiRadarContact contact, MouseEvent e) {
+    	
+    	if(isVisible()) {
+    		// against double calls
+    		return;
+    	}
+    	
+    	log.warn("initializing Dialog");
         this.contact = contact;
 
         setData(contact);
         if(master.getAirportData().isLenny64Enabled()) {
+        	// async retrieval 
             (new Thread(new Lenny64FpExistsChecker(master, contact, this,this.lenny64Controller.getLenny64Connector()),"OpenRadar - Lenny64 Flightplan exists checker")).start();
         }
 
@@ -855,56 +872,58 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         setLocation(new Point((int) p.getX(), (int) p.getY()));
         setVisible(true);
         tpDetails.requestFocus();
+        log.warn("Dialog initialized");
     }
 
-    public void setData(GuiRadarContact contact) {
-        
-        btRetrieveFp.setForeground(Color.black);
-
-        tbContacts.setTitle("<html><body>Contact <b>"+contact.getCallSign()+"</b></body></html>");
-        chbFgComSupport.setSelected(contact.hasFgComSupport());
-        cbLanguages.setSelectedItem(contact.getAtcLanguage());
-
-
-        FlightPlanData fpd = contact.getFlightPlan();
-
-        String aircraftCode = fpd.getAircraft();
-        tfAircraft.setText(aircraftCode==null|| aircraftCode.isEmpty()?contact.getAircraftCode():aircraftCode);
-        tfAircraft.setToolTipText("Model: "+contact.getModel());
-        tfSquawk.setText(contact.getAssignedSquawk()!=null?""+contact.getAssignedSquawk():"");
-
-        tfFlightCode.setText(fpd.getFlightCode());
-        cbFlightPlanTypes.setSelectedItem(fpd.getType());
-
-        tfDepAirport.setText(fpd.getDepartureAirport());
-        tfDepTime.setText(fpd.getDeparture());
-        tfDestAirport.setText(fpd.getDestinationAirport());
-        tfArrivalTime.setText(controller.getEstimatedArrivalTime(contact));
-        tfRoute.setText(fpd.getRoute());
-        tfAlternAirports.setText(fpd.getAlternativeDestinationAirports());
-        tfFpAltitude.setText(fpd.getCruisingAltitude());
-        tfFpTAS.setText(fpd.getTrueAirspeed());
-        
-        master.getAirportData().updateRunwayModel((DefaultComboBoxModel<String>) cbAssignedRunway.getModel(),true);
-        cbAssignedRunway.getEditor().setItem(fpd.getAssignedRunway());
-        master.getAirportData().getNavaidDB().updateRoutesCbModel((DefaultComboBoxModel<String>) cbAssignedRoute.getModel(),master,true);
-        cbAssignedRoute.getEditor().setItem(fpd.getAssignedRoute());
-
-        tfAssignedAltitude.setText(fpd.getAssignedAltitude());
-        //cbFlightPlanStatus.getEditor().setItem(fpd.getFpStatus());
-
-        cbHandoverATCs.setModel(master.getRadarContactManager().getOtherATCsCbModel());
-
-        tpDetails.setText(fpd.getRemarks());
-        tpPrivateDetails.setText(contact.getAtcComment());
-
-        initOwnership(fpd);
-        
-        setLennyButtonText("Retrieve FP");
-        btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
-
-        setFpReadable(fpd.isUncontrolled() || fpd.isOwnedByMe());
-        btCloseFp.setEnabled(fpd.isOwnedByMe() && fpd.getFlightPlanId()!=null && !fpd.getFlightPlanId().isEmpty());
+    private synchronized void setData(GuiRadarContact contact) {
+    	log.warn("Running setData");
+	        btRetrieveFp.setForeground(Color.black);
+	
+	        tbContacts.setTitle("<html><body>Contact <b>"+contact.getCallSign()+"</b></body></html>");
+	        chbFgComSupport.setSelected(contact.hasFgComSupport());
+	        cbLanguages.setSelectedItem(contact.getAtcLanguage());
+	
+	
+	        FlightPlanData fpd = contact.getFlightPlan();
+	
+	        String aircraftCode = fpd.getAircraft();
+	        tfAircraft.setText(aircraftCode==null|| aircraftCode.isEmpty()?contact.getAircraftCode():aircraftCode);
+	        tfAircraft.setToolTipText("Model: "+contact.getModel());
+	        tfSquawk.setText(contact.getAssignedSquawk()!=null?""+contact.getAssignedSquawk():"");
+	
+	        tfFlightCode.setText(fpd.getFlightCode());
+	        cbFlightPlanTypes.setSelectedItem(fpd.getType());
+	
+	        tfDepAirport.setText(fpd.getDepartureAirport());
+	        tfDepTime.setText(fpd.getDeparture());
+	        tfDestAirport.setText(fpd.getDestinationAirport());
+	        tfArrivalTime.setText(controller.getEstimatedArrivalTime(contact));
+	        tfRoute.setText(fpd.getRoute());
+	        tfAlternAirports.setText(fpd.getAlternativeDestinationAirports());
+	        tfFpAltitude.setText(fpd.getCruisingAltitude());
+	        tfFpTAS.setText(fpd.getTrueAirspeed());
+	        
+	        master.getAirportData().updateRunwayModel((DefaultComboBoxModel<String>) cbAssignedRunway.getModel(),true);
+	        cbAssignedRunway.getEditor().setItem(fpd.getAssignedRunway());
+	        master.getAirportData().getNavaidDB().updateRoutesCbModel((DefaultComboBoxModel<String>) cbAssignedRoute.getModel(),master,fpd.getAssignedRunway(),true);
+	        cbAssignedRoute.getEditor().setItem(fpd.getAssignedRoute());
+	
+	        tfAssignedAltitude.setText(fpd.getAssignedAltitude());
+	        //cbFlightPlanStatus.getEditor().setItem(fpd.getFpStatus());
+	
+	        cbHandoverATCs.setModel(master.getRadarContactManager().getOtherATCsCbModel());
+	
+	        tpDetails.setText(fpd.getRemarks());
+	        tpPrivateDetails.setText(contact.getAtcComment());
+	
+	        initOwnership(fpd);
+	        
+	        setLennyButtonText("Retrieve FP");
+	        btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
+	
+	        setFpReadable(fpd.isUncontrolled() || fpd.isOwnedByMe());
+	        btCloseFp.setEnabled(fpd.isOwnedByMe() && fpd.getFlightPlanId()!=null && !fpd.getFlightPlanId().isEmpty());
+	     log.warn("setData done");
     }
     /** fills the panel in fron of the reset flightplan button */
     private void initOwnership(FlightPlanData fpd) {
@@ -1080,7 +1099,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 //
 //    }
 
-    public void closeDialog(boolean save) {
+    public synchronized void closeDialog(boolean save) {
         if (isVisible()) {
             if(lenny64Controller.isDialogOpen()) {
                 getLenny64Controller().closeFpSelectionDialog();
@@ -1095,55 +1114,61 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
         }
     }
 
-    public void saveData() {
-System.out.println("saveData");
-        FlightPlanData fpd = contact.getFlightPlan();
-
-        contact.setFgComSupport(chbFgComSupport.isSelected());
-        contact.setAtcLanguage(controller.getAutoAtcLanguages(cbLanguages.getSelectedIndex()));
-
-
-        fpd.setAircraft(tfAircraft.getText());
-
-        fpd.setFlightCode(tfFlightCode.getText());
-        fpd.setType((String)cbFlightPlanTypes.getSelectedItem());
-
-        fpd.setDepartureAirport(tfDepAirport.getText());
-        fpd.setDeparture(tfDepTime.getText());
-        fpd.setDestinationAirport(tfDestAirport.getText());
-        fpd.setRoute(tfRoute.getText());
-        fpd.setAlternativeDestinationAirports(tfAlternAirports.getText());
-        fpd.setCruisingAltitude(tfFpAltitude.getText());
-        fpd.setTrueAirspeed(tfFpTAS.getText());
-        // estimatedFlightTime+
-        // estimatedFuelTime
-        
-        fpd.setAssignedRunway((String)cbAssignedRunway.getEditor().getItem());
-        fpd.setAssignedRoute((String)cbAssignedRoute.getEditor().getItem());
-        fpd.setAssignedAltitude(tfAssignedAltitude.getText());
-
-        if(contact.getFlightPlan().isOwnedByMe()) {
-            String handover = (String)cbHandoverATCs.getSelectedItem();
-            fpd.setHandover(handover);
-            if(handover!=null && !handover.isEmpty()) {
-                FpAtc handoverAtc = master.getRadarContactManager().getAtcFor(handover);
-                if(handoverAtc!=null) {
-                    master.getFlightPlanExchangeManager().sendHandoverMessage(contact, handoverAtc);
-                }
-            }
-        }
-        
-        String sqCode = tfSquawk.getText();
-        if(SquawkCode.checkValue(sqCode)) {
-            contact.setAssignedSquawk(Integer.parseInt(sqCode));
-        }
-        
-        // cbFlightPlanStatus.setSelectedItem(fpd.getFpStatus());
-        fpd.setRemarks(tpDetails.getText().trim());
-        contact.setAtcComment(tpPrivateDetails.getText().trim());
-
-        contact.getFlightPlan().setReadyForTransmission();
-        master.getFlightPlanExchangeManager().triggerTransmission();
+    public synchronized void saveData() {
+    	log.warn("saving Data");
+		synchronized(contact) {
+	        FlightPlanData fpd = contact.getFlightPlan();
+	
+	        synchronized(fpd) {
+		        contact.setFgComSupport(chbFgComSupport.isSelected());
+		        contact.setAtcLanguage(controller.getAutoAtcLanguages(cbLanguages.getSelectedIndex()));
+		
+		
+		        fpd.setAircraft(tfAircraft.getText());
+		
+		        fpd.setFlightCode(tfFlightCode.getText());
+		        fpd.setType((String)cbFlightPlanTypes.getSelectedItem());
+		
+		        fpd.setDepartureAirport(tfDepAirport.getText());
+		        fpd.setDeparture(tfDepTime.getText());
+		        fpd.setDestinationAirport(tfDestAirport.getText());
+		        fpd.setRoute(tfRoute.getText());
+		        fpd.setAlternativeDestinationAirports(tfAlternAirports.getText());
+		        fpd.setCruisingAltitude(tfFpAltitude.getText());
+		        fpd.setTrueAirspeed(tfFpTAS.getText());
+		        // estimatedFlightTime+
+		        // estimatedFuelTime
+		        
+		        fpd.setAssignedRunway((String)cbAssignedRunway.getEditor().getItem());
+		        fpd.setAssignedRoute((String)cbAssignedRoute.getEditor().getItem());
+		        fpd.setAssignedAltitude(tfAssignedAltitude.getText());
+		
+		        if(contact.getFlightPlan().isOwnedByMe()) {
+		            String handover = (String)cbHandoverATCs.getSelectedItem();
+		            fpd.setHandover(handover);
+		            if(handover!=null && !handover.isEmpty()) {
+		                FpAtc handoverAtc = master.getRadarContactManager().getAtcFor(handover);
+		                if(handoverAtc!=null) {
+		                    master.getFlightPlanExchangeManager().sendHandoverMessage(contact, handoverAtc);
+		                }
+		            }
+		        }
+		        
+		        String sqCode = tfSquawk.getText();
+		        if(SquawkCode.checkValue(sqCode)) {
+		            contact.setAssignedSquawk(Integer.parseInt(sqCode));
+		        }
+		        
+		        // cbFlightPlanStatus.setSelectedItem(fpd.getFpStatus());
+		        fpd.setRemarks(tpDetails.getText().trim());
+		        contact.setAtcComment(tpPrivateDetails.getText().trim());
+		        master.getRadarContactManager().saveAtcNotes(contact);
+		        
+		        contact.getFlightPlan().setReadyForTransmission();
+		        master.getFlightPlanExchangeManager().triggerTransmission();
+	        }
+		}
+		log.warn("Data saved");
     }
 
     private class DetailsKeyListener extends KeyAdapter {
@@ -1235,7 +1260,7 @@ System.out.println("saveData");
                     saveData();
                 }
             } else if("NEXT_SQUAWK".equals(source.getName()) && e.getClickCount()==1) {
-                saveData();
+            	saveData();
                 master.getRadarContactManager().assignSquawkCode(FlightType.valueOf(contact.getFlightPlan().getType()));
                 setData(contact);
             } else if("RESET_SQUAWK".equals(source.getName()) && e.getClickCount()==1) {
@@ -1263,7 +1288,6 @@ System.out.println("saveData");
             //saveData();
             tfArrivalTime.setText(controller.getEstimatedArrivalTime(contact));
         }
-        
     }
 
     public synchronized boolean shows(GuiRadarContact c) {
@@ -1303,12 +1327,64 @@ System.out.println("saveData");
         }
     }
 
-    public void setFlightplansAvailable(boolean fpsExist) {
-        if(fpsExist) {
-            btRetrieveFp.setForeground(Color.blue);
-        } else {
-            btRetrieveFp.setForeground(Color.GRAY);
-        }
-        btRetrieveFp.repaint();
+    private class CbRunwayActionListener implements ActionListener {
+    	@Override
+    	public void actionPerformed(ActionEvent e) {
+            if(e.getSource().equals(cbAssignedRunway)) {
+            	log.info("CbRunway: Action Performed");
+            	String selectedRoute = (String)cbAssignedRoute.getSelectedItem();
+                master.getAirportData().getNavaidDB().updateRoutesCbModel((DefaultComboBoxModel<String>) cbAssignedRoute.getModel(),master,(String)cbAssignedRunway.getSelectedItem(),true);
+            	if(selectedRoute==null || selectedRoute.isEmpty()) {
+            		return;
+            	}
+            	if(selectedRoute!=null) {
+            		for(int i=0; i<cbAssignedRoute.getModel().getSize();i++) {
+            			String currentElement = cbAssignedRoute.getModel().getElementAt(i);
+            			if(selectedRoute.equals(currentElement)) {
+            				cbAssignedRoute.getModel().setSelectedItem(currentElement);
+            				continue;
+            			}
+            		}
+            	}
+            	log.info("CbRunway: Action Performed DONE");
+            }
+    	}
     }
+    
+	/**
+	 * Called to update the lenny download button
+	 */
+	public void extUpdateLennysFpButton(boolean fpExists) {
+    	final boolean innerFpExists = fpExists;
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				// executed by the Swing Thread
+				log.info("Executing work for extUpdateLennysFpButton");
+		        if(innerFpExists) {
+		            btRetrieveFp.setForeground(Color.blue);
+		        } else {
+		            btRetrieveFp.setForeground(Color.GRAY);
+		        }
+		        btRetrieveFp.repaint();
+		        log.info("DONE executing work for extUpdateLennysFpButton");
+			}
+		});
+    }
+	/**
+	 * Called to bring new data into the dialog!
+	 */
+	public void extUpdateUI(GuiRadarContact currentContact) {
+    	final GuiRadarContact c = currentContact;
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				log.info("Executing work for extUpdateUI");
+				// executed by the Swing Thread
+				setData(c);
+				log.info("DONE Executing work for extUpdateUI");
+			}
+		});
+    }
+
 }

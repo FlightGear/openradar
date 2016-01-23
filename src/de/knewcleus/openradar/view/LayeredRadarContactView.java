@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012, 2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -51,7 +51,8 @@ import de.knewcleus.openradar.rpvd.RadarTargetView;
  */
 public class LayeredRadarContactView extends LayeredView {
 
-    
+//    private static final Logger log = Logger.getLogger(LayeredRadarContactView.class);
+	
     public LayeredRadarContactView( IViewerAdapter mapViewAdapter ) {
         super(mapViewAdapter);
     }
@@ -60,19 +61,9 @@ public class LayeredRadarContactView extends LayeredView {
     public synchronized void traverse(IViewVisitor visitor) {
         RadarTargetView selectedView = null;
         List<IView> viewsToRepaint=new ArrayList<IView>(views);
-        
-        // paint the expired
-        for (IView view: new ArrayList<IView>(viewsToRepaint)) {
-            if(view instanceof RadarTargetView) {
-                RadarTargetView radarView = (RadarTargetView)view;
-                if(radarView.getTrackDisplayState().getGuiContact().isExpired()
-                   && !radarView.getTrackDisplayState().getGuiContact().isNeglect()) {
+//		log.warn("Painting views ");
+//		log.warn("viewsToPaint: "+viewsToRepaint.size());
 
-                    view.accept(visitor);
-                    viewsToRepaint.remove(view); // remove already painted 
-                }
-            }
-        }
         // the neglected
         for (IView view: new ArrayList<IView>(viewsToRepaint)) {
             if(view instanceof RadarTargetView) {

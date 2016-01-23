@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -86,17 +86,25 @@ public class RadarTargetProvider implements INotificationListener {
                 if(guiContact!=null) {
                     displayState.setGuiLink(master, guiContact);
                     final RadarTargetView newView = new RadarTargetView(master,radarMapViewAdapter, displayState);
+
                     displayState.setView(newView);
                     viewMap.put(track, newView);
                     radarTargetLayer.pushView(newView);
                 } else {
                     log.error("No contact found for package "+targetStatus.getCallsign());
                 }
+        		log.warn("Track created ");
+        		log.warn("vieweMap: "+viewMap.size());
+                
                 break;
             case RETIRED:
                 final RadarTargetView oldView = viewMap.get(track);
                 radarTargetLayer.removeView(oldView);
                 viewMap.remove(track);
+                oldView.destroy();
+
+                log.warn("Track removed ");
+        		log.warn("vieweMap: "+viewMap.size());
                 break;
             }
         }

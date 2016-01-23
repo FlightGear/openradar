@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012-2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -48,6 +48,7 @@ import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 import de.knewcleus.openradar.tracks.TrackLifetimeNotification.LifetimeState;
 
 public class TrackManager extends Notifier implements ITrackManager, IRadarDataRecipient {
+	
 	protected final Map<TargetStatus, Track> trackMap=Collections.synchronizedMap(new HashMap<TargetStatus, Track>());
 	/**
 	 * The length of the time in milliseconds to wait between the last signal and
@@ -102,6 +103,7 @@ public class TrackManager extends Notifier implements ITrackManager, IRadarDataR
 			final long trackAge = currentTime - track.getLastUpdateTimestamp();
 			if (trackAge > trackRetirementTimeoutMsecs) {
 				/* retire track */
+				track.destroy();
                 trackMap.remove(track.getIdentifier());
 				notify(new TrackLifetimeNotification(this, track, LifetimeState.RETIRED));
 			} else if (trackAge > lossOfTrackTimeoutMsecs) {

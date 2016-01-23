@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -165,7 +165,23 @@ public class StdRouteReader {
 											end, angle, length, startOffset, endOffset, arrows, text, attributes);
 									previous = line;
 									route.addElement(line);
-								} else if (element.getName().equalsIgnoreCase("bow")) {
+								} else if (element.getName().equalsIgnoreCase("way")) {
+                                    String start = element.getAttributeValue("start");
+                                    String end = element.getAttributeValue("end");
+                                    String angle = element.getAttributeValue("angle");
+                                    String length = element.getAttributeValue("length");
+                                    String startOffset = element.getAttributeValue("startOffset");
+                                    String endOffset = element.getAttributeValue("endOffset");
+                                    String arrows = element.getAttributeValue("arrows");
+                                    String label = element.getAttributeValue("label");
+                                    String height = element.getAttributeValue("height");
+                                    String distance = element.getAttributeValue("distance");
+                                    String heading = element.getAttributeValue("heading");
+                                    StdRouteWay line = new StdRouteWay(data, route, mapViewAdapter, previous, start, end, angle, length, startOffset, endOffset,
+                                                                        arrows, label, height, distance, heading, attributes);
+                                    previous = line;
+                                    route.addElement(line);
+                                } else if (element.getName().equalsIgnoreCase("bow")) {
 									String center = element.getAttributeValue("center");
 									String radius = element.getAttributeValue("radius");
 									String startAngle = element.getAttributeValue("startAngle");
@@ -252,9 +268,10 @@ public class StdRouteReader {
 								} else if (element.getName().equalsIgnoreCase("screenText")) {
 									String position = element.getAttributeValue("screenPos");
 									String angle = element.getAttributeValue("angle");
+									boolean clickable = "true".equals(element.getAttributeValue("clickable"));
 									String sText = element.getAttributeValue("text");
 									StdRouteScreenText text = new StdRouteScreenText(data, route, mapViewAdapter,
-											previous, position, angle, sText, attributes);
+											previous, position, angle, clickable, sText, attributes);
 									previous = text;
 									route.addElement(text);
 								} else if (element.getName().equalsIgnoreCase("minAlt")) {

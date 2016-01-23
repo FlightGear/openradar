@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -69,19 +69,19 @@ public class Player {
 		this.callsign=callsign;
 	}
 
-	public void setAddress(InetAddress address) {
+	public synchronized void setAddress(InetAddress address) {
 		this.address = address;
 	}
 
-	public InetAddress getAddress() {
+	public synchronized InetAddress getAddress() {
 		return address;
 	}
 
-	public void setPort(int port) {
+	public synchronized void setPort(int port) {
 		this.port = port;
 	}
 
-	public int getPort() {
+	public synchronized int getPort() {
 		return port;
 	}
 
@@ -157,7 +157,7 @@ public class Player {
         transpLastIdentStart=System.currentTimeMillis();
     }
 
-    public boolean isIdentActive() {
+    public synchronized boolean isIdentActive() {
         return System.currentTimeMillis()-transpLastIdentStart < 2000;
     }
 

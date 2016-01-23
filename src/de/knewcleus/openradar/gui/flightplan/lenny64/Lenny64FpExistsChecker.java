@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Wolfram Wagner
+ * Copyright (C) 2015-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -49,6 +49,6 @@ public class Lenny64FpExistsChecker implements Runnable {
     @Override
     public void run() {
         boolean fpsExist = !connector.checkForFlightplan(master.getAirportData(), contact).isEmpty();
-        dialog.setFlightplansAvailable(fpsExist);
+        dialog.extUpdateLennysFpButton(fpsExist);
     }
 }

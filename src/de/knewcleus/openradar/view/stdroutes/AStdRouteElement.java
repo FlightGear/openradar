@@ -121,4 +121,8 @@ public abstract class AStdRouteElement {
     public abstract boolean contains(Point p);
 
     public void mouseClicked(MouseEvent e) {}
+
+    public boolean isClickable() {
+		return false;
+	}
 }

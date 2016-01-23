@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2015 Wolfram Wagner
+ * Copyright (C) 2012,2015, 2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -88,8 +88,7 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 
 	@Override
 	public void run() {
-		Thread myThread=Thread.currentThread();
-		while (!myThread.isInterrupted()) {
+		while (true) {
 			try {
 				receivePacket();
 			} catch (SocketTimeoutException e) {

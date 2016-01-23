@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -44,8 +44,6 @@ import java.util.zip.ZipFile;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
-
-import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.geodata.GeodataException;
@@ -137,7 +135,7 @@ public class RadarMapPanel extends JComponent {
     // this view will contain the Fixes defined inline in the standard routes
     protected LayeredView addNavSymbolView;
 
-    private static final Logger log = Logger.getLogger(SwingRadarDataAdapter.class);
+//    private static final Logger log = Logger.getLogger(SwingRadarDataAdapter.class);
 
     public RadarMapPanel(GuiMasterController guiInteractionManager) {
         this.master = guiInteractionManager;
@@ -284,7 +282,7 @@ public class RadarMapPanel extends JComponent {
             if (master.getAirportData().isLayerVisible("stream")) {
                 try {
                     setupDialog.setStatus(40, "Reading stream layer...");
-                    ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), newFormat ? "osm_stream":"v0_stream"));
+                    ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), newFormat ? "osm_river":"v0_stream"));
                     final GeodataView streamView = new GeodataView(master, radarMapViewAdapter, streamLayer, "STREAM", bounds);
                     streamLayer.closeZipArchive();
                     streamView.setColor(Palette.STREAM);

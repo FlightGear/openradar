@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -50,15 +50,18 @@ public class StdRouteScreenText extends AStdRouteElement {
 
     private String screenPos;
     private Double angle;
+    private final boolean clickable;
     private final String text;
+    private volatile Rectangle2D extBounds;
 
     public StdRouteScreenText(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
-                        String screenPos, String angle, String text,StdRouteAttributes attributes) {
+                        String screenPos, String angle, boolean clickable, String text,StdRouteAttributes attributes) {
         super(data, mapViewAdapter, new Point2D.Double(0,0),null,attributes);
 
         this.screenPos = screenPos;
 
         this.angle = angle !=null ? Double.parseDouble(angle)+magDeclination : 0;
+        this.clickable = clickable;
         this.text=text;
     }
 
@@ -77,6 +80,7 @@ public class StdRouteScreenText extends AStdRouteElement {
         g2d.setTransform(oldTransform);
 
         bounds.setRect(displayPoint.getX(), displayPoint.getY(),bounds.getWidth(),bounds.getHeight());
+        extBounds = new Rectangle2D.Double(displayPoint.getX()-bounds.getWidth(),displayPoint.getY()-bounds.getHeight(),2*bounds.getWidth(),2*bounds.getHeight());
         return bounds;
     }
     /**
@@ -121,6 +125,9 @@ public class StdRouteScreenText extends AStdRouteElement {
 
     @Override
     public synchronized boolean contains(Point p) {
-        return false;
+    	if(!clickable || extBounds==null) {
+    		return false;
+    	}
+        return extBounds.contains(p);
     }
 }

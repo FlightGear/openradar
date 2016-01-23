@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -87,9 +87,9 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
             @Override
             public void run() {
                 int counter = 0;
-                while (!Thread.interrupted()) {
+                while (true) {
                     try {
-                        synchronized (this) {
+//                        synchronized (this) { // does lock the sending thread. This has no influence
                             // send every second if queue is empty, otherwise
                             // every 250 ms.
                             if (!chatQueue.isEmpty() || activeChatMessage != null || counter > 1) {
@@ -98,10 +98,10 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
                             } else {
                                 counter++;
                             }
-                        }
-
+//                        }
                         sleep(250);
                     } catch (InterruptedException e) {
+                    	log.warn("OpenRadar - messageSender was interrupted, Cause for a former error...");
                     }
                 }
             }

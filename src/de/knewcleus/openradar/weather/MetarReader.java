@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -223,11 +223,12 @@ public class MetarReader implements Runnable {
             MetarData lastMetar = metars.get(code);
 
             if(lastMetar==null || !lastMetar.equals(metar)) {
+                log.info("Metar received: " + metar.getMetarBaseData());
                 metars.put(code, metar);
                 for (IMetarListener l : listener) {
                     l.registerNewMetar(metar);
                 }
-                log.info("Metar received: " + metar.getMetarBaseData());
+                log.info("Metar for "+metar.getAirportCode()+" processed.");
 
                 if(code.equalsIgnoreCase(data.getAirportCode())) {
                     SoundManager.playWeather();

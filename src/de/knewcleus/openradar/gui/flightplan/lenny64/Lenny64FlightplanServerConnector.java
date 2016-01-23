@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2015 Wolfram Wagner
+ * Copyright (C) 2014-2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -124,7 +124,7 @@ public class Lenny64FlightplanServerConnector {
                     log.error("Error while parsing flightplan from lenny64!", e);
                     result = new ArrayList<FlightPlanData>();
                 }
-
+                log.warn("Flightplan download processing finished. "+result.size()+" FPs found!");
             } else {
                 log.warn("Flightplan: " + data.getCallSign() + " Failed to retrieve flightplan from lenny64! (got response code " + responseCode + " from "
                         + url.toString() + ")...");

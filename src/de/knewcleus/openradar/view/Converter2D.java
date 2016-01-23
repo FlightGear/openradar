@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -39,83 +39,94 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public abstract class Converter2D {
 
-    /**
-     * This method returns a point in a direction and a distance. It assumes an coordinate system with origin in the top left, and y increasing downwards,
-     * like our screen coordinates and a heading expressed in relation to our north, growing clockwise.
-     *
-     * @param origin
-     * @param heading
-     * @param distance
-     * @return
-     */
-    public static Point2D getMapDisplayPoint(Point2D origin, double heading, double distance) {
-        double headingCorrected = (heading-90d)*2*Math.PI/360d ;
+	/**
+	 * This method returns a point in a direction and a distance. It assumes an
+	 * coordinate system with origin in the top left, and y increasing
+	 * downwards, like our screen coordinates and a heading expressed in
+	 * relation to our north, growing clockwise.
+	 *
+	 * @param origin
+	 * @param heading
+	 * @param distance
+	 * @return
+	 */
+	public static Point2D getMapDisplayPoint(Point2D origin, double heading, double distance) {
+		double headingCorrected = (heading - 90d) * 2 * Math.PI / 360d;
 
-        double x = distance * Math.cos(headingCorrected);
-        double y = distance * Math.sin(headingCorrected);
+		double x = distance * Math.cos(headingCorrected);
+		double y = distance * Math.sin(headingCorrected);
 
-        return addPoints(origin, new Point2D.Double(x,y));
-    }
+		return addPoints(origin, new Point2D.Double(x, y));
+	}
 
-    public Point2D getGeographicPoint(Point2D origin, double heading, double distance) {
-        return null;
-    }
+	public Point2D getGeographicPoint(Point2D origin, double heading, double distance) {
+		return null;
+	}
 
-    public static Point2D addPoints(Point2D point1, Point2D point2) {
-        return new Point2D.Double(point1.getX()+point2.getX(),point1.getY()+point2.getY());
-    }
+	public static Point2D addPoints(Point2D point1, Point2D point2) {
+		return new Point2D.Double(point1.getX() + point2.getX(), point1.getY() + point2.getY());
+	}
 
+	public static Point2D midPoint(Point2D point1, Point2D point2) {
+		return new Point2D.Double((point1.getX() + point2.getX()) / 2, (point1.getY() + point2.getY()) / 2);
+	}
 
-    public static double getFeetToDots(double distance, IMapViewerAdapter mapViewerAdapter) {
-        double scale = mapViewerAdapter.getLogicalScale();
-        scale = scale == 0 ? 1 : scale;
-        return distance / 6076d / scale * 1850d; // the last number is the global correction factor for distances
-    }
+	public static double getFeetToDots(double distance, IMapViewerAdapter mapViewerAdapter) {
+		double scale = mapViewerAdapter.getLogicalScale();
+		scale = scale == 0 ? 1 : scale;
+		return distance / 6076d / scale * 1850d; // the last number is the global correction factor for distances
+	}
 
-    public double getDistanceMiles(Point2D geoPoint1, Point2D geoPoint2) {
-        return 0d;
-    }
+	public double getDistanceMiles(Point2D geoPoint1, Point2D geoPoint2) {
+		return 0d;
+	}
 
-    public static double getMilesPerDot(IMapViewerAdapter mapViewerAdapter) {
-        return 1d/getFeetToDots(Units.NM/Units.FT, mapViewerAdapter);
-    }
+	public static double getMilesPerDot(IMapViewerAdapter mapViewerAdapter) {
+		return 1d / getFeetToDots(Units.NM / Units.FT, mapViewerAdapter);
+	}
 
-    public static double normalizeAngle(double d) {
-        while(d>360) {
-            d = d-360;
-        }
-        while(d<0) {
-            d = d+360;
-        }
-        return d;
-    }
+	public static double normalizeAngle(double d) {
+		while (d > 360) {
+			d = d - 360;
+		}
+		while (d < 0) {
+			d = d + 360;
+		}
+		return d;
+	}
 
-    public static double getDirection (Point2D point1, Point2D point2) {
-        double dx = point2.getX()-point1.getX();
-        double dy = -1*(point2.getY()-point1.getY());
-        return getDirection(dx, dy);
-    }
-    public static double getDirection (double dx, double dy) {
-        
-        double distance = Math.sqrt(dx*dx + dy*dy);
-        Long angle = null;
-        if(distance!=0) {
-            if(dx>=0 && dy>=0) angle = Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
-            if(dx>=0 && dy<=0) angle = 180-Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
-            if(dx<=0 && dy<=0) angle = 180+-1*Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
-            if(dx<=0 && dy>=0) angle = 360+Math.round(Math.asin(dx/distance)/2d/Math.PI*360d);
-        }
-        long degrees = angle!=null ? ( angle<0 ? angle+360 : angle) : -1;
+	public static double getDirection(Point2D point1, Point2D point2) {
+		double dx = point2.getX() - point1.getX();
+		double dy = -1 * (point2.getY() - point1.getY());
+		return getDirection(dx, dy);
+	}
 
-        return degrees;
-    }
+	public static double getDirection(double dx, double dy) {
 
-    public static int toDisplayAngle(long l) {
-        return l==0 ? 360 : (int)l;
-    }
+		double distance = Math.sqrt(dx * dx + dy * dy);
+		Long angle = null;
+		if (distance != 0) {
+			if (dx >= 0 && dy >= 0)
+				angle = Math.round(Math.asin(dx / distance) / 2d / Math.PI * 360d);
+			if (dx >= 0 && dy <= 0)
+				angle = 180 - Math.round(Math.asin(dx / distance) / 2d / Math.PI * 360d);
+			if (dx <= 0 && dy <= 0)
+				angle = 180 + -1 * Math.round(Math.asin(dx / distance) / 2d / Math.PI * 360d);
+			if (dx <= 0 && dy >= 0)
+				angle = 360 + Math.round(Math.asin(dx / distance) / 2d / Math.PI * 360d);
+		}
+		long degrees = angle != null ? (angle < 0 ? angle + 360 : angle) : -1;
 
-    public static Point2D getMapDisplayPoint(Point2D geographical, IMapViewerAdapter mva) {
-        Point2D logical = mva.getProjection().toLogical(geographical);
-        return mva.getLogicalToDeviceTransform().transform(logical,null);
-    }
+		return degrees;
+	}
+
+	public static int toDisplayAngle(long l) {
+		return l == 0 ? 360 : (int) l;
+	}
+
+	public static Point2D getMapDisplayPoint(Point2D geographical, IMapViewerAdapter mva) {
+		Point2D logical = mva.getProjection().toLogical(geographical);
+		return mva.getLogicalToDeviceTransform().transform(logical, null);
+	}
+
 }

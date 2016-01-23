@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -623,21 +623,22 @@ public class RadarPanel extends JPanel {
     }
 
     public void setObjectFilter(JComponent l, boolean state) {
-        if(l instanceof JMenuItem) ((JMenuItem)l).setSelected(state);
-//        if(l.getName().equals("STP")) {
-//            mItemSTP.setSelected(state);
-//            if(state) {
-//                mItemSTP2.setForeground(Color.white);
-//            } else {
-//                mItemSTP2.setForeground(Color.gray);
-//            }
-//        } else 
+        if(l instanceof JMenuItem) { 
+        	((JMenuItem)l).setSelected(state);
+        }
+        
         if(l.getName().equals("PPN")) {
             mItemPPN.setSelected(state);
             if(state) {
                 mItemPPN2.setForeground(Color.white);
             } else {
                 mItemPPN2.setForeground(Color.gray);
+            }
+        } else if(l.getName().equals("STP")) {
+            if(state) {
+            	mItemSTP2.setForeground(Color.white);
+            } else {
+            	mItemSTP2.setForeground(Color.gray);
             }
         } else if(l.getName().equals("STARSID")) {
             mItemSTARSID.setSelected(state);

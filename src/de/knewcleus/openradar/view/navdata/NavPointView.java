@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -142,7 +142,7 @@ public class NavPointView implements IBoundedView, INotificationListener {
         final AffineTransform logical2display = mapViewAdapter.getLogicalToDeviceTransform();
         displayPosition = logical2display.transform(logicalPosition, null);
         viewObjectPainter.updateDisplayPosition(displayPosition);
-        //mapViewAdapter.getUpdateManager().markRegionDirty(viewObjectPainter.getDisplayExtents());
+        mapViewAdapter.getUpdateManager().markRegionDirty(viewObjectPainter.getDisplayExtents());
     }
 
     public String getTooltipText(Point p) {

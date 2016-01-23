@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2015 Wolfram Wagner
+ * Copyright (C) 2012,2015-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -50,6 +50,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
@@ -493,8 +494,13 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
 
     public synchronized void requestGuiUpdate() {
-        dirty = true;
-        chatHistory.repaint();
+    	SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				// executed by the Swing Thread
+		        dirty = true;
+		        chatHistory.repaint();
+			}
+    	});
     }
 
 

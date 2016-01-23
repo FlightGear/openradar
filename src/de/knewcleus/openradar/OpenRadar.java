@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -62,6 +62,7 @@ public class OpenRadar {
         //System.setProperty("log4j.configurationFile","data/log4j.xml");
         log = LogManager.getLogger(OpenRadar.class); 
         
+        log.warn("************ Open Radar is STARTING ************");
         
         for(String arg : args) {
             int pos = arg.indexOf("=");

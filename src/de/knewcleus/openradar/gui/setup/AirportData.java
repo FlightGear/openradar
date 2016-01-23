@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -103,7 +103,7 @@ public class AirportData implements INavPointListener {
 
     private List<RadioFrequency> radioFrequencies = new ArrayList<RadioFrequency>();
     private Map<String, Radio> radios = new TreeMap<String, Radio>();
-    private Map<String, GuiRunway> runways = Collections.synchronizedMap(new TreeMap<String, GuiRunway>());
+    private final Map<String, GuiRunway> runways = Collections.synchronizedMap(new TreeMap<String, GuiRunway>());
 
     private HashSet<String> activeLandingRouteRunways = new HashSet<>();
     private HashSet<String> activeStartingRouteRunways = new HashSet<>();
@@ -1040,6 +1040,8 @@ public class AirportData implements INavPointListener {
                 }
             }
         }
+        
+        navaidDB.refreshRouteVisibility();
     }
 
     public boolean isActiveRouteRunwayContained(Collection<String> routeStartingSettings, Collection<String> routeLandingSettings) {

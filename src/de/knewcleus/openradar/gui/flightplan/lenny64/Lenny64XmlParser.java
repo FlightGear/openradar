@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2015 Wolfram Wagner
+ * Copyright (C) 2014-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -102,7 +102,10 @@ public class Lenny64XmlParser {
                         ) {
                     // check for departure date
                     try {
-                        FlightPlanData fpd = contact.getFlightPlan().copy(); // creates a copy of the existing record
+                    	FlightPlanData fpd;
+                    	synchronized(contact) {
+                    		fpd = contact.getFlightPlan().copy(); // creates a copy of the existing record
+                    	}
                         // now merge the data we have got and which we do not already know
                         fpd.setFlightPlanId(flightplanId);
                         fpd.setAircraft(aircraft);

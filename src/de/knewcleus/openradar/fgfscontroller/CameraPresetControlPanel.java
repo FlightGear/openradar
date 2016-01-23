@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Wolfram Wagner
+ * Copyright (C) 2015-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -181,7 +181,7 @@ public class CameraPresetControlPanel extends JPanel {
                         fgfsController.activatePreset(sourceName);
                         displaySelectedPreset((JLabel) e.getSource());
                         
-                    } else if(e.getButton()==MouseEvent.BUTTON3) {
+                    } else if(e.getButton()==MouseEvent.BUTTON2) {
                         
                         fgfsController.savePreset(sourceName);
                         displaySelectedPreset((JLabel) e.getSource());

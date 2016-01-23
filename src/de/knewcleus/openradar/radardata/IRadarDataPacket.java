@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -33,6 +34,8 @@
 package de.knewcleus.openradar.radardata;
 
 import java.awt.geom.Point2D;
+
+import de.knewcleus.openradar.rpvd.contact.ContactShape;
 
 
 /**
@@ -85,4 +88,11 @@ public interface IRadarDataPacket {
 	 * @return the calculated true course.
 	 */
 	public float getCalculatedTrueCourse();
+	
+	/**
+	 * Returns the contact shape for this radar echo
+	 */
+	public ContactShape getContactShape();
+
+	 
 }

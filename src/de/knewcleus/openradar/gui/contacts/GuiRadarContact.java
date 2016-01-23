@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -33,10 +33,9 @@
 package de.knewcleus.openradar.gui.contacts;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.fgfs.location.GeoUtil;
 import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -46,7 +45,6 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 import de.knewcleus.openradar.rpvd.RadarTargetView;
 import de.knewcleus.openradar.view.Converter2D;
-import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.weather.MetarData;
 
 /**
@@ -62,7 +60,7 @@ public class GuiRadarContact {
     public enum Operation {
         GROUND, LANDING, STARTING, TRAVEL, EMERGENCY, UNKNOWN
     };
-    public final List<FlightState> flightStates = new ArrayList<FlightState>();
+//    public final List<FlightState> flightStates = new ArrayList<FlightState>();
 
     public enum Alignment {LEFT,CENTER,RIGHT}
     private volatile Alignment alignment = Alignment.RIGHT;
@@ -74,7 +72,7 @@ public class GuiRadarContact {
 
     private RadarContactController manager = null;
     private volatile TargetStatus player = null;
-    private volatile FlightState currentFlightState;
+//    private volatile FlightState currentFlightState;
 
     private String aircraft = "";
     private String activeModel = "";
@@ -86,6 +84,7 @@ public class GuiRadarContact {
     protected final AirportData airportData;
     protected volatile double lastHeading=-1;
     protected volatile double lastHeadingMag=-1;
+    protected volatile double distanceD;
     protected volatile String atcLanguage = "en";
     private volatile boolean fgComSupport = false;
 
@@ -96,16 +95,16 @@ public class GuiRadarContact {
         this.airportElevationFt = master.getAirportData().getElevationFt();
         this.atcComment = atcComment;
 
-        flightStates.add(new FlightState("","UNCONTROLLED","???","Uncontrolled/cold"));
-        flightStates.add(new FlightState("GND","PARKED","PRKNG","At Gate/Parking warm"));
-        flightStates.add(new FlightState("GND","TAXI_TO_RW","TXRW","Taxi to Runway"));
-        flightStates.add(new FlightState("TWR","START","START","Starting"));
-        flightStates.add(new FlightState("APP","DEPARTING","DEPART","Leaving aiport"));
-        flightStates.add(new FlightState("APP","TRANSITION","TRANS","Transition through area"));
-        flightStates.add(new FlightState("APP","APPROACH","APPRCH","Approaching airport"));
-        flightStates.add(new FlightState("TWR","LANDING","LNDNG","Landing"));
-        flightStates.add(new FlightState("GND","TAXI_TO_GATE","TXGT","Taxi to Gate/Parking"));
-        currentFlightState=flightStates.get(0);
+//        flightStates.add(new FlightState("","UNCONTROLLED","???","Uncontrolled/cold"));
+//        flightStates.add(new FlightState("GND","PARKED","PRKNG","At Gate/Parking warm"));
+//        flightStates.add(new FlightState("GND","TAXI_TO_RW","TXRW","Taxi to Runway"));
+//        flightStates.add(new FlightState("TWR","START","START","Starting"));
+//        flightStates.add(new FlightState("APP","DEPARTING","DEPART","Leaving aiport"));
+//        flightStates.add(new FlightState("APP","TRANSITION","TRANS","Transition through area"));
+//        flightStates.add(new FlightState("APP","APPROACH","APPRCH","Approaching airport"));
+//        flightStates.add(new FlightState("TWR","LANDING","LNDNG","Landing"));
+//        flightStates.add(new FlightState("GND","TAXI_TO_GATE","TXGT","Taxi to Gate/Parking"));
+//        currentFlightState=flightStates.get(0);
 
         flightPlan = new FlightPlanData(master.getAirportData(), this);
     }
@@ -123,16 +122,16 @@ public class GuiRadarContact {
         this.airportData = master.getAirportData();
         this.airportElevationFt = master.getAirportData().getElevationFt();
 
-        flightStates.add(new FlightState("","UNCONTROLLED","???","Uncontrolled/cold"));
-        flightStates.add(new FlightState("GND","PARKED","PRKNG","At Gate/Parking warm"));
-        flightStates.add(new FlightState("GND","TAXI_TO_RW","TXRW","Taxi to Runway"));
-        flightStates.add(new FlightState("TWR","START","START","Starting"));
-        flightStates.add(new FlightState("APP","DEPARTING","DEPART","Leaving aiport"));
-        flightStates.add(new FlightState("APP","TRANSITION","TRANS","Transition through area"));
-        flightStates.add(new FlightState("APP","APPROACH","APPRCH","Approaching airport"));
-        flightStates.add(new FlightState("TWR","LANDING","LNDNG","Landing"));
-        flightStates.add(new FlightState("GND","TAXI_TO_GATE","TXGT","Taxi to Gate/Parking"));
-        currentFlightState=flightStates.get(0);
+//        flightStates.add(new FlightState("","UNCONTROLLED","???","Uncontrolled/cold"));
+//        flightStates.add(new FlightState("GND","PARKED","PRKNG","At Gate/Parking warm"));
+//        flightStates.add(new FlightState("GND","TAXI_TO_RW","TXRW","Taxi to Runway"));
+//        flightStates.add(new FlightState("TWR","START","START","Starting"));
+//        flightStates.add(new FlightState("APP","DEPARTING","DEPART","Leaving aiport"));
+//        flightStates.add(new FlightState("APP","TRANSITION","TRANS","Transition through area"));
+//        flightStates.add(new FlightState("APP","APPROACH","APPRCH","Approaching airport"));
+//        flightStates.add(new FlightState("TWR","LANDING","LNDNG","Landing"));
+//        flightStates.add(new FlightState("GND","TAXI_TO_GATE","TXGT","Taxi to Gate/Parking"));
+//        currentFlightState=flightStates.get(0);
 
         flightPlan = new FlightPlanData(master.getAirportData(), this);
     }
@@ -182,31 +181,31 @@ public class GuiRadarContact {
         this.manager = manager;
     }
 
-    public synchronized FlightState getFlightState() {
-        return currentFlightState;
-    }
-
-    public synchronized void setFlightState(FlightState fs) {
-        currentFlightState = fs;
-    }
-
-    public synchronized void setNextFlightState() {
-        int currentIndex = flightStates.indexOf(currentFlightState);
-        if(currentIndex<flightStates.size()-1) {
-            currentFlightState = flightStates.get(currentIndex+1);
-        } else {
-            currentFlightState = flightStates.get(0);
-        }
-    }
-
-    public synchronized void setPrevFlightState() {
-        int currentIndex = flightStates.indexOf(currentFlightState);
-        if(currentIndex>0) {
-            currentFlightState = flightStates.get(currentIndex-1);
-        } else {
-            currentFlightState = flightStates.get(flightStates.size());
-        }
-    }
+//    public synchronized FlightState getFlightState() {
+//        return currentFlightState;
+//    }
+//
+//    public synchronized void setFlightState(FlightState fs) {
+//        currentFlightState = fs;
+//    }
+//
+//    public synchronized void setNextFlightState() {
+//        int currentIndex = flightStates.indexOf(currentFlightState);
+//        if(currentIndex<flightStates.size()-1) {
+//            currentFlightState = flightStates.get(currentIndex+1);
+//        } else {
+//            currentFlightState = flightStates.get(0);
+//        }
+//    }
+//
+//    public synchronized void setPrevFlightState() {
+//        int currentIndex = flightStates.indexOf(currentFlightState);
+//        if(currentIndex>0) {
+//            currentFlightState = flightStates.get(currentIndex-1);
+//        } else {
+//            currentFlightState = flightStates.get(flightStates.size());
+//        }
+//    }
 
     public Alignment getAlignment() {
         return alignment;
@@ -228,16 +227,15 @@ public class GuiRadarContact {
     }
 
 
-    public String getAtcComment() {
+    public synchronized String getAtcComment() {
         return atcComment;
     }
 
 
-    public void setAtcComment(String atcComment) {
+    public synchronized void setAtcComment(String atcComment) {
         if((this.atcComment==null && atcComment!=null) ||
                 !this.atcComment.equals(atcComment)) {
             this.atcComment = atcComment;
-            manager.saveAtcNotes(this);
         }
     }
 
@@ -248,7 +246,6 @@ public class GuiRadarContact {
     public synchronized void setFgComSupport(boolean fgComSupport) {
     	if(this.fgComSupport!=fgComSupport) {
     		this.fgComSupport = fgComSupport;
-    		manager.saveAtcNotes(this);
     	}
     }
 
@@ -388,11 +385,12 @@ public class GuiRadarContact {
 
     // GuiSelectable
 
-    public String getFormatedDetails() {
+    public synchronized String getFormatedDetails() {
         return atcComment;
     }
 
     public boolean isSelected() {
+    	// not synchronized because it forwards to synchronized manager method
         return manager.isSelected(this);
     }
 
@@ -423,7 +421,7 @@ public class GuiRadarContact {
     public String toString() { return player.getCallsign(); }
 
 
-    public void setView(GuiMasterController master, RadarTargetView view) {
+    public synchronized void setView(GuiMasterController master, RadarTargetView view) {
         this.view = view;
         
         if(getFlightPlan().getDestinationAirport().isEmpty() && getRadarContactDistanceD()<3 && getGroundSpeedD()<1) {
@@ -432,21 +430,22 @@ public class GuiRadarContact {
     }
 
     public boolean isVisible() {
+    	// not synchronized because it forwards to synchronized view
         return view.isVisible();
     }
 
 
     public Point2D getCenterViewCoordinates() {
+    	// not synchronized because it forwards to synchronized view
         return view.getCenterViewCoordinates();
     }
 
 
     public synchronized double getRadarContactDistanceD() {
         if(view==null) return 0d;
-        Point2D apPos = view.convertToDeviceLocation(airportData.getAirportPosition());
-        Point2D plPos = view.getPlayersMapPosition();
-
-        return Math.sqrt( Math.pow(plPos.getX()-apPos.getX(),2) + Math.pow(plPos.getY()-apPos.getY(),2) ) * Converter2D.getMilesPerDot(getMapViewerAdapter());
+        Point2D apPos = airportData.getAirportPosition();
+        Position plPos = player.getGeodeticPosition();
+        return GeoUtil.getDistance(apPos.getX(), apPos.getY(), plPos.getX(), plPos.getY()).length/Units.NM;
     }
 
     public synchronized String getRadarContactDistance() {
@@ -455,17 +454,16 @@ public class GuiRadarContact {
 
     public synchronized long getRadarContactDirectionD() {
         if(view==null) return -1;
-        Point2D apPos = view.convertToDeviceLocation(airportData.getAirportPosition());
-        Point2D plPos = getCenterViewCoordinates();
-
-        return (long)Converter2D.getDirection(apPos, plPos);
+        Point2D apPos = airportData.getAirportPosition();
+        Position plPos = player.getGeodeticPosition();
+        return (long)GeoUtil.getDistance(apPos.getX(), apPos.getY(), plPos.getX(), plPos.getY()).angle;
     }
 
     public synchronized String getRadarContactDirection() {
         return String.format("%d",getRadarContactDirectionD());
     }
 
-    public State getState() {
+    public synchronized State getState() {
         State state = State.UNCONTROLLED;
         switch(alignment) {
         case CENTER:
@@ -481,9 +479,9 @@ public class GuiRadarContact {
         return state;
     }
 
-    public IMapViewerAdapter getMapViewerAdapter() {
-        return view.getMapViewAdapter();
-    }
+//    public IMapViewerAdapter getMapViewerAdapter() {
+//        return view.getMapViewAdapter();
+//    }
 
     public synchronized Point2D getCenterGeoCoordinates() {
         Position p = player.getGeodeticPosition();

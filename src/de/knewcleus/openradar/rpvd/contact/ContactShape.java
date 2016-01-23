@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Wolfram Wagner
+ * Copyright (C) 2013,2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -44,8 +44,8 @@ public class ContactShape {
     private Symbol type;
     private GuiRadarContact contact;
 
-    private double x=0;
-    private double y=0;
+    private Point2D logicalPosition = new Point2D.Double();
+	private Point2D displayPosition = new Point2D.Double();
     private double size = 6;
 
     private boolean tailVisible = true;
@@ -56,10 +56,21 @@ public class ContactShape {
         this.size=size;
     }
 
-    public synchronized void setCenter(Point2D center) {
-        this.x=center.getX();
-        this.y=center.getY();
-    }
+    public Point2D getLogicalPosition() {
+		return logicalPosition;
+	}
+
+	public void setLogicalPosition(Point2D logicalPosition) {
+		this.logicalPosition = logicalPosition;
+	}
+
+	public Point2D getDisplayPosition() {
+		return displayPosition;
+	}
+
+	public void setDisplayPosition(Point2D displayPosition) {
+		this.displayPosition = displayPosition;
+	}
 
     public synchronized void paintShape(Graphics2D g2d) {
         double s1 = size/2;
@@ -69,50 +80,50 @@ public class ContactShape {
         case Asterix:
             tailVisible=true;
             path.reset();
-            path.append(new Line2D.Double(x-s1,y,x+s1,y),false);
-            path.append(new Line2D.Double(x,y-s1,x,y+s1),false);
-            path.append(new Line2D.Double(x-s2,y-s2,x+s2,y+s2),false);
-            path.append(new Line2D.Double(x-s2,y+s2,x+s2,y-s2),false);
+            path.append(new Line2D.Double(displayPosition.getX()-s1,displayPosition.getY(),displayPosition.getX()+s1,displayPosition.getY()),false);
+            path.append(new Line2D.Double(displayPosition.getX(),displayPosition.getY()-s1,displayPosition.getX(),displayPosition.getY()+s1),false);
+            path.append(new Line2D.Double(displayPosition.getX()-s2,displayPosition.getY()-s2,displayPosition.getX()+s2,displayPosition.getY()+s2),false);
+            path.append(new Line2D.Double(displayPosition.getX()-s2,displayPosition.getY()+s2,displayPosition.getX()+s2,displayPosition.getY()-s2),false);
             g2d.draw(path);
             break;
         case EmptyDiamond:
             tailVisible=true;
             path.reset();
-            path.append(new Line2D.Double(x-s1,y,x,y+s1),false);
-            path.append(new Line2D.Double(x,y+s1,x+s1,y),true);
-            path.append(new Line2D.Double(x+s1,y,x,y-s1),true);
-            path.append(new Line2D.Double(x,y-s1,x-s1,y),true);
+            path.append(new Line2D.Double(displayPosition.getX()-s1,displayPosition.getY(),displayPosition.getX(),displayPosition.getY()+s1),false);
+            path.append(new Line2D.Double(displayPosition.getX(),displayPosition.getY()+s1,displayPosition.getX()+s1,displayPosition.getY()),true);
+            path.append(new Line2D.Double(displayPosition.getX()+s1,displayPosition.getY(),displayPosition.getX(),displayPosition.getY()-s1),true);
+            path.append(new Line2D.Double(displayPosition.getX(),displayPosition.getY()-s1,displayPosition.getX()-s1,displayPosition.getY()),true);
             g2d.draw(path);
             break;
         case EmptySquare:
             tailVisible=true;
             path.reset();
-            path.append(new Line2D.Double(x-s1,y+s1,x+s1,y+s1),false);
-            path.append(new Line2D.Double(x+s1,y+s1,x+s1,y-s1),true);
-            path.append(new Line2D.Double(x+s1,y-s1,x-s1,y-s1),true);
-            path.append(new Line2D.Double(x-s1,y-s1,x-s1,y+s1),true);
+            path.append(new Line2D.Double(displayPosition.getX()-s1,displayPosition.getY()+s1,displayPosition.getX()+s1,displayPosition.getY()+s1),false);
+            path.append(new Line2D.Double(displayPosition.getX()+s1,displayPosition.getY()+s1,displayPosition.getX()+s1,displayPosition.getY()-s1),true);
+            path.append(new Line2D.Double(displayPosition.getX()+s1,displayPosition.getY()-s1,displayPosition.getX()-s1,displayPosition.getY()-s1),true);
+            path.append(new Line2D.Double(displayPosition.getX()-s1,displayPosition.getY()-s1,displayPosition.getX()-s1,displayPosition.getY()+s1),true);
             g2d.draw(path);
             break;
         case FilledDiamond:
             tailVisible=true;
             path.reset();
-            path.append(new Line2D.Double(x-s1,y,x,y+s1),false);
-            path.append(new Line2D.Double(x,y+s1,x+s1,y),true);
-            path.append(new Line2D.Double(x+s1,y,x,y-s1),true);
-            path.append(new Line2D.Double(x,y-s1,x-s1,y),true);
+            path.append(new Line2D.Double(displayPosition.getX()-s1,displayPosition.getY(),displayPosition.getX(),displayPosition.getY()+s1),false);
+            path.append(new Line2D.Double(displayPosition.getX(),displayPosition.getY()+s1,displayPosition.getX()+s1,displayPosition.getY()),true);
+            path.append(new Line2D.Double(displayPosition.getX()+s1,displayPosition.getY(),displayPosition.getX(),displayPosition.getY()-s1),true);
+            path.append(new Line2D.Double(displayPosition.getX(),displayPosition.getY()-s1,displayPosition.getX()-s1,displayPosition.getY()),true);
             g2d.fill(path);
             break;
         case Letter:
             tailVisible=true;
             String letter = contact.getAtcLetter();
             Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(letter, g2d);
-            g2d.drawString(letter, (float) (x-bounds.getWidth()/2), (float)(y+bounds.getHeight()/2));
+            g2d.drawString(letter, (float) (displayPosition.getX()-bounds.getWidth()/2), (float)(displayPosition.getY()+bounds.getHeight()/2));
             break;
         default:
             // Type.FilledDot
             tailVisible=true;
             path.reset();
-            path.append(new Ellipse2D.Double(x-s1,y-s1,size,size),false);
+            path.append(new Ellipse2D.Double(displayPosition.getX()-s1,displayPosition.getY()-s1,size,size),false);
             g2d.fill(path);
             break;
 

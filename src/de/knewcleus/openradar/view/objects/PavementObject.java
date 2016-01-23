@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Wolfram Wagner
+ * Copyright (C) 2015-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -56,7 +56,7 @@ public class PavementObject extends AViewObject {
 
 		switch (pavement.getSurfaceType()) {
 		case Concrete:
-			setColor(new Color(115, 115, 110));
+			setColor(new Color(110, 110, 110));
 			break;
 		case Asphalt:
 			setColor(Palette.TARMAC);
@@ -96,7 +96,7 @@ public class PavementObject extends AViewObject {
 	}
 
 	@Override
-	public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mva) {
+	public void constructPath(Point2D currentDisplayPosition, Point2D newDisplayPosition, IMapViewerAdapter mva) {	
 		setMaxScalePath(500);
 		path = new Path2D.Double();
 		PavementNode start = null;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -342,7 +342,7 @@ public class SetupController {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error while downloading scenery for airport " + selectedSector.getAirportCode() + "! (" + e.getMessage() + ")",
                     "Error", JOptionPane.ERROR_MESSAGE);
-            SectorCreator.deleteDir(selectedSector);
+           // SectorCreator.deleteDir(selectedSector);
         }
         parseSectorDir(); // to find results
     }

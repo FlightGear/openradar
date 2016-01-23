@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -281,7 +281,7 @@ public class AptDatStream1000 implements INavDataStream<INavPoint> {
                 currentPavement.addNode(def);
                 Point2D position = currentPavement.getNodes().get(0)!=null?currentPavement.getNodes().get(0).point : null;
                 
-                if(position==null || !isInRange(position.getX(),position.getY())) {
+                if(position==null || !isInRange(position.getX(),position.getY(), 20)) {
                     // not in range
                     currentPavement=null;
                     return;
@@ -294,8 +294,10 @@ public class AptDatStream1000 implements INavDataStream<INavPoint> {
         }
     }
 
-    protected boolean isInRange(double lon, double lat) {
-        return bounds.contains(lon, lat);
+    protected boolean isInRange(double lon, double lat, double maxMiles) {
+    	Point2D apt = data.getAirportPosition();
+    	double distance = GeoUtil.getDistance(apt.getX(), apt.getY(), lon, lat).length / Units.NM;
+        return distance < maxMiles; //bounds.contains(lon, lat);
     }
 
     private RawFrequency parseFrequency(FieldIterator recordIterator) throws NavDataStreamException {
@@ -370,7 +372,7 @@ public class AptDatStream1000 implements INavDataStream<INavPoint> {
             throw new NavDataStreamException("Non-numeric value in numeric field", e);
         }
 
-        if(!isInRange(longitudeA, latitudeA)) {
+        if(!isInRange(longitudeA, latitudeA,100)) {
             return null;
         }
         

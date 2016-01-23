@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -61,7 +61,7 @@ public class StdRouteText extends AStdRouteElement {
     private Double angle;
     private final String text;
     private final boolean clickable;
-    private volatile Rectangle2D bounds;
+	private volatile Rectangle2D bounds;
     private volatile Rectangle2D extBounds;
 
     public StdRouteText(AirportData data, StdRoute route, IMapViewerAdapter mapViewAdapter, AStdRouteElement previous,
@@ -119,4 +119,9 @@ public class StdRouteText extends AStdRouteElement {
         if(!clickable || extBounds==null) return false;
         return extBounds.contains(e);
     }
+
+    @Override
+    public boolean isClickable() {
+		return clickable;
+	}
 }

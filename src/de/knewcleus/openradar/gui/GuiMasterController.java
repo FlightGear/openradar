@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -38,6 +38,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JTextPane;
 
+import org.apache.log4j.Logger;
+
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.Position;
@@ -56,6 +58,7 @@ import de.knewcleus.openradar.radardata.fgmp.FGMPClient;
 import de.knewcleus.openradar.radardata.fgmp.FGMPRegistry;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 import de.knewcleus.openradar.tracks.TrackManager;
+import de.knewcleus.openradar.util.DeadLockChecker;
 import de.knewcleus.openradar.weather.MetarData;
 import de.knewcleus.openradar.weather.MetarReader;
 
@@ -88,13 +91,15 @@ public class GuiMasterController {
     private FGFSController fgfsController1 = null;
     private FGFSController fgfsController2 = null;
     
+    private final static Logger log = Logger.getLogger(GuiMasterController.class);
+    
     public synchronized SoundManager getSoundManager() {
         return soundManager;
     }
 
     private JTextPane detailsArea = null;
 
-    private final TrackManager trackManager = new TrackManager();
+    private final TrackManager trackManager;
 
     private String airportCode = null;
     private volatile FGMPClient<TargetStatus> radarProvider;
@@ -105,6 +110,7 @@ public class GuiMasterController {
         this.airportData = data;
         
         // init managers
+        trackManager = new TrackManager();
         radarBackend = new GuiRadarBackend(this);
         radarManager = new RadarManager(this, radarBackend);
         radarContactManager = new RadarContactController(this, radarBackend);
@@ -123,6 +129,7 @@ public class GuiMasterController {
                 fgfsController1.setSlave(fgfsController2);
             }
         }
+        new DeadLockChecker().start();
     }
 
     public LogWindow getLogWindow() {
@@ -216,12 +223,14 @@ public class GuiMasterController {
             public void run() {
                 while (!Thread.interrupted()) {
                     try {
-                        sleep(1000);
+                        sleep(2000);
                     } catch (InterruptedException e) {
                         // I don't care
                     }
+                    log.info("Checking for lost or retired contacts.");
                     trackManager.checkForLossOrRetirement();
                     statusManager.updateTime(); // update time display
+                    log.info("Checking done.");
                 }
             }
         };

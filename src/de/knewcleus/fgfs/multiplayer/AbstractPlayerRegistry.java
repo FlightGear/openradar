@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2015 Wolfram Wagner 
+ * Copyright (C) 2015, 2016 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -42,18 +42,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 
 public abstract class AbstractPlayerRegistry<T extends Player> implements IPlayerRegistry<T> {
-	protected static Logger log = LogManager.getLogger("de.knewcleus.fgfs.multiplayer");
-
 	public abstract T createNewPlayer(String callsign) throws MultiplayerException;
 
 	protected final Set<T> players = new HashSet<T>();
 	protected final Map<String, T> playersByAddress = new HashMap<String, T>();
 	protected final List<IPlayerListener<T>> listeners= new ArrayList<IPlayerListener<T>>();
+	
+//		private static final Logger log = Logger.getLogger(AbstractPlayerRegistry.class);
 	
 	public AbstractPlayerRegistry() {
 		super();
@@ -86,6 +83,10 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 		for(IPlayerListener<T> l : listeners) {
 		    l.playerAdded(player);
 		}
+		
+//		log.warn("Player ADDED");
+//		log.warn("Player:          "+players.size());
+//		log.warn("PlayerByAddress: "+playersByAddress.size());
 	}
 
 	public synchronized void unregisterPlayer(T expiredPlayer) {
@@ -95,6 +96,9 @@ public abstract class AbstractPlayerRegistry<T extends Player> implements IPlaye
 		for(IPlayerListener<T> l : listeners) {
             l.playerRemoved(expiredPlayer);
         }
+//		log.warn("Player EXPIRED");
+//		log.warn("Player:          "+players.size());
+//		log.warn("PlayerByAddress: "+playersByAddress.size());
 	}
 	
 	public Collection<T> getPlayers() {

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2014 Wolfram Wagner
+ * Copyright (C) 2013,2014-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -122,7 +122,7 @@ public class FlightPlanExchangeManager implements Runnable {
             }
             callSignList.append(contact.getCallSign().trim());
         }
-        log.trace("Flightplan: "+data.getCallSign()+" Going to request updates for: " + callSignList);
+        log.info("Going to request updates for: " + callSignList);
         // send the list to the server to request updated flightplans
 
 //        if (callSignList.length() > 0) {
@@ -198,6 +198,9 @@ public class FlightPlanExchangeManager implements Runnable {
                                 radarContactController.updateFlightPlan(c,FpXml_1_0.parseXml(data, c, eFp));
                             }
                             log.info("Got FP update for: " + callsign);
+                        }
+                        if(eFlightPlans.isEmpty()) {
+                        	log.info("Got no flightplans");
                         }
                         connectedToServer=true;
                     } catch (IOException e) {

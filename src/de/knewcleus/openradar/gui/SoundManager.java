@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2015 Wolfram Wagner 
+ * Copyright (C) 2014-2016 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -40,6 +40,8 @@ import java.util.Set;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import org.apache.log4j.Logger;
+
 import de.knewcleus.openradar.gui.setup.AirportData;
 
 
@@ -56,6 +58,8 @@ public class SoundManager {
 
     private static Set<Sound> mutedSounds = Collections.synchronizedSet(new HashSet<Sound>());
 
+    private final static Logger log = Logger.getLogger(SoundManager.class);
+    
     public static void init(AirportData data) {
         try {
             popClip = AudioSystem.getClip();
@@ -76,8 +80,10 @@ public class SoundManager {
             if(data.getToggleState(Sound.METAR.toString(), false)) {
                 mutedSounds.add(Sound.METAR);
             }
+            log.info("SoundManager initialized!");
             initiated=true;
         } catch (Exception e) {
+        	log.info("Problem to init SoundManager!",e);
         }
     }
 

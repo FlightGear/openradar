@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -51,7 +51,7 @@ import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 public class StdRoute {
 
     public enum DisplayMode {
-        always, optional, star, sid, runway
+        always, optional, star, sid, runway, unknown
     }
 
     private final IMapViewerAdapter mapViewerAdapter;
@@ -62,6 +62,8 @@ public class StdRoute {
     private final float zoomMin;
     private final float zoomMax;
 
+    private Boolean visibleRoute = false;
+    
     private HashSet<String> activeLandingRunways = new HashSet<>();
     private HashSet<String> activeStartingRunways = new HashSet<>();
 
@@ -69,7 +71,7 @@ public class StdRoute {
     // private final Set<String> navaids = new HashSet<String>();
     // private Color navaidColor = null;
 
-    private final Set<NavaidList> navaids = new HashSet<NavaidList>();
+    private final List<NavaidList> navaids = new ArrayList<NavaidList>();
 
     private final List<AStdRouteElement> elements = new ArrayList<AStdRouteElement>();
     /** The list of routes, that use this route as an include */
@@ -123,6 +125,10 @@ public class StdRoute {
     public void setActiveLandingRunways(String cs) {
         String[] array = cs.split(",");
         this.activeLandingRunways.addAll(Arrays.asList(array));
+//        if(displayMode==DisplayMode.unknown) {
+//        	// correct missing xml attribute setting        	
+//        	displayMode = DisplayMode.star;
+//        }
     }
 
     public Set<String> getActiveStartingRunways() {
@@ -132,6 +138,10 @@ public class StdRoute {
     public void setActiveStartingRunways(String cs) {
         String[] array = cs.split(",");
         this.activeStartingRunways.addAll(Arrays.asList(array));
+//        if(displayMode==DisplayMode.unknown) {
+//        	// correct missing xml attribute setting
+//        	displayMode = DisplayMode.sid;
+//        }
     }
 
     public synchronized boolean contains(Point p) {
@@ -171,52 +181,95 @@ public class StdRoute {
         return Color.gray;
     }
 
-    public boolean isVisible(GuiMasterController master) {
-        if(isParentRouteVisible(master)) {
+    public boolean isVisible(GuiMasterController master, GuiRadarContact selectedContact) {
+//    	return false;
+//        if(displayMode==DisplayMode.unknown) {
+//        	// correct missing xml attribute setting
+//        	displayMode = DisplayMode.optional;
+//        }
+
+
+        if( displayMode.equals(DisplayMode.always) ) {
+        	return true;
+         }
+
+        boolean thisRouteIsIncluded = !parentRoutes.isEmpty();
+        
+    	// PARENT ROUTE => dynamic
+        if(thisRouteIsIncluded) {
+        	if( isParentRouteVisible(master,selectedContact) ) {
             // this means, this route is included into another route which is visible.
-            return true;
+        		return true;
+        	} else {
+        		return false;
+        	}
         }
-        AirportData data = master.getAirportData();
-
-        if (mapViewerAdapter.getLogicalScale() < zoomMin || mapViewerAdapter.getLogicalScale() > zoomMax) {
+        
+        // only non included routes are left
+        
+        // SCALE interval => dynamic
+        double currentScale = mapViewerAdapter.getLogicalScale(); 
+        if (currentScale < zoomMin || currentScale > zoomMax) {
             return false;
         }
 
-        GuiRadarContact c = master.getRadarContactManager().getSelectedContact();
-        if(c!=null) {
-            String assignedRoute = c.getFlightPlan().getAssignedRoute();
-            if(assignedRoute!=null) {
-                if(getName().equals(assignedRoute)) {
-                    return true;
-                }
-            }
+        // SELECTED CONTACT => dynamic
+        if(selectedContact!=null) {
+        	synchronized(selectedContact) {
+        		String assignedRunway = selectedContact.getFlightPlan().getAssignedRunway();
+	            String assignedRoute = selectedContact.getFlightPlan().getAssignedRoute();
+	            if(assignedRoute!=null) {
+	                if( (activeLandingRunways.contains(assignedRunway)||activeStartingRunways.contains(assignedRoute)) 
+	                	&& getName().equals(assignedRoute)) {
+	                    return true;
+	                }
+	            }
+        	}
         }
-        if(displayMode.equals(DisplayMode.always)
-           || ( displayMode.equals(DisplayMode.optional) && data.getRadarObjectFilterState("STARSID")==true)) {
+        
+        boolean mainswitch = data.getRadarObjectFilterState("STARSID");
+        
+        // MAIN SWITCH
+        if(mainswitch==false) {
+            return false;
+        }
+
+        // MAINSWITCH is ON
+        
+        // OPTIONAL (main switch dependent)
+        if( displayMode.equals(DisplayMode.optional) ) {
             return true;
         }
 
-        // display mode runway
-  
-        // SPEED optimization: Get the list from data and remove all runways that are not in the route definitions
-        if(!(activeStartingRunways.isEmpty() && activeLandingRunways.isEmpty())) { 
-            if ( data.isActiveRouteRunwayContained(activeStartingRunways,activeLandingRunways) ) {
-                return true;
-            }
-        }
-
-        // main switch off
-        if(data.getRadarObjectFilterState("STARSID")!=true) {
-            return false;
-        }
+        // ACTIVE RUNWAY
+    	synchronized (visibleRoute) {
+    		if(!visibleRoute) {
+    			return false;
+    		}
+    	}
 
         // no runways defined + main switch is on
-        return false;
+        return true;
     }
 
-    private boolean isParentRouteVisible(GuiMasterController master) {
+    public void refeshRouteVisibility() {
+    	synchronized (visibleRoute) {
+    		visibleRoute=false;
+            // SPEED optimization: Get the list from data and remove all runways that are not in the route definitions
+	        if( !(activeStartingRunways.isEmpty() && activeLandingRunways.isEmpty()) ) { 
+	            if ( data.isActiveRouteRunwayContained(activeStartingRunways,activeLandingRunways) ) {
+	            	visibleRoute=true;
+	            }
+	        } else {
+	        	// no routes defined
+	        	visibleRoute=true;
+	        }
+    	}
+    }
+    
+    private boolean isParentRouteVisible(GuiMasterController master,GuiRadarContact selectedContact) {
         for (StdRoute parentRoute : parentRoutes) {
-            if (parentRoute.isVisible(master)) {
+            if (parentRoute.isVisible(master,selectedContact)) {
                 return true;
             }
         }
@@ -261,17 +314,16 @@ public class StdRoute {
             float angle = Float.parseFloat(pointDescr.substring(pos + 2, pos2)) + (float) data.getMagneticDeclination();
             String id = pointDescr.substring(pos2 + 1);
 
-            Point2D navaidPoint = null;
-            if (data.getNavaidDB().getNavaid(id) != null) {
-                // search the referenced navaid
-                navaidPoint = data.getNavaidDB().getNavaid(id).getGeographicPosition();
-            }
-            if (navaidPoint == null) {
+            Point2D navaidPoint;
+            if (id.contains("@")) {
                 // another recursive redirection
                 navaidPoint = getPoint(data, mapViewerAdapter, id, previous);
-                if (navaidPoint == null) {
+            } else {
+                // search the referenced navaid
+                if (data.getNavaidDB().getNavaid(id) == null) {
                     throw new IllegalArgumentException("Navaid " + pointDescr + " not found!");
                 }
+                navaidPoint = data.getNavaidDB().getNavaid(id).getGeographicPosition();
             }
             Point2D point = new IndirectPoint2D(mapViewerAdapter, navaidPoint, angle, distance);
             return point;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013-2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -167,7 +167,7 @@ public class SimulationLayout extends ADatablockLayout {
                 if (sb.length() > 0) {
                     sb.append(" ");
                 }
-                sb.append(fp.getDirectiontoDestinationAirport());
+                sb.append(fp.getDirectiontoDestinationAirport(c.getCenterGeoCoordinates()));
             }
             if (fp.getAssignedRoute() != null && !fp.getAssignedRoute().isEmpty()) {
                 // known ROUTE
@@ -196,7 +196,7 @@ public class SimulationLayout extends ADatablockLayout {
                 if (sb.length() > 0) {
                     sb.append(" ");
                 }
-                sb.append(fp.getDirectiontoDestinationAirport());
+                sb.append(fp.getDirectiontoDestinationAirport(c.getCenterGeoCoordinates()));
             }
             if (fp.getAssignedRoute() != null && !fp.getAssignedRoute().isEmpty()) {
                 // known ROUTE

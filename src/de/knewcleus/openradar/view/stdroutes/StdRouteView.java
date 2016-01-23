@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -42,6 +42,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
@@ -106,8 +107,8 @@ public class StdRouteView implements IBoundedView, INotificationListener,ISelect
 
     @Override
     public synchronized void paint(Graphics2D g2d) {
-
-        boolean isVisible = route.isVisible(master);
+    	GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
+        boolean isVisible = route.isVisible(master,selectedContact);
         if(isVisible) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             this.attributes.applyAttributes(g2d, false);
@@ -168,9 +169,10 @@ public class StdRouteView implements IBoundedView, INotificationListener,ISelect
     
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(e.getClickCount()==1 && route.isVisible(master)) {
+    	GuiRadarContact selectedContact = master.getRadarContactManager().getSelectedContact();
+        if(e.getClickCount()==1 && route.isVisible(master,selectedContact)) {
             for(AStdRouteElement re : route.getElements()) {
-                if(re.contains(e.getPoint())) {
+                if(re.contains(e.getPoint()) && re.isClickable() ) {
                     master.getRadarContactManager().assignRoute(route.getName());
                     //route.setSelected(!route.isSelected());
                     e.consume();

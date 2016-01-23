@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2015 Wolfram Wagner
+ * Copyright (C) 2012,2015-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -152,8 +152,11 @@ public abstract class AViewObject {
     }
 
     public synchronized void paint(Graphics2D g2d, IMapViewerAdapter mapViewAdapter) {
+    	
         g2d.setColor(color);
         double currentScale = mapViewAdapter.getLogicalScale();
+
+        // Path
         if (path != null && minScalePath < currentScale && maxScalePath > currentScale) {
             Stroke originalStroke = g2d.getStroke();
             if (stroke != null)
@@ -165,14 +168,15 @@ public abstract class AViewObject {
             }
             g2d.setStroke(originalStroke);
         }
-        if (text != null) {
-            if (font != null)
+        // Text
+        if (text != null && minScaleText < currentScale && maxScaleText > currentScale) {
+            if (font != null) {
                 g2d.setFont(font);
+            }
             FontMetrics fm = g2d.getFontMetrics();
             textBounds = fm.getStringBounds(text, g2d);
-        }
-        if (text != null && minScaleText < currentScale && maxScaleText > currentScale) {
-            g2d.drawString(text, (float) textCoordinates.getX(), (float) textCoordinates.getY());
+        
+          	g2d.drawString(text, (float) textCoordinates.getX(), (float) textCoordinates.getY());
         }
     }
 

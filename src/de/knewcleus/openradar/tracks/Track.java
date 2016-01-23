@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2014,2015 Wolfram Wagner
+ * Copyright (C) 2014-2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -41,7 +41,7 @@ import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 
 public class Track implements ITrack {
     private final TargetStatus identifier;
-	protected final static int historySize = 1000;//2000;
+	protected final static int historySize = 500;
 	protected final ArrayList<IRadarDataPacket> history = new ArrayList<IRadarDataPacket>(historySize);
 	protected int headIndex = historySize-1;
 	protected int size = 0;
@@ -53,6 +53,10 @@ public class Track implements ITrack {
 
     public Track(TargetStatus identifier) {
         this.identifier = identifier;
+    }
+    
+    public synchronized void destroy() {
+    	history.clear();
     }
     
     public TargetStatus getIdentifier() {
@@ -92,6 +96,7 @@ public class Track implements ITrack {
 	
 	public synchronized void addState(IRadarDataPacket state) {
 		assert(state!=null);
+
 		history.add(0, state);
 		if(history.size()>historySize) {
 		    history.remove(historySize-1);

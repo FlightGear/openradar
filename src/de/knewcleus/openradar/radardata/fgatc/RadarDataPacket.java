@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -36,6 +37,7 @@ import java.awt.geom.Point2D;
 
 import de.knewcleus.openradar.radardata.IRadarDataPacket;
 import de.knewcleus.openradar.radardata.ISSRData;
+import de.knewcleus.openradar.rpvd.contact.ContactShape;
 
 public class RadarDataPacket implements IRadarDataPacket {
 	protected final Object trackingIdentifier;
@@ -90,6 +92,11 @@ public class RadarDataPacket implements IRadarDataPacket {
 	@Override
 	public float getCalculatedVelocity() {
 		return groundspeed;
+	}
+
+	@Override
+	public ContactShape getContactShape() {
+		throw new IllegalStateException("not implemented");
 	}
 
 }

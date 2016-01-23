@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014,2015 Wolfram Wagner
+ * Copyright (C) 2014-2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -88,7 +88,7 @@ public class Lenny64Controller {
         synchronized (c) {
             c.setFlightPlan(lenny64Flightplan);
             dialog.setLennyButtonText("(loaded)");
-            dialog.setData(c);
+            dialog.extUpdateUI(c);
             dialog.saveData();
         }
     }
@@ -100,5 +100,4 @@ public class Lenny64Controller {
     public synchronized Lenny64FlightplanServerConnector getLenny64Connector() {
         return lenny64Connector;
     }
-
 }

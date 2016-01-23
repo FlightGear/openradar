@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Wolfram Wagner
+ * Copyright (C) 2015-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -71,10 +71,8 @@ public class FollowTargetController implements Runnable {
                 fgfsController.pointCameraIntoPresetHeading();
             } catch (Exception e) {
                 log.error(e);
-                ;
             }
         }
-
     }
 
     private void focusOnTarget() {
