@@ -47,7 +47,7 @@ public class NavaidList {
    private final List<String> navaids = new ArrayList<String>();
 
     public NavaidList(StdRouteAttributes attributes) {
-        this.attributes=attributes;
+        this.attributes = attributes;
     }
 
     public StdRouteAttributes getAttributes() {

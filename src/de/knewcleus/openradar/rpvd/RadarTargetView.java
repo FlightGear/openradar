@@ -29,6 +29,7 @@
  */
 package de.knewcleus.openradar.rpvd;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -176,6 +177,7 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
     @Override
     public synchronized void paint(Graphics2D g2d) {
     	
+            g2d.setStroke(new BasicStroke (1));
             // the text block
 
     		boolean highlighted = trackDisplayState.guiContact.isHighlighted();

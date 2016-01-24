@@ -72,7 +72,7 @@ public abstract class AStdRouteElement {
             this.arrowSize = 15;
         }
 
-        this.attributes=attributes;
+        this.attributes = attributes;
     }
 
     public Point2D getGeoReferencePoint() {
