@@ -28,10 +28,7 @@
  */
 package de.knewcleus.openradar.gui;
 
-import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -55,7 +52,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private de.knewcleus.openradar.gui.contacts.ContactsPanel contactsPanel;
     private javax.swing.JSplitPane hspMain;
-    private ResizeListener resizeListener = new ResizeListener();
     private de.knewcleus.openradar.gui.chat.MpChatPanel mpChatPanel;
     private javax.swing.JPanel pnlRightTop;
     private de.knewcleus.openradar.gui.radar.RadarPanel radarPanel;
@@ -95,8 +91,8 @@ public class MainFrame extends javax.swing.JFrame {
         jPnlContentPane.setLayout(new java.awt.GridBagLayout());
         jPnlContentPane.setBackground(Palette.DESKTOP);
 
-        hspMain = new javax.swing.JSplitPane();
-        hspMain.addComponentListener(resizeListener);
+        hspMain = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, false);
+        hspMain.setResizeWeight(1);
 
         java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -135,7 +131,7 @@ public class MainFrame extends javax.swing.JFrame {
         // Right MAIN split pane
 
         vspRight.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        vspRight.setResizeWeight(0.5);
+        vspRight.setResizeWeight(0);
         vspRight.setMinimumSize(new java.awt.Dimension(400, 0));
         vspRight.setPreferredSize(new java.awt.Dimension(400, 0));
         hspMain.setRightComponent(vspRight);
@@ -157,25 +153,6 @@ public class MainFrame extends javax.swing.JFrame {
         // Right bottom
 
         vspRight.setBottomComponent(contactsPanel);
-    }
-
-    /**
-     * Adapts divider position, when window is being resized or moved to another screen.
-     */
-    public class ResizeListener extends ComponentAdapter {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            setDividerPosition();
-        }
-    }
-
-    public void setDividerPosition() {
-        Dimension windowSize = getSize();
-        Dimension dim = pnlRightTop.getPreferredSize();
-        hspMain.setDividerLocation((int) Math.round(windowSize.getWidth() - dim.getWidth()));
-        vspLeft.setDividerLocation((int) Math.round(windowSize.getHeight() * 0.8));
-        guiInteractionManager.getStatusManager().updateRunways();
-        guiInteractionManager.getRadarBackend().forceRepaint();
     }
 
     /**
