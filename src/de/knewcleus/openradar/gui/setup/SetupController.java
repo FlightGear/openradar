@@ -169,6 +169,7 @@ public class SetupController {
                 SectorCreator.deleteDir(setupDialog.getSelectedSector());
                 parseSectorDir();
             } else if (jSource.getName().equals("StartButton")) {
+            	log.info("start-button pressed");
                 startApplication();
             } else if (jSource.getName().equals("CheckButton")) {
                 setupDialog.readInputs(data);
@@ -348,17 +349,23 @@ public class SetupController {
     }
 
     private void startApplication() {
+    	//log.info("startApplication: begin");
         if (setupDialog.readInputs(data)) {
             // start application
             try {
+            	//log.info("setCallSign");
                 data.setCallSign(setupDialog.getCallsign());
+            	//log.info("manager");
                 GuiMasterController manager = new GuiMasterController(data);
+            	//log.info("manager.start");
                 manager.start(setupDialog);
+            	//log.info("setupDialog.dispose");
                 setupDialog.dispose();
             } catch (Exception e) {
                 log.error("Error while starting application!", e);
             }
         }
+    	//log.info("startApplication: end");
     }
 
     protected InputStreamReader openXPlaneAptDat() throws IOException {

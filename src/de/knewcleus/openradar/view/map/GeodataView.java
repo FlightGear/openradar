@@ -131,7 +131,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 			return;
 		}
 		this.visible = visible;
-		mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
+		repaint();
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	protected void updateDisplayExtents() {
 		if (displayExtents!=null) {
 			/* Make sure the previously occupied region is repainted */
-			mapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
+			repaint();
 		}
 		final AffineTransform logicalToDevice = mapViewAdapter.getLogicalToDeviceTransform();
 		displayExtents = logicalToDevice.createTransformedShape(logicalBounds).getBounds2D();

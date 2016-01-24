@@ -111,6 +111,7 @@ public abstract class Converter2D {
 	}
 
 	public static double normalizeAngle(double d) {
+		// TODO: use mod operator %
 		while (d > 360) {
 			d = d - 360;
 		}
@@ -140,6 +141,7 @@ public abstract class Converter2D {
 			if (dx <= 0 && dy >= 0)
 				angle = 360 + Math.round(Math.asin(dx / distance) / 2d / Math.PI * 360d);
 		}
+		// TODO: use normalizeAngle
 		long degrees = angle != null ? (angle < 0 ? angle + 360 : angle) : -1;
 
 		return degrees;

@@ -118,7 +118,7 @@ public class MetarSettingsDialog extends JDialog {
         gridBagConstraints.insets = new java.awt.Insets(8, 4, 4, 8);
         add(lbOwnWeatherStation, gridBagConstraints);
 
-        tfOwnWeatherStation.setToolTipText("lowest squawk code to assign");
+        tfOwnWeatherStation.setToolTipText("nearest weather station");
         tfOwnWeatherStation.addKeyListener(textFieldListener);
         Dimension preferredSize = tfAddWeatherStation.getPreferredSize();
         preferredSize.setSize(100, preferredSize.getHeight());
