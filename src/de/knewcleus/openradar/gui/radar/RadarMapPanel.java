@@ -173,13 +173,11 @@ public class RadarMapPanel extends JComponent {
         return canvas;
     }
 
-    public void setup(String airportCode, GuiMasterController guiInteractionManager, SetupDialog setupDialog)
+    public void setup(SetupDialog setupDialog)
             throws GeodataException, IOException, NavDataStreamException {
 
         try {
-            this.master = guiInteractionManager;
-
-            AirportData data = guiInteractionManager.getAirportData();
+            AirportData data = master.getAirportData();
 
             radarAdapter.registerRecipient(master.getTrackManager());
 
@@ -221,7 +219,7 @@ public class RadarMapPanel extends JComponent {
 
             boolean warningShapefileNotFound = false;
 
-            if (master.getAirportData().isLayerVisible("landmass")) {
+            if (data.isLayerVisible("landmass")) {
                 try {
                     setupDialog.setStatus(10, "Reading landmass layer...");
                     ZippedShapefileLayer landmassLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), "v0_landmass", "v0_landmass"));
@@ -245,7 +243,7 @@ public class RadarMapPanel extends JComponent {
                 setBackground(Palette.LANDMASS);
             }
 
-            if (master.getAirportData().isLayerVisible("urban")) {
+            if (data.isLayerVisible("urban")) {
                 try {
                     setupDialog.setStatus(20, "Reading urban layer...");
                     ZippedShapefileLayer urbanLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), newFormat ? "v0_urban" : "cs_urban"));
@@ -263,7 +261,7 @@ public class RadarMapPanel extends JComponent {
                     System.err.println("Could not load urban layer data. Hiding it...");
                 }
             }
-            if (master.getAirportData().isLayerVisible("lake")) {
+            if (data.isLayerVisible("lake")) {
                 try {
                     setupDialog.setStatus(30, "Reading lake layer...");
                     ZippedShapefileLayer lakeLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), newFormat ? "v0_lake" : "cs_lake"));
@@ -279,7 +277,7 @@ public class RadarMapPanel extends JComponent {
                     System.err.println("Could not load lake layer data. Hiding it...");
                 }
             }
-            if (master.getAirportData().isLayerVisible("stream")) {
+            if (data.isLayerVisible("stream")) {
                 try {
                     setupDialog.setStatus(40, "Reading stream layer...");
                     ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), newFormat ? "osm_river":"v0_stream"));
@@ -298,7 +296,7 @@ public class RadarMapPanel extends JComponent {
                 }
             }
             // disabled because we use apt.dat (xplane) data now.
-//            if (master.getAirportData().isLayerVisible("tarmac")) {
+//            if (data.isLayerVisible("tarmac")) {
 //                setupDialog.setStatus(50, "Reading tarmac layer...");
 //                ZippedShapefileLayer tarmacLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), "apt_tarmac"));
 //                final GeodataView tarmacView = new GeodataView(master, radarMapViewAdapter, tarmacLayer, "TARMAC", bounds);
@@ -331,14 +329,14 @@ public class RadarMapPanel extends JComponent {
             
             final LayeredView airportView = new LayeredView(radarMapViewAdapter);
             final NavPointProvider navPointProvider = new NavPointProvider(radarMapViewAdapter, airportView, master);
-            navPointProvider.addNavPointListener(guiInteractionManager.getAirportData());
+            navPointProvider.addNavPointListener(master.getAirportData());
             rootView.pushView(airportView);
             setupDialog.setStatus(70, "Reading airport data...");
             navPointProvider.addViews(airportStream);
 
             // initialize symbol layers
             
-            if (master.getAirportData().isLayerVisible("groundnet")) {
+            if (data.isLayerVisible("groundnet")) {
             	
                 final LayeredView layeredGroundnetView = new LayeredView(radarMapViewAdapter);
                 GroundnetReader groundnetReader = new GroundnetReader(data.getAirportCode());
@@ -356,7 +354,7 @@ public class RadarMapPanel extends JComponent {
             routeView = new LayeredView(radarMapViewAdapter);
             rootView.pushView(routeView);
 
-            final ActiveAtcRangeView activeAtcRangeView = new ActiveAtcRangeView(radarMapViewAdapter, guiInteractionManager);
+            final ActiveAtcRangeView activeAtcRangeView = new ActiveAtcRangeView(radarMapViewAdapter, master);
             rootView.pushView(activeAtcRangeView);
 
             // navaids
@@ -364,7 +362,7 @@ public class RadarMapPanel extends JComponent {
             setupDialog.setStatus(80, "Reading navaid data...");
             final LayeredView navSymbolView = new LayeredView(radarMapViewAdapter);
             final NavPointProvider navPointProvider2 = new NavPointProvider(radarMapViewAdapter, navSymbolView, master);
-            navPointProvider2.addNavPointListener(guiInteractionManager.getAirportData());
+            navPointProvider2.addNavPointListener(master.getAirportData());
             rootView.pushView(navSymbolView);
 
             navPointProvider2.addViews(navDataStream);
@@ -377,7 +375,7 @@ public class RadarMapPanel extends JComponent {
             rootView.pushView(addNavSymbolView);
 
             // read here to have navaid data available
-            readStandardRouteData(guiInteractionManager);
+            readStandardRouteData(master);
 
             final LayeredView layeredAtcObjectsView = new LayeredView(radarMapViewAdapter);
             layeredAtcObjectsView.pushView(new AtcObjectsView(radarMapViewAdapter, master));
@@ -388,16 +386,16 @@ public class RadarMapPanel extends JComponent {
             ScaleMarkerView westMarkerView = new ScaleMarkerView(radarMapViewAdapter, Side.WEST, Palette.WINDOW_BLUE);
             rootView.pushView(westMarkerView);
 
-            final ActiveAtcSymbolView activeAtcView = new ActiveAtcSymbolView(radarMapViewAdapter, guiInteractionManager);
+            final ActiveAtcSymbolView activeAtcView = new ActiveAtcSymbolView(radarMapViewAdapter, master);
             rootView.pushView(activeAtcView);
 
             LayeredView targetView = new LayeredRadarContactView(radarMapViewAdapter);
             // RadarTargetProvider radarTargetProvider = 
-            new RadarTargetProvider(radarMapViewAdapter, targetView, master.getTrackManager(), guiInteractionManager);
+            new RadarTargetProvider(radarMapViewAdapter, targetView, master.getTrackManager(), master);
             rootView.pushView(targetView);
 
             LayeredView glassPaneView = new LayeredView(radarMapViewAdapter);
-            glassPaneView.pushView(new StPView(radarMapViewAdapter, guiInteractionManager));
+            glassPaneView.pushView(new StPView(radarMapViewAdapter, master));
             rootView.pushView(glassPaneView);
 
             this.addComponentListener(new ViewerCenteringListener(radarMapViewAdapter));
@@ -405,11 +403,11 @@ public class RadarMapPanel extends JComponent {
             final MouseInteractionManager interactionManager = new MouseInteractionManager(rootView);
             interactionManager.install(this);
             final IFocusManager focusManager = new FocusManager();
-            final MouseFocusManager mouseFocusManager = new MouseFocusManager(guiInteractionManager, focusManager, rootView, radarMapViewAdapter);
+            final MouseFocusManager mouseFocusManager = new MouseFocusManager(master, focusManager, rootView, radarMapViewAdapter);
             mouseFocusManager.install(this);
 
             // check which airports in range have a metar
-            master.getMetarReader().retrieveWeatherStations(master.getAirportData().getNavaidDB().getAerodromes());
+            master.getMetarReader().retrieveWeatherStations(data.getNavaidDB().getAerodromes());
 
             setupDialog.setStatus(100, "Ready.");
 

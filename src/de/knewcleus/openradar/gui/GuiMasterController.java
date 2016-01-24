@@ -96,7 +96,6 @@ public class GuiMasterController {
 
     private final TrackManager trackManager;
 
-    private String airportCode = null;
     private volatile FGMPClient<TargetStatus> radarProvider;
     
     private volatile long lastEscPressed = 0;
@@ -152,7 +151,7 @@ public class GuiMasterController {
         if(!setupDialog.getIcons().isEmpty()) {
             mainFrame.setIconImages(setupDialog.getIcons());
         }
-        mainFrame.getRadarScreen().setup(airportCode, this, setupDialog);
+        mainFrame.getRadarScreen().setup(setupDialog);
         initMpRadar();
         mainFrame.getRadarScreen().initRadarData();
         airportData.restoreRunwaySettings();
