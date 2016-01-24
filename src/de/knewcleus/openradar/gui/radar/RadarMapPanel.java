@@ -109,23 +109,16 @@ public class RadarMapPanel extends JComponent {
 
     private static final long serialVersionUID = -3173711704273558768L;
 
-    private GuiMasterController master = null;
+    private final GuiMasterController master;
 
     protected final SwingUpdateManager updateManager = new SwingUpdateManager(this);
     protected final ComponentCanvas canvas = new ComponentCanvas(this);
 
+    private final SwingRadarDataAdapter radarAdapter = new SwingRadarDataAdapter();
+
     private ZipFile zif = null;
 
-    /* Set up the initial display range */
-    protected double width = 6.0 * Units.DEG;
-    protected double height = 6.0 * Units.DEG;
-    protected double centerLon;
-    protected double centerLat;
-    protected Rectangle2D bounds;
-
-    protected Point2D center;
-
-    private final SwingRadarDataAdapter radarAdapter = new SwingRadarDataAdapter();
+    protected final Rectangle2D bounds;                // visible area (lon, lat, lon, lat)
 
     private volatile LayeredView rootView;
     protected IProjection projection;
@@ -137,16 +130,20 @@ public class RadarMapPanel extends JComponent {
 //    private static final Logger log = Logger.getLogger(SwingRadarDataAdapter.class);
 
     public RadarMapPanel(GuiMasterController guiInteractionManager) {
-        this.master = guiInteractionManager;
-
-        AirportData data = guiInteractionManager.getAirportData();
-        this.centerLon = data.getLon();
-        this.centerLat = data.getLat();
+        final double width = 6.0 * Units.DEG;    // visible area (deg)
+        final double height = 6.0 * Units.DEG;   // visible area (deg)
+        final double centerLon;                  // airport coordinate (lon)
+        final double centerLat;                  // airport coordinate (lat)
+        final Point2D center;                    // center position (lon, lat)
+        master = guiInteractionManager;
+        AirportData data = master.getAirportData();
+        centerLon = data.getLon();
+        centerLat = data.getLat();
         bounds = new Rectangle2D.Double(centerLon - width / 2.0d, centerLat - height / 2.0d, width, height);
         center = new Point2D.Double(centerLon, centerLat);
         /* Set up the projection */
         projection = new LocalSphericalProjection(center);
-        radarMapViewAdapter = new RadarMapViewerAdapter(this.getCanvas(), this.getUpdateManager(), projection, center);
+        radarMapViewAdapter = new RadarMapViewerAdapter(canvas, updateManager, projection, center);
     }
 
     @Override
@@ -162,14 +159,6 @@ public class RadarMapPanel extends JComponent {
     public void validate() {
         super.validate();
         updateManager.validate();
-    }
-
-    public SwingUpdateManager getUpdateManager() {
-        return updateManager;
-    }
-
-    public ComponentCanvas getCanvas() {
-        return canvas;
     }
 
     public void setup(SetupDialog setupDialog)
@@ -361,7 +350,7 @@ public class RadarMapPanel extends JComponent {
             setupDialog.setStatus(80, "Reading navaid data...");
             final LayeredView navSymbolView = new LayeredView(radarMapViewAdapter);
             final NavPointProvider navPointProvider2 = new NavPointProvider(radarMapViewAdapter, navSymbolView, master);
-            navPointProvider2.addNavPointListener(master.getAirportData());
+            navPointProvider2.addNavPointListener(data);
             rootView.pushView(navSymbolView);
 
             navPointProvider2.addViews(navDataStream);
@@ -374,7 +363,7 @@ public class RadarMapPanel extends JComponent {
             rootView.pushView(addNavSymbolView);
 
             // read here to have navaid data available
-            readStandardRouteData(master);
+            readStandardRouteData();
 
             final LayeredView layeredAtcObjectsView = new LayeredView(radarMapViewAdapter);
             layeredAtcObjectsView.pushView(new AtcObjectsView(radarMapViewAdapter, master));
@@ -478,16 +467,15 @@ public class RadarMapPanel extends JComponent {
     private void closeFiles() throws IOException {
         if (zif != null)
             zif.close();
-
     }
 
-    public void reReadStandardRoutes(GuiMasterController master) {
+    public void reReadStandardRoutes() {
         routeView.clear();
         addNavSymbolView.clear();
-        readStandardRouteData(master);
+        readStandardRouteData();
     }
 
-    private void readStandardRouteData(GuiMasterController master) {
+    private void readStandardRouteData() {
         StdRouteReader reader = new StdRouteReader(master.getAirportData(), radarMapViewAdapter);
         for (StdRoute route : reader.getStdRoutes()) {
             routeView.pushView(new StdRouteView(radarMapViewAdapter, route, master));
