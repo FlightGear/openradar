@@ -38,6 +38,7 @@ import de.knewcleus.fgfs.location.GeoUtil;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.setup.SectorCreator;
+import de.knewcleus.openradar.view.Converter2D;
 
 public class FlightPlanData {
 
@@ -427,9 +428,9 @@ public class FlightPlanData {
 			if (isDestinationAirportLocationAvailable && locDestinationAirport != null && (this.dirToDestination == null
 					|| System.currentTimeMillis() - lastUpdatelocDestAirport > 3000)) {
 				lastUpdatelocDestAirport = System.currentTimeMillis();
-				double angle = GeoUtil.getInitialAngle(locContact.getX(), locContact.getY(),
+				double angle = Converter2D.normalizeAngle(GeoUtil.getInitialAngle(locContact.getX(), locContact.getY(),
 						locDestinationAirport.getX(), locDestinationAirport.getY())
-						- airportData.getMagneticDeclination();
+						- airportData.getMagneticDeclination()); // avoid a negative angle due to the declination
 
 				dirToDestination = String.format("%03d°", Math.round(angle));//Math.round(angle/10)*10);
 			}
