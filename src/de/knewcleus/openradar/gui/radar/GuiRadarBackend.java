@@ -258,7 +258,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     }
 
     public void reloadStandardRoutes() {
-        radarPanel.getRadarMapPanel().reReadStandardRoutes(master);
+        radarPanel.getRadarMapPanel().reReadStandardRoutes();
     }
 
     public void copyMouseLocationToClipboard() {
