@@ -82,6 +82,7 @@ import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Operation;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightplan.FpAtc;
+import de.knewcleus.openradar.gui.flightstrips.HandoverDialog;
 import de.knewcleus.openradar.gui.radar.GuiRadarBackend;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.setup.SectorCreator;
@@ -103,6 +104,7 @@ public class RadarContactController
 	private TextManager textManager = new TextManager();
 	private AtcMessageDialog atcMessageDialog;
 	private FlightPlanDialog flightplanDialog;
+    private HandoverDialog handoverDialog = null;
 	private TransponderSettingsDialog transponderSettingsDialog;
 
 	// private volatile GuiRadarContact.Operation filterOperation = null;
@@ -133,6 +135,8 @@ public class RadarContactController
 	private ContactMouseListener contactMouseListener = new ContactMouseListener();
 	private ContactFilterMouseListener contactFilterMouseListener = new ContactFilterMouseListener();
 	private DetailsFocusListener detailsFocusListener = new DetailsFocusListener();
+
+    private boolean evokeSectionsListManager = true;
 
 	private enum OrderMode {
 		AUTO, MANUAL
@@ -251,6 +255,11 @@ public class RadarContactController
 		
 					modelList = new ArrayList<GuiRadarContact>(activeContactList);
 					notifyListenersListChange(formerSize);
+					
+		            if (evokeSectionsListManager) {
+		            	evokeSectionsListManager = false;
+		                SwingUtilities.invokeLater(master.getSectionsListManager());
+		            }
 				}
 				if (displayChatAsEnabled) {
 					master.getMpChatManager().validateTextLength();
@@ -706,10 +715,12 @@ public class RadarContactController
 				if (lSource.getText().equals("AUTO")) {
 					orderMode = OrderMode.MANUAL;
 					lSource.setText("MANUAL");
+					master.getSectionsListManager().setTraditionalOrder(false);
 				} else {
 					orderMode = OrderMode.AUTO;
 					lSource.setText("AUTO");
 					orderContacts();
+					master.getSectionsListManager().setTraditionalOrder(true);
 				}
 			}
 			// if (lSource.getName().equals("ALL")) {
@@ -1138,4 +1149,26 @@ public class RadarContactController
 					&& newRouteName.equals(selectedContact.getFlightPlan().getAssignedRoute());
 		}
 	}
+	
+	public synchronized void clearSectionsListManagerFlag() {
+		evokeSectionsListManager = true;
+	}
+
+	public void contactDoubleClicked(GuiRadarContact contact, boolean changeZoom) {
+		contact.setHighlighted();
+        master.getRadarBackend().showRadarContact(contact, changeZoom);
+        atcMessageDialog.setVisible(false);
+	}
+	
+	public void showHandoverDialog(MouseEvent e) {
+		if (handoverDialog == null) handoverDialog = new HandoverDialog(master);
+        if(!handoverDialog.isVisible()) {
+            handoverDialog.setLocation(e);
+        }
+	}
+
+	public void transmitFlightplan() {
+        master.getFlightPlanExchangeManager().triggerTransmission();
+	}
+	
 }

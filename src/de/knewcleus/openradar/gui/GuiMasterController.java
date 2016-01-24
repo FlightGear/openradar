@@ -48,6 +48,9 @@ import de.knewcleus.openradar.fgfscontroller.FGFSController;
 import de.knewcleus.openradar.gui.chat.MpChatManager;
 import de.knewcleus.openradar.gui.contacts.RadarContactController;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanExchangeManager;
+import de.knewcleus.openradar.gui.flightstrips.FlightStripBay;
+import de.knewcleus.openradar.gui.flightstrips.SectionsListManager;
+import de.knewcleus.openradar.gui.flightstrips.rules.RulesManager;
 import de.knewcleus.openradar.gui.radar.GuiRadarBackend;
 import de.knewcleus.openradar.gui.radar.RadarManager;
 import de.knewcleus.openradar.gui.setup.AirportData;
@@ -91,6 +94,10 @@ public class GuiMasterController {
     private FGFSController fgfsController2 = null;
     
     private final static Logger log = Logger.getLogger(GuiMasterController.class);
+
+    private FlightStripBay flightstripbay = null; 
+    private SectionsListManager sectionsListManager = null; 
+    private RulesManager rulesManager = null; 
     
     private JTextPane detailsArea = null;
 
@@ -124,6 +131,8 @@ public class GuiMasterController {
             }
         }
         new DeadLockChecker().start();
+        rulesManager = new RulesManager(); 
+        sectionsListManager = new SectionsListManager(this); 
     }
 
     public LogWindow getLogWindow() {
@@ -174,6 +183,9 @@ public class GuiMasterController {
         mainFrame.setVisible(true);
         
         mainFrame.getRadarScreen().showMap(); // move map and display it
+        
+        sectionsListManager.createExample(); 
+        //sectionsListManager.createTraditional(); 
     }
 
     private void initMpRadar() throws Exception {
@@ -428,4 +440,21 @@ public class GuiMasterController {
     public FGFSController getFgfsController2() {
         return fgfsController2;
     }
+    
+    public SectionsListManager getSectionsListManager() {
+    	return sectionsListManager;
+    }
+    
+    public RulesManager getRulesManager() {
+    	return rulesManager;
+    }
+    
+    public FlightStripBay getFlightStripBay() {
+    	return flightstripbay;
+    }
+    
+    public void setFlightStripBay(FlightStripBay flightstripbay) {
+    	this.flightstripbay = flightstripbay;
+    }
+    
 }

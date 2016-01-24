@@ -56,6 +56,7 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact.Alignment;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
+import de.knewcleus.openradar.gui.flightstrips.FlightStripBay;
 import de.knewcleus.openradar.gui.setup.DataBlockLayoutListener;
 import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
 
@@ -319,7 +320,26 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
-        add(spRadarContacs, gridBagConstraints);
+        //test avo add(spRadarContacs, gridBagConstraints);
+        
+        //+ avo testing begin
+        /*
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
+        */
+        FlightStripBay fsb = new FlightStripBay(master);
+        add(fsb, gridBagConstraints);
+        master.setFlightStripBay(fsb);
+        
+        //JSplitPane vspOldNew = new JSplitPane(JSplitPane.VERTICAL_SPLIT, spRadarContacs, fsb); // test
+        //add(vspOldNew, gridBagConstraints); // test
+        //+ avo testing end
     }
 
     // Drop target

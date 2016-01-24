@@ -62,6 +62,7 @@ import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.chat.auto.AtcAliasChatMessage;
 import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
+import de.knewcleus.openradar.gui.chat.auto.ChatMessagesManager;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.view.IRadarViewChangeListener;
 import de.knewcleus.openradar.view.ViewerAdapter;
@@ -119,6 +120,8 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     private List<String> ownChatHistory = new ArrayList<String>();
     private volatile int currentHistoryIndex = -1;
 
+    private final ChatMessagesManager messagesManager = new ChatMessagesManager();
+    
     public MpChatManager(GuiMasterController master) {
         this.master = master;
 
@@ -497,6 +500,12 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     public void setAutoAtcMessage(GuiRadarContact contact, AtcMenuChatMessage msg) {
         autoAtcMessage = msg;
         List<String> messages = msg.generateMessages(master, contact, null);
+        chatPanel.setChatMessage(messages.get(0)); // English text
+        requestFocusForInput();
+    }
+    // TODO: merge the similar methods above and below
+    public void setAtcMessage(GuiRadarContact contact, String msg, Object... args) {
+        List<String> messages = messagesManager.getMessage(msg).generateMessagesWithArgs(master, contact, null, args);
         chatPanel.setChatMessage(messages.get(0)); // English text
         requestFocusForInput();
     }
