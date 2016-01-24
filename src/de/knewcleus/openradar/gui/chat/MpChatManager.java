@@ -62,8 +62,6 @@ import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.chat.auto.AtcAliasChatMessage;
 import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
-import de.knewcleus.openradar.radardata.fgmp.FGMPClient;
-import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
 import de.knewcleus.openradar.view.IRadarViewChangeListener;
 import de.knewcleus.openradar.view.ViewerAdapter;
 
@@ -82,7 +80,6 @@ import de.knewcleus.openradar.view.ViewerAdapter;
 public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionListener, IChatListener, KeyListener, IRadarViewChangeListener {
 
     private GuiMasterController master = null;
-    private FGMPClient<TargetStatus> mpBackend = null;
     @SuppressWarnings("unchecked")
     private final static List<GuiChatMessage> emptyList = (List<GuiChatMessage>) Collections.EMPTY_LIST;
 
@@ -129,14 +126,6 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 
     public void start() {
         guiUpdater.start();
-    }
-
-    public FGMPClient<TargetStatus> getMpBackend() {
-        return mpBackend;
-    }
-
-    public void setMpBackend(FGMPClient<TargetStatus> mpBackend) {
-        this.mpBackend = mpBackend;
     }
 
     public void setChatPanel(MpChatPanel chatPanel) {
@@ -582,7 +571,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     private void processOutGoingMessage(String message, boolean resetChatField) {
         String ownFrequency = master.getRadioManager().getModels().size()>0 ? master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency() : "";
         message = checkMessage(message);
-        mpBackend.sendChatMessage(ownFrequency, message); // send to MP Server
+        master.getRadarProvider().sendChatMessage(ownFrequency, message); // send to MP Server
         // add to own chat history
         ownChatHistory.add(0,message);
         if(ownChatHistory.size()>20) {

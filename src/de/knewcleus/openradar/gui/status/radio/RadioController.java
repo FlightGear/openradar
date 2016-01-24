@@ -142,7 +142,7 @@ public class RadioController implements Runnable {
                     String radioKey = cb.getName();
                     fgComController.tuneRadio(radioKey, rf.getCode(), rf);
                     if(radioKey.equals("COM0")) {
-                        master.getMpChatManager().getMpBackend().setFrequency(rf.getFrequency());
+                        master.getRadarProvider().setFrequency(rf.getFrequency());
                     }
                 }
                 // todo tune other radios with same frequency away

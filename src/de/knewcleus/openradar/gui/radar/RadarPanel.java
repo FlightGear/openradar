@@ -712,13 +712,13 @@ public class RadarPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             JMenuItem item = (JMenuItem)e.getSource();
             if(item.getName().equals("UPDATE_1")) {
-                master.getMpChatManager().getMpBackend().setAntennaRotationTime(1*1000);
+                master.getRadarProvider().setAntennaRotationTime(1*1000);
                 master.getAirportData().setAntennaRotationTime(1000);
             } else if(item.getName().equals("UPDATE_3")) {
-                master.getMpChatManager().getMpBackend().setAntennaRotationTime(3*1000);
+                master.getRadarProvider().setAntennaRotationTime(3*1000);
                 master.getAirportData().setAntennaRotationTime(3000);
             } else if(item.getName().equals("UPDATE_5")) {
-                master.getMpChatManager().getMpBackend().setAntennaRotationTime(5*1000);
+                master.getRadarProvider().setAntennaRotationTime(5*1000);
                 master.getAirportData().setAntennaRotationTime(5000);
             }
             master.getAirportData().storeAirportData(master); // save it!
