@@ -28,7 +28,6 @@
  */
 package de.knewcleus.openradar.gui.contacts;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
@@ -631,7 +630,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 		lbFrom.setToolTipText(
 				"Click to initialize flightplan as originating from " + master.getAirportData().getAirportCode());
 		lbFrom.addMouseListener(fpMouseListener);
-		lbFrom.setForeground(Color.blue);
+		lbFrom.setForeground(Palette.FPD_CLICKABLE);
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridx = 0;
 		gridBagConstraints.gridy = 0;
@@ -661,7 +660,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 		lbTo.setName("LAND_HERE");
 		lbTo.addMouseListener(fpMouseListener);
 		lbTo.setToolTipText("Click to file flightplan to go to " + master.getAirportData().getAirportCode());
-		lbTo.setForeground(Color.blue);
+		lbTo.setForeground(Palette.FPD_CLICKABLE);
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridx = 3;
 		gridBagConstraints.gridy = 0;
@@ -875,7 +874,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 	private synchronized void setData(GuiRadarContact contact) {
 		log.warn("Running setData");
 		if (master.getAirportData().isFpDownloadEnabled()) {
-			btRetrieveFp.setForeground(Color.black);
+			btRetrieveFp.setForeground(Palette.FPD_BUTTON_TEXT);
 		}
 
 		tbContacts.setTitle("<html><body>Contact <b>" + contact.getCallSign() + "</b></body></html>");
@@ -1310,16 +1309,16 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 			}
 
 			String newText = tfSquawk.getText();
-			tfSquawk.setForeground(newText.matches("[0-7]{0,4}") ? Color.black : Color.red);
+			tfSquawk.setForeground(newText.matches("[0-7]{0,4}") ? Palette.FPD_SQUAWK_OK : Palette.FPD_SQUAWK_ERROR);
 
 			String key = "" + e.getKeyChar();
 			newText = newText + key;
 			if (newText.length() == 4 && !"".equals(key)) {
 				if (!SquawkCode.checkValue(newText)) {
-					tfSquawk.setForeground(Color.red);
+					tfSquawk.setForeground(Palette.FPD_SQUAWK_ERROR);
 					e.consume();
 				} else {
-					tfSquawk.setForeground(Color.black);
+					tfSquawk.setForeground(Palette.FPD_SQUAWK_OK);
 				}
 			}
 		}
@@ -1362,9 +1361,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				// executed by the Swing Thread
 				log.info("Executing work for extUpdateLennysFpButton");
 				if (innerFpExists) {
-					btRetrieveFp.setForeground(new Color(0,150,0)); // darker green
+					btRetrieveFp.setForeground(Palette.FPD_Online);
 				} else {
-					btRetrieveFp.setForeground(Color.GRAY);
+					btRetrieveFp.setForeground(Palette.FPD_Offline);
 				}
 				btRetrieveFp.repaint();
 				log.info("DONE executing work for extUpdateLennysFpButton");

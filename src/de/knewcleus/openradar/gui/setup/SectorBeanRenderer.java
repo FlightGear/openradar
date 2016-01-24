@@ -42,6 +42,8 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+
+import de.knewcleus.openradar.gui.Palette;
 /**
  * The renderer for the sector information in the list
  * 
@@ -82,14 +84,14 @@ public class SectorBeanRenderer extends DefaultListCellRenderer {
         
         labelCode.setPreferredSize(new Dimension(50,list.getFont().getSize()));
 
-        Color foreground = new Color(50,50,50);
-        Color background = Color.WHITE;
+        Color foreground = Palette.SECTORBEAN_FOREGOUND;
+        Color background = Palette.WHITE;
         if(cellHasFocus) {
-            foreground=Color.BLACK;
+            foreground=Palette.BLACK;
         }
         if(isSelected) {
-            foreground=Color.WHITE;
-            background = new Color(110,152,203);
+            foreground=Palette.WHITE;
+            background = Palette.SECTORBEAN_BACKGROUND;
         }
         
         SectorBean sb = (SectorBean)value;

@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.gui.status.runways.GuiRunway;
@@ -181,7 +182,7 @@ public class StdRoute {
                 return nList.getAttributes().getColor();
             }
         }
-        return Color.gray;
+        return Palette.GRAY;
     }
 
     public boolean isVisible(GuiMasterController master, GuiRadarContact selectedContact) {

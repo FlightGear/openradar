@@ -28,7 +28,6 @@
  */
 package de.knewcleus.openradar.gui.setup;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -71,6 +70,7 @@ import javax.swing.border.TitledBorder;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
 import de.knewcleus.openradar.rpvd.contact.ADatablockLayout;
 import de.knewcleus.openradar.view.map.GeometryToShapeProjector;
@@ -323,7 +323,7 @@ public class SetupDialog extends JFrame {
         jsPane.getViewport().add(liSearchResults);
 
         lbMessage = new JLabel();
-        lbMessage.setForeground(Color.red);
+        lbMessage.setForeground(Palette.RED);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -1354,7 +1354,7 @@ public class SetupDialog extends JFrame {
     public boolean readInputs(AirportData data) {
         btCheckSettings.setText("Checking...");
         btCheckSettings.setEnabled(false);
-        btCheckSettings.setForeground(Color.gray);
+        btCheckSettings.setForeground(Palette.GRAY);
 
         boolean dataOk = true;
 
@@ -1363,27 +1363,27 @@ public class SetupDialog extends JFrame {
         List<Integer> list = null;
 
         if (fgComMode != FgComMode.Internal) {
-            lbfgComPath.setForeground(Color.black);
+            lbfgComPath.setForeground(Palette.BLACK);
         } else {
             // internal
             if (checkPath(tfFgComPath.getText().trim())) {
-                lbfgComPath.setForeground(Color.black);
+                lbfgComPath.setForeground(Palette.BLACK);
                 data.setFgComPath(tfFgComPath.getText().trim());
             } else {
-                lbfgComPath.setForeground(Color.red);
+                lbfgComPath.setForeground(Palette.RED);
                 dataOk = false;
             }
         }
 
         if (fgComMode != FgComMode.Internal) {
-            lbfgComExec.setForeground(Color.black);
+            lbfgComExec.setForeground(Palette.BLACK);
         } else {
             // internal
             if (!tfFgComExec.getText().trim().isEmpty() && checkPath(tfFgComPath.getText().trim() + File.separator + tfFgComExec.getText().trim())) {
-                lbfgComExec.setForeground(Color.black);
+                lbfgComExec.setForeground(Palette.BLACK);
                 data.setFgComExec(tfFgComExec.getText().trim());
             } else {
-                lbfgComExec.setForeground(Color.red);
+                lbfgComExec.setForeground(Palette.RED);
                 dataOk = false;
             }
         }
@@ -1392,32 +1392,32 @@ public class SetupDialog extends JFrame {
             if (fgComMode == FgComMode.Auto) {
                 lbFgComHost.setText("localhost");
             }
-            lbFgComHost.setForeground(Color.black);
+            lbFgComHost.setForeground(Palette.BLACK);
         } else {
             // auto + internal
             if (checkHost(tfFgComHost.getText().trim())) {
-                lbFgComHost.setForeground(Color.black);
+                lbFgComHost.setForeground(Palette.BLACK);
                 data.setFgComHost(tfFgComHost.getText().trim());
             } else {
-                lbFgComHost.setForeground(Color.red);
+                lbFgComHost.setForeground(Palette.RED);
                 dataOk = false;
             }
         }
 
         if (fgComMode == FgComMode.Off
                 || ((list = checkPorts(tfFgComPorts.getText().trim())).size() > 0 && (list = checkPorts(tfFgComPorts.getText().trim())).size() < 5)) {
-            lbFgComPorts.setForeground(Color.black);
+            lbFgComPorts.setForeground(Palette.BLACK);
             if (fgComMode != FgComMode.Off)
                 data.setFgComPorts(list);
         } else {
-            lbFgComPorts.setForeground(Color.red);
+            lbFgComPorts.setForeground(Palette.RED);
             dataOk = false;
         }
         if (fgComMode == FgComMode.Off || checkHost(tfFgComServer.getText())) {
-            lbFgComServer.setForeground(Color.black);
+            lbFgComServer.setForeground(Palette.BLACK);
             data.setFgComServer(tfFgComServer.getText().trim());
         } else {
-            lbFgComServer.setForeground(Color.red);
+            lbFgComServer.setForeground(Palette.RED);
             dataOk = false;
         }
         data.setAltRadioTextEnabled(cbEnableAltRadioText.isSelected());
@@ -1425,65 +1425,65 @@ public class SetupDialog extends JFrame {
         data.setFpExchangeEnabled(cbEnableFpExchange.isSelected());
         if (cbEnableFpExchange.isSelected()) {
             if (checkUrl(tfFpServer.getText().trim())) {
-                lbFpServer.setForeground(Color.black);
+                lbFpServer.setForeground(Palette.BLACK);
                 data.setFpServerUrl(tfFpServer.getText().trim());
                 data.setFpServerUser(tfFpServerUser.getText().trim());
                 data.setFpServerPassword(new String(tfFpServerPassword.getPassword()));
             } else {
-                lbFpServer.setForeground(Color.red);
+                lbFpServer.setForeground(Palette.RED);
                 dataOk = false;
             }
         } else {
-            lbFpServer.setForeground(Color.black);
+            lbFpServer.setForeground(Palette.BLACK);
         }
         
         if (checkUrl(tfMetarUrl.getText().trim())) {
-            lbMetarUrl.setForeground(Color.black);
+            lbMetarUrl.setForeground(Palette.BLACK);
             data.setMetarUrl(tfMetarUrl.getText().trim());
         } else {
-            lbMetarUrl.setForeground(Color.red);
+            lbMetarUrl.setForeground(Palette.RED);
             dataOk = false;
         }
         if ((list = checkPorts(tfMpLocalPort.getText().trim())).size() > 0) {
-            lbMpLocalPort.setForeground(Color.black);
+            lbMpLocalPort.setForeground(Palette.BLACK);
             data.setMpLocalPort(list.get(0));
         } else {
-            lbMpLocalPort.setForeground(Color.red);
+            lbMpLocalPort.setForeground(Palette.RED);
             dataOk = false;
         }
         if (checkHost(tfMpServer.getText().trim())) {
-            lbMpServer.setForeground(Color.black);
+            lbMpServer.setForeground(Palette.BLACK);
             data.setMpServer(tfMpServer.getText().trim());
         } else {
-            lbMpServer.setForeground(Color.red);
+            lbMpServer.setForeground(Palette.RED);
             dataOk = false;
         }
         if ((list = checkPorts(tfMpPort.getText().trim())).size() == 1) {
-            lbMpPort.setForeground(Color.black);
+            lbMpPort.setForeground(Palette.BLACK);
             data.setMpServerPort(list.get(0));
         } else {
-            lbMpPort.setForeground(Color.red);
+            lbMpPort.setForeground(Palette.RED);
             dataOk = false;
         }
         if ((list = checkPorts(tfMpLocalPort.getText().trim())).size() == 1) {
-            lbMpLocalPort.setForeground(Color.black);
+            lbMpLocalPort.setForeground(Palette.BLACK);
             data.setMpLocalPort(list.get(0));
         } else {
-            lbMpLocalPort.setForeground(Color.red);
+            lbMpLocalPort.setForeground(Palette.RED);
             dataOk = false;
         }
         
         data.setFpDownloadEnabled(cbEnableFpDownload.isSelected());
         if(cbEnableFpDownload.isEnabled()) {
 	        if (checkUrl(tfLennysFpServer.getText().trim())) {
-	            lbLennysServer.setForeground(Color.black);
+	            lbLennysServer.setForeground(Palette.BLACK);
 	            data.setFpDownloadUrl(tfLennysFpServer.getText().trim());
 	        } else {
-	            lbLennysServer.setForeground(Color.red);
+	            lbLennysServer.setForeground(Palette.RED);
 	            dataOk = false;
 	        }
         } else {
-        	lbLennysServer.setForeground(Color.black);
+        	lbLennysServer.setForeground(Palette.BLACK);
         }
 
         data.setChatAliasesEnabled(cbEnableChatAliases.isSelected());
@@ -1505,72 +1505,72 @@ public class SetupDialog extends JFrame {
         // fgfs remove control
         data.setFgfsCamera1Enabled(cbFgfsCamera1Enabled.isSelected());
         if (checkHost(tfFgfsCamera1Host.getText().trim())) {
-            tfFgfsCamera1Host.setForeground(Color.black);
+            tfFgfsCamera1Host.setForeground(Palette.BLACK);
             data.setFgfsCamera1Host(tfFgfsCamera1Host.getText().trim());
         } else {
-            tfFgfsCamera1Host.setForeground(Color.red);
+            tfFgfsCamera1Host.setForeground(Palette.RED);
             dataOk = false;
         }
         if ((list = checkPorts(tfFgfsCamera1Port.getText().trim())).size() == 1) {
-            tfFgfsCamera1Port.setForeground(Color.black);
+            tfFgfsCamera1Port.setForeground(Palette.BLACK);
             data.setFgfsCamera1Port(list.get(0));
         } else {
-            tfFgfsCamera1Port.setForeground(Color.red);
+            tfFgfsCamera1Port.setForeground(Palette.RED);
             dataOk = false;
         }
         data.setFgfsLocalMPPacketForward1(cbFgfsLocalMPPacketForward1.isSelected());
         if ((list = checkPorts(tfFgfsLocalMPPacketPort1.getText().trim())).size() == 1) {
-            tfFgfsLocalMPPacketPort1.setForeground(Color.black);
+            tfFgfsLocalMPPacketPort1.setForeground(Palette.BLACK);
             data.setFgfsLocalMPPacketPort1(list.get(0));
         } else {
-            tfFgfsLocalMPPacketPort1.setForeground(Color.red);
+            tfFgfsLocalMPPacketPort1.setForeground(Palette.RED);
             dataOk = false;
         }
         if ((tfFgfsCamera1Host.getText().trim().equalsIgnoreCase("localhost") || tfFgfsCamera1Host.getText().trim().equalsIgnoreCase("127.0.0.1"))
                 && tfFgfsLocalMPPacketPort1.getText().trim().equalsIgnoreCase(tfMpLocalPort.getText().trim())) {
             // same port as OR local MP port => Loop
-            tfFgfsLocalMPPacketPort1.setForeground(Color.red);
+            tfFgfsLocalMPPacketPort1.setForeground(Palette.RED);
             dataOk = false;
         } else {
-            tfFgfsLocalMPPacketPort1.setForeground(Color.black);
+            tfFgfsLocalMPPacketPort1.setForeground(Palette.BLACK);
         }
         // cam 2
         data.setFgfsCamera2Enabled(cbFgfsCamera2Enabled.isSelected());
         data.setFgfsSlave2To1(cbFgfsCamera2SlavedTo1.isSelected());
         if (checkHost(tfFgfsCamera2Host.getText().trim())) {
-            tfFgfsCamera2Host.setForeground(Color.black);
+            tfFgfsCamera2Host.setForeground(Palette.BLACK);
             data.setFgfsCamera2Host(tfFgfsCamera2Host.getText().trim());
         } else {
-            tfFgfsCamera2Host.setForeground(Color.red);
+            tfFgfsCamera2Host.setForeground(Palette.RED);
             dataOk = false;
         }
         if ((list = checkPorts(tfFgfsCamera2Port.getText().trim())).size() == 1) {
-            tfFgfsCamera2Port.setForeground(Color.black);
+            tfFgfsCamera2Port.setForeground(Palette.BLACK);
             data.setFgfsCamera2Port(list.get(0));
         } else {
-            tfFgfsCamera2Port.setForeground(Color.red);
+            tfFgfsCamera2Port.setForeground(Palette.RED);
             dataOk = false;
         }
         data.setFgfsLocalMPPacketForward2(cbFgfsLocalMPPacketForward2.isSelected());
         if ((list = checkPorts(tfFgfsLocalMPPacketPort2.getText().trim())).size() == 1) {
-            tfFgfsLocalMPPacketPort2.setForeground(Color.black);
+            tfFgfsLocalMPPacketPort2.setForeground(Palette.BLACK);
             data.setFgfsLocalMPPacketPort2(list.get(0));
         } else {
-            tfFgfsLocalMPPacketPort2.setForeground(Color.red);
+            tfFgfsLocalMPPacketPort2.setForeground(Palette.RED);
             dataOk = false;
         }
         if ((tfFgfsCamera2Host.getText().trim().equalsIgnoreCase("localhost") || tfFgfsCamera2Host.getText().trim().equalsIgnoreCase("127.0.0.1"))
                 && tfFgfsLocalMPPacketPort2.getText().trim().equalsIgnoreCase(tfMpLocalPort.getText().trim())) {
             // same port as OR local MP port => Loop
-            tfFgfsLocalMPPacketPort2.setForeground(Color.red);
+            tfFgfsLocalMPPacketPort2.setForeground(Palette.RED);
             dataOk = false;
         } else {
-            tfFgfsLocalMPPacketPort2.setForeground(Color.black);
+            tfFgfsLocalMPPacketPort2.setForeground(Palette.BLACK);
         }
 
         btCheckSettings.setText("Check Settings & Save");
         btCheckSettings.setEnabled(true);
-        btCheckSettings.setForeground(Color.black);
+        btCheckSettings.setForeground(Palette.BLACK);
 
         if (!dataOk) {
             lbMessage.setText("Please verify your settings!");

@@ -33,7 +33,6 @@
 package de.knewcleus.openradar.view.objects;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
@@ -41,6 +40,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.Units;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -58,7 +58,7 @@ public class DistanceCircle extends AViewObject {
     private Point2D point;
     
     public DistanceCircle(AirportData data, Style style, double radius, int minScale, int maxScale) {
-        super(Color.gray);
+        super(Palette.GRAY);
         this.data =data;
         this.radius = radius;
         setMinScalePath(minScale);
@@ -68,15 +68,15 @@ public class DistanceCircle extends AViewObject {
         
         switch(style) {
         case MINOR:
-            color=Color.gray;
+            color=Palette.DISTANCE_CIRCLE_MINOR;
             this.stroke = new BasicStroke(0.3f);
             break;
         case PLAIN:
-            color=Color.lightGray;
+            color=Palette.DISTANCE_CIRCLE_PLAIN;
             this.stroke = new BasicStroke(0.4f);
             break;
         case IMPORTANT:
-            color=Color.white;
+            color=Palette.DISTANCE_CIRCLE_IMPORTANT;
             this.stroke = new BasicStroke(0.5f);
             break;
         }

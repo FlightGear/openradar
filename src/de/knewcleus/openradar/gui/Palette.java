@@ -104,20 +104,40 @@ public class Palette {
     public static final Color RADAR_IMPORTANT = RADAR_ORANGE;
     public static final Color RADAR_UNCONTROLLED = RADAR_GREEN;
     public static final Color RADAR_GHOST = Color.GRAY;
+    public static final Color RADAR_EMERGENCY = new Color(255,100,0);
 
-    public static final Color CHAT_GHOST = Color.GRAY;
+    public static final Color CHAT_GHOST = Color.RED; // Color.GRAY;
     public static final Color CHAT_SELECTED = RADAR_LIGHTBLUE;
     public static final Color CHAT_OWN_TO_SELECTED = RADAR_LIGHTBLUE;
     public static final Color CHAT_OWN = Color.LIGHT_GRAY;
     public static final Color CHAT_AIRPORT_MENTIONED = Color.WHITE;
-    public static final Color CHAT_TEXT = Color.LIGHT_GRAY;
+    public static final Color CHAT_TEXT = Color.WHITE; // Color.LIGHT_GRAY;
 
 	// added
 
-    public static final Color GLIDESLOPE = Color.blue;
+    public static final Color LIGHT_GRAY = Color.LIGHT_GRAY;
+    public static final Color GRAY = Color.GRAY;
+    public static final Color ORANGE = Color.ORANGE;
+    public static final Color BLUE = Color.BLUE;
+    public static final Color RED = Color.RED;
+    
+    public static final Color GLIDESLOPE_ACTIVE = Color.blue;
+    public static final Color GLIDESLOPE_INACTIVE = new Color(150,150,255);
     public static final Color RUNWAYEND_OPEN = Color.green;
     public static final Color RUNWAYEND_FORBIDDEN = Color.red;
 
+    public static final Color PAVEMENT_DEFAULT = Color.lightGray;
+    public static final Color PAVEMENT_CONCRETE = new Color(110, 110, 110);
+    public static final Color PAVEMENT_ASPHALT = Palette.TARMAC;
+    public static final Color PAVEMENT_DIRT = new Color(135, 115, 110);
+    public static final Color PAVEMENT_DRYLAKEBED = new Color(135, 115, 110);
+    public static final Color PAVEMENT_GRAVEL = new Color(115, 115, 110);
+    public static final Color PAVEMENT_SNOWICE = new Color(120, 120, 200);
+    public static final Color PAVEMENT_TRANSPARENT = new Color(135, 115, 110);
+    public static final Color PAVEMENT_TURFGRASS = new Color(40, 70, 40);
+    public static final Color PAVEMENT_WATER = new Color(20, 20, 80);
+
+    
 //  public final static Color DESKTOP=new Color(0.29f,0.32f,0.29f);
     public final static Color DESKTOP=new Color(70,71,70);//new Color(77,90,77);
  //   public static final Color DESKTOP_TEXT = Color.WHITE;
@@ -125,11 +145,77 @@ public class Palette {
     public static final Color DESKTOP_FILTER_SELECTED = new Color(190,190,255);
     public static final Color WARNING_REARWIND = new Color(255,90,90);
     public static final Color WARNING_GUSTS = Color.ORANGE;//new Color(255,100,0)
+	public static final Color URBAN = new Color(80,80,80); 
     public static final Color LAKE = new Color(0.39f,0.39f,0.41f);
     public static final Color STREAM = new Color(0.39f,0.39f,0.41f);
+    public static final Color TAXIWAY_LINE = new Color(177,181,64);  
+    public static final Color TAXIWAY_SIGN = Color.WHITE; 
+    public static final Color PARKING_POSITION = Color.LIGHT_GRAY; 
+    public static final Color RUNWAY_ACTIVE = new Color(60,60,80); 
+    public static final Color RUNWAY_ENDNUMBER = Color.LIGHT_GRAY; 
 
+    public static final Color ATC_ACTIVE = new Color(0,230,0);
+    public static final Color ATC_RANGE = new Color(0,127,0);
     public static final Color NAVAID_HIGHLIGHT = Color.yellow;
+    public static final Color VOR_TEXT = Color.LIGHT_GRAY;
+    public static final Color NDB_TEXT = Color.LIGHT_GRAY;
+    public static final Color FIX_TEXT = Color.LIGHT_GRAY;
+    public static final Color FIX_ICON = Color.LIGHT_GRAY;
+    public static final Color HELIPAD_TEXT = Color.LIGHT_GRAY;
+    public static final Color AIRPORT_TEXT = Color.LIGHT_GRAY;
+    public static final Color DISTANCE_CIRCLE_MINOR = Color.GRAY;
+    public static final Color DISTANCE_CIRCLE_PLAIN = Color.LIGHT_GRAY;
+    public static final Color DISTANCE_CIRCLE_IMPORTANT = Color.WHITE;
+    
+    // Metar
+    public static final Color METAR_LIFR = new Color(218,0,213); 
+    public static final Color METAR_IFR = new Color(200,0,0); 
+    public static final Color METAR_MVFR = new Color(0,0,200); 
+    public static final Color METAR_VFR = new Color(0,150,0); 
 
+    // Wind and Crosswind Info
+    public static final Color WIND_5KN_LINE = Color.GRAY; 
+    public static final Color WIND_STRONG = Color.RED; 
+    public static final Color WIND_MIDDLE = Color.ORANGE; 
+    public static final Color WIND_WEAK = Color.GREEN; 
+    public static final Color GUSTS_STRONG = Color.MAGENTA; 
+    public static final Color GUSTS_MIDDLE = new Color(170, 0, 0); 
+    public static final Color GUSTS_WEAK = new Color(0, 64, 0); 
+    
+    // Chat
+    public static final Color CHAT_TIMESTAMP = CHAT_TEXT; 
+    public static final Color CHAT_CALLSIGN = CHAT_TEXT; 
+    public static final Color CHAT_MESSAGE = CHAT_TEXT; 
+    public static final Color CHAT_MESSAGE_LONG = Color.BLUE; 
+    public static final Color CHAT_MESSAGE_TOO_LONG = Color.RED; 
+    public static final Color CHAT_BUTTON_ALL = Color.BLUE; 
+    public static final Color CHAT_BUTTON_SELECTED = Color.WHITE; 
+    public static final Color CHAT_BACKGROUND = new Color(30, 35, 30); 
+    public static final Color CHAT_FILTER_NONE = Color.BLUE; 
+    public static final Color CHAT_FILTER_FREQUENCY = Color.BLUE; 
+    public static final Color CHAT_FILTER_RANGE = Color.BLUE; 
+    public static final Color CHAT_FILTER_VISIBLE = Color.WHITE; 
+    public static final Color CHAT_FILTER_SELECTED_USER = Color.WHITE; 
+    
+    // Flightplan Dialog
+    public static final Color FPD_CLICKABLE = Color.blue; 
+    public static final Color FPD_BUTTON_TEXT = Color.black; 
+    public static final Color FPD_SQUAWK_OK = Color.black; 
+    public static final Color FPD_SQUAWK_ERROR = Color.red; 
+    public static final Color FPD_Online = Color.blue; 
+    public static final Color FPD_Offline = Color.GRAY; 
+    
+    // ORCam
+    public static final Color ORCAM_OFFLINE = new Color(200,0,0); 
+    public static final Color ORCAM_FOLLOW = Color.blue; 
+    public static final Color ORCAM_SETPOS = Color.blue; 
+    public static final Color ORCAM_STOP = Color.black; 
+    
+    // other
+    
+    public static final Color SECTORBEAN_FOREGOUND = new Color(50,50,50); 
+    public static final Color SECTORBEAN_BACKGROUND = new Color(110,152,203); 
+    
 	public static Color getHightlightColor(Color c) {
 		final int r,g,b;
 

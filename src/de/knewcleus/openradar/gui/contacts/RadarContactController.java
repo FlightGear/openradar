@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.gui.contacts;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -72,6 +71,7 @@ import de.knewcleus.fgfs.Units;
 import de.knewcleus.fgfs.location.GeoUtil;
 import de.knewcleus.fgfs.multiplayer.IPlayerListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.chat.GuiChatMessage;
 import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
@@ -257,7 +257,7 @@ public class RadarContactController
 				}
 				if (displayChatAsDisabled) {
 					//master.getMpChatManager().setSelectedCallSign(null, false); // lock
-					master.getMpChatManager().setChatMsgColor(Color.red); // gray
+					master.getMpChatManager().setChatMsgColor(Palette.CHAT_GHOST);
 				}
 			}
 		});

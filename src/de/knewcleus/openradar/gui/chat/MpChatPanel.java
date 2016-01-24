@@ -86,7 +86,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         setBackground(Palette.DESKTOP);
 
         lbMpShowAll.setFont(Palette.DESKTOP_FONT); // NOI18N
-        lbMpShowAll.setForeground(java.awt.Color.blue);
+        lbMpShowAll.setForeground(Palette.CHAT_BUTTON_ALL);
         lbMpShowAll.setText("ALL");
         lbMpShowAll.setName("ALL");
         lbMpShowAll.setToolTipText("Show all messages");
@@ -102,7 +102,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         // lbMpShowFreq.setFont(Palette.DESKTOP_FONT); // NOI18N
         // lbMpShowFreq.setText("FRQ");
         // lbMpShowFreq.setName("FRQ");
-        // lbMpShowFreq.setForeground(Color.white);
+        // lbMpShowFreq.setForeground(Palette.CHAT_FILTER_FREQUENCY);
         // lbMpShowFreq.setToolTipText("Show only messages of contacts in radar range");
         // gridBagConstraints = new java.awt.GridBagConstraints();
         // gridBagConstraints.gridx = 1;
@@ -130,7 +130,7 @@ public class MpChatPanel extends javax.swing.JPanel {
 //        lbMpShowVisible.setText("VIS");
 //        lbMpShowVisible.setName("VIS");
 //        lbMpShowVisible.setToolTipText("Show only messages of visible contacts");
-//        lbMpShowVisible.setForeground(Color.white);
+//        lbMpShowVisible.setForeground(Palette.CHAT_FILTER_VISIBLE);
 //        gridBagConstraints = new java.awt.GridBagConstraints();
 //        gridBagConstraints.gridx = 3;
 //        gridBagConstraints.gridy = 0;
@@ -144,7 +144,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         lbMpShowACT.setText("SEL");
         lbMpShowACT.setName("SEL");
         lbMpShowACT.setToolTipText("Show only messages of the SELECTED contact");
-        lbMpShowACT.setForeground(Color.white);
+        lbMpShowACT.setForeground(Palette.CHAT_BUTTON_SELECTED);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
@@ -172,7 +172,7 @@ public class MpChatPanel extends javax.swing.JPanel {
 
         liMPChatHistory.setModel(guiInteractionManager.getMpChatManager());
         liMPChatHistory.setCellRenderer(new MpChatListCellRenderer(guiInteractionManager));
-        liMPChatHistory.setBackground(new Color(30, 35, 30));
+        liMPChatHistory.setBackground(Palette.CHAT_BACKGROUND);
         liMPChatHistory.setForeground(Palette.DESKTOP_TEXT);
         liMPChatHistory.setDragEnabled(true);
         spMPChatHistory.setViewportView(liMPChatHistory);
@@ -230,30 +230,30 @@ public class MpChatPanel extends javax.swing.JPanel {
 
     public void selectFilter(Filter filter) {
         // reset Filters
-        liMPChatHistory.setBackground(new Color(30, 35, 30));
+        liMPChatHistory.setBackground(Palette.CHAT_BACKGROUND);
 
-        lbMpShowAll.setForeground(Color.white);
-        lbMpShowFreq.setForeground(Color.white);
-        lbMpShowSect.setForeground(Color.white);
-        lbMpShowVisible.setForeground(Color.white);
-        lbMpShowACT.setForeground(Color.white);
+        lbMpShowAll.setForeground(Palette.CHAT_TEXT);
+        lbMpShowFreq.setForeground(Palette.CHAT_TEXT);
+        lbMpShowSect.setForeground(Palette.CHAT_TEXT);
+        lbMpShowVisible.setForeground(Palette.CHAT_TEXT);
+        lbMpShowACT.setForeground(Palette.CHAT_TEXT);
 
         // and set it
         switch(filter) {
         case FILTER_NONE:
-           lbMpShowAll.setForeground(Color.blue);
+           lbMpShowAll.setForeground(Palette.CHAT_FILTER_NONE);
            break;
         case FILTER_FREQUENCY:
-            lbMpShowFreq.setForeground(Color.blue);
+            lbMpShowFreq.setForeground(Palette.CHAT_FILTER_FREQUENCY);
             break;
          case FILTER_RANGE:
-             lbMpShowSect.setForeground(Color.blue);
+             lbMpShowSect.setForeground(Palette.CHAT_FILTER_RANGE);
              break;
          case FILTER_VISIBLE:
-             lbMpShowVisible.setForeground(Color.blue);
+             lbMpShowVisible.setForeground(Palette.CHAT_FILTER_VISIBLE);
              break;
          case FILTER_SELECTED_USER:
-             lbMpShowACT.setForeground(Color.blue);
+             lbMpShowACT.setForeground(Palette.CHAT_FILTER_SELECTED_USER);
              break;
         }
     }

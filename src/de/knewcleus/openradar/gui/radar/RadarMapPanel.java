@@ -28,7 +28,6 @@
  */
 package de.knewcleus.openradar.gui.radar;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -249,7 +248,7 @@ public class RadarMapPanel extends JComponent {
                     ZippedShapefileLayer urbanLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), newFormat ? "v0_urban" : "cs_urban"));
                     final GeodataView urbanView = new GeodataView(master, radarMapViewAdapter, urbanLayer, "URBAN", bounds);
                     urbanLayer.closeZipArchive();
-                    urbanView.setColor(new Color(80, 80, 80));
+                    urbanView.setColor(Palette.URBAN);
                     // landmassView.setFill(false);
                     if (urbanView.hasContent()) {
                         rootView.pushView(urbanView);

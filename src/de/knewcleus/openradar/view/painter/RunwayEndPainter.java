@@ -32,10 +32,10 @@
  */
 package de.knewcleus.openradar.view.painter;
 
-import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.objects.RunwayEndIlsCone;
@@ -58,7 +58,7 @@ public class RunwayEndPainter extends AViewObjectPainter<RunwayEnd> {
 //        RunwayEndCenterLine runwayEndCenterLine = new RunwayEndCenterLine(runwayEnd, 100d);
 //        viewObjectList.add(runwayEndCenterLine);
 
-        RunwayEndNumber runwayEndNumber = new RunwayEndNumber(runwayEnd, data, font, Color.lightGray, 0 , 50);
+        RunwayEndNumber runwayEndNumber = new RunwayEndNumber(runwayEnd, data, font, Palette.RUNWAY_ENDNUMBER, 0 , 50);
         viewObjectList.add(runwayEndNumber);
         
     }

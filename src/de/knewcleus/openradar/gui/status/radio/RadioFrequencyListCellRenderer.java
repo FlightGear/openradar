@@ -40,6 +40,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
+
+import de.knewcleus.openradar.gui.Palette;
 /**
  * This class renders the frequency information in the combobox.
  * 
@@ -54,7 +56,7 @@ public class RadioFrequencyListCellRenderer extends JPanel implements ListCellRe
 //    private Font defaultFont = new java.awt.Font("Cantarell", Font.PLAIN, 12); // NOI18N
 //    private Font activeFont = new java.awt.Font("Cantarell", Font.BOLD, 12); // NOI18N
 
-    private Color defaultColor = Color.BLACK;
+    private Color defaultColor = Palette.BLACK;
 //    private Color selectionColor = Color.BLUE;
 //    private Color errorColor = Color.RED;
 
@@ -86,7 +88,7 @@ public class RadioFrequencyListCellRenderer extends JPanel implements ListCellRe
         add(lbFreq, gridBagConstraints);
 
         //this.setOpaque(false);
-        setBackground(Color.white);
+        setBackground(Palette.WHITE);
         
         this.doLayout();
     }

@@ -28,7 +28,6 @@
  */
 package de.knewcleus.openradar.view.painter;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -38,6 +37,7 @@ import java.util.List;
 import de.knewcleus.fgfs.navaids.Pavement;
 import de.knewcleus.fgfs.navdata.impl.Aerodrome;
 import de.knewcleus.fgfs.navdata.xplane.Runway;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.objects.AViewObject;
@@ -61,7 +61,7 @@ public class AirportPainter extends AViewObjectPainter<Aerodrome> {
         Font font = new Font("Arial", Font.PLAIN, 9);
 
         String code = aerodrome.getIdentification();
-        airportCode = new AirportCode(data, aerodrome, font, Color.lightGray, code, 32, Integer.MAX_VALUE);
+        airportCode = new AirportCode(data, aerodrome, font, Palette.AIRPORT_TEXT, code, 32, Integer.MAX_VALUE);
         viewObjectList.add(airportCode);
         for (Pavement p : aerodrome.getPavements()) {
             viewObjectList.add(new PavementObject(aerodrome, p));

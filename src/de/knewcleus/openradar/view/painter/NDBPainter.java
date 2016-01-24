@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.view.painter;
 
-import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.fgfs.navdata.impl.NDB;
@@ -57,10 +56,10 @@ public class NDBPainter extends AViewObjectPainter<NDB> {
         NDBSymbol s = new NDBSymbol(master, ndb, 0 , 200);
         viewObjectList.add(s);
 
-        NDBName n = new NDBName(master, ndb, font, Color.lightGray, 0 , 200);
+        NDBName n = new NDBName(master, ndb, font, Palette.NDB_TEXT, 0 , 200);
         viewObjectList.add(n);
 
-        NDBFrequency f = new NDBFrequency(master, ndb, font, Color.lightGray, 0 , 200);
+        NDBFrequency f = new NDBFrequency(master, ndb, font, Palette.NDB_TEXT, 0 , 200);
         viewObjectList.add(f);
     }
 

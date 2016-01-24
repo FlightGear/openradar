@@ -95,11 +95,11 @@ public class TraditionalLayout extends ADatablockLayout {
         Color color = Palette.RADAR_UNCONTROLLED;
 
         if (c.isIdentActive()) {
-            color = Color.black;
+            color = Palette.BLACK;
             c.setHighlighted();
-        } else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode() || 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode()) ) {
+        } else if (c.isOnEmergency()) {
             // Emergency
-            color = new Color(255,100,0);
+            color = Palette.RADAR_EMERGENCY;
 
         } else if(c.isSelected()) { // this is the difference to the original implementation!
             // SELECTED

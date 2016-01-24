@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.gui.status.radio;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -91,7 +90,7 @@ public class RadioPanel extends JPanel {
         for(RadioModel model : radioManager.getModels().values()) {
 
             JLabel lbRadioKey = new JLabel();
-            lbRadioKey.setForeground(Color.lightGray);
+            lbRadioKey.setForeground(Palette.LIGHT_GRAY);
             lbRadioKey.setName("lb"+model.getRadioKey());
             lbRadioKey.setText(model.getRadioKey());
             GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -123,7 +122,7 @@ public class RadioPanel extends JPanel {
 
             JLabel lbVolume = new JLabel();
             lbVolume.setToolTipText("Volume");
-            lbVolume.setForeground(Color.lightGray);
+            lbVolume.setForeground(Palette.LIGHT_GRAY);
             radioManager.registerLabel(model.getRadioKey(),lbVolume);
             lbVolume.setFont(lbVolume.getFont().deriveFont(8));
             gridBagConstraints = new GridBagConstraints();
@@ -168,7 +167,7 @@ public class RadioPanel extends JPanel {
             pnlRight.setLayout(new GridBagLayout());
 
             JLabel lbFreq = new JLabel();
-            lbFreq.setForeground(Color.lightGray);
+            lbFreq.setForeground(Palette.LIGHT_GRAY);
             lbFreq.setText("");//"910.00 Test FgCom"
             lbFreq.setFont(lbFreq.getFont().deriveFont(8));
             gridBagConstraints = new GridBagConstraints();
@@ -226,19 +225,19 @@ public class RadioPanel extends JPanel {
 
     public void displayEnabledPTT(String radioKey, boolean enablePTT) {
         if (enablePTT) {
-            mapPTTButtons.get(radioKey).setForeground(Color.red);
+            mapPTTButtons.get(radioKey).setForeground(Palette.RED);
         } else {
-            mapPTTButtons.get(radioKey).setForeground(Color.black);
+            mapPTTButtons.get(radioKey).setForeground(Palette.BLACK);
         }
         mapPTTButtons.get(radioKey).repaint();
     }
 
     public void setRadioConnectedToServer(String radioKey, boolean success) {
         if(success) {
-            mapRadioLabels.get(radioKey).setForeground(Color.lightGray);
+            mapRadioLabels.get(radioKey).setForeground(Palette.LIGHT_GRAY);
             mapRadioLabels.get(radioKey).setToolTipText("FGCom connected");
         } else {
-            mapRadioLabels.get(radioKey).setForeground(Color.red);
+            mapRadioLabels.get(radioKey).setForeground(Palette.RED);
             mapRadioLabels.get(radioKey).setToolTipText("ERROR: FGCom does not accept frequency (Toggle Log Window ALT+L)");
         }
         mapRadioLabels.get(radioKey).repaint();

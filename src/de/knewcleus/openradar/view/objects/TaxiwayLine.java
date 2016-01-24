@@ -33,11 +33,11 @@
 package de.knewcleus.openradar.view.objects;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.view.groundnet.ParkPos;
 import de.knewcleus.openradar.view.groundnet.TaxiWaySegment;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
@@ -47,7 +47,7 @@ public class TaxiwayLine extends AViewObject {
     private TaxiWaySegment seg;
 
     public TaxiwayLine(TaxiWaySegment seg,int minScale, int maxScale) {
-        super(new Color(177,181,64));
+        super(Palette.TAXIWAY_LINE);
         setMinScalePath(minScale);
         setMaxScalePath(maxScale);
 //        if(seg.getBegin().getPaintStyle()==1) {

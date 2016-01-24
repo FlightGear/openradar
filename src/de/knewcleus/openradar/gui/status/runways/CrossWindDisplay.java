@@ -32,13 +32,14 @@
  */
 package de.knewcleus.openradar.gui.status.runways;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
+
+import de.knewcleus.openradar.gui.Palette;
 /**
  * This class paints the cross wind display, the bar showing the strengt and direction of the cross wind fraction.
  * 
@@ -77,11 +78,11 @@ public class CrossWindDisplay extends JComponent {
         if (windSpeed > 0) {
             windSpeed = Math.abs(rw.getCrossWindGusts());
             if (windSpeed > 10) {
-                g2d.setColor(Color.magenta);
+                g2d.setColor(Palette.GUSTS_STRONG);
             } else if (windSpeed > 5) {
-                g2d.setColor(new Color(170, 0, 0));
+                g2d.setColor(Palette.GUSTS_MIDDLE);
             } else {
-                g2d.setColor(new Color(0, 64, 0));
+                g2d.setColor(Palette.GUSTS_WEAK);
             }
             windSpeed = windSpeed > 10 ? 10f : windSpeed;
 
@@ -103,11 +104,11 @@ public class CrossWindDisplay extends JComponent {
         windSpeed = Math.abs(rw.getCrossWindSpeed());
         if (windSpeed > 0) {
             if (windSpeed > 10) {
-                g2d.setColor(Color.red);
+                g2d.setColor(Palette.WIND_STRONG);
             } else if (windSpeed > 5) {
-                g2d.setColor(Color.orange);
+                g2d.setColor(Palette.WIND_MIDDLE);
             } else {
-                g2d.setColor(Color.green);
+                g2d.setColor(Palette.WIND_WEAK);
             }
             windSpeed = windSpeed > 10 ? 10f : windSpeed;
             double barLength = ((barWidth - 3) / 2 / 10 * windSpeed) + 1;
@@ -121,7 +122,7 @@ public class CrossWindDisplay extends JComponent {
                 g2d.fill(r2d);
             }
         }
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(Palette.WIND_5KN_LINE);
         // -5kn
         g2d.drawLine((int) (spaceAround + totalWidth / 4), 0, (int) (spaceAround + totalWidth / 4), (int) totalHeight);
         // middle

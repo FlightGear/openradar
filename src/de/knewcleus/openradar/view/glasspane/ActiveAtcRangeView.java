@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.view.glasspane;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -46,6 +45,7 @@ import java.awt.geom.Rectangle2D;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.flightplan.FpAtc;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
@@ -130,10 +130,9 @@ public class ActiveAtcRangeView implements IBoundedView, INotificationListener {
             for(FpAtc atc : master.getRadarContactManager().getActiveAtcs()) {
                 
                 currentPosition = mapViewAdapter.getLogicalToDeviceTransform().transform(mapViewAdapter.getProjection().toLogical(atc.geoPosition),null);
-                g2d.setColor(new Color(0,230,0));
                 
                 // range
-                g2d.setColor(new Color(0,127,0));
+                g2d.setColor(Palette.ATC_RANGE);
                 if(atc.distance>100) {
                     /* Thanks to Michael for helping out in a tired moment...
                      

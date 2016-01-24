@@ -32,11 +32,11 @@
  */
 package de.knewcleus.openradar.view.objects;
 
-import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.view.groundnet.ParkPos;
 import de.knewcleus.openradar.view.groundnet.TaxiPoint;
 import de.knewcleus.openradar.view.groundnet.TaxiWaySegment;
@@ -49,17 +49,17 @@ public class HoldPoint extends AViewObject {
     private double radius;
     
     public HoldPoint(TaxiWaySegment seg, TaxiPoint taxiPoint, int minScalePath, int maxScalePath) {
-        super(Color.white);
+        super(Palette.WHITE);
 //      this.seg=seg;
         this.taxiPoint = taxiPoint;
         fillPath=true;
         this.minScalePath = minScalePath;
         this.maxScalePath = maxScalePath;
         if(taxiPoint instanceof ParkPos) {
-            color = new Color(177,181,64);
+            color = Palette.TAXIWAY_LINE;
             radius = 2;
         } else {
-            color = Color.white;
+            color = Palette.WHITE;
             radius = 2;
         }
     }

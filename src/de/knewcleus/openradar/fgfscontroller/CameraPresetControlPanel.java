@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.fgfscontroller;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -43,6 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 
 public class CameraPresetControlPanel extends JPanel {
 
@@ -143,7 +143,7 @@ public class CameraPresetControlPanel extends JPanel {
 
         lbOffline = new JLabel("-Offline-");
         lbOffline.setToolTipText("The connection to ORCam could not be established.");
-        lbOffline.setForeground(new Color(200,0,0));
+        lbOffline.setForeground(Palette.ORCAM_OFFLINE);
         lbOffline.setVisible(false);
         
         gbc = new GridBagConstraints();
@@ -191,7 +191,7 @@ public class CameraPresetControlPanel extends JPanel {
                         lbFollow.setText("F: "+fgfsController.getFollowContact());
                         lbFollow.setToolTipText("Following the selected contact");
                         lbFollow.setFont(lbFollow.getFont().deriveFont(Font.BOLD));
-                        lbFollow.setForeground(Color.blue);
+                        lbFollow.setForeground(Palette.ORCAM_FOLLOW);
                         lbFollow.repaint();
                         //fgfsController.setFollow(true);
                     } else {
@@ -199,7 +199,7 @@ public class CameraPresetControlPanel extends JPanel {
                         lbFollow.setText("Follow");
                        // lbFollow.setToolTipText("Click to follow the selected contact, drag a contact to this line to follow this contact");
                         lbFollow.setFont(lbFollow.getFont().deriveFont(Font.PLAIN));
-                        lbFollow.setForeground(Color.black);
+                        lbFollow.setForeground(Palette.ORCAM_STOP);
                         lbFollow.repaint();
                         //fgfsController.setFollow(false);
                         //fgfsController.followContact(null);
@@ -208,7 +208,7 @@ public class CameraPresetControlPanel extends JPanel {
                     if(!fgfsController.isSetposActive()) {
                         fgfsController.setSetposActive(true);
                         lbSetPos.setFont(lbSetPos.getFont().deriveFont(Font.BOLD));
-                        lbSetPos.setForeground(Color.blue);
+                        lbSetPos.setForeground(Palette.ORCAM_SETPOS);
                     } else {
                         fgfsController.setSetposActive(false);
                         disableSetPosInView();
@@ -226,21 +226,21 @@ public class CameraPresetControlPanel extends JPanel {
         lbP4.setFont(lbP4.getFont().deriveFont(Font.PLAIN));
         lbP5.setFont(lbP5.getFont().deriveFont(Font.PLAIN));
         
-        lbP1.setForeground(Color.black);
-        lbP2.setForeground(Color.black);
-        lbP3.setForeground(Color.black);
-        lbP4.setForeground(Color.black);
-        lbP5.setForeground(Color.black);
+        lbP1.setForeground(Palette.BLACK);
+        lbP2.setForeground(Palette.BLACK);
+        lbP3.setForeground(Palette.BLACK);
+        lbP4.setForeground(Palette.BLACK);
+        lbP5.setForeground(Palette.BLACK);
         
         if(lbToActivate!=null) {
             lbToActivate.setFont(lbToActivate.getFont().deriveFont(Font.BOLD));
-            lbToActivate.setForeground(Color.blue);
+            lbToActivate.setForeground(Palette.ORCAM_FOLLOW);
         }
     }
 
     public void disableSetPosInView() {
         lbSetPos.setFont(lbSetPos.getFont().deriveFont(Font.PLAIN));
-        lbSetPos.setForeground(Color.black);
+        lbSetPos.setForeground(Palette.BLACK);
     }
     
 //   private class CamDropTarget extends DropTarget {

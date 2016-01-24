@@ -194,7 +194,7 @@ public class RadarPanel extends JPanel {
         JMenuBar menuBar = new JBackgroundMenuBar();
         menuBar.setOpaque(false);
         menuBar.setBackground(Palette.DESKTOP);
-        menuBar.setForeground(Color.white);
+        menuBar.setForeground(Palette.WHITE);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -535,7 +535,7 @@ public class RadarPanel extends JPanel {
         lbZoomGround.setText("GROUND");
         lbZoomGround.setName("GROUND");
         lbZoomGround.setToolTipText("F1, left click to choose, middle click to define");
-        lbZoomGround.setForeground(java.awt.Color.white);
+        lbZoomGround.setForeground(Palette.WHITE);
         lbZoomGround.addMouseListener(master.getRadarManager().getZoomMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
@@ -544,7 +544,7 @@ public class RadarPanel extends JPanel {
         lbZoomTower.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbZoomTower.setText("TOWER");
         lbZoomTower.setName("TOWER");
-        lbZoomTower.setForeground(java.awt.Color.blue);
+        lbZoomTower.setForeground(Palette.BLUE);
         lbZoomTower.setToolTipText("F2, left click to choose, middle click to define");
         lbZoomTower.addMouseListener(master.getRadarManager().getZoomMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -554,7 +554,7 @@ public class RadarPanel extends JPanel {
         lbZoomApp.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         lbZoomApp.setText("APP");
         lbZoomApp.setName("APP");
-        lbZoomApp.setForeground(java.awt.Color.white);
+        lbZoomApp.setForeground(Palette.WHITE);
         lbZoomApp.setToolTipText("F3, left click to choose, middle click to define");
         lbZoomApp.addMouseListener(master.getRadarManager().getZoomMouseListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -565,7 +565,7 @@ public class RadarPanel extends JPanel {
         lbZoomSector.setText("SECTOR");
         lbZoomSector.setName("SECTOR");
         lbZoomSector.setToolTipText("F4, left click to choose, middle/right click to define");
-        lbZoomSector.setForeground(java.awt.Color.white);
+        lbZoomSector.setForeground(Palette.WHITE);
         lbZoomSector.addMouseListener(master.getRadarManager().getZoomMouseListener());
         zoomPanel.add(lbZoomSector, new java.awt.GridBagConstraints());
 
@@ -583,7 +583,7 @@ public class RadarPanel extends JPanel {
         tfSearchNavaids = new JTextField();
         tfSearchNavaids.setFont(tfSearchNavaids.getFont().deriveFont(10));
         tfSearchNavaids.setToolTipText("Enter navaids/airport codes to find and highlight");
-        //tfSearchNavaids.setForeground(java.awt.Color.white);
+        //tfSearchNavaids.setForeground(Palette.WHITE);
         tfSearchNavaids.addActionListener(master.getRadarManager().getNavaidSearchActionListener());
         tfSearchNavaids.setMinimumSize(new Dimension(100,tfSearchNavaids.getFont().getSize()+10));
         tfSearchNavaids.setPreferredSize(new Dimension(400,tfSearchNavaids.getFont().getSize()+10));
@@ -597,10 +597,10 @@ public class RadarPanel extends JPanel {
     }
 
     public void resetFilters() {
-        lbZoomGround.setForeground(Color.white);
-        lbZoomTower.setForeground(Color.white);
-        lbZoomApp.setForeground(Color.white);
-        lbZoomSector.setForeground(Color.white);
+        lbZoomGround.setForeground(Palette.WHITE);
+        lbZoomTower.setForeground(Palette.WHITE);
+        lbZoomApp.setForeground(Palette.WHITE);
+        lbZoomSector.setForeground(Palette.WHITE);
     }
 
     public void selectFilter(String zoomLevelKey) {
@@ -608,16 +608,16 @@ public class RadarPanel extends JPanel {
             mItemSTARSID.setVisible(false);
         }
         // reset
-        lbZoomGround.setForeground(Color.white);
-        lbZoomTower.setForeground(Color.white);
-        lbZoomApp.setForeground(Color.white);
-        lbZoomSector.setForeground(Color.white);
+        lbZoomGround.setForeground(Palette.WHITE);
+        lbZoomTower.setForeground(Palette.WHITE);
+        lbZoomApp.setForeground(Palette.WHITE);
+        lbZoomSector.setForeground(Palette.WHITE);
 
         // set
         for(Component c : zoomPanel.getComponents()) {
             if(zoomLevelKey.equals(c.getName())) {
               ((JComponent)c).setForeground(Palette.DESKTOP_FILTER_SELECTED);
-              ((JComponent)c).setForeground(new Color(100,100,255));
+              ((JComponent)c).setForeground(new Color(100,100,255)); // TODO: Versehen oder Absicht?
             }
         }
     }
@@ -630,22 +630,22 @@ public class RadarPanel extends JPanel {
         if(l.getName().equals("PPN")) {
             mItemPPN.setSelected(state);
             if(state) {
-                mItemPPN2.setForeground(Color.white);
+                mItemPPN2.setForeground(Palette.WHITE);
             } else {
-                mItemPPN2.setForeground(Color.gray);
+                mItemPPN2.setForeground(Palette.GRAY);
             }
         } else if(l.getName().equals("STP")) {
             if(state) {
-            	mItemSTP2.setForeground(Color.white);
+            	mItemSTP2.setForeground(Palette.WHITE);
             } else {
-            	mItemSTP2.setForeground(Color.gray);
+            	mItemSTP2.setForeground(Palette.GRAY);
             }
         } else if(l.getName().equals("STARSID")) {
             mItemSTARSID.setSelected(state);
             if(state) {
-                mItemSTARSID2.setForeground(Color.white);
+                mItemSTARSID2.setForeground(Palette.WHITE);
             } else {
-                mItemSTARSID2.setForeground(Color.gray);
+                mItemSTARSID2.setForeground(Palette.GRAY);
             }
         }
 

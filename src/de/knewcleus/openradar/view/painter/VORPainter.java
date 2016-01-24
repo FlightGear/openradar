@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.view.painter;
 
-import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.fgfs.navdata.impl.VOR;
@@ -62,10 +61,10 @@ public class VORPainter extends AViewObjectPainter<VOR> {
         VORSymbol s = new VORSymbol(master, vor, vorType);
         viewObjectList.add(s);
 
-        VORName n = new VORName(master, vor, font, Color.lightGray, 0 , Integer.MAX_VALUE);
+        VORName n = new VORName(master, vor, font, Palette.VOR_TEXT, 0 , Integer.MAX_VALUE);
         viewObjectList.add(n);
 
-        VORFrequency f = new VORFrequency(master, vor, font, Color.lightGray, 0 , Integer.MAX_VALUE);
+        VORFrequency f = new VORFrequency(master, vor, font, Palette.VOR_TEXT, 0 , Integer.MAX_VALUE);
         viewObjectList.add(f);
     }
 

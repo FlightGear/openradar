@@ -58,6 +58,7 @@ import javax.swing.event.ListSelectionListener;
 
 import de.knewcleus.fgfs.multiplayer.IChatListener;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.SoundManager;
 import de.knewcleus.openradar.gui.chat.auto.AtcAliasChatMessage;
 import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
@@ -410,9 +411,9 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     
     public void validateTextLength(String msg) {
         if(msg.length()>128) {
-            chatPanel.setChatMsgColor(Color.red);
+            chatPanel.setChatMsgColor(Palette.CHAT_MESSAGE_TOO_LONG);
         } else if(msg.length()>120) {
-            chatPanel.setChatMsgColor(Color.blue);
+            chatPanel.setChatMsgColor(Palette.CHAT_MESSAGE_LONG);
         } else {
             chatPanel.resetChatMsgColor();
         }

@@ -33,7 +33,6 @@
  */
 package de.knewcleus.openradar.view;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -41,6 +40,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 
@@ -96,7 +96,7 @@ public class GridView implements IView, INotificationListener {
 		maxX=Math.ceil(clipBounds.getMaxX()/gridLogicalSize)*gridLogicalSize;
 		maxY=Math.ceil(clipBounds.getMaxY()/gridLogicalSize)*gridLogicalSize;
 
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(Palette.BLACK);
 		for (double x=minX; x<=maxX; x+=gridLogicalSize) {
 			Line2D line=new Line2D.Double(x,minY,x,maxY);
 			g2d.draw(line);
