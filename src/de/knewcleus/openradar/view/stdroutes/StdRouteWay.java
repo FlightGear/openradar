@@ -83,8 +83,8 @@ public class StdRouteWay  extends AStdRouteElement {
         this.label = label;
         this.height = height;
         this.distance = distance;
-        this.startHeading = (heading != null) ? heading + "�" : null;
-        this.endHeading = (heading != null) ? String.format("%.0f�", (Double.parseDouble(heading) + 180) % 360) : null;
+        this.startHeading = (heading != null) ? heading + "°" : null;
+        this.endHeading = (heading != null) ? String.format("%.0f°", (Double.parseDouble(heading) + 180) % 360) : null;
     }
 
     @Override
