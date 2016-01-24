@@ -106,7 +106,7 @@ public class Palette {
     public static final Color RADAR_GHOST = Color.GRAY;
     public static final Color RADAR_EMERGENCY = new Color(255,100,0);
 
-    public static final Color CHAT_GHOST = Color.RED; // Color.GRAY;
+    public static final Color CHAT_GHOST = Color.GRAY;
     public static final Color CHAT_SELECTED = RADAR_LIGHTBLUE;
     public static final Color CHAT_OWN_TO_SELECTED = RADAR_LIGHTBLUE;
     public static final Color CHAT_OWN = Color.LIGHT_GRAY;
