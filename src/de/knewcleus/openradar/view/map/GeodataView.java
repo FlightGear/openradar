@@ -51,6 +51,7 @@ import de.knewcleus.fgfs.geodata.GeodataException;
 import de.knewcleus.fgfs.geodata.IGeodataLayer;
 import de.knewcleus.fgfs.geodata.geometry.Geometry;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.view.CoordinateSystemNotification;
@@ -63,7 +64,7 @@ public class GeodataView implements IBoundedView, INotificationListener {
 	protected final String layerCode;
 	protected final GuiMasterController master;
 
-	protected Color color = Color.BLACK;
+	protected Color color = Palette.BLACK;
 	protected boolean fill = true;
 	protected boolean visible = true;
 

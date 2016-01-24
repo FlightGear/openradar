@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.gui.status;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -241,12 +240,12 @@ public class StatusPanel extends javax.swing.JPanel implements IMetarListener {
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 4);
         headerPanel.add(weatherPanel, gridBagConstraints);
 
-        lbFlightConditions.setForeground(Color.white);
+        lbFlightConditions.setForeground(Palette.WHITE);
         lbFlightConditions.setText("VFR");
         lbFlightConditions.setName(master.getAirportData().getAirportCode());
         lbFlightConditions.setOpaque(true);
         lbFlightConditions.setFont(lbFlightConditions.getFont().deriveFont(Font.BOLD));
-        lbFlightConditions.setForeground(Color.white);
+        lbFlightConditions.setForeground(Palette.WHITE);
         lbFlightConditions.addMouseListener(metarMouseListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

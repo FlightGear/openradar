@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.gui.contacts;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsDevice.WindowTranslucency;
@@ -511,10 +510,10 @@ public class TransponderSettingsDialog extends JDialog {
     private boolean verifyRange(char key) {
         if(!Character.isDigit(key)) return true;
 
-        tfSquawkFromVFR.setForeground(Color.black);
-        tfSquawkToVFR.setForeground(Color.black);
-        tfSquawkFromIFR.setForeground(Color.black);
-        tfSquawkToIFR.setForeground(Color.black);
+        tfSquawkFromVFR.setForeground(Palette.FPD_SQUAWK_OK);
+        tfSquawkToVFR.setForeground(Palette.FPD_SQUAWK_OK);
+        tfSquawkFromIFR.setForeground(Palette.FPD_SQUAWK_OK);
+        tfSquawkToIFR.setForeground(Palette.FPD_SQUAWK_OK);
         
         String sKey = ""+key;
         if(!Character.isLetterOrDigit(key)) {
@@ -542,12 +541,12 @@ public class TransponderSettingsDialog extends JDialog {
                 }
                 // verify that begin is less than end
                 if(squawkFromVFR<squawkToVFR) {
-                    tfSquawkFromVFR.setForeground(Color.black);
-                    tfSquawkToVFR.setForeground(Color.black);
+                    tfSquawkFromVFR.setForeground(Palette.FPD_SQUAWK_OK);
+                    tfSquawkToVFR.setForeground(Palette.FPD_SQUAWK_OK);
                     return true;
                 } else {
-                    tfSquawkFromVFR.setForeground(Color.red);
-                    tfSquawkToVFR.setForeground(Color.red);
+                    tfSquawkFromVFR.setForeground(Palette.FPD_SQUAWK_ERROR);
+                    tfSquawkToVFR.setForeground(Palette.FPD_SQUAWK_ERROR);
                     return false;
                 }
             } catch(Exception e) {
@@ -575,12 +574,12 @@ public class TransponderSettingsDialog extends JDialog {
             
             // verify that begin is less than end
             if(squawkFromIFR<squawkToIFR) {
-                tfSquawkFromIFR.setForeground(Color.black);
-                tfSquawkToIFR.setForeground(Color.black);
+                tfSquawkFromIFR.setForeground(Palette.FPD_SQUAWK_OK);
+                tfSquawkToIFR.setForeground(Palette.FPD_SQUAWK_OK);
                 return true;
             } else {
-                tfSquawkFromIFR.setForeground(Color.red);
-                tfSquawkToIFR.setForeground(Color.red);
+                tfSquawkFromIFR.setForeground(Palette.FPD_SQUAWK_ERROR);
+                tfSquawkToIFR.setForeground(Palette.FPD_SQUAWK_ERROR);
                 return false;
             }
         }
@@ -589,10 +588,10 @@ public class TransponderSettingsDialog extends JDialog {
 
     public boolean verifySquawkCodeRange(JTextField squawkField, String newContent) {
         if(newContent.matches("[0-7]{1,4}")) {
-            squawkField.setForeground(Color.black);
+            squawkField.setForeground(Palette.FPD_SQUAWK_OK);
             return true;
         } else {
-            squawkField.setForeground(Color.red);
+            squawkField.setForeground(Palette.FPD_SQUAWK_ERROR);
             return false;
         }
     }

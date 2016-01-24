@@ -32,9 +32,9 @@
  */
 package de.knewcleus.openradar.view.painter;
 
-import java.awt.Color;
 import java.awt.Font;
 
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.groundnet.ParkPos;
 import de.knewcleus.openradar.view.groundnet.TaxiWaySegment;
@@ -56,7 +56,7 @@ public class TaxiWayPainter extends AViewObjectPainter<TaxiWaySegment> {
         if(seg.getBegin() instanceof ParkPos &&
                 !"Startup Location".equals(((ParkPos)seg.getBegin()).getName()) ) {
             
-            ParkingPosition pos = new ParkingPosition(data, seg,(ParkPos)seg.getBegin(),font,Color.lightGray,0,10);
+            ParkingPosition pos = new ParkingPosition(data, seg,(ParkPos)seg.getBegin(),font,Palette.PARKING_POSITION,0,10);
             viewObjectList.add(pos);
         }
 
@@ -68,7 +68,7 @@ public class TaxiWayPainter extends AViewObjectPainter<TaxiWaySegment> {
         
         if(seg.getEnd() instanceof ParkPos &&
                 !"Startup Location".equals(((ParkPos)seg.getEnd()).getName()) ) {
-            ParkingPosition pos = new ParkingPosition(data,seg,(ParkPos)seg.getEnd(),font,Color.lightGray,0,10);
+            ParkingPosition pos = new ParkingPosition(data,seg,(ParkPos)seg.getEnd(),font,Palette.PARKING_POSITION,0,10);
             viewObjectList.add(pos);
         }
 

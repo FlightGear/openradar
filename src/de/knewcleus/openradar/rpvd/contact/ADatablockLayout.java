@@ -64,7 +64,7 @@ public abstract class ADatablockLayout {
 
     public Color getBackgroundColor(GuiRadarContact contact, boolean highlighted) {
         if (highlighted || contact.isIdentActive()) {
-            return Color.white;
+            return Palette.WHITE;
         }
         return Palette.LANDMASS;
     }
@@ -80,12 +80,11 @@ public abstract class ADatablockLayout {
 		Color color = Palette.RADAR_UNCONTROLLED;
 
 		if (c.isIdentActive()) {
-			color = Color.black;
+			color = Palette.BLACK;
 			c.setHighlighted();
-		} else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode()
-				|| 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode())) {
+		} else if (c.isOnEmergency()) {
 			// Emergency
-			color = new Color(255, 100, 0);
+			color = Palette.RADAR_EMERGENCY;
 
 		} else if (!c.isActive()) {
 			// INACCTIVE GHOSTS
@@ -122,12 +121,11 @@ public abstract class ADatablockLayout {
 
 		if (c.isIdentActive()) {
 			// IDENT sent
-			color = Color.black;
+			color = Palette.BLACK;
 			c.setHighlighted();
-		} else if (c.getTranspSquawkCode() != null && (7700 == c.getTranspSquawkCode()
-				|| 7600 == c.getTranspSquawkCode() || 7500 == c.getTranspSquawkCode())) {
+		} else if (c.isOnEmergency()) {
 			// Emergency
-			color = new Color(255, 100, 0);
+			color = Palette.RADAR_EMERGENCY;
 
 		} else if (!c.isActive()) {
 			// INACTIVE GHOSTS

@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.gui;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -125,7 +124,7 @@ public class LogWindow extends JFrame implements FocusListener {
                 jTabbedPane.addTab(tab, scrollPane);
     
                 textArea.setEditable(false);
-                textArea.setForeground(Color.black);
+                textArea.setForeground(Palette.BLACK);
                 map.put(tab, textArea);
             }
             
@@ -139,7 +138,7 @@ public class LogWindow extends JFrame implements FocusListener {
                 }
             }
             textArea.setText(newText);
-            textArea.setForeground(Color.black);
+            textArea.setForeground(Palette.BLACK);
             textArea.invalidate();
         }
     }

@@ -28,7 +28,6 @@
  */
 package de.knewcleus.openradar.gui.status.runways;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -100,7 +99,7 @@ public class RunwayPanel extends JPanel {
                 Font f = lbRwCode.getFont();
                 f = f.deriveFont(Font.PLAIN, 20);
                 lbRwCode.setFont(f);
-                lbRwCode.setForeground(rw.getRunwayData().isEnabledAtAll() ? Palette.DESKTOP_TEXT : Color.LIGHT_GRAY);
+                lbRwCode.setForeground(rw.getRunwayData().isEnabledAtAll() ? Palette.DESKTOP_TEXT : Palette.LIGHT_GRAY);
                 GridBagConstraints gridBagConstraints = new GridBagConstraints();
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = 2 * i;
@@ -117,7 +116,7 @@ public class RunwayPanel extends JPanel {
                         JCheckBox cbStarting = new JCheckBox();
                         // cbStarting.setText("Start");
                         cbStarting.setFont(f);
-                        cbStarting.setForeground(rw.getRunwayData().isStartingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
+                        cbStarting.setForeground(rw.getRunwayData().isStartingEnabled() ? Palette.DESKTOP_TEXT : Palette.GRAY);
                         cbStarting.setRolloverEnabled(false);
                         cbStarting.setOpaque(false);
                         cbStarting.setName("STARTING");
@@ -135,7 +134,7 @@ public class RunwayPanel extends JPanel {
                         JCheckBox cbSID = new JCheckBox();
                         cbSID.setText("Start,SID");
                         cbSID.setFont(f);
-                        cbSID.setForeground(rw.getRunwayData().isStartingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
+                        cbSID.setForeground(rw.getRunwayData().isStartingEnabled() ? Palette.DESKTOP_TEXT : Palette.GRAY);
                         cbSID.setRolloverEnabled(false);
                         cbSID.setOpaque(false);
                         cbSID.setName("STARTROUTE");
@@ -156,7 +155,7 @@ public class RunwayPanel extends JPanel {
                         JCheckBox cbLanding = new JCheckBox();
                         // cbLanding.setText("Land");
                         cbLanding.setFont(f);
-                        cbLanding.setForeground(rw.getRunwayData().isLandingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
+                        cbLanding.setForeground(rw.getRunwayData().isLandingEnabled() ? Palette.DESKTOP_TEXT : Palette.GRAY);
                         cbLanding.setRolloverEnabled(false);
                         cbLanding.setOpaque(false);
                         cbLanding.setName("LANDING");
@@ -174,7 +173,7 @@ public class RunwayPanel extends JPanel {
                         JCheckBox cbSTAR = new JCheckBox();
                         cbSTAR.setText("Land,STAR");
                         cbSTAR.setFont(f);
-                        cbSTAR.setForeground(rw.getRunwayData().isLandingEnabled() ? Palette.DESKTOP_TEXT : Color.gray);
+                        cbSTAR.setForeground(rw.getRunwayData().isLandingEnabled() ? Palette.DESKTOP_TEXT : Palette.GRAY);
                         cbSTAR.setRolloverEnabled(false);
                         cbSTAR.setOpaque(false);
                         cbSTAR.setName("LANDINGROUTE");

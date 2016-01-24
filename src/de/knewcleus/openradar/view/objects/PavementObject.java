@@ -28,7 +28,6 @@
  */
 package de.knewcleus.openradar.view.objects;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -46,7 +45,7 @@ public class PavementObject extends AViewObject {
 	private final Pavement pavement;
 
 	public PavementObject(Aerodrome aerodrome, Pavement pavement) {
-		super(Color.lightGray);
+		super(Palette.PAVEMENT_DEFAULT);
 
 		// this.aerodrome = aerodrome;
 		this.pavement = pavement;
@@ -56,31 +55,31 @@ public class PavementObject extends AViewObject {
 
 		switch (pavement.getSurfaceType()) {
 		case Concrete:
-			setColor(new Color(110, 110, 110));
+			setColor(Palette.PAVEMENT_CONCRETE);
 			break;
 		case Asphalt:
-			setColor(Palette.TARMAC);
+			setColor(Palette.PAVEMENT_ASPHALT);
 			break;
 		case Dirt:
-			setColor(new Color(135, 115, 110));
+			setColor(Palette.PAVEMENT_DIRT);
 			break;
 		case DryLakebed:
-			setColor(new Color(135, 115, 110));
+			setColor(Palette.PAVEMENT_DRYLAKEBED);
 			break;
 		case Gravel:
-			setColor(new Color(115, 115, 110));
+			setColor(Palette.PAVEMENT_GRAVEL);
 			break;
 		case SnowIce:
-			setColor(new Color(120, 120, 200));
+			setColor(Palette.PAVEMENT_SNOWICE);
 			break;
 		case Transparent:
-			setColor(new Color(135, 115, 110));
+			setColor(Palette.PAVEMENT_TRANSPARENT);
 			break;
 		case TurfGrass:
-			setColor(new Color(40, 70, 40));
+			setColor(Palette.PAVEMENT_TURFGRASS);
 			break;
 		case Water:
-			setColor(new Color(20, 20, 80));
+			setColor(Palette.PAVEMENT_WATER);
 			break;
 		default:
 			break;

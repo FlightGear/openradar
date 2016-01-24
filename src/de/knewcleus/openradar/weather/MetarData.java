@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.Units;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.chat.auto.AtcMenuChatMessage;
 import de.knewcleus.openradar.gui.setup.AirportData;
 
@@ -279,16 +280,16 @@ public class MetarData {
 
             if (ceiling < 500 || visibilitySM < 1) {
                 flightConditions = "LIFR";
-                flightConditionColor = new Color(218,0,213);
+                flightConditionColor = Palette.METAR_LIFR;
             } else if (ceiling < 1000 || visibilitySM < 3) {
                 flightConditions = "IFR";
-                flightConditionColor = new Color(200,0,0);;
+                flightConditionColor = Palette.METAR_IFR;
             } else if (ceiling < 3000 || visibilitySM < 5) {
                 flightConditions = "MVFR";
-                flightConditionColor = new Color(0,0,200);
+                flightConditionColor = Palette.METAR_MVFR;
             } else {
                 flightConditions = "VFR";
-                flightConditionColor = new Color(0,150,0);
+                flightConditionColor = Palette.METAR_VFR;
             }
 
         } catch (Exception e) {

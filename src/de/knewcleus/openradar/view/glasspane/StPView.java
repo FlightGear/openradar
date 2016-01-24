@@ -33,7 +33,6 @@
 package de.knewcleus.openradar.view.glasspane;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -167,7 +166,7 @@ public class StPView implements IBoundedView, INotificationListener {
             ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f);
             g2d.setComposite(ac);
 
-            g2d.setColor(Color.white);
+            g2d.setColor(Palette.WHITE);
 
             g2d.drawString(textLine1,(float)(newX+SPACE),(float)(newY+boundsLine1.getHeight()));
             g2d.drawString(textLine2,(float)(newX+SPACE),(float)(newY+boundsText.getHeight()));

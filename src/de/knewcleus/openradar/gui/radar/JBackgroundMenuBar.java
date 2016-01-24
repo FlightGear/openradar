@@ -39,9 +39,11 @@ import java.awt.Graphics2D;
 
 import javax.swing.JMenuBar;
 
+import de.knewcleus.openradar.gui.Palette;
+
 public class JBackgroundMenuBar extends JMenuBar {
     private static final long serialVersionUID = 1L;
-    Color bgColor = Color.WHITE;
+    Color bgColor = Palette.WHITE;
 
     @Override
     public Dimension getMinimumSize() {

@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.view.objects;
 
-import java.awt.Color;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -52,7 +51,7 @@ public class RunwayObject extends AViewObject {
     private boolean activeRw = false;
 
     public RunwayObject(AirportData data, Runway rwy) {
-        super(Color.lightGray);
+        super(Palette.RUNWAY);
         this.data = data;
         this.rwy = rwy;
 
@@ -95,7 +94,7 @@ public class RunwayObject extends AViewObject {
     	activeRw=false;
     	if(rwy.getAirportID().equals(data.getAirportCode())) {
 	        if(isActive(rwy.getEndA().getRunwayID()) || isActive(rwy.getEndB().getRunwayID())) {
-                color = new Color(60,60,80);
+                color = Palette.RUNWAY_ACTIVE;
                 activeRw=true;
             }
 // System.out.println(rwy.getAirportID()+" "+rwy.getDesignation()+" "+activeRw);

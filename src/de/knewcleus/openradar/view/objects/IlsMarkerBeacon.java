@@ -33,7 +33,6 @@
 package de.knewcleus.openradar.view.objects;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.QuadCurve2D;
@@ -51,19 +50,19 @@ public class IlsMarkerBeacon extends AViewObject {
     private final AirportData data;
 
     public IlsMarkerBeacon(MarkerBeacon mb, AirportData data) {
-        super(Palette.GLIDESLOPE);
+        super(Palette.GLIDESLOPE_ACTIVE);
         this.stroke = new BasicStroke(0.3f);
         this.mb=mb;
         this.data = data;
         switch(mb.getType()) {
         case Inner:
-            color = Color.white;
+            color = Palette.WHITE;
             break;
         case Middle:
-            color = Color.orange;
+            color = Palette.ORANGE;
             break;
         case Outer:
-            color = Palette.GLIDESLOPE;
+            color = Palette.GLIDESLOPE_ACTIVE;
             break;
         }
 

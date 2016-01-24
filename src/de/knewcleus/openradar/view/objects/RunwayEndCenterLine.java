@@ -33,12 +33,12 @@
 package de.knewcleus.openradar.view.objects;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.impl.RunwayEnd;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.view.Converter2D;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
@@ -48,7 +48,7 @@ public class RunwayEndCenterLine extends AViewObject {
 //    private double lengthMiles;
 
     public RunwayEndCenterLine(RunwayEnd runwayEnd, double lengthMiles) {
-        super(Color.blue);
+        super(Palette.GLIDESLOPE_ACTIVE);
         this.stroke = new BasicStroke(0.3f);
         this.runwayEnd = runwayEnd;
 //        this.lengthMiles=lengthMiles;

@@ -33,7 +33,6 @@
 package de.knewcleus.openradar.view.objects;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
@@ -75,7 +74,7 @@ public class RunwayEndIlsCone extends AViewObject {
     private TreeMap<Integer,Point2D> heightTextPositions = new TreeMap<Integer,Point2D>();
 
     public RunwayEndIlsCone(AirportData data, RunwayEnd runwayEnd) {
-        super(Palette.GLIDESLOPE);
+        super(Palette.GLIDESLOPE_ACTIVE);
         this.stroke = new BasicStroke(0.3f);
         this.data = data;
         this.runwayEnd = runwayEnd;
@@ -97,7 +96,7 @@ public class RunwayEndIlsCone extends AViewObject {
         }
 
         boolean activeGS = data.getRunways().get(runwayEnd.getRunwayID()).getGlideslope()!=null;
-        setColor(activeGS ? Palette.GLIDESLOPE : new Color(150,150,255));
+        setColor(activeGS ? Palette.GLIDESLOPE_ACTIVE : Palette.GLIDESLOPE_INACTIVE);
 
         boolean showHeights = data.getRadarObjectFilterState("GSH") && mva.getLogicalScale() < 170;
 

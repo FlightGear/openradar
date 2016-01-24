@@ -33,7 +33,6 @@
 package de.knewcleus.openradar.view.glasspane;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -135,7 +134,7 @@ public class ActiveAtcSymbolView implements IBoundedView, INotificationListener 
             for(FpAtc atc : master.getRadarContactManager().getActiveAtcs()) {
                 
                 currentPosition = mapViewAdapter.getLogicalToDeviceTransform().transform(mapViewAdapter.getProjection().toLogical(atc.geoPosition),null);
-                g2d.setColor(new Color(0,230,0));
+                g2d.setColor(Palette.ATC_ACTIVE);
                 
                 // symbol
                 double dotRangeRadius = 5;
@@ -155,7 +154,7 @@ public class ActiveAtcSymbolView implements IBoundedView, INotificationListener 
                 g2d.setColor(Palette.LANDMASS);
                 g2d.fill(new RoundRectangle2D.Double(currentPosition.getX()+8,currentPosition.getY()-20-bounds.getHeight(), bounds.getWidth()+6,bounds.getHeight()+12,5d,5d));
                 g2d.setComposite(formerComposite);
-                g2d.setColor(new Color(0,230,0));                
+                g2d.setColor(Palette.ATC_ACTIVE);                
                 g2d.drawString(atc.callSign,(float)(currentPosition.getX()+10),(float)(currentPosition.getY()-20));
                 g2d.drawString(atc.frequency,(float)(currentPosition.getX()+10),(float)(currentPosition.getY()-10));
                 if(atc.distance>100) {
@@ -168,7 +167,7 @@ public class ActiveAtcSymbolView implements IBoundedView, INotificationListener 
                     g2d.setColor(Palette.LANDMASS);
                     g2d.fill(new RoundRectangle2D.Double(currentPosition2.getX()-bounds.getWidth()/2-2,currentPosition2.getY()-bounds.getHeight()/2-10, bounds.getWidth()+6,bounds.getHeight()+12,5d,5d));
                     g2d.setComposite(formerComposite);
-                    g2d.setColor(new Color(0,230,0));         
+                    g2d.setColor(Palette.ATC_ACTIVE);         
                     String line1 = atc.callSign+String.format(" %03.0f°", heading);
                     String line2 = atc.frequency+ String.format(" +%01.0fNM", atc.distance-100);
                     g2d.drawString(line1,(float)(currentPosition2.getX()-bounds.getWidth()/2),(float)(currentPosition2.getY()-10));

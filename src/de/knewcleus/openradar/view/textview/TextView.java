@@ -33,7 +33,6 @@
  */
 package de.knewcleus.openradar.view.textview;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -43,6 +42,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.view.IBoundedView;
 import de.knewcleus.openradar.view.IViewVisitor;
 import de.knewcleus.openradar.view.IViewerAdapter;
@@ -82,7 +82,7 @@ public class TextView implements IBoundedView, ILayoutPart {
 
 	@Override
 	public void paint(Graphics2D g2d) {
-		g2d.setColor(Color.WHITE);
+		g2d.setColor(Palette.WHITE);
 		g2d.setFont(font);
 		g2d.drawString(text,
 				(float)displayExtents.getMinX(), (float)(displayExtents.getMinY()+baselineOffset));

@@ -38,6 +38,7 @@ import java.awt.geom.Point2D;
 
 import de.knewcleus.fgfs.navdata.model.IIntersection;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 
 public class FixSymbol extends AViewObject {
@@ -49,12 +50,12 @@ public class FixSymbol extends AViewObject {
 
 
     public FixSymbol(GuiMasterController master, IIntersection fix, int minScale, int maxScale) {
-        super(Color.lightGray);
+        super(Palette.FIX_ICON);
         this.master = master;
 
         this.fix = fix;
         this.defaultMaxScale=maxScale;
-        this.defaultColor=Color.lightGray;
+        this.defaultColor=Palette.FIX_ICON;
 
         setMinScalePath(minScale);
         setMaxScalePath(maxScale);

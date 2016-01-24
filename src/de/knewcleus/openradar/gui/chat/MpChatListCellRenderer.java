@@ -67,7 +67,7 @@ public class MpChatListCellRenderer extends JComponent implements ListCellRender
         this.setOpaque(false);
         
         lbTimeStamp = new JLabel();
-        lbTimeStamp.setForeground(java.awt.Color.white);
+        lbTimeStamp.setForeground(Palette.CHAT_TIMESTAMP);
         lbTimeStamp.setOpaque(false);
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -77,7 +77,7 @@ public class MpChatListCellRenderer extends JComponent implements ListCellRender
         add(lbTimeStamp, gridBagConstraints);
 
         lbCallSign = new JLabel();
-        lbCallSign.setForeground(java.awt.Color.white);
+        lbCallSign.setForeground(Palette.CHAT_CALLSIGN);
         lbCallSign.setOpaque(false);
         lbCallSign.setPreferredSize(new Dimension(80,lbCallSign.getFont().getSize()+4));
         gridBagConstraints = new GridBagConstraints();
@@ -89,7 +89,7 @@ public class MpChatListCellRenderer extends JComponent implements ListCellRender
         add(lbCallSign, gridBagConstraints);
 
         lbMessage = new JLabel();
-        lbMessage.setForeground(java.awt.Color.white);
+        lbMessage.setForeground(Palette.CHAT_MESSAGE);
         lbMessage.setOpaque(false);
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -114,7 +114,7 @@ public class MpChatListCellRenderer extends JComponent implements ListCellRender
 
             if (value.isNeglectOrInactive()) {
                 // bad guys
-                foreground = Color.GRAY;
+                foreground = Palette.CHAT_GHOST;
                 
              } else if (value.isContactSelected()) {
                  // messages of selected contacts

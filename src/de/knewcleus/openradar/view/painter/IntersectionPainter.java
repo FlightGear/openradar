@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.view.painter;
 
-import java.awt.Color;
 import java.awt.Font;
 
 import de.knewcleus.fgfs.navdata.model.IIntersection;
@@ -52,7 +51,7 @@ public class IntersectionPainter extends AViewObjectPainter<IIntersection> {
             FixSymbol fs = new FixSymbol(master, fix, 0,100);
             viewObjectList.add(fs);
 
-            FixName fn = new FixName(master, fix, font, Color.lightGray, 0 , 100);
+            FixName fn = new FixName(master, fix, font, Palette.FIX_TEXT, 0 , 100);
             viewObjectList.add(fn);
     }
 

@@ -30,6 +30,8 @@ package de.knewcleus.openradar.view.stdroutes;
 
 import org.jdom2.Element;
 
+import de.knewcleus.openradar.gui.Palette;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -50,7 +52,7 @@ public class StdRouteAttributes {
 
     public StdRouteAttributes () {
         this.stroke = new BasicStroke(2);
-        this.color = Color.gray;
+        this.color = Palette.GRAY;
         this.font = new Font("Arial", Font.PLAIN, 10);
         this.stroke_backup = null;
         this.color_backup = null;

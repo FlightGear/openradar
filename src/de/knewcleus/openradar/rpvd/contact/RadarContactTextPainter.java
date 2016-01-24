@@ -47,6 +47,7 @@ import java.awt.geom.RoundRectangle2D;
 
 import de.knewcleus.fgfs.location.Vector2D;
 import de.knewcleus.openradar.gui.GuiMasterController;
+import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.rpvd.TrackDisplayState;
 import de.knewcleus.openradar.view.Converter2D;
@@ -153,7 +154,7 @@ public class RadarContactTextPainter {
 
             if(hightlighted || trackDisplayState.getGuiContact().isIdentActive()) {
                 // SELECTED
-                g2d.setColor(Color.black);
+                g2d.setColor(Palette.BLACK);
             }
             
             for(int i=0;i<textHelper.getLineCount(g2d);i++) {
