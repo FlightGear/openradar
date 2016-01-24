@@ -284,6 +284,8 @@ public class RadarContactController
 				mapExpiredCallSigns.put(c.getCallSign(), c);
 
 				activeContactList = completeContactList;
+
+                if (c.isSelected()) deselectContact();
 			}
 		}
 	}
@@ -453,6 +455,7 @@ public class RadarContactController
 			activeContactList.remove(c);
 			mapCallSignContact.remove(c.getCallSign());
 			mapExpiredCallSigns.remove(c.getCallSign());
+            if (c.isSelected()) deselectContact();
 		}
 		master.getAirportData().getSquawkCodeManager().updateUsedSquawkCodes(completeContactList);
 	}
