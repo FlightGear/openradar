@@ -512,16 +512,25 @@ public class GuiRadarContact {
         return player.getTranspSquawkCode();
     }
 
-    public synchronized Integer getTranspAltitude() {
-        return player.getTranspAltitude();
+    public static String formatSquawk(Integer squawk) {
+    	return ((squawk == null) ? "" : String.format("%04d", squawk));
+    }
+    
+    public synchronized String getTranspSquawkDisplay() {
+        //if(getTranspSquawkCode()!=null) System.out.println(getCallSign()+": Sq:"+getTranspSquawkCode()+" A:"+getTranspAltitude());
+        Integer squawk = getTranspSquawkCode();
+        if ((squawk != null) && (squawk == -9999)) squawk = null; 
+        return formatSquawk (squawk);
     }
 
-    public synchronized String getTranspMode() {
-        return player.getTranspModeS();
-    }
-
-    public synchronized boolean isIdentActive() {
-        return player.isIdentActive();
+    public synchronized String getSquawkDisplay() {
+    	Integer aSquawk = getAssignedSquawk();
+    	Integer tSquawk = getTranspSquawkCode();
+        //if(getTranspSquawkCode()!=null) System.out.println(getCallSign()+": Sq:"+getTranspSquawkCode()+" A:"+getTranspAltitude());
+    	if (tSquawk == null) return (aSquawk == null) ? "" : (getAssignedSquawkDisplay() + "(standby)");
+        if (tSquawk == -9999) return getAssignedSquawkDisplay() + "(standby)";
+        if (tSquawk.equals(aSquawk)) return getTranspSquawkDisplay();
+        return getAssignedSquawkDisplay() + "(" + getTranspSquawkDisplay() + ")";
     }
 
     public synchronized Integer getAssignedSquawk() {
@@ -533,8 +542,25 @@ public class GuiRadarContact {
         return squawk;
     }
 
+    public synchronized String getAssignedSquawkDisplay() {
+        //if(getAssignedSquawk()!=null) System.out.println(getCallSign()+": Sq:"+getAssignedSquawk());
+    	return formatSquawk (getAssignedSquawk());
+    }
+
     public synchronized void setAssignedSquawk(Integer assignedSquawk) {
         flightPlan.setSquawk(assignedSquawk!=null?assignedSquawk.toString():"");;
+    }
+
+    public synchronized Integer getTranspAltitude() {
+        return player.getTranspAltitude();
+    }
+
+    public synchronized String getTranspMode() {
+        return player.getTranspModeS();
+    }
+
+    public synchronized boolean isIdentActive() {
+        return player.isIdentActive();
     }
 
     public synchronized void reAppeared() {
