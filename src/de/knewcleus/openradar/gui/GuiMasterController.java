@@ -77,7 +77,7 @@ import de.knewcleus.openradar.weather.MetarReader;
 public class GuiMasterController {
 
     private LogWindow logWindow = new LogWindow();
-    private final AirportData airportData;;
+    private final AirportData airportData;
     private GuiRadarBackend radarBackend;
     private RadarManager radarManager;
     private RadarContactController radarContactManager;
@@ -87,16 +87,11 @@ public class GuiMasterController {
     private RadioController radioManager;
     private MainFrame mainFrame = null;
     private FlightPlanExchangeManager fpExchangeManager;
-    private final SoundManager soundManager = new SoundManager() ;
     private FGFSController fgfsController1 = null;
     private FGFSController fgfsController2 = null;
     
     private final static Logger log = Logger.getLogger(GuiMasterController.class);
     
-    public synchronized SoundManager getSoundManager() {
-        return soundManager;
-    }
-
     private JTextPane detailsArea = null;
 
     private final TrackManager trackManager;
