@@ -360,6 +360,7 @@ public class RadarContactController
 	}
 
 	public void select(GuiRadarContact guiRadarContact, boolean force, boolean exlcusive) {
+    	// TODO: always called with force = true, exclusive = false
 		synchronized (selectedContactLock) {
 			if (selectedContact != null) {
 				selectedContact.setAtcComment(master.getDetails());
@@ -378,6 +379,9 @@ public class RadarContactController
 		}
 		master.getMpChatManager().requestGuiUpdate();
 		master.getRadarBackend().forceRepaint();
+        if(selectedContact.equals(guiRadarContact)) {
+        	master.getMpChatManager().requestFocusForInput(); 
+        }
 	}
 
 	// ListSelectionListener
@@ -528,16 +532,12 @@ public class RadarContactController
 						if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
 							// select
 							select(c, true, false);
-							if (c.isSelected()) {
-								master.getMpChatManager().requestFocusForInput();
-							}
 						} else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
 							// select and move map to it
 							select(c, true, false);
 							c.setHighlighted();
 							master.getRadarBackend().showRadarContact(c, !e.isShiftDown());
 							atcMessageDialog.setVisible(false);
-							master.getMpChatManager().requestFocusForInput();
 
 						} else if ((e.getButton() == MouseEvent.BUTTON2 && e.getClickCount() == 1)
 								|| (e.isAltDown() && e.getButton() == MouseEvent.BUTTON3)) {
@@ -592,7 +592,6 @@ public class RadarContactController
 					setContactsAlignment(c, Alignment.LEFT);
 					select(c, true, false);
 					c.setHighlighted();
-					master.getMpChatManager().requestFocusForInput();
 				} else if (alignment == Alignment.RIGHT && clickCount == 1) {
 					setContactsAlignment(c, Alignment.CENTER);
 				}
@@ -676,7 +675,6 @@ public class RadarContactController
 
 	public synchronized void selectNShowAtcMsgDialog(GuiRadarContact c, MouseEvent e) {
 		select(c, true, false); // normal select
-		master.getMpChatManager().requestFocusForInput();
 		if (c.isActive())
 			atcMessageDialog.setLocation(c, e);
 	}
