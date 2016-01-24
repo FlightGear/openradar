@@ -205,7 +205,6 @@ public class GuiMasterController {
         radarProvider.setCallsign(airportData.getCallSign());
         // register MP Chat (send & receive)
         radarProvider.addChatListener(getMpChatManager());
-        getMpChatManager().setMpBackend(radarProvider);
 
         // initialize reception
         Thread atcNetworkThread = new Thread(radarProvider, "OpenRadar - AtcNetworkThread");
