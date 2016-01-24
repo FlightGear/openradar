@@ -336,7 +336,7 @@ public class GuiRadarContact {
 
     public synchronized double getMagnCourseD() {
         if(getGroundSpeedD()>0.5 || lastHeadingMag==-1) {
-            lastHeadingMag = player.getTrueCourse() - airportData.getMagneticDeclination();
+            lastHeadingMag = Converter2D.normalizeAngle(player.getTrueCourse() - airportData.getMagneticDeclination());
         }
         return lastHeadingMag;
     }
