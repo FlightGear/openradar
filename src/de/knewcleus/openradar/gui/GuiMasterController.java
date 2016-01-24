@@ -172,7 +172,6 @@ public class GuiMasterController {
         
         // ready, so display it
         mainFrame.setVisible(true);
-        mainFrame.setDividerPosition();
         
         mainFrame.getRadarScreen().showMap(); // move map and display it
     }
