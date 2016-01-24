@@ -48,7 +48,7 @@ public class FlightStripsPanel extends JPanel {
 	}
 
 	public synchronized void addFlightStrip(FlightStrip flightstrip) {
-		System.out.println("addFlightStrip --- start");
+		//- System.out.println("addFlightStrip --- start");
 		synchronized(getTreeLock()) { // should be used around getComponentCount
 			// constraints
 			GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -62,23 +62,23 @@ public class FlightStripsPanel extends JPanel {
 			add(fsr, gridBagConstraints);
 		}
 		reorderFlightStrips();
-		System.out.println("addFlightStrip --- end");
+		//- System.out.println("addFlightStrip --- end");
 	}
 	
 	public synchronized void removeFlightStrip(FlightStrip flightstrip) {
-		System.out.println("removeFlightStrip --- start");
-		System.out.printf("for %s from section %s", flightstrip.getContact().getCallSign(), section.getTitle());
+		//- System.out.println("removeFlightStrip --- start");
+		//- System.out.printf("for %s from section %s", flightstrip.getContact().getCallSign(), section.getTitle());
 		synchronized(getTreeLock()) { // should be used around getComponentCount
 			FlightStripRow fsr = (FlightStripRow)flightstrip.getParent();
 			rows.remove(fsr);
 			remove(fsr);
 		}
 		reorderFlightStrips();
-		System.out.println("removeFlightStrip --- end");
+		//- System.out.println("removeFlightStrip --- end");
 	}
 	
 	public synchronized void moveFlightStrip(FlightStrip flightstrip) {
-		System.out.println("moveFlightStrip --- start");
+		//- System.out.println("moveFlightStrip --- start");
 		synchronized(getTreeLock()) { // should be used around getComponentCount
 			// constraints
 			GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -94,7 +94,7 @@ public class FlightStripsPanel extends JPanel {
 		}
 		updateColumn(flightstrip);
 		reorderFlightStrips();
-		System.out.println("moveFlightStrip --- end");
+		//- System.out.println("moveFlightStrip --- end");
 	}
 	
 	public void updateColumn(FlightStrip flightstrip) {
@@ -102,7 +102,7 @@ public class FlightStripsPanel extends JPanel {
 	}
 	
 	public synchronized void reorderFlightStrips() {
-		System.out.println("reorderFlightStrips --- start");
+		//- System.out.println("reorderFlightStrips --- start");
 		synchronized(getTreeLock()) { // should be used around getComponentCount
 			// user defined sort order
 			if (order != null) order.sort(rows);
@@ -117,11 +117,11 @@ public class FlightStripsPanel extends JPanel {
 			}
 			validate();
 		}
-		System.out.println("reorderFlightStrips --- end");
+		//- System.out.println("reorderFlightStrips --- end");
 	}
 	
 	public synchronized void moveRowToIndex(FlightStripRow row, int target_index) {
-		System.out.println("moveRowToIndex --- start");
+		//- System.out.println("moveRowToIndex --- start");
 		int source_index = getRowIndex(row);
 		if (target_index < 0) target_index = 0;
 		if (target_index >= rows.size()) target_index = rows.size() - 1;
@@ -130,7 +130,7 @@ public class FlightStripsPanel extends JPanel {
 			rows.add(target_index, row);
 			reorderFlightStrips();
 		}
-		System.out.println("moveRowToIndex --- end");
+		//- System.out.println("moveRowToIndex --- end");
 	}
 	
 	public int getRowIndex(FlightStripRow row) {

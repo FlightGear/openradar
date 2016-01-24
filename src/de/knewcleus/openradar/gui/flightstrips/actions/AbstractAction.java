@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import org.jdom2.Element;
 
-import de.knewcleus.openradar.gui.flightstrips.DomAttributes;
+import de.knewcleus.openradar.gui.flightstrips.IDomElement;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 
-public abstract class AbstractAction implements DomAttributes {
+public abstract class AbstractAction implements IDomElement {
 
 	public abstract void executeAction(FlightStrip flightstrip);
 
@@ -17,11 +17,21 @@ public abstract class AbstractAction implements DomAttributes {
 		return new ArrayList<AbstractAction>();
 	}
 	
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
+	public String getDomElementName() {
+		return getClass().getSimpleName();
+	}
+
+	@Override
+	public Element createDomElement() {
+		Element element = new Element(getDomElementName());
+		putAttributes(element);
+		return element;
+	}
+
 	public void putAttributes(Element element) {
-		element.setAttribute("id", getClass().getSimpleName());
 	}
 	
 }

@@ -6,6 +6,7 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class AtcSelfRule extends AbstractRule {
 
@@ -13,6 +14,10 @@ public class AtcSelfRule extends AbstractRule {
 	
 	public AtcSelfRule(boolean isAtcSelf) {
 		this.isAtcSelf = isAtcSelf;
+	}
+	
+	public AtcSelfRule(Element element, LogicManager logic) {
+		this.isAtcSelf = Boolean.valueOf(element.getAttributeValue("isatcself"));
 	}
 	
 	@Override
@@ -28,7 +33,7 @@ public class AtcSelfRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

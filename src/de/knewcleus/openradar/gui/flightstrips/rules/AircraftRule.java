@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class AircraftRule extends AbstractRule {
 
@@ -14,6 +15,11 @@ public class AircraftRule extends AbstractRule {
 	public AircraftRule(String Aircraft, boolean isAircraft) {
 		this.Aircraft = Aircraft;
 		this.isAircraft = isAircraft;
+	}
+	
+	public AircraftRule(Element element, LogicManager logic) {
+		this.Aircraft = element.getAttributeValue("aircraft");
+		this.isAircraft = Boolean.valueOf(element.getAttributeValue("isaircraft"));
 	}
 	
 	@Override
@@ -28,7 +34,7 @@ public class AircraftRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

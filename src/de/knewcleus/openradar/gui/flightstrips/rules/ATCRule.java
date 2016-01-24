@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 /* checks if contact is (not) ATC
  * 
  */
@@ -14,6 +15,10 @@ public class ATCRule extends AbstractRule {
 	
 	public ATCRule(boolean isAtc) {
 		this.isAtc = isAtc;
+	}
+	
+	public ATCRule(Element element, LogicManager logic) {
+		this.isAtc = Boolean.valueOf(element.getAttributeValue("isatc"));
 	}
 	
 	@Override
@@ -28,7 +33,7 @@ public class ATCRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

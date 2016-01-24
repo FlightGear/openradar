@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class DirectionRule extends AbstractRule {
 
@@ -24,6 +25,11 @@ public class DirectionRule extends AbstractRule {
 		}
 	}
 	
+	public DirectionRule(Element element, LogicManager logic) {
+		this(Double.valueOf(element.getAttributeValue("mindirection")), 
+			 Double.valueOf(element.getAttributeValue("maxdirection")));
+	}
+	
 	@Override
 	public boolean isAppropriate(FlightStrip flightstrip) {
 		double Direction = flightstrip.getContact().getRadarContactDirectionD();
@@ -33,18 +39,17 @@ public class DirectionRule extends AbstractRule {
 	@Override
 	public ArrayList<String> getRuleText() {
 		ArrayList<String> result = new ArrayList<String>();
-		result.add("contact's direction from the airport is between " + (isInside ? minDirection : maxDirection) + "° and " + (isInside ? maxDirection : minDirection) + "° .");
+		result.add("contact's direction from the airport is between " + (isInside ? minDirection : maxDirection) + "Â° and " + (isInside ? maxDirection : minDirection) + "Â° .");
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {
 		super.putAttributes(element);
 		element.setAttribute("mindirection", String.valueOf(minDirection));
 		element.setAttribute("maxdirection", String.valueOf(maxDirection));
-		element.setAttribute("isinside", String.valueOf(isInside));
 	}
 
 }

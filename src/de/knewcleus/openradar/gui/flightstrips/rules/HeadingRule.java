@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class HeadingRule extends AbstractRule {
 
@@ -24,6 +25,11 @@ public class HeadingRule extends AbstractRule {
 		}
 	}
 	
+	public HeadingRule(Element element, LogicManager logic) {
+		this(Double.valueOf(element.getAttributeValue("minheading")), 
+			 Double.valueOf(element.getAttributeValue("maxheading")));
+	}
+	
 	@Override
 	public boolean isAppropriate(FlightStrip flightstrip) {
 		double heading = flightstrip.getContact().getHeadingD();
@@ -33,18 +39,17 @@ public class HeadingRule extends AbstractRule {
 	@Override
 	public ArrayList<String> getRuleText() {
 		ArrayList<String> result = new ArrayList<String>();
-		result.add("contact's heading is between " + (isInside ? minHeading : maxHeading) + "° and " + (isInside ? maxHeading : minHeading) + "° .");
+		result.add("contact's heading is between " + (isInside ? minHeading : maxHeading) + "ï¿½ and " + (isInside ? maxHeading : minHeading) + "ï¿½ .");
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {
 		super.putAttributes(element);
 		element.setAttribute("minheading", String.valueOf(minHeading));
 		element.setAttribute("maxheading", String.valueOf(maxHeading));
-		element.setAttribute("isinside", String.valueOf(isInside));
 	}
 
 }

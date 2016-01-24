@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class ActiveRule extends AbstractRule {
 
@@ -12,6 +13,10 @@ public class ActiveRule extends AbstractRule {
 	
 	public ActiveRule(boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	public ActiveRule(Element element, LogicManager logic) {
+		this.isActive = Boolean.valueOf(element.getAttributeValue("isactive"));
 	}
 	
 	@Override
@@ -26,7 +31,7 @@ public class ActiveRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

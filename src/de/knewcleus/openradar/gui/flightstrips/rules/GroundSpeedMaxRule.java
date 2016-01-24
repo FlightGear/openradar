@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class GroundSpeedMaxRule extends AbstractRule {
 
@@ -12,6 +13,10 @@ public class GroundSpeedMaxRule extends AbstractRule {
 	
 	public GroundSpeedMaxRule(double groundSpeed) {
 		this.groundSpeed = groundSpeed;
+	}
+	
+	public GroundSpeedMaxRule(Element element, LogicManager logic) {
+		this.groundSpeed = Double.valueOf(element.getAttributeValue("groundspeed"));
 	}
 	
 	@Override
@@ -26,7 +31,7 @@ public class GroundSpeedMaxRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

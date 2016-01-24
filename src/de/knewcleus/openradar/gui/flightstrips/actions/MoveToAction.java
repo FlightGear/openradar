@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 import de.knewcleus.openradar.gui.flightstrips.SectionData;
 
 public class MoveToAction extends AbstractAction {
@@ -17,6 +18,11 @@ public class MoveToAction extends AbstractAction {
 		// column  < 0    : Don't change column
 		this.section = section;
 		this.column = column;
+	}
+
+	public MoveToAction(Element element, LogicManager logic) {
+		this.section = logic.getSectionByTitle (element.getAttributeValue("section"));
+		this.column = Integer.valueOf(element.getAttributeValue("column"));
 	}
 
 	public SectionData getSection() {
@@ -50,7 +56,7 @@ public class MoveToAction extends AbstractAction {
     	flightstrip.moveToPosition((section == null) ? flightstrip.getSection() : section, (column < 0) ? flightstrip.getColumn() : column);
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

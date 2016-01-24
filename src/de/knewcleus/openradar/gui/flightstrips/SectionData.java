@@ -6,12 +6,13 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.flightstrips.order.AbstractOrder;
+import de.knewcleus.openradar.gui.flightstrips.order.OrderManager;
 
 /* SectionData is a non-visual class
  * which provides information about a section of the FlightStripBay
  * like section title and columns data
  */
-public class SectionData implements DomAttributes {
+public class SectionData implements IDomElement {
 
 	private String title = "";
 	private boolean showHeader = true;
@@ -40,6 +41,26 @@ public class SectionData implements DomAttributes {
 		showHeader = showColumnTitles || (title.length() > 0);  
 	}
 	
+	public SectionData(Element element, LogicManager logic) throws Exception {
+		title = element.getAttributeValue("title");
+		showHeader = Boolean.valueOf(element.getAttributeValue("showheader"));
+		showColumnTitles = Boolean.valueOf(element.getAttributeValue("showcolumntitles"));
+		panel = new SectionPanel(this);
+		String columntag = ColumnData.getClassDomElementName();
+		for (Element e : element.getChildren()) {
+			if (e.getName().equals(columntag)) {
+				// column
+				columns.add(new ColumnData(e, logic));
+			}
+			else {
+				// order: last order is valid
+				AbstractOrder<? extends Comparable<?>> order = OrderManager.createClass(e); 
+				if (order != null) setOrder(order); 
+			}
+		}
+		panel.recreateContents();
+	}
+
 	// --- title ---
 	
 	public String getTitle() {
@@ -154,13 +175,30 @@ public class SectionData implements DomAttributes {
 		panel.reorderFlightStrips();
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
+	public static String getClassDomElementName() {
+		return "section";
+	}
+
 	@Override
-	public void putAttributes(Element element) {
+	public String getDomElementName() {
+		return getClassDomElementName();
+	}
+
+	@Override
+	public Element createDomElement() {
+		// section
+		Element element = new Element(getDomElementName());
 		element.setAttribute("title", title);
-		element.setAttribute("showHeader", String.valueOf(showHeader));
-		element.setAttribute("showColumnTitles", String.valueOf(showColumnTitles));
+		element.setAttribute("showheader", String.valueOf(showHeader));
+		element.setAttribute("showcolumntitles", String.valueOf(showColumnTitles));
+		// order
+		AbstractOrder<?> order = getOrder();
+		if (order != null) element.addContent(getOrder().createDomElement());
+		// columns
+		for (ColumnData column : getColumns()) element.addContent(column.createDomElement());
+		return element;
 	}
 	
 }

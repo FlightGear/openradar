@@ -6,11 +6,11 @@ import java.util.Comparator;
 
 import org.jdom2.Element;
 
-import de.knewcleus.openradar.gui.flightstrips.DomAttributes;
+import de.knewcleus.openradar.gui.flightstrips.IDomElement;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.FlightStripsPanel.FlightStripRow;
 
-public abstract class AbstractOrder<T extends Comparable<T>> implements Comparator<FlightStripRow>, DomAttributes {
+public abstract class AbstractOrder<T extends Comparable<T>> implements Comparator<FlightStripRow>, IDomElement {
 
 	protected boolean ascending = true;
 	
@@ -19,6 +19,10 @@ public abstract class AbstractOrder<T extends Comparable<T>> implements Comparat
 
 	public AbstractOrder(boolean ascending) {
 		this.ascending = ascending;
+	}
+
+	public AbstractOrder(Element element) {
+		this.ascending = Boolean.valueOf(element.getAttributeValue("ascending"));
 	}
 
 	public boolean isAscending() {
@@ -45,12 +49,22 @@ public abstract class AbstractOrder<T extends Comparable<T>> implements Comparat
 		return ascending ? result : -result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
-	public void putAttributes(Element element) {
-		element.setAttribute("id", getClass().getSimpleName());
-		element.setAttribute("ascending", String.valueOf(ascending));
+	public String getDomElementName() {
+		return getClass().getSimpleName();
 	}
 
+	@Override
+	public Element createDomElement() {
+		Element element = new Element(getDomElementName());
+		putAttributes(element);
+		return element;
+	}
+
+	public void putAttributes(Element element) {
+		element.setAttribute("ascending", String.valueOf(ascending));
+	}
+	
 }

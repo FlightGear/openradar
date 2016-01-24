@@ -217,7 +217,7 @@ public class Palette {
     public static final Color STRIP_BACKGROUND_FLIGHT = Color.WHITE; 
     public static final Color STRIP_BACKGROUND_ATC = Color.WHITE; 
     public static final Color STRIP_BACKGROUND_SELECTED = new Color(215,215,255); 
-    public static final Color STRIP_BACKGROUND_OFFERED = new Color(215,215,127); 
+    public static final Color STRIP_BACKGROUND_OFFERED = new Color(255,255,127); 
     public static final Color STRIP_DEFAULT = Color.BLACK;  
     public static final Color STRIP_INACTIVE = Color.GRAY;  
     public static final Color STRIP_SELECTION = Color.BLUE;  

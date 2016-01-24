@@ -2,55 +2,43 @@ package de.knewcleus.openradar.gui.flightstrips.rules;
 
 import java.util.ArrayList;
 
+import org.jdom2.Element;
+
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 /* This class bundles a set of rules with the AND operator together to one rule
  * 
  */
-public class AndRule extends AbstractRule {
+public class AndRule extends AbstractOperatorRule {
 
-	ArrayList<AbstractRule> rules = null;
-	
 	public AndRule() {
-		rules = new ArrayList<AbstractRule>();
+		super();
 	}
 
 	public AndRule(ArrayList<AbstractRule> rules) {
-		this.rules = rules;
+		super(rules);
 	}
 
 	public AndRule(AbstractRule... rules) {
-		this.rules = new ArrayList<AbstractRule>();
-		for (AbstractRule rule : rules) this.rules.add(rule);
+		super(rules);
 	}
 
-	public void add (AbstractRule rule) {
-		rules.add(rule);
+	public AndRule(Element element, LogicManager logic) throws Exception {
+		super(element, logic);
 	}
 	
 	@Override
 	public boolean isAppropriate(FlightStrip flightstrip) {
-		boolean result = true;
 		for (AbstractRule rule : rules) {
-			result &= rule.isAppropriate(flightstrip);
-			if (!result) break;
+			if (!rule.isAppropriate(flightstrip)) return false;
 		}
-		return result;
+		return true;
 	}
 	
 	@Override
-	public ArrayList<String> getRuleText () {
-		// TODO: insert "AND"
-		ArrayList<String> result = new ArrayList<String>();
-		for (AbstractRule rule : rules) {
-			result.addAll(rule.getRuleText ());
-		}
-		return result;
-	}
-	
-	@Override
-	public ArrayList<AbstractRule> getRules() {
-		return rules;
+	protected String getOperatorText() {
+		return "AND";
 	}
 	
 }

@@ -49,8 +49,8 @@ import de.knewcleus.openradar.gui.chat.MpChatManager;
 import de.knewcleus.openradar.gui.contacts.RadarContactController;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanExchangeManager;
 import de.knewcleus.openradar.gui.flightstrips.FlightStripBay;
-import de.knewcleus.openradar.gui.flightstrips.SectionsListManager;
-import de.knewcleus.openradar.gui.flightstrips.rules.RulesManager;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
+import de.knewcleus.openradar.gui.flightstrips.rules.RuleManager;
 import de.knewcleus.openradar.gui.radar.GuiRadarBackend;
 import de.knewcleus.openradar.gui.radar.RadarManager;
 import de.knewcleus.openradar.gui.setup.AirportData;
@@ -96,8 +96,8 @@ public class GuiMasterController {
     private final static Logger log = Logger.getLogger(GuiMasterController.class);
 
     private FlightStripBay flightstripbay = null; 
-    private SectionsListManager sectionsListManager = null; 
-    private RulesManager rulesManager = null; 
+    private LogicManager sectionsListManager = null; 
+    private RuleManager rulesManager = null; 
     
     private JTextPane detailsArea = null;
 
@@ -131,8 +131,8 @@ public class GuiMasterController {
             }
         }
         new DeadLockChecker().start();
-        rulesManager = new RulesManager(); 
-        sectionsListManager = new SectionsListManager(this); 
+        rulesManager = new RuleManager(); 
+        sectionsListManager = new LogicManager(this); 
     }
 
     public LogWindow getLogWindow() {
@@ -184,7 +184,8 @@ public class GuiMasterController {
         
         mainFrame.getRadarScreen().showMap(); // move map and display it
         
-        sectionsListManager.createExample(); 
+        sectionsListManager.LoadLayout();
+        //sectionsListManager.createExample(); 
         //sectionsListManager.createTraditional(); 
     }
 
@@ -441,11 +442,11 @@ public class GuiMasterController {
         return fgfsController2;
     }
     
-    public SectionsListManager getSectionsListManager() {
+    public LogicManager getSectionsListManager() {
     	return sectionsListManager;
     }
     
-    public RulesManager getRulesManager() {
+    public RuleManager getRulesManager() {
     	return rulesManager;
     }
     

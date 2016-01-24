@@ -1,7 +1,10 @@
 package de.knewcleus.openradar.gui.flightstrips;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,23 +12,21 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.contacts.RadarContactController;
-import de.knewcleus.openradar.gui.flightstrips.actions.AbstractAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.ControlAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.MoveToAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.UncontrolAction;
-import de.knewcleus.openradar.gui.flightstrips.order.AbstractOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.AltitudeOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.CallsignOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.ColumnOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.DistanceOrder;
 import de.knewcleus.openradar.gui.flightstrips.rules.ATCRule;
-import de.knewcleus.openradar.gui.flightstrips.rules.AbstractRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.AircraftRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.AltitudeMaxRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.AndRule;
@@ -39,17 +40,20 @@ import de.knewcleus.openradar.gui.flightstrips.rules.GroundSpeedMaxRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.GroundSpeedMinRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.NewRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.OrRule;
-import de.knewcleus.openradar.gui.flightstrips.rules.RulesManager;
+import de.knewcleus.openradar.gui.flightstrips.rules.RuleAndAction;
+import de.knewcleus.openradar.gui.flightstrips.rules.RuleManager;
 
-public class SectionsListManager implements Runnable {
+public class LogicManager implements Runnable {
+
+	private final String filename = "settings" + File.separator + "layout.xml";
 	
 	private final GuiMasterController master;
 	private final ArrayList<SectionData> sections = new ArrayList<SectionData>();
-    private static Logger log = LogManager.getLogger(SectionsListManager.class.getName());
+    private static Logger log = LogManager.getLogger(LogicManager.class.getName());
 	
 	// --- constructors ---
 	
-	public SectionsListManager(GuiMasterController master) {
+	public LogicManager(GuiMasterController master) {
 		this.master = master;
 	}
 	
@@ -63,10 +67,10 @@ public class SectionsListManager implements Runnable {
 		section_default.getColumn(0).addAction(true, new ControlAction());
 		section_default.getColumn(2).addAction(true, new UncontrolAction());
 		// rules for new contacts
-		RulesManager rules = master.getRulesManager();
-		rules.add(rules.new RuleAndAction("new", new NewRule(true), new MoveToAction(section_default, 2)));
-		rules.add(rules.new RuleAndAction("Controlled", new AndRule(new AtcSelfRule(true), new ColumnRule(2, true)), new MoveToAction(null, 0)));
-		rules.add(rules.new RuleAndAction("Uncontrolled", new AndRule(new AtcSelfRule(false), new ColumnRule(0, true)), new MoveToAction(null, 2)));
+		RuleManager rules = master.getRulesManager();
+		rules.add(new RuleAndAction("new", new NewRule(true), new MoveToAction(section_default, 2)));
+		rules.add(new RuleAndAction("Controlled", new AndRule(new AtcSelfRule(true), new ColumnRule(2, true)), new MoveToAction(null, 0)));
+		rules.add(new RuleAndAction("Uncontrolled", new AndRule(new AtcSelfRule(false), new ColumnRule(0, true)), new MoveToAction(null, 2)));
 		// recreate FlightStripbay
 		master.getFlightStripBay().recreateContents();
 
@@ -103,28 +107,28 @@ public class SectionsListManager implements Runnable {
 		section_atc.setOrder(new CallsignOrder());
 		
 		// rules for new contacts
-		RulesManager rules = master.getRulesManager();
+		RuleManager rules = master.getRulesManager();
 		// ATC / carrier / car contacts
-		rules.add(rules.new RuleAndAction("ATC", new ATCRule(true), new MoveToAction(section_atc, 0)));
-		rules.add(rules.new RuleAndAction("carrier", new OrRule (new AircraftRule("MP-NIMITZ", true), new AircraftRule("MP-VINSON", true)), new MoveToAction(section_atc, 0)));
-		rules.add(rules.new RuleAndAction("car", new AircraftRule("FOLLOWME", true), new MoveToAction(section_atc, 0)));
+		rules.add(new RuleAndAction("ATC", new ATCRule(true), new MoveToAction(section_atc, 0)));
+		rules.add(new RuleAndAction("carrier", new OrRule (new AircraftRule("MP-NIMITZ", true), new AircraftRule("MP-VINSON", true)), new MoveToAction(section_atc, 0)));
+		rules.add(new RuleAndAction("car", new AircraftRule("FOLLOWME", true), new MoveToAction(section_atc, 0)));
 		// ground
 		double ground = master.getAirportData().getElevationFt() + 50;
 		System.out.printf("ground = %f\n", ground);
-		rules.add(rules.new RuleAndAction("Ground Taxi OUT", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1), new ColumnRule(1, true)), new MoveToAction(section_ground, 2)));
-		rules.add(rules.new RuleAndAction("Ground Taxi", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1)), new MoveToAction(section_ground, -1)));
-		rules.add(rules.new RuleAndAction("Ground Parking", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMaxRule(1)), new MoveToAction(section_ground, 1)));
+		rules.add(new RuleAndAction("Ground Taxi OUT", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1), new ColumnRule(1, true)), new MoveToAction(section_ground, 2)));
+		rules.add(new RuleAndAction("Ground Taxi", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1)), new MoveToAction(section_ground, -1)));
+		rules.add(new RuleAndAction("Ground Parking", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMaxRule(1)), new MoveToAction(section_ground, 1)));
 		// controlled by me
-		rules.add(rules.new RuleAndAction("Controlled", new AtcSelfRule(true), new MoveToAction(section_controlled, -1)));
+		rules.add(new RuleAndAction("Controlled", new AtcSelfRule(true), new MoveToAction(section_controlled, -1)));
 		// controlled by any other ATC
-		rules.add(rules.new RuleAndAction("Interesting DEP", new AndRule(new NewRule(true), new AtcOtherRule(""), new DistanceMaxRule(2)), new MoveToAction(section_interesting, 2)));
-		rules.add(rules.new RuleAndAction("Interesting APP", new AndRule(new NewRule(true), new AtcOtherRule(""), new DistanceMinRule(90)), new MoveToAction(section_interesting, 0)));
-		rules.add(rules.new RuleAndAction("Interesting OTHERS", new AndRule(new NewRule(true), new AtcOtherRule("")), new MoveToAction(section_interesting, 1)));
-		rules.add(rules.new RuleAndAction("Interesting", new AtcOtherRule(""), new MoveToAction(section_interesting, -1)));
+		rules.add(new RuleAndAction("Interesting DEP", new AndRule(new NewRule(true), new AtcOtherRule(""), new DistanceMaxRule(2)), new MoveToAction(section_interesting, 2)));
+		rules.add(new RuleAndAction("Interesting APP", new AndRule(new NewRule(true), new AtcOtherRule(""), new DistanceMinRule(90)), new MoveToAction(section_interesting, 0)));
+		rules.add(new RuleAndAction("Interesting OTHERS", new AndRule(new NewRule(true), new AtcOtherRule("")), new MoveToAction(section_interesting, 1)));
+		rules.add(new RuleAndAction("Interesting", new AtcOtherRule(""), new MoveToAction(section_interesting, -1)));
 		// uncontrolled
-		rules.add(rules.new RuleAndAction("new APP", new AndRule(new NewRule(true), new DistanceMinRule(90)), new MoveToAction(section_uncontrolled, 0)));
-		rules.add(rules.new RuleAndAction("new OTHERS", new NewRule(true), new MoveToAction(section_uncontrolled, 1)));
-		rules.add(rules.new RuleAndAction("Uncontrolled", new AtcNoneRule(true), new MoveToAction(section_uncontrolled, -1)));
+		rules.add(new RuleAndAction("new APP", new AndRule(new NewRule(true), new DistanceMinRule(90)), new MoveToAction(section_uncontrolled, 0)));
+		rules.add(new RuleAndAction("new OTHERS", new NewRule(true), new MoveToAction(section_uncontrolled, 1)));
+		rules.add(new RuleAndAction("Uncontrolled", new AtcNoneRule(true), new MoveToAction(section_uncontrolled, -1)));
 		// recreate FlightStripbay
 		master.getFlightStripBay().recreateContents();
 
@@ -150,6 +154,13 @@ public class SectionsListManager implements Runnable {
 	public ArrayList<SectionData> getSections() {
 		return sections;
 	}
+	
+	public SectionData getSectionByTitle (String title) {
+		for (SectionData section : sections) {
+			if (title.equalsIgnoreCase(section.getTitle())) return section;
+		}
+		return null;
+	}
 
 	public void updateFlightstrips() {
 		RadarContactController radarContactController = master.getRadarContactManager();
@@ -161,7 +172,7 @@ public class SectionsListManager implements Runnable {
 			flightstrips.addAll(section.getFlightStrips());
 		}
 		// update existing and remove expired flightstrips
-        RulesManager rm = master.getRulesManager();
+        RuleManager rm = master.getRulesManager();
 		for (FlightStrip flightstrip : flightstrips) {
 			GuiRadarContact contact = flightstrip.getContact();
 			if (contacts.contains(contact)) {
@@ -202,74 +213,59 @@ public class SectionsListManager implements Runnable {
             Document doc = new Document();
             Element root = new Element("flightstripbay");
             doc.addContent(root);
-            root.setAttribute("version", "1.0");
+            root.setAttribute("version", "1");
             // sections
-            Element eSections = new Element("sections");
-            root.addContent(eSections);
-            Element eSection; 
-            Element eOrder; 
-            Element eColumn; 
-            Element eRuleAction; 
     		for (SectionData section : sections) {
-    			// section
-    			eSection = new Element("section");
-    			eSections.addContent(eSection);
-    			section.putAttributes(eSection);
-    			// order
-    			eOrder = new Element("order");
-    			eSection.addContent(eOrder);
-    			AbstractOrder<?> order = section.getOrder();
-    			if (order != null) order.putAttributes(eOrder);
-    			// columns
-    			for (ColumnData column : section.getColumns()) {
-    				// column
-    				eColumn = new Element("column");
-    				eSection.addContent(eColumn);
-    				column.putAttributes(eColumn);
-    				// actions
-    				for (AbstractAction action : column.getEnterActions()) {
-    					eRuleAction = new Element("action");
-    					eColumn.addContent(eRuleAction);
-    					action.putAttributes(eRuleAction);
-    				}
-    			}
+    			root.addContent(section.createDomElement());
     		}
     		// rules
-            Element eRules = new Element("rules");
-            root.addContent(eRules);
-            for (RulesManager.RuleAndAction ra : master.getRulesManager().getRuleAndActions()) {
-            	eRuleAction = new Element("ruleaction");
-            	eRules.addContent(eRuleAction);
-				ra.putAttributes(eRuleAction);
-				addRule(eRuleAction, ra.getRule());
-				addAction(eRuleAction, ra.getAction());
+            for (RuleAndAction ra : master.getRulesManager().getRuleAndActions()) {
+            	root.addContent(ra.createDomElement());
             }
             // --- save document ---
             XMLOutputter xmlOutput = new XMLOutputter();
             xmlOutput.setFormat(Format.getPrettyFormat());
-            xmlOutput.output(doc, new FileWriter("settings" + File.separator + "layout.xml"));        
+            xmlOutput.output(doc, new FileWriter(filename));        
         } catch (Exception exception) {
-        	log.error( "Problem to create xml document for flightstripbay: ", exception);
-            System.err.printf("Problem to create xml document for flightstripbay: ", exception.getMessage());
+        	log.error( "Problem to create " + filename + " document for flightstripbay: ", exception);
         }
 	}
 	
-	public void addRule(Element element, AbstractRule rule) {
-		Element eRule = new Element("rule"); 
-		element.addContent(eRule);
-		rule.putAttributes(eRule);
-		for (AbstractRule r : rule.getRules()) {
-			addRule(eRule, r);
+	public void LoadLayout() {
+		InputStream xmlInputStream = null;
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			xmlInputStream = new FileInputStream(filename);
+			Document document = (Document) builder.build(xmlInputStream);
+			Element root = document.getRootElement();
+			if (!root.getName().equals("flightstripbay")) throw(new Exception("root element <flightstripbay> not recognized!"));
+			LoadLayout1(root, Integer.parseInt(root.getAttributeValue("version")));
+		} catch (Exception e) {
+			log.error("Problem to parse file " + filename + ", Error:" + e.getMessage());
+		} finally {
+			if (xmlInputStream != null) {
+				try {
+					xmlInputStream.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 	}
 	
-	public void addAction(Element element, AbstractAction action) {
-		Element eAction = new Element("action"); 
-		element.addContent(eAction);
-		action.putAttributes(eAction);
-		for (AbstractAction a : action.getActions()) {
-			addAction(eAction, a);
+	protected void LoadLayout1(Element root, int version) throws Exception {
+		if (version != 1) throw(new Exception(String.format("version %d root element <flightstripbay> can not be parsed!", version)));
+		System.out.printf("create sections\n");
+		for (Element eSection : root.getChildren(SectionData.getClassDomElementName())) {
+			sections.add(new SectionData(eSection, this));
 		}
+		System.out.printf("\n\ncreate rules\n");
+		RuleManager rules = master.getRulesManager();
+		for (Element eRuleAction : root.getChildren(RuleAndAction.getClassDomElementName())) {
+			rules.add(new RuleAndAction(eRuleAction, this));
+		}
+		System.out.printf("-----------------------------------\n\n\n");
+		// recreate FlightStripbay
+		master.getFlightStripBay().recreateContents();
 	}
 	
 }

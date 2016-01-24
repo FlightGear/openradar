@@ -6,6 +6,7 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class DepartureRule extends AbstractRule {
 
@@ -13,6 +14,10 @@ public class DepartureRule extends AbstractRule {
 	
 	public DepartureRule(String otherAirport) {
 		this.otherAirport = otherAirport;
+	}
+	
+	public DepartureRule(Element element, LogicManager logic) {
+		this.otherAirport = element.getAttributeValue("otherairport");
 	}
 	
 	@Override
@@ -28,7 +33,7 @@ public class DepartureRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

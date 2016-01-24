@@ -6,6 +6,7 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class SquawkRule extends AbstractRule {
 
@@ -23,6 +24,11 @@ public class SquawkRule extends AbstractRule {
 		}
 	}
 	
+	public SquawkRule(Element element, LogicManager logic) {
+		this(Integer.valueOf(element.getAttributeValue("minsquawk")), 
+			 Integer.valueOf(element.getAttributeValue("maxsquawk")));
+	}
+	
 	@Override
 	public boolean isAppropriate(FlightStrip flightstrip) {
 		int Squawk = flightstrip.getContact().getTranspSquawkCode();
@@ -37,7 +43,7 @@ public class SquawkRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

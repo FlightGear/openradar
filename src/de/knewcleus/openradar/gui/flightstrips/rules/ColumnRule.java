@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class ColumnRule extends AbstractRule {
 
@@ -14,6 +15,11 @@ public class ColumnRule extends AbstractRule {
 	public ColumnRule(int column, boolean isIn) {
 		this.column = column;
 		this.isIn = isIn;
+	}
+	
+	public ColumnRule(Element element, LogicManager logic) {
+		this.column = Integer.valueOf(element.getAttributeValue("column"));
+		this.isIn = Boolean.valueOf(element.getAttributeValue("isin"));
 	}
 	
 	@Override
@@ -28,7 +34,7 @@ public class ColumnRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

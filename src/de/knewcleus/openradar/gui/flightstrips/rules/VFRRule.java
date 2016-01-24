@@ -6,6 +6,7 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class VFRRule extends AbstractRule {
 
@@ -13,6 +14,10 @@ public class VFRRule extends AbstractRule {
 	
 	public VFRRule(boolean isVFR) {
 		this.isVFR = isVFR;
+	}
+	
+	public VFRRule(Element element, LogicManager logic) {
+		this.isVFR = Boolean.valueOf(element.getAttributeValue("isvfr"));
 	}
 	
 	@Override
@@ -28,7 +33,7 @@ public class VFRRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class NeglectRule extends AbstractRule {
 
@@ -12,6 +13,10 @@ public class NeglectRule extends AbstractRule {
 	
 	public NeglectRule(boolean isNeglect) {
 		this.isNeglect = isNeglect;
+	}
+	
+	public NeglectRule(Element element, LogicManager logic) {
+		this.isNeglect = Boolean.valueOf(element.getAttributeValue("isneglect"));
 	}
 	
 	@Override
@@ -26,7 +31,7 @@ public class NeglectRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

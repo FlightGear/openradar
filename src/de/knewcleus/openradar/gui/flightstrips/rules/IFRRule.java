@@ -6,6 +6,7 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class IFRRule extends AbstractRule {
 
@@ -13,6 +14,10 @@ public class IFRRule extends AbstractRule {
 	
 	public IFRRule(boolean isIFR) {
 		this.isIFR = isIFR;
+	}
+	
+	public IFRRule(Element element, LogicManager logic) {
+		this.isIFR = Boolean.valueOf(element.getAttributeValue("isifr"));
 	}
 	
 	@Override
@@ -28,7 +33,7 @@ public class IFRRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

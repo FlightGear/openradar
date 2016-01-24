@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class DistanceMinRule extends AbstractRule {
 
@@ -12,6 +13,10 @@ public class DistanceMinRule extends AbstractRule {
 	
 	public DistanceMinRule(double distance) {
 		this.distance = distance;
+	}
+	
+	public DistanceMinRule(Element element, LogicManager logic) {
+		this.distance = Double.valueOf(element.getAttributeValue("distance"));
 	}
 	
 	@Override
@@ -26,7 +31,7 @@ public class DistanceMinRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

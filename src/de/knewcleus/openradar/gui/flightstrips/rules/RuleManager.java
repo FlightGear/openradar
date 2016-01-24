@@ -4,61 +4,10 @@ import java.util.ArrayList;
 
 import org.jdom2.Element;
 
-import de.knewcleus.openradar.gui.flightstrips.DomAttributes;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
-import de.knewcleus.openradar.gui.flightstrips.actions.AbstractAction;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class RulesManager {
-	
-	public class RuleAndAction implements DomAttributes {
-		
-		private String name;
-		private AbstractRule rule;
-		private AbstractAction action;
-		
-		public RuleAndAction(String name, AbstractRule rule, AbstractAction action) {
-			this.name = name;
-			this.rule = rule;
-			this.action = action;
-		}
-
-		public boolean isAppropriate(FlightStrip flightstrip) {
-			return rule.isAppropriate(flightstrip); 
-		}
-		
-		public ArrayList<String> getRuleText () {
-			ArrayList<String> result = new ArrayList<String>();
-			result.addAll(rule.getRuleText ());
-			result.addAll(action.getActionText ());
-			return result;
-		}
-
-		public String MenuText() {
-			return name;
-		}
-		
-		public AbstractRule getRule() {
-			return rule;
-		}
-		
-		public AbstractAction getAction() {
-			return action;
-		}
-		
-		public void ApplyRule(FlightStrip flightstrip) {
-			action.executeAction(flightstrip);
-		}
-		
-		// --- DomAttributes ---
-		
-		@Override
-		public void putAttributes(Element element) {
-			element.setAttribute("name", name);
-		}
-
-	}
-
-	// ========================================
+public class RuleManager {
 	
 	ArrayList<RuleAndAction> ruleAndActions = new ArrayList<RuleAndAction>();
 	
@@ -103,10 +52,11 @@ public class RulesManager {
 		}
 	}
 	
-	public ArrayList<Class<? extends AbstractRule>> AvailableRules() {
+	public static ArrayList<Class<? extends AbstractRule>> getAvailableRules() {
 		ArrayList<Class<? extends AbstractRule>> result = new ArrayList<Class<? extends AbstractRule>>();
-		// set of rules
+		// boolean operation with rules
 		result.add(AndRule.class);
+		result.add(OrRule.class);
 		// always true
 		result.add(AnyRule.class);
 		// flight rules
@@ -114,8 +64,11 @@ public class RulesManager {
 		result.add(VFRRule.class);
 		// is ATC
 		result.add(ATCRule.class);
-		// neglect
+		// status
+		result.add(NewRule.class);
+		result.add(ActiveRule.class);
 		result.add(NeglectRule.class);
+		result.add(EmergencyRule.class);
 		// controller
 		result.add(AtcSelfRule.class);
 		result.add(AtcNoneRule.class);
@@ -128,6 +81,7 @@ public class RulesManager {
 		// squawk
 		result.add(SquawkRule.class);
 		// aircraft
+		result.add(AircraftRule.class);
 		result.add(HeadingRule.class);
 		result.add(GroundSpeedMinRule.class);
 		result.add(GroundSpeedMaxRule.class);
@@ -137,8 +91,21 @@ public class RulesManager {
 		result.add(DistanceMinRule.class);
 		result.add(DistanceMaxRule.class);
 		result.add(DirectionRule.class);
-		// TODO: add new rules
+		// flightstrip bay
+		result.add(ColumnRule.class);
 		return result;
 	}
 
+	public static AbstractRule createClass(Element element, LogicManager logic) throws Exception {
+		String classname = element.getName();
+		Class<?> parameterTypes[] = new Class[] { Element.class, LogicManager.class };
+		for (Class<? extends AbstractRule> orderclass : getAvailableRules()) {
+			if (classname.equalsIgnoreCase(orderclass.getSimpleName())) {
+				System.out.printf("create rule '%s' end: found\n", classname);
+				return orderclass.getConstructor(parameterTypes).newInstance(element, logic);
+			}
+		}
+		return null;
+	}
+	
 }

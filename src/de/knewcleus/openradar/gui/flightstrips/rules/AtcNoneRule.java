@@ -6,6 +6,7 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class AtcNoneRule extends AbstractRule {
 
@@ -13,6 +14,10 @@ public class AtcNoneRule extends AbstractRule {
 	
 	public AtcNoneRule(boolean isAtcNone) {
 		this.isAtcNone = isAtcNone;
+	}
+	
+	public AtcNoneRule(Element element, LogicManager logic) {
+		this.isAtcNone = Boolean.valueOf(element.getAttributeValue("isatcnone"));
 	}
 	
 	@Override
@@ -28,7 +33,7 @@ public class AtcNoneRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {

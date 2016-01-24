@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.actions.AbstractAction;
+import de.knewcleus.openradar.gui.flightstrips.actions.ActionManager;
 
-public class ColumnData implements DomAttributes {
+public class ColumnData implements IDomElement {
 
 	private String title = "";
 	private final ArrayList<AbstractAction> enterActions = new ArrayList<AbstractAction>(); 
@@ -16,6 +17,26 @@ public class ColumnData implements DomAttributes {
 	
 	public ColumnData(String title) {
 		this.title = title;
+	}
+
+	public ColumnData(Element element, LogicManager logic) throws Exception {
+		title = element.getAttributeValue("title");
+		// actions
+		Element e;
+		e = element.getChild("enter");
+		if (e != null) {
+			for (Element a : e.getChildren()) {
+				AbstractAction action = ActionManager.createClass(a, logic); 
+				if (action != null) addAction(true, action); 
+			}
+		}
+		e = element.getChild("exit");
+		if (e != null) {
+			for (Element a : e.getChildren()) {
+				AbstractAction action = ActionManager.createClass(a, logic); 
+				if (action != null) addAction(false, action); 
+			}
+		}
 	}
 
 	// --- title ---
@@ -59,11 +80,35 @@ public class ColumnData implements DomAttributes {
 		for (AbstractAction action : exitActions) action.executeAction(flightstrip);
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
+	public static String getClassDomElementName() {
+		return "column";
+	}
+
 	@Override
-	public void putAttributes(Element element) {
+	public String getDomElementName() {
+		return getClassDomElementName();
+	}
+
+	@Override
+	public Element createDomElement() {
+		// column
+		Element element = new Element(getDomElementName());
 		element.setAttribute("title", title);
+		// actions
+		Element e;
+		if (enterActions.size() > 0) {
+			e = new Element("enter");
+			element.addContent(e);
+			for (AbstractAction action : enterActions) e.addContent(action.createDomElement());
+		}
+		if (exitActions.size() > 0) {
+			e = new Element("exit");
+			element.addContent(e);
+			for (AbstractAction action : exitActions) e.addContent(action.createDomElement());
+		}
+		return element;
 	}
 	
 }

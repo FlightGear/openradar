@@ -4,28 +4,33 @@ import java.util.ArrayList;
 
 import org.jdom2.Element;
 
-import de.knewcleus.openradar.gui.flightstrips.DomAttributes;
+import de.knewcleus.openradar.gui.flightstrips.IDomElement;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 
 /* This class is the base class for each rule
  * 
  */
-public abstract class AbstractRule implements DomAttributes {
+public abstract class AbstractRule implements IDomElement {
 
 	abstract public boolean isAppropriate(FlightStrip flightstrip);
 
 	abstract public ArrayList<String> getRuleText();
 
-	public ArrayList<AbstractRule> getRules() {
-		// override to provide a list of rules
-		return new ArrayList<AbstractRule>();
-	}
-	
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
-	public void putAttributes(Element element) {
-		element.setAttribute("id", getClass().getSimpleName());
+	public String getDomElementName() {
+		return getClass().getSimpleName();
 	}
 
+	@Override
+	public Element createDomElement() {
+		Element element = new Element(getDomElementName());
+		putAttributes(element);
+		return element;
+	}
+
+	public void putAttributes(Element element) {
+	}
+	
 }

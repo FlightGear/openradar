@@ -2,47 +2,43 @@ package de.knewcleus.openradar.gui.flightstrips.rules;
 
 import java.util.ArrayList;
 
+import org.jdom2.Element;
+
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class OrRule extends AbstractRule {
+/* This class bundles a set of rules with the OR operator together to one rule
+ * 
+ */
+public class OrRule extends AbstractOperatorRule {
 
-	ArrayList<AbstractRule> rules = null;
-	
 	public OrRule() {
-		rules = new ArrayList<AbstractRule>();
+		super();
 	}
 
 	public OrRule(ArrayList<AbstractRule> rules) {
-		this.rules = rules;
+		super(rules);
 	}
 
 	public OrRule(AbstractRule... rules) {
-		this.rules = new ArrayList<AbstractRule>();
-		for (AbstractRule rule : rules) this.rules.add(rule);
+		super(rules);
 	}
 
-	public void add (AbstractRule rule) {
-		rules.add(rule);
+	public OrRule(Element element, LogicManager logic) throws Exception {
+		super(element, logic);
 	}
 	
 	@Override
 	public boolean isAppropriate(FlightStrip flightstrip) {
-		boolean result = false;
 		for (AbstractRule rule : rules) {
-			result |= rule.isAppropriate(flightstrip);
-			if (result) break;
+			if (rule.isAppropriate(flightstrip)) return true;
 		}
-		return result;
+		return false;
 	}
 	
 	@Override
-	public ArrayList<String> getRuleText () {
-		// TODO: insert "OR"
-		ArrayList<String> result = new ArrayList<String>();
-		for (AbstractRule rule : rules) {
-			result.addAll(rule.getRuleText ());
-		}
-		return result;
+	protected String getOperatorText() {
+		return "OR";
 	}
 	
 }

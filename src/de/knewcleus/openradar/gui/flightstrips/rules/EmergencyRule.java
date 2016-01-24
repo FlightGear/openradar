@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class EmergencyRule extends AbstractRule {
 
@@ -12,6 +13,10 @@ public class EmergencyRule extends AbstractRule {
 	
 	public EmergencyRule(boolean isEmergency) {
 		this.isEmergency = isEmergency;
+	}
+	
+	public EmergencyRule(Element element, LogicManager logic) {
+		this.isEmergency = Boolean.valueOf(element.getAttributeValue("isemergency"));
 	}
 	
 	@Override
@@ -26,7 +31,7 @@ public class EmergencyRule extends AbstractRule {
 		return result;
 	}
 
-	// --- DomAttributes ---
+	// --- IDomElement ---
 	
 	@Override
 	public void putAttributes(Element element) {
