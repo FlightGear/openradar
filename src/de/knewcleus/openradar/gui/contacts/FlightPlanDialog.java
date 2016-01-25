@@ -19,7 +19,7 @@
  * Software Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren veröffentlichten Version,
  * weiterverbreiten und/oder modifizieren.
  *
- * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHELEISTUNG, bereitgestellt; sogar ohne
+ * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne
  * die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public
  * License für weitere Details.
  *
@@ -1362,7 +1362,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				// executed by the Swing Thread
 				log.info("Executing work for extUpdateLennysFpButton");
 				if (innerFpExists) {
-					btRetrieveFp.setForeground(Color.blue);
+					btRetrieveFp.setForeground(new Color(0,150,0)); // darker green
 				} else {
 					btRetrieveFp.setForeground(Color.GRAY);
 				}
@@ -1383,6 +1383,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				log.info("Executing work for extUpdateUI");
 				// executed by the Swing Thread
 				setData(c);
+				saveData();
 				log.info("DONE Executing work for extUpdateUI");
 			}
 		});
