@@ -23,7 +23,7 @@
  * weiterverbreiten und/oder modifizieren.
  *
  * OpenRadar wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE
- * GEWÄHELEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
+ * GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der
  * MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General
  * Public License für weitere Details.
  *
@@ -130,4 +130,9 @@ public class StdRouteScreenText extends AStdRouteElement {
     	}
         return extBounds.contains(p);
     }
+
+    @Override
+    public boolean isClickable() {
+ 		return clickable;
+ 	}
 }
