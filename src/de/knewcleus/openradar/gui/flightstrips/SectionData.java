@@ -15,6 +15,7 @@ import de.knewcleus.openradar.gui.flightstrips.order.OrderManager;
 public class SectionData implements IDomElement {
 
 	private String title = "";
+	private boolean autoVisible = false;
 	private boolean showHeader = true;
 	private boolean showColumnTitles = false;
 	
@@ -43,6 +44,7 @@ public class SectionData implements IDomElement {
 	
 	public SectionData(Element element, LogicManager logic) throws Exception {
 		title = element.getAttributeValue("title");
+		autoVisible = Boolean.valueOf(element.getAttributeValue("autovisible"));
 		showHeader = Boolean.valueOf(element.getAttributeValue("showheader"));
 		showColumnTitles = Boolean.valueOf(element.getAttributeValue("showcolumntitles"));
 		panel = new SectionPanel(this);
@@ -74,6 +76,17 @@ public class SectionData implements IDomElement {
 		}
 	}
 	
+	// --- autoVisible ---
+	
+	public boolean isAutoVisible() {
+		return autoVisible;
+	}
+
+	public void setAutoVisible(boolean autoVisible) {
+		this.autoVisible = autoVisible;
+		panel.checkVisible();
+	}
+
 	// --- showHeader ---
 	
 	public boolean getShowHeader() {
@@ -191,6 +204,7 @@ public class SectionData implements IDomElement {
 		// section
 		Element element = new Element(getDomElementName());
 		element.setAttribute("title", title);
+		element.setAttribute("autovisible", String.valueOf(autoVisible));
 		element.setAttribute("showheader", String.valueOf(showHeader));
 		element.setAttribute("showcolumntitles", String.valueOf(showColumnTitles));
 		// order

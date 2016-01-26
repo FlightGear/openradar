@@ -21,7 +21,7 @@ public class EmergencyRule extends AbstractRule {
 	
 	@Override
 	public boolean isAppropriate(FlightStrip flightstrip) {
-		return flightstrip.getContact().isActive() == isEmergency;
+		return flightstrip.getContact().isOnEmergency() == isEmergency;
 	}
 
 	@Override

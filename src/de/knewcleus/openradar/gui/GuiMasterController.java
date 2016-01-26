@@ -184,8 +184,8 @@ public class GuiMasterController {
         
         mainFrame.getRadarScreen().showMap(); // move map and display it
         
-        sectionsListManager.LoadLayout();
-        //sectionsListManager.createExample(); 
+        //sectionsListManager.LoadLayout();
+        sectionsListManager.createExample(); 
         //sectionsListManager.createTraditional(); 
     }
 

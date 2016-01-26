@@ -59,6 +59,11 @@ public class SectionPanel extends JPanel {
 			add(new FooterPanel(), gridBagConstraints);
 			gridBagConstraints.gridy++;
 		}
+		checkVisible();
+	}
+	
+	public void checkVisible() {
+		setVisible(section.isAutoVisible() ? (flightstripspanel.getRowCount() > 0) : true);
 	}
 	
 	public AbstractOrder<?> getOrder() {

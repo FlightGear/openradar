@@ -36,6 +36,7 @@ import de.knewcleus.openradar.gui.flightstrips.rules.AtcSelfRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.ColumnRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.DistanceMaxRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.DistanceMinRule;
+import de.knewcleus.openradar.gui.flightstrips.rules.EmergencyRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.GroundSpeedMaxRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.GroundSpeedMinRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.NewRule;
@@ -82,17 +83,19 @@ public class LogicManager implements Runnable {
 	}
 	
 	public void createExample() {
-		/* test
-		SectionData section = new SectionData("Emergency", "");
-		sections.add(section);
-		*/
+		SectionData section_emergency = new SectionData("Emergency", "");
+		sections.add(section_emergency);
+		section_emergency.setAutoVisible(true);
+		
 		SectionData section_controlled = new SectionData("Controlled", "APP", "Transit | Pattern", "DEP");
 		sections.add(section_controlled);
 		section_controlled.setOrder(new DistanceOrder());
+		section_controlled.setAutoVisible(true);
 		
 		SectionData section_interesting = new SectionData("Interesting", "APP", "Transit", "DEP");
 		sections.add(section_interesting);
 		section_controlled.setOrder(new DistanceOrder());
+		section_interesting.setAutoVisible(true);
 
 		SectionData section_uncontrolled = new SectionData("Uncontrolled", "APP", "Other", "DEP");
 		sections.add(section_uncontrolled);
@@ -102,22 +105,31 @@ public class LogicManager implements Runnable {
 		sections.add(section_ground);
 		section_ground.setOrder(new ColumnOrder(false));
 
-		SectionData section_atc = new SectionData("ATC | carrier | car", "");
+		SectionData section_car = new SectionData("car", "park", "drive");
+		sections.add(section_car);
+		section_car.setOrder(new CallsignOrder());
+		section_car.setAutoVisible(true);
+		
+		SectionData section_atc = new SectionData("ATC | carrier", "");
 		sections.add(section_atc);
 		section_atc.setOrder(new CallsignOrder());
+		section_atc.setAutoVisible(true);
 		
 		// rules for new contacts
 		RuleManager rules = master.getRulesManager();
 		// ATC / carrier / car contacts
 		rules.add(new RuleAndAction("ATC", new ATCRule(true), new MoveToAction(section_atc, 0)));
 		rules.add(new RuleAndAction("carrier", new OrRule (new AircraftRule("MP-NIMITZ", true), new AircraftRule("MP-VINSON", true)), new MoveToAction(section_atc, 0)));
-		rules.add(new RuleAndAction("car", new AircraftRule("FOLLOWME", true), new MoveToAction(section_atc, 0)));
+		rules.add(new RuleAndAction("car",  new AndRule(new AircraftRule("FOLLOWME", true), new GroundSpeedMaxRule(1)), new MoveToAction(section_car, 0)));
+		rules.add(new RuleAndAction("car", new AircraftRule("FOLLOWME", true), new MoveToAction(section_car, 0)));
 		// ground
 		double ground = master.getAirportData().getElevationFt() + 50;
 		System.out.printf("ground = %f\n", ground);
 		rules.add(new RuleAndAction("Ground Taxi OUT", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1), new ColumnRule(1, true)), new MoveToAction(section_ground, 2)));
 		rules.add(new RuleAndAction("Ground Taxi", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1)), new MoveToAction(section_ground, -1)));
 		rules.add(new RuleAndAction("Ground Parking", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMaxRule(1)), new MoveToAction(section_ground, 1)));
+		// emergency
+		rules.add(new RuleAndAction("Emergency", new EmergencyRule(true), new MoveToAction(section_emergency, 0)));
 		// controlled by me
 		rules.add(new RuleAndAction("Controlled", new AtcSelfRule(true), new MoveToAction(section_controlled, -1)));
 		// controlled by any other ATC

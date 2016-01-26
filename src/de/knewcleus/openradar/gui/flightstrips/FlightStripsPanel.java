@@ -103,6 +103,7 @@ public class FlightStripsPanel extends JPanel {
 	
 	public synchronized void reorderFlightStrips() {
 		//- System.out.println("reorderFlightStrips --- start");
+		section.getPanel().checkVisible();
 		synchronized(getTreeLock()) { // should be used around getComponentCount
 			// user defined sort order
 			if (order != null) order.sort(rows);
@@ -131,6 +132,10 @@ public class FlightStripsPanel extends JPanel {
 			reorderFlightStrips();
 		}
 		//- System.out.println("moveRowToIndex --- end");
+	}
+	
+	public int getRowCount() {
+		return rows.size();
 	}
 	
 	public int getRowIndex(FlightStripRow row) {
