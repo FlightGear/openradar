@@ -353,6 +353,10 @@ public class SetupController {
         if (setupDialog.readInputs(data)) {
             // start application
             try {
+            	// Prevent JComboBox popup from grabbing mouse completely from X11.
+            	// As JComboBox popup sometimes freezes 
+            	// with this property set true only OpenRadar freezes and not all of X11
+        		System.setProperty("sun.awt.disablegrab", "true");  
             	//log.info("setCallSign");
                 data.setCallSign(setupDialog.getCallsign());
             	//log.info("manager");
