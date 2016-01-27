@@ -796,7 +796,7 @@ public class RadarContactController
 
 	public void hideDialogs(boolean save) {
 		atcMessageDialog.setVisible(false);
-		flightplanDialog.closeDialog(save);
+		flightplanDialog.extCloseDialog(save);
 		transponderSettingsDialog.closeDialog();
 	}
 
