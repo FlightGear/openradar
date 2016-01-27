@@ -920,7 +920,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 		btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
 
 		setFpReadable(fpd.isUncontrolled() || fpd.isOwnedByMe());
-		btCloseFp.setEnabled(master.getAirportData().isFpDownloadEnabled() && fpd.isOwnedByMe() && fpd.getFlightPlanId() != null && !fpd.getFlightPlanId().isEmpty());
+		btCloseFp.setEnabled(master.getAirportData().isFpDownloadEnabled() && fpd.isOwnedByMe()
+				&& fpd.getFlightPlanId() != null && !fpd.getFlightPlanId().isEmpty());
 		log.warn("setData done");
 	}
 
@@ -1096,21 +1097,6 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 	//
 	//    }
 
-	public synchronized void closeDialog(boolean save) {
-		if (isVisible()) {
-			if (lenny64Controller.isDialogOpen()) {
-				getLenny64Controller().closeFpSelectionDialog();
-				toFront();
-			} else {
-				if (save) {
-					saveData();
-				}
-
-				setVisible(false);
-			}
-		}
-	}
-
 	public synchronized void saveData() {
 		log.warn("saving Data");
 		synchronized (contact) {
@@ -1182,7 +1168,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				ta.setCaretPosition(carretPos);
 				e.consume();
 
-				closeDialog(true);
+				extCloseDialog(true);
 			}
 			if (e.getKeyChar() == KeyEvent.VK_ENTER && e.isControlDown() && !e.isShiftDown()) {
 				int carretPos = ta.getCaretPosition();
@@ -1243,9 +1229,11 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 			} else if ("RELEASE_CONTROL".equals(source.getName())) {
 				master.getRadarContactManager().releaseFromControl(contact);
 				setData(contact);
-			} else if ("RETRIEVE_FP".equals(source.getName()) && e.getClickCount() == 1 && master.getAirportData().isFpDownloadEnabled()) {
+			} else if ("RETRIEVE_FP".equals(source.getName()) && e.getClickCount() == 1
+					&& master.getAirportData().isFpDownloadEnabled()) {
 				lenny64Controller.downloadFlightPlansFor(e, contact.getCallSign());
-			} else if ("CLOSE_FP".equals(source.getName()) && e.getClickCount() == 1 && master.getAirportData().isFpDownloadEnabled()) {
+			} else if ("CLOSE_FP".equals(source.getName()) && e.getClickCount() == 1
+					&& master.getAirportData().isFpDownloadEnabled()) {
 				if (btCloseFp.getText().equals(FPCLOSE_BUTTON_DEFAULT)) {
 					// change text to are you sure?
 					btCloseFp.setText(FPCLOSE_BUTTON_ASK);
@@ -1288,7 +1276,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 	}
 
 	public synchronized boolean shows(GuiRadarContact c) {
-		return c.equals(contact);
+		return isVisible() && c.equals(contact);
 	}
 
 	public synchronized Lenny64Controller getLenny64Controller() {
@@ -1348,6 +1336,27 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				log.info("CbRunway: Action Performed DONE");
 			}
 		}
+	}
+
+	public void extCloseDialog(boolean save) {
+		final boolean doSave = save;
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				if (isVisible()) {
+					if (lenny64Controller.isDialogOpen()) {
+						getLenny64Controller().closeFpSelectionDialog();
+						toFront();
+					} else {
+						setVisible(false);
+						if (doSave) {
+							saveData();
+						}
+					}
+				}
+			}
+		});
 	}
 
 	/**
