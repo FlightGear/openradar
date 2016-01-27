@@ -33,14 +33,20 @@ public abstract class AbstractOrder<T extends Comparable<T>> implements Comparat
 		this.ascending = ascending;
 	}
 
-	protected abstract T getCompareValue(FlightStrip flightstrip);
-	
-	// --- AbstractOrder ---
+	public String getDisplayName() {
+		return "";
+	}
 
+	public String getDisplayText() {
+		return String.format("%s (%s)", getDisplayName(), ascending ? "ascending" : "descending");
+	}
+	
 	public void sort(ArrayList<FlightStripRow> rows) {
 		Collections.sort(rows, this);
 	}
 
+	protected abstract T getCompareValue(FlightStrip flightstrip);
+	
 	// --- Comparator ---
 	
 	@Override
@@ -65,6 +71,11 @@ public abstract class AbstractOrder<T extends Comparable<T>> implements Comparat
 
 	public void putAttributes(Element element) {
 		element.setAttribute("ascending", String.valueOf(ascending));
+	}
+
+	@Override
+	public String toString() {
+		return getDisplayName();
 	}
 	
 }

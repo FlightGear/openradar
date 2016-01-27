@@ -66,6 +66,10 @@ public class SectionPanel extends JPanel {
 		setVisible(section.isAutoVisible() ? (flightstripspanel.getRowCount() > 0) : true);
 	}
 	
+	public SectionData getSection() {
+		return section;
+	}
+
 	public AbstractOrder<?> getOrder() {
 		return flightstripspanel.getOrder();
 	}
@@ -109,6 +113,11 @@ public class SectionPanel extends JPanel {
 			setBackground(Palette.SECTION_HEADER);
 			setBorder(BorderFactory.createLineBorder(Palette.BLACK));
 			setLayout(new GridBagLayout());
+			recreatePanel();
+		}
+		
+		public void recreatePanel() {
+			removeAll();
 			// columns informations
 			ArrayList<ColumnData> columns = section.getColumns();
 			// add label for section title
@@ -144,8 +153,9 @@ public class SectionPanel extends JPanel {
 				if (columns.size() > 1)	title.setHorizontalAlignment(JLabel.RIGHT);
 	        }
 		}
-	}
 
+	}
+	
 	// =======================================================================
 	
 	protected class FooterPanel extends JPanel {

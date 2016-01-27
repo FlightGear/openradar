@@ -18,6 +18,11 @@ public class DistanceOrder extends AbstractOrder<Double> {
 	}
 	
 	@Override
+	public String getDisplayName() {
+		return "distance";
+	}
+
+	@Override
 	protected Double getCompareValue(FlightStrip flightstrip) {
 		return flightstrip.getContact().getRadarContactDistanceD();
 	}

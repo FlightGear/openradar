@@ -56,7 +56,7 @@ public class SectionData implements IDomElement {
 			}
 			else {
 				// order: last order is valid
-				AbstractOrder<? extends Comparable<?>> order = OrderManager.createClass(e); 
+				AbstractOrder<? extends Comparable<?>> order = OrderManager.createByClassName(e); 
 				if (order != null) setOrder(order); 
 			}
 		}

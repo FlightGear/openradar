@@ -18,6 +18,11 @@ public class ColumnOrder extends AbstractOrder<Integer> {
 	}
 	
 	@Override
+	public String getDisplayName() {
+		return "column";
+	}
+
+	@Override
 	protected Integer getCompareValue(FlightStrip flightstrip) {
 		return flightstrip.getColumn();
 	}

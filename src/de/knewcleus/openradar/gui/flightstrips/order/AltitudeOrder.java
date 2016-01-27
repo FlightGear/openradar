@@ -18,6 +18,11 @@ public class AltitudeOrder extends AbstractOrder<Double> {
 	}
 	
 	@Override
+	public String getDisplayName() {
+		return "altitude";
+	}
+
+	@Override
 	protected Double getCompareValue(FlightStrip flightstrip) {
 		return flightstrip.getContact().getAltitude();
 	}

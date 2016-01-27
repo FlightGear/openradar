@@ -6,9 +6,10 @@ import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+
+import de.knewcleus.openradar.gui.flightstrips.config.SectionColumnDialog;
 
 public class SectionMouseAdapter extends MouseAdapter {
 
@@ -17,6 +18,8 @@ public class SectionMouseAdapter extends MouseAdapter {
 	private GridBagLayout layout = null;
 	private Point panelPoint = null;
 	private Point targetPoint;
+	
+	private SectionColumnDialog dialog = null;
 	
 	public SectionMouseAdapter(SectionPanel sectionPanel) {
 		this.sectionPanel = sectionPanel;
@@ -78,4 +81,16 @@ public class SectionMouseAdapter extends MouseAdapter {
 		panelPoint = null;
 	}
 	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+			// double click -> show configuration dialog
+			if (dialog == null) dialog = new SectionColumnDialog();
+			dialog.setSection(sectionPanel.getSection());
+			Point p = sectionPanel.getLocationOnScreen();
+			dialog.setLocation(p.x - dialog.getWidth(), p.y);
+			dialog.setVisible(true);
+		}
+	}
+
 }
