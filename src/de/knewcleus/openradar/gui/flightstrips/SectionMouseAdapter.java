@@ -83,7 +83,7 @@ public class SectionMouseAdapter extends MouseAdapter {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+		if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() == 2) && sectionPanel.contains(e.getPoint())) {
 			// double click -> show configuration dialog
 			if (dialog == null) dialog = new SectionColumnDialog();
 			dialog.setSection(sectionPanel.getSection());

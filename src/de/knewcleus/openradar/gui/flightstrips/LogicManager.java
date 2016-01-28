@@ -85,17 +85,14 @@ public class LogicManager implements Runnable {
 	public void createExample() {
 		SectionData section_emergency = new SectionData("Emergency", "");
 		sections.add(section_emergency);
-		section_emergency.setAutoVisible(true);
 		
 		SectionData section_controlled = new SectionData("Controlled", "APP", "Transit | Pattern", "DEP");
 		sections.add(section_controlled);
 		section_controlled.setOrder(new DistanceOrder());
-		section_controlled.setAutoVisible(true);
 		
 		SectionData section_interesting = new SectionData("Interesting", "APP", "Transit", "DEP");
 		sections.add(section_interesting);
 		section_controlled.setOrder(new DistanceOrder());
-		section_interesting.setAutoVisible(true);
 
 		SectionData section_uncontrolled = new SectionData("Uncontrolled", "APP", "Other", "DEP");
 		sections.add(section_uncontrolled);
@@ -103,17 +100,14 @@ public class LogicManager implements Runnable {
 		
 		SectionData section_ground = new SectionData("Ground", "TAXI IN", "PARKING", "TAXI OUT");
 		sections.add(section_ground);
-		section_ground.setOrder(new ColumnOrder(false));
 
 		SectionData section_car = new SectionData("car", "park", "drive");
 		sections.add(section_car);
 		section_car.setOrder(new CallsignOrder());
-		section_car.setAutoVisible(true);
 		
 		SectionData section_atc = new SectionData("ATC | carrier", "");
 		sections.add(section_atc);
 		section_atc.setOrder(new CallsignOrder());
-		section_atc.setAutoVisible(true);
 		
 		// rules for new contacts
 		RuleManager rules = master.getRulesManager();

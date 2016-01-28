@@ -72,7 +72,7 @@ public class SectionData implements IDomElement {
 	public void setTitle(String title) {
 		if (!this.title.equals(title)) {
 			this.title = title;
-			// TODO: broadcast message: contacts section column title changed
+			panel.recreateContents();
 		}
 	}
 	
