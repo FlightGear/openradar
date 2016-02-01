@@ -107,7 +107,11 @@ public class StPView implements IBoundedView, INotificationListener {
         mapViewAdapter.registerListener(this);
     }
 
-    @Override
+	public void destroy() {
+		mapViewAdapter.unregisterListener(this);
+	}
+
+	@Override
     public Rectangle2D getDisplayExtents() {
         return displayExtents;
     }

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2015 Wolfram Wagner
+ * Copyright (C) 2015-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -54,6 +54,11 @@ public class GridView implements IView, INotificationListener {
 		this.viewAdapter = viewAdapter;
 		this.gridLogicalSize = gridLogicalSize;
 		viewAdapter.registerListener(this);
+	}
+
+
+	public void destroy() {
+		viewAdapter.unregisterListener(this);
 	}
 
 	public double getGridLogicalSize() {

@@ -482,6 +482,7 @@ public class RadarMapPanel extends JComponent {
         }
         final NavPointProvider navPointProvider = new NavPointProvider(radarMapViewAdapter, addNavSymbolView, master);
         navPointProvider.addViews(master.getAirportData().getNavaidDB().getManualNavpoints());
+        master.getAirportData().getNavaidDB().refreshRouteVisibility();
     }
 
     @Override

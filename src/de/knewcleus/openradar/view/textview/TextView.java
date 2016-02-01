@@ -69,6 +69,9 @@ public class TextView implements IBoundedView, ILayoutPart {
 		this.container = container;
 	}
 
+	public void destroy() {
+	}
+	
 	public void setText(String text) {
 		this.text = text;
 		invalidate();

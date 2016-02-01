@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -42,7 +42,6 @@ import de.knewcleus.openradar.tracks.ITrack;
 
 public class TrackDisplayState extends Notifier {
 	protected final ITrack track;
-	protected boolean selected = false;
 
 	protected GuiMasterController master;
 	protected volatile GuiRadarContact guiContact;

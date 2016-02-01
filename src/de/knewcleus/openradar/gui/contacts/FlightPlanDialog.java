@@ -1097,7 +1097,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 	//
 	//    }
 
-	public synchronized void saveData() {
+	public synchronized void saveData(boolean transmit) {
 		log.warn("saving Data");
 		synchronized (contact) {
 			FlightPlanData fpd = contact.getFlightPlan();
@@ -1146,8 +1146,10 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				contact.setAtcComment(tpPrivateDetails.getText().trim());
 				master.getRadarContactManager().saveAtcNotes(contact);
 
-				contact.getFlightPlan().setReadyForTransmission();
-				master.getFlightPlanExchangeManager().triggerTransmission();
+				if(transmit) {
+					contact.getFlightPlan().setReadyForTransmission();
+					master.getFlightPlanExchangeManager().triggerTransmission();
+				}
 			}
 		}
 		log.warn("Data saved");
@@ -1163,8 +1165,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				int carretPos = ta.getCaretPosition() - 1;
 				currentText = new StringBuilder(currentText).deleteCharAt(carretPos).toString();
 				// master.getRadarContactManager().setAtcComment(currentText);
-				saveData();
-				ta.setText(currentText); // remove newlinesa
+				saveData(false);
+				ta.setText(currentText); // remove newlines
 				ta.setCaretPosition(carretPos);
 				e.consume();
 
@@ -1175,7 +1177,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				currentText = new StringBuilder(currentText).insert(carretPos, "\n").toString();
 				ta.setText(currentText);
 				ta.setCaretPosition(carretPos + 1);
-				saveData();
+				saveData(false);
 				//ta.requestFocus();
 			}
 			//            }
@@ -1212,7 +1214,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				setData(contact);
 			}
 			if ("SAVE".equals(source.getName())) {
-				saveData();
+				saveData(false);
 				setData(contact);
 			} else if ("START_HERE".equals(source.getName())) {
 				contact.getFlightPlan().startFromHere(master.getAirportData());
@@ -1242,10 +1244,10 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 					// really close it
 					lenny64Controller.closeFlightPlan(contact);
 					setData(contact);
-					saveData();
+					saveData(false);
 				}
 			} else if ("NEXT_SQUAWK".equals(source.getName()) && e.getClickCount() == 1) {
-				saveData();
+				saveData(false);
 				master.getRadarContactManager().assignSquawkCode(FlightType.valueOf(contact.getFlightPlan().getType()));
 				setData(contact);
 			} else if ("RESET_SQUAWK".equals(source.getName()) && e.getClickCount() == 1) {
@@ -1351,7 +1353,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 					} else {
 						setVisible(false);
 						if (doSave) {
-							saveData();
+							saveData(true);
 						}
 					}
 				}
@@ -1383,15 +1385,17 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 	/**
 	 * Called to bring new data into the dialog!
 	 */
-	public void extUpdateUI(GuiRadarContact currentContact) {
+	public void extUpdateUI(GuiRadarContact currentContact, boolean fgExchangeTransmit) {
 		final GuiRadarContact c = currentContact;
+		final boolean doTransmit = fgExchangeTransmit;
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				log.info("Executing work for extUpdateUI");
 				// executed by the Swing Thread
 				setData(c);
-				saveData();
+				saveData(doTransmit); // do not retransmit these changes => 
 				log.info("DONE Executing work for extUpdateUI");
 			}
 		});

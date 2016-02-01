@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -89,6 +89,10 @@ public class GeodataView implements IBoundedView, INotificationListener {
 		    }
 		}
 		updateLogicalShapes();
+	}
+
+	public void destroy() {
+		mapViewAdapter.unregisterListener(this);
 	}
 
 	public synchronized boolean hasContent() {

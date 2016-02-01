@@ -83,7 +83,11 @@ public class NavPointView implements IBoundedView, INotificationListener {
         updateLogicalPosition();
     }
 
-    @Override
+	public void destroy() {
+		mapViewAdapter.unregisterListener(this);
+	}
+
+	@Override
     public Rectangle2D getDisplayExtents() {
         return viewObjectPainter.getDisplayExtents();
     }

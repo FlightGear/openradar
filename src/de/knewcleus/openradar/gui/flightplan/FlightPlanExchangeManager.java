@@ -266,7 +266,7 @@ public class FlightPlanExchangeManager implements Runnable {
             if (responseCode == 200) {
                 // Everything is fine
                 fp.updateAsTransmitted();
-                log.info("Flightplan: "+data.getCallSign()+" Successfully updated flightplans! (got response code " + responseCode + " from " + url.toString() + ")...");
+                log.info("Flightplan: "+data.getCallSign()+"/"+fp.getCallsign()+" Successfully updated flightplan! (got response code " + responseCode + " from " + url.toString() + ")...");
             } else if (responseCode == 406) {
                 log.error("Failed to update flightplan updates! XML not understood at server (got response code " + responseCode + " "
                         + con.getResponseMessage() + " from " + url.toString() + ")...");

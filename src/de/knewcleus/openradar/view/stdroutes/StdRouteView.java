@@ -79,7 +79,11 @@ public class StdRouteView implements IBoundedView, INotificationListener,ISelect
         updateLogicalPosition();
 	}
 
-    @Override
+	public synchronized void destroy() {
+		mapViewAdapter.unregisterListener(this);
+	}
+
+	@Override
     public synchronized Rectangle2D getDisplayExtents() {
         if(displayExtents == null || mapViewAdapter.getViewerExtents().getHeight()>0) {
             displayExtents = mapViewAdapter.getViewerExtents();

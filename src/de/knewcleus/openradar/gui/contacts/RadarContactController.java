@@ -1030,7 +1030,7 @@ public class RadarContactController
 
 		// update FP Dialog
 		if (flightplanDialog.shows(c)) {
-			flightplanDialog.extUpdateUI(c);
+			flightplanDialog.extUpdateUI(c, false);
 		}
 	}
 

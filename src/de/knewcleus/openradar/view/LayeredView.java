@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -47,8 +47,12 @@ public class LayeredView implements IContainer {
         this.viewAdapter = mapViewAdapter;
     }
 
-    public synchronized void clear() {
+	public void destroy() {
+	}
+
+	public synchronized void clear() {
         for (IView view : new ArrayList<IView>(views)) {
+        	view.destroy();
             removeView(view);
         }
     }
@@ -115,7 +119,7 @@ public class LayeredView implements IContainer {
     public synchronized void paint(Graphics2D g2d) {
     }
 
-    public String getTooltipText(Point p) {
+    public synchronized String getTooltipText(Point p) {
         for (IView view : views) {
             String text = view.getTooltipText(p);
             if (text != null)
@@ -125,7 +129,7 @@ public class LayeredView implements IContainer {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public synchronized void mouseClicked(MouseEvent e) {
         for (IView view : views) {
             view.mouseClicked(e);
             if (e.isConsumed()) {

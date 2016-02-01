@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -43,6 +43,11 @@ import java.awt.event.MouseEvent;
  * @author Ralf Gerlich
  */
 public interface IView {
+	
+	/**
+	 * Called short before it is unreferenced to destroy connections to listeners etc.
+	 */
+	public void destroy();
 	/**
 	 * Paint this view.
 	 * @param g2d  The graphics context to paint on.
@@ -69,4 +74,6 @@ public interface IView {
     public String getTooltipText(Point p);
 
     public void mouseClicked(MouseEvent e);
+
+
 }

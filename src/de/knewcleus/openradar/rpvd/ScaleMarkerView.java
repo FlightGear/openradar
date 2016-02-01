@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -73,6 +73,10 @@ public class ScaleMarkerView implements IBoundedView, INotificationListener {
 		this.color = color;
 
 		viewerAdapter.registerListener(this);
+	}
+
+	public void destroy() {
+		viewerAdapter.unregisterListener(this);
 	}
 
 	public Color getColor() {

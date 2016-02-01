@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2015 Wolfram Wagner
+ * Copyright (C) 2012-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -77,6 +77,12 @@ public class AtcObjectsView implements IBoundedView, INotificationListener {
         viewObjectPainter = AViewObjectPainter.getPainterForNavpoint(mapViewAdapter, master, data);
         updateLogicalPosition();
 	}
+	
+
+	public void destroy() {
+		mapViewAdapter.unregisterListener(this);
+	}
+
     @Override
     public synchronized Rectangle2D getDisplayExtents() {
         return viewObjectPainter.getDisplayExtents();

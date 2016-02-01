@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013-2016 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -88,6 +88,11 @@ public class ActiveAtcRangeView implements IBoundedView, INotificationListener {
         displayExtents=mapViewAdapter.getViewerExtents();
         mapViewAdapter.registerListener(this);
     }
+
+
+	public void destroy() {
+		mapViewAdapter.unregisterListener(this);
+	}
 
     @Override
     public Rectangle2D getDisplayExtents() {
