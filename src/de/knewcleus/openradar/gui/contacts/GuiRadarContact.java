@@ -584,4 +584,8 @@ public class GuiRadarContact {
     public synchronized String getAtcLetter() {
         return null;
     }
+
+    public AirportData getAirportData() {
+    	return airportData;
+    }
 }

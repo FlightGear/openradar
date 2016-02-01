@@ -205,6 +205,29 @@ public class Palette {
     public static final Color FPD_Online = Color.blue; 
     public static final Color FPD_Offline = Color.GRAY; 
     
+    // Flight Strip Section
+    public static final Color SECTION_BACKGROUND = DESKTOP; 
+    public static final Color SECTION_HEADER     = Color.LIGHT_GRAY; 
+    public static final Color SECTION_TITLE      = Color.BLACK; 
+    
+    // Flight Strip
+	public final static Font STRIP_FONT = new Font("Geneva",Font.PLAIN,11); 
+	public final static Font STRIP_FONT_BOLD = new Font("Geneva",Font.BOLD,11); 
+    public static final Color STRIP_BACKGROUND_NEW = new Color(215,255,215); 
+    public static final Color STRIP_BACKGROUND_FLIGHT = Color.WHITE; 
+    public static final Color STRIP_BACKGROUND_ATC = Color.WHITE; 
+    public static final Color STRIP_BACKGROUND_SELECTED = new Color(215,215,255); 
+    public static final Color STRIP_BACKGROUND_OFFERED = new Color(255,255,127); 
+    public static final Color STRIP_DEFAULT = Color.BLACK;  
+    public static final Color STRIP_INACTIVE = Color.GRAY;  
+    public static final Color STRIP_SELECTION = Color.BLUE;  
+    public static final Color STRIP_EMERGENCY = Color.RED;  
+    public static final Color STRIP_CALLSIGN = Color.blue;  
+    public static final Color STRIP_AIRCRAFT = Color.blue;  
+    public static final Color STRIP_SQUAWK = Color.blue;  
+    public static final Color STRIP_EDIT_TEXT = Color.BLUE; 
+    public static final int STRIP_COLUMN_SPACE = 40; 
+    
     // ORCam
     public static final Color ORCAM_OFFLINE = new Color(200,0,0); 
     public static final Color ORCAM_FOLLOW = Color.blue; 

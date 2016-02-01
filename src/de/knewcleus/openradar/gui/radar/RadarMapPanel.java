@@ -336,6 +336,7 @@ public class RadarMapPanel extends JComponent {
                 }
                 rootView.pushView(layeredGroundnetView);
             }
+
             
             // route view
             

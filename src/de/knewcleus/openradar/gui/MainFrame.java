@@ -132,8 +132,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         vspRight.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         vspRight.setResizeWeight(0);
-        vspRight.setMinimumSize(new java.awt.Dimension(400, 0));
-        vspRight.setPreferredSize(new java.awt.Dimension(400, 0));
+        vspRight.setMinimumSize(new java.awt.Dimension(450, 0));
+        vspRight.setPreferredSize(new java.awt.Dimension(450, 0));
         hspMain.setRightComponent(vspRight);
 
         // Right top: Radios, Details of wind and runways
