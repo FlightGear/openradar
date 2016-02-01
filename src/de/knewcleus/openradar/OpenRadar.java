@@ -80,9 +80,9 @@ public class OpenRadar {
 
         Locale.setDefault(Locale.US);
 
-        log.info(System.getProperties().getProperty("java.runtime.name").toString().replace( ',', '\n' ).replace( '{', ' '  ).replace( '}', ' '  ));
-        log.info(System.getProperties().getProperty("java.runtime.version").toString().replace( ',', '\n' ).replace( '{', ' '  ).replace( '}', ' '  ));
-        log.info(System.getProperties().getProperty("java.awt.graphicsenv").toString().replace( ',', '\n' ).replace( '{', ' '  ).replace( '}', ' '  ));
+        log.info(System.getProperties().getProperty("java.runtime.name").toString().replace( ',', '\n' ).replace( '{', ' '  ).replace( '}', ' '  )); // avo:test
+        log.info(System.getProperties().getProperty("java.runtime.version").toString().replace( ',', '\n' ).replace( '{', ' '  ).replace( '}', ' '  )); // avo:test
+        log.info(System.getProperties().getProperty("java.awt.graphicsenv").toString().replace( ',', '\n' ).replace( '{', ' '  ).replace( '}', ' '  )); // avo:test
 
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
