@@ -257,6 +257,7 @@ public class NavaidDB {
 
 	public void updateRoutesCbModel(DefaultComboBoxModel<String> cbModel, GuiMasterController master,
 			String assignedRunway, boolean addEmptyEntry) {
+		log.info("Refreshing FP Routes Field!");
 		HashSet<String> activeRunways = master.getAirportData().getActiveRunways();
 
 		ArrayList<StdRoute> stdRoutesList = new ArrayList<>(stdRoutes); // outside syncronized block

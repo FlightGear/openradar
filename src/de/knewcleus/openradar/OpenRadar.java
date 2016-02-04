@@ -57,7 +57,14 @@ public class OpenRadar {
     private static Logger log;
     
     public static void main(String[] args) {
-
+    	/**
+    	 * There is an honest problem under Debian and Ubuntu: Since September 2015 openjdk enables atk as part of GTKLookAndFeel. 
+    	 * ATK has several issues under SWING especially if you use JComboBoxes: Java App Freezes and X-Server Lockups have been seen
+    	 * and fought over several months. 
+    	 * By setting the following property, we disable ATC to avoid that every debian/ubuntu user has to do this in his Java system config files.
+    	 */
+    	System.setProperty("javax.accessibility.assistive_technologies", ""); 
+    	// enable logging
         PropertyConfigurator.configureAndWatch( "data/log4j.properties", 60*1000 );
         //System.setProperty("log4j.configurationFile","data/log4j.xml");
         log = LogManager.getLogger(OpenRadar.class); 
@@ -85,20 +92,18 @@ public class OpenRadar {
         log.info(System.getProperties().getProperty("java.awt.graphicsenv").toString().replace( ',', '\n' ).replace( '{', ' '  ).replace( '}', ' '  ));
 
         try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             UIManager.put("desktop", Palette.DESKTOP);
             UIManager.put("SplitPane.background", Palette.DESKTOP);
             UIManager.put("SplitPane.foreground", Palette.DESKTOP_TEXT);
             UIManager.put("SplitPane.highlight", Palette.DESKTOP_TEXT);
 
         } catch (Exception e) {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception e1) {
-                log.error("Error while setting look and feel!",e);
-            }
+        	log.error("Error while setting look and feel!",e);
         }
 
+        log.info(UIManager.getLookAndFeel().getClass().getName()+": "+UIManager.getLookAndFeel().getDescription());
         EventQueue.invokeLater(new Runnable() {
 
             @Override

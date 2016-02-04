@@ -821,19 +821,19 @@ public class AirportData implements INavPointListener {
         }
     }
 
-    public void updateGeneralArrivalRunwayModel(DefaultComboBoxModel<String> cbModel, boolean addEmptyEntry) {
-        synchronized (cbModel) {
-            cbModel.removeAllElements();
-            if (addEmptyEntry) {
-                cbModel.addElement("");
-            }
-            for (GuiRunway rw : runways.values()) {
-                if (rw.getRunwayData().isLandingEnabled()) {
-                    cbModel.addElement(rw.getCode());
-                }
-            }
-        }
-    }
+//    public void updateGeneralArrivalRunwayModel(DefaultComboBoxModel<String> cbModel, boolean addEmptyEntry) {
+//        synchronized (cbModel) {
+//            cbModel.removeAllElements();
+//            if (addEmptyEntry) {
+//                cbModel.addElement("");
+//            }
+//            for (GuiRunway rw : runways.values()) {
+//                if (rw.getRunwayData().isLandingEnabled()) {
+//                    cbModel.addElement(rw.getCode());
+//                }
+//            }
+//        }
+//    }
 
     public synchronized HashSet<String> getActiveRunways() {
         HashSet<String> activeRWs = new HashSet<String>();

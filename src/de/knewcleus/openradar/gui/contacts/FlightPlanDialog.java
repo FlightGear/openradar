@@ -901,10 +901,10 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 		tfFpTAS.setText(fpd.getTrueAirspeed());
 
 		master.getAirportData().updateRunwayModel((DefaultComboBoxModel<String>) cbAssignedRunway.getModel(), true);
-		cbAssignedRunway.getEditor().setItem(fpd.getAssignedRunway());
+		cbAssignedRunway.setSelectedItem(fpd.getAssignedRunway());
 		master.getAirportData().getNavaidDB().updateRoutesCbModel(
 				(DefaultComboBoxModel<String>) cbAssignedRoute.getModel(), master, fpd.getAssignedRunway(), true);
-		cbAssignedRoute.getEditor().setItem(fpd.getAssignedRoute());
+		cbAssignedRoute.setSelectedItem(fpd.getAssignedRoute());
 
 		tfAssignedAltitude.setText(fpd.getAssignedAltitude());
 		//cbFlightPlanStatus.getEditor().setItem(fpd.getFpStatus());
@@ -1121,8 +1121,8 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				// estimatedFlightTime+
 				// estimatedFuelTime
 
-				fpd.setAssignedRunway((String) cbAssignedRunway.getEditor().getItem());
-				fpd.setAssignedRoute((String) cbAssignedRoute.getEditor().getItem());
+				fpd.setAssignedRunway((String) cbAssignedRunway.getSelectedItem());
+				fpd.setAssignedRoute((String) cbAssignedRoute.getSelectedItem());
 				fpd.setAssignedAltitude(tfAssignedAltitude.getText());
 
 				if (contact.getFlightPlan().isOwnedByMe()) {
@@ -1330,7 +1330,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 					for (int i = 0; i < cbAssignedRoute.getModel().getSize(); i++) {
 						String currentElement = cbAssignedRoute.getModel().getElementAt(i);
 						if (selectedRoute.equals(currentElement)) {
-							cbAssignedRoute.getModel().setSelectedItem(currentElement);
+							cbAssignedRoute.setSelectedItem(currentElement);
 							continue;
 						}
 					}
