@@ -203,10 +203,13 @@ public class SetupController {
                 @SuppressWarnings("unchecked")
                 JList<SectorBean> jList = (JList<SectorBean>) e.getSource();
                 SectorBean sb = jList.getSelectedValue();
-                if (sb.isSectorDownloaded()) {
-                    startApplication();
-                } else {
-                    downloadSector(setupDialog.getSelectedSector());
+                if(sb!=null) {
+                	// some user manage to do a double click without selecting a sector
+	                if (sb.isSectorDownloaded()) {
+	                    startApplication();
+	                } else {
+	                    downloadSector(setupDialog.getSelectedSector());
+	                }
                 }
             }
         }
