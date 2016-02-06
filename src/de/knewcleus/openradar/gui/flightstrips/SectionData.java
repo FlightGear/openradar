@@ -19,9 +19,9 @@ public class SectionData implements IDomElement {
 	private boolean showHeader = true;
 	private boolean showColumnTitles = false;
 	
-	private final SectionPanel panel;
-
 	private ArrayList<ColumnData> columns = new ArrayList<ColumnData>();
+
+	private final SectionPanel panel;
 
 	
 	// --- constructors ---

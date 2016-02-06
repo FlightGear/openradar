@@ -90,7 +90,7 @@ public class FlightStripsPanel extends JPanel {
 			FlightStripRow fsr = (FlightStripRow) flightstrip.getParent();
 			if (!rows.contains(fsr)) rows.add(fsr);
 			layout.setConstraints(fsr, gridBagConstraints);
-			setComponentZOrder(fsr, 0); // this is not really working correctly
+			setComponentZOrder(fsr, 0); // this is not really working correctly when moving from a different component
 		}
 		updateColumn(flightstrip);
 		reorderFlightStrips();
@@ -116,6 +116,7 @@ public class FlightStripsPanel extends JPanel {
 					layout.setConstraints(fsr, gridBagConstraints);
 				}
 			}
+			invalidate();
 			validate();
 		}
 		//- System.out.println("reorderFlightStrips --- end");

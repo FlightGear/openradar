@@ -317,7 +317,8 @@ public class FlightStrip extends JPanel implements FocusListener {
 		// row 1
 		cAircraft.setText(contact.isNeglect() ? "neglected" : (contact.isActive() ? contact.getModel() : "inactive: " + ((System.currentTimeMillis() - contact.getLastUpdate()) / 1000) + " sec"));
 		cAircraft.setFont(contact.isActive() ? Palette.STRIP_FONT : Palette.STRIP_FONT_BOLD);
-		cSquawk.setLabelText(contact.getTranspSquawkDisplay());
+		String s = contact.getTranspSquawkDisplay();
+		cSquawk.setLabelText(s.isEmpty() ? "----" : s);
 		cSquawk.setEditText(contact.getAssignedSquawkDisplay());
 		// row 2
 		cDistance.setText(contact.getRadarContactDistance() + " NM");
