@@ -59,7 +59,7 @@ public class SectionMouseAdapter extends MouseAdapter {
 	protected void updateParent(MouseEvent e) {
         int targetGridY = getTargetGridY(e);
         if (targetGridY >= 0) {
-            parent.moveSection(sectionPanel, targetGridY - getGridY(sectionPanel));
+            parent.moveSection(sectionPanel, targetGridY);
         }
 		getParent().doLayout();
 	}

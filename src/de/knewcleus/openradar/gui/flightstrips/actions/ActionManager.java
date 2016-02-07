@@ -21,7 +21,7 @@ public class ActionManager {
 		Class<?> parameterTypes[] = new Class[] { Element.class , LogicManager.class };
 		for (Class<? extends AbstractAction> orderclass : getAvailableActions()) {
 			if (classname.equalsIgnoreCase(orderclass.getSimpleName())) {
-				System.out.printf("create action '%s' end: found\n", classname);
+				//System.out.printf("create action '%s' end: found\n", classname);
 				return orderclass.getConstructor(parameterTypes).newInstance(element, logic);
 			}
 		}

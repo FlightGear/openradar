@@ -32,10 +32,12 @@ public class OrderManager {
 	public static AbstractOrder<? extends Comparable<?>> createByClassName(Element element) throws Exception {
 		AbstractOrder<? extends Comparable<?>> result = null;
 		String classname = element.getName();
+		//System.out.println("order name = " + classname);
 		Class<?> parameterTypes[] = new Class[] { Element.class };
 		for (Class<? extends AbstractOrder<? extends Comparable<?>>> orderclass : getAvailableOrderClasses()) {
 			if (classname.equalsIgnoreCase(orderclass.getSimpleName())) {
 				result = orderclass.getConstructor(parameterTypes).newInstance(element);
+				//System.out.println("order name = " + classname + " found: result " + (result == null ? "<null>" : result.getClass().getSimpleName()));
 				break;
 			}
 		}

@@ -46,7 +46,9 @@ import de.knewcleus.openradar.gui.flightstrips.rules.RuleManager;
 
 public class LogicManager implements Runnable {
 
-	private final String filename = "settings" + File.separator + "layout.xml";
+	public enum FilenameId { DEFAULT, ROLE, AIRPORT, CALLSIGN };
+	
+	private final String FilePath = "layout";
 	
 	private final GuiMasterController master;
 	private final ArrayList<SectionData> sections = new ArrayList<SectionData>();
@@ -60,8 +62,218 @@ public class LogicManager implements Runnable {
 	
 	// --- sections ---
 	
+	public int getSectionCount() {
+		return sections.size();
+	}
+	
+	public SectionData addSection(String title) {
+		SectionData result = new SectionData(this, title); 
+		sections.add(result);
+		return result;
+	}
+
+	public SectionData addSection(String title, String... columnTitles) {
+		SectionData result = new SectionData(this, title, columnTitles); 
+		sections.add(result);
+		return result;
+	}
+	
+	public ArrayList<SectionData> getSections() {
+		return sections;
+	}
+	
+	public SectionData getPreviousSection (SectionData section) {
+		int i = sections.indexOf(section) - 1;
+		try {
+			return sections.get(i); 
+		}
+		catch (IndexOutOfBoundsException e) {
+			return null; 
+		}
+	}
+	
+	public SectionData getNextSection (SectionData section) {
+		int i = sections.indexOf(section) + 1;
+		try {
+			return sections.get(i); 
+		}
+		catch (IndexOutOfBoundsException e) {
+			return null; 
+		}
+	}
+	
+	public SectionData getSectionByTitle (String title) {
+		for (SectionData section : sections) {
+			if (title.equalsIgnoreCase(section.getTitle())) return section;
+		}
+		return null;
+	}
+
+	public void moveSectionToIndex (SectionData section, int target_index) {
+		int source_index = sections.indexOf(section);
+		if (target_index < 0) target_index = 0;
+		if (target_index >= sections.size()) target_index = sections.size() - 1;
+		if (source_index != target_index) {
+			sections.remove(section);
+			sections.add(target_index, section);
+		}
+	}
+	
+	public void updateFlightstrips() {
+		RadarContactController radarContactController = master.getRadarContactManager();
+		// get list of contacts
+		radarContactController.clearSectionsListManagerFlag();
+		List<GuiRadarContact> contacts = radarContactController.getContactListCopy();
+		// collect all flightstrips
+		ArrayList<FlightStrip> flightstrips = new ArrayList<FlightStrip>();
+		for (SectionData section : sections) {
+			flightstrips.addAll(section.getFlightStrips());
+		}
+		// update existing and remove expired flightstrips
+        RuleManager rules = master.getRulesManager();
+		for (FlightStrip flightstrip : flightstrips) {
+			GuiRadarContact contact = flightstrip.getContact();
+			if (contacts.contains(contact)) {
+				// contact exists
+				flightstrip.updateContents();
+				rules.ApplyAppropriateRule(flightstrip);
+				// remove contact from list, so that new contacts remain in list
+				contacts.remove(contact);
+			}
+			else {
+				// contact is expired
+				flightstrip.remove();
+			}
+		}
+		// create new flightstrips
+		for (GuiRadarContact contact : contacts) {
+			FlightStrip flightstrip = new FlightStrip(contact);
+			flightstrip.updateContents();
+			rules.ApplyAppropriateRule(flightstrip);
+		}
+		// order flightstrips within the section
+		for (SectionData section : sections) {
+			section.reorderFlightStrips();
+		}
+	}
+	
+	@Override
+	public void run() {
+		// runs in AWT-Thread, invoked by RadarContactController.publishData: 
+		//      SwingUtilities.invokeLater(master.getSectionsListManager());
+		updateFlightstrips();
+	}
+	
+	// XML
+	
+	public String createFilename(FilenameId id) {
+		String callsign = master.getAirportData().getCallSign();
+		switch (id) {
+		case CALLSIGN:
+			return callsign;
+		case AIRPORT:
+			return callsign.substring(0, 4);
+		case ROLE:
+			return callsign.substring(4);
+		default:
+			return "default";
+		}
+	}
+
+	protected String createFilename(String filename) {
+		return FilePath + File.separator + filename + ".xml";
+	}
+	
+	public void SaveLayout(FilenameId id) {
+		SaveLayout(createFilename(id));
+	}
+	
+	public void SaveLayout(String filename) {
+        try {
+        	filename = createFilename (filename);
+        	File f = new File (FilePath);
+        	f.mkdirs();
+    		// --- create document ---
+            Document doc = new Document();
+            Element root = new Element("flightstripbay");
+            doc.addContent(root);
+            root.setAttribute("version", "1");
+            // sections
+            for (SectionData section : sections) {
+    			root.addContent(section.createDomElement());
+    		}
+    		// rules
+            for (RuleAndAction ra : master.getRulesManager().getRuleAndActions()) {
+            	root.addContent(ra.createDomElement());
+            }
+            // --- save document ---
+            XMLOutputter xmlOutput = new XMLOutputter();
+            xmlOutput.setFormat(Format.getPrettyFormat());
+            xmlOutput.output(doc, new FileWriter(filename));        
+        } catch (Exception exception) {
+        	log.error( "Problem to create " + filename + " document for flightstripbay: ", exception);
+        }
+	}
+	
+	public void LoadLayout() {
+		if (!LoadLayout(createFilename(FilenameId.CALLSIGN)))
+			if (!LoadLayout(createFilename(FilenameId.AIRPORT)))
+				if (!LoadLayout(createFilename(FilenameId.ROLE)))
+					if (!LoadLayout(createFilename(FilenameId.DEFAULT)))
+						createExample();
+	}
+	
+	public void LoadLayout(FilenameId id) {
+		LoadLayout(createFilename(id));
+	}
+	
+	public boolean LoadLayout(String filename) {
+		boolean result = false; 
+    	filename = createFilename (filename);
+		InputStream xmlInputStream = null;
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			xmlInputStream = new FileInputStream(filename);
+			Document document = (Document) builder.build(xmlInputStream);
+			Element root = document.getRootElement();
+			if (!root.getName().equals("flightstripbay")) throw(new Exception("root element <flightstripbay> not recognized!"));
+			RuleManager rules = master.getRulesManager();
+			rules.setActive(false);
+			rules.clear();
+			sections.clear();
+			LoadLayout1(root, Integer.parseInt(root.getAttributeValue("version")), rules);
+			rules.setActive(true);
+			result = true;
+		} catch (Exception e) {
+			log.error("Problem to parse file " + filename + ", Error:" + e.getMessage());
+		} finally {
+			if (xmlInputStream != null) {
+				try {
+					xmlInputStream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return result;
+	}
+	
+	protected void LoadLayout1(Element root, int version, RuleManager rules) throws Exception {
+		if (version != 1) throw(new Exception(String.format("version %d root element <flightstripbay> can not be parsed!", version)));
+		// load sections
+		for (Element eSection : root.getChildren(SectionData.getClassDomElementName())) {
+			sections.add(new SectionData(this, eSection));
+		}
+		master.getFlightStripBay().recreateContents();
+		// load rules
+		for (Element eRuleAction : root.getChildren(RuleAndAction.getClassDomElementName())) {
+			rules.add(new RuleAndAction(eRuleAction, this));
+		}
+	}
+
+	// --- default examples ---
+	
 	public void createTraditional() {
-		SectionData section_default = new SectionData("Traditional", "Controlled", "Interesting", "Uncontrolled");
+		SectionData section_default = new SectionData(this, "Traditional", "Controlled", "Interesting", "Uncontrolled");
 		section_default.setShowHeader(false);
 		sections.add(section_default);
 		section_default.setOrder(new ColumnOrder());
@@ -75,7 +287,8 @@ public class LogicManager implements Runnable {
 		// recreate FlightStripbay
 		master.getFlightStripBay().recreateContents();
 
-		SaveLayout(); // test
+		SaveLayout(createFilename(FilenameId.DEFAULT)); // test
+		rules.setActive(true);
 	}
 	
 	public void setTraditionalOrder(boolean ordered) {
@@ -83,29 +296,29 @@ public class LogicManager implements Runnable {
 	}
 	
 	public void createExample() {
-		SectionData section_emergency = new SectionData("Emergency", "");
+		SectionData section_emergency = new SectionData(this, "Emergency", "");
 		sections.add(section_emergency);
 		
-		SectionData section_controlled = new SectionData("Controlled", "APP", "Transit | Pattern", "DEP");
+		SectionData section_controlled = new SectionData(this, "Controlled", "APP", "Transit | Pattern", "DEP");
 		sections.add(section_controlled);
 		section_controlled.setOrder(new DistanceOrder());
 		
-		SectionData section_interesting = new SectionData("Interesting", "APP", "Transit", "DEP");
+		SectionData section_interesting = new SectionData(this, "Interesting", "APP", "Transit", "DEP");
 		sections.add(section_interesting);
 		section_controlled.setOrder(new DistanceOrder());
 
-		SectionData section_uncontrolled = new SectionData("Uncontrolled", "APP", "Other", "DEP");
+		SectionData section_uncontrolled = new SectionData(this, "Uncontrolled", "APP", "Other", "DEP");
 		sections.add(section_uncontrolled);
 		section_uncontrolled.setOrder(new AltitudeOrder(false));
 		
-		SectionData section_ground = new SectionData("Ground", "TAXI IN", "PARKING", "TAXI OUT");
+		SectionData section_ground = new SectionData(this, "Ground", "TAXI IN", "PARKING", "TAXI OUT");
 		sections.add(section_ground);
 
-		SectionData section_car = new SectionData("car", "park", "drive");
+		SectionData section_car = new SectionData(this, "car", "park", "drive");
 		sections.add(section_car);
 		section_car.setOrder(new CallsignOrder());
 		
-		SectionData section_atc = new SectionData("ATC | carrier", "");
+		SectionData section_atc = new SectionData(this, "ATC | carrier", "");
 		sections.add(section_atc);
 		section_atc.setOrder(new CallsignOrder());
 		
@@ -118,7 +331,7 @@ public class LogicManager implements Runnable {
 		rules.add(new RuleAndAction("car", new AircraftRule("FOLLOWME", true), new MoveToAction(section_car, 0)));
 		// ground
 		double ground = master.getAirportData().getElevationFt() + 50;
-		System.out.printf("ground = %f\n", ground);
+		//System.out.printf("ground = %f\n", ground);
 		rules.add(new RuleAndAction("Ground Taxi OUT", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1), new ColumnRule(1, true)), new MoveToAction(section_ground, 2)));
 		rules.add(new RuleAndAction("Ground Taxi", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1)), new MoveToAction(section_ground, -1)));
 		rules.add(new RuleAndAction("Ground Parking", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMaxRule(1)), new MoveToAction(section_ground, 1)));
@@ -138,140 +351,8 @@ public class LogicManager implements Runnable {
 		// recreate FlightStripbay
 		master.getFlightStripBay().recreateContents();
 
-		SaveLayout(); // test
+		SaveLayout(createFilename(FilenameId.DEFAULT)); // test
+		rules.setActive(true);
 	}
 
-	public int getSectionCount() {
-		return sections.size();
-	}
-	
-	public SectionData addSection(String title) {
-		SectionData result = new SectionData(title); 
-		sections.add(result);
-		return result;
-	}
-
-	public SectionData addSection(String title, String... columnTitles) {
-		SectionData result = new SectionData(title, columnTitles); 
-		sections.add(result);
-		return result;
-	}
-	
-	public ArrayList<SectionData> getSections() {
-		return sections;
-	}
-	
-	public SectionData getSectionByTitle (String title) {
-		for (SectionData section : sections) {
-			if (title.equalsIgnoreCase(section.getTitle())) return section;
-		}
-		return null;
-	}
-
-	public void updateFlightstrips() {
-		RadarContactController radarContactController = master.getRadarContactManager();
-		radarContactController.clearSectionsListManagerFlag();
-		List<GuiRadarContact> contacts = radarContactController.getContactListCopy();
-		ArrayList<FlightStrip> flightstrips = new ArrayList<FlightStrip>();
-		// collect all flightstrips
-		for (SectionData section : sections) {
-			flightstrips.addAll(section.getFlightStrips());
-		}
-		// update existing and remove expired flightstrips
-        RuleManager rm = master.getRulesManager();
-		for (FlightStrip flightstrip : flightstrips) {
-			GuiRadarContact contact = flightstrip.getContact();
-			if (contacts.contains(contact)) {
-				// contact exists
-				flightstrip.updateContents();
-				rm.ApplyAppropriateRule(flightstrip);
-				// remove contact from list, so that new contacts remain in list
-				contacts.remove(contact);
-			}
-			else {
-				// contact is expired
-				flightstrip.remove();
-			}
-		}
-		// create new flightstrips
-		for (GuiRadarContact contact : contacts) {
-			FlightStrip flightstrip = new FlightStrip(contact);
-			flightstrip.updateContents();
-			rm.ApplyAppropriateRule(flightstrip);
-		}
-		// order flightstrips within the section
-		for (SectionData section : sections) {
-			section.reorderFlightStrips();
-		}
-	}
-	
-	@Override
-	public void run() {
-		// runs in AWT-Thread, invoked by RadarContactController.publishData: SwingUtilities.invokeLater(master.getSectionsListManager());
-		updateFlightstrips();
-	}
-	
-	// XML
-	
-	public void SaveLayout() {
-        try {
-    		// --- create document ---
-            Document doc = new Document();
-            Element root = new Element("flightstripbay");
-            doc.addContent(root);
-            root.setAttribute("version", "1");
-            // sections
-    		for (SectionData section : sections) {
-    			root.addContent(section.createDomElement());
-    		}
-    		// rules
-            for (RuleAndAction ra : master.getRulesManager().getRuleAndActions()) {
-            	root.addContent(ra.createDomElement());
-            }
-            // --- save document ---
-            XMLOutputter xmlOutput = new XMLOutputter();
-            xmlOutput.setFormat(Format.getPrettyFormat());
-            xmlOutput.output(doc, new FileWriter(filename));        
-        } catch (Exception exception) {
-        	log.error( "Problem to create " + filename + " document for flightstripbay: ", exception);
-        }
-	}
-	
-	public void LoadLayout() {
-		InputStream xmlInputStream = null;
-		try {
-			SAXBuilder builder = new SAXBuilder();
-			xmlInputStream = new FileInputStream(filename);
-			Document document = (Document) builder.build(xmlInputStream);
-			Element root = document.getRootElement();
-			if (!root.getName().equals("flightstripbay")) throw(new Exception("root element <flightstripbay> not recognized!"));
-			LoadLayout1(root, Integer.parseInt(root.getAttributeValue("version")));
-		} catch (Exception e) {
-			log.error("Problem to parse file " + filename + ", Error:" + e.getMessage());
-		} finally {
-			if (xmlInputStream != null) {
-				try {
-					xmlInputStream.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-	}
-	
-	protected void LoadLayout1(Element root, int version) throws Exception {
-		if (version != 1) throw(new Exception(String.format("version %d root element <flightstripbay> can not be parsed!", version)));
-		System.out.printf("create sections\n");
-		for (Element eSection : root.getChildren(SectionData.getClassDomElementName())) {
-			sections.add(new SectionData(eSection, this));
-		}
-		System.out.printf("\n\ncreate rules\n");
-		RuleManager rules = master.getRulesManager();
-		for (Element eRuleAction : root.getChildren(RuleAndAction.getClassDomElementName())) {
-			rules.add(new RuleAndAction(eRuleAction, this));
-		}
-		System.out.printf("-----------------------------------\n\n\n");
-		// recreate FlightStripbay
-		master.getFlightStripBay().recreateContents();
-	}
-	
 }

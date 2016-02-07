@@ -173,7 +173,7 @@ public class HandoverDialog extends JDialog {
 		@Override
 		public void mouseClicked(MouseEvent e) {
             GuiRadarContact contact = manager.getSelectedContact();
-			System.out.println(target);
+			//System.out.println(target);
             // set handover
 			if (contact != null) {
 	            if(target.equals("-revoke-")) {

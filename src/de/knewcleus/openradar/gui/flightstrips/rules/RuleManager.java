@@ -9,10 +9,15 @@ import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class RuleManager {
 	
-	ArrayList<RuleAndAction> ruleAndActions = new ArrayList<RuleAndAction>();
+	private final ArrayList<RuleAndAction> ruleAndActions = new ArrayList<RuleAndAction>();
+	private boolean active = false; 
 	
 	public void add(RuleAndAction ColumnRule) {
 		ruleAndActions.add(ColumnRule);
+	}
+	
+	public void clear() {
+		ruleAndActions.clear();
 	}
 	
 	public void remove(String name) {
@@ -46,10 +51,14 @@ public class RuleManager {
 	}
 
 	public void ApplyAppropriateRule(FlightStrip flightstrip) {
-		if (!flightstrip.isPending()) {
+		if (active && !flightstrip.isPending()) {
 			RuleAndAction scr = find(flightstrip);
 			if (scr != null) scr.ApplyRule(flightstrip);
 		}
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	public static ArrayList<Class<? extends AbstractRule>> getAvailableRules() {
@@ -101,7 +110,7 @@ public class RuleManager {
 		Class<?> parameterTypes[] = new Class[] { Element.class, LogicManager.class };
 		for (Class<? extends AbstractRule> orderclass : getAvailableRules()) {
 			if (classname.equalsIgnoreCase(orderclass.getSimpleName())) {
-				System.out.printf("create rule '%s' end: found\n", classname);
+				//System.out.printf("create rule '%s' end: found\n", classname);
 				return orderclass.getConstructor(parameterTypes).newInstance(element, logic);
 			}
 		}

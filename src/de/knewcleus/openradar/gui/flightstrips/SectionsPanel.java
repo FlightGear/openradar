@@ -1,11 +1,9 @@
 package de.knewcleus.openradar.gui.flightstrips;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
@@ -40,9 +38,10 @@ public class SectionsPanel extends JPanel {
 			add(section.getPanel(), gridBagConstraints);
 			gridBagConstraints.gridy++;
 		}
+		revalidate();
 	}
-	
-	protected int getGridY(JComponent component) {
+	/*
+	public int getGridY(JComponent component) {
 		return layout.getConstraints(component).gridy;
 	}
 	
@@ -53,9 +52,21 @@ public class SectionsPanel extends JPanel {
 		}
 		return result;
 	}
-	
-	public void moveSection(SectionPanel sectionpanel, int count) {
+	*/
+	public void moveSection(SectionPanel sectionpanel, int target_index) {
+		master.getSectionsListManager().moveSectionToIndex(sectionpanel.getSection(), target_index);
 		synchronized (getTreeLock()) {
+			ArrayList<SectionData> sections = master.getSectionsListManager().getSections();
+			for (int i = 0; i < sections.size(); i++) {
+				SectionData section = sections.get(i);
+				GridBagConstraints gridBagConstraints = layout.getConstraints(section.getPanel());
+				if (gridBagConstraints.gridy != i) {
+					gridBagConstraints.gridy = i;
+					layout.setConstraints(section.getPanel(), gridBagConstraints);
+				}
+			}
+			revalidate();
+			/*
 			GridBagConstraints sourceConstraints = layout.getConstraints(sectionpanel);
 			int source_y = sourceConstraints.gridy;
 			int target_y = source_y + count;
@@ -73,6 +84,7 @@ public class SectionsPanel extends JPanel {
 				sourceConstraints.gridy = target_y;
 				layout.setConstraints(sectionpanel, sourceConstraints);
 			}
+			*/
 		}
 	}
 	

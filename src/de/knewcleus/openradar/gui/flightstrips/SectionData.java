@@ -18,21 +18,24 @@ public class SectionData implements IDomElement {
 	private boolean autoVisible = false;
 	private boolean showHeader = true;
 	private boolean showColumnTitles = false;
+	private AbstractOrder<?> order = null;
 	
 	private ArrayList<ColumnData> columns = new ArrayList<ColumnData>();
 
 	private final SectionPanel panel;
-
+	private final LogicManager logic;
 	
 	// --- constructors ---
 
-	public SectionData(String title) {
+	public SectionData(LogicManager logic, String title) {
+		this.logic = logic;
 		this.title = title;
 		panel = new SectionPanel(this);
 		showHeader = title.length() > 0;
 	}
 
-	public SectionData(String title, String... columnTitles) {
+	public SectionData(LogicManager logic, String title, String... columnTitles) {
+		this.logic = logic;
 		this.title = title;
 		panel = new SectionPanel(this);
 		for (String columnTitle : columnTitles) {
@@ -42,7 +45,8 @@ public class SectionData implements IDomElement {
 		showHeader = showColumnTitles || (title.length() > 0);  
 	}
 	
-	public SectionData(Element element, LogicManager logic) throws Exception {
+	public SectionData(LogicManager logic, Element element) throws Exception {
+		this.logic = logic;
 		title = element.getAttributeValue("title");
 		autoVisible = Boolean.valueOf(element.getAttributeValue("autovisible"));
 		showHeader = Boolean.valueOf(element.getAttributeValue("showheader"));
@@ -56,13 +60,19 @@ public class SectionData implements IDomElement {
 			}
 			else {
 				// order: last order is valid
-				AbstractOrder<? extends Comparable<?>> order = OrderManager.createByClassName(e); 
+				AbstractOrder<?> order = OrderManager.createByClassName(e); 
 				if (order != null) setOrder(order); 
 			}
 		}
 		panel.recreateContents();
 	}
 
+	// --- LogicManager ---
+	
+	public LogicManager getLogicManager() {
+		return logic;
+	}
+	
 	// --- title ---
 	
 	public String getTitle() {
@@ -126,6 +136,14 @@ public class SectionData implements IDomElement {
 		return result;
 	}
 
+	public void removeLastColumn() {
+		int cc = getColumnCount();
+		if (cc > 1) {
+			columns.remove(cc - 1);
+			panel.recreateContents();
+		}
+	}
+
 	public ColumnData getColumn(int Index) {
 		return columns.get(Index);
 	}
@@ -177,11 +195,12 @@ public class SectionData implements IDomElement {
 	// --- sort order ---
 	
 	public AbstractOrder<?> getOrder() {
-		return panel.getOrder();
+		return order;
 	}
 
 	public synchronized void setOrder(AbstractOrder<?> order) {
-		panel.setOrder(order);
+		this.order = order; 
+		panel.reorderFlightStrips();
 	}
 
 	public void reorderFlightStrips() {

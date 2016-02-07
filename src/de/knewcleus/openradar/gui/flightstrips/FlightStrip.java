@@ -547,7 +547,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		
 		public void setLongText(String text) {
 			if (!this.longtext.equals(text)) {
-				System.out.println("setLongText" + System.currentTimeMillis());
+				//System.out.println("setLongText" + System.currentTimeMillis());
 				this.longtext = text;
 				parts.clear();
 				parts.addAll(Arrays.asList(text.split("\\W+")));

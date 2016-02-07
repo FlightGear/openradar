@@ -24,7 +24,6 @@ public class FlightStripsPanel extends JPanel {
 	private final SectionData section;
 	private final GridBagLayout layout = new GridBagLayout();
 	private final ArrayList<FlightStripRow> rows = new ArrayList<FlightStripRow>(); // manage order
-	private AbstractOrder<?> order = null;
 	
 	public FlightStripsPanel(SectionData section) {
 		this.section = section;
@@ -38,15 +37,6 @@ public class FlightStripsPanel extends JPanel {
 		}
 	}
 	
-	public AbstractOrder<?> getOrder() {
-		return order;
-	}
-
-	public synchronized void setOrder(AbstractOrder<?> order) {
-		this.order = order;
-		reorderFlightStrips();
-	}
-
 	public synchronized void addFlightStrip(FlightStrip flightstrip) {
 		//- System.out.println("addFlightStrip --- start");
 		synchronized(getTreeLock()) { // should be used around getComponentCount
@@ -106,6 +96,7 @@ public class FlightStripsPanel extends JPanel {
 		section.getPanel().checkVisible();
 		synchronized(getTreeLock()) { // should be used around getComponentCount
 			// user defined sort order
+			AbstractOrder<?> order = section.getOrder();
 			if (order != null) order.sort(rows);
 			// position rows (gridy) according to sort order
 			for (int i = 0; i < rows.size(); i++) {
@@ -116,8 +107,7 @@ public class FlightStripsPanel extends JPanel {
 					layout.setConstraints(fsr, gridBagConstraints);
 				}
 			}
-			invalidate();
-			validate();
+			revalidate();
 		}
 		//- System.out.println("reorderFlightStrips --- end");
 	}
@@ -186,8 +176,9 @@ public class FlightStripsPanel extends JPanel {
 		public void setColumn() {
 			createInsets();
 			layout.setConstraints(flightstrip, flightstripConstraints);
-			doLayout();
-			paintImmediately(getVisibleRect());
+			//-doLayout();
+			//-paintImmediately(getVisibleRect());
+			revalidate();
 		}
 		
 		public FlightStrip getFlightStrip() {

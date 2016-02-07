@@ -12,7 +12,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import de.knewcleus.openradar.gui.Palette;
-import de.knewcleus.openradar.gui.flightstrips.order.AbstractOrder;
 
 /* SectionPanel is a visual component
  * with 3 parts: HeaderPanel, FlightStripsPanel, FooterPanel
@@ -60,6 +59,7 @@ public class SectionPanel extends JPanel {
 			gridBagConstraints.gridy++;
 		}
 		checkVisible();
+		revalidate();
 	}
 	
 	public void checkVisible() {
@@ -68,14 +68,6 @@ public class SectionPanel extends JPanel {
 	
 	public SectionData getSection() {
 		return section;
-	}
-
-	public AbstractOrder<?> getOrder() {
-		return flightstripspanel.getOrder();
-	}
-
-	public void setOrder(AbstractOrder<?> order) {
-		flightstripspanel.setOrder(order);
 	}
 
 	public void reorderFlightStrips() {

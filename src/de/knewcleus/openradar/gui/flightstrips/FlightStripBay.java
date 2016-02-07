@@ -49,6 +49,11 @@ public class FlightStripBay extends JPanel {
 	
 	public void recreateContents() {
 		sectionspanel.recreateContents();
+		revalidate();
+	}
+	
+	public SectionsPanel getSectionsPanel() {
+		return sectionspanel;
 	}
 	
 	// ===================================================================
