@@ -118,6 +118,14 @@ public class LogicManager implements Runnable {
 			sections.add(target_index, section);
 		}
 	}
+
+	public void moveSectionUp (SectionData section) {
+		master.getFlightStripBay().getSectionsPanel().moveSection(section.getPanel(), sections.indexOf(section) - 1);
+	}
+	
+	public void moveSectionDown (SectionData section) {
+		master.getFlightStripBay().getSectionsPanel().moveSection(section.getPanel(), sections.indexOf(section) + 1);
+	}
 	
 	public void updateFlightstrips() {
 		RadarContactController radarContactController = master.getRadarContactManager();

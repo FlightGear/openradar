@@ -86,7 +86,7 @@ public class SectionMouseAdapter extends MouseAdapter {
 		if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() == 2) && sectionPanel.contains(e.getPoint())) {
 			// double click -> show configuration dialog
 			if (dialog == null) dialog = new SectionColumnDialog();
-			dialog.setSection(sectionPanel.getSection());
+			dialog.setSection(sectionPanel.getSection(), false);
 			Point p = sectionPanel.getLocationOnScreen();
 			dialog.setLocation(p.x - dialog.getWidth(), p.y);
 			dialog.setVisible(true);
