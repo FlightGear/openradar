@@ -65,6 +65,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 	private final JRadioButton callsignFilename = new JRadioButton("callsign");
 	private final JButton loadLayout = new JButton("load");
 	private final JButton saveLayout = new JButton("save");
+	private final JButton rules = new JButton("rules");
 	// sections list
 	private final JPanel listPanel = new JPanel();
 	private final JList<String> sections = new JList<String>();
@@ -443,6 +444,16 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		});
 		panel.add(saveLayout, gbc);
 		gbc.gridy++;
+		// rules Button
+		// save layout
+		rules.setToolTipText("<html>save layout</html>");
+		rules.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				section.getLogicManager().showDialog();
+			}
+		});
+		outer_panel.add(rules, BorderLayout.PAGE_END);
 		return outer_panel;
 	}
 	

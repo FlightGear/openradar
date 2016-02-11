@@ -22,6 +22,7 @@ import de.knewcleus.openradar.gui.contacts.RadarContactController;
 import de.knewcleus.openradar.gui.flightstrips.actions.ControlAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.MoveToAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.UncontrolAction;
+import de.knewcleus.openradar.gui.flightstrips.config.RulesDialog;
 import de.knewcleus.openradar.gui.flightstrips.order.AltitudeOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.CallsignOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.ColumnOrder;
@@ -53,6 +54,8 @@ public class LogicManager implements Runnable {
 	private final GuiMasterController master;
 	private final ArrayList<SectionData> sections = new ArrayList<SectionData>();
     private static Logger log = LogManager.getLogger(LogicManager.class.getName());
+    
+    private RulesDialog dialog = null;
 	
 	// --- constructors ---
 	
@@ -277,6 +280,13 @@ public class LogicManager implements Runnable {
 			rules.add(new RuleAndAction(eRuleAction, this));
 		}
 	}
+	
+	// --- dialog ---
+	
+	public void showDialog() {
+		if (dialog == null) dialog = new RulesDialog(master);
+		dialog.showDialog();
+	}
 
 	// --- default examples ---
 	
@@ -289,6 +299,7 @@ public class LogicManager implements Runnable {
 		section_default.getColumn(2).addAction(true, new UncontrolAction());
 		// rules for new contacts
 		RuleManager rules = master.getRulesManager();
+		rules.clear();
 		rules.add(new RuleAndAction("new", new NewRule(true), new MoveToAction(section_default, 2)));
 		rules.add(new RuleAndAction("Controlled", new AndRule(new AtcSelfRule(true), new ColumnRule(2, true)), new MoveToAction(null, 0)));
 		rules.add(new RuleAndAction("Uncontrolled", new AndRule(new AtcSelfRule(false), new ColumnRule(0, true)), new MoveToAction(null, 2)));
@@ -332,11 +343,12 @@ public class LogicManager implements Runnable {
 		
 		// rules for new contacts
 		RuleManager rules = master.getRulesManager();
+		rules.clear();
 		// ATC / carrier / car contacts
 		rules.add(new RuleAndAction("ATC", new ATCRule(true), new MoveToAction(section_atc, 0)));
 		rules.add(new RuleAndAction("carrier", new OrRule (new AircraftRule("MP-NIMITZ", true), new AircraftRule("MP-VINSON", true)), new MoveToAction(section_atc, 0)));
-		rules.add(new RuleAndAction("car",  new AndRule(new AircraftRule("FOLLOWME", true), new GroundSpeedMaxRule(1)), new MoveToAction(section_car, 0)));
-		rules.add(new RuleAndAction("car", new AircraftRule("FOLLOWME", true), new MoveToAction(section_car, 0)));
+		rules.add(new RuleAndAction("car park",  new AndRule(new AircraftRule("FOLLOWME", true), new GroundSpeedMaxRule(1)), new MoveToAction(section_car, 0)));
+		rules.add(new RuleAndAction("car drive", new AircraftRule("FOLLOWME", true), new MoveToAction(section_car, 1)));
 		// ground
 		double ground = master.getAirportData().getElevationFt() + 50;
 		//System.out.printf("ground = %f\n", ground);

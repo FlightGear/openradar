@@ -2,18 +2,21 @@ package de.knewcleus.openradar.gui.flightstrips.rules;
 
 import java.util.ArrayList;
 
+import javax.swing.ListModel;
+import javax.swing.event.ListDataListener;
+
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class RuleManager {
+public class RuleManager implements ListModel<RuleAndAction> {
 	
 	private final ArrayList<RuleAndAction> ruleAndActions = new ArrayList<RuleAndAction>();
 	private boolean active = false; 
 	
-	public void add(RuleAndAction ColumnRule) {
-		ruleAndActions.add(ColumnRule);
+	public void add(RuleAndAction ruleAndAction) {
+		ruleAndActions.add(ruleAndAction);
 	}
 	
 	public void clear() {
@@ -30,7 +33,7 @@ public class RuleManager {
 	
 	protected int indexOf(String name) {
 		for (int i = 0; i < ruleAndActions.size(); i++) {
-			if (ruleAndActions.get(i).MenuText().equals(name)) {
+			if (ruleAndActions.get(i).getMenuText().equals(name)) {
 				return i;
 			}
 		}
@@ -115,6 +118,30 @@ public class RuleManager {
 			}
 		}
 		return null;
+	}
+
+	// --- ListModel ---
+	
+	@Override
+	public int getSize() {
+		return ruleAndActions.size();
+	}
+
+	@Override
+	public RuleAndAction getElementAt(int index) {
+		return ruleAndActions.get(index);
+	}
+
+	@Override
+	public void addListDataListener(ListDataListener l) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeListDataListener(ListDataListener l) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

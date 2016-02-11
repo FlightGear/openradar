@@ -45,7 +45,7 @@ public class RuleAndAction implements IDomElement {
 		return result;
 	}
 
-	public String MenuText() {
+	public String getMenuText() {
 		return name;
 	}
 	
