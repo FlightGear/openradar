@@ -333,11 +333,19 @@ public class LogicManager implements Runnable {
 		SectionData section_ground = new SectionData(this, "Ground", "TAXI IN", "PARKING", "TAXI OUT");
 		sections.add(section_ground);
 
+		SectionData section_dual = new SectionData(this, "Dual", "copilot", "passenger");
+		sections.add(section_dual);
+		section_dual.setOrder(new CallsignOrder());
+		
 		SectionData section_car = new SectionData(this, "car", "park", "drive");
 		sections.add(section_car);
 		section_car.setOrder(new CallsignOrder());
 		
-		SectionData section_atc = new SectionData(this, "ATC | carrier", "");
+		SectionData section_carrier = new SectionData(this, "carrier", "");
+		sections.add(section_carrier);
+		section_carrier.setOrder(new CallsignOrder());
+		
+		SectionData section_atc = new SectionData(this, "ATC", "");
 		sections.add(section_atc);
 		section_atc.setOrder(new CallsignOrder());
 		
@@ -346,9 +354,12 @@ public class LogicManager implements Runnable {
 		rules.clear();
 		// ATC / carrier / car contacts
 		rules.add(new RuleAndAction("ATC", new ATCRule(true), new MoveToAction(section_atc, 0)));
-		rules.add(new RuleAndAction("carrier", new OrRule (new AircraftRule("MP-NIMITZ", true), new AircraftRule("MP-VINSON", true)), new MoveToAction(section_atc, 0)));
+		rules.add(new RuleAndAction("carrier", new OrRule (new AircraftRule("MP-NIMITZ", true), new AircraftRule("MP-VINSON", true)), new MoveToAction(section_carrier, 0)));
 		rules.add(new RuleAndAction("car park",  new AndRule(new AircraftRule("FOLLOWME", true), new GroundSpeedMaxRule(1)), new MoveToAction(section_car, 0)));
 		rules.add(new RuleAndAction("car drive", new AircraftRule("FOLLOWME", true), new MoveToAction(section_car, 1)));
+		// dual
+		rules.add(new RuleAndAction("dual copilot", new OrRule (new AircraftRule(".+-copilot", true)), new MoveToAction(section_dual, 0)));
+		rules.add(new RuleAndAction("dual passenger", new OrRule (new AircraftRule(".+-PAX", true)), new MoveToAction(section_dual, 1)));
 		// ground
 		double ground = master.getAirportData().getElevationFt() + 50;
 		//System.out.printf("ground = %f\n", ground);
