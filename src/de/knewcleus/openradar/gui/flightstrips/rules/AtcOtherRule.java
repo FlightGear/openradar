@@ -1,44 +1,41 @@
 package de.knewcleus.openradar.gui.flightstrips.rules;
 
-import java.util.ArrayList;
-
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class AtcOtherRule extends AbstractRule {
+public class AtcOtherRule extends AbstractStringRule {
 
-	private final String OtherAtc; // if empty: any other ATC
-	
-	public AtcOtherRule(String OtherAtc) {
-		this.OtherAtc = OtherAtc;
+	public AtcOtherRule(String OtherAtc, boolean isOtherAtc) {
+		super(OtherAtc, isOtherAtc);
 	}
 	
 	public AtcOtherRule(Element element, LogicManager logic) {
-		this.OtherAtc = element.getAttributeValue("otheratc");
+		super(element, logic);
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
+	protected String getStringAttribute() {
+		return "other_atc";
+	}
+
+	@Override
+	protected String getBooleanAttribute() {
+		return "is_other_atc";
+	}
+
+	@Override
+	protected String getStringValue(FlightStrip flightstrip) {
 		FlightPlanData flightplan = flightstrip.getContact().getFlightPlan();
-		return (flightplan != null) && ((OtherAtc.length() <= 0) ? flightplan.isOwnedBySomeoneElse() : OtherAtc.equalsIgnoreCase(flightplan.getOwner()));
+		if (flightplan == null) return null;
+		return flightplan.getOwner();
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("contact is controlled by " + ((OtherAtc.length() > 0) ? OtherAtc : "other ATC") + ".");
-		return result;
+	protected String getTextline() {
+		return "contact is controlled by " + super.getTextline();
 	}
-
-	// --- IDomElement ---
 	
-	@Override
-	public void putAttributes(Element element) {
-		super.putAttributes(element);
-		element.setAttribute("otheratc", OtherAtc);
-	}
-
 }

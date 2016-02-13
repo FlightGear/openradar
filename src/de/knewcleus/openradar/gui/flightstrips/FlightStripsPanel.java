@@ -191,6 +191,7 @@ public class FlightStripsPanel extends JPanel {
 			int column = flightstrip.getColumn();
 			if (column < 0) column = 0;
 			if (column >= columns) column = columns - 1;
+			flightstrip.setColumn(column);
 			flightstripConstraints.insets.left = Palette.STRIP_COLUMN_SPACE * column;
 			flightstripConstraints.insets.right = Palette.STRIP_COLUMN_SPACE * (columns - 1 - column);
 		}

@@ -25,7 +25,7 @@ public class RuleAndAction implements IDomElement {
 	public RuleAndAction(Element element, LogicManager logic) throws Exception {
 		this.name = element.getAttributeValue("name");
 		for (Element e : element.getChildren()) {
-			AbstractRule rule = RuleManager.createClass(e, logic);
+			AbstractRule rule = RulesManager.createClass(e, logic);
 			if (rule != null) this.rule = rule;
 			else {
 				AbstractAction action = ActionManager.createClass(e, logic);
@@ -35,13 +35,14 @@ public class RuleAndAction implements IDomElement {
 	}
 
 	public boolean isAppropriate(FlightStrip flightstrip) {
-		return rule.isAppropriate(flightstrip); 
+		Boolean value = rule.isAppropriate(flightstrip); 
+		return (value == null) ? false : value; 
 	}
 	
-	public ArrayList<String> getRuleText () {
+	public ArrayList<String> getText () {
 		ArrayList<String> result = new ArrayList<String>();
-		result.addAll(rule.getRuleText ());
-		result.addAll(action.getActionText ());
+		result.addAll(rule.getText ());
+		result.addAll(action.getText ());
 		return result;
 	}
 

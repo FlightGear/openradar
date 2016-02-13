@@ -1,55 +1,42 @@
 package de.knewcleus.openradar.gui.flightstrips.rules;
 
-import java.util.ArrayList;
-
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class DirectionRule extends AbstractRule {
+public class DirectionRule extends AbstractDoubleRangeRule {
 
-	private final double minDirection;
-	private final double maxDirection;
-	private final boolean isInside;
-	
-	public DirectionRule(double minDirection, double maxDirection) {
-		isInside = minDirection <= maxDirection; 
-		if (isInside) {
-			this.minDirection = minDirection;
-			this.maxDirection = maxDirection;
-		}
-		else {
-			this.minDirection = maxDirection;
-			this.maxDirection = minDirection;
-		}
+	public DirectionRule(double minDirection, double maxDirection, boolean isInRange) {
+		super(minDirection, maxDirection, isInRange);
 	}
 	
 	public DirectionRule(Element element, LogicManager logic) {
-		this(Double.valueOf(element.getAttributeValue("mindirection")), 
-			 Double.valueOf(element.getAttributeValue("maxdirection")));
+		super(element, logic);
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
-		double Direction = flightstrip.getContact().getRadarContactDirectionD();
-		return ((minDirection <= Direction) && (Direction <= maxDirection)) == isInside; 
+	protected String getMinAttribute() {
+		return "min_direction";
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("contact's direction from the airport is between " + (isInside ? minDirection : maxDirection) + "° and " + (isInside ? maxDirection : minDirection) + "° .");
-		return result;
+	protected String getMaxAttribute() {
+		return "max_direction";
 	}
 
-	// --- IDomElement ---
+	@Override
+	protected Double getDoubleValue(FlightStrip flightstrip) {
+		return (double)flightstrip.getContact().getRadarContactDirectionD();
+	}
+
+	@Override
+	protected String getTextline() {
+		return "contact's direction from the airport is " + super.getTextline();
+	}
 	
-	@Override
-	public void putAttributes(Element element) {
-		super.putAttributes(element);
-		element.setAttribute("mindirection", String.valueOf(minDirection));
-		element.setAttribute("maxdirection", String.valueOf(maxDirection));
+	protected String formatValue(double value) {
+		return super.formatValue(value) + "°";
 	}
-
+	
 }

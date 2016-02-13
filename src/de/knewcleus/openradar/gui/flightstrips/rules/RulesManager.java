@@ -7,14 +7,24 @@ import javax.swing.event.ListDataListener;
 
 import org.jdom2.Element;
 
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
+import de.knewcleus.openradar.gui.flightstrips.SectionColumnRule;
+import de.knewcleus.openradar.gui.flightstrips.config.RulesDialog;
 
-public class RuleManager implements ListModel<RuleAndAction> {
+public class RulesManager implements ListModel<RuleAndAction> {
 	
 	private final ArrayList<RuleAndAction> ruleAndActions = new ArrayList<RuleAndAction>();
 	private boolean active = false; 
 	
+	private final GuiMasterController master;
+    private RulesDialog dialog = null;
+	
+    public RulesManager(GuiMasterController master) {
+		this.master = master;
+	}
+    
 	public void add(RuleAndAction ruleAndAction) {
 		ruleAndActions.add(ruleAndAction);
 	}
@@ -95,16 +105,14 @@ public class RuleManager implements ListModel<RuleAndAction> {
 		// aircraft
 		result.add(AircraftRule.class);
 		result.add(HeadingRule.class);
-		result.add(GroundSpeedMinRule.class);
-		result.add(GroundSpeedMaxRule.class);
-		result.add(AltitudeMinRule.class);
-		result.add(AltitudeMaxRule.class);
+		result.add(GroundSpeedRule.class);
+		result.add(AltitudeRule.class);
 		// position
-		result.add(DistanceMinRule.class);
-		result.add(DistanceMaxRule.class);
+		result.add(DistanceRule.class);
 		result.add(DirectionRule.class);
 		// flightstrip bay
 		result.add(ColumnRule.class);
+		result.add(SectionColumnRule.class);
 		return result;
 	}
 
@@ -118,6 +126,13 @@ public class RuleManager implements ListModel<RuleAndAction> {
 			}
 		}
 		return null;
+	}
+
+	// --- dialog ---
+	
+	public void showDialog() {
+		if (dialog == null) dialog = new RulesDialog(master);
+		dialog.showDialog();
 	}
 
 	// --- ListModel ---

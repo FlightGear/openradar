@@ -26,7 +26,7 @@ public abstract class AbstractOperatorRule extends AbstractRule {
 	public AbstractOperatorRule(Element element, LogicManager logic) throws Exception {
 		this.rules = new ArrayList<AbstractRule>();
 		for (Element e : element.getChildren()) {
-			AbstractRule rule = RuleManager.createClass(e, logic);
+			AbstractRule rule = RulesManager.createClass(e, logic);
 			if (rule != null) add(rule);
 		}
 	}
@@ -36,12 +36,14 @@ public abstract class AbstractOperatorRule extends AbstractRule {
 	}
 	
 	@Override
-	public ArrayList<String> getRuleText () {
+	public ArrayList<String> getText () {
 		ArrayList<String> result = new ArrayList<String>();
-		result.add(getOperatorText());
-		String indent = "   ";
+		String indent = "|  ";
+		String operator = "";
 		for (AbstractRule rule : rules) {
-			for (String text : rule.getRuleText()) result.add(indent + text);
+			if (!operator.isEmpty()) result.add(operator);
+			for (String text : rule.getText()) result.add(indent + text);
+			operator = indent + getOperatorText();
 		}
 		return result;
 	}

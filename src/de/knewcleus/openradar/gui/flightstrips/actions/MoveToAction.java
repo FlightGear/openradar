@@ -34,7 +34,7 @@ public class MoveToAction extends AbstractAction {
 	}
 	
 	@Override
-	public ArrayList<String> getActionText () {
+	public ArrayList<String> getText () {
 		ArrayList<String> result = new ArrayList<String>();
 		if ((section == null) && (column < 0)) {
 			result.add("stay in section and column");
@@ -46,7 +46,9 @@ public class MoveToAction extends AbstractAction {
 			result.add("move to section '" + section.getTitle() + "', but stay in column'");
 		}
 		else {
-			result.add("move to section '" + section.getTitle() + "' column '" + section.getColumn(column).getTitle() + "'");
+			String col = section.getColumn(column).getTitle();
+			if (col.isEmpty()) col = String.valueOf(column);
+			result.add("move to section '" + section.getTitle() + "' column '" + col + "'");
 		}
 		return result;
 	}

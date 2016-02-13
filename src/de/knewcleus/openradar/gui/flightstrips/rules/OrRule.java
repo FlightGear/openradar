@@ -29,9 +29,10 @@ public class OrRule extends AbstractOperatorRule {
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
+	public Boolean isAppropriate(FlightStrip flightstrip) {
 		for (AbstractRule rule : rules) {
-			if (rule.isAppropriate(flightstrip)) return true;
+			Boolean value = rule.isAppropriate(flightstrip);
+			if ((value == null) || value) return value; 
 		}
 		return false;
 	}

@@ -50,7 +50,7 @@ import de.knewcleus.openradar.gui.contacts.RadarContactController;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanExchangeManager;
 import de.knewcleus.openradar.gui.flightstrips.FlightStripBay;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
-import de.knewcleus.openradar.gui.flightstrips.rules.RuleManager;
+import de.knewcleus.openradar.gui.flightstrips.rules.RulesManager;
 import de.knewcleus.openradar.gui.radar.GuiRadarBackend;
 import de.knewcleus.openradar.gui.radar.RadarManager;
 import de.knewcleus.openradar.gui.setup.AirportData;
@@ -97,7 +97,7 @@ public class GuiMasterController {
 
     private FlightStripBay flightstripbay = null; 
     private LogicManager sectionsListManager = null; 
-    private RuleManager rulesManager = null; 
+    private RulesManager rulesManager = null; 
     
     private JTextPane detailsArea = null;
 
@@ -131,7 +131,7 @@ public class GuiMasterController {
             }
         }
         new DeadLockChecker().start();
-        rulesManager = new RuleManager(); 
+        rulesManager = new RulesManager(this); 
         sectionsListManager = new LogicManager(this); 
     }
 
@@ -444,7 +444,7 @@ public class GuiMasterController {
     	return sectionsListManager;
     }
     
-    public RuleManager getRulesManager() {
+    public RulesManager getRulesManager() {
     	return rulesManager;
     }
     

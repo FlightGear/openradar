@@ -10,12 +10,12 @@ import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 public class AnyRule extends AbstractRule {
 
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
+	public Boolean isAppropriate(FlightStrip flightstrip) {
 		return true;
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
+	public ArrayList<String> getText() {
 		ArrayList<String> result = new ArrayList<String>();
 		result.add("any contact.");
 		return result;

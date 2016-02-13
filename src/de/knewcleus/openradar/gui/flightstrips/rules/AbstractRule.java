@@ -12,9 +12,9 @@ import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
  */
 public abstract class AbstractRule implements IDomElement {
 
-	abstract public boolean isAppropriate(FlightStrip flightstrip);
+	abstract public Boolean isAppropriate(FlightStrip flightstrip);
 
-	abstract public ArrayList<String> getRuleText();
+	abstract public ArrayList<String> getText();
 
 	// --- IDomElement ---
 	

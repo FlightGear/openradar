@@ -1,44 +1,36 @@
 package de.knewcleus.openradar.gui.flightstrips.rules;
 
-import java.util.ArrayList;
-
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class AtcSelfRule extends AbstractRule {
+public class AtcSelfRule extends AbstractBooleanRule {
 
-	private final boolean isAtcSelf;
-	
 	public AtcSelfRule(boolean isAtcSelf) {
-		this.isAtcSelf = isAtcSelf;
+		super(isAtcSelf);
 	}
 	
 	public AtcSelfRule(Element element, LogicManager logic) {
-		this.isAtcSelf = Boolean.valueOf(element.getAttributeValue("isatcself"));
+		super(element, logic);
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
+	protected String getBooleanAttribute() {
+		return "isatcself";
+	}
+
+	@Override
+	protected Boolean getBooleanValue(FlightStrip flightstrip) {
 		FlightPlanData flightplan = flightstrip.getContact().getFlightPlan();
-		return (flightplan != null) && (flightplan.isOwnedByMe() == isAtcSelf);
+		if (flightplan == null) return null;
+		return flightplan.isOwnedByMe();
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("contact is " + (isAtcSelf ? "" : "not") + " controlled by me.");
-		return result;
+	protected String getTextline() {
+		return "contact is " + super.getTextline() + "controlled by me.";
 	}
-
-	// --- IDomElement ---
 	
-	@Override
-	public void putAttributes(Element element) {
-		super.putAttributes(element);
-		element.setAttribute("isatcself", String.valueOf(isAtcSelf));
-	}
-
 }

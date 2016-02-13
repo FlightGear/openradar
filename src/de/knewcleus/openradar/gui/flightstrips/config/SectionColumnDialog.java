@@ -450,7 +450,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		rules.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				section.getLogicManager().showDialog();
+				section.getLogicManager().getRulesManager().showDialog();
 			}
 		});
 		outer_panel.add(rules, BorderLayout.PAGE_END);

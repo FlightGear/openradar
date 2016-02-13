@@ -18,7 +18,7 @@ public class ControlAction extends AbstractAction {
 	}
 	
 	@Override
-	public ArrayList<String> getActionText () {
+	public ArrayList<String> getText () {
 		ArrayList<String> result = new ArrayList<String>();
 		result.add("take control");
 		return result;

@@ -22,28 +22,25 @@ import de.knewcleus.openradar.gui.contacts.RadarContactController;
 import de.knewcleus.openradar.gui.flightstrips.actions.ControlAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.MoveToAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.UncontrolAction;
-import de.knewcleus.openradar.gui.flightstrips.config.RulesDialog;
 import de.knewcleus.openradar.gui.flightstrips.order.AltitudeOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.CallsignOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.ColumnOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.DistanceOrder;
 import de.knewcleus.openradar.gui.flightstrips.rules.ATCRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.AircraftRule;
-import de.knewcleus.openradar.gui.flightstrips.rules.AltitudeMaxRule;
+import de.knewcleus.openradar.gui.flightstrips.rules.AltitudeRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.AndRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.AtcNoneRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.AtcOtherRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.AtcSelfRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.ColumnRule;
-import de.knewcleus.openradar.gui.flightstrips.rules.DistanceMaxRule;
-import de.knewcleus.openradar.gui.flightstrips.rules.DistanceMinRule;
+import de.knewcleus.openradar.gui.flightstrips.rules.DistanceRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.EmergencyRule;
-import de.knewcleus.openradar.gui.flightstrips.rules.GroundSpeedMaxRule;
-import de.knewcleus.openradar.gui.flightstrips.rules.GroundSpeedMinRule;
+import de.knewcleus.openradar.gui.flightstrips.rules.GroundSpeedRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.NewRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.OrRule;
 import de.knewcleus.openradar.gui.flightstrips.rules.RuleAndAction;
-import de.knewcleus.openradar.gui.flightstrips.rules.RuleManager;
+import de.knewcleus.openradar.gui.flightstrips.rules.RulesManager;
 
 public class LogicManager implements Runnable {
 
@@ -55,8 +52,6 @@ public class LogicManager implements Runnable {
 	private final ArrayList<SectionData> sections = new ArrayList<SectionData>();
     private static Logger log = LogManager.getLogger(LogicManager.class.getName());
     
-    private RulesDialog dialog = null;
-	
 	// --- constructors ---
 	
 	public LogicManager(GuiMasterController master) {
@@ -141,7 +136,7 @@ public class LogicManager implements Runnable {
 			flightstrips.addAll(section.getFlightStrips());
 		}
 		// update existing and remove expired flightstrips
-        RuleManager rules = master.getRulesManager();
+        RulesManager rules = master.getRulesManager();
 		for (FlightStrip flightstrip : flightstrips) {
 			GuiRadarContact contact = flightstrip.getContact();
 			if (contacts.contains(contact)) {
@@ -248,7 +243,7 @@ public class LogicManager implements Runnable {
 			Document document = (Document) builder.build(xmlInputStream);
 			Element root = document.getRootElement();
 			if (!root.getName().equals("flightstripbay")) throw(new Exception("root element <flightstripbay> not recognized!"));
-			RuleManager rules = master.getRulesManager();
+			RulesManager rules = master.getRulesManager();
 			rules.setActive(false);
 			rules.clear();
 			sections.clear();
@@ -268,7 +263,7 @@ public class LogicManager implements Runnable {
 		return result;
 	}
 	
-	protected void LoadLayout1(Element root, int version, RuleManager rules) throws Exception {
+	protected void LoadLayout1(Element root, int version, RulesManager rules) throws Exception {
 		if (version != 1) throw(new Exception(String.format("version %d root element <flightstripbay> can not be parsed!", version)));
 		// load sections
 		for (Element eSection : root.getChildren(SectionData.getClassDomElementName())) {
@@ -281,13 +276,12 @@ public class LogicManager implements Runnable {
 		}
 	}
 	
-	// --- dialog ---
+	// --- RulesManager ---
 	
-	public void showDialog() {
-		if (dialog == null) dialog = new RulesDialog(master);
-		dialog.showDialog();
+	public RulesManager getRulesManager() {
+		return master.getRulesManager();
 	}
-
+	
 	// --- default examples ---
 	
 	public void createTraditional() {
@@ -298,7 +292,7 @@ public class LogicManager implements Runnable {
 		section_default.getColumn(0).addAction(true, new ControlAction());
 		section_default.getColumn(2).addAction(true, new UncontrolAction());
 		// rules for new contacts
-		RuleManager rules = master.getRulesManager();
+		RulesManager rules = master.getRulesManager();
 		rules.clear();
 		rules.add(new RuleAndAction("new", new NewRule(true), new MoveToAction(section_default, 2)));
 		rules.add(new RuleAndAction("Controlled", new AndRule(new AtcSelfRule(true), new ColumnRule(2, true)), new MoveToAction(null, 0)));
@@ -330,16 +324,16 @@ public class LogicManager implements Runnable {
 		sections.add(section_uncontrolled);
 		section_uncontrolled.setOrder(new AltitudeOrder(false));
 		
-		SectionData section_ground = new SectionData(this, "Ground", "TAXI IN", "PARKING", "TAXI OUT");
+		SectionData section_ground = new SectionData(this, "Ground", "TAXI IN", "stop", "PARKING", "stop", "TAXI OUT");
 		sections.add(section_ground);
 
 		SectionData section_dual = new SectionData(this, "Dual", "copilot", "passenger");
 		sections.add(section_dual);
 		section_dual.setOrder(new CallsignOrder());
 		
-		SectionData section_car = new SectionData(this, "car", "park", "drive");
+		SectionData section_car = new SectionData(this, "car", "drive", "park");
 		sections.add(section_car);
-		section_car.setOrder(new CallsignOrder());
+		section_car.setOrder(new ColumnOrder());
 		
 		SectionData section_carrier = new SectionData(this, "carrier", "");
 		sections.add(section_carrier);
@@ -350,33 +344,35 @@ public class LogicManager implements Runnable {
 		section_atc.setOrder(new CallsignOrder());
 		
 		// rules for new contacts
-		RuleManager rules = master.getRulesManager();
+		RulesManager rules = master.getRulesManager();
 		rules.clear();
 		// ATC / carrier / car contacts
 		rules.add(new RuleAndAction("ATC", new ATCRule(true), new MoveToAction(section_atc, 0)));
 		rules.add(new RuleAndAction("carrier", new OrRule (new AircraftRule("MP-NIMITZ", true), new AircraftRule("MP-VINSON", true)), new MoveToAction(section_carrier, 0)));
-		rules.add(new RuleAndAction("car park",  new AndRule(new AircraftRule("FOLLOWME", true), new GroundSpeedMaxRule(1)), new MoveToAction(section_car, 0)));
-		rules.add(new RuleAndAction("car drive", new AircraftRule("FOLLOWME", true), new MoveToAction(section_car, 1)));
+		rules.add(new RuleAndAction("car park",  new AndRule(new AircraftRule("FOLLOWME", true), new GroundSpeedRule(1, true)), new MoveToAction(section_car, 1)));
+		rules.add(new RuleAndAction("car drive", new AircraftRule("FOLLOWME", true), new MoveToAction(section_car, 0)));
 		// dual
 		rules.add(new RuleAndAction("dual copilot", new OrRule (new AircraftRule(".+-copilot", true)), new MoveToAction(section_dual, 0)));
 		rules.add(new RuleAndAction("dual passenger", new OrRule (new AircraftRule(".+-PAX", true)), new MoveToAction(section_dual, 1)));
 		// ground
 		double ground = master.getAirportData().getElevationFt() + 50;
 		//System.out.printf("ground = %f\n", ground);
-		rules.add(new RuleAndAction("Ground Taxi OUT", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1), new ColumnRule(1, true)), new MoveToAction(section_ground, 2)));
-		rules.add(new RuleAndAction("Ground Taxi", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMinRule(1)), new MoveToAction(section_ground, -1)));
-		rules.add(new RuleAndAction("Ground Parking", new AndRule(new DistanceMaxRule(2), new AltitudeMaxRule(ground), new GroundSpeedMaxRule(1)), new MoveToAction(section_ground, 1)));
+		rules.add(new RuleAndAction("PARKING", new AndRule(new DistanceRule(2, true), new AltitudeRule(ground, true), new GroundSpeedRule(1, true), new OrRule (new NewRule(true), new ColumnRule(2, true))), new MoveToAction(section_ground, 2)));
+		rules.add(new RuleAndAction("Taxi OUT", new AndRule(new DistanceRule(2, true), new AltitudeRule(ground, true), new GroundSpeedRule(1, false), new OrRule (new NewRule(true), new ColumnRule(2, true), new ColumnRule(3, true))), new MoveToAction(section_ground, 4)));
+		rules.add(new RuleAndAction("Taxi OUT stop", new AndRule(new DistanceRule(2, true), new AltitudeRule(ground, true), new GroundSpeedRule(1, true), new OrRule (new ColumnRule(3, true), new ColumnRule(4, true))), new MoveToAction(section_ground, 3)));
+		rules.add(new RuleAndAction("Taxi IN stop", new AndRule(new DistanceRule(2, true), new AltitudeRule(ground, true), new GroundSpeedRule(1, true), new OrRule (new ColumnRule(0, true), new ColumnRule(1, true))), new MoveToAction(section_ground, 1)));
+		rules.add(new RuleAndAction("Taxi IN", new AndRule(new DistanceRule(2, true), new AltitudeRule(ground, true), new GroundSpeedRule(1, false)), new MoveToAction(section_ground, 0)));
 		// emergency
 		rules.add(new RuleAndAction("Emergency", new EmergencyRule(true), new MoveToAction(section_emergency, 0)));
 		// controlled by me
 		rules.add(new RuleAndAction("Controlled", new AtcSelfRule(true), new MoveToAction(section_controlled, -1)));
 		// controlled by any other ATC
-		rules.add(new RuleAndAction("Interesting DEP", new AndRule(new NewRule(true), new AtcOtherRule(""), new DistanceMaxRule(2)), new MoveToAction(section_interesting, 2)));
-		rules.add(new RuleAndAction("Interesting APP", new AndRule(new NewRule(true), new AtcOtherRule(""), new DistanceMinRule(90)), new MoveToAction(section_interesting, 0)));
-		rules.add(new RuleAndAction("Interesting OTHERS", new AndRule(new NewRule(true), new AtcOtherRule("")), new MoveToAction(section_interesting, 1)));
-		rules.add(new RuleAndAction("Interesting", new AtcOtherRule(""), new MoveToAction(section_interesting, -1)));
+		rules.add(new RuleAndAction("Interesting DEP", new AndRule(new NewRule(true), new AtcOtherRule(".+", true), new DistanceRule(2, true)), new MoveToAction(section_interesting, 2)));
+		rules.add(new RuleAndAction("Interesting APP", new AndRule(new NewRule(true), new AtcOtherRule(".+", true), new DistanceRule(90, false)), new MoveToAction(section_interesting, 0)));
+		rules.add(new RuleAndAction("Interesting OTHERS", new AndRule(new NewRule(true), new AtcOtherRule(".+", true)), new MoveToAction(section_interesting, 1)));
+		rules.add(new RuleAndAction("Interesting", new AtcOtherRule(".+", true), new MoveToAction(section_interesting, -1)));
 		// uncontrolled
-		rules.add(new RuleAndAction("new APP", new AndRule(new NewRule(true), new DistanceMinRule(90)), new MoveToAction(section_uncontrolled, 0)));
+		rules.add(new RuleAndAction("new APP", new AndRule(new NewRule(true), new DistanceRule(90, false)), new MoveToAction(section_uncontrolled, 0)));
 		rules.add(new RuleAndAction("new OTHERS", new NewRule(true), new MoveToAction(section_uncontrolled, 1)));
 		rules.add(new RuleAndAction("Uncontrolled", new AtcNoneRule(true), new MoveToAction(section_uncontrolled, -1)));
 		// recreate FlightStripbay

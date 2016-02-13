@@ -1,44 +1,36 @@
 package de.knewcleus.openradar.gui.flightstrips.rules;
 
-import java.util.ArrayList;
-
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class DepartureHereRule extends AbstractRule {
+public class DepartureHereRule extends AbstractBooleanRule {
 
-	private final boolean isDeparting;
-	
 	public DepartureHereRule(boolean isDeparting) {
-		this.isDeparting = isDeparting;
+		super(isDeparting);
 	}
 	
 	public DepartureHereRule(Element element, LogicManager logic) {
-		this.isDeparting = Boolean.valueOf(element.getAttributeValue("isdeparting"));
+		super(element, logic);
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
+	protected String getBooleanAttribute() {
+		return "isdeparting";
+	}
+
+	@Override
+	protected Boolean getBooleanValue(FlightStrip flightstrip) {
 		FlightPlanData flightplan = flightstrip.getContact().getFlightPlan();
-		return (flightplan != null) && (flightplan.isDeparting() == isDeparting);
+		if (flightplan == null) return null;
+		return flightplan.isDeparting();
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("contact is " + (isDeparting ? "" : "not") + " departing here.");
-		return result;
+	protected String getTextline() {
+		return "contact is " + super.getTextline() + "departing here.";
 	}
-
-	// --- IDomElement ---
 	
-	@Override
-	public void putAttributes(Element element) {
-		super.putAttributes(element);
-		element.setAttribute("isdeparting", String.valueOf(isDeparting));
-	}
-
 }

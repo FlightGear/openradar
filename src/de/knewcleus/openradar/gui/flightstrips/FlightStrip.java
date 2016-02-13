@@ -445,14 +445,16 @@ public class FlightStrip extends JPanel implements FocusListener {
 	
 	public void moveToPosition(SectionData section, int column) {
 		SectionData oldsection = this.section;
+		// execute exit actions
+		if (this.section != null) this.section.getColumn(this.column).executeExitActions(this);
+		// move visual
 		this.section = section;
 		this.column = column;
-		// move visual
 		if (section == null) oldsection.removeFlightStrip(this);
 		else section.moveFlightStrip(this, oldsection);
-		// execute actions
-		if (oldsection != null) oldsection.getColumn(column).executeExitActions(this);
-		if (section != null) section.getColumn(column).executeEnterActions(this);
+		// execute enter actions
+		// use this because column could be changed in section.moveFlightStrip (see call history of setColumn)
+		if (this.section != null) this.section.getColumn(this.column).executeEnterActions(this);
 	}
 	
 	public SectionData getSection() {
@@ -461,6 +463,10 @@ public class FlightStrip extends JPanel implements FocusListener {
 	
 	public int getColumn() {
 		return column;
+	}
+	
+	public void setColumn(int column) {
+		this.column = column;
 	}
 	
 	public void remove() {

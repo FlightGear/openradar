@@ -1,19 +1,18 @@
 package de.knewcleus.openradar.gui.flightstrips.rules;
 
-import java.util.ArrayList;
-
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class SquawkRule extends AbstractRule {
+public class SquawkRule extends AbstractBooleanRule {
 
 	private final int minSquawk;
 	private final int maxSquawk;
 	
-	public SquawkRule(int minSquawk, int maxSquawk) {
+	public SquawkRule(int minSquawk, int maxSquawk, boolean isInRange) {
+		super(isInRange);
 		if (minSquawk <= maxSquawk) {
 			this.minSquawk = minSquawk;
 			this.maxSquawk = maxSquawk;
@@ -25,22 +24,33 @@ public class SquawkRule extends AbstractRule {
 	}
 	
 	public SquawkRule(Element element, LogicManager logic) {
-		this(Integer.valueOf(element.getAttributeValue("minsquawk")), 
-			 Integer.valueOf(element.getAttributeValue("maxsquawk")));
+		super(element, logic);
+		int minSquawk = Integer.valueOf(element.getAttributeValue("minsquawk")); 
+		int maxSquawk = Integer.valueOf(element.getAttributeValue("maxsquawk"));
+		if (minSquawk <= maxSquawk) {
+			this.minSquawk = minSquawk;
+			this.maxSquawk = maxSquawk;
+		}
+		else {
+			this.minSquawk = maxSquawk;
+			this.maxSquawk = minSquawk;
+		}
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
-		int Squawk = flightstrip.getContact().getTranspSquawkCode();
-		return ((minSquawk <= Squawk) && (Squawk <= maxSquawk)); 
+	protected String getBooleanAttribute() {
+		return "is_in_range";
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		if (minSquawk == maxSquawk) result.add("contact's Squawk is " + GuiRadarContact.formatSquawk(minSquawk) + ".");
-		else result.add("contact's squawk code is between " + GuiRadarContact.formatSquawk(minSquawk) + " and " + GuiRadarContact.formatSquawk(maxSquawk) + ".");
-		return result;
+	protected String getTextline() {
+		return "contact's squawk code is " + super.getTextline() + ((minSquawk == maxSquawk) ? GuiRadarContact.formatSquawk(minSquawk) : "between " + GuiRadarContact.formatSquawk(minSquawk) + " and " + GuiRadarContact.formatSquawk(maxSquawk)) + ".";
+	}
+	
+	@Override
+	protected Boolean getBooleanValue(FlightStrip flightstrip) {
+		int Squawk = flightstrip.getContact().getTranspSquawkCode();
+		return ((minSquawk <= Squawk) && (Squawk <= maxSquawk)); 
 	}
 
 	// --- IDomElement ---

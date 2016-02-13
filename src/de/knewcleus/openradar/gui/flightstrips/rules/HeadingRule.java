@@ -1,55 +1,42 @@
 package de.knewcleus.openradar.gui.flightstrips.rules;
 
-import java.util.ArrayList;
-
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class HeadingRule extends AbstractRule {
+public class HeadingRule extends AbstractDoubleRangeRule {
 
-	private final double minHeading;
-	private final double maxHeading;
-	private final boolean isInside;
-	
-	public HeadingRule(double minHeading, double maxHeading) {
-		isInside = minHeading <= maxHeading; 
-		if (isInside) {
-			this.minHeading = minHeading;
-			this.maxHeading = maxHeading;
-		}
-		else {
-			this.minHeading = maxHeading;
-			this.maxHeading = minHeading;
-		}
+	public HeadingRule(double minHeading, double maxHeading, boolean isInRange) {
+		super(minHeading, maxHeading, isInRange);
 	}
 	
 	public HeadingRule(Element element, LogicManager logic) {
-		this(Double.valueOf(element.getAttributeValue("minheading")), 
-			 Double.valueOf(element.getAttributeValue("maxheading")));
+		super(element, logic);
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
-		double heading = flightstrip.getContact().getHeadingD();
-		return ((minHeading <= heading) && (heading <= maxHeading)) == isInside; 
+	protected String getMinAttribute() {
+		return "min_heading";
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("contact's heading is between " + (isInside ? minHeading : maxHeading) + "� and " + (isInside ? maxHeading : minHeading) + "� .");
-		return result;
+	protected String getMaxAttribute() {
+		return "max_heading";
 	}
 
-	// --- IDomElement ---
+	@Override
+	protected Double getDoubleValue(FlightStrip flightstrip) {
+		return flightstrip.getContact().getHeadingD();
+	}
+
+	@Override
+	protected String getTextline() {
+		return "contact's heading is " + super.getTextline();
+	}
 	
-	@Override
-	public void putAttributes(Element element) {
-		super.putAttributes(element);
-		element.setAttribute("minheading", String.valueOf(minHeading));
-		element.setAttribute("maxheading", String.valueOf(maxHeading));
+	protected String formatValue(double value) {
+		return super.formatValue(value) + "°";
 	}
-
+	
 }

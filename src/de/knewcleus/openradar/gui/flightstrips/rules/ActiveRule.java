@@ -1,42 +1,33 @@
 package de.knewcleus.openradar.gui.flightstrips.rules;
 
-import java.util.ArrayList;
-
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class ActiveRule extends AbstractRule {
+public class ActiveRule extends AbstractBooleanRule {
 
-	private final boolean isActive;
-	
 	public ActiveRule(boolean isActive) {
-		this.isActive = isActive;
+		super(isActive);
 	}
 	
 	public ActiveRule(Element element, LogicManager logic) {
-		this.isActive = Boolean.valueOf(element.getAttributeValue("isactive"));
+		super(element, logic);
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
-		return flightstrip.getContact().isActive() == isActive;
+	protected String getBooleanAttribute() {
+		return "isactive";
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("contact is " + (isActive ? "" : "not") + " active.");
-		return result;
+	protected Boolean getBooleanValue(FlightStrip flightstrip) {
+		return flightstrip.getContact().isActive();
 	}
 
-	// --- IDomElement ---
+	@Override
+	protected String getTextline() {
+		return "contact is " + super.getTextline() + "active.";
+	}
 	
-	@Override
-	public void putAttributes(Element element) {
-		super.putAttributes(element);
-		element.setAttribute("isactive", String.valueOf(isActive));
-	}
-
 }

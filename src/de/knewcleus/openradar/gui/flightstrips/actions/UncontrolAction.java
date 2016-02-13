@@ -18,7 +18,7 @@ public class UncontrolAction extends AbstractAction {
 	}
 	
 	@Override
-	public ArrayList<String> getActionText () {
+	public ArrayList<String> getText () {
 		ArrayList<String> result = new ArrayList<String>();
 		result.add("release control");
 		return result;

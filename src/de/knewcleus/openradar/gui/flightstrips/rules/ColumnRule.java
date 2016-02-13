@@ -1,37 +1,37 @@
 package de.knewcleus.openradar.gui.flightstrips.rules;
 
-import java.util.ArrayList;
-
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
-public class ColumnRule extends AbstractRule {
+public class ColumnRule extends AbstractBooleanRule {
 
 	private final int column;
-	private final boolean isIn;
 	
 	public ColumnRule(int column, boolean isIn) {
+		super(isIn);
 		this.column = column;
-		this.isIn = isIn;
 	}
 	
 	public ColumnRule(Element element, LogicManager logic) {
+		super(element, logic);
 		this.column = Integer.valueOf(element.getAttributeValue("column"));
-		this.isIn = Boolean.valueOf(element.getAttributeValue("isin"));
 	}
 	
 	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
-		return (flightstrip.getColumn() == column) == isIn;
+	protected String getTextline() {
+		return "flightstrip is " + super.getTextline() + "in column " + String.format("%d", column) + ".";
+	}
+	
+	@Override
+	protected String getBooleanAttribute() {
+		return "is_in_column";
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("flightstrip is " + (isIn ? "" : "not") + " in column " + column + ".");
-		return result;
+	protected Boolean getBooleanValue(FlightStrip flightstrip) {
+		return flightstrip.getColumn() == column;
 	}
 
 	// --- IDomElement ---
@@ -40,7 +40,6 @@ public class ColumnRule extends AbstractRule {
 	public void putAttributes(Element element) {
 		super.putAttributes(element);
 		element.setAttribute("column", String.valueOf(column));
-		element.setAttribute("isin", String.valueOf(isIn));
 	}
 
 }

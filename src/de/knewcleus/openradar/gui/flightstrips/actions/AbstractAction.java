@@ -11,7 +11,7 @@ public abstract class AbstractAction implements IDomElement {
 
 	public abstract void executeAction(FlightStrip flightstrip);
 
-	public abstract ArrayList<String> getActionText ();
+	public abstract ArrayList<String> getText ();
 	
 	public ArrayList<AbstractAction> getActions() {
 		return new ArrayList<AbstractAction>();

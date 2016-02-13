@@ -1,32 +1,49 @@
 package de.knewcleus.openradar.gui.flightstrips;
 
-import java.util.ArrayList;
+import org.jdom2.Element;
 
-import de.knewcleus.openradar.gui.flightstrips.rules.AbstractRule;
+import de.knewcleus.openradar.gui.flightstrips.rules.AbstractBooleanRule;
 
-public class SectionColumnRule extends AbstractRule {
+public class SectionColumnRule extends AbstractBooleanRule {
 
-	private final boolean     isIn;
 	private final SectionData section; // null : any section
 	private final int         column;  // <0   : any column
 	
-	public SectionColumnRule(boolean isIn, SectionData section, int column) {
-		this.isIn    = isIn;
+	public SectionColumnRule(SectionData section, int column, boolean isIn) {
+		super(isIn);
 		this.section = section;
 		this.column  = column;
 	}
 	
-	@Override
-	public boolean isAppropriate(FlightStrip flightstrip) {
-		return isIn == (((section == null) || (section.equals(flightstrip.getSection()))) && ((column < 0) || (column == flightstrip.getColumn())));
+	public SectionColumnRule(Element element, LogicManager logic) {
+		super(element, logic);
+		this.section = logic.getSectionByTitle(element.getAttributeValue("section"));
+		this.column = Integer.valueOf(element.getAttributeValue("column"));
 	}
 
 	@Override
-	public ArrayList<String> getRuleText() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("flightstrip is " + (isIn ? "" : "not") + "in " + (section == null ? "any section" : "section '" + section.getTitle() + "'") + 
-				   " and in " + (column < 0 ? "any column." : "column " + column + (section == null ? "." : " '" + section.getColumn(column).getTitle() + "'.")));
-		return result;
+	protected String getTextline() {
+		return "flightstrip is " + super.getTextline() + "in " + (section == null ? "any section" : "section '" + section.getTitle() + "'") + 
+				   " and in " + (column < 0 ? "any column." : "column " + column + (section == null ? "." : " '" + section.getColumn(column).getTitle() + "'."));
+	}
+	
+	@Override
+	protected String getBooleanAttribute() {
+		return "is_in";
+	}
+
+	@Override
+	protected Boolean getBooleanValue(FlightStrip flightstrip) {
+		return ((section == null) || (section.equals(flightstrip.getSection()))) && ((column < 0) || (column == flightstrip.getColumn()));
+	}
+
+	// --- IDomElement ---
+	
+	@Override
+	public void putAttributes(Element element) {
+		super.putAttributes(element);
+		element.setAttribute("section", section.getTitle());
+		element.setAttribute("column", String.valueOf(column));
 	}
 
 }
