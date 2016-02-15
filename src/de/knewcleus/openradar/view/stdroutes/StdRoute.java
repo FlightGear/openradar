@@ -223,7 +223,7 @@ public class StdRoute {
         		String assignedRunway = selectedContact.getFlightPlan().getAssignedRunway();
 	            String assignedRoute = selectedContact.getFlightPlan().getAssignedRoute();
 	            if(assignedRoute!=null) {
-	                if( (activeLandingRunways.contains(assignedRunway)||activeStartingRunways.contains(assignedRoute)) 
+	                if( (activeLandingRunways.contains(assignedRunway)||activeStartingRunways.contains(assignedRunway)) 
 	                	&& getName().equals(assignedRoute)) {
 	                    return true;
 	                }
