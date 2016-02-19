@@ -5,26 +5,30 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.Scrollable;
 
-import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
+import de.knewcleus.openradar.gui.flightstrips.config.SectionsManager;
 
 /* FlightStripBay is a visual component 
  * where the user will find the flight strips.
  * It contains sections to organize the flight strips
  */
-public class FlightStripBay extends JPanel {
+public class FlightStripBay extends JPanel implements MouseListener {
 
 	private static final long serialVersionUID = 4074532865663077094L;
 
+	private final SectionsManager sectionsManager;
 	private final SectionsPanel sectionspanel; 
 	
-	public FlightStripBay(GuiMasterController master) {
+	public FlightStripBay(SectionsManager sectionsManager) {
 		super();
+		this.sectionsManager = sectionsManager;
 		setBackground(Palette.SECTION_BACKGROUND);
 		setOpaque(true);
 		setLayout(new GridBagLayout());
@@ -43,17 +47,40 @@ public class FlightStripBay extends JPanel {
 		scrollpane.getViewport().setOpaque(false);
 		add(scrollpane, gridBagConstraints);
 		// sectionspanel top in panel
-		sectionspanel = new SectionsPanel(master);
+		sectionspanel = new SectionsPanel();
+		sectionsManager.addListDataListener(sectionspanel);
 		panel.add(sectionspanel, BorderLayout.NORTH);
-	}
-	
-	public void recreateContents() {
-		sectionspanel.recreateContents();
-		revalidate();
+		scrollpane.addMouseListener(this);
 	}
 	
 	public SectionsPanel getSectionsPanel() {
 		return sectionspanel;
+	}
+	
+	// --- MouseListener ---
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() == 2)) {
+			// double click -> show configuration dialog
+			sectionsManager.showSectionColumnDialog(null, getLocationOnScreen());
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
 	}
 	
 	// ===================================================================
@@ -99,8 +126,6 @@ public class FlightStripBay extends JPanel {
 			return 0;
 		}
 		
-		
-		
 	}
-	
+
 }

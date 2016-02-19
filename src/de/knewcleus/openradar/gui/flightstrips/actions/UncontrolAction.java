@@ -1,31 +1,34 @@
 package de.knewcleus.openradar.gui.flightstrips.actions;
 
-import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Set;
 
 import org.jdom2.Element;
 
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
-import de.knewcleus.openradar.gui.flightstrips.LogicManager;
 
 public class UncontrolAction extends AbstractAction {
 
+	public static Set<UseCase> getUseCases() {
+		return EnumSet.of(UseCase.COLUMN);
+	}
+	
 	public UncontrolAction() {
 	}
 	
-	public UncontrolAction(Element element, LogicManager logic) {
+	public UncontrolAction(Element element) {
 	}
 	
 	@Override
-	public ArrayList<String> getText () {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add("release control");
-		return result;
+	public String getSimpleText() {
+		 return "release control";
 	}
 
 	@Override
-	public void executeAction(FlightStrip flightstrip) {
+	public void executeAction(FlightStrip flightstrip, GuiMasterController master) {
 		GuiRadarContact contact = flightstrip.getContact();
 		FlightPlanData fpd = contact.getFlightPlan();
 		if (fpd.isOwnedByMe()) {

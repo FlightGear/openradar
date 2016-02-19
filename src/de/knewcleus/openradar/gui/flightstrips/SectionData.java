@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+import de.knewcleus.openradar.gui.flightstrips.config.SectionsManager;
 import de.knewcleus.openradar.gui.flightstrips.order.AbstractOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.OrderManager;
 
@@ -14,6 +15,8 @@ import de.knewcleus.openradar.gui.flightstrips.order.OrderManager;
  */
 public class SectionData implements IDomElement {
 
+	private final SectionsManager sectionsManager;
+	
 	private String title = "";
 	private boolean autoVisible = false;
 	private boolean showHeader = true;
@@ -23,19 +26,18 @@ public class SectionData implements IDomElement {
 	private ArrayList<ColumnData> columns = new ArrayList<ColumnData>();
 
 	private final SectionPanel panel;
-	private final LogicManager logic;
 	
 	// --- constructors ---
 
-	public SectionData(LogicManager logic, String title) {
-		this.logic = logic;
+	public SectionData(SectionsManager sectionsManager, String title) {
+		this.sectionsManager = sectionsManager;
 		this.title = title;
 		panel = new SectionPanel(this);
 		showHeader = title.length() > 0;
 	}
 
-	public SectionData(LogicManager logic, String title, String... columnTitles) {
-		this.logic = logic;
+	public SectionData(SectionsManager sectionsManager, String title, String... columnTitles) {
+		this.sectionsManager = sectionsManager;
 		this.title = title;
 		panel = new SectionPanel(this);
 		for (String columnTitle : columnTitles) {
@@ -45,8 +47,8 @@ public class SectionData implements IDomElement {
 		showHeader = showColumnTitles || (title.length() > 0);  
 	}
 	
-	public SectionData(LogicManager logic, Element element) throws Exception {
-		this.logic = logic;
+	public SectionData(SectionsManager sectionsManager, Element element) throws Exception {
+		this.sectionsManager = sectionsManager;
 		title = element.getAttributeValue("title");
 		autoVisible = Boolean.valueOf(element.getAttributeValue("autovisible"));
 		showHeader = Boolean.valueOf(element.getAttributeValue("showheader"));
@@ -56,7 +58,7 @@ public class SectionData implements IDomElement {
 		for (Element e : element.getChildren()) {
 			if (e.getName().equals(columntag)) {
 				// column
-				columns.add(new ColumnData(e, logic));
+				columns.add(new ColumnData(e));
 			}
 			else {
 				// order: last order is valid
@@ -67,12 +69,6 @@ public class SectionData implements IDomElement {
 		panel.recreateContents();
 	}
 
-	// --- LogicManager ---
-	
-	public LogicManager getLogicManager() {
-		return logic;
-	}
-	
 	// --- title ---
 	
 	public String getTitle() {
@@ -186,10 +182,14 @@ public class SectionData implements IDomElement {
 		return (panel == null) ? new ArrayList<FlightStrip>() : panel.getFlightStrips();
 	}
 
-	// --- Panel ---
+	// --- links provider ---
 	
 	public SectionPanel getPanel() {
 		return panel;
+	}
+	
+	public SectionsManager getSectionsManager() {
+		return sectionsManager;
 	}
 	
 	// --- sort order ---

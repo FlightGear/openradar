@@ -450,7 +450,9 @@ public class FlightStrip extends JPanel implements FocusListener {
 		// move visual
 		this.section = section;
 		this.column = column;
-		if (section == null) oldsection.removeFlightStrip(this);
+		if (section == null) {
+			if (oldsection != null) oldsection.removeFlightStrip(this);
+		}
 		else section.moveFlightStrip(this, oldsection);
 		// execute enter actions
 		// use this because column could be changed in section.moveFlightStrip (see call history of setColumn)

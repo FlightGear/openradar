@@ -258,7 +258,7 @@ public class RadarContactController
 					
 		            if (evokeSectionsListManager) {
 		            	evokeSectionsListManager = false;
-		                SwingUtilities.invokeLater(master.getSectionsListManager());
+		                SwingUtilities.invokeLater(master.getLogicManager());
 		            }
 				}
 				if (displayChatAsEnabled) {
@@ -715,12 +715,12 @@ public class RadarContactController
 				if (lSource.getText().equals("AUTO")) {
 					orderMode = OrderMode.MANUAL;
 					lSource.setText("MANUAL");
-					master.getSectionsListManager().setTraditionalOrder(false);
+					master.getLogicManager().setTraditionalOrder(false);
 				} else {
 					orderMode = OrderMode.AUTO;
 					lSource.setText("AUTO");
 					orderContacts();
-					master.getSectionsListManager().setTraditionalOrder(true);
+					master.getLogicManager().setTraditionalOrder(true);
 				}
 			}
 			// if (lSource.getName().equals("ALL")) {

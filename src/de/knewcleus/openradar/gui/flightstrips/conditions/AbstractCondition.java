@@ -1,21 +1,23 @@
-package de.knewcleus.openradar.gui.flightstrips.actions;
+package de.knewcleus.openradar.gui.flightstrips.conditions;
 
 import java.util.ArrayList;
+
 import org.jdom2.Element;
 
-import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.flightstrips.IDomElement;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.flightstrips.config.IEditProvider;
 import de.knewcleus.openradar.gui.flightstrips.config.IRuleTextProvider;
+import de.knewcleus.openradar.gui.setup.AirportData;
 
-public abstract class AbstractAction implements IRuleTextProvider, IEditProvider, IDomElement {
+/* This class is the base class for each condition
+ * 
+ */
+public abstract class AbstractCondition implements IDomElement, IRuleTextProvider, IEditProvider {
 
-	public enum UseCase { RULE, COLUMN };
+	// --- compare ---
 	
-	// --- execution ---
-	
-	public abstract void executeAction(FlightStrip flightstrip, GuiMasterController master);
+	abstract public Boolean isAppropriate(FlightStrip flightstrip, AirportData airportData);
 
 	// --- IDomElement ---
 	
@@ -48,7 +50,7 @@ public abstract class AbstractAction implements IRuleTextProvider, IEditProvider
 	
 	@Override
 	public int getMaxIndex() {
-		return 0;
+		return -1;
 	}
 
 	@Override

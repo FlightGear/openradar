@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -45,8 +45,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-import de.knewcleus.openradar.gui.flightstrips.LogicManager.FilenameId;
 import de.knewcleus.openradar.gui.flightstrips.SectionData;
+import de.knewcleus.openradar.gui.flightstrips.config.LogicManager.FilenameId;
 import de.knewcleus.openradar.gui.flightstrips.order.AbstractOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.OrderManager;
 
@@ -54,7 +54,9 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 
 	private static final long serialVersionUID = 1L;
 
-	private SectionData section = null;
+	private final SectionsManager sectionsManager;
+	
+	private Point posTopRight;
 	
 	// layout
 	private final JPanel layoutPanel;
@@ -65,14 +67,19 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 	private final JRadioButton callsignFilename = new JRadioButton("callsign");
 	private final JButton loadLayout = new JButton("load");
 	private final JButton saveLayout = new JButton("save");
+	private final JButton createTraditional = new JButton("traditional");
+	private final JButton createExample = new JButton("example");
 	private final JButton rules = new JButton("rules");
 	// sections list
 	private final JPanel listPanel = new JPanel();
-	private final JList<String> sections = new JList<String>();
+	private final JList<SectionData> sections = new JList<SectionData>();
 	private final JButton moveUp = new JButton("up");
 	private final JButton moveDown = new JButton("down");
+	private final JButton newSection = new JButton("+");
+	private final JButton deleteSection = new JButton("-");
 	boolean sections_enable_event;
 	// section details
+	private final JPanel details = new JPanel();
 	private final JCheckBox autoVisible = new JCheckBox("auto visible");
 	private final JCheckBox showHeader = new JCheckBox("show header");
 	private final JTextField sectionTitle = new JTextField();
@@ -84,7 +91,8 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 	private final JButton delColumn = new JButton("-");
 	private final JToggleButton more = new JToggleButton("<<");
 	
-	public SectionColumnDialog() {
+	public SectionColumnDialog(SectionsManager sectionsManager) {
+		this.sectionsManager = sectionsManager;
 		setUndecorated(true);
 		addWindowFocusListener(this);
 		// --- components ---
@@ -103,18 +111,12 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		panel.add(layoutPanel, gbc);
 		gbc.gridx++;
         // right column
+		gbc.weightx = 1.0;
 		panel.add(createSectionsPanel(), gbc);
 		gbc.gridx++;
 		// layout and size
         doLayout();
         pack();
-	}
-	
-	protected void adjustSizeAndPosition() {
-		int x = getX() + getWidth();
-		revalidate();
-        pack();
-		setLocation(x - getWidth(), getY());
 	}
 	
 	public JPanel createSectionsPanel() {
@@ -129,13 +131,12 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 1.0;
 		// sections list
 		panel.add(createSectionsColumn(), gbc);
 		gbc.gridx++;
         // section details
-		gbc.weightx = 0.0;
-		panel.add(createSectionColumn(), gbc);
+		gbc.weightx = 1.0;
+		panel.add(createSectionColumn(details), gbc);
 		gbc.gridx++;
 		return outer_panel;
 	}
@@ -154,13 +155,24 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		// sections list
 		sections.setToolTipText("<html>select section to edit details</html>");
 		sections.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		sections.setModel(new DefaultListModel<String>());
+		sections.setModel(sectionsManager);
+		sections.setCellRenderer(new ListCellRenderer<SectionData>() {
+			@Override
+			public Component getListCellRendererComponent(
+					JList<? extends SectionData> list, SectionData value,
+					int index, boolean isSelected, boolean cellHasFocus) {
+				JLabel label = new JLabel(value.getTitle());
+				label.setFont(list.getFont());
+				label.setOpaque(true);
+				label.setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
+				label.setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
+				return label;
+			}
+		});
 		sections.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (sections_enable_event) {
-					setSection(section.getLogicManager().getSectionByTitle(sections.getSelectedValue()), more.isSelected());
-				}
+				sectionsSelectionChanged();
 			}
 		});
 		panel.add(sections, gbc);
@@ -174,8 +186,9 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		moveUp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		    	section.getLogicManager().moveSectionUp(section);
-		    	updateSections();
+				SectionData section = sections.getSelectedValue();
+		    	sectionsManager.moveSectionUp(section);
+		    	setSection(section, true);
 			}
 		});
 		panel.add(moveUp, gbc);
@@ -185,30 +198,39 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		moveDown.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		    	section.getLogicManager().moveSectionDown(section);
-		    	updateSections();
+				SectionData section = sections.getSelectedValue();
+				sectionsManager.moveSectionDown(sections.getSelectedValue());
+		    	setSection(section, true);
 			}
 		});
 		panel.add(moveDown, gbc);
+		gbc.gridx = 0;
+		gbc.gridy++;
+		// add section
+		newSection.setToolTipText("<html>create a new section</html>");
+		newSection.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+		    	SectionData s = sectionsManager.addSection("new section", "new column");
+		    	setSection(s, true);
+			}
+		});
+		panel.add(newSection, gbc);
 		gbc.gridx++;
+		// delete section 
+		deleteSection.setToolTipText("<html>delete the selected section</html>");
+		deleteSection.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sectionsManager.removeSection(sections.getSelectedValue());
+				
+			}
+		});
+		panel.add(deleteSection, gbc);
 		return panel;
 	}
 	
-	public void updateSections() {
-		if (section != null) {
-			sections_enable_event = false;
-			DefaultListModel<String> model = (DefaultListModel<String>) sections.getModel();
-			model.clear();
-			for (SectionData s : section.getLogicManager().getSections()) {
-				model.addElement(s.getTitle());
-			}
-			sections.setSelectedValue(section.getTitle(), true);
-			sections_enable_event = true;
-		}
-	}
-		
-	public JPanel createSectionColumn() {
-        JPanel outer_panel = new JPanel();
+	public JPanel createSectionColumn(JPanel outer_panel) {
         outer_panel.setBorder(BorderFactory.createTitledBorder("Section"));
         outer_panel.setLayout(new BorderLayout());
         JPanel panel = new JPanel();
@@ -225,7 +247,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		autoVisible.addItemListener(new ItemListener() {
 		    @Override
 		    public void itemStateChanged(ItemEvent e) {
-		    	section.setAutoVisible(e.getStateChange() == ItemEvent.SELECTED);
+		    	sections.getSelectedValue().setAutoVisible(e.getStateChange() == ItemEvent.SELECTED);
 		    }
 		});
 		autoVisible.addFocusListener(new FocusListener() {
@@ -233,7 +255,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 			public void focusGained(FocusEvent e) {}
 			@Override
 			public void focusLost(FocusEvent e) {
-		    	section.setAutoVisible(autoVisible.isSelected());
+				sections.getSelectedValue().setAutoVisible(autoVisible.isSelected());
 			}
 		});
 		panel.add(autoVisible, gbc);
@@ -243,7 +265,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		showHeader.addItemListener(new ItemListener() {
 		    @Override
 		    public void itemStateChanged(ItemEvent e) {
-		    	section.setShowHeader(e.getStateChange() == ItemEvent.SELECTED);
+		    	sections.getSelectedValue().setShowHeader(e.getStateChange() == ItemEvent.SELECTED);
 		    }
 		});
 		showHeader.addFocusListener(new FocusListener() {
@@ -251,7 +273,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 			public void focusGained(FocusEvent e) {}
 			@Override
 			public void focusLost(FocusEvent e) {
-		    	section.setShowHeader(showHeader.isSelected());
+				sections.getSelectedValue().setShowHeader(showHeader.isSelected());
 			}
 		});
 		panel.add(showHeader, gbc);
@@ -261,8 +283,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		sectionTitle.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		    	section.setTitle(sectionTitle.getText());
-		    	updateSections();
+				sectionsManager.setSectionTitle(sections.getSelectedValue(), sectionTitle.getText());
 			}
 		});
 		sectionTitle.addFocusListener(new FocusListener() {
@@ -270,7 +291,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 			public void focusGained(FocusEvent e) {}
 			@Override
 			public void focusLost(FocusEvent e) {
-		    	section.setTitle(sectionTitle.getText());
+				sectionsManager.setSectionTitle(sections.getSelectedValue(), sectionTitle.getText());
 			}
 		});
 		panel.add(sectionTitle, gbc);
@@ -280,7 +301,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		showColumnTitles.addItemListener(new ItemListener() {
 		    @Override
 		    public void itemStateChanged(ItemEvent e) {
-		    	section.setShowColumnTitles(e.getStateChange() == ItemEvent.SELECTED);
+		    	sections.getSelectedValue().setShowColumnTitles(e.getStateChange() == ItemEvent.SELECTED);
 		    }
 		});
 		showColumnTitles.addFocusListener(new FocusListener() {
@@ -288,7 +309,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 			public void focusGained(FocusEvent e) {}
 			@Override
 			public void focusLost(FocusEvent e) {
-		    	section.setShowColumnTitles(showColumnTitles.isSelected());
+				sections.getSelectedValue().setShowColumnTitles(showColumnTitles.isSelected());
 			}
 		});
 		panel.add(showColumnTitles, gbc);
@@ -320,7 +341,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		ascending.addItemListener(new ItemListener() {
 		    @Override
 		    public void itemStateChanged(ItemEvent e) {
-		    	section.getOrder().setAscending(e.getStateChange() == ItemEvent.SELECTED);
+		    	sections.getSelectedValue().getOrder().setAscending(e.getStateChange() == ItemEvent.SELECTED);
 		    }
 		});
 		ascending.addFocusListener(new FocusListener() {
@@ -328,7 +349,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 			public void focusGained(FocusEvent e) {}
 			@Override
 			public void focusLost(FocusEvent e) {
-				section.getOrder().setAscending(ascending.isSelected());
+				sections.getSelectedValue().getOrder().setAscending(ascending.isSelected());
 			}
 		});
 		panel.add(ascending, gbc);
@@ -366,7 +387,8 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		addColumn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		    	section.addColumn("");
+				sections.getSelectedValue().addColumn("new column");
+		    	columns.invalidate();
 				adjustSizeAndPosition();
 			}
 		});
@@ -376,7 +398,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		delColumn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		    	section.removeLastColumn();
+				sections.getSelectedValue().removeLastColumn();
 				adjustSizeAndPosition();
 			}
 		});
@@ -421,11 +443,9 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				SectionData s = section;
-				section = null;
-				s.getLogicManager().LoadLayout(callsignFilename.isSelected() ? FilenameId.CALLSIGN : 
-											   (airportFilename.isSelected() ? FilenameId.AIRPORT : 
-												(roleFilename.isSelected() ? FilenameId.ROLE : FilenameId.DEFAULT)));
+				sectionsManager.getLogicManager().LoadLayout(callsignFilename.isSelected() ? FilenameId.CALLSIGN : 
+											                 (airportFilename.isSelected() ? FilenameId.AIRPORT : 
+												              (roleFilename.isSelected() ? FilenameId.ROLE : FilenameId.DEFAULT)));
 			}
 		});
 		panel.add(loadLayout, gbc);
@@ -435,50 +455,104 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		saveLayout.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				section.getLogicManager().SaveLayout(callsignFilename.isSelected() ? FilenameId.CALLSIGN : 
-					                                 (airportFilename.isSelected() ? FilenameId.AIRPORT : 
-						                              (roleFilename.isSelected() ? FilenameId.ROLE : FilenameId.DEFAULT)));
-				section = null;
 				setVisible(false);
+				sectionsManager.getLogicManager().SaveLayout(callsignFilename.isSelected() ? FilenameId.CALLSIGN : 
+	                 										 (airportFilename.isSelected() ? FilenameId.AIRPORT : 
+	                 										  (roleFilename.isSelected() ? FilenameId.ROLE : FilenameId.DEFAULT)));
 			}
 		});
 		panel.add(saveLayout, gbc);
 		gbc.gridy++;
-		// rules Button
+
+		// --- middle panel ---
+        panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        outer_panel.add(panel, BorderLayout.CENTER);
+        // constraints
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		// create traditional
+		createTraditional.setToolTipText("<html>create traditional layout with 3 columns</html>");
+		createTraditional.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sectionsManager.getLogicManager().createTraditional();
+			}
+		});
+		panel.add(createTraditional, gbc);
+		gbc.gridy++;
 		// save layout
-		rules.setToolTipText("<html>save layout</html>");
+		createExample.setToolTipText("<html>create example layout</html>");
+		createExample.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sectionsManager.getLogicManager().createExample();
+			}
+		});
+		panel.add(createExample, gbc);
+		gbc.gridy++;
+		
+		// rules Button
+		rules.setToolTipText("<html>manage rules</html>");
 		rules.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				section.getLogicManager().getRulesManager().showDialog();
+				sectionsManager.getLogicManager().getRulesManager().showDialog();
 			}
 		});
 		outer_panel.add(rules, BorderLayout.PAGE_END);
 		return outer_panel;
 	}
 	
+	public void setTopRight(Point posTopRight) {
+		this.posTopRight = posTopRight;
+	}
+	
 	public void setSection(SectionData section, boolean showMore) {
-		this.section = section;
-		autoVisible.setSelected(section.isAutoVisible());
-		showHeader.setSelected(section.getShowHeader());
-		sectionTitle.setText(section.getTitle());
-		showColumnTitles.setSelected(section.getShowColumnTitles());
-		AbstractOrder<?> order = section.getOrder();
-		//System.out.println("section: " + section.getTitle() + " order: " + (order == null ? "<null>" : order.getClass().getSimpleName()));
-		sortOrder.setSelectedOrder(order);
-		ascending.setEnabled(order != null);
-		if (order != null) ascending.setSelected(order.isAscending());
-		// layout and size
-		columns.setModel(this);
-		columns.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		columns.getColumnModel().getColumn(0).setMaxWidth(10);
-		updateSections();
+		sections.setSelectedValue(section, true);
+		if (section == null) {
+			showMore = true;
+			sectionsSelectionChanged();
+		}
+		else {
+			autoVisible.setSelected(section.isAutoVisible());
+			showHeader.setSelected(section.getShowHeader());
+			sectionTitle.setText(section.getTitle());
+			showColumnTitles.setSelected(section.getShowColumnTitles());
+			AbstractOrder<?> order = section.getOrder();
+			sortOrder.setSelectedOrder(order);
+			ascending.setEnabled(order != null);
+			if (order != null) ascending.setSelected(order.isAscending());
+			// layout and size
+			columns.setModel(this);
+			columns.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+			columns.getColumnModel().getColumn(0).setMaxWidth(10);
+		}
 		if (more.isSelected() != showMore) more.doClick();
 		adjustSizeAndPosition();
 	}
 
+	protected void sectionsSelectionChanged() {
+		boolean isSelected = !sections.isSelectionEmpty();
+		details.setVisible(isSelected);
+		if (isSelected) setSection(sections.getSelectedValue(), more.isSelected());
+		moveUp.setEnabled(isSelected && (sections.getSelectedIndex() > 0));
+		moveDown.setEnabled(isSelected && (sections.getSelectedIndex() < sections.getModel().getSize() - 1));
+		deleteSection.setEnabled(isSelected);
+		adjustSizeAndPosition();
+	}
+	
+	protected void adjustSizeAndPosition() {
+		revalidate();
+        pack();
+		setLocation(posTopRight.x - getWidth(), posTopRight.y);
+	}
+	
 	protected void writeSortOrder(AbstractOrder<?> order) {
-		section.setOrder(order);
+		sections.getSelectedValue().setOrder(order);
 		ascending.setEnabled(order != null);
 		if (order != null) ascending.setSelected(order.isAscending());
 	}
@@ -491,7 +565,6 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 
 	@Override
 	public void windowLostFocus(WindowEvent e) {
-		section = null;
 		setVisible(false);
 	}
 
@@ -650,7 +723,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 	
 	@Override
 	public int getRowCount() {
-		return (section == null) ? 0 : section.getColumnCount();
+		return sections.isSelectionEmpty() ? 0 : sections.getSelectedValue().getColumnCount();
 	}
 
 	@Override
@@ -675,14 +748,14 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return columnIndex == 0 ? rowIndex : ((section == null) ? "" : section.getColumn(rowIndex).getTitle());
+		return columnIndex == 0 ? rowIndex : (sections.isSelectionEmpty() ? "" : sections.getSelectedValue().getColumn(rowIndex).getTitle());
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		if (section != null) {
-			section.getColumn(rowIndex).setTitle(aValue.toString());
-			section.getPanel().recreateContents();
+		if (!sections.isSelectionEmpty()) {
+			sections.getSelectedValue().getColumn(rowIndex).setTitle(aValue.toString());
+			sections.getSelectedValue().getPanel().recreateContents();
 		}
 	}
 

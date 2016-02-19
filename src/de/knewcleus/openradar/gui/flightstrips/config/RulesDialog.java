@@ -1,38 +1,59 @@
 package de.knewcleus.openradar.gui.flightstrips.config;
 
+// TODO: rule name edit
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import de.knewcleus.openradar.gui.GuiMasterController;
-import de.knewcleus.openradar.gui.flightstrips.rules.RuleAndAction;
+import de.knewcleus.openradar.gui.flightstrips.actions.AbstractAction;
+import de.knewcleus.openradar.gui.flightstrips.conditions.AbstractOperatorCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.AbstractCondition;
 
 public class RulesDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
+	
+	private final RulesManager rulesManager;
 
-	private final GuiMasterController master;
+	private final JList<Rule> list = new JList<Rule>();
+
+	private final JPanel details = new JPanel(new BorderLayout());
+	private final NameEdit ruleName = new NameEdit();
+	private final JPanel conditions_panel = new JPanel(new BorderLayout());
+	private final JPanel actions_panel = new JPanel(new BorderLayout());
+	private final JButton moveUp = new JButton("up");
+	private final JButton moveDown = new JButton("down");
+	private final JButton newRule = new JButton("+");
+	private final JButton deleteRule = new JButton("-");
 	
-	private final JList<RuleAndAction> list = new JList<RuleAndAction>();
-	private final JList<String> rule = new JList<String>(new DefaultListModel<String>());
-	private final JList<String> action = new JList<String>(new DefaultListModel<String>());
+	private boolean editCondition = false;
+	private boolean editAction = false;
 	
-	public RulesDialog(GuiMasterController master) {
-		this.master =  master;
-		setTitle("Rules and Actions");
+	public RulesDialog(RulesManager rulesManager) {
+		this.rulesManager =  rulesManager;
+		setTitle("Rules");
 		// --- components ---
         JPanel panel = new JPanel();
         setContentPane(panel);
@@ -49,23 +70,38 @@ public class RulesDialog extends JDialog {
 		gbc.gridx++;
 		// details
 		gbc.weightx = 1.0;
-		panel.add(createDetails(), gbc);
+		fillDetailsPanel();
+		details.setVisible(false);
+		panel.add(details, gbc);
 		gbc.gridx++;
 		// do layout and adjust size
+		rulesSelectionChanged();
 		validate();
 		pack();
 	}
 	
 	protected JComponent createRulesList() {
-		list.setToolTipText("<html>select section to edit details</html>");
+        JPanel panel = new JPanel(new GridBagLayout());
+        // constraints
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridwidth = 2;
+		// --- rules list ---
+		panel.add(list, gbc);
+		list.setToolTipText("<html>select rule to edit rule details</html>");
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		list.setModel(master.getRulesManager());
-		list.setCellRenderer(new ListCellRenderer<RuleAndAction>() {
+		list.setModel(rulesManager);
+		list.setCellRenderer(new ListCellRenderer<Rule>() {
 			@Override
 			public Component getListCellRendererComponent(
-					JList<? extends RuleAndAction> list, RuleAndAction value,
+					JList<? extends Rule> list, Rule value,
 					int index, boolean isSelected, boolean cellHasFocus) {
 				JLabel label = new JLabel(value.getMenuText());
+				label.setFont(list.getFont());
 				label.setOpaque(true);
 				label.setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
 				label.setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
@@ -75,57 +111,160 @@ public class RulesDialog extends JDialog {
 		list.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				DefaultListModel<String> rule_model = (DefaultListModel<String>) (rule.getModel());
-				rule_model.clear();
-				DefaultListModel<String> action_model = (DefaultListModel<String>) (action.getModel());
-				action_model.clear();
-				RuleAndAction selected = list.getSelectedValue();
-				System.out.println((selected == null) ? "<null>" : selected.getClass().getSimpleName());  
-				if (selected != null) {
-					for (String s : selected.getRule().getText()) System.out.println(s);
-					for (String s : selected.getRule().getText()) rule_model.addElement(s);
-					for (String s : selected.getAction().getText()) action_model.addElement(s);
+				rulesSelectionChanged();
+			}
+		});
+		// --- buttons ---
+		gbc.gridy++;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 0.5;
+		gbc.weighty = 0;
+		gbc.gridwidth = 1;
+		// move section up
+		moveUp.setToolTipText("<html>move selected section up</html>");
+		moveUp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Rule selected = list.getSelectedValue();
+				if (selected != null)
+				{
+					rulesManager.moveRule(selected, -1);
+					list.setSelectedValue(selected, true);
 				}
-//				rule.revalidate();
-//				action.revalidate();
+			}
+		});
+		panel.add(moveUp, gbc);
+		gbc.gridx++;
+		// move section down
+		moveDown.setToolTipText("<html>move selected section down</html>");
+		moveDown.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Rule selected = list.getSelectedValue();
+				if (selected != null)
+				{
+					rulesManager.moveRule(selected, 1);
+					list.setSelectedValue(selected, true);
+				}
+			}
+		});
+		panel.add(moveDown, gbc);
+		gbc.gridx = 0;
+		gbc.gridy++;
+		// add section
+		newRule.setToolTipText("<html>create a new section</html>");
+		newRule.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Rule rule = new Rule("new rule", null, null);
+				rulesManager.add(rule);
+				list.setSelectedValue(rule, true);
 				pack();
 			}
 		});
-        JPanel panel = new JPanel(new BorderLayout());
-		panel.add(list, BorderLayout.PAGE_START);
-		return panel;
+		panel.add(newRule, gbc);
+		gbc.gridx++;
+		// delete section 
+		deleteRule.setToolTipText("<html>delete the selected section</html>");
+		deleteRule.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!list.isSelectionEmpty()) {
+					Rule selected = list.getSelectedValue();
+					if (selected != null)
+					{
+						rulesManager.remove(selected);
+						pack();
+					}
+				}
+			}
+		});
+		panel.add(deleteRule, gbc);
+		// outer panel
+        JPanel outer_panel = new JPanel(new BorderLayout());
+		outer_panel.add(panel, BorderLayout.PAGE_START);
+		return outer_panel;
 	}
 	
-	protected Component createDetails() {
-        JPanel outer_panel = new JPanel(new BorderLayout());
+	protected void rulesSelectionChanged() {
+		editCondition = false;
+		editAction = false;
+		fillConditionsPanel();
+		fillActionsPanel();
+		boolean isSelected = !list.isSelectionEmpty();
+		if (isSelected) ruleName.init();
+		details.setVisible(isSelected);
+		moveUp.setEnabled(isSelected && (list.getSelectedIndex() > 0));
+		moveDown.setEnabled(isSelected && (list.getSelectedIndex() < list.getModel().getSize() - 1));
+		deleteRule.setEnabled(isSelected);
+		pack();
+	}
+	
+	protected void fillDetailsPanel() {
 		JPanel panel = new JPanel(new GridBagLayout());
-		panel.setBorder(BorderFactory.createTitledBorder("Details"));
+		panel.setBorder(BorderFactory.createTitledBorder("Rule details"));
+		details.add(panel, BorderLayout.PAGE_START);
         // constraints
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		// rule text
-		JPanel rule_panel = new JPanel(new BorderLayout());
-		rule_panel.setBorder(BorderFactory.createTitledBorder("Rule"));
-		panel.add(rule_panel, gbc);
+		// rule name
+		panel.add(ruleName, gbc);
 		gbc.gridy++;
-		rule.setToolTipText("<html>description of the conditions</html>");
-		rule.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		rule.setFixedCellHeight(rule.getFontMetrics(rule.getFont()).getHeight());
-		rule_panel.add(rule, BorderLayout.CENTER);
-		// action text
-		JPanel action_panel = new JPanel(new BorderLayout());
-		action_panel.setBorder(BorderFactory.createTitledBorder("Action"));
-		panel.add(action_panel, gbc);
+		// conditions texts
+		conditions_panel.setBorder(BorderFactory.createTitledBorder("Condition(s)"));
+		conditions_panel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() >= 2) {
+					editCondition = !editCondition;
+					fillConditionsPanel();
+					pack();
+				}
+			}
+		});
+		panel.add(conditions_panel, gbc);
 		gbc.gridy++;
-		action.setToolTipText("<html>description of the action(s)</html>");
-		action.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		action.setFixedCellHeight(action.getFontMetrics(action.getFont()).getHeight());
-		action_panel.add(action, BorderLayout.CENTER);
-		outer_panel.add(panel, BorderLayout.PAGE_START);
-		return outer_panel;
+		// actions texts
+		actions_panel.setBorder(BorderFactory.createTitledBorder("Action(s)"));
+		actions_panel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() >= 2) {
+					editAction = !editAction;
+					fillActionsPanel();
+					pack();
+				}
+			}
+		});
+		panel.add(actions_panel, gbc);
+		gbc.gridy++;
 	}
 
 	public void showDialog() {
@@ -134,4 +273,389 @@ public class RulesDialog extends JDialog {
 		setVisible(true);
 	}
 	
+	// --- conditions ---
+	
+	protected void fillConditionsPanel() {
+		conditions_panel.removeAll();
+		if (!list.isSelectionEmpty()) {
+			Rule selected = list.getSelectedValue();
+			if (selected != null) {
+				AbstractCondition condition = selected.getCondition();
+				JPanel panel = new JPanel(new GridBagLayout());
+				conditions_panel.add(panel, BorderLayout.CENTER);
+		        // constraints
+				GridBagConstraints gbc = new GridBagConstraints();
+				gbc.gridx = 0;
+				gbc.gridy = 0;
+				gbc.weightx = 1.0;
+				gbc.fill = GridBagConstraints.BOTH;
+				// conditions panel
+				panel.add(createConditionComponent(condition, new BaseNewCondition(selected)), gbc);
+				gbc.gridx++;
+				if (editCondition) {
+					// delete button
+					gbc.weightx = 0.0;
+					JButton delete = new JButton("X");
+					delete.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							list.getSelectedValue().setCondition(null);
+							fillConditionsPanel();
+							pack();
+						}
+					});
+					panel.add(delete, gbc);
+					gbc.gridx++;
+				}
+			}
+		}
+	}
+	
+	protected JComponent createConditionComponent(AbstractCondition condition, ActionListener newConditionActionListener) {
+		if (condition instanceof AbstractOperatorCondition) return createAbstractOperatorConditionComponent((AbstractOperatorCondition) condition);
+		if (editCondition) {
+			return (condition == null) ? createNewConditionComponent(newConditionActionListener) : createPanel(condition);
+		}
+		return createSimpleTextComponent(condition, "<No condition defined!>");
+	}
+	
+	protected JComponent createNewConditionComponent(ActionListener newConditionActionListener) {
+		JComboBox<String> conditions = new JComboBox<String>(RulesManager.getAvailableConditionsNames());
+		conditions.addActionListener(newConditionActionListener);
+		return conditions;
+	}
+	
+	protected JComponent createAbstractOperatorConditionComponent(AbstractOperatorCondition rule) {
+		JPanel panel = new JPanel(new GridBagLayout());
+		panel.setBorder(BorderFactory.createTitledBorder(rule.getSimpleText()));
+        // constraints
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		// list rules
+		for (AbstractCondition r : rule.getConditions()) {
+			JPanel row_panel = new JPanel(new GridBagLayout());
+			panel.add(row_panel, gbc);
+			gbc.gridy++;
+	        // constraints
+			GridBagConstraints gbc_row = new GridBagConstraints();
+			gbc_row.gridx = 0;
+			gbc_row.gridy = 0;
+			gbc_row.weightx = 1.0;
+			gbc_row.fill = GridBagConstraints.BOTH;
+			// rule panel
+			row_panel.add(createConditionComponent(r, new OperatorNewCondition(rule)), gbc_row);
+			gbc_row.gridx++;
+			if (editCondition) {
+				// delete button
+				gbc_row.weightx = 0.0;
+				JButton delete = new JButton("X");
+				delete.addActionListener(new OperatorRemoveCondition(rule, r));
+				row_panel.add(delete, gbc_row);
+				gbc_row.gridx++;
+			}
+		}
+		if (editCondition) panel.add(createConditionComponent(null, new OperatorNewCondition(rule)), gbc);
+		return panel;
+	}
+	
+	// --- actions ---
+	
+	protected void fillActionsPanel() {
+		actions_panel.removeAll();
+		if (!list.isSelectionEmpty()) {
+			Rule selected = list.getSelectedValue();
+			if (selected != null) {
+				ArrayList<AbstractAction> actions = selected.getActions();
+				JPanel panel = new JPanel(new GridBagLayout());
+				actions_panel.add(panel, BorderLayout.CENTER);
+		        // constraints
+				GridBagConstraints gbc = new GridBagConstraints();
+				gbc.gridx = 0;
+				gbc.gridy = 0;
+				gbc.weightx = 1.0;
+				gbc.fill = GridBagConstraints.BOTH;
+				// actions panel
+				for (AbstractAction action : actions) {
+					panel.add(createActionComponent(action), gbc);
+					gbc.gridx++;
+					if (editAction) {
+						// delete button
+						gbc.weightx = 0.0;
+						JButton delete = new JButton("X");
+						delete.addActionListener(new RemoveAction(action));
+						panel.add(delete, gbc);
+						gbc.gridx++;
+					}
+					gbc.gridx = 0;
+					gbc.gridy++;
+				}
+				if ((actions.size() <= 0) || editAction){
+					panel.add(createActionComponent(null), gbc);
+				}
+			}
+		}
+	}
+	
+	protected JComponent createActionComponent(AbstractAction action) {
+		if (editAction) {
+			return (action == null) ? createNewActionComponent() : createPanel(action);
+		}
+		return createSimpleTextComponent(action, "<No action defined!>");
+	}
+	
+	protected JComponent createNewActionComponent() {
+		JComboBox<String> actions = new JComboBox<String>(RulesManager.getAvailableActionsNames(AbstractAction.UseCase.RULE));
+		actions.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				@SuppressWarnings("unchecked")
+				JComboBox<String> actions = (JComboBox<String>)e.getSource();
+				String selected = (String) actions.getSelectedItem();
+				try {
+					list.getSelectedValue().addAction(RulesManager.createActionClassByName(selected, AbstractAction.UseCase.RULE));
+					fillActionsPanel();
+					pack();
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
+			}
+		});
+		return actions;
+	}
+	
+	// --- create methods ---
+	
+	protected JComponent createSimpleTextComponent(IRuleTextProvider ruleTextProvider, String nullText) {
+		String s = (ruleTextProvider == null) ? nullText : ruleTextProvider.getSimpleText();
+		return new JLabel(s);
+	}
+	
+	protected JComponent createPanel(IEditProvider provider) {
+		GridBagLayout layout = new GridBagLayout();
+		JPanel panel = new JPanel(layout);
+        // constraints
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.WEST;
+		// components
+		JComponent last = null;
+		boolean weight = true;
+		for (int i = 0; i <= provider.getMaxIndex(); i++) {
+			switch(provider.getType(i)) {
+			case TEXT:		last = new JLabel(provider.getStringValue(i));
+							break;
+			case STRING:	if (provider.getMaxLength(i) < 0) {
+							weight = false;
+							gbc.weightx = 1.0; 
+							}
+							last = new Edit(provider, i);
+							break;
+			case NUMBER:	if (provider.getMaxLength(i) < 0) {
+							weight = false;
+							gbc.weightx = 1.0; 
+							}
+							last = new Edit(provider, i);
+							((Edit)last).setHorizontalAlignment(JTextField.RIGHT);
+							break;
+			case LIST:		last = new Combobox(provider, i);
+							break;
+			}
+			panel.add(last, gbc);
+			gbc.gridx++;
+			gbc.weightx = 0.0;
+		}
+		// if no other component got weightx = 1.0 then the last component gets it
+		if (weight) {
+			gbc = layout.getConstraints(last);
+			gbc.weightx = 1.0;
+			layout.setConstraints(last, gbc);
+		}
+		return panel;
+	}
+	
+	// === NameEdit ===
+	
+	protected class NameEdit extends RegExpEdit {
+		
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected String fetchStringValue() {
+			return list.getSelectedValue().getMenuText();
+		}
+		
+		@Override
+		protected void putStringValue(String value) {
+			rulesManager.renameRule(list.getSelectedValue(), value);
+		}
+
+		@Override
+		protected String fetchRegExp() {
+			return "[^\"]*";
+		}
+
+		@Override
+		protected String fetchToolTipText() { 
+			return "Enter a name which helps you (and others) to guess what should happen under which conditions";
+		} 
+
+	}
+	
+	// === BooleanCombobox ===
+	
+	protected class Combobox extends JComboBox<String> {
+
+		private static final long serialVersionUID = 1L;
+	
+		private final IEditProvider provider;
+		private final int index;
+		
+		public Combobox(IEditProvider provider, int index) {
+			super (provider.getStringList(index));
+			this.provider = provider;
+			this.index = index;
+			setSelectedIndex(provider.getIndexedValue(index));
+			getModel().addListDataListener(new ListDataListener() {
+				@Override
+				public void intervalAdded(ListDataEvent e) {}
+				@Override
+				public void intervalRemoved(ListDataEvent e) {}
+				@Override
+				public void contentsChanged(ListDataEvent e) {
+					Combobox.this.provider.setIndexedValue(getSelectedIndex(), Combobox.this.index);
+				}
+			});
+		}
+		
+	}
+	
+	// === Edit ===
+	
+	protected class Edit extends RegExpEdit {
+		
+		private static final long serialVersionUID = 1L;
+
+		private final IEditProvider provider;
+		private final int index;
+		
+		public Edit(IEditProvider provider, int index) {
+			this.provider = provider;
+			this.index = index;
+			init();
+		}
+
+		@Override
+		protected String fetchStringValue() {
+			return provider.getStringValue(index);
+		}
+		
+		@Override
+		protected void putStringValue(String value) {
+			provider.setStringValue(index, value);
+		}
+
+		@Override
+		protected int fetchMaxLength() {
+			return provider.getMaxLength(index);
+		}
+
+		@Override
+		protected String fetchRegExp() {
+			return provider.getRegExp(index);
+		}
+
+		@Override
+		protected String fetchToolTipText() { 
+			return provider.getToolTipText(index);
+		} 
+
+	}
+	
+	// === ActionListeners ===
+	
+	protected class BaseNewCondition implements ActionListener {
+		
+		protected final Rule rule;
+		
+		public BaseNewCondition(Rule rule) {
+			this.rule = rule;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			@SuppressWarnings("unchecked")
+			JComboBox<String> conditions = (JComboBox<String>)e.getSource();
+			String selected = (String) conditions.getSelectedItem();
+			try {
+				rule.setCondition(RulesManager.createConditionClassByName(selected));
+				fillConditionsPanel();
+				pack();
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
+		}
+	}
+		
+	protected class OperatorNewCondition implements ActionListener {
+		
+		protected final AbstractOperatorCondition condition;
+		
+		public OperatorNewCondition(AbstractOperatorCondition condition) {
+			this.condition = condition;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			@SuppressWarnings("unchecked")
+			JComboBox<String> conditions = (JComboBox<String>)e.getSource();
+			String selected = (String) conditions.getSelectedItem();
+			try {
+				condition.add(RulesManager.createConditionClassByName(selected));
+				fillConditionsPanel();
+				pack();
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
+		}
+	}
+		
+	protected class OperatorRemoveCondition implements ActionListener {
+		
+		protected final AbstractOperatorCondition operator_condition;
+		protected final AbstractCondition condition;
+		
+		public OperatorRemoveCondition(AbstractOperatorCondition condition, AbstractCondition removecondition) {
+			this.operator_condition = condition;
+			this.condition = removecondition;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			operator_condition.remove(condition);
+			fillConditionsPanel();
+			pack();
+		}
+	}
+
+	protected class RemoveAction implements ActionListener {
+		
+		protected final AbstractAction action;
+		
+		public RemoveAction(AbstractAction action) {
+			this.action = action;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			list.getSelectedValue().removeAction(action);
+			fillActionsPanel();
+			pack();
+		}
+	}
+
 }

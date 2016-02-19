@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.actions.AbstractAction;
-import de.knewcleus.openradar.gui.flightstrips.actions.ActionManager;
+import de.knewcleus.openradar.gui.flightstrips.config.RulesManager;
 
 public class ColumnData implements IDomElement {
 
@@ -19,21 +19,21 @@ public class ColumnData implements IDomElement {
 		this.title = title;
 	}
 
-	public ColumnData(Element element, LogicManager logic) throws Exception {
+	public ColumnData(Element element) throws Exception {
 		title = element.getAttributeValue("title");
 		// actions
 		Element e;
 		e = element.getChild("enter");
 		if (e != null) {
 			for (Element a : e.getChildren()) {
-				AbstractAction action = ActionManager.createClass(a, logic); 
+				AbstractAction action = RulesManager.createActionClass(a, AbstractAction.UseCase.COLUMN); 
 				if (action != null) addAction(true, action); 
 			}
 		}
 		e = element.getChild("exit");
 		if (e != null) {
 			for (Element a : e.getChildren()) {
-				AbstractAction action = ActionManager.createClass(a, logic); 
+				AbstractAction action = RulesManager.createActionClass(a, AbstractAction.UseCase.COLUMN); 
 				if (action != null) addAction(false, action); 
 			}
 		}
@@ -46,10 +46,7 @@ public class ColumnData implements IDomElement {
 	}
 	
 	public void setTitle(String title) {
-		if (this.title != title) {
-			this.title = title;
-			// TODO: broadcast message: contacts section column title changed
-		}
+		this.title = title;
 	}
 	
 	// --- actions ---
@@ -73,11 +70,11 @@ public class ColumnData implements IDomElement {
 	}
 	
 	public void executeEnterActions(FlightStrip flightstrip) {
-		for (AbstractAction action : enterActions) action.executeAction(flightstrip);
+		for (AbstractAction action : enterActions) action.executeAction(flightstrip, flightstrip.getSection().getSectionsManager().getLogicManager().getGuiMasterController());
 	}
 	
 	public void executeExitActions(FlightStrip flightstrip) {
-		for (AbstractAction action : exitActions) action.executeAction(flightstrip);
+		for (AbstractAction action : exitActions) action.executeAction(flightstrip, flightstrip.getSection().getSectionsManager().getLogicManager().getGuiMasterController());
 	}
 
 	// --- IDomElement ---

@@ -333,7 +333,7 @@ public class ContactsPanel extends javax.swing.JPanel implements DropTargetListe
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 4, 4);
         */
-        FlightStripBay fsb = new FlightStripBay(master);
+        FlightStripBay fsb = new FlightStripBay(master.getLogicManager().getSectionsManager());
         add(fsb, gridBagConstraints);
         master.setFlightStripBay(fsb);
         
