@@ -140,12 +140,17 @@ public class SectionData implements IDomElement {
 		}
 	}
 
-	public ColumnData getColumn(int Index) {
-		return columns.get(Index);
+	public ColumnData getColumn(int index) {
+		return columns.get(index);
 	}
 
 	public ArrayList<ColumnData> getColumns() {
 		return columns;
+	}
+	
+	public void setColumnTitle(int index, String title) {
+		columns.get(index).setTitle(title);
+		panel.recreateContents();
 	}
 
 	// --- contacts ---

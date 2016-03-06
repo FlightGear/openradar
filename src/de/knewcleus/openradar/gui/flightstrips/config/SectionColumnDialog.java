@@ -2,7 +2,6 @@ package de.knewcleus.openradar.gui.flightstrips.config;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -24,72 +23,81 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
-
 import de.knewcleus.openradar.gui.flightstrips.SectionData;
+import de.knewcleus.openradar.gui.flightstrips.actions.AbstractAction;
+import de.knewcleus.openradar.gui.flightstrips.config.DialogTools.RemoveActionListenerFactory;
 import de.knewcleus.openradar.gui.flightstrips.config.LogicManager.FilenameId;
+import de.knewcleus.openradar.gui.flightstrips.config.RulesDialog.RemoveAction;
+import de.knewcleus.openradar.gui.flightstrips.config.RulesDialog.RuleRemoveActionListenerFactory;
 import de.knewcleus.openradar.gui.flightstrips.order.AbstractOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.OrderManager;
 
-public class SectionColumnDialog extends JDialog implements WindowFocusListener, TableModel {
+@SuppressWarnings("unused")
+public class SectionColumnDialog extends JDialog implements WindowFocusListener {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final int maxColumns = 9;
+	
 	private final SectionsManager sectionsManager;
 	
 	private Point posTopRight;
 	
 	// layout
-	private final JPanel layoutPanel;
-	private final ButtonGroup filename = new ButtonGroup();
-	private final JRadioButton defaultFilename = new JRadioButton("default");
-	private final JRadioButton roleFilename = new JRadioButton("role");
-	private final JRadioButton airportFilename = new JRadioButton("airport");
-	private final JRadioButton callsignFilename = new JRadioButton("callsign");
-	private final JButton loadLayout = new JButton("load");
-	private final JButton saveLayout = new JButton("save");
-	private final JButton createTraditional = new JButton("traditional");
-	private final JButton createExample = new JButton("example");
-	private final JButton rules = new JButton("rules");
+	private final JPanel             layoutPanel       = new JPanel();
+	private final ButtonGroup        filename          = new ButtonGroup();
+	private final JRadioButton       defaultFilename   = new JRadioButton("default");
+	private final JRadioButton       roleFilename      = new JRadioButton("role");
+	private final JRadioButton       airportFilename   = new JRadioButton("airport");
+	private final JRadioButton       callsignFilename  = new JRadioButton("callsign");
+	private final JButton            loadLayout        = new JButton("load");
+	private final JButton            saveLayout        = new JButton("save");
+	private final JButton            createTraditional = new JButton("traditional");
+	private final JButton            createExample     = new JButton("example");
+	private final JButton            rules             = new JButton("rules");
 	// sections list
-	private final JPanel listPanel = new JPanel();
-	private final JList<SectionData> sections = new JList<SectionData>();
-	private final JButton moveUp = new JButton("up");
-	private final JButton moveDown = new JButton("down");
-	private final JButton newSection = new JButton("+");
-	private final JButton deleteSection = new JButton("-");
-	boolean sections_enable_event;
+	private final JPanel             listPanel         = new JPanel();
+	private final JList<SectionData> sections          = new JList<SectionData>();
+	private final JButton            moveUp            = new JButton("up");
+	private final JButton            moveDown          = new JButton("down");
+	private final JButton            newSection        = new JButton("+");
+	private final JButton            deleteSection     = new JButton("-");
 	// section details
-	private final JPanel details = new JPanel();
-	private final JCheckBox autoVisible = new JCheckBox("auto visible");
-	private final JCheckBox showHeader = new JCheckBox("show header");
-	private final JTextField sectionTitle = new JTextField();
-	private final JCheckBox showColumnTitles = new JCheckBox("show column titles");
-	private final OrderComboBox sortOrder = new OrderComboBox();
-	private final JCheckBox ascending = new JCheckBox("ascending");
-	private final JTable columns = new JTable();
-	private final JButton addColumn = new JButton("+");
-	private final JButton delColumn = new JButton("-");
-	private final JToggleButton more = new JToggleButton("<<");
+	private final JPanel             sectionDetails    = new JPanel();
+	private final JCheckBox          autoVisible       = new JCheckBox("auto visible");
+	private final JCheckBox          showHeader        = new JCheckBox("show header");
+	private final SectionTitleEdit   sectionTitle      = new SectionTitleEdit();
+	private final JCheckBox          showColumnTitles  = new JCheckBox("show column titles");
+	private final OrderComboBox      sortOrder         = new OrderComboBox();
+	private final JCheckBox          ascending         = new JCheckBox("ascending");
+	private final JPanel             columnTitles      = new JPanel();
+	private final JButton            addColumn         = new JButton("+");
+	private final JButton            delColumn         = new JButton("-");
+	private final JToggleButton      more              = new JToggleButton("<<");
+	// column details
+	private final JPanel             columnActions     = new JPanel();
+	private final JPanel             enterActions      = new JPanel();
+	private final JPanel             exitActions       = new JPanel();
+	private       int                detailsColumn;
+	private       boolean            editEnterActions  = false;
+	private       boolean            editExitActions   = false;
 	
 	public SectionColumnDialog(SectionsManager sectionsManager) {
 		this.sectionsManager = sectionsManager;
@@ -107,8 +115,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.PAGE_START;
         // left column
-		layoutPanel = createLayoutColumn(); 
-		panel.add(layoutPanel, gbc);
+		panel.add(createLayoutColumn(), gbc);
 		gbc.gridx++;
         // right column
 		gbc.weightx = 1.0;
@@ -117,6 +124,106 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		// layout and size
         doLayout();
         pack();
+	}
+	
+	public JPanel createLayoutColumn() {
+        layoutPanel.setBorder(BorderFactory.createTitledBorder("Layout"));
+        layoutPanel.setLayout(new BorderLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        layoutPanel.add(panel, BorderLayout.PAGE_START);
+        // constraints
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		// --- top panel ---
+		// select filename to load or save layout 
+		defaultFilename.setToolTipText("<html>select slot to load from or save to<br>default for every airport and every role</html>");
+		roleFilename.setToolTipText("<html>select slot to load from or save to<br>default for every airport and this role</html>");
+		airportFilename.setToolTipText("<html>select slot to load from or save to<br>default for this airport and every role</html>");
+		callsignFilename.setToolTipText("<html>select slot to load from or save to<br>default for this airport and this role</html>");
+		filename.add(defaultFilename);
+		filename.add(roleFilename);
+		filename.add(airportFilename);
+		filename.add(callsignFilename);
+		panel.add(defaultFilename, gbc);
+		gbc.gridy++;
+		panel.add(roleFilename, gbc);
+		gbc.gridy++;
+		panel.add(airportFilename, gbc);
+		gbc.gridy++;
+		panel.add(callsignFilename, gbc);
+		gbc.gridy++;
+		callsignFilename.setSelected(true);
+		// button load layout
+		loadLayout.setToolTipText("<html>load layout</html>");
+		loadLayout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				sectionsManager.getLogicManager().LoadLayout(callsignFilename.isSelected() ? FilenameId.CALLSIGN : 
+											                 (airportFilename.isSelected() ? FilenameId.AIRPORT : 
+												              (roleFilename.isSelected() ? FilenameId.ROLE : FilenameId.DEFAULT)));
+			}
+		});
+		panel.add(loadLayout, gbc);
+		gbc.gridy++;
+		// button save layout
+		saveLayout.setToolTipText("<html>save layout</html>");
+		saveLayout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				sectionsManager.getLogicManager().SaveLayout(callsignFilename.isSelected() ? FilenameId.CALLSIGN : 
+	                 										 (airportFilename.isSelected() ? FilenameId.AIRPORT : 
+	                 										  (roleFilename.isSelected() ? FilenameId.ROLE : FilenameId.DEFAULT)));
+			}
+		});
+		panel.add(saveLayout, gbc);
+		gbc.gridy++;
+		// --- middle panel ---
+        panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        layoutPanel.add(panel, BorderLayout.CENTER);
+        // constraints
+		gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		// button create traditional layout
+		createTraditional.setToolTipText("<html>create traditional layout with 3 columns</html>");
+		createTraditional.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sectionsManager.getLogicManager().createTraditional();
+			}
+		});
+		panel.add(createTraditional, gbc);
+		gbc.gridy++;
+		// button create example layout
+		createExample.setToolTipText("<html>create example layout</html>");
+		createExample.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sectionsManager.getLogicManager().createExample();
+			}
+		});
+		panel.add(createExample, gbc);
+		gbc.gridy++;
+		// --- bottom ---
+		// button rules 
+		rules.setToolTipText("<html>manage rules</html>");
+		rules.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sectionsManager.getLogicManager().getRulesManager().showDialog();
+			}
+		});
+		layoutPanel.add(rules, BorderLayout.PAGE_END);
+		return layoutPanel;
 	}
 	
 	public JPanel createSectionsPanel() {
@@ -136,14 +243,13 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		gbc.gridx++;
         // section details
 		gbc.weightx = 1.0;
-		panel.add(createSectionColumn(details), gbc);
+		panel.add(createSectionColumn(), gbc);
 		gbc.gridx++;
 		return outer_panel;
 	}
 
 	public JPanel createSectionsColumn() {
-        JPanel panel = listPanel;
-        panel.setLayout(new GridBagLayout());
+        listPanel.setLayout(new GridBagLayout());
         // constraints
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -175,7 +281,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 				sectionsSelectionChanged();
 			}
 		});
-		panel.add(sections, gbc);
+		listPanel.add(sections, gbc);
 		gbc.gridy++;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 0.5;
@@ -191,7 +297,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		    	setSection(section, true);
 			}
 		});
-		panel.add(moveUp, gbc);
+		listPanel.add(moveUp, gbc);
 		gbc.gridx++;
 		// move section down
 		moveDown.setToolTipText("<html>move selected section down</html>");
@@ -203,7 +309,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		    	setSection(section, true);
 			}
 		});
-		panel.add(moveDown, gbc);
+		listPanel.add(moveDown, gbc);
 		gbc.gridx = 0;
 		gbc.gridy++;
 		// add section
@@ -215,7 +321,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		    	setSection(s, true);
 			}
 		});
-		panel.add(newSection, gbc);
+		listPanel.add(newSection, gbc);
 		gbc.gridx++;
 		// delete section 
 		deleteSection.setToolTipText("<html>delete the selected section</html>");
@@ -226,16 +332,16 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 				
 			}
 		});
-		panel.add(deleteSection, gbc);
-		return panel;
+		listPanel.add(deleteSection, gbc);
+		return listPanel;
 	}
 	
-	public JPanel createSectionColumn(JPanel outer_panel) {
-        outer_panel.setBorder(BorderFactory.createTitledBorder("Section"));
-        outer_panel.setLayout(new BorderLayout());
+	public JPanel createSectionColumn() {
+        sectionDetails.setBorder(BorderFactory.createTitledBorder("Section"));
+        sectionDetails.setLayout(new BorderLayout());
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        outer_panel.add(panel, BorderLayout.PAGE_START);
+        sectionDetails.add(panel, BorderLayout.PAGE_START);
         // constraints
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -279,21 +385,6 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		panel.add(showHeader, gbc);
 		gbc.gridy++;
 		// sectionTitle
-		sectionTitle.setToolTipText("<html>enter a section title and hit RETURN</html>");
-		sectionTitle.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sectionsManager.setSectionTitle(sections.getSelectedValue(), sectionTitle.getText());
-			}
-		});
-		sectionTitle.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {}
-			@Override
-			public void focusLost(FocusEvent e) {
-				sectionsManager.setSectionTitle(sections.getSelectedValue(), sectionTitle.getText());
-			}
-		});
 		panel.add(sectionTitle, gbc);
 		gbc.gridy++;
 		// showColumnTitles
@@ -355,18 +446,29 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		panel.add(ascending, gbc);
 		gbc.gridy++;
 		// columns
-		columns.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		columns.setCellSelectionEnabled(false);
-		columns.setShowVerticalLines(false);
-		columns.setToolTipText("<html>enter a column title and hit RETURN</html>");
-		gbc.insets = new Insets(5, 5, 5, 5);
-		panel.add(columns, gbc);
+		columnTitles.setLayout(new GridBagLayout());
+        GridBagConstraints gbc_ct = new GridBagConstraints();
+        gbc_ct.gridy = 0;
+        gbc_ct.fill = GridBagConstraints.HORIZONTAL;
+		for (int i = 0; i <= maxColumns; i++) {
+	        gbc_ct.gridx = 0;
+	        gbc_ct.weightx = 0.0;
+	        columnTitles.add(new JLabel(String.valueOf(i)), gbc_ct);
+	        gbc_ct.gridx++;
+	        gbc_ct.weightx = 1.0;
+	        columnTitles.add(new ColumnTitleEdit(i), gbc_ct);
+	        gbc_ct.gridx++;
+	        gbc_ct.weightx = 0.0;
+	        columnTitles.add(new ColumnActionsButton(i), gbc_ct);
+	        gbc_ct.gridy++;
+		}
+		panel.add(columnTitles, gbc);
 		gbc.gridy++;
 		// row: add and remove column
 		JPanel row_panel = new JPanel();
 		panel.add(row_panel, gbc);
-		row_panel.setLayout(new GridLayout(1, 4, 5, 0));
 		gbc.gridy++;
+		row_panel.setLayout(new GridLayout(1, 4, 5, 0));
         // constraints
 		// add column
 		more.setToolTipText("<html>show more options</html>");
@@ -388,7 +490,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				sections.getSelectedValue().addColumn("new column");
-		    	columns.invalidate();
+				fillColumnsTitles();
 				adjustSizeAndPosition();
 			}
 		});
@@ -399,112 +501,106 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				sections.getSelectedValue().removeLastColumn();
+				fillColumnsTitles();
 				adjustSizeAndPosition();
 			}
 		});
 		row_panel.add(delColumn);
-		return outer_panel;
+		// column details
+		panel.add(createColumnDetails(), gbc);
+		gbc.gridy++;
+		return sectionDetails;
 	}
-	
-	public JPanel createLayoutColumn() {
-        JPanel outer_panel = new JPanel();
-        outer_panel.setBorder(BorderFactory.createTitledBorder("Layout"));
-        outer_panel.setLayout(new BorderLayout());
+
+	public JPanel createColumnDetails() {
+        columnActions.setBorder(BorderFactory.createTitledBorder("Column"));
+        columnActions.setLayout(new BorderLayout());
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        outer_panel.add(panel, BorderLayout.PAGE_START);
+        columnActions.add(panel, BorderLayout.PAGE_START);
         // constraints
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
-		// row: load and save layout: select filename
-		defaultFilename.setToolTipText("<html>select slot to load from or save to<br>default for every airport and every role</html>");
-		roleFilename.setToolTipText("<html>select slot to load from or save to<br>default for every airport and this role</html>");
-		airportFilename.setToolTipText("<html>select slot to load from or save to<br>default for this airport and every role</html>");
-		callsignFilename.setToolTipText("<html>select slot to load from or save to<br>default for this airport and this role</html>");
-		filename.add(defaultFilename);
-		panel.add(defaultFilename, gbc);
+		// --- panel for enter actions
+        enterActions.setBorder(BorderFactory.createTitledBorder("enter actions"));
+        panel.add(enterActions, gbc);
 		gbc.gridy++;
-		filename.add(roleFilename);
-		panel.add(roleFilename, gbc);
+		// --- panel for exit actions
+        exitActions.setBorder(BorderFactory.createTitledBorder("exit actions"));
+        panel.add(exitActions, gbc);
 		gbc.gridy++;
-		filename.add(airportFilename);
-		panel.add(airportFilename, gbc);
-		gbc.gridy++;
-		filename.add(callsignFilename);
-		panel.add(callsignFilename, gbc);
-		gbc.gridy++;
-		callsignFilename.setSelected(true);
-		// load layout
-		loadLayout.setToolTipText("<html>load layout</html>");
-		loadLayout.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				sectionsManager.getLogicManager().LoadLayout(callsignFilename.isSelected() ? FilenameId.CALLSIGN : 
-											                 (airportFilename.isSelected() ? FilenameId.AIRPORT : 
-												              (roleFilename.isSelected() ? FilenameId.ROLE : FilenameId.DEFAULT)));
-			}
-		});
-		panel.add(loadLayout, gbc);
-		gbc.gridy++;
-		// save layout
-		saveLayout.setToolTipText("<html>save layout</html>");
-		saveLayout.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				sectionsManager.getLogicManager().SaveLayout(callsignFilename.isSelected() ? FilenameId.CALLSIGN : 
-	                 										 (airportFilename.isSelected() ? FilenameId.AIRPORT : 
-	                 										  (roleFilename.isSelected() ? FilenameId.ROLE : FilenameId.DEFAULT)));
-			}
-		});
-		panel.add(saveLayout, gbc);
-		gbc.gridy++;
+		return columnActions;
+	}
 
-		// --- middle panel ---
-        panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        outer_panel.add(panel, BorderLayout.CENTER);
-        // constraints
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1.0;
-		// create traditional
-		createTraditional.setToolTipText("<html>create traditional layout with 3 columns</html>");
-		createTraditional.addActionListener(new ActionListener() {
+	protected void fillColumnsTitles() {
+		GridBagLayout layout = (GridBagLayout)columnTitles.getLayout();
+		int columns = sections.isSelectionEmpty() ? 0 :  sections.getSelectedValue().getColumnCount();
+		for (Component c : columnTitles.getComponents()) {
+			GridBagConstraints gbc = layout.getConstraints(c);
+			boolean v = gbc.gridy < columns;
+			c.setVisible(v);
+			if (v && (c instanceof ColumnTitleEdit)) ((ColumnTitleEdit) c).init();
+		}
+		addColumn.setEnabled(columns <= maxColumns);
+		delColumn.setEnabled(columns > 1);
+		columnActions.setVisible(false);
+		editEnterActions = false;
+		editExitActions = false;
+	}
+	
+	protected void fillColumnActions() {
+		((TitledBorder)	columnActions.getBorder()).setTitle("Column " + detailsColumn + ": " + sections.getSelectedValue().getColumn(detailsColumn).getTitle());
+		columnActions.repaint();
+		editEnterActions = true;
+		editExitActions = true;
+		fillEnterActionsPanel();
+		fillExitActionsPanel();
+		columnActions.setVisible(true);
+		pack();
+	}
+	
+	protected void fillEnterActionsPanel() {
+		ActionListener newActionListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sectionsManager.getLogicManager().createTraditional();
+				@SuppressWarnings("unchecked")
+				JComboBox<String> actions = (JComboBox<String>)e.getSource();
+				String selected = (String) actions.getSelectedItem();
+				try {
+					sections.getSelectedValue().getColumn(detailsColumn).addAction(true, RulesManager.createActionClassByName(selected, AbstractAction.UseCase.COLUMN));
+					fillEnterActionsPanel();
+					pack();
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
 			}
-		});
-		panel.add(createTraditional, gbc);
-		gbc.gridy++;
-		// save layout
-		createExample.setToolTipText("<html>create example layout</html>");
-		createExample.addActionListener(new ActionListener() {
+		};
+		DialogTools.fillActionsPanel(enterActions, sections.getSelectedValue().getColumn(detailsColumn).getEnterActions(), 
+				                     editEnterActions, AbstractAction.UseCase.COLUMN, 
+				                     newActionListener, new RemoveEnterActionListenerFactory());
+	}
+	
+	protected void fillExitActionsPanel() {
+		ActionListener newActionListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sectionsManager.getLogicManager().createExample();
+				@SuppressWarnings("unchecked")
+				JComboBox<String> actions = (JComboBox<String>)e.getSource();
+				String selected = (String) actions.getSelectedItem();
+				try {
+					sections.getSelectedValue().getColumn(detailsColumn).addAction(false, RulesManager.createActionClassByName(selected, AbstractAction.UseCase.COLUMN));
+					fillExitActionsPanel();
+					pack();
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
 			}
-		});
-		panel.add(createExample, gbc);
-		gbc.gridy++;
-		
-		// rules Button
-		rules.setToolTipText("<html>manage rules</html>");
-		rules.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sectionsManager.getLogicManager().getRulesManager().showDialog();
-			}
-		});
-		outer_panel.add(rules, BorderLayout.PAGE_END);
-		return outer_panel;
+		};
+		DialogTools.fillActionsPanel(exitActions, sections.getSelectedValue().getColumn(detailsColumn).getExitActions(),
+				                     editExitActions, AbstractAction.UseCase.COLUMN, newActionListener, new RemoveExitActionListenerFactory());
 	}
 	
 	public void setTopRight(Point posTopRight) {
@@ -520,24 +616,23 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		else {
 			autoVisible.setSelected(section.isAutoVisible());
 			showHeader.setSelected(section.getShowHeader());
-			sectionTitle.setText(section.getTitle());
+			sectionTitle.init();
 			showColumnTitles.setSelected(section.getShowColumnTitles());
 			AbstractOrder<?> order = section.getOrder();
 			sortOrder.setSelectedOrder(order);
 			ascending.setEnabled(order != null);
 			if (order != null) ascending.setSelected(order.isAscending());
 			// layout and size
-			columns.setModel(this);
-			columns.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-			columns.getColumnModel().getColumn(0).setMaxWidth(10);
 		}
 		if (more.isSelected() != showMore) more.doClick();
+		fillColumnsTitles();
 		adjustSizeAndPosition();
 	}
 
 	protected void sectionsSelectionChanged() {
 		boolean isSelected = !sections.isSelectionEmpty();
-		details.setVisible(isSelected);
+		((TitledBorder)	sectionDetails.getBorder()).setTitle("Section" + (isSelected ? (": " + sections.getSelectedValue().getTitle()) : ""));
+		sectionDetails.setVisible(isSelected);
 		if (isSelected) setSection(sections.getSelectedValue(), more.isSelected());
 		moveUp.setEnabled(isSelected && (sections.getSelectedIndex() > 0));
 		moveDown.setEnabled(isSelected && (sections.getSelectedIndex() < sections.getModel().getSize() - 1));
@@ -671,100 +766,148 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener,
 		
 	}
 	
-	// =====================================================
+	// === SectionTitleEdit ===
 	
-	protected class ColumnEdit extends JTextField {
-
-		private static final long serialVersionUID = -2687496532378115367L;
-
-		private final String regexp;
+	protected class SectionTitleEdit extends RegExpEdit {
 		
-		public ColumnEdit() {
-			this.regexp = "[1-9]";
-			setPreferredSize(new Dimension(12, getMinimumSize().height));
-			((AbstractDocument) getDocument()).setDocumentFilter(new RegExpEditDocumentFilter());
-		}
-
-		// =====================================================
-
-		protected class RegExpEditDocumentFilter extends DocumentFilter {
-			
-			public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-				string = string.toUpperCase();
-				String text = getText();
-				text = text.substring(0, offset) + string + text.substring(offset);
-				if (text.matches(regexp)) {
-					fb.insertString(offset, string, attr);
-				}
-			}
-
-			public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attrs) throws BadLocationException {
-				string = string.toUpperCase();
-				String text = getText();
-				text = text.substring(0, offset) + string + text.substring(offset + length);
-				if (text.matches(regexp)) {
-					fb.replace(offset, length, string, attrs);
-				}
-			}
-
-			public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-				String text = getText();
-				text = text.substring(0, offset) + text.substring(offset + length);
-				if (text.matches(regexp)) {
-					fb.remove(offset, length);
-				}
-			}
-			
+		private static final long serialVersionUID = 1L;
+		
+		@Override
+		protected String fetchStringValue() {
+			return sections.getSelectedValue().getTitle();
 		}
 		
-	}
+		@Override
+		protected void putStringValue(String value) {
+			sectionsManager.setSectionTitle(sections.getSelectedValue(), value);
+			((TitledBorder)	sectionDetails.getBorder()).setTitle("Section: " + value);
+			sectionDetails.repaint();
+		}
 
-	// --- TableModel ---
+		@Override
+		protected String fetchRegExp() {
+			return "[^\"]*";
+		}
+
+		@Override
+		protected String fetchToolTipText() { 
+			return "Enter a section name to identify the section in rules";
+		} 
+
+	}
 	
-	@Override
-	public int getRowCount() {
-		return sections.isSelectionEmpty() ? 0 : sections.getSelectedValue().getColumnCount();
+	// === ColumnTitleEdit ===
+	
+	protected class ColumnTitleEdit extends RegExpEdit {
+		
+		private static final long serialVersionUID = 1L;
+
+		private final int column;
+		
+		public ColumnTitleEdit(int column) {
+			this.column = column;
+		}
+		
+		@Override
+		protected String fetchStringValue() {
+			return sections.getSelectedValue().getColumn(column).getTitle();
+		}
+		
+		@Override
+		protected void putStringValue(String value) {
+			sections.getSelectedValue().setColumnTitle(column, value);
+			if (column == detailsColumn) {
+				((TitledBorder)	columnActions.getBorder()).setTitle("column " + column + ": " + value);
+				columnActions.repaint();
+			}
+		}
+
+		@Override
+		protected String fetchRegExp() {
+			return "[^\"]*";
+		}
+
+		@Override
+		protected String fetchToolTipText() { 
+			return "Enter a column name for display";
+		} 
+
+	}
+	
+	// === ColumnActionsButton ===
+	
+	protected class ColumnActionsButton extends JButton implements ActionListener {
+		
+		private static final long serialVersionUID = 1L;
+
+		private final int column;
+		
+		public ColumnActionsButton(int column) {
+			super("actions");
+			this.column = column;
+			addActionListener(this);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			detailsColumn = column;
+			fillColumnActions();
+		}
+		
+	}
+	
+	// === ActionListener ===
+	
+	abstract protected class AbstractRemoveAction implements ActionListener {
+		
+		protected final AbstractAction action;
+		
+		public AbstractRemoveAction(AbstractAction action) {
+			this.action = action;
+		}
+		
 	}
 
-	@Override
-	public int getColumnCount() {
-		return 2;
-	}
-
-	@Override
-	public String getColumnName(int columnIndex) {
-		return "";
-	}
-
-	@Override
-	public Class<?> getColumnClass(int columnIndex) {
-		return String.class;
-	}
-
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return columnIndex > 0;
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		return columnIndex == 0 ? rowIndex : (sections.isSelectionEmpty() ? "" : sections.getSelectedValue().getColumn(rowIndex).getTitle());
-	}
-
-	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		if (!sections.isSelectionEmpty()) {
-			sections.getSelectedValue().getColumn(rowIndex).setTitle(aValue.toString());
-			sections.getSelectedValue().getPanel().recreateContents();
+	protected class RemoveEnterAction extends AbstractRemoveAction {
+		
+		public RemoveEnterAction(AbstractAction action) {
+			super(action);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			sections.getSelectedValue().getColumn(detailsColumn).removeAction(true, action);
+			fillEnterActionsPanel();
+			pack();
 		}
 	}
 
-	@Override
-	public void addTableModelListener(TableModelListener l) {
+	protected class RemoveExitAction extends AbstractRemoveAction {
+		
+		public RemoveExitAction(AbstractAction action) {
+			super(action);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			sections.getSelectedValue().getColumn(detailsColumn).removeAction(false, action);
+			fillExitActionsPanel();
+			pack();
+		}
 	}
 
-	@Override
-	public void removeTableModelListener(TableModelListener l) {
+	protected class RemoveEnterActionListenerFactory extends RemoveActionListenerFactory {
+		@Override
+		public ActionListener createRemoveActionListener(AbstractAction action) {
+			return new RemoveEnterAction(action);
+		}
+	}
+	
+	protected class RemoveExitActionListenerFactory extends RemoveActionListenerFactory {
+		@Override
+		public ActionListener createRemoveActionListener(AbstractAction action) {
+			return new RemoveExitAction(action);
+		}
 	}
 	
 }

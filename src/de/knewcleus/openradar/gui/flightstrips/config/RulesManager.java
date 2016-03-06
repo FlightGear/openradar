@@ -239,11 +239,13 @@ public class RulesManager implements ListModel<Rule> {
 	}
 	
 	protected static AbstractAction doCreateActionClass(String classname, Element element, AbstractAction.UseCase useCase) throws Exception {
-		Class<?> parameterTypes[] = new Class[] { Element.class };
-		for (Class<? extends AbstractAction> orderclass : getAvailableActions(useCase)) {
-			if (classname.equalsIgnoreCase(orderclass.getSimpleName())) {
-				//System.out.printf("create action '%s' end: found\n", classname);
-				return orderclass.getConstructor(parameterTypes).newInstance(element);
+		if (classname != null) {
+			Class<?> parameterTypes[] = new Class[] { Element.class };
+			for (Class<? extends AbstractAction> orderclass : getAvailableActions(useCase)) {
+				if (classname.equalsIgnoreCase(orderclass.getSimpleName())) {
+					//System.out.printf("create action '%s' end: found\n", classname);
+					return orderclass.getConstructor(parameterTypes).newInstance(element);
+				}
 			}
 		}
 		return null;

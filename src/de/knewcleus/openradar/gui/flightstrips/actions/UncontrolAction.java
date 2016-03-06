@@ -16,17 +16,16 @@ public class UncontrolAction extends AbstractAction {
 		return EnumSet.of(UseCase.COLUMN);
 	}
 	
+	// --- constructors ---
+	
 	public UncontrolAction() {
 	}
 	
 	public UncontrolAction(Element element) {
 	}
 	
-	@Override
-	public String getSimpleText() {
-		 return "release control";
-	}
-
+	// --- execution ---
+	
 	@Override
 	public void executeAction(FlightStrip flightstrip, GuiMasterController master) {
 		GuiRadarContact contact = flightstrip.getContact();
@@ -36,4 +35,32 @@ public class UncontrolAction extends AbstractAction {
 		}		
 	}
 
+	// --- IRuleTextProvider ---
+	
+	@Override
+	public String getSimpleText() {
+		return "release control";
+	}
+
+	// --- IEditProvider ---
+	
+	@Override
+	public int getMaxIndex() {
+		return super.getMaxIndex() + 1;
+	}
+
+	public String getStringValue(int index) {
+		switch (index) {
+		case 0: return getSimpleText(); 
+		}
+		return super.getStringValue(index);
+	}
+	
+	public String getToolTipText(int index) {
+		switch (index) {
+		case 0: return "<html>Release contact from your control</html>";
+		}
+		return super.getToolTipText(index);
+	}
+	
 }

@@ -52,8 +52,10 @@ public class ColumnData implements IDomElement {
 	// --- actions ---
 	
 	public void addAction(boolean enter, AbstractAction action) {
-		if (enter) enterActions.add(action);
-		else exitActions.add(action);
+		if (action != null) {
+			if (enter) enterActions.add(action);
+			else exitActions.add(action);
+		}
 	}
 
 	public void removeAction(boolean enter, AbstractAction action) {
