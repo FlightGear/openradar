@@ -33,6 +33,13 @@ public abstract class AbstractRangeCondition extends AbstractBooleanCondition {
 	
 	@Override
 	protected String getTextline() {
+		String minValue = getFormattedMinValue();
+		String maxValue = getFormattedMaxValue();
+		if (minValue.length() <= 0) {
+			if (maxValue.length() <= 0) return " (ERROR: condition is always " + (booleanValue ? "true" : "false") + ")";
+			return super.getTextline() + "below " + maxValue + " " + getUnit();
+		}
+		else if (maxValue.length() <= 0) return super.getTextline() + "above " + minValue + " " + getUnit();
 		return super.getTextline() + "between " + getFormattedMinValue() + " " + getUnit() + " and " + getFormattedMaxValue() + " " + getUnit();
 	}
 

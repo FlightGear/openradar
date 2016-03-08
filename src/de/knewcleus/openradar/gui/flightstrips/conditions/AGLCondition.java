@@ -7,7 +7,7 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class AGLCondition extends AltitudeCondition {
 
-	public AGLCondition(int minAltitude, int maxAltitude, boolean isInRange) {
+	public AGLCondition(Integer minAltitude, Integer maxAltitude, boolean isInRange) {
 		super(minAltitude, maxAltitude, isInRange);
 		digits = 4;
 	}

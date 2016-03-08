@@ -9,7 +9,7 @@ public class SquawkCondition extends AbstractIntegerRangeCondition {
 
 	// --- constructors ---
 	
-	public SquawkCondition(int minSquawk, int maxSquawk, boolean isInRange) {
+	public SquawkCondition(Integer minSquawk, Integer maxSquawk, boolean isInRange) {
 		super(minSquawk, maxSquawk, isInRange);
 		digits = 4;
 	}
@@ -46,8 +46,8 @@ public class SquawkCondition extends AbstractIntegerRangeCondition {
 	}
 	
 	@Override
-	protected String formatValue(int value) {
-		return String.format("%4d", value);
+	protected String formatValue(Integer value) {
+		return (value == null) ? "" : String.format("%4d", value);
 	}
 	
 	// --- IEditProvider ---

@@ -9,7 +9,7 @@ public class DirectionCondition extends AbstractDoubleRangeCondition {
 
 	// --- constructors ---
 	
-	public DirectionCondition(double minDirection, double maxDirection, boolean isInRange) {
+	public DirectionCondition(Double minDirection, Double maxDirection, boolean isInRange) {
 		super(minDirection, maxDirection, isInRange);
 		digits = 3;
 	}

@@ -256,28 +256,28 @@ public class LogicManager implements Runnable {
 		// ATC / carrier / car contacts
 		rulesManager.add(new Rule("ATC", new ATCCondition(true), new MoveToAction(section_atc.getTitle(), 0)));
 		rulesManager.add(new Rule("carrier", new OrCondition (new AircraftCondition("MP-NIMITZ", true), new AircraftCondition("MP-VINSON", true)), new MoveToAction(section_carrier.getTitle(), 0)));
-		rulesManager.add(new Rule("car park",  new AndCondition(new AircraftCondition("FOLLOWME", true), new GroundSpeedCondition(0, 1, true)), new MoveToAction(section_car.getTitle(), 1)));
+		rulesManager.add(new Rule("car park",  new AndCondition(new AircraftCondition("FOLLOWME", true), new GroundSpeedCondition(null, 1, true)), new MoveToAction(section_car.getTitle(), 1)));
 		rulesManager.add(new Rule("car drive", new AircraftCondition("FOLLOWME", true), new MoveToAction(section_car.getTitle(), 0)));
 		// dual
 		rulesManager.add(new Rule("dual copilot", new OrCondition (new AircraftCondition(".+-copilot", true)), new MoveToAction(section_dual.getTitle(), 0)));
 		rulesManager.add(new Rule("dual passenger", new OrCondition (new AircraftCondition(".+-PAX", true)), new MoveToAction(section_dual.getTitle(), 1)));
 		// ground
-		rulesManager.add(new Rule("PARKING", new AndCondition(new DistanceCondition(0, 2, true), new AGLCondition(0, 50, true), new GroundSpeedCondition(0, 1, true), new OrCondition (new NewCondition(true), new ColumnCondition(2, true))), new MoveToAction(section_ground.getTitle(), 2)));
-		rulesManager.add(new Rule("Taxi OUT", new AndCondition(new DistanceCondition(0, 2, true), new AGLCondition(0, 50, true), new GroundSpeedCondition(0, 1, false), new OrCondition (new NewCondition(true), new ColumnCondition(2, true), new ColumnCondition(3, true))), new MoveToAction(section_ground.getTitle(), 4)));
-		rulesManager.add(new Rule("Taxi OUT stop", new AndCondition(new DistanceCondition(0, 2, true), new AGLCondition(0, 50, true), new GroundSpeedCondition(0, 1, true), new OrCondition (new ColumnCondition(3, true), new ColumnCondition(4, true))), new MoveToAction(section_ground.getTitle(), 3)));
-		rulesManager.add(new Rule("Taxi IN stop", new AndCondition(new DistanceCondition(0, 2, true), new AGLCondition(0, 50, true), new GroundSpeedCondition(0, 1, true), new OrCondition (new ColumnCondition(0, true), new ColumnCondition(1, true))), new MoveToAction(section_ground.getTitle(), 1)));
-		rulesManager.add(new Rule("Taxi IN", new AndCondition(new DistanceCondition(0, 2, true), new AGLCondition(0, 50, true), new GroundSpeedCondition(0, 1, false)), new MoveToAction(section_ground.getTitle(), 0)));
+		rulesManager.add(new Rule("PARKING", new AndCondition(new DistanceCondition(null, 2., true), new AGLCondition(null, 50, true), new GroundSpeedCondition(null, 1, true), new OrCondition (new NewCondition(true), new ColumnCondition(2, true))), new MoveToAction(section_ground.getTitle(), 2)));
+		rulesManager.add(new Rule("Taxi OUT", new AndCondition(new DistanceCondition(null, 2., true), new AGLCondition(null, 50, true), new GroundSpeedCondition(1, null, true), new OrCondition (new NewCondition(true), new ColumnCondition(2, true), new ColumnCondition(3, true))), new MoveToAction(section_ground.getTitle(), 4)));
+		rulesManager.add(new Rule("Taxi OUT stop", new AndCondition(new DistanceCondition(null, 2., true), new AGLCondition(null, 50, true), new GroundSpeedCondition(null, 1, true), new OrCondition (new ColumnCondition(3, true), new ColumnCondition(4, true))), new MoveToAction(section_ground.getTitle(), 3)));
+		rulesManager.add(new Rule("Taxi IN stop", new AndCondition(new DistanceCondition(null, 2., true), new AGLCondition(null, 50, true), new GroundSpeedCondition(null, 1, true), new OrCondition (new ColumnCondition(0, true), new ColumnCondition(1, true))), new MoveToAction(section_ground.getTitle(), 1)));
+		rulesManager.add(new Rule("Taxi IN", new AndCondition(new DistanceCondition(null, 2., true), new AGLCondition(null, 50, true), new GroundSpeedCondition(1, null, true)), new MoveToAction(section_ground.getTitle(), 0)));
 		// emergency
 		rulesManager.add(new Rule("Emergency", new EmergencyCondition(true), new MoveToAction(section_emergency.getTitle(), 0)));
 		// controlled by me
 		rulesManager.add(new Rule("Controlled", new AtcSelfCondition(true), new MoveToAction(section_controlled.getTitle(), -1)));
 		// controlled by any other ATC
-		rulesManager.add(new Rule("Interesting DEP", new AndCondition(new NewCondition(true), new AtcOtherCondition(".+", true), new DistanceCondition(0, 2, true)), new MoveToAction(section_interesting.getTitle(), 2)));
-		rulesManager.add(new Rule("Interesting APP", new AndCondition(new NewCondition(true), new AtcOtherCondition(".+", true), new DistanceCondition(0, 90, false)), new MoveToAction(section_interesting.getTitle(), 0)));
+		rulesManager.add(new Rule("Interesting DEP", new AndCondition(new NewCondition(true), new AtcOtherCondition(".+", true), new DistanceCondition(null, 2., true)), new MoveToAction(section_interesting.getTitle(), 2)));
+		rulesManager.add(new Rule("Interesting APP", new AndCondition(new NewCondition(true), new AtcOtherCondition(".+", true), new DistanceCondition(90., null, true)), new MoveToAction(section_interesting.getTitle(), 0)));
 		rulesManager.add(new Rule("Interesting OTHERS", new AndCondition(new NewCondition(true), new AtcOtherCondition(".+", true)), new MoveToAction(section_interesting.getTitle(), 1)));
 		rulesManager.add(new Rule("Interesting", new AtcOtherCondition(".+", true), new MoveToAction(section_interesting.getTitle(), -1)));
 		// uncontrolled
-		rulesManager.add(new Rule("new APP", new AndCondition(new NewCondition(true), new DistanceCondition(0, 90, false)), new MoveToAction(section_uncontrolled.getTitle(), 0)));
+		rulesManager.add(new Rule("new APP", new AndCondition(new NewCondition(true), new DistanceCondition(90., null, true)), new MoveToAction(section_uncontrolled.getTitle(), 0)));
 		rulesManager.add(new Rule("new OTHERS", new NewCondition(true), new MoveToAction(section_uncontrolled.getTitle(), 1)));
 		rulesManager.add(new Rule("Uncontrolled", new AtcNoneCondition(true), new MoveToAction(section_uncontrolled.getTitle(), -1)));
 		rulesManager.setActive(true);

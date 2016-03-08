@@ -66,7 +66,11 @@ public abstract class AbstractDoubleCondition extends AbstractNumberCondition {
 	@Override
 	public void setStringValue(int index, String value) {
 		switch (index) {
-		case 2: this.doubleValue = Double.parseDouble(value);
+		case 2: try {
+					this.doubleValue = Double.parseDouble(value);
+				} catch (NumberFormatException e) {
+					this.doubleValue = 0;
+				}
 				break;
 		}
 		super.setStringValue(index, value);

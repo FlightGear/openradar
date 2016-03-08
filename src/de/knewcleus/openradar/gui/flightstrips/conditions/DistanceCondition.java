@@ -9,7 +9,7 @@ public class DistanceCondition extends AbstractDoubleRangeCondition {
 
 	// --- constructors ---
 	
-	public DistanceCondition(double minDistance, double maxDistance, boolean belowDistance) {
+	public DistanceCondition(Double minDistance, Double maxDistance, boolean belowDistance) {
 		super(minDistance, maxDistance, belowDistance);
 		digits = 3;
 	}

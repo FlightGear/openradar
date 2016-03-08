@@ -144,7 +144,7 @@ public class DialogTools {
 				public void intervalRemoved(ListDataEvent e) {}
 				@Override
 				public void contentsChanged(ListDataEvent e) {
-					Combobox.this.provider.setIndexedValue(getSelectedIndex(), Combobox.this.index);
+					Combobox.this.provider.setIndexedValue(Combobox.this.index, getSelectedIndex());
 				}
 			});
 		}

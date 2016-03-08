@@ -7,7 +7,7 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class AltitudeCondition extends AbstractIntegerRangeCondition {
 
-	public AltitudeCondition(int minAltitude, int maxAltitude, boolean isInRange) {
+	public AltitudeCondition(Integer minAltitude, Integer maxAltitude, boolean isInRange) {
 		super(minAltitude, maxAltitude, isInRange);
 		digits = 5;
 	}

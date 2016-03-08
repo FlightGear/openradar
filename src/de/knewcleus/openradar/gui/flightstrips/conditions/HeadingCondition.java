@@ -9,7 +9,7 @@ public class HeadingCondition extends AbstractIntegerRangeCondition {
 
 	// --- constructors ---
 	
-	public HeadingCondition(int minHeading, int maxHeading, boolean isInRange) {
+	public HeadingCondition(Integer minHeading, Integer maxHeading, boolean isInRange) {
 		super(minHeading, maxHeading, isInRange);
 		digits = 3;
 	}

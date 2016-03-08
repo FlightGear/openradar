@@ -7,7 +7,7 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class GroundSpeedCondition extends AbstractIntegerRangeCondition {
 
-	public GroundSpeedCondition(int minGroundSpeed, int maxGroundSpeed, boolean belowGroundSpeed) {
+	public GroundSpeedCondition(Integer minGroundSpeed, Integer maxGroundSpeed, boolean belowGroundSpeed) {
 		super(minGroundSpeed, maxGroundSpeed, belowGroundSpeed);
 		digits = 3;
 	}

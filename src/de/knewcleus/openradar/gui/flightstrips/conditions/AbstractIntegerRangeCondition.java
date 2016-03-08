@@ -7,36 +7,28 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 
 public abstract class AbstractIntegerRangeCondition extends AbstractRangeCondition {
 
-	protected int minValue;
-	protected int maxValue;
+	protected Integer minValue; // null = no min value
+	protected Integer maxValue; // null = no max value
 	protected int digits = 1;
 	
 	// --- constructors ---
 	
-	public AbstractIntegerRangeCondition(int minValue, int maxValue, boolean isInRange) {
+	public AbstractIntegerRangeCondition(Integer minValue, Integer maxValue, boolean isInRange) {
 		super(isInRange);
-		if (minValue <= maxValue) {
-			this.minValue = minValue;
-			this.maxValue = maxValue;
-		}
-		else {
-			this.minValue = maxValue;
-			this.maxValue = minValue;
-		}
+		this.minValue = minValue;
+		this.maxValue = maxValue;
 	}
 	
 	public AbstractIntegerRangeCondition(Element element) {
 		super(element);
-		int minValue = (element == null) ? 0 : Integer.valueOf(element.getAttributeValue(getMinAttribute()));
-		int maxValue = (element == null) ? 0 : Integer.valueOf(element.getAttributeValue(getMaxAttribute()));
-		if (minValue <= maxValue) {
-			this.minValue = minValue;
-			this.maxValue = maxValue;
-		}
-		else {
-			this.minValue = maxValue;
-			this.maxValue = minValue;
-		}
+		this.minValue = getIntegerFromAttribute(element, getMinAttribute());
+		this.maxValue = getIntegerFromAttribute(element, getMaxAttribute());
+	}
+	
+	protected Integer getIntegerFromAttribute(Element element, String attribute) {
+		if (element == null) return 0;
+		String s = element.getAttributeValue(attribute).trim();
+		return (s.length() <= 0) ? null : Integer.valueOf(s);
 	}
 	
 	// --- compare ---
@@ -44,8 +36,7 @@ public abstract class AbstractIntegerRangeCondition extends AbstractRangeConditi
 	@Override
 	protected Boolean extractBooleanValue(FlightStrip flightstrip, AirportData airportData) {
 		Integer value = extractIntegerValue(flightstrip, airportData);
-		if (value == null) return null;
-		return (minValue <= value) && (value <= maxValue); 
+		return (value == null) ? null : (((minValue == null) ? true : (minValue <= value)) && (((maxValue == null) ? true : (value <= maxValue)))); 
 	}
 
 	protected abstract Integer extractIntegerValue(FlightStrip flightstrip, AirportData airportData);
@@ -55,14 +46,14 @@ public abstract class AbstractIntegerRangeCondition extends AbstractRangeConditi
 	@Override
 	public void putAttributes(Element element) {
 		super.putAttributes(element);
-		element.setAttribute(getMinAttribute(), String.valueOf(minValue));
-		element.setAttribute(getMaxAttribute(), String.valueOf(maxValue));
+		element.setAttribute(getMinAttribute(), (minValue == null) ? "" : String.valueOf(minValue));
+		element.setAttribute(getMaxAttribute(), (maxValue == null) ? "" : String.valueOf(maxValue));
 	}
 
 	// --- IRuleTextProvider ---
 	
-	protected String formatValue(int value) {
-		return String.format("%d", value);
+	protected String formatValue(Integer value) {
+		return (value == null) ? "" : String.format("%d", value);
 	}
 	
 	@Override
@@ -80,9 +71,9 @@ public abstract class AbstractIntegerRangeCondition extends AbstractRangeConditi
 	@Override
 	public void setStringValue(int index, String value) {
 		switch (index) {
-		case 3: this.minValue = Integer.parseInt(value);
+		case 3: this.minValue = (value.length() <= 0) ? null : Integer.parseInt(value);
 		        break;
-		case 5: this.maxValue = Integer.parseInt(value);
+		case 5: this.maxValue = (value.length() <= 0) ? null : Integer.parseInt(value);
 				break;
 		}
 		super.setStringValue(index, value);
