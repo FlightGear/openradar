@@ -40,6 +40,7 @@ import de.knewcleus.fgfs.location.Position;
 import de.knewcleus.fgfs.location.Vector3D;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
+import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.setup.AircraftCodeConverter;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.radardata.fgmp.TargetStatus;
@@ -88,6 +89,8 @@ public class GuiRadarContact {
     protected volatile String atcLanguage = "en";
     private volatile boolean fgComSupport = false;
 
+    protected FlightStrip flightstrip = null;  
+    
     public GuiRadarContact(GuiMasterController master, RadarContactController manager, TargetStatus player, String atcComment) {
         this.manager=manager;
         this.player=player;
@@ -588,4 +591,13 @@ public class GuiRadarContact {
     public AirportData getAirportData() {
     	return airportData;
     }
+    
+    public void setFlightstrip(FlightStrip flightstrip) {
+    	this.flightstrip = flightstrip;
+    }
+    
+    public FlightStrip getFlightStrip() {
+    	return flightstrip;
+    }
+    
 }

@@ -93,6 +93,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 	
 	public FlightStrip(GuiRadarContact contact) {
 		this.contact = contact;
+		contact.setFlightstrip(this);
 		// design and layout
 		setOpaque(true);
 		setBorder(BorderFactory.createLineBorder(Palette.BLACK));

@@ -16,10 +16,13 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -40,6 +43,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
+import de.knewcleus.openradar.gui.flightstrips.ColumnData;
+import de.knewcleus.openradar.gui.flightstrips.ColumnData.PaintLevel;
 import de.knewcleus.openradar.gui.flightstrips.SectionData;
 import de.knewcleus.openradar.gui.flightstrips.actions.AbstractAction;
 import de.knewcleus.openradar.gui.flightstrips.config.DialogTools.RemoveActionListenerFactory;
@@ -92,7 +98,8 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener 
 	private final JButton            delColumn         = new JButton("-");
 	private final JToggleButton      more              = new JToggleButton("<<");
 	// column details
-	private final JPanel             columnActions     = new JPanel();
+	private final JPanel             columnDetails     = new JPanel();
+	private final PaintLevelComboBox paintLevel        = new PaintLevelComboBox(); 
 	private final JPanel             enterActions      = new JPanel();
 	private final JPanel             exitActions       = new JPanel();
 	private       int                detailsColumn;
@@ -459,7 +466,7 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener 
 	        columnTitles.add(new ColumnTitleEdit(i), gbc_ct);
 	        gbc_ct.gridx++;
 	        gbc_ct.weightx = 0.0;
-	        columnTitles.add(new ColumnActionsButton(i), gbc_ct);
+	        columnTitles.add(new ColumnDetailsButton(i), gbc_ct);
 	        gbc_ct.gridy++;
 		}
 		panel.add(columnTitles, gbc);
@@ -513,26 +520,35 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener 
 	}
 
 	public JPanel createColumnDetails() {
-        columnActions.setBorder(BorderFactory.createTitledBorder("Column"));
-        columnActions.setLayout(new BorderLayout());
+        columnDetails.setBorder(BorderFactory.createTitledBorder("Column"));
+        columnDetails.setLayout(new BorderLayout());
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        columnActions.add(panel, BorderLayout.PAGE_START);
+        columnDetails.add(panel, BorderLayout.PAGE_START);
         // constraints
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
+		// --- paint priority ---
+		panel.add(new JLabel("paint level:"), gbc);
+		gbc.gridx++;
+		paintLevel.setToolTipText("paint level for radar screen");
+		panel.add(paintLevel, gbc);
+		gbc.gridx = 0;
+		gbc.gridy++;
 		// --- panel for enter actions
         enterActions.setBorder(BorderFactory.createTitledBorder("enter actions"));
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
         panel.add(enterActions, gbc);
 		gbc.gridy++;
 		// --- panel for exit actions
         exitActions.setBorder(BorderFactory.createTitledBorder("exit actions"));
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
         panel.add(exitActions, gbc);
 		gbc.gridy++;
-		return columnActions;
+		return columnDetails;
 	}
 
 	protected void fillColumnsTitles() {
@@ -546,19 +562,20 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener 
 		}
 		addColumn.setEnabled(columns <= maxColumns);
 		delColumn.setEnabled(columns > 1);
-		columnActions.setVisible(false);
+		columnDetails.setVisible(false);
 		editEnterActions = false;
 		editExitActions = false;
 	}
 	
-	protected void fillColumnActions() {
-		((TitledBorder)	columnActions.getBorder()).setTitle("Column " + detailsColumn + ": " + sections.getSelectedValue().getColumn(detailsColumn).getTitle());
-		columnActions.repaint();
+	protected void fillColumnDetails() {
+		((TitledBorder)	columnDetails.getBorder()).setTitle("Column " + detailsColumn + ": " + sections.getSelectedValue().getColumn(detailsColumn).getTitle());
+		columnDetails.repaint();
+		paintLevel.init();
 		editEnterActions = true;
 		editExitActions = true;
 		fillEnterActionsPanel();
 		fillExitActionsPanel();
-		columnActions.setVisible(true);
+		columnDetails.setVisible(true);
 		pack();
 	}
 	
@@ -817,8 +834,8 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener 
 		protected void putStringValue(String value) {
 			sections.getSelectedValue().setColumnTitle(column, value);
 			if (column == detailsColumn) {
-				((TitledBorder)	columnActions.getBorder()).setTitle("column " + column + ": " + value);
-				columnActions.repaint();
+				((TitledBorder)	columnDetails.getBorder()).setTitle("column " + column + ": " + value);
+				columnDetails.repaint();
 			}
 		}
 
@@ -836,14 +853,14 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener 
 	
 	// === ColumnActionsButton ===
 	
-	protected class ColumnActionsButton extends JButton implements ActionListener {
+	protected class ColumnDetailsButton extends JButton implements ActionListener {
 		
 		private static final long serialVersionUID = 1L;
 
 		private final int column;
 		
-		public ColumnActionsButton(int column) {
-			super("actions");
+		public ColumnDetailsButton(int column) {
+			super("details");
 			this.column = column;
 			addActionListener(this);
 		}
@@ -851,7 +868,29 @@ public class SectionColumnDialog extends JDialog implements WindowFocusListener 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			detailsColumn = column;
-			fillColumnActions();
+			fillColumnDetails();
+		}
+		
+	}
+	
+	// === PriorityComboBox ===
+	
+	protected class PaintLevelComboBox extends JComboBox<ColumnData.PaintLevel> {
+
+		private static final long serialVersionUID = 1L;
+		
+		public PaintLevelComboBox() {
+			super(ColumnData.getPaintLevels());
+			addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					sections.getSelectedValue().getColumn(detailsColumn).setPaintLevel((PaintLevel)getSelectedItem());
+				}
+			});
+		}
+	
+		public void init() {
+			setSelectedItem(sections.getSelectedValue().getColumn(detailsColumn).getPaintLevel());
 		}
 		
 	}

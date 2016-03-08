@@ -15,6 +15,7 @@ import org.jdom2.output.XMLOutputter;
 
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.RadarContactController;
+import de.knewcleus.openradar.gui.flightstrips.ColumnData;
 import de.knewcleus.openradar.gui.flightstrips.SectionData;
 import de.knewcleus.openradar.gui.flightstrips.actions.ControlAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.MoveToAction;
@@ -199,7 +200,9 @@ public class LogicManager implements Runnable {
 		sectionsManager.add(section_default);
 		section_default.setOrder(new ColumnOrder());
 		section_default.getColumn(0).addAction(true, new ControlAction());
+		section_default.getColumn(0).setPaintLevel(ColumnData.PaintLevel.TOP);
 		section_default.getColumn(2).addAction(true, new UncontrolAction());
+		section_default.getColumn(2).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
 		// rules for new contacts
 		rulesManager.setActive(false);
 		rulesManager.clear();
@@ -218,37 +221,55 @@ public class LogicManager implements Runnable {
 		sectionsManager.clear();
 		SectionData section_emergency = new SectionData(sectionsManager, "Emergency", "");
 		sectionsManager.add(section_emergency);
+		section_emergency.getColumn(0).setPaintLevel(ColumnData.PaintLevel.TOP);
 		
 		SectionData section_controlled = new SectionData(sectionsManager, "Controlled", "APP", "Transit | Pattern", "DEP");
 		sectionsManager.add(section_controlled);
 		section_controlled.setOrder(new DistanceOrder());
+		section_controlled.getColumn(0).setPaintLevel(ColumnData.PaintLevel.HIGHER);
+		section_controlled.getColumn(1).setPaintLevel(ColumnData.PaintLevel.LOWER);
+		section_controlled.getColumn(2).setPaintLevel(ColumnData.PaintLevel.HIGHER);
 		
 		SectionData section_interesting = new SectionData(sectionsManager, "Interesting", "APP", "Transit", "DEP");
 		sectionsManager.add(section_interesting);
-		section_controlled.setOrder(new DistanceOrder());
+		section_interesting.setOrder(new DistanceOrder());
+		section_interesting.getColumn(0).setPaintLevel(ColumnData.PaintLevel.LOWER);
+		section_interesting.getColumn(1).setPaintLevel(ColumnData.PaintLevel.LOWER);
+		section_interesting.getColumn(2).setPaintLevel(ColumnData.PaintLevel.LOWER);
 
 		SectionData section_uncontrolled = new SectionData(sectionsManager, "Uncontrolled", "APP", "Other", "DEP");
 		sectionsManager.add(section_uncontrolled);
 		section_uncontrolled.setOrder(new AltitudeOrder(false));
+		section_uncontrolled.getColumn(0).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
+		section_uncontrolled.getColumn(1).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
+		section_uncontrolled.getColumn(2).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
 		
 		SectionData section_ground = new SectionData(sectionsManager, "Ground", "TAXI IN", "stop", "PARKING", "stop", "TAXI OUT");
 		sectionsManager.add(section_ground);
+		section_ground.getColumn(1).setPaintLevel(ColumnData.PaintLevel.LOWER);
+		section_ground.getColumn(2).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
+		section_ground.getColumn(3).setPaintLevel(ColumnData.PaintLevel.LOWER);
 
 		SectionData section_dual = new SectionData(sectionsManager, "Dual", "copilot", "passenger");
 		sectionsManager.add(section_dual);
 		section_dual.setOrder(new CallsignOrder());
+		section_dual.getColumn(0).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
+		section_dual.getColumn(1).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
 		
 		SectionData section_car = new SectionData(sectionsManager, "car", "drive", "park");
 		sectionsManager.add(section_car);
 		section_car.setOrder(new ColumnOrder());
+		section_car.getColumn(1).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
 		
 		SectionData section_carrier = new SectionData(sectionsManager, "carrier", "");
 		sectionsManager.add(section_carrier);
 		section_carrier.setOrder(new CallsignOrder());
+		section_carrier.getColumn(0).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
 		
 		SectionData section_atc = new SectionData(sectionsManager, "ATC", "");
 		sectionsManager.add(section_atc);
 		section_atc.setOrder(new CallsignOrder());
+		section_atc.getColumn(0).setPaintLevel(ColumnData.PaintLevel.BOTTOM);
 		
 		// rules for new contacts
 		rulesManager.setActive(false);

@@ -35,18 +35,17 @@ package de.knewcleus.openradar.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.knewcleus.openradar.gui.contacts.GuiRadarContact.State;
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+import de.knewcleus.openradar.gui.flightstrips.ColumnData;
+import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
+import de.knewcleus.openradar.gui.flightstrips.SectionData;
 import de.knewcleus.openradar.rpvd.RadarTargetView;
 
 /**
  * This class exists to paint radar contacts in a sequence, 
  * 
- * (1) at first the uncontrolled
- * (2) the controlled
- * (3) the important
- * (4) the selected 
- * 
  * @author Wolfram Wagner
+ * @author Andreas Vogel
  *
  */
 public class LayeredRadarContactView extends LayeredView {
@@ -56,79 +55,40 @@ public class LayeredRadarContactView extends LayeredView {
     public LayeredRadarContactView( IViewerAdapter mapViewAdapter ) {
         super(mapViewAdapter);
     }
-    
+
     @Override
     public synchronized void traverse(IViewVisitor visitor) {
-        RadarTargetView selectedView = null;
         List<IView> viewsToRepaint=new ArrayList<IView>(views);
-//		log.warn("Painting views ");
-//		log.warn("viewsToPaint: "+viewsToRepaint.size());
-
-        // the neglected
+        
+        // --- sort views by paint priority ---
+        List<List<RadarTargetView>> radarTargetViews = new ArrayList<List<RadarTargetView>>();
+        for (int i = 0; i < ColumnData.PaintLevel.values().length + 2; i++) radarTargetViews.add(new ArrayList<RadarTargetView>());
+        
         for (IView view: new ArrayList<IView>(viewsToRepaint)) {
             if(view instanceof RadarTargetView) {
+            	int i = 0;
                 RadarTargetView radarView = (RadarTargetView)view;
-                if(radarView.getTrackDisplayState().getGuiContact().isNeglect()) {
-
-                    view.accept(visitor);
-                    viewsToRepaint.remove(view); // remove already painted 
+                GuiRadarContact contact = radarView.getTrackDisplayState().getGuiContact();
+                if (contact.isSelected()) i = radarTargetViews.size() - 1;
+                else {
+                	FlightStrip flightstrip = contact.getFlightStrip();
+                	if (flightstrip != null) {
+                		SectionData section = flightstrip.getSection();
+                		if (section != null) {
+                			i = 1 + section.getColumn(flightstrip.getColumn()).getPaintLevel().ordinal();
+                		}
+                	}
                 }
+                radarTargetViews.get(i).add(radarView);
             }
         }
-        // paint the inactive
-        for (IView view: new ArrayList<IView>(viewsToRepaint)) {
-            if(view instanceof RadarTargetView) {
-                RadarTargetView radarView = (RadarTargetView)view;
-                if(!radarView.getTrackDisplayState().getGuiContact().isActive()) {
-
-                    view.accept(visitor);
-                    viewsToRepaint.remove(view); // remove already painted 
-                }
-            }
-        }
-        // paint the uncontrolled
-        for (IView view: new ArrayList<IView>(viewsToRepaint)) {
-            if(view instanceof RadarTargetView) {
-                RadarTargetView radarView = (RadarTargetView)view;
-                if(radarView.getTrackDisplayState().getGuiContact().isSelected()) {
-
-                    selectedView = radarView; // remember the selected one, once 
-                } else if(radarView.getTrackDisplayState().getGuiContact().getState()==State.UNCONTROLLED 
-                        && !radarView.getTrackDisplayState().getGuiContact().isSelected()) {
-
-                    view.accept(visitor);
-                    viewsToRepaint.remove(view); // remove already painted 
-                }
-            }
-        }
-        // paint the controlled
-        for (IView view: new ArrayList<IView>(viewsToRepaint)) {
-            if(view instanceof RadarTargetView) {
-                RadarTargetView radarView = (RadarTargetView)view;
-                if(radarView.getTrackDisplayState().getGuiContact().getState()==State.CONTROLLED 
-                        && !radarView.getTrackDisplayState().getGuiContact().isSelected()) {
-
-                    view.accept(visitor);
-                    viewsToRepaint.remove(view); // remove already painted 
-                }
-            }
-        }
-        // paint the important
-        for (IView view: new ArrayList<IView>(viewsToRepaint)) {
-            if(view instanceof RadarTargetView) {
-                RadarTargetView radarView = (RadarTargetView)view;
-                if(radarView.getTrackDisplayState().getGuiContact().getState()==State.IMPORTANT && 
-                        !radarView.getTrackDisplayState().getGuiContact().isSelected()) {
-                    
-                    view.accept(visitor);
-                    viewsToRepaint.remove(view); // remove already painted                    
-                }
-            }
-        }
-        // paint the selected
-        if(selectedView!=null) {
-            selectedView.accept(visitor);
-        }
+        // --- visit views ---
+        for (List<RadarTargetView> views : radarTargetViews)
+        	for (RadarTargetView view : views)
+        		view.accept(visitor);
+        
+        radarTargetViews.clear();
         viewsToRepaint.clear();
     }
 }
+    
