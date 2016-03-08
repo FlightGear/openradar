@@ -78,6 +78,10 @@ public class DatablockLayoutManager {
         layoutList.add(l);
         layoutModes.put(l.getName(),l);
 
+        l = new FuturisticLayout(this);
+        layoutList.add(l);
+        layoutModes.put(l.getName(),l);
+        
     }
 
     public synchronized void addDataBlockLayoutListener(DataBlockLayoutListener l) {
