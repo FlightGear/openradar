@@ -70,7 +70,7 @@ public class PositionMessage implements IMultiplayerMessage {
 	}
 
 	public int getMessageSize() {
-		return MAX_MODEL_NAME_LEN+5*8+15*4+getPropertiesLength();
+		return MAX_MODEL_NAME_LEN+5*8+15*4+4+getPropertiesLength();
 	}
 
 	public String getModel() {
@@ -161,7 +161,7 @@ public class PositionMessage implements IMultiplayerMessage {
 	public void encode(XDROutputStream outputStream) throws MultiplayerException {
 
 		try {
-			MPUtils.writeCString(outputStream, model, MAX_MODEL_NAME_LEN);
+			MPUtils.writeCString(outputStream, model, MAX_MODEL_NAME_LEN); // 96 byte
 
 			outputStream.writeDouble(time);  // 8 byte
 			outputStream.writeDouble(lag);  // 8 byte
@@ -171,8 +171,8 @@ public class PositionMessage implements IMultiplayerMessage {
 			MPUtils.writeFloatPosition(outputStream,angularVelocity); // 3rd 4 byte
 			MPUtils.writeFloatPosition(outputStream,linearAcceleration); // 4th 4 byte
 			MPUtils.writeFloatPosition(outputStream,angularAcceleration); // 5th 4 byte
-//			// add 4 bytes padding are missing pad them
-			//outputStream.write(new byte[] {0,0,0,0}); // 6th 4 byte
+			// add 4 bytes padding are missing pad them
+			outputStream.write(new byte[] {0,0,0,0}); // 6th 4 byte
 			// => 200 byte
 			encodeProperties(outputStream);
 		} catch (IOException e) {
