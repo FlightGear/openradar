@@ -204,7 +204,7 @@ public class FlightPlanData {
 				} catch (Exception e) {
 					this.soulsOnBoard = 1;
 				}
-	//			this.remarks = newFp.getRemarks();
+				this.remarks = newFp.getRemarks();
 			}
 		}
 	}
