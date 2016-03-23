@@ -143,6 +143,20 @@ public class FlightStrip extends JPanel implements FocusListener {
 		// can't click if tooltips set // cCallsign.setToolTipText("<html>left click to select; middle click for flightplan; right click for menu<br>double click to show; shift + double click to center<html>");
 		cAircraft           = new Label("---");
 		cSquawk             = new EditLabel(new SquawkEdit(), " ", "", "");
+		cSquawk.label.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				cSquawk.copyLabelToEdit();
+			}
+		});
 		cATC                = new AtcComponent(" -> ", "", "");
 		cDistance           = new Label("--");
 		cAltitude           = new EditLabel(new AltitudeEdit(), " ", "", "");
@@ -960,6 +974,10 @@ public class FlightStrip extends JPanel implements FocusListener {
 		public void setEditText(String edit) {
 			this.edit.setText(edit);
 			showLabel();
+		}
+		
+		public void copyLabelToEdit() {
+			setEditText(label.getText()); // TODO
 		}
 		
 		public String getEditText() {
