@@ -41,6 +41,7 @@ import de.knewcleus.openradar.gui.flightstrips.conditions.IFRCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.NeglectCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.NewCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.OrCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.RelativeHeadingCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.SectionCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.SquawkCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.VFRCondition;
@@ -174,6 +175,8 @@ public class RulesManager implements ListModel<Rule> {
 		// position
 		result.add(DistanceCondition.class);
 		result.add(DirectionCondition.class);
+		// aircraft heading relative to airport direction
+		result.add(RelativeHeadingCondition.class);
 		// flightstrip bay
 		result.add(ColumnCondition.class);
 		result.add(SectionCondition.class);
