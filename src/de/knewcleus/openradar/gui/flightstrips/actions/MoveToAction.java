@@ -76,7 +76,7 @@ public class MoveToAction extends AbstractAction {
 	@Override
 	public Type getType(int index) {
 		switch (index) {
-		case 1: 
+		case 1: return Type.STRING;
 		case 3: return Type.NUMBER;
 		}
 		return super.getType(index);
