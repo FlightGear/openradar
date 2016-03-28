@@ -142,7 +142,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		cCallsign           = new Label("----");
 		// can't click if tooltips set // cCallsign.setToolTipText("<html>left click to select; middle click for flightplan; right click for menu<br>double click to show; shift + double click to center<html>");
 		cAircraft           = new Label("---");
-		cSquawk             = new EditLabel(new SquawkEdit(), " ", "", "");
+		cSquawk             = new EditLabel(new SquawkEdit(), " ", "","----", "");
 		cSquawk.label.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -159,9 +159,9 @@ public class FlightStrip extends JPanel implements FocusListener {
 		});
 		cATC                = new AtcComponent(" -> ", "", "");
 		cDistance           = new Label("--");
-		cAltitude           = new EditLabel(new AltitudeEdit(), " ", "", "");
-		cHeading            = new EditLabel(new HeadingEdit(), " ", "", "°");
-		cSpeed              = new EditLabel(new SpeedEdit(), " ", "G", "");
+		cAltitude           = new EditLabel(new AltitudeEdit(), " ", "", null, "");
+		cHeading            = new EditLabel(new HeadingEdit(), " ", "", null, "°");
+		cSpeed              = new EditLabel(new SpeedEdit(), " ", "G", null, "");
 		cVerticalSpeed		= new Label(null);
 		cFlightrules        = new Label(null);
 		cDepartureAirport   = new Label("----");
@@ -333,7 +333,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		cAircraft.setText(contact.isNeglect() ? "neglected" : (contact.isActive() ? contact.getModel() : "inactive: " + ((System.currentTimeMillis() - contact.getLastUpdate()) / 1000) + " sec"));
 		cAircraft.setFont(contact.isActive() ? Palette.STRIP_FONT : Palette.STRIP_FONT_BOLD);
 		String s = contact.getTranspSquawkDisplay();
-		cSquawk.setLabelText(s.isEmpty() ? "----" : s);
+		cSquawk.setLabelText(s.isEmpty() ? null : s); // TODO
 		cSquawk.setEditText(contact.getAssignedSquawkDisplay());
 		// row 2
 		cDistance.setText(contact.getRadarContactDistance() + " NM");
@@ -541,11 +541,19 @@ public class FlightStrip extends JPanel implements FocusListener {
 		// --- JLabel ---
 		
 		@Override
-		public void setText(String text) {
-			if (text.isEmpty()) {
-				if (emptyText != null) text = emptyText;
+		public void setText(String text) { // TODO
+			if ((text == null) || text.isEmpty()) {
+				text = (emptyText == null) ? "" : emptyText;
 			}
 			super.setText(text);
+		}
+
+		public String getValue() {
+			String result = getText();
+			if (emptyText != null) {
+				if (result.equals(emptyText)) result = "";
+			}
+			return result;
 		}
 
 	}
@@ -570,7 +578,6 @@ public class FlightStrip extends JPanel implements FocusListener {
 		
 		public void setLongText(String text) {
 			if (!this.longtext.equals(text)) {
-				//System.out.println("setLongText" + System.currentTimeMillis());
 				this.longtext = text;
 				parts.clear();
 				parts.addAll(Arrays.asList(text.split("\\W+")));
@@ -676,7 +683,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 				}
 			}
 		}
-
+		
 		// --- DocumentListener ---
 		
 		@Override
@@ -916,10 +923,10 @@ public class FlightStrip extends JPanel implements FocusListener {
 		private final JLabel editSuffix = new FlightStrip.Label(null);
 		private final JLabel separator = new FlightStrip.Label(null);
 		private final JLabel labelPrefix = new FlightStrip.Label(null);
-		private final JLabel label = new FlightStrip.Label(null);
+		private final Label  label;
 		private final JLabel labelSuffix = new FlightStrip.Label(null);
 		
-		public EditLabel(Edit edit, String separator, String prefix, String suffix) {
+		public EditLabel(Edit edit, String separator, String prefix, String emptyText, String suffix) {
 			// layout
 			setLayout(new GridBagLayout());
 			// --- constraints ---
@@ -956,6 +963,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 				add(labelPrefix, gridConstraints);
 				gridConstraints.gridx++;
 			}
+			label = new FlightStrip.Label(emptyText);
 			add(label, gridConstraints);
 			gridConstraints.gridx++;
 			// labelSuffix
@@ -977,7 +985,9 @@ public class FlightStrip extends JPanel implements FocusListener {
 		}
 		
 		public void copyLabelToEdit() {
-			setEditText(label.getText()); // TODO
+			edit.resetUserChange();
+			setEditText(label.getValue()); // TODO
+			edit.actionPerformed(new ActionEvent(edit, 0, null));
 		}
 		
 		public String getEditText() {
@@ -994,8 +1004,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		
 		protected void showLabel() {
 			if (edit.isEnabled()) {
-				boolean showLabel = !label.getText().equals(getEditText());
-				//System.out.printf("edit='%s' label='%s' showLabel=%s", args)
+				boolean showLabel = !label.getValue().equals(getEditText());
 				separator.setVisible(showLabel && edit.isVisible());
 				labelPrefix.setVisible(showLabel);
 				label.setVisible(showLabel);
