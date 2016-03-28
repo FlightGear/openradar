@@ -24,6 +24,7 @@ import de.knewcleus.openradar.gui.flightstrips.conditions.AircraftCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AltitudeCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AndCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AnyCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.AtcLocalCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AtcNoneCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AtcOtherCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AtcSelfCondition;
@@ -158,6 +159,7 @@ public class RulesManager implements ListModel<Rule> {
 		result.add(EmergencyCondition.class);
 		// controller
 		result.add(AtcSelfCondition.class);
+		result.add(AtcLocalCondition.class);
 		result.add(AtcNoneCondition.class);
 		result.add(AtcOtherCondition.class);
 		// airports
