@@ -27,6 +27,7 @@ import de.knewcleus.openradar.gui.flightstrips.conditions.AnyCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AtcNoneCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AtcOtherCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AtcSelfCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.CallsignCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.ColumnCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.DepartureCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.DepartureHereCondition;
@@ -167,6 +168,7 @@ public class RulesManager implements ListModel<Rule> {
 		// squawk
 		result.add(SquawkCondition.class);
 		// aircraft
+		result.add(CallsignCondition.class);
 		result.add(AircraftCondition.class);
 		result.add(HeadingCondition.class);
 		result.add(GroundSpeedCondition.class);
