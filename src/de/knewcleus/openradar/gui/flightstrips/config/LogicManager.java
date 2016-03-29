@@ -141,7 +141,8 @@ public class LogicManager implements Runnable {
 			if (!LoadLayout(createFilename(FilenameId.AIRPORT)))
 				if (!LoadLayout(createFilename(FilenameId.ROLE)))
 					if (!LoadLayout(createFilename(FilenameId.DEFAULT))) {
-						createExample();
+						//createExample();
+						createTraditional();
 						SaveLayout(createFilename(FilenameId.DEFAULT));
 					}
 	}
