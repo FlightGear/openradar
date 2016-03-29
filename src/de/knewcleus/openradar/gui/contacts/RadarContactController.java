@@ -1027,7 +1027,6 @@ public class RadarContactController
 					existingFp.releaseControl();
 					existingFp.setReadyForTransmission();
 				}
-				deselectContact();
 
 			} else if (myCallSign.equals(formerHandover) && ("".equals(handover) || null == handover)
 					&& c.getAlignment() == Alignment.CENTER) {
