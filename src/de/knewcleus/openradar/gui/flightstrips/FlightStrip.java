@@ -503,6 +503,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 			contact.getManager().select(contact, true, false);
 			((JComponent)e.getSource()).requestFocus();
 		}
+		if (e.getSource() instanceof Edit) ((Edit)e.getSource()).selectAll();
 	}
 
 	@Override
