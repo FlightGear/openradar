@@ -40,6 +40,7 @@ import de.knewcleus.openradar.gui.flightstrips.conditions.EmergencyCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.GroundSpeedCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.HeadingCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.IFRCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ModelCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.NeglectCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.NewCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.OrCondition;
@@ -172,6 +173,7 @@ public class RulesManager implements ListModel<Rule> {
 		// aircraft
 		result.add(CallsignCondition.class);
 		result.add(AircraftCondition.class);
+		result.add(ModelCondition.class);
 		result.add(HeadingCondition.class);
 		result.add(GroundSpeedCondition.class);
 		result.add(AltitudeCondition.class);
