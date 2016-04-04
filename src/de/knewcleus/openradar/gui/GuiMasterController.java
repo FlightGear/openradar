@@ -38,7 +38,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JTextPane;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
@@ -92,7 +92,7 @@ public class GuiMasterController {
     private FGFSController fgfsController1 = null;
     private FGFSController fgfsController2 = null;
     
-    private final static Logger log = Logger.getLogger(GuiMasterController.class);
+//    private final static Logger log = Logger.getLogger(GuiMasterController.class);
 
     private FlightStripBay flightstripbay = null; 
     private LogicManager logicManager = null; 
@@ -227,10 +227,10 @@ public class GuiMasterController {
                     } catch (InterruptedException e) {
                         // I don't care
                     }
-                    log.info("Checking for lost or retired contacts.");
+//                    log.info("Checking for lost or retired contacts.");
                     trackManager.checkForLossOrRetirement();
                     statusManager.updateTime(); // update time display
-                    log.info("Checking done.");
+//                    log.info("Checking done.");
                 }
             }
         };
