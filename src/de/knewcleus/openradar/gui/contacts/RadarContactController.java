@@ -368,7 +368,11 @@ public class RadarContactController
 		setContactsAlignment(c, Alignment.RIGHT);
 	}
 
+<<<<<<< Entwicklung
 	public void select(GuiRadarContact guiRadarContact, boolean force, boolean exlcusive) {
+=======
+	public void select(GuiRadarContact guiRadarContact, boolean force, boolean exclusive, boolean focusChat) {
+>>>>>>> ed52c27 Flightstrip: Edit: userChange bug fixed
     	// TODO: always called with force = true, exclusive = false
 		synchronized (selectedContactLock) {
 			if (selectedContact != null) {
@@ -381,14 +385,14 @@ public class RadarContactController
 			} else {
 				selectedContact = guiRadarContact;
 				selectedContact.disableNewContact();
-				master.getMpChatManager().setSelectedCallSign(guiRadarContact.getCallSign(), exlcusive);
+				master.getMpChatManager().setSelectedCallSign(guiRadarContact.getCallSign(), exclusive);
 				master.getStatusManager().setSelectedCallSign(guiRadarContact.getCallSign());
 				master.setDetails(guiRadarContact.getAtcComment());
 			}
 		}
 		master.getMpChatManager().requestGuiUpdate();
 		master.getRadarBackend().forceRepaint();
-        if(selectedContact.equals(guiRadarContact)) {
+        if(focusChat && selectedContact.equals(guiRadarContact)) {
         	master.getMpChatManager().requestFocusForInput(); 
         }
 	}
@@ -398,7 +402,7 @@ public class RadarContactController
 	@Override
 	public synchronized void valueChanged(ListSelectionEvent e) {
 		int selectedIndex = e.getFirstIndex();
-		select(activeContactList.get(selectedIndex), true, false);
+		select(activeContactList.get(selectedIndex), true, false, true);
 	}
 
 	// Player registry listener
@@ -540,10 +544,10 @@ public class RadarContactController
 						// click on fs row
 						if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1) {
 							// select
-							select(c, true, false);
+							select(c, true, false, true);
 						} else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
 							// select and move map to it
-							select(c, true, false);
+							select(c, true, false, true);
 							c.setHighlighted();
 							master.getRadarBackend().showRadarContact(c, !e.isShiftDown());
 							atcMessageDialog.setVisible(false);
@@ -599,7 +603,7 @@ public class RadarContactController
 			case LEFT:
 				if (alignment == Alignment.CENTER || (alignment == Alignment.RIGHT && clickCount == 2)) {
 					setContactsAlignment(c, Alignment.LEFT);
-					select(c, true, false);
+					select(c, true, false, true);
 					c.setHighlighted();
 				} else if (alignment == Alignment.RIGHT && clickCount == 1) {
 					setContactsAlignment(c, Alignment.CENTER);
@@ -683,14 +687,14 @@ public class RadarContactController
 	}
 
 	public synchronized void selectNShowAtcMsgDialog(GuiRadarContact c, MouseEvent e) {
-		select(c, true, false); // normal select
+		select(c, true, false, true); // normal select
 		if (c.isActive())
 			atcMessageDialog.setLocation(c, e);
 	}
 
 	public synchronized void selectNShowFlightplanDialog(GuiRadarContact c, MouseEvent e) {
 		// show details dialog
-		select(c, true, false);
+		select(c, true, false, true);
 		//        flightplanDialog = new FlightPlanDialog(master, this); // TODO remove
 		flightplanDialog.show(c, e);
 	}

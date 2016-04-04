@@ -201,7 +201,7 @@ public class FlightStripsPanel extends JPanel {
 			// always select contact / flightstrip
 			GuiRadarContact contact = flightstrip.getContact();
 			RadarContactController controller = contact.getManager();
-			controller.select(contact, true, false);
+			controller.select(contact, true, false, true);
 			// calculate click position
 			int x = e.getX();
 			int fs_x = flightstrip.getX();

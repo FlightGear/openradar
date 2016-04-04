@@ -74,7 +74,7 @@ public class FlightStripRowMouseAdapter extends MouseAdapter {
 			// always select contact / flightstrip
 			GuiRadarContact contact = flightstrip.getContact();
 			RadarContactController controller = contact.getManager();
-			controller.select(contact, true, false);
+			controller.select(contact, true, false, true);
 		}
 		updateParent(e);
 		row.setBounds(0 /*-targetPoint.x - panelPoint.x*/, targetPoint.y - panelPoint.y, row.getWidth(), row.getHeight());

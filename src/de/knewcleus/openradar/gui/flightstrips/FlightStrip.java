@@ -179,8 +179,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		    public void actionPerformed(ActionEvent e) {
 				// select contact/flightstrip if edit has got the focus
 				if (!contact.isSelected()) {
-					contact.getManager().select(contact, true, false);
-					((JCheckBox)e.getSource()).requestFocus();
+					contact.getManager().select(contact, true, false, false);
 				}
 		    	rowsVisible = ((JCheckBox) e.getSource()).isSelected();
 		    }
@@ -500,8 +499,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 	public void focusGained(FocusEvent e) {
 		// select contact/flightstrip if edit has got the focus
 		if (!contact.isSelected()) {
-			contact.getManager().select(contact, true, false);
-			((JComponent)e.getSource()).requestFocus();
+			contact.getManager().select(contact, true, false, false);
 		}
 		if (e.getSource() instanceof Edit) ((Edit)e.getSource()).selectAll();
 	}
@@ -621,7 +619,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			contact.getManager().select(contact, true, false);
+			contact.getManager().select(contact, true, false, true);
 			if (e.getButton() == MouseEvent.BUTTON1) {
 				if (dialog == null)	dialog = new ListDialog();
 				dialog.setListItems(segments, selected, this);
@@ -681,6 +679,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 				if (text == null) text = "";
 				if (!text.equals(getText())) {
 					super.setText(text);
+					resetUserChange();
 				}
 			}
 		}
@@ -1004,13 +1003,11 @@ public class FlightStrip extends JPanel implements FocusListener {
 		}
 		
 		protected void showLabel() {
-			if (edit.isEnabled()) {
-				boolean showLabel = !label.getValue().equals(getEditText());
-				separator.setVisible(showLabel && edit.isVisible());
-				labelPrefix.setVisible(showLabel);
-				label.setVisible(showLabel);
-				labelSuffix.setVisible(showLabel);
-			}
+			boolean showLabel = !label.getValue().equals(getEditText());
+			separator.setVisible(showLabel && edit.isVisible());
+			labelPrefix.setVisible(showLabel);
+			label.setVisible(showLabel);
+			labelSuffix.setVisible(showLabel);
 		}
 		
 	}
@@ -1059,7 +1056,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			contact.getManager().select(contact, true, false);
+			contact.getManager().select(contact, true, false, true);
 			FlightPlanData fpd = contact.getFlightPlan();
 			if (e.getButton() == MouseEvent.BUTTON1) {
 				if (fpd.isUncontrolled() || fpd.isOfferedToMe()) {
