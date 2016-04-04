@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.jdom2.Element;
 
-import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.flightstrips.config.SectionsManager;
 import de.knewcleus.openradar.gui.flightstrips.order.AbstractOrder;
 import de.knewcleus.openradar.gui.flightstrips.order.OrderManager;
@@ -171,11 +170,8 @@ public class SectionData implements IDomElement {
 			panel.updateColumn(flightstrip);
 		}
 		else {
-			GuiRadarContact contact = flightstrip.getContact();
-			boolean s = contact.isSelected();
 			oldsection.removeFlightStrip(flightstrip);
 			addFlightStrip(flightstrip);
-			if (s) contact.getManager().select(contact, true, false);
 		}
 	}
 	

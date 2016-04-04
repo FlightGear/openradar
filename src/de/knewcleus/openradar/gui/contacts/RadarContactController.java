@@ -368,11 +368,7 @@ public class RadarContactController
 		setContactsAlignment(c, Alignment.RIGHT);
 	}
 
-<<<<<<< Entwicklung
-	public void select(GuiRadarContact guiRadarContact, boolean force, boolean exlcusive) {
-=======
 	public void select(GuiRadarContact guiRadarContact, boolean force, boolean exclusive, boolean focusChat) {
->>>>>>> ed52c27 Flightstrip: Edit: userChange bug fixed
     	// TODO: always called with force = true, exclusive = false
 		synchronized (selectedContactLock) {
 			if (selectedContact != null) {
