@@ -268,7 +268,7 @@ public class RadarMapPanel extends JComponent {
             if (data.isLayerVisible("stream")) {
                 try {
                     setupDialog.setStatus(40, "Reading stream layer...");
-                    ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), newFormat ? "osm_river":"v0_stream"));
+                    ZippedShapefileLayer streamLayer = new ZippedShapefileLayer(data.getAirportDir(),getDataPath(data.getAirportDir(), newFormat ? "osm_stream":"v0_stream"));
                     final GeodataView streamView = new GeodataView(master, radarMapViewAdapter, streamLayer, "STREAM", bounds);
                     streamLayer.closeZipArchive();
                     streamView.setColor(Palette.STREAM);
@@ -308,13 +308,13 @@ public class RadarMapPanel extends JComponent {
             //            if (runwayView.hasContent()) {
 //                //rootView.pushView(runwayView);
 //            } else {}
-//            
+//
 //                //warningShapefileNotFound = true;
 //                // initiate emergeny runway painter
 ////          }
-                
+
             // aiport runway and tarmac data
-            
+
             final LayeredView airportView = new LayeredView(radarMapViewAdapter);
             final NavPointProvider navPointProvider = new NavPointProvider(radarMapViewAdapter, airportView, master);
             navPointProvider.addNavPointListener(master.getAirportData());
@@ -323,9 +323,9 @@ public class RadarMapPanel extends JComponent {
             navPointProvider.addViews(airportStream);
 
             // initialize symbol layers
-            
+
             if (data.isLayerVisible("groundnet")) {
-            	
+
                 final LayeredView layeredGroundnetView = new LayeredView(radarMapViewAdapter);
                 GroundnetReader groundnetReader = new GroundnetReader(data.getAirportCode());
                 for (TaxiWaySegment seg : groundnetReader.getTaxiWaySegments()) {
@@ -336,9 +336,9 @@ public class RadarMapPanel extends JComponent {
                 }
                 rootView.pushView(layeredGroundnetView);
             }
-            
+
             // route view
-            
+
             routeView = new LayeredView(radarMapViewAdapter);
             rootView.pushView(routeView);
 
@@ -346,7 +346,7 @@ public class RadarMapPanel extends JComponent {
             rootView.pushView(activeAtcRangeView);
 
             // navaids
-            
+
             setupDialog.setStatus(80, "Reading navaid data...");
             final LayeredView navSymbolView = new LayeredView(radarMapViewAdapter);
             final NavPointProvider navPointProvider2 = new NavPointProvider(radarMapViewAdapter, navSymbolView, master);
@@ -378,7 +378,7 @@ public class RadarMapPanel extends JComponent {
             rootView.pushView(activeAtcView);
 
             LayeredView targetView = new LayeredRadarContactView(radarMapViewAdapter);
-            // RadarTargetProvider radarTargetProvider = 
+            // RadarTargetProvider radarTargetProvider =
             new RadarTargetProvider(radarMapViewAdapter, targetView, master.getTrackManager(), master);
             rootView.pushView(targetView);
 
