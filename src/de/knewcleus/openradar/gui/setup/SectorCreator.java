@@ -65,18 +65,18 @@ public abstract class SectorCreator {
 
     // "http://mapserver.flightgear.org/dlaction?layer=<layername>&xmin=<degree>&xmax=<degree>&ymin=<degree>&ymax=<degree>";
     //private static String address = "http://mapserver.flightgear.org/dlsingle?";
-	private static String address = "http://landcover.ucsd.edu/dlsingle?";
+	private static String address = "http://mapserver.mgras.net/dlsingle?";
 //    private static String[] layers = { "v0_landmass", "cs_urban", "cs_lake", "osm_river", "apt_airfield", "apt_runway", "apt_tarmac" };
 	private static String[] layers = { "v0_landmass", "v0_urban", "v0_lake", "osm_stream" };
     private static double mapWidth = 10; // degrees
     private static double mapHeight = 10; // degrees
     private static final Logger log = Logger.getLogger(SectorCreator.class);
-    
+
     public static Point2D findLocationOf(String searchTerm) {
         ZipFile zif = null;;
         BufferedReader ir = null;
         Point2D position = null;
-        
+
         try {
             final File inputFile = new File("data/AptNav.zip");
             zif = new ZipFile(inputFile);
@@ -87,9 +87,9 @@ public abstract class SectorCreator {
                     ir = new BufferedReader(new InputStreamReader(zif.getInputStream(zipentry)));
                     break;
                 }
-            } 
+            }
             if(ir==null) return null;
-            
+
             String line = ir.readLine();
             while(line!=null) {
                 if(line.startsWith("1 ")) {
@@ -105,7 +105,7 @@ public abstract class SectorCreator {
                         name.append(st.nextToken());
                     }
                     if(airportCode.equalsIgnoreCase(searchTerm)) {
-                        
+
                         // seach runway
                         line = ir.readLine();
                         while(line!=null) {
@@ -162,7 +162,7 @@ public abstract class SectorCreator {
         p.put("metarSource", data.getAirportCode());
         p.put("lat", Double.toString(data.getLat()));
         p.put("lon", Double.toString(data.getLon()));
-       
+
         SetupController.saveSectorProperties(data.getAirportCode(), p);
 
         // download shapefiles
