@@ -414,7 +414,9 @@ public class FlightStrip extends JPanel implements FocusListener {
 			contact.getFlightPlan().setRemarks(value);
 		}
 		else if (edit.equals(cNotes)) {
+			contact.getManager().getMaster().setDetails(value);
 			contact.setAtcComment(value);
+			contact.getManager().saveAtcNotes(contact);
 		}
         contact.getFlightPlan().setReadyForTransmission();
         contact.getManager().transmitFlightplan();
