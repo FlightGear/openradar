@@ -89,20 +89,20 @@ public class GuiMasterController {
     private FlightPlanExchangeManager fpExchangeManager;
     private FGFSController fgfsController1 = null;
     private FGFSController fgfsController2 = null;
-    
+
     private final static Logger log = Logger.getLogger(GuiMasterController.class);
-    
+
     private JTextPane detailsArea = null;
 
     private final TrackManager trackManager;
 
     private volatile FGMPClient<TargetStatus> radarProvider;
-    
+
     private volatile long lastEscPressed = 0;
 
     public GuiMasterController(AirportData data) {
         this.airportData = data;
-        
+
         // init managers
         trackManager = new TrackManager();
         radarBackend = new GuiRadarBackend(this);
@@ -167,12 +167,12 @@ public class GuiMasterController {
         if(airportData.isFgfsCamera1Enabled()) {
                 fgfsController1.start();
         }
-        
+
         airportData.storeAirportData(this); // to store initially set data
-        
+
         // ready, so display it
         mainFrame.setVisible(true);
-        
+
         mainFrame.getRadarScreen().showMap(); // move map and display it
     }
 
@@ -219,10 +219,10 @@ public class GuiMasterController {
                     } catch (InterruptedException e) {
                         // I don't care
                     }
-                    log.info("Checking for lost or retired contacts.");
+                    log.trace("Checking for lost or retired contacts.");
                     trackManager.checkForLossOrRetirement();
                     statusManager.updateTime(); // update time display
-                    log.info("Checking done.");
+                    log.trace("Checking done.");
                 }
             }
         };
@@ -243,7 +243,7 @@ public class GuiMasterController {
                            !getStatusManager().isRunwayDialogVisible() &&
                            !getStatusManager().isMetarDialogVisible() &&
                            !getRadarContactManager().getTransponderSettingsDialog().isVisible()) {
-                            
+
                             radarContactManager.displayChatMenu();
                             e.consume();
                             return true;
@@ -256,7 +256,7 @@ public class GuiMasterController {
                         return true;
                     }
                 }
-                
+
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
 
                     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -417,11 +417,11 @@ public class GuiMasterController {
     public FlightPlanExchangeManager getFlightPlanExchangeManager() {
         return fpExchangeManager;
     }
-    
+
     public boolean isVisible() {
         return mainFrame.isVisible();
     }
-    
+
     public FGFSController getFgfsController1() {
         return fgfsController1;
     }

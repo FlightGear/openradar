@@ -179,7 +179,7 @@ public class FlightPlanData {
 				this.assignedAltitude = newFp.getAssignedAltitude();
 				this.assignedRoute = newFp.getAssignedRoute();
 				this.assignedRunway = newFp.getAssignedRunway();
-		
+
 				this.flightCode = newFp.getFlightCode();
 				this.callsign = newFp.getCallsign();
 				this.owner = newFp.getOwner();
@@ -204,7 +204,7 @@ public class FlightPlanData {
 				} catch (Exception e) {
 					this.soulsOnBoard = 1;
 				}
-	//			this.remarks = newFp.getRemarks();
+				this.remarks = newFp.getRemarks();
 			}
 		}
 	}
@@ -415,7 +415,7 @@ public class FlightPlanData {
 
 	public synchronized String getDirectiontoDestinationAirport(Point2D locContact) {
 		try {
-			// check if location of airport is known 
+			// check if location of airport is known
 			if (destinationAirport != null && !destinationAirport.isEmpty() && locDestinationAirport == null
 					&& isDestinationAirportLocationAvailable) {
 				locDestinationAirport = SectorCreator.findLocationOf(destinationAirport.trim());

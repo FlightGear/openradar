@@ -93,7 +93,8 @@ public class StatusManager implements INavPointListener {
 //    }
 
     public void setSelectedCallSign(String callsign) {
-        statusPanel.setAirport(master.getAirportData().getAirportCode()+" / "+ (master.getAirportData().getAirportName()));
+        statusPanel.setAirport(master.getAirportData().getAirportCode()+" / "+ (master.getAirportData().getAirportName()) + " / " +
+        		Math.round(master.getAirportData().getElevationFt()) + " ft");;
         statusPanel.setSelectedCallSign(callsign);
     }
 
@@ -246,7 +247,7 @@ public class StatusManager implements INavPointListener {
     }
 
     public void updateTransitionValues() {
-        master.getAirportData().updateTransitionFl(master); 
+        master.getAirportData().updateTransitionFl(master);
         statusPanel.updateTransitionValues();
     }
 }

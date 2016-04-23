@@ -67,7 +67,7 @@ public class StdRoute {
     private final float zoomMax;
 
     private Boolean visibleRoute = false;
-    
+
     private HashSet<String> activeLandingRunways = new HashSet<>();
     private HashSet<String> activeStartingRunways = new HashSet<>();
 
@@ -130,7 +130,7 @@ public class StdRoute {
         String[] array = cs.split(",");
         this.activeLandingRunways.addAll(Arrays.asList(array));
 //        if(displayMode==DisplayMode.unknown) {
-//        	// correct missing xml attribute setting        	
+//        	// correct missing xml attribute setting
 //        	displayMode = DisplayMode.star;
 //        }
     }
@@ -198,7 +198,7 @@ public class StdRoute {
          }
 
         boolean thisRouteIsIncluded = !parentRoutes.isEmpty();
-        
+
     	// PARENT ROUTE => dynamic
         if(thisRouteIsIncluded) {
         	if( isParentRouteVisible(master,selectedContact) ) {
@@ -208,11 +208,11 @@ public class StdRoute {
         		return false;
         	}
         }
-        
+
         // only non included routes are left
-        
+
         // SCALE interval => dynamic
-        double currentScale = mapViewerAdapter.getLogicalScale(); 
+        double currentScale = mapViewerAdapter.getLogicalScale();
         if (currentScale < zoomMin || currentScale > zoomMax) {
             return false;
         }
@@ -223,23 +223,23 @@ public class StdRoute {
         		String assignedRunway = selectedContact.getFlightPlan().getAssignedRunway();
 	            String assignedRoute = selectedContact.getFlightPlan().getAssignedRoute();
 	            if(assignedRoute!=null) {
-	                if( (activeLandingRunways.contains(assignedRunway)||activeStartingRunways.contains(assignedRunway)) 
+	                if( (activeLandingRunways.contains(assignedRunway)||activeStartingRunways.contains(assignedRunway))
 	                	&& getName().equals(assignedRoute)) {
 	                    return true;
 	                }
 	            }
         	}
         }
-        
+
         boolean mainswitch = data.getRadarObjectFilterState("STARSID");
-        
+
         // MAIN SWITCH
         if(mainswitch==false) {
             return false;
         }
 
         // MAINSWITCH is ON
-        
+
         // OPTIONAL (main switch dependent)
         if( displayMode.equals(DisplayMode.optional) ) {
             return true;
@@ -260,7 +260,7 @@ public class StdRoute {
     	synchronized (visibleRoute) {
     		visibleRoute=false;
             // SPEED optimization: Get the list from data and remove all runways that are not in the route definitions
-	        if( !(activeStartingRunways.isEmpty() && activeLandingRunways.isEmpty()) ) { 
+	        if( !(activeStartingRunways.isEmpty() && activeLandingRunways.isEmpty()) ) {
 	            if ( data.isActiveRouteRunwayContained(activeStartingRunways,activeLandingRunways) ) {
 	            	visibleRoute=true;
 	            }
@@ -270,7 +270,7 @@ public class StdRoute {
 	        }
     	}
     }
-    
+
     private boolean isParentRouteVisible(GuiMasterController master,GuiRadarContact selectedContact) {
         for (StdRoute parentRoute : parentRoutes) {
             if (parentRoute.isVisible(master,selectedContact)) {
@@ -318,7 +318,7 @@ public class StdRoute {
             if (pos_a1 < 0) {
                 throw new IllegalArgumentException("Wrong point definition! First ray, no '@' to separate angle and point found: " + pointDescr);
             }
-            float angle1 = Float.parseFloat(pointDescr.substring(0, pos_a1));
+            float angle1 = Float.parseFloat(pointDescr.substring(0, pos_a1))+ (float) data.getMagneticDeclination();
             String id1 = pointDescr.substring(pos_a1+1, pos_d);
             Point2D navaidPoint1 = getPoint(data, mapViewerAdapter, id1, previous);
 
@@ -327,8 +327,8 @@ public class StdRoute {
             if (pos_a2 < 0) {
                 throw new IllegalArgumentException("Wrong point definition! Second ray, no '@' to separate angle and point found: " + pointDescr);
             }
-            float angle2 = Float.parseFloat(pointDescr.substring(pos_d+1,pos_a2));
-            String id2 = pointDescr.substring(pos_a2 +1  + 1);
+            float angle2 = Float.parseFloat(pointDescr.substring(pos_d+1,pos_a2)) + (float) data.getMagneticDeclination();
+            String id2 = pointDescr.substring(pos_a2 +1);
             Point2D navaidPoint2 = getPoint(data, mapViewerAdapter, id2, previous);
 
             // parallel rays?
@@ -456,7 +456,7 @@ public class StdRoute {
     /**
      * checks if this route is assigned to the selected contact or if it is implicitelly assigned, because it is
      * included into an assigned route.
-     * 
+     *
      * @param master
      * @return true if assigned
      */
