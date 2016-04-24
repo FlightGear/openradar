@@ -35,7 +35,7 @@ public class AtcLocalCondition extends AbstractBooleanCondition {
 	
 	@Override
 	public String getSuffixText() {
-		return "controlled by local ATC.";
+		return "a local ATC.";
 	}
 	
 }
