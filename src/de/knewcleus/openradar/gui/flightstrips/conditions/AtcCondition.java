@@ -4,16 +4,18 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.setup.AirportData;
-
-public class AtcLocalCondition extends AbstractBooleanCondition {
+/* checks if contact is (not) ATC
+ * 
+ */
+public class AtcCondition extends AbstractBooleanCondition {
 
 	// --- constructors ---
 	
-	public AtcLocalCondition(boolean isAtcLocal) {
-		super(isAtcLocal);
+	public AtcCondition(boolean isAtc) {
+		super(isAtc);
 	}
 	
-	public AtcLocalCondition(Element element) {
+	public AtcCondition(Element element) {
 		super(element);
 	}
 	
@@ -21,21 +23,21 @@ public class AtcLocalCondition extends AbstractBooleanCondition {
 	
 	@Override
 	protected Boolean extractBooleanValue(FlightStrip flightstrip, AirportData airportData) {
-		return flightstrip.getContact().getCallSign().startsWith(airportData.getAirportCode());
+		return flightstrip.getContact().isAtc();
 	}
 
 	// --- IDomElement ---
 	
 	@Override
 	protected String getBooleanAttribute() {
-		return "is_atc_local";
+		return "is_atc";
 	}
 
 	// --- IRuleTextProvider ---
 	
 	@Override
 	public String getSuffixText() {
-		return "a local ATC.";
+		return "ATC (e.g. OpenRadar).";
 	}
 	
 }

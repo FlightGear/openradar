@@ -6,15 +6,15 @@ import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.setup.AirportData;
 
-public class AtcNoneCondition extends AbstractBooleanCondition {
+public class ControlNoneCondition extends AbstractBooleanCondition {
 
 	// --- constructors ---
 	
-	public AtcNoneCondition(boolean isAtcNone) {
+	public ControlNoneCondition(boolean isAtcNone) {
 		super(isAtcNone);
 	}
 	
-	public AtcNoneCondition(Element element) {
+	public ControlNoneCondition(Element element) {
 		super(element);
 	}
 	
@@ -31,7 +31,7 @@ public class AtcNoneCondition extends AbstractBooleanCondition {
 	
 	@Override
 	protected String getBooleanAttribute() {
-		return "isatcnone";
+		return "is_uncontrolled";
 	}
 
 	// --- IRuleTextProvider ---

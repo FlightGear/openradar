@@ -21,12 +21,12 @@ import de.knewcleus.openradar.gui.flightstrips.actions.ControlAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.MoveToAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.UncontrolAction;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AGLCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.ATCCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.AtcCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AircraftCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AndCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.AtcNoneCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.AtcOtherCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.AtcSelfCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ControlNoneCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ControlOtherCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ControlSelfCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.ColumnCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.DistanceCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.EmergencyCondition;
@@ -208,8 +208,8 @@ public class LogicManager implements Runnable {
 		rulesManager.setActive(false);
 		rulesManager.clear();
 		rulesManager.add(new Rule("new", new OrCondition(new NewCondition(true), new SectionCondition("Traditional", false)), new MoveToAction(section_default.getTitle(), 2)));
-		rulesManager.add(new Rule("Controlled", new AndCondition(new AtcSelfCondition(true), new ColumnCondition(2, true)), new MoveToAction("", 0)));
-		rulesManager.add(new Rule("Uncontrolled", new AndCondition(new AtcSelfCondition(false), new ColumnCondition(0, true)), new MoveToAction("", 2)));
+		rulesManager.add(new Rule("Controlled", new AndCondition(new ControlSelfCondition(true), new ColumnCondition(2, true)), new MoveToAction("", 0)));
+		rulesManager.add(new Rule("Uncontrolled", new AndCondition(new ControlSelfCondition(false), new ColumnCondition(0, true)), new MoveToAction("", 2)));
 		rulesManager.setActive(true);
 	}
 	
@@ -276,7 +276,7 @@ public class LogicManager implements Runnable {
 		rulesManager.setActive(false);
 		rulesManager.clear();
 		// ATC / carrier / car contacts
-		rulesManager.add(new Rule("ATC", new ATCCondition(true), new MoveToAction(section_atc.getTitle(), 0)));
+		rulesManager.add(new Rule("ATC", new AtcCondition(true), new MoveToAction(section_atc.getTitle(), 0)));
 		rulesManager.add(new Rule("carrier", new OrCondition (new AircraftCondition("MP-NIMITZ", true), new AircraftCondition("MP-VINSON", true)), new MoveToAction(section_carrier.getTitle(), 0)));
 		rulesManager.add(new Rule("car park",  new AndCondition(new AircraftCondition("FOLLOWME", true), new GroundSpeedCondition(null, 1, true)), new MoveToAction(section_car.getTitle(), 1)));
 		rulesManager.add(new Rule("car drive", new AircraftCondition("FOLLOWME", true), new MoveToAction(section_car.getTitle(), 0)));
@@ -292,16 +292,16 @@ public class LogicManager implements Runnable {
 		// emergency
 		rulesManager.add(new Rule("Emergency", new EmergencyCondition(true), new MoveToAction(section_emergency.getTitle(), 0)));
 		// controlled by me
-		rulesManager.add(new Rule("Controlled", new AtcSelfCondition(true), new MoveToAction(section_controlled.getTitle(), -1)));
+		rulesManager.add(new Rule("Controlled", new ControlSelfCondition(true), new MoveToAction(section_controlled.getTitle(), -1)));
 		// controlled by any other ATC
-		rulesManager.add(new Rule("Interesting DEP", new AndCondition(new NewCondition(true), new AtcOtherCondition(".+", true), new DistanceCondition(null, 2., true)), new MoveToAction(section_interesting.getTitle(), 2)));
-		rulesManager.add(new Rule("Interesting APP", new AndCondition(new NewCondition(true), new AtcOtherCondition(".+", true), new DistanceCondition(90., null, true)), new MoveToAction(section_interesting.getTitle(), 0)));
-		rulesManager.add(new Rule("Interesting OTHERS", new AndCondition(new NewCondition(true), new AtcOtherCondition(".+", true)), new MoveToAction(section_interesting.getTitle(), 1)));
-		rulesManager.add(new Rule("Interesting", new AtcOtherCondition(".+", true), new MoveToAction(section_interesting.getTitle(), -1)));
+		rulesManager.add(new Rule("Interesting DEP", new AndCondition(new NewCondition(true), new ControlOtherCondition(".+", true), new DistanceCondition(null, 2., true)), new MoveToAction(section_interesting.getTitle(), 2)));
+		rulesManager.add(new Rule("Interesting APP", new AndCondition(new NewCondition(true), new ControlOtherCondition(".+", true), new DistanceCondition(90., null, true)), new MoveToAction(section_interesting.getTitle(), 0)));
+		rulesManager.add(new Rule("Interesting OTHERS", new AndCondition(new NewCondition(true), new ControlOtherCondition(".+", true)), new MoveToAction(section_interesting.getTitle(), 1)));
+		rulesManager.add(new Rule("Interesting", new ControlOtherCondition(".+", true), new MoveToAction(section_interesting.getTitle(), -1)));
 		// uncontrolled
 		rulesManager.add(new Rule("new APP", new AndCondition(new NewCondition(true), new DistanceCondition(90., null, true)), new MoveToAction(section_uncontrolled.getTitle(), 0)));
 		rulesManager.add(new Rule("new OTHERS", new NewCondition(true), new MoveToAction(section_uncontrolled.getTitle(), 1)));
-		rulesManager.add(new Rule("Uncontrolled", new AtcNoneCondition(true), new MoveToAction(section_uncontrolled.getTitle(), -1)));
+		rulesManager.add(new Rule("Uncontrolled", new ControlNoneCondition(true), new MoveToAction(section_uncontrolled.getTitle(), -1)));
 		rulesManager.setActive(true);
 	}
 

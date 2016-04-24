@@ -4,41 +4,45 @@ import org.jdom2.Element;
 
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
-import de.knewcleus.openradar.gui.setup.AirportData;
 
-public class AtcSelfCondition extends AbstractBooleanCondition {
+public class ControlOtherCondition extends AbstractStringCondition {
 
 	// --- constructors ---
 	
-	public AtcSelfCondition(boolean isAtcSelf) {
-		super(isAtcSelf);
+	public ControlOtherCondition(String OtherAtc, boolean isOtherAtc) {
+		super(OtherAtc, isOtherAtc);
 	}
 	
-	public AtcSelfCondition(Element element) {
+	public ControlOtherCondition(Element element) {
 		super(element);
 	}
 	
 	// --- compare ---
 	
 	@Override
-	protected Boolean extractBooleanValue(FlightStrip flightstrip, AirportData airportData) {
+	protected String extractStringValue(FlightStrip flightstrip) {
 		FlightPlanData flightplan = flightstrip.getContact().getFlightPlan();
 		if (flightplan == null) return null;
-		return flightplan.isOwnedByMe();
+		return flightplan.getOwner();
 	}
 
 	// --- IDomElement ---
 	
 	@Override
+	protected String getStringAttribute() {
+		return "other_atc";
+	}
+
+	@Override
 	protected String getBooleanAttribute() {
-		return "isatcself";
+		return "is_owner_other";
 	}
 
 	// --- IRuleTextProvider ---
 	
 	@Override
-	public String getSuffixText() {
-		return "controlled by me.";
+	public String getPrefixText() {
+		return "contact is controlled by ";
 	}
 	
 }

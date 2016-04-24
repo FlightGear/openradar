@@ -96,8 +96,10 @@ public class Rule implements IDomElement {
 	public Element createDomElement() {
 		Element element = new Element(getDomElementName());
 		putAttributes(element);
-		element.addContent(condition.createDomElement());
-		for (AbstractAction action : actions) element.addContent(action.createDomElement());
+		if (condition != null) element.addContent(condition.createDomElement());
+		for (AbstractAction action : actions) {
+			if (action != null) element.addContent(action.createDomElement());
+		}
 		return element;
 	}
 

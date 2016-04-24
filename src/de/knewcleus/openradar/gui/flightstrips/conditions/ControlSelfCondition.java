@@ -2,20 +2,19 @@ package de.knewcleus.openradar.gui.flightstrips.conditions;
 
 import org.jdom2.Element;
 
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightstrips.FlightStrip;
 import de.knewcleus.openradar.gui.setup.AirportData;
-/* checks if contact is (not) ATC
- * 
- */
-public class ATCCondition extends AbstractBooleanCondition {
+
+public class ControlSelfCondition extends AbstractBooleanCondition {
 
 	// --- constructors ---
 	
-	public ATCCondition(boolean isAtc) {
-		super(isAtc);
+	public ControlSelfCondition(boolean isAtcSelf) {
+		super(isAtcSelf);
 	}
 	
-	public ATCCondition(Element element) {
+	public ControlSelfCondition(Element element) {
 		super(element);
 	}
 	
@@ -23,21 +22,23 @@ public class ATCCondition extends AbstractBooleanCondition {
 	
 	@Override
 	protected Boolean extractBooleanValue(FlightStrip flightstrip, AirportData airportData) {
-		return flightstrip.getContact().isAtc();
+		FlightPlanData flightplan = flightstrip.getContact().getFlightPlan();
+		if (flightplan == null) return null;
+		return flightplan.isOwnedByMe();
 	}
 
 	// --- IDomElement ---
 	
 	@Override
 	protected String getBooleanAttribute() {
-		return "isatc";
+		return "is_owner_self";
 	}
 
 	// --- IRuleTextProvider ---
 	
 	@Override
 	public String getSuffixText() {
-		return "ATC (e.g. OpenRadar).";
+		return "controlled by me.";
 	}
 	
 }

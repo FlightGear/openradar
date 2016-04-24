@@ -17,7 +17,7 @@ import de.knewcleus.openradar.gui.flightstrips.actions.MoveToAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.NoAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.UncontrolAction;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AGLCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.ATCCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.AtcCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AbstractCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.ActiveCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AircraftCondition;
@@ -25,9 +25,10 @@ import de.knewcleus.openradar.gui.flightstrips.conditions.AltitudeCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AndCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AnyCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AtcLocalCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.AtcNoneCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.AtcOtherCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.AtcSelfCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ControlLocalCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ControlNoneCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ControlOtherCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ControlSelfCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.CallsignCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.ColumnCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.DepartureCondition;
@@ -151,18 +152,19 @@ public class RulesManager implements ListModel<Rule> {
 		// flight rules
 		result.add(IFRCondition.class);
 		result.add(VFRCondition.class);
-		// is ATC
-		result.add(ATCCondition.class);
+		// ATC
+		result.add(AtcCondition.class);
+		result.add(AtcLocalCondition.class);
 		// status
 		result.add(NewCondition.class);
 		result.add(ActiveCondition.class);
 		result.add(NeglectCondition.class);
 		result.add(EmergencyCondition.class);
 		// controller
-		result.add(AtcSelfCondition.class);
-		result.add(AtcLocalCondition.class);
-		result.add(AtcNoneCondition.class);
-		result.add(AtcOtherCondition.class);
+		result.add(ControlSelfCondition.class);
+		result.add(ControlLocalCondition.class);
+		result.add(ControlNoneCondition.class);
+		result.add(ControlOtherCondition.class);
 		// airports
 		result.add(DestinationCondition.class);
 		result.add(DestinationHereCondition.class);
