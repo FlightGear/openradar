@@ -24,6 +24,8 @@ public class ControlLocalCondition extends AbstractBooleanCondition {
 	protected Boolean extractBooleanValue(FlightStrip flightstrip, AirportData airportData) {
 		FlightPlanData flightplan = flightstrip.getContact().getFlightPlan();
 		if (flightplan == null) return null;
+		String owner = flightplan.getOwner();
+		if (owner == null) return null;
 		return flightplan.getOwner().startsWith(airportData.getAirportCode());
 	}
 

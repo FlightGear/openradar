@@ -102,7 +102,6 @@ public abstract class AbstractBooleanCondition extends AbstractCondition {
 
 	@Override
 	public void setIndexedValue(int index, int value) {
-		System.out.printf("index=%d,  value=%d\n", index, value);
 		switch (index) {
 		case 1: booleanValue = (value <= 0);
 		}

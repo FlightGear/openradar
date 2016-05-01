@@ -23,6 +23,8 @@ public class ControlOtherCondition extends AbstractStringCondition {
 	protected String extractStringValue(FlightStrip flightstrip) {
 		FlightPlanData flightplan = flightstrip.getContact().getFlightPlan();
 		if (flightplan == null) return null;
+		String owner = flightplan.getOwner();
+		if (owner == null) return null;
 		return flightplan.getOwner();
 	}
 
