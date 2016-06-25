@@ -58,7 +58,7 @@ public class RadarTargetProvider implements INotificationListener {
     protected final GuiMasterController master;
 
     protected final Map<ITrack, RadarTargetView> viewMap = Collections.synchronizedMap(new HashMap<ITrack, RadarTargetView>());
-    
+
     private final static Logger log = LogManager.getLogger(RadarTargetProvider.class);
 
     public RadarTargetProvider(IRadarMapViewerAdapter radarMapViewAdapter, LayeredView radarTargetLayer, ITrackManager trackManager,
@@ -93,9 +93,9 @@ public class RadarTargetProvider implements INotificationListener {
                 } else {
                     log.error("No contact found for package "+targetStatus.getCallsign());
                 }
-        		log.warn("Track created ");
-        		log.warn("vieweMap: "+viewMap.size());
-                
+        		//log.warn("Track created ");
+        		//log.warn("vieweMap: "+viewMap.size());
+
                 break;
             case RETIRED:
                 final RadarTargetView oldView = viewMap.get(track);
@@ -103,8 +103,8 @@ public class RadarTargetProvider implements INotificationListener {
                 viewMap.remove(track);
                 oldView.destroy();
 
-                log.warn("Track removed ");
-        		log.warn("vieweMap: "+viewMap.size());
+                //log.warn("Track removed ");
+        		//log.warn("vieweMap: "+viewMap.size());
                 break;
             }
         }

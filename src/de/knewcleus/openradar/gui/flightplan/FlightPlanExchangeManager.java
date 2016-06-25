@@ -66,9 +66,9 @@ public class FlightPlanExchangeManager implements Runnable {
     private volatile boolean initial = true;
     private volatile boolean connectedToServer = false;
     private static Logger log = LogManager.getLogger(FlightPlanExchangeManager.class.getName());
-    
+
     public FlightPlanExchangeManager(GuiMasterController master) {
-        this.master = master; 
+        this.master = master;
         this.data = master.getAirportData();
         this.radarContactController = master.getRadarContactManager();
         this.baseUrl = data.getFpServerUrl();
@@ -122,7 +122,7 @@ public class FlightPlanExchangeManager implements Runnable {
             }
             callSignList.append(contact.getCallSign().trim());
         }
-        log.info("Going to request updates for: " + callSignList);
+        //log.info("Going to request updates for: " + callSignList);
         // send the list to the server to request updated flightplans
 
 //        if (callSignList.length() > 0) {
@@ -137,17 +137,17 @@ public class FlightPlanExchangeManager implements Runnable {
                 } else {
                     url = new URL(baseUrl + "/getFlightplans");
                 }
-                
+
                 String frequency = "000.00";
                 if(!master.getRadioManager().getModels().isEmpty()) {
                     frequency = master.getRadioManager().getModels().get("COM0").getSelectedItem().getFrequency();
                 }
-                
-                
-                String parameters = "user=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8") 
+
+
+                String parameters = "user=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8")
                         + "&password=" + URLEncoder.encode(data.getFpServerPassword(), "UTF-8")
                         + "&username=" + URLEncoder.encode(data.getFpServerUser(), "UTF-8") // todo
-                        + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") 
+                        + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8")
                         + "&airport=" + URLEncoder.encode(data.getAirportCode(), "UTF-8")
                         + "&lon="+Double.toString(data.getAirportPosition().getX())
                         + "&lat="+Double.toString(data.getAirportPosition().getY())
@@ -189,7 +189,7 @@ public class FlightPlanExchangeManager implements Runnable {
                             List<FpAtc> activeAtcs = FpXml_1_0.parseAtcs(eAtcsInRange);
                             master.getRadarContactManager().setActiveAtcs(activeAtcs);
                         }
-                        
+
                         List<Element> eFlightPlans = document.getRootElement().getChildren("flightplan");
                         for (Element eFp : eFlightPlans) {
                             String callsign = FpXml_1_0.getCallSign(eFp);
@@ -200,7 +200,7 @@ public class FlightPlanExchangeManager implements Runnable {
                             log.info("Got FP update for: " + callsign);
                         }
                         if(eFlightPlans.isEmpty()) {
-                        	log.info("Got no flightplans");
+                        	//log.info("Got no flightplans");
                         }
                         connectedToServer=true;
                     } catch (IOException e) {

@@ -169,7 +169,7 @@ public class SetupController {
                 SectorCreator.deleteDir(setupDialog.getSelectedSector());
                 parseSectorDir();
             } else if (jSource.getName().equals("StartButton")) {
-            	log.info("start-button pressed");
+            	//log.info("start-button pressed");
                 startApplication();
             } else if (jSource.getName().equals("CheckButton")) {
                 setupDialog.readInputs(data);
@@ -219,7 +219,7 @@ public class SetupController {
         if(searchTerm.trim().isEmpty()) {
             return;
         }
-        
+
         Map<String, SectorBean> mapFindings = new TreeMap<String, SectorBean>();
         BufferedReader ir = null;
 
@@ -297,7 +297,7 @@ public class SetupController {
 
     /**
      * Parses the line and extracts the position
-     * 
+     *
      * @param line
      * @return
      */
