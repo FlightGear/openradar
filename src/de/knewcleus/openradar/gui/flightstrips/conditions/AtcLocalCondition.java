@@ -21,7 +21,7 @@ public class AtcLocalCondition extends AbstractBooleanCondition {
 	
 	@Override
 	protected Boolean extractBooleanValue(FlightStrip flightstrip, AirportData airportData) {
-		return flightstrip.getContact().getCallSign().startsWith(airportData.getAirportCode());
+		return flightstrip.getContact().isAtc() && flightstrip.getContact().getCallSign().startsWith(airportData.getAirportCode());
 	}
 
 	// --- IDomElement ---

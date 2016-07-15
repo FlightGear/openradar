@@ -44,7 +44,7 @@ public class ControlOtherCondition extends AbstractStringCondition {
 	
 	@Override
 	public String getPrefixText() {
-		return "contact is controlled by ";
+		return "contact's controller is ";
 	}
 	
 }
