@@ -63,7 +63,7 @@ public class SectionPanel extends JPanel {
 	}
 	
 	public void checkVisible() {
-		setVisible(section.isAutoVisible() ? (flightstripspanel.getRowCount() > 0) : true);
+		setVisible((section.isAutoVisible() ? (flightstripspanel.getRowCount() > 0) : true) || section.getSectionsManager().getIsDragging());
 	}
 	
 	public SectionData getSection() {

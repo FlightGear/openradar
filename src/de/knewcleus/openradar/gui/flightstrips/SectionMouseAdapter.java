@@ -73,6 +73,7 @@ public class SectionMouseAdapter extends MouseAdapter {
 			panelPoint = e.getPoint();
 			getParent().doLayout();
 			getParent().setComponentZOrder(sectionPanel, 0);
+			sectionPanel.getSection().getSectionsManager().setIsDragging(true);
 		}
 		updateParent(e);
 		sectionPanel.setBounds(targetPoint.x - panelPoint.x, targetPoint.y - panelPoint.y, sectionPanel.getWidth(), sectionPanel.getHeight());
@@ -80,6 +81,7 @@ public class SectionMouseAdapter extends MouseAdapter {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		sectionPanel.getSection().getSectionsManager().setIsDragging(false);
 		updateParent(e);
 		panelPoint = null;
 	}

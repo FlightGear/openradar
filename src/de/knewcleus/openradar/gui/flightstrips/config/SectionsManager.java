@@ -20,6 +20,8 @@ public class SectionsManager implements ListModel<SectionData> {
 
 	private SectionColumnDialog dialog = null;
 	
+	private boolean isDragging = false;
+	
 	// --- constructor ---
 	
 	public SectionsManager(LogicManager logicManager) {
@@ -160,6 +162,17 @@ public class SectionsManager implements ListModel<SectionData> {
 		dialog.setTopRight(p);
 		dialog.setSection(section, false);
 		dialog.setVisible(true);
+	}
+	
+	public void setIsDragging (boolean isDragging) {
+		this.isDragging = isDragging;
+		for (SectionData section : sections) {
+			section.getPanel().checkVisible();
+		}
+	}
+	
+	public boolean getIsDragging () {
+		return isDragging;
 	}
 	
 	// --- ListModel ---
