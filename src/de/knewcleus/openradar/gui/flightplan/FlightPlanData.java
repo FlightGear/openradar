@@ -674,4 +674,37 @@ public class FlightPlanData {
 		return sb.toString();
 	}
 
+	public static int AltitudeFeet(String altitude) {
+		if (altitude == null)   return -1;
+		if (altitude.isEmpty()) return -1;
+		altitude = altitude.trim().toUpperCase();
+		int feet; 
+		try {
+			if (altitude.startsWith("FL")) {
+				feet = Integer.parseInt(altitude.substring(2)) * 100;
+			}
+			else {
+				feet = Integer.parseInt(altitude);
+			} 
+		} catch (NumberFormatException exception) {
+			feet = -1;
+		}
+		return feet;
+	}
+	
+	public static  String formatAltitude(AirportData airportData, int feet) {
+		String altitude = "";
+		if (feet >= 0) {
+			int fl = feet / 100;
+			int tfl;
+			try {
+				tfl = airportData.getTransitionFL(null);
+			} catch (NullPointerException exeption) {
+				tfl = (airportData.getTransitionAlt() + airportData.getTransitionLayerWidth()) / 100;
+			}
+			altitude = (fl >= tfl) ? String.format("FL%03d", fl) : "" + String.format("%04d", feet); 
+		}
+		return altitude;
+	}
+	
 }

@@ -434,6 +434,8 @@ public class FlightStrip extends JPanel implements FocusListener {
 	}
 	
 	protected int AltitudeFeet(String altitude) {
+		return FlightPlanData.AltitudeFeet(altitude);
+		/* 
 		if (altitude == null)   return -1;
 		if (altitude.isEmpty()) return -1;
 		altitude = altitude.trim().toUpperCase();
@@ -449,9 +451,12 @@ public class FlightStrip extends JPanel implements FocusListener {
 			feet = -1;
 		}
 		return feet;
+		*/
 	}
 	
 	protected String formatAltitude(int feet) {
+		return FlightPlanData.formatAltitude(contact.getAirportData(), feet);
+		/*
 		String altitude = "";
 		if (feet >= 0) {
 			int fl = feet / 100;
@@ -464,6 +469,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 			altitude = (fl >= tfl) ? String.format("FL%03d", fl) : "" + String.format("%04d", feet); 
 		}
 		return altitude;
+		*/
 	}
 	
 	public GuiRadarContact getContact() {
