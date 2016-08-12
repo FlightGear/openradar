@@ -405,7 +405,18 @@ public class FlightStrip extends JPanel implements FocusListener {
 			if ((feet >= 0) && !value.isEmpty()) ((AltitudeEdit)cAltitude.edit).setAutoAtcMessage(value, feet);
 		}
 		else if (edit.equals(cHeading.edit)) {
-			if (!value.isEmpty()) ((HeadingEdit)cHeading.edit).setAutoAtcMessage(value);
+			if (!value.isEmpty()) {
+				int heading;
+				try {
+					heading = Integer.parseInt(value);
+					if (heading == 0) heading = 360;
+					value = String.format("%03d", heading);
+				} catch (NumberFormatException exception) {
+					value = "";
+				}
+				((HeadingEdit)cHeading.edit).setText(value);
+				((HeadingEdit)cHeading.edit).setAutoAtcMessage(value);
+			}
 		}
 		else if (edit.equals(cSpeed.edit)) {
 			if (!value.isEmpty()) ((SpeedEdit)cSpeed.edit).setAutoAtcMessage(value);
