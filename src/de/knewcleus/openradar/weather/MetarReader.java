@@ -40,8 +40,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -147,8 +150,9 @@ public class MetarReader implements Runnable {
                         code = code.substring(1);
                         master.getAirportData().setMetarSource(code);
                     }
-
-                    loadMetar(code,false); // not error logging at this point...
+                    code = code.toUpperCase();
+                    
+                    loadMetar(code, false); // not error logging at this point...
                     
                     master.getStatusManager().updateTransitionValues(); // transFL depends on QNH
 
@@ -204,6 +208,74 @@ public class MetarReader implements Runnable {
     }
 
     private void loadMetar(String code, boolean logError) throws IOException, MalformedURLException {
+    	//loadMetarTXT(code, logError);
+    	loadMetarCSV(code, logError);
+    }
+    
+    private void loadMetarCSV(String code, boolean logError) throws IOException, MalformedURLException {
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        String line = null;
+        String airport_code = code.toUpperCase();
+        // String baseUrl = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&hoursBeforeNow=1&mostRecentForEachStation=true&fields=raw_text,observation_time&stationString=%s";
+        URL url = new URL(String.format(baseUrl, airport_code));
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        if (responseCode == 200) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            // search for result line
+            line = reader.readLine();
+            while ((line != null) && !line.startsWith(airport_code)) {
+                line = reader.readLine();
+            }
+            reader.close();
+        }
+        if (line != null) {
+            StringTokenizer st = new StringTokenizer(line, ",");
+            String raw_text         = st.nextToken();
+            String observation_time = st.nextToken();
+            observation_time = observation_time.replaceAll("Z", "+0000");
+            
+            Date observationTime = null;
+            try {
+                observationTime = sdf.parse(observation_time);
+            } catch (ParseException e) {
+                log.error("Error while parsing observation time!", e);
+            }
+
+            MetarData metar = new MetarData(data, raw_text, observationTime);
+            MetarData lastMetar = metars.get(airport_code);
+
+            if(lastMetar==null || !lastMetar.equals(metar)) {
+                log.info("Metar received: " + metar.getMetarBaseData());
+                metars.put(airport_code, metar);
+                for (IMetarListener l : listener) {
+                    l.registerNewMetar(metar);
+                }
+                log.info("Metar for "+metar.getAirportCode()+" processed.");
+
+                if(airport_code.equalsIgnoreCase(data.getAirportCode())) {
+                    SoundManager.playWeather();
+                }
+            }
+        } else {
+            if(logError) {
+                log.warn("WARNING: No Metar for "+airport_code+"(got response code " + responseCode + " from " + url.toString()+")...");
+                log.warn("Set alternative weather station via dialog!");
+            }
+            MetarData metar = null;
+            metar = MetarData.createNotFoundMetar(airport_code);
+            metars.put(airport_code, metar);
+
+            for (IMetarListener l : listener) {
+                l.registerNewMetar(metar);
+            }
+        }
+    }
+
+    // obsolete since 2016-08
+	private void loadMetarTXT(String code, boolean logError) throws IOException, MalformedURLException {
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         StringBuilder result = new StringBuilder();
         String line = null;
         URL url = new URL(baseUrl + code.toUpperCase() + ".TXT");
@@ -219,7 +291,16 @@ public class MetarReader implements Runnable {
             }
             reader.close();
 
-            MetarData metar = new MetarData(data, result.toString());
+            String metar_string = result.toString();
+            Date observationTime = null;
+            try {
+                observationTime = sdf.parse(metar_string.substring(0,metar_string.indexOf("\n")));
+            } catch (ParseException e) {
+                log.error("Error while parsing observation time!", e);
+            }
+
+            		
+            MetarData metar = new MetarData(data, metar_string.substring(metar_string.indexOf("\n")).trim(), observationTime);
             MetarData lastMetar = metars.get(code);
 
             if(lastMetar==null || !lastMetar.equals(metar)) {
@@ -250,12 +331,13 @@ public class MetarReader implements Runnable {
     }
 
     public MetarData getMetar(String code) {
+    	String airport_code = code.toUpperCase();
         MetarData metar = null;
         synchronized(metarsLock) {
-            metar = metars.get(code);
+            metar = metars.get(airport_code);
             if(metar==null) {
-                metar = MetarData.createNotFoundMetar(code);
-                metars.put(code, metar);
+                metar = MetarData.createNotFoundMetar(airport_code);
+                metars.put(airport_code, metar);
             }
         }
         return metar;

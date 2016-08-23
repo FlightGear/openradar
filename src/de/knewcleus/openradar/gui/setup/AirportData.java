@@ -126,7 +126,8 @@ public class AirportData implements INavPointListener {
     private String fpServerUrl = "";
     private String fpServerUser = "";
     private String fpServerPassword = "";
-    private String metarUrl = "http://weather.noaa.gov/pub/data/observations/metar/stations/";
+    private String metarUrl = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&hoursBeforeNow=1&mostRecentForEachStation=true&fields=raw_text,observation_time&stationString=%s";
+    // obsolete since 2016-08: private String metarUrl = "http://weather.noaa.gov/pub/data/observations/metar/stations/";
     private String metarSource = null;
     private String addMetarSources = null;
 
