@@ -216,7 +216,7 @@ public class MetarReader implements Runnable {
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         String line = null;
         String airport_code = code.toUpperCase();
-        // String baseUrl = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&hoursBeforeNow=1&mostRecentForEachStation=true&fields=raw_text,observation_time&stationString=%s";
+        String baseUrl = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&hoursBeforeNow=1&mostRecentForEachStation=true&fields=raw_text,observation_time&stationString=%s";
         URL url = new URL(String.format(baseUrl, airport_code));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
