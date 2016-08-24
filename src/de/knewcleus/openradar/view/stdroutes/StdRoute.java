@@ -318,8 +318,8 @@ public class StdRoute {
             if (pos_a1 < 0) {
                 throw new IllegalArgumentException("Wrong point definition! First ray, no '@' to separate angle and point found: " + pointDescr);
             }
-            float angle1 = Float.parseFloat(pointDescr.substring(0, pos_a1));
-            String id1 = pointDescr.substring(pos_a1+1, pos_d);
+            float angle1 = Float.parseFloat(pointDescr.substring(0, pos_a1)) + (float) data.getMagneticDeclination();
+            String id1 = pointDescr.substring(pos_a1 + 1, pos_d);
             Point2D navaidPoint1 = getPoint(data, mapViewerAdapter, id1, previous);
 
             // angle2, navaidPoint2
@@ -327,8 +327,8 @@ public class StdRoute {
             if (pos_a2 < 0) {
                 throw new IllegalArgumentException("Wrong point definition! Second ray, no '@' to separate angle and point found: " + pointDescr);
             }
-            float angle2 = Float.parseFloat(pointDescr.substring(pos_d+1,pos_a2));
-            String id2 = pointDescr.substring(pos_a2 +1  + 1);
+            float angle2 = Float.parseFloat(pointDescr.substring(pos_d+1,pos_a2)) + (float) data.getMagneticDeclination();
+            String id2 = pointDescr.substring(pos_a2 + 1);
             Point2D navaidPoint2 = getPoint(data, mapViewerAdapter, id2, previous);
 
             // parallel rays?

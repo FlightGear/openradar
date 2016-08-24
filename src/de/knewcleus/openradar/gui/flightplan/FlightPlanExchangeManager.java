@@ -122,7 +122,6 @@ public class FlightPlanExchangeManager implements Runnable {
             }
             callSignList.append(contact.getCallSign().trim());
         }
-        //log.info("Going to request updates for: " + callSignList);
         // send the list to the server to request updated flightplans
 
 //        if (callSignList.length() > 0) {
@@ -197,7 +196,7 @@ public class FlightPlanExchangeManager implements Runnable {
                             if (c != null) {
                                 radarContactController.updateFlightPlan(c,FpXml_1_0.parseXml(data, c, eFp));
                             }
-                            log.info("Got FP update for: " + callsign);
+//                            log.info("Got FP update for: " + callsign);
                         }
                         if(eFlightPlans.isEmpty()) {
                         	//log.info("Got no flightplans");
@@ -245,7 +244,7 @@ public class FlightPlanExchangeManager implements Runnable {
                     + URLEncoder.encode(data.getFpServerPassword(), "UTF-8") + "&atc=" + URLEncoder.encode(data.getCallSign(), "UTF-8") + "&flightplans="
                     + URLEncoder.encode(xml, "UTF-8");
 
-            log.info("Flightplan: "+data.getCallSign()+" Going to send updates for: " + fp.getCallsign());
+//            log.info("Flightplan: "+data.getCallSign()+" Going to send updates for: " + fp.getCallsign());
 
             URL url = new URL(baseUrl + "/updateFlightplans");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -266,7 +265,7 @@ public class FlightPlanExchangeManager implements Runnable {
             if (responseCode == 200) {
                 // Everything is fine
                 fp.updateAsTransmitted();
-                log.info("Flightplan: "+data.getCallSign()+"/"+fp.getCallsign()+" Successfully updated flightplan! (got response code " + responseCode + " from " + url.toString() + ")...");
+//                log.info("Flightplan: "+data.getCallSign()+"/"+fp.getCallsign()+" Successfully updated flightplan! (got response code " + responseCode + " from " + url.toString() + ")...");
             } else if (responseCode == 406) {
                 log.error("Failed to update flightplan updates! XML not understood at server (got response code " + responseCode + " "
                         + con.getResponseMessage() + " from " + url.toString() + ")...");

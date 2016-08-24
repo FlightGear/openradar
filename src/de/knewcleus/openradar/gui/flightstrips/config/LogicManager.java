@@ -22,7 +22,7 @@ import de.knewcleus.openradar.gui.flightstrips.actions.MoveToAction;
 import de.knewcleus.openradar.gui.flightstrips.actions.UncontrolAction;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AGLCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AtcCondition;
-import de.knewcleus.openradar.gui.flightstrips.conditions.AircraftCondition;
+import de.knewcleus.openradar.gui.flightstrips.conditions.ModelCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.AndCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.ControlNoneCondition;
 import de.knewcleus.openradar.gui.flightstrips.conditions.ControlOtherCondition;
@@ -277,12 +277,12 @@ public class LogicManager implements Runnable {
 		rulesManager.clear();
 		// ATC / carrier / car contacts
 		rulesManager.add(new Rule("ATC", new AtcCondition(true), new MoveToAction(section_atc.getTitle(), 0)));
-		rulesManager.add(new Rule("carrier", new OrCondition (new AircraftCondition("MP-NIMITZ", true), new AircraftCondition("MP-VINSON", true)), new MoveToAction(section_carrier.getTitle(), 0)));
-		rulesManager.add(new Rule("car park",  new AndCondition(new AircraftCondition("FOLLOWME", true), new GroundSpeedCondition(null, 1, true)), new MoveToAction(section_car.getTitle(), 1)));
-		rulesManager.add(new Rule("car drive", new AircraftCondition("FOLLOWME", true), new MoveToAction(section_car.getTitle(), 0)));
+		rulesManager.add(new Rule("carrier", new OrCondition (new ModelCondition("MP-NIMITZ", true), new ModelCondition("MP-VINSON", true)), new MoveToAction(section_carrier.getTitle(), 0)));
+		rulesManager.add(new Rule("car park",  new AndCondition(new ModelCondition("FOLLOWME", true), new GroundSpeedCondition(null, 1, true)), new MoveToAction(section_car.getTitle(), 1)));
+		rulesManager.add(new Rule("car drive", new ModelCondition("FOLLOWME", true), new MoveToAction(section_car.getTitle(), 0)));
 		// dual
-		rulesManager.add(new Rule("dual copilot", new OrCondition (new AircraftCondition(".+-copilot", true)), new MoveToAction(section_dual.getTitle(), 0)));
-		rulesManager.add(new Rule("dual passenger", new OrCondition (new AircraftCondition(".+-PAX", true)), new MoveToAction(section_dual.getTitle(), 1)));
+		rulesManager.add(new Rule("dual copilot", new OrCondition (new ModelCondition(".+-copilot", true)), new MoveToAction(section_dual.getTitle(), 0)));
+		rulesManager.add(new Rule("dual passenger", new OrCondition (new ModelCondition(".+-PAX", true)), new MoveToAction(section_dual.getTitle(), 1)));
 		// ground
 		rulesManager.add(new Rule("PARKING", new AndCondition(new DistanceCondition(null, 2., true), new AGLCondition(null, 50, true), new GroundSpeedCondition(null, 1, true), new OrCondition (new NewCondition(true), new ColumnCondition(2, true))), new MoveToAction(section_ground.getTitle(), 2)));
 		rulesManager.add(new Rule("Taxi OUT", new AndCondition(new DistanceCondition(null, 2., true), new AGLCondition(null, 50, true), new GroundSpeedCondition(1, null, true), new OrCondition (new NewCondition(true), new ColumnCondition(2, true), new ColumnCondition(3, true), new ColumnCondition(4, true))), new MoveToAction(section_ground.getTitle(), 4)));

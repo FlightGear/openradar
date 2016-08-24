@@ -48,6 +48,7 @@ import de.knewcleus.fgfs.location.Vector2D;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.notify.INotification;
 import de.knewcleus.openradar.notify.INotificationListener;
 import de.knewcleus.openradar.view.Converter2D;
@@ -73,6 +74,8 @@ public class StPView implements IBoundedView, INotificationListener {
     private Double distanceMiles = null;
     private Integer timeMinutes = null;
     private Integer timeSeconds = null;
+    private Integer reachedAltitude = null;
+    private Integer requiredVerticalSpeed = null;
 
     protected boolean visible = true;
 
@@ -151,10 +154,12 @@ public class StPView implements IBoundedView, INotificationListener {
             String dTP = degreesToPointer==null ? "n/a" : String.format("%03d",degreesToPointer);
             String dTS = degreesToSelection==null ? "n/a" : String.format("%03d",degreesToSelection);
             String dist = distanceMiles==null ? "n/a" : String.format("%.1f", distanceMiles);
-            String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);;
+            String min = timeMinutes==null ? "n/a" : String.format("%1d:%02d",timeMinutes,timeSeconds);
+            String alt = reachedAltitude == null ? "" : (reachedAltitude < 1 ? ", GND" : (reachedAltitude > 999 ? ", FL999" : String.format(", FL%d", reachedAltitude)));
+            String vspd = requiredVerticalSpeed == null ? "" : String.format(", %+d", requiredVerticalSpeed);
 
             String textLine1 = String.format("%s° (%2s°)",dTP,dTS);
-            String textLine2 = String.format("%1s NM, ETA %2s", dist,min);
+            String textLine2 = String.format("%1s NM, ETA %2s%s%s", dist, min, alt, vspd);
             boundsLine1 = fontMetrics.getStringBounds(textLine1, g2d);
             boundsLine2 = fontMetrics.getStringBounds(textLine2, g2d);
             boundsText = new Rectangle2D.Double(boundsLine1.getX(), boundsLine1.getY()-boundsLine1.getHeight(), Math.max(boundsLine1.getWidth(), boundsLine2.getWidth()), boundsLine1.getHeight()+boundsLine2.getHeight());
@@ -233,6 +238,14 @@ public class StPView implements IBoundedView, INotificationListener {
         distanceMiles = distance*Converter2D.getMilesPerDot(mapViewAdapter);
         timeMinutes = milesPerHour>10 ? (int)Math.floor(60*distanceMiles/(double)milesPerHour) : null;
         timeSeconds = milesPerHour>10 ? (int)Math.floor(60*60*distanceMiles/(double)milesPerHour) - timeMinutes * 60 : null;
+        Long duration = timeMinutes == null ? null : (long)timeMinutes + (long)timeSeconds / 60;
+        double vertspeed = contact.getVerticalSpeedD();
+        int altitude = (int)Math.floor(contact.getElevationFt());
+        String assignedAltitude = contact.getFlightPlan().getAssignedAltitude();
+        reachedAltitude = (duration == null) || (Math.abs(vertspeed) < 200) ? null : (int)Math.floor((altitude + duration * vertspeed) / 100);
+        if ((reachedAltitude != null) && (reachedAltitude < 0)) reachedAltitude = 0;
+        requiredVerticalSpeed = (duration == null) || (duration < 1) || assignedAltitude.isEmpty() ? null : (int)Math.floor((FlightPlanData.AltitudeFeet(assignedAltitude) - altitude) / duration);
+        if ((requiredVerticalSpeed == null) || (Math.abs(requiredVerticalSpeed) < 100)) requiredVerticalSpeed = null;
 
 //  System.out.println("orig "+angle+" AS"+contact.getAirSpeedD()+" vOA: "+vOriginalAngle.getAngleL()+" vW "+vWind.getAngleL()+" result "+lAngle);
         constructBackgroundShapes();

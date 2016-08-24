@@ -405,7 +405,18 @@ public class FlightStrip extends JPanel implements FocusListener {
 			if ((feet >= 0) && !value.isEmpty()) ((AltitudeEdit)cAltitude.edit).setAutoAtcMessage(value, feet);
 		}
 		else if (edit.equals(cHeading.edit)) {
-			if (!value.isEmpty()) ((HeadingEdit)cHeading.edit).setAutoAtcMessage(value);
+			if (!value.isEmpty()) {
+				int heading;
+				try {
+					heading = Integer.parseInt(value);
+					if (heading == 0) heading = 360;
+					value = String.format("%03d", heading);
+				} catch (NumberFormatException exception) {
+					value = "";
+				}
+				((HeadingEdit)cHeading.edit).setText(value);
+				((HeadingEdit)cHeading.edit).setAutoAtcMessage(value);
+			}
 		}
 		else if (edit.equals(cSpeed.edit)) {
 			if (!value.isEmpty()) ((SpeedEdit)cSpeed.edit).setAutoAtcMessage(value);
@@ -423,6 +434,8 @@ public class FlightStrip extends JPanel implements FocusListener {
 	}
 	
 	protected int AltitudeFeet(String altitude) {
+		return FlightPlanData.AltitudeFeet(altitude);
+		/* 
 		if (altitude == null)   return -1;
 		if (altitude.isEmpty()) return -1;
 		altitude = altitude.trim().toUpperCase();
@@ -438,9 +451,12 @@ public class FlightStrip extends JPanel implements FocusListener {
 			feet = -1;
 		}
 		return feet;
+		*/
 	}
 	
 	protected String formatAltitude(int feet) {
+		return FlightPlanData.formatAltitude(contact.getAirportData(), feet);
+		/*
 		String altitude = "";
 		if (feet >= 0) {
 			int fl = feet / 100;
@@ -453,6 +469,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 			altitude = (fl >= tfl) ? String.format("FL%03d", fl) : "" + String.format("%04d", feet); 
 		}
 		return altitude;
+		*/
 	}
 	
 	public GuiRadarContact getContact() {

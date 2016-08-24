@@ -38,7 +38,6 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JTextPane;
 
-
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodToCartTransformation;
 import de.knewcleus.fgfs.location.Position;
@@ -90,8 +89,6 @@ public class GuiMasterController {
     private FlightPlanExchangeManager fpExchangeManager;
     private FGFSController fgfsController1 = null;
     private FGFSController fgfsController2 = null;
-
-//	    private final static Logger log = Logger.getLogger(GuiMasterController.class);
 
     private FlightStripBay flightstripbay = null;
     private LogicManager logicManager = null;

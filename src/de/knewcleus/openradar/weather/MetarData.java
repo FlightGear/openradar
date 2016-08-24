@@ -29,8 +29,6 @@
 package de.knewcleus.openradar.weather;
 
 import java.awt.Color;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,7 +62,6 @@ public class MetarData {
     private AirportData data = null;
 
     private String airportCode = null;
-    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     private Date observationTime = null;
 
     // wind
@@ -127,20 +124,16 @@ public class MetarData {
 
     private final static Logger log = LogManager.getLogger(MetarData.class);
 
-    public MetarData(AirportData data, String metar) {
+    public MetarData(AirportData data, String raw_text, Date observationTime) {
         exists = true;
 
         // parse metar data
-        this.metarBaseData = metar.substring(metar.indexOf("\n")).trim();
+        metarBaseData = raw_text;
         this.data = data;
+        this.observationTime = observationTime;
+        
         StringTokenizer st = new StringTokenizer(metarBaseData, " ");
-
-        try {
-            observationTime = sdf.parse(metar.substring(0,metar.indexOf("\n")));
-        } catch (ParseException e) {
-            log.error("Error while parsing observation time!", e);
-        }
-
+        
         airportCode = st.nextToken();
 
         try {
@@ -293,7 +286,7 @@ public class MetarData {
             }
 
         } catch (Exception e) {
-            log.error("Failed to parse Metar: " + metar, e);
+            log.error("Failed to parse Metar: " + metarBaseData, e);
             weatherPhaenomena = "";
         }
 

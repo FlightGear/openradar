@@ -36,6 +36,8 @@ package de.knewcleus.openradar.gui;
 import java.awt.Color;
 import java.awt.Font;
 
+import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
+
 /**
  * Color and Font definitions based an REFGHMI of Eurocontrol
  *
@@ -234,6 +236,12 @@ public class Palette {
     public static final Color ORCAM_SETPOS = Color.blue; 
     public static final Color ORCAM_STOP = Color.black; 
     
+    public static final Color CONTACT_GROUND     = getDepressedColor(Color.RED);
+    public static final Color CONTACT_TRANSITION = getDepressedColor(Color.YELLOW);
+    public static final Color CONTACT_FL100      = getDepressedColor(Color.GREEN);
+    public static final Color CONTACT_FL245      = getDepressedColor(Color.BLUE);
+    public static final Color CONTACT_FL400      = getDepressedColor(Color.MAGENTA);
+    
     // other
     
     public static final Color SECTORBEAN_FOREGOUND = new Color(50,50,50); 
@@ -256,4 +264,30 @@ public class Palette {
 		b=Math.max(0,c.getBlue()-51);
 		return new Color(r,g,b);
 	}
+	
+	public static Color getAltitudeColor(GuiRadarContact contact) {
+		Double altitude = contact.getAltitude();
+		if (altitude <= contact.getAirportData().getElevationFt()) return CONTACT_GROUND;
+		if (altitude <= contact.getAirportData().getTransitionAlt()) 
+			return calcColor (altitude, contact.getAirportData().getElevationFt(), contact.getAirportData().getTransitionAlt(), CONTACT_GROUND, CONTACT_TRANSITION);
+		if (altitude <= 10000) 
+			return calcColor (altitude, contact.getAirportData().getTransitionAlt(), 10000, CONTACT_TRANSITION, CONTACT_FL100);
+		if (altitude <= 24500) 
+			return calcColor (altitude, 10000, 24500, CONTACT_FL100, CONTACT_FL245);
+		if (altitude <= 40000) 
+			return calcColor (altitude, 24500, 40000, CONTACT_FL245, CONTACT_FL400);
+		return CONTACT_FL400;
+	}
+
+	protected static Color calcColor(double value, double minValue, double maxValue, Color minColor, Color maxColor) {
+		double f = (value - minValue) / (maxValue - minValue);
+		int r = minColor.getRed(); 
+		int g = minColor.getGreen();
+		int b = minColor.getBlue();
+		r = (int) Math.round((maxColor.getRed()   - r) * f + r);
+		g = (int) Math.round((maxColor.getGreen() - g) * f + g);
+		b = (int) Math.round((maxColor.getBlue()  - b) * f + b);
+		return new Color(r,g,b);
+	}
+	
 }
