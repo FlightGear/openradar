@@ -71,6 +71,7 @@ import org.apache.log4j.Logger;
 import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData.FlightPlanStatus;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData.FlightType;
 import de.knewcleus.openradar.gui.flightplan.FpAtc;
 import de.knewcleus.openradar.gui.flightplan.SquawkCode;
@@ -130,6 +131,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 	private final Lenny64Controller lenny64Controller;
 
 	private final String FPCLOSE_BUTTON_DEFAULT = "Close FP";
+	private final String FPCLOSE_BUTTON_OPEN = "OPEN FP";
 	private final String FPCLOSE_BUTTON_ASK = "Really Close?";
 
 	private static final Logger log = Logger.getLogger(FlightPlanDialog.class);
@@ -917,11 +919,17 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 		initOwnership(fpd);
 
 		setLennyButtonText("Retrieve FP");
-		btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
+		if( FlightPlanStatus.FILED.toString().equals(fpd.getFpStatus()) ) {
+			btCloseFp.setText(FPCLOSE_BUTTON_OPEN);
+			btCloseFp.setToolTipText("Click to activate this flightplan");
+		} else {
+			btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
+		}
 
 		setFpReadable(fpd.isUncontrolled() || fpd.isOwnedByMe());
-		btCloseFp.setEnabled(master.getAirportData().isFpDownloadEnabled() && fpd.isOwnedByMe()
-				&& fpd.getFlightPlanId() != null && !fpd.getFlightPlanId().isEmpty());
+		btCloseFp.setEnabled(master.getAirportData().isFpDownloadEnabled() && (fpd.isOwnedByMe() || fpd.isOwnedbyNobody()) 
+				&& ( fpd.getFpStatus().equals(FlightPlanStatus.FILED.toString()) || fpd.getFpStatus().toString().equals(FlightPlanStatus.ACTIVE.toString())) &&
+				fpd.getFlightPlanId()!=null && !fpd.getFlightPlanId().isEmpty());
 		log.warn("setData done");
 	}
 
@@ -1239,6 +1247,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				if (btCloseFp.getText().equals(FPCLOSE_BUTTON_DEFAULT)) {
 					// change text to are you sure?
 					btCloseFp.setText(FPCLOSE_BUTTON_ASK);
+				} if (btCloseFp.getText().equals(FPCLOSE_BUTTON_OPEN)) {
+					lenny64Controller.openFlightPlan(contact);
+					btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
 				} else {
 					btCloseFp.setText(FPCLOSE_BUTTON_DEFAULT);
 					// really close it

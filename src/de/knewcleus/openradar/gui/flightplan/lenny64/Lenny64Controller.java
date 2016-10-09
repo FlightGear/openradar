@@ -35,6 +35,7 @@ import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.contacts.FlightPlanDialog;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
+import de.knewcleus.openradar.gui.flightplan.FlightPlanData.FlightPlanStatus;
 import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class Lenny64Controller {
@@ -90,6 +91,11 @@ public class Lenny64Controller {
             dialog.setLennyButtonText("(loaded)");
             dialog.extUpdateUI(c, false);
         }
+    }
+
+    public synchronized void openFlightPlan(GuiRadarContact contact) {
+		contact.getFlightPlan().setFpStatus(FlightPlanStatus.ACTIVE.toString());
+        lenny64Connector.openFlightPlan(master, contact);
     }
 
     public synchronized void closeFlightPlan(GuiRadarContact contact) {

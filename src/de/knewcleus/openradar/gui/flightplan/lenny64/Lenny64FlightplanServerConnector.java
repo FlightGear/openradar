@@ -164,7 +164,7 @@ public class Lenny64FlightplanServerConnector {
         AirportData data = master.getAirportData();
         String code = contact.getFlightPlan().getFlightPlanId();
         
-        log.warn("Flightplan: " + data.getCallSign() + " Going to close flightplan " + code + " for " + callsign + " from " + baseUrl);
+        log.warn("Flightplan: " + data.getCallSign() + " Going to call "+method+" " + code + " for " + callsign + " from " + baseUrl);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));

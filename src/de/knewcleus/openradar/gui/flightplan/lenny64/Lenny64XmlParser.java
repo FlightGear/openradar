@@ -92,7 +92,7 @@ public class Lenny64XmlParser {
 //                    messages.append(user).append(": ").append(message).append("; ");
 //                }
                 String status = eFp.getChildText("status");
-                status = status.equals("")?FlightPlanData.FlightPlanStatus.ACTIVE.toString():status.replaceAll("filled", "FILED");
+                status = status.equals("")?FlightPlanData.FlightPlanStatus.ACTIVE.toString():status.replaceAll("filed", FlightPlanData.FlightPlanStatus.FILED.toString());
 //                String additionalInformation = eFp.getChildText("additionalInformation");
 //                String lastUpdated = eFp.getChildText("lastUpdated");
                 

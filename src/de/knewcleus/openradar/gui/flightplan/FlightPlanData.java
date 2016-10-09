@@ -557,6 +557,7 @@ public class FlightPlanData {
 				this.squawk = null;
 
 				this.fpStatus = FlightPlanStatus.ACTIVE.toString();
+				this.flightPlanId = null;
 				this.aircraft = contact.getAircraftCode();
 				// TODO: when a flightplan is closed then there shouldn't be a departure entry
 				this.departureAirport = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5)
