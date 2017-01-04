@@ -127,7 +127,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
 
         PositionMessage positionMessage = new PositionMessage();
         positionMessage.setTime((double) (System.currentTimeMillis() - APPLICATION_START_TIME_MILLIS) / 1000d);
-        positionMessage.setLag(0d);
+        positionMessage.setLag(0.25d);
         positionMessage.setPosition(getPosition());
         positionMessage.setOrientation(getOrientation());
         positionMessage.setLinearVelocity(getLinearVelocity());
