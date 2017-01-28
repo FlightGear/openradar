@@ -220,13 +220,9 @@ public class StdRoute {
         // SELECTED CONTACT => dynamic
         if(selectedContact!=null) {
         	synchronized(selectedContact) {
-        		String assignedRunway = selectedContact.getFlightPlan().getAssignedRunway();
 	            String assignedRoute = selectedContact.getFlightPlan().getAssignedRoute();
-	            if(assignedRoute!=null) {
-	                if( (activeLandingRunways.contains(assignedRunway)||activeStartingRunways.contains(assignedRunway)) 
-	                	&& getName().equals(assignedRoute)) {
+	            if(assignedRoute!=null && getName().equals(assignedRoute) ) {
 	                    return true;
-	                }
 	            }
         	}
         }
