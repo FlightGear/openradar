@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2016 Wolfram Wagner
+ * Copyright (C) 2012-2017 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -108,6 +108,8 @@ public class AirportData implements INavPointListener {
     private HashSet<String> activeLandingRouteRunways = new HashSet<>();
     private HashSet<String> activeStartingRouteRunways = new HashSet<>();
 
+    private Properties props = new Properties();
+    
     public enum FgComMode {
         Auto, Internal, External, Off
     };
@@ -146,8 +148,12 @@ public class AirportData implements INavPointListener {
     private StPView directionMessageView;
 
     private boolean fpDownloadEnabled = false;
-    private String fpDownloadUrl = "http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans";
+    //private String fpDownloadUrl = "http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans";
+    private String fpDownloadUrl = "http://flightgear-atc.alwaysdata.net/dev2017_04_28.php";
 
+    private String fpDownloadEmail = "";
+    private String fpDownloadPassword = "";
+    
     private int contactTailLength = 10;
 
     private int antennaRotationTime = 1000;
@@ -170,6 +176,10 @@ public class AirportData implements INavPointListener {
     private int fgfsCamera2Port = 5020;
     private boolean fgfsLocalMPPacketForward2 = false;
     private int fgfsLocalMPPacketPort2 = 5020;
+    
+    private Rectangle mainFrameLastBounds=null;
+    private int mainFrameDividerMainPos=-1;
+    private int mainFrameDividerLeftPos=-1;
 
     private static Logger log = LogManager.getLogger(AirportData.class);
 
@@ -441,6 +451,26 @@ public class AirportData implements INavPointListener {
         this.altRadioText = altRadioText;
     }
 
+    public synchronized Rectangle getLastBounds() {
+    	return mainFrameLastBounds;
+    }
+    
+    public synchronized int getMainFrameDividerLeftPos() {
+    	return mainFrameDividerLeftPos;
+    }
+
+    public synchronized void setMainFrameDividerLeftPos(int pos) {
+    	mainFrameDividerLeftPos = pos;
+    }
+
+    public synchronized int getMainFrameDividerMainPos() {
+    	return mainFrameDividerMainPos;
+    }
+
+    public synchronized void setMainFrameDividerMainPos(int pos) {
+    	mainFrameDividerMainPos = pos;
+    }
+
     /**
      * This method is called when the navdata files are read. We use it to gather additional information
      */
@@ -621,23 +651,22 @@ public class AirportData implements INavPointListener {
 
     public synchronized void loadAirportData(GuiMasterController master) {
 
-        Properties p = new Properties();
         File propertyFile = new File("settings" + File.separator + getAirportCode() + ".properties");
         try {
-            p.load(new FileReader(propertyFile));
+            props.load(new FileReader(propertyFile));
         } catch (IOException e) {
         }
 
         if (callSign == null) {
             // for some reason the callsign was not set in setup dialog
-            callSign = p.getProperty("lastCallsign");
+            callSign = props.getProperty("lastCallsign");
             if (callSign == null) {
                 // pilot has never been here
                 callSign = getInitialATCCallSign();
             }
         }
 
-        String sTA = p.getProperty("transitionAlt");
+        String sTA = props.getProperty("transitionAlt");
         if (sTA != null) {
             transitionAlt = Integer.parseInt(sTA);
         } else {
@@ -646,28 +675,28 @@ public class AirportData implements INavPointListener {
 
         // metar
         MetarReader metarReader = master.getMetarReader();
-        metarSource = p.getProperty("metarSource");
+        metarSource = props.getProperty("metarSource");
         if (metarSource == null) {
             metarSource = "_" + getAirportCode(); // The underscore marks it as initial setting
         }
-        addMetarSources = p.getProperty("addMetarSources");
+        addMetarSources = props.getProperty("addMetarSources");
         metarReader.changeMetarSources(metarSource, addMetarSources);
 
         if (propertyFile.exists()) {
 
             // restore zoomlevel values
-            master.getRadarBackend().setZoomLevelValuesFromProperties(p);
+            master.getRadarBackend().setZoomLevelValuesFromProperties(props);
             // restore layout
-            datablockLayoutManager.restoreSelectedLayoutFrom(master, p);
+            datablockLayoutManager.restoreSelectedLayoutFrom(master, props);
 
-            squawkCodeManager.restoreSquawkRangeFrom(p);
+            squawkCodeManager.restoreSquawkRangeFrom(props);
             // restore toggles
-            Enumeration<?> e = p.propertyNames();
+            Enumeration<?> e = props.propertyNames();
             while (e.hasMoreElements()) {
                 String name = (String) e.nextElement();
                 if (name.startsWith("toggle.")) {
                     String objKey = name.substring(7);
-                    boolean b = !"false".equals(p.getProperty(name));
+                    boolean b = !"false".equals(props.getProperty(name));
                     toggleObjectsMap.put(objKey, b);
                 }
             }
@@ -675,7 +704,7 @@ public class AirportData implements INavPointListener {
             // restore saved selected frequencies
 
             for (Radio r : radios.values()) {
-                String savedFrequency = p.getProperty("radio." + r.getKey());
+                String savedFrequency = props.getProperty("radio." + r.getKey());
                 // check if frequency is known
                 if (savedFrequency != null) {
                     r.setRestoredFrequency(savedFrequency);
@@ -683,13 +712,21 @@ public class AirportData implements INavPointListener {
             }
 
             // restore alternative radio data
-            altRadioText = p.getProperty("altRadioText.text", "");
+            altRadioText = props.getProperty("altRadioText.text", "");
 
-            contactTailLength = Integer.parseInt(p.getProperty("contact.tailLength", "10"));
+            contactTailLength = Integer.parseInt(props.getProperty("contact.tailLength", "10"));
 
-            antennaRotationTime = Integer.parseInt(p.getProperty("antennaRotationTime", "1000"));
+            antennaRotationTime = Integer.parseInt(props.getProperty("antennaRotationTime", "1000"));
 
-            master.getFgfsController1().loadData(p);
+            if(props.getProperty("fgfs.mainFrame.bounds.x")!=null) {
+            	mainFrameLastBounds = new Rectangle(Integer.parseInt(props.getProperty("fgfs.mainFrame.bounds.x")),
+            										Integer.parseInt(props.getProperty("fgfs.mainFrame.bounds.y")),
+            										Integer.parseInt(props.getProperty("fgfs.mainFrame.bounds.width")),
+            										Integer.parseInt(props.getProperty("fgfs.mainFrame.bounds.height")));
+            }
+            	
+            mainFrameDividerMainPos = Integer.parseInt(props.getProperty("fgfs.mainFrame.main","-1"));
+            mainFrameDividerLeftPos = Integer.parseInt(props.getProperty("fgfs.mainFrame.left","-1"));
         }
         // calculate magnetic declination
         setMagneticDeclination(CoreMag.calc_magvarDeg(getLat(), getLon(), getElevationM(), System.currentTimeMillis()));
@@ -762,6 +799,8 @@ public class AirportData implements INavPointListener {
 
         p.setProperty("antennaRotationTime", "" + antennaRotationTime);
 
+        master.getMainFrame().storeData(p);
+        
         master.getFgfsController1().storeData(p);
 
         File propertiesFile = new File("settings" + File.separator + getAirportCode() + ".properties");
@@ -925,6 +964,22 @@ public class AirportData implements INavPointListener {
         this.fpDownloadUrl = fpDownloadUrl;
     }
 
+	public synchronized String getFpDownloadEmail() {
+		return fpDownloadEmail;
+	}
+
+	public synchronized void setFpDownloadEmail(String fpDownloadEmail) {
+		this.fpDownloadEmail = fpDownloadEmail;
+	}
+
+	public synchronized String getFpDownloadPassword() {
+		return fpDownloadPassword;
+	}
+
+	public synchronized void setFpDownloadPassword(String fpDownloadPassword) {
+		this.fpDownloadPassword = fpDownloadPassword;
+	}
+
     public synchronized int getContactTailLength() {
         return contactTailLength;
     }
@@ -1068,5 +1123,4 @@ public class AirportData implements INavPointListener {
         }
         return false;
     }
-
 }

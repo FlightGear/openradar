@@ -77,7 +77,7 @@ public class FpXml_1_0 {
         String assignedRunway = eFlightPlan.getChild("header").getChildText("assignedRunway");
         String assignedAlt = eFlightPlan.getChild("header").getChildText("assignedAlt");
         String assignedRoute = eFlightPlan.getChild("header").getChildText("assignedRoute");        
-        String state = eFlightPlan.getChild("header").getChildText("status");
+        String state = eFlightPlan.getChild("header").getChildText("status").replaceAll("ACTIVE","OPEN");
         boolean fgcomSupport = "true".equals(eFlightPlan.getChild("header").getChildText("fgcom"));
         String flags = eFlightPlan.getChild("header").getChildText("flags");
         
@@ -207,7 +207,7 @@ public class FpXml_1_0 {
 
             Element eState = new Element("status");
             if (fp.getFpStatus() != null) {
-                eState.setText(fp.getFpStatus().toString());
+                eState.setText(fp.getFpStatus().toString().replace("OPEN", "ACTIVE"));
             }
             eFpHeader.addContent(eState);
 

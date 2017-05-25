@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2015 Wolfram Wagner
+ * Copyright (C) 2012-2017 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -28,12 +28,21 @@
  */
 package de.knewcleus.openradar.gui;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import de.knewcleus.openradar.gui.radar.RadarMapPanel;
 import de.knewcleus.openradar.gui.setup.AirportData;
@@ -46,8 +55,9 @@ import de.knewcleus.openradar.gui.setup.AirportData;
 public class MainFrame extends javax.swing.JFrame {
     private static final long serialVersionUID = 2623104404247180992L;
 
-    private GuiMasterController guiInteractionManager;
-
+    private GuiMasterController master;
+    private AirportData data;
+    
     private JPanel jPnlContentPane = new JPanel();
 
     private de.knewcleus.openradar.gui.contacts.ContactsPanel contactsPanel;
@@ -59,11 +69,14 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane vspLeft;
     private javax.swing.JSplitPane vspRight;
 
+    private SplitPaneDividerListener dividerListener = new SplitPaneDividerListener(); 
+    
     /**
      * Creates new form MainFrame
      */
-    public MainFrame(GuiMasterController guiInteractionManager) {
-        this.guiInteractionManager = guiInteractionManager;
+    public MainFrame(GuiMasterController master) {
+        this.master = master;
+        this.data = master.getAirportData();
         initComponents();
     }
 
@@ -74,15 +87,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle(guiInteractionManager.getAirportData().getAirportCode() + " " + guiInteractionManager.getAirportData().getAirportName() + " - OpenRadar");
+        setTitle(master.getAirportData().getAirportCode() + " " + master.getAirportData().getAirportName() + " - OpenRadar");
 
-        // maximize it
-        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
-        ;
-        this.setLocation(0, 0);
-        this.setSize(maxBounds.width, maxBounds.height);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.addWindowListener(new MainFrameListener());
+        this.addComponentListener(new MovementListener());
         // add main view
         this.setContentPane(jPnlContentPane);
 
@@ -104,12 +112,12 @@ public class MainFrame extends javax.swing.JFrame {
         jPnlContentPane.add(hspMain, gridBagConstraints);
 
         vspLeft = new javax.swing.JSplitPane();
-        radarPanel = new de.knewcleus.openradar.gui.radar.RadarPanel(guiInteractionManager);
-        mpChatPanel = new de.knewcleus.openradar.gui.chat.MpChatPanel(guiInteractionManager);
+        radarPanel = new de.knewcleus.openradar.gui.radar.RadarPanel(master);
+        mpChatPanel = new de.knewcleus.openradar.gui.chat.MpChatPanel(master);
         vspRight = new javax.swing.JSplitPane();
         pnlRightTop = new javax.swing.JPanel();
-        radioRunwayPanel = new de.knewcleus.openradar.gui.status.StatusPanel(guiInteractionManager);
-        contactsPanel = new de.knewcleus.openradar.gui.contacts.ContactsPanel(guiInteractionManager);
+        radioRunwayPanel = new de.knewcleus.openradar.gui.status.StatusPanel(master);
+        contactsPanel = new de.knewcleus.openradar.gui.contacts.ContactsPanel(master);
 
         // Left MAIN split pane
 
@@ -153,8 +161,46 @@ public class MainFrame extends javax.swing.JFrame {
         // Right bottom
 
         vspRight.setBottomComponent(contactsPanel);
+        
+        hspMain.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,dividerListener);
+        vspLeft.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,dividerListener);
+        vspRight.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,dividerListener);
     }
 
+    public void storeData(Properties p) {
+    	p.setProperty("fgfs.mainFrame.bounds.x",""+getBounds().x);
+    	p.setProperty("fgfs.mainFrame.bounds.y",""+getBounds().y);
+    	p.setProperty("fgfs.mainFrame.bounds.width",""+getBounds().width);
+    	p.setProperty("fgfs.mainFrame.bounds.height",""+getBounds().height);
+        p.setProperty("fgfs.mainFrame.main", ""+hspMain.getDividerLocation());
+        p.setProperty("fgfs.mainFrame.left", ""+vspLeft.getDividerLocation());
+    }
+    
+    public void restoreWindowAndDividerPosition() {
+    	if(data.getLastBounds()!=null) {
+            setLocation(data.getLastBounds().x, data.getLastBounds().y);
+            this.setSize(data.getLastBounds().width, data.getLastBounds().height);
+    	} else {
+	        // maximize it on center monitor
+    		Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+        	GraphicsDevice gds[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+	        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
+        	for(int i=0;i<gds.length;i++){
+        		GraphicsDevice gd = gds[i];
+        	    if(gd.getDefaultConfiguration().getBounds().contains(center)) {
+    	    	    maxBounds = gd.getDefaultConfiguration().getBounds();
+    	    	    break;
+        	    }
+        	}
+	        
+	        this.setLocation(maxBounds.x, maxBounds.y);
+	        this.setSize(maxBounds.width, maxBounds.height);
+	        this.setExtendedState(JFrame.MAXIMIZED_BOTH);    		
+        }
+    	if(data.getMainFrameDividerMainPos()>-1) hspMain.setDividerLocation(data.getMainFrameDividerMainPos());
+    	if(data.getMainFrameDividerLeftPos()>-1) vspLeft.setDividerLocation(data.getMainFrameDividerLeftPos());
+    }
+    
     /**
      * Responsible for closing the dialogs when user returns to the main window.
      */
@@ -162,8 +208,33 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         public void windowActivated(WindowEvent e) {
             if(e.getOppositeWindow()!=null) {
-                guiInteractionManager.closeDialogs(true);
+                master.closeDialogs(true);
             }
         }
+    }
+    
+    private class SplitPaneDividerListener implements PropertyChangeListener {
+        @Override
+        public void propertyChange(PropertyChangeEvent pce) {
+        	// save new divider position
+        	master.getAirportData().storeAirportData(master);
+        };
+    }
+
+    private class MovementListener extends ComponentAdapter {
+    	@Override
+    	public void componentMoved(ComponentEvent e) {
+    		storePosition();
+    	}
+    	@Override
+    	public void componentResized(ComponentEvent e) {
+    		// TODO Auto-generated method stub
+    		storePosition();
+    	}
+    	
+    	private void storePosition() {
+        	// save new divider position
+        	master.getAirportData().storeAirportData(master);
+    	}
     }
 }

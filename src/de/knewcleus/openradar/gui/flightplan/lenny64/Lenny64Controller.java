@@ -94,7 +94,7 @@ public class Lenny64Controller {
     }
 
     public synchronized void openFlightPlan(GuiRadarContact contact) {
-		contact.getFlightPlan().setFpStatus(FlightPlanStatus.ACTIVE.toString());
+		contact.getFlightPlan().setFpStatus(FlightPlanStatus.OPEN.toString());
         lenny64Connector.openFlightPlan(master, contact);
     }
 

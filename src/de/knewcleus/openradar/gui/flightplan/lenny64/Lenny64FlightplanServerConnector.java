@@ -71,10 +71,11 @@ public class Lenny64FlightplanServerConnector {
         String callsign = contact.getCallSign();
         // http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans&callsign=
         // http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5
+        // http://flightgear-atc.alwaysdata.net/dev2017_04_28.php
         String baseUrl = data.getFpDownloadUrl();
         List<FlightPlanData> result = new ArrayList<FlightPlanData>();
 
-        log.warn("Flightplan: " + data.getCallSign() + " Going to download existing flightplans for " + callsign + " from " + baseUrl);
+        log.trace("Flightplan: " + data.getCallSign() + " Going to download existing flightplans for " + callsign + " from " + baseUrl);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -124,7 +125,7 @@ public class Lenny64FlightplanServerConnector {
                     log.error("Error while parsing flightplan from lenny64!", e);
                     result = new ArrayList<FlightPlanData>();
                 }
-                log.warn("Flightplan download processing finished. "+result.size()+" FPs found!");
+                log.trace("Flightplan download processing finished. "+result.size()+" FPs found!");
             } else {
                 log.warn("Flightplan: " + data.getCallSign() + " Failed to retrieve flightplan from lenny64! (got response code " + responseCode + " from "
                         + url.toString() + ")...");
@@ -141,7 +142,7 @@ public class Lenny64FlightplanServerConnector {
     public void openFlightPlan(GuiMasterController master, GuiRadarContact contact) {
         if(openOrCloseFlightPlan("openFlightplan", master, contact)) {
             // delete FP Data
-            contact.getFlightPlan().setFpStatus(FlightPlanStatus.ACTIVE.toString());
+            contact.getFlightPlan().setFpStatus(FlightPlanStatus.OPEN.toString());
             contact.getFlightPlan().setReadyForTransmission();
             master.getFlightPlanExchangeManager().triggerTransmission();
         }
@@ -160,9 +161,14 @@ public class Lenny64FlightplanServerConnector {
         String callsign = contact.getCallSign();
         // http://lenny64.free.fr/dev2014_01_13.php5?closeFlightplans&callsign=
         // http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5
+        // http://flightgear-atc.alwaysdata.net/dev2017_04_28.php
         String baseUrl = master.getAirportData().getFpDownloadUrl();
         AirportData data = master.getAirportData();
         String code = contact.getFlightPlan().getFlightPlanId();
+        
+        if(data.getFpDownloadEmail().trim().isEmpty()) {
+        	log.warn("Flightplan: Doing nothing because accounts name (email) is not set!"); 
+        }
         
         log.warn("Flightplan: " + data.getCallSign() + " Going to call "+method+" " + code + " for " + callsign + " from " + baseUrl);
 
@@ -170,10 +176,7 @@ public class Lenny64FlightplanServerConnector {
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         try {
-            String parameters = "ident=openradar&flightplanId="+contact.getFlightPlan().getFlightPlanId();//+"&callsign=" + URLEncoder.encode(callsign, "UTF-8") + "&airport=*"// +
-                                                                                                 // URLEncoder.encode(data.getAirportCode(),
-                                                                                                 // "UTF-8")
-                    //+ "&date=" + URLEncoder.encode(sdf.format(new Date()), "UTF-8");
+            String parameters = "email="+data.getFpDownloadEmail()+"&password="+data.getFpDownloadPassword()+"&flightplanId="+contact.getFlightPlan().getFlightPlanId();
             URL url = new URL(baseUrl + "?"+method+"&" + parameters);
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();

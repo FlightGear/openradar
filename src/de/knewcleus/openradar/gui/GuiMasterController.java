@@ -128,6 +128,10 @@ public class GuiMasterController {
         logicManager = new LogicManager(this);
     }
 
+    public MainFrame getMainFrame() {
+    	return mainFrame;
+    }
+    
     public LogWindow getLogWindow() {
         return logWindow;
     }
@@ -178,6 +182,8 @@ public class GuiMasterController {
         mainFrame.getRadarScreen().showMap(); // move map and display it
 
         logicManager.LoadLayout();
+        
+        mainFrame.restoreWindowAndDividerPosition();
     }
 
     private void initMpRadar() throws Exception {

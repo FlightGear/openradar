@@ -91,12 +91,12 @@ public class Lenny64XmlParser {
 //                    String message = eComment.getChildText("message");
 //                    messages.append(user).append(": ").append(message).append("; ");
 //                }
-                String status = eFp.getChildText("status");
-                status = status.equals("")?FlightPlanData.FlightPlanStatus.ACTIVE.toString():status.replaceAll("filed", FlightPlanData.FlightPlanStatus.FILED.toString());
+                String status = eFp.getChildText("status").toUpperCase();
+                status = status.equals("")?FlightPlanData.FlightPlanStatus.OPEN.toString():status.replaceAll("FILED", FlightPlanData.FlightPlanStatus.FILED.toString());
 //                String additionalInformation = eFp.getChildText("additionalInformation");
 //                String lastUpdated = eFp.getChildText("lastUpdated");
                 
-                if( (status.equalsIgnoreCase(FlightPlanData.FlightPlanStatus.ACTIVE.toString()) || status.equalsIgnoreCase(FlightPlanData.FlightPlanStatus.FILED.toString()))  
+                if( (status.equalsIgnoreCase(FlightPlanData.FlightPlanStatus.OPEN.toString()) || status.equalsIgnoreCase(FlightPlanData.FlightPlanStatus.FILED.toString()))  
                         /*(airportFrom.equals(data.getAirportCode()) || airportTo.equals(data.getAirportCode()) ) */
                     && (dateDeparture.equals(today) || dateArrival.equals(today))
                         ) {

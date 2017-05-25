@@ -49,7 +49,7 @@ public class FlightPlanData {
 	private UpdateStatus updateStatus = UpdateStatus.CHANGED;
 
 	public enum FlightPlanStatus {
-		FILED, ACTIVE, CLOSED, EXPIRED, DELETED
+		FILED, OPEN, CLOSED, EXPIRED, DELETED
 	};
 
 	public enum FlightType {
@@ -109,7 +109,7 @@ public class FlightPlanData {
 		this.owner = null;
 		this.handover = null;
 		this.squawk = contact.getAssignedSquawk() != null ? "" + contact.getAssignedSquawk() : null;
-		this.fpStatus = FlightPlanStatus.ACTIVE.toString();
+		this.fpStatus = FlightPlanStatus.OPEN.toString();
 		this.flags = "";
 		this.type = FlightType.IFR.toString();
 		this.aircraft = contact.getAircraftCode();
@@ -556,7 +556,7 @@ public class FlightPlanData {
 				this.assignedRunway = null;
 				this.squawk = null;
 
-				this.fpStatus = FlightPlanStatus.ACTIVE.toString();
+				this.fpStatus = FlightPlanStatus.OPEN.toString();
 				this.flightPlanId = null;
 				this.aircraft = contact.getAircraftCode();
 				// TODO: when a flightplan is closed then there shouldn't be a departure entry
@@ -582,7 +582,7 @@ public class FlightPlanData {
 				//        this.assignedRoute = null;
 				//        this.assignedRunway = null;
 				if (isOwnedByMe() || isOfferedToMe() || isOwnedbyNobody()) {
-					this.fpStatus = FlightPlanStatus.ACTIVE.toString();
+					this.fpStatus = FlightPlanStatus.OPEN.toString();
 					this.aircraft = contact.getAircraftCode();
 					this.departureAirport = (contact.getRadarContactDistanceD() < 10 && contact.getGroundSpeedD() < 5)
 							? data.getAirportCode() : "";

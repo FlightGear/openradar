@@ -838,11 +838,12 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 			return;
 		}
 
-		log.warn("initializing Dialog");
+		log.trace("initializing Dialog");
 		this.contact = contact;
 
 		setData(contact);
-		if (master.getAirportData().isFpDownloadEnabled()) {
+		if (master.getAirportData().isFpDownloadEnabled()  && 
+				(contact.getFlightPlan().getFlightPlanId()==null || contact.getFlightPlan().getFlightPlanId().isEmpty()) ) {
 			// async retrieval 
 			(new Thread(new Lenny64FpExistsChecker(master, contact, this, this.lenny64Controller.getLenny64Connector()),
 					"OpenRadar - Lenny64 Flightplan exists checker")).start();
@@ -870,11 +871,11 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 		setLocation(new Point((int) p.getX(), (int) p.getY()));
 		setVisible(true);
 		tpDetails.requestFocus();
-		log.warn("Dialog initialized");
+		log.trace("Dialog initialized");
 	}
 
 	private synchronized void setData(GuiRadarContact contact) {
-		log.warn("Running setData");
+		log.trace("Running setData");
 		if (master.getAirportData().isFpDownloadEnabled()) {
 			btRetrieveFp.setForeground(Palette.FPD_BUTTON_TEXT);
 		}
@@ -928,9 +929,9 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 
 		setFpReadable(fpd.isUncontrolled() || fpd.isOwnedByMe());
 		btCloseFp.setEnabled(master.getAirportData().isFpDownloadEnabled() && (fpd.isOwnedByMe() || fpd.isOwnedbyNobody()) 
-				&& ( fpd.getFpStatus().equals(FlightPlanStatus.FILED.toString()) || fpd.getFpStatus().toString().equals(FlightPlanStatus.ACTIVE.toString())) &&
+				&& ( fpd.getFpStatus().equalsIgnoreCase(FlightPlanStatus.FILED.toString()) || fpd.getFpStatus().toString().equalsIgnoreCase(FlightPlanStatus.OPEN.toString())) &&
 				fpd.getFlightPlanId()!=null && !fpd.getFlightPlanId().isEmpty());
-		log.warn("setData done");
+		log.trace("setData done");
 	}
 
 	/** fills the panel in fron of the reset flightplan button */
@@ -1106,7 +1107,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 	//    }
 
 	public synchronized void saveData(boolean transmit) {
-		log.warn("saving Data");
+		log.trace("saving Data");
 		synchronized (contact) {
 			FlightPlanData fpd = contact.getFlightPlan();
 
@@ -1160,7 +1161,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 				}
 			}
 		}
-		log.warn("Data saved");
+		log.trace("Data saved");
 	}
 
 	private class DetailsKeyListener extends KeyAdapter {

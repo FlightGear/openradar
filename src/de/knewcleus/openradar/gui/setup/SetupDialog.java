@@ -28,9 +28,11 @@
  */
 package de.knewcleus.openradar.gui.setup;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,12 +40,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +134,10 @@ public class SetupDialog extends JFrame {
     private JCheckBox cbEnableFpDownload;
     private JLabel lbLennysServer;
     private JTextField tfLennysFpServer;
+    private JLabel lbLennysAccountEmail;
+    private JTextField tfLennysAccountEmail;
+    private JLabel lbLennysAccountPassword;
+    private JPasswordField tfLennysAccountPassword;
     private JButton btCreateSector;
     private JButton btDeleteSector;
     private JComboBox<String> cbStatusMessages;
@@ -199,10 +207,9 @@ public class SetupDialog extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("OpenRadar - Welcome!");
-        Rectangle maxBounds = AirportData.MAX_WINDOW_SIZE;
-
-        this.setLocation((int) maxBounds.getWidth() / 2 - 300, 100);// (int) maxBounds.getHeight() / 2 - 200);
-        // this.setSize(400,600);
+        Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+        this.setLocation((int) center.x - 200, 100);
+        this.setSize(400,600);
 
         JPanel jPnlContentPane = new JPanel();
         jPnlContentPane.setLayout(new GridBagLayout());
@@ -925,13 +932,59 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
         jPnlLenny.add(tfLennysFpServer, gridBagConstraints);
 
+        lbLennysAccountEmail = new JLabel();
+        lbLennysAccountEmail.setText("FP Account");
+        lbLennysAccountEmail.setToolTipText("Your account at Lenny's server");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLenny.add(lbLennysAccountEmail, gridBagConstraints);
+
+        tfLennysAccountEmail = new JTextField();
+        tfLennysAccountEmail.setName("FPServer");
+        tfLennysAccountEmail.setToolTipText("Your account name at Lenny's server");
+        tfLennysAccountEmail.setText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLenny.add(tfLennysAccountEmail, gridBagConstraints);
+
+        lbLennysAccountPassword = new JLabel();
+        lbLennysAccountPassword.setText("FP password");
+        lbLennysAccountPassword.setToolTipText("Your password at Lenny's server");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLenny.add(lbLennysAccountPassword, gridBagConstraints);
+
+        tfLennysAccountPassword = new JPasswordField();
+        tfLennysAccountPassword.setName("FPServer");
+        tfLennysAccountPassword.setToolTipText("Your password name at Lenny's server");
+        tfLennysAccountPassword.setText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.weightx = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
+        jPnlLenny.add(tfLennysAccountPassword, gridBagConstraints);
+
         btCheckSettings2 = new JButton();
         btCheckSettings2.setText("Check Settings");
         btCheckSettings2.setName("CheckButton");
         btCheckSettings2.addActionListener(setupManager.getActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.weighty = 1;
         gridBagConstraints.anchor = GridBagConstraints.NORTH;
@@ -1478,6 +1531,9 @@ public class SetupDialog extends JFrame {
 	        if (checkUrl(tfLennysFpServer.getText().trim())) {
 	            lbLennysServer.setForeground(Palette.BLACK);
 	            data.setFpDownloadUrl(tfLennysFpServer.getText().trim());
+	            
+	            data.setFpDownloadEmail(tfLennysAccountEmail.getText().trim());
+	            data.setFpDownloadPassword(new String(tfLennysAccountPassword.getPassword()).trim());
 	        } else {
 	            lbLennysServer.setForeground(Palette.RED);
 	            dataOk = false;
@@ -1707,7 +1763,13 @@ public class SetupDialog extends JFrame {
                 cbEnableFpDownload.setSelected("true".equals(p.getProperty("fpDownload.enable")));
                 tfLennysFpServer.setText(p.getProperty("fpLenny.server", "http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5"));
                 tfLennysFpServer.setEnabled(cbEnableFpDownload.isSelected());
-                
+                tfLennysAccountEmail.setText(p.getProperty("fpLenny.email",""));
+                try {
+                	tfLennysAccountPassword.setText(new String(Base64.getDecoder().decode(p.getProperty("fpLenny.ident","")),"UTF-8"));
+        		} catch (UnsupportedEncodingException e1) {
+        			e1.printStackTrace();
+        		}
+
                 {
                     String name = p.getProperty("radar.datablockLayout");
                     if (name != null) {
@@ -1769,9 +1831,12 @@ public class SetupDialog extends JFrame {
 
         p.put("fpDownload.enable", "" + cbEnableFpDownload.isSelected());
         p.put("fpLenny.server", tfLennysFpServer.getText().trim());
-
-        p.put("radar.datablockLayout", ((ADatablockLayout) cbDataboxLayout.getSelectedItem()).getName());
-
+        p.put("fpLenny.email", tfLennysAccountEmail.getText().trim());
+        try {
+			p.put("fpLenny.ident", Base64.getEncoder().encodeToString(new String(tfLennysAccountPassword.getPassword()).getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
         p.put(GeometryToShapeProjector.TOGGLE_STATE, "" + cbNiceShapes.isSelected());
 
         p.put("layer.landmass", "" + cbLandmass.isSelected());
