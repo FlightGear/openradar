@@ -37,18 +37,16 @@ public class Lenny64FpExistsChecker implements Runnable {
     final GuiMasterController master;
     final GuiRadarContact contact;
     final FlightPlanDialog dialog;
-    final Lenny64FlightplanServerConnector connector;
     
-    public Lenny64FpExistsChecker(GuiMasterController master, GuiRadarContact contact, FlightPlanDialog dialog, Lenny64FlightplanServerConnector connector) {
+    public Lenny64FpExistsChecker(GuiMasterController master, GuiRadarContact contact, FlightPlanDialog dialog) {
         this.master=master;
         this.contact = contact;
         this.dialog = dialog;
-        this.connector = connector;
     }
 
     @Override
     public void run() {
-        boolean fpsExist = !connector.checkForFlightplan(master.getAirportData(), contact).isEmpty();
+        boolean fpsExist = !Lenny64FlightplanServerConnector.checkForFlightplan(contact).isEmpty();
         dialog.extUpdateLennysFpButton(fpsExist);
     }
 }

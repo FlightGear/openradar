@@ -66,9 +66,10 @@ public class Lenny64FlightplanServerConnector {
 
     private static final Logger log = LogManager.getLogger(Lenny64FlightplanServerConnector.class.getName());
 
-    public List<FlightPlanData> checkForFlightplan(AirportData data, GuiRadarContact contact) {
+    public static List<FlightPlanData> checkForFlightplan(GuiRadarContact contact) {
 
         String callsign = contact.getCallSign();
+        AirportData data = contact.getAirportData();
         // http://lenny64.free.fr/dev2014_01_13.php5?getFlightplans&callsign=
         // http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5
         // http://flightgear-atc.alwaysdata.net/dev2017_04_28.php
@@ -139,8 +140,8 @@ public class Lenny64FlightplanServerConnector {
         return result;
     }
 
-    public void openFlightPlan(GuiMasterController master, GuiRadarContact contact) {
-        if(openOrCloseFlightPlan("openFlightplan", master, contact)) {
+    public static void openFlightPlan(GuiMasterController master, GuiRadarContact contact) {
+        if(openOrCloseFlightPlan("openFlightplan", contact)) {
             // delete FP Data
             contact.getFlightPlan().setFpStatus(FlightPlanStatus.OPEN.toString());
             contact.getFlightPlan().setReadyForTransmission();
@@ -148,8 +149,8 @@ public class Lenny64FlightplanServerConnector {
         }
     }
 
-    public void closeFlightPlan(GuiMasterController master, GuiRadarContact contact) {
-        if(openOrCloseFlightPlan("closeFlightplan", master, contact)) {
+    public static void closeFlightPlan(GuiMasterController master, GuiRadarContact contact) {
+        if(openOrCloseFlightPlan("closeFlightplan", contact)) {
             // delete FP Data
             contact.getFlightPlan().reset();
             contact.getFlightPlan().setReadyForTransmission();
@@ -157,13 +158,13 @@ public class Lenny64FlightplanServerConnector {
         }
     }
         
-    public boolean openOrCloseFlightPlan(String method, GuiMasterController master, GuiRadarContact contact) {
+    public static boolean openOrCloseFlightPlan(String method, GuiRadarContact contact) {
         String callsign = contact.getCallSign();
         // http://lenny64.free.fr/dev2014_01_13.php5?closeFlightplans&callsign=
         // http://flightgear-atc.alwaysdata.net/dev2014_01_13.php5
         // http://flightgear-atc.alwaysdata.net/dev2017_04_28.php
-        String baseUrl = master.getAirportData().getFpDownloadUrl();
-        AirportData data = master.getAirportData();
+        AirportData data = contact.getAirportData();
+        String baseUrl = data.getFpDownloadUrl();
         String code = contact.getFlightPlan().getFlightPlanId();
         
         if(data.getFpDownloadEmail().trim().isEmpty()) {

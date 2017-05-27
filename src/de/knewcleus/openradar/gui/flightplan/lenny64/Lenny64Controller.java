@@ -36,21 +36,16 @@ import de.knewcleus.openradar.gui.contacts.FlightPlanDialog;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData.FlightPlanStatus;
-import de.knewcleus.openradar.gui.setup.AirportData;
 
 public class Lenny64Controller {
 
     private final GuiMasterController master;
     private final FlightPlanDialog dialog;
-    private final AirportData airportData;
-    private final Lenny64FlightplanServerConnector lenny64Connector;
     private final Lenny64FpSelectionDialog fpSelectionDialog;
 
-    public Lenny64Controller(GuiMasterController master, FlightPlanDialog dialog, AirportData airportData) {
+    public Lenny64Controller(GuiMasterController master, FlightPlanDialog dialog) {
         this.master = master;
-        this.airportData = airportData;
         this.dialog = dialog;
-        this.lenny64Connector = new Lenny64FlightplanServerConnector();
 
         fpSelectionDialog = new Lenny64FpSelectionDialog(this, dialog);
     }
@@ -71,7 +66,7 @@ public class Lenny64Controller {
     public synchronized void downloadFlightPlansFor(MouseEvent e, String callsign) {
 //        dialog.saveData();
         GuiRadarContact c = master.getRadarContactManager().getContactFor(callsign);
-        List<FlightPlanData> existingFPs = lenny64Connector.checkForFlightplan(airportData, c);
+        List<FlightPlanData> existingFPs = Lenny64FlightplanServerConnector.checkForFlightplan(c);
         if (existingFPs.isEmpty()) {
             dialog.setLennyButtonText("none found");
         } else {
@@ -95,14 +90,11 @@ public class Lenny64Controller {
 
     public synchronized void openFlightPlan(GuiRadarContact contact) {
 		contact.getFlightPlan().setFpStatus(FlightPlanStatus.OPEN.toString());
-        lenny64Connector.openFlightPlan(master, contact);
+		Lenny64FlightplanServerConnector.openFlightPlan(master, contact);
     }
 
     public synchronized void closeFlightPlan(GuiRadarContact contact) {
-        lenny64Connector.closeFlightPlan(master, contact);
+    	Lenny64FlightplanServerConnector.closeFlightPlan(master, contact);
     }
 
-    public synchronized Lenny64FlightplanServerConnector getLenny64Connector() {
-        return lenny64Connector;
-    }
 }

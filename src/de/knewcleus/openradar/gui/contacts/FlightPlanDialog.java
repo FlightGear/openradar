@@ -140,7 +140,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 		this.master = master;
 		this.controller = controller;
 		initComponents();
-		lenny64Controller = new Lenny64Controller(master, this, master.getAirportData());
+		lenny64Controller = new Lenny64Controller(master, this);
 	}
 
 	private void initComponents() {
@@ -845,7 +845,7 @@ public class FlightPlanDialog extends JDialog implements FocusListener {
 		if (master.getAirportData().isFpDownloadEnabled()  && 
 				(contact.getFlightPlan().getFlightPlanId()==null || contact.getFlightPlan().getFlightPlanId().isEmpty()) ) {
 			// async retrieval 
-			(new Thread(new Lenny64FpExistsChecker(master, contact, this, this.lenny64Controller.getLenny64Connector()),
+			(new Thread(new Lenny64FpExistsChecker(master, contact, this),
 					"OpenRadar - Lenny64 Flightplan exists checker")).start();
 		}
 
