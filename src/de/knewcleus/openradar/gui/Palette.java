@@ -227,7 +227,10 @@ public class Palette {
     public static final Color STRIP_CALLSIGN = Color.blue;  
     public static final Color STRIP_AIRCRAFT = Color.blue;  
     public static final Color STRIP_SQUAWK = Color.blue;  
-    public static final Color STRIP_EDIT_TEXT = Color.BLUE; 
+    public static final Color STRIP_EDIT_TEXT = Color.BLACK; 
+    public static final Color STRIP_EDIT_TEXT_FOKUSED = Color.BLUE; 
+    public static final Color STRIP_EDIT_BACKGROUND = Color.WHITE; 
+    public static final Color STRIP_EDIT_BACKGROUND_FOKUSED = Color.YELLOW; 
     public static final int STRIP_COLUMN_SPACE = 40; 
     
     // ORCam

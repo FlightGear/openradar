@@ -476,6 +476,13 @@ public class FlightStrip extends JPanel implements FocusListener {
 		return contact;
 	}
 	
+	public void selectContact () {
+		// select contact/flightstrip if edit has got the focus
+		if (!contact.isSelected()) {
+			contact.getManager().select(contact, true, false, false);
+		}		
+	}
+	
 	public void moveToPosition(SectionData section, int column) {
 		SectionData oldsection = this.section;
 		// execute exit actions
@@ -516,16 +523,13 @@ public class FlightStrip extends JPanel implements FocusListener {
 	
 	@Override
 	public void focusGained(FocusEvent e) {
-		// select contact/flightstrip if edit has got the focus
-		if (!contact.isSelected()) {
-			contact.getManager().select(contact, true, false, false);
-		}
-		if (e.getSource() instanceof Edit) ((Edit)e.getSource()).selectAll();
+		selectContact ();
+		//		if (e.getSource() instanceof Edit) ((Edit)e.getSource()).selectAll();
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		((UserChange)e.getSource()).resetUserChange();
+//		((UserChange)e.getSource()).resetUserChange();
 	}
 
 	public boolean isPending() {
@@ -536,12 +540,6 @@ public class FlightStrip extends JPanel implements FocusListener {
 		this.pending = pending;
 	}
 
-	// =====================================================
-
-	protected interface UserChange {
-		public abstract void resetUserChange();
-	}
-	
 	// =====================================================
 	
 	protected class Label extends JLabel {
@@ -676,11 +674,12 @@ public class FlightStrip extends JPanel implements FocusListener {
 	
 	// =====================================================
 	
-	protected class Edit extends JTextField implements DocumentListener, ActionListener, UserChange {
+	protected class Edit extends JTextField implements DocumentListener, ActionListener, FocusListener {
 
 		private static final long serialVersionUID = -2089161153316588661L;
 		
 		private boolean userChange = false;
+		private boolean keyTyped = true;
 		
 		public Edit() {
 			super();
@@ -689,7 +688,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 			setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
 			getDocument().addDocumentListener(this);
 			addActionListener(this);
-			addFocusListener(FlightStrip.this);
+			addFocusListener(this);
 		}
 
 		@Override
@@ -697,9 +696,21 @@ public class FlightStrip extends JPanel implements FocusListener {
 			if (!userChange) {
 				if (text == null) text = "";
 				if (!text.equals(getText())) {
+					keyTyped = false;
 					super.setText(text);
-					resetUserChange();
+					keyTyped = true;
 				}
+			}
+		}
+		
+		protected void setUserChange (boolean Value) {
+			userChange = Value;
+			if (userChange) {
+				setForeground(Palette.STRIP_EDIT_TEXT_FOKUSED);
+				setBackground(Palette.STRIP_EDIT_BACKGROUND_FOKUSED);
+			} else {
+				setForeground(Palette.STRIP_EDIT_TEXT);
+				setBackground(Palette.STRIP_EDIT_BACKGROUND);
 			}
 		}
 		
@@ -707,34 +718,42 @@ public class FlightStrip extends JPanel implements FocusListener {
 		
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			userChange = true;
+			setUserChange (keyTyped);
 		}
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			userChange = true;
+			setUserChange (keyTyped);
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			userChange = true;
+			setUserChange (keyTyped);
 		}
 
 		// --- ActionListener ---
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			userChange = false;
+			setUserChange (false);
 			updateFlightPlanDataFromEdit(e);
 		}
 
-		// --- UserChange ---
+		// --- FocusListener ---
 		
 		@Override
-		public void resetUserChange() {
-			userChange = false;
+		public void focusGained(FocusEvent e) {
+			selectContact();
+			selectAll();
 		}
-		
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			if (e.getComponent().equals(this)) {
+				setUserChange (false);
+			}
+		}
+
 	}
 	
 	// =====================================================
@@ -787,11 +806,12 @@ public class FlightStrip extends JPanel implements FocusListener {
 	
 	// =====================================================
 	
-	protected class EditArea extends JTextArea implements DocumentListener, KeyListener, UserChange {
+	protected class EditArea extends JTextArea implements DocumentListener, KeyListener, FocusListener {
 
 		private static final long serialVersionUID = -2089161153316588661L;
 		
 		private boolean userChange = false;
+		private boolean keyTyped = true;
 		
 		public EditArea() {
 			super();
@@ -802,7 +822,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 			setWrapStyleWord(true);
 			getDocument().addDocumentListener(this);
 			addKeyListener(this);
-			addFocusListener(FlightStrip.this);
+			addFocusListener(this);
 		}
 
 		@Override
@@ -810,26 +830,39 @@ public class FlightStrip extends JPanel implements FocusListener {
 			if (!userChange) {
 				if (text == null) text = "";
 				if (!text.equals(getText())) {
+					keyTyped = false;
 					super.setText(text);
+					keyTyped = true;
 				}
 			}
 		}
 
+		protected void setUserChange (boolean Value) {
+			userChange = Value;
+			if (userChange) {
+				setForeground(Palette.STRIP_EDIT_TEXT_FOKUSED);
+				setBackground(Palette.STRIP_EDIT_BACKGROUND_FOKUSED);
+			} else {
+				setForeground(Palette.STRIP_EDIT_TEXT);
+				setBackground(Palette.STRIP_EDIT_BACKGROUND);
+			}
+		}
+		
 		// --- DocumentListener ---
 		
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			userChange = true;
+			setUserChange (keyTyped);
 		}
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			userChange = true;
+			setUserChange (keyTyped);
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			userChange = true;
+			setUserChange (keyTyped);
 		}
 
 		// --- KeyListener ---
@@ -837,7 +870,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-				userChange = false;
+				setUserChange (false);
 				updateFlightPlanDataFromEdit(e);
 				e.consume();
 			}
@@ -851,11 +884,18 @@ public class FlightStrip extends JPanel implements FocusListener {
 		public void keyTyped(KeyEvent e) {
 		}
 
-		// --- UserChange ---
+		// --- FocusListener ---
 		
 		@Override
-		public void resetUserChange() {
-			userChange = false;
+		public void focusGained(FocusEvent e) {
+			selectContact();
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			if (e.getComponent().equals(this)) {
+				setUserChange (false);
+			}
 		}
 
 	}
@@ -1004,8 +1044,8 @@ public class FlightStrip extends JPanel implements FocusListener {
 		}
 		
 		public void copyLabelToEdit() {
-			edit.resetUserChange();
-			setEditText(label.getValue()); // TODO
+			edit.setUserChange (false);
+			setEditText(label.getValue());
 			edit.actionPerformed(new ActionEvent(edit, 0, null));
 		}
 		
