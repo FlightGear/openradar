@@ -84,7 +84,7 @@ public class Lenny64Controller {
         synchronized (c) {
             c.setFlightPlan(lenny64Flightplan);
             dialog.setLennyButtonText("(loaded)");
-            dialog.extUpdateUI(c, false);
+            dialog.extUpdateUI(c, true);
         }
     }
 
