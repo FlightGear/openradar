@@ -35,6 +35,7 @@ import de.knewcleus.openradar.gui.Palette;
 import de.knewcleus.openradar.gui.contacts.FgComSupportSymbol;
 import de.knewcleus.openradar.gui.contacts.GuiRadarContact;
 import de.knewcleus.openradar.gui.flightplan.FlightPlanData;
+import de.knewcleus.openradar.gui.flightplan.lenny64.Lenny64FlightplanServerConnector;
 import de.knewcleus.openradar.gui.flightstrips.ListDialog.ListDialogListener;
 
 /* FlightStrip is a visual component 
@@ -66,6 +67,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 	private Label              cFrequency;
 	private EditLabel          cSquawk;
 	private AtcComponent       cATC;
+	private Label              cOnlineFlightplan;
 	private Label              cDistance;
 	private EditLabel          cAltitude;
 	private EditLabel          cHeading;
@@ -91,9 +93,20 @@ public class FlightStrip extends JPanel implements FocusListener {
 	private boolean rowsVisible = false;
 	private boolean row3Visible = true;
 	
+	private final FlightplanOnlineChecker fpoChecker;
+	private boolean fpoCheckAgain      = true;
+	private boolean flightplanIsOnline = false;
+
 	public FlightStrip(GuiRadarContact contact) {
 		this.contact = contact;
 		contact.setFlightstrip(this);
+		if (contact.getAirportData().isFpDownloadEnabled()) {
+			fpoChecker = new FlightplanOnlineChecker();
+			fpoChecker.setDaemon(true);
+			fpoChecker.start();
+		} else {
+			fpoChecker = null;
+		}
 		// design and layout
 		setOpaque(true);
 		setBorder(BorderFactory.createLineBorder(Palette.BLACK));
@@ -158,6 +171,10 @@ public class FlightStrip extends JPanel implements FocusListener {
 			}
 		});
 		cATC                = new AtcComponent(" -> ", "", "");
+		cOnlineFlightplan   = new Label("");
+		cOnlineFlightplan.setFont(Palette.STRIP_FONT_BOLD);
+		cOnlineFlightplan.setText("FP");
+		cOnlineFlightplan.setVisible(false);
 		cDistance           = new Label("--");
 		cAltitude           = new EditLabel(new AltitudeEdit(), " ", "", null, "");
 		cHeading            = new EditLabel(new HeadingEdit(), " ", "", null, "°");
@@ -216,6 +233,8 @@ public class FlightStrip extends JPanel implements FocusListener {
 		rowConstraints.fill = GridBagConstraints.HORIZONTAL;
 		rowConstraints.gridx++;
 		row.add(cATC, rowConstraints);
+		rowConstraints.gridx++;
+		row.add(cOnlineFlightplan, rowConstraints);
 		rowConstraints.gridx++;
 		row.add(showRows, rowConstraints);
 		rowConstraints.gridx = 0;
@@ -296,6 +315,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 	}
 	
 	public void updateContents() {
+		fpoCheckAgain = true;
 		setBackground(contact.getFlightPlan().isOfferedToMe() ? Palette.STRIP_BACKGROUND_OFFERED  :     
 	                 (contact.isNew()                         ? Palette.STRIP_BACKGROUND_NEW      :     
 			         (contact.isSelected()                    ? Palette.STRIP_BACKGROUND_SELECTED : 
@@ -355,6 +375,7 @@ public class FlightStrip extends JPanel implements FocusListener {
 		cComments.setEnabled(edit_enabled);
 		// row 1
 		cATC.setData(fpd);
+		cOnlineFlightplan.setVisible(flightplanIsOnline && contact.getFlightPlan().getDestinationAirport().isEmpty());
 		// row 2
 		cAltitude.setEditText(formatAltitude(AltitudeFeet(fpd.getAssignedAltitude())));
 		cFlightrules.setText(fpd.getType());
@@ -1148,6 +1169,28 @@ public class FlightStrip extends JPanel implements FocusListener {
 		public void mouseReleased(MouseEvent e) {
 		}
 		
+	}
+
+	// =====================================================
+
+	protected class FlightplanOnlineChecker extends Thread {
+
+		public void run() {
+			setName("OpenRadar - Flightstrip - FlightplanOnlineChecker - " + contact.getCallSign());
+
+			while (fpoCheckAgain) {
+				fpoCheckAgain = false;
+				System.out.printf("FlightplanOnlineCheck for %s: dest=%s|\n", contact.getCallSign(), contact.getFlightPlan().getDestinationAirport());
+				if (contact.getFlightPlan().getDestinationAirport().isEmpty()) {
+					flightplanIsOnline = !Lenny64FlightplanServerConnector.checkForFlightplan(contact).isEmpty();
+				}
+				try {
+					Thread.sleep(30000);
+				} catch (InterruptedException e) {
+				}
+			}
+			System.out.printf("FlightplanOnlineCheck for %s terminated!\n", contact.getCallSign());
+		}
 	}
 
 }
