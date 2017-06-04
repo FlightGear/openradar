@@ -718,6 +718,8 @@ public class AirportData implements INavPointListener {
 
             antennaRotationTime = Integer.parseInt(props.getProperty("antennaRotationTime", "1000"));
 
+            master.getFgfsController1().loadData(props);
+            
             if(props.getProperty("fgfs.mainFrame.bounds.x")!=null) {
             	mainFrameLastBounds = new Rectangle(Integer.parseInt(props.getProperty("fgfs.mainFrame.bounds.x")),
             										Integer.parseInt(props.getProperty("fgfs.mainFrame.bounds.y")),

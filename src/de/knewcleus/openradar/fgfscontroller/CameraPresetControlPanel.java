@@ -76,6 +76,7 @@ public class CameraPresetControlPanel extends JPanel {
         
         lbP1 = new JLabel("P1");
         lbP1.setName("P1");
+        lbP1.setToolTipText("Click to select camera preset. Right click to store camera preset.");
         lbP1.addMouseListener(fsMouseListener);
         
         GridBagConstraints gbc = new GridBagConstraints();
@@ -87,6 +88,7 @@ public class CameraPresetControlPanel extends JPanel {
 
         lbP2 = new JLabel("P2");
         lbP2.setName("P2");
+        lbP2.setToolTipText("Click to select camera preset. Right click to store camera preset.");
         lbP2.addMouseListener(fsMouseListener);
         
         gbc = new GridBagConstraints();
@@ -98,6 +100,7 @@ public class CameraPresetControlPanel extends JPanel {
 
         lbP3 = new JLabel("P3");
         lbP3.setName("P3");
+        lbP3.setToolTipText("Click to select camera preset. Right click to store camera preset.");
         lbP3.addMouseListener(fsMouseListener);
         
         gbc = new GridBagConstraints();
@@ -109,6 +112,7 @@ public class CameraPresetControlPanel extends JPanel {
 
         lbP4 = new JLabel("P4");
         lbP4.setName("P4");
+        lbP4.setToolTipText("Click to select camera preset. Right click to store camera preset.");
         lbP4.addMouseListener(fsMouseListener);
         
         gbc = new GridBagConstraints();
@@ -120,6 +124,7 @@ public class CameraPresetControlPanel extends JPanel {
 
         lbP5 = new JLabel("P5");
         lbP5.setName("P5");
+        lbP5.setToolTipText("Click to select camera preset. Right click to store camera preset.");
         lbP5.addMouseListener(fsMouseListener);
         
         gbc = new GridBagConstraints();
@@ -181,8 +186,7 @@ public class CameraPresetControlPanel extends JPanel {
                         fgfsController.activatePreset(sourceName);
                         displaySelectedPreset((JLabel) e.getSource());
                         
-                    } else if(e.getButton()==MouseEvent.BUTTON2) {
-                        
+                    } else {
                         fgfsController.savePreset(sourceName);
                         displaySelectedPreset((JLabel) e.getSource());
                     }
