@@ -186,7 +186,7 @@ public class MetarData {
                     parsePressureInHG(t);
                 else if (t.matches("^Q[\\d]{4}$"))
                     parsePressureHPa(t);
-                else if (t.matches("[M]{0,1}^[\\d]{2}/[M]{0,1}[\\d]{2}$"))
+                else if (t.matches("^[M]{0,1}[\\d]{2}/[M]{0,1}[\\d]{2}$"))
                     parseTemperatures(t); // todo M1/M4
                 else if (t.matches("^RMK$"))
                     break; // means "national information follow
