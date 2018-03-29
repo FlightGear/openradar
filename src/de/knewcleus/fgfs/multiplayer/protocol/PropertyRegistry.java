@@ -1,6 +1,7 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * 
+ * Copyright (C) 2018 Wolfram Wagner
+ *
  * This file is part of OpenRadar.
  * 
  * OpenRadar is free software: you can redistribute it and/or modify it under
@@ -32,17 +33,25 @@
  */
 package de.knewcleus.fgfs.multiplayer.protocol;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 
 public class PropertyRegistry {
+
+	public enum DataType {
+		NONE,ALIAS,BOOL,INT,SHORTINT,LONG,FLOAT,SHORT_FLOAT_NORM,SHORT_FLOAT_1,SHORT_FLOAT_2,SHORT_FLOAT_3,SHORT_FLOAT_4,DOUBLE,STRING,UNSPECIFIED,TT_BOOLARRAY;
+	}
+	
 	protected static Logger log = LogManager.getLogger("de.knewcleus.fgfs.multiplayer");
 	protected static PropertyRegistry instance;
 	
@@ -50,29 +59,27 @@ public class PropertyRegistry {
 	protected final Map<Integer, PropertyDescriptor> descriptorsByID=new HashMap<Integer, PropertyDescriptor>();
 	
 	protected PropertyRegistry() {
-		InputStream inputStream=PropertyRegistry.class.getResourceAsStream("propertytypes.properties");
-		Properties properties=new Properties();
+		InputStream inputStream=PropertyRegistry.class.getResourceAsStream("propertytypes.csv");
+
 		try {
-			properties.load(inputStream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+			String line;
+			while(null != (line = br.readLine())) {
+				StringTokenizer t = new StringTokenizer(line, ",");
+				int id = Integer.parseInt(t.nextToken());
+				String prop = t.nextToken();
+				DataType type = DataType.valueOf(t.nextToken());
+				String sTransType = t.nextToken();
+				DataType transType = ("same".equals(sTransType)) ? type : DataType.valueOf(sTransType);
+				String proto = t.nextToken();
+				
+				PropertyDescriptor descriptor=new PropertyDescriptor(id,prop,type,transType,proto);
+				descriptorsByName.put(prop,descriptor);
+				descriptorsByID.put(id,descriptor);
+			}
 		} catch (IOException e) {
 			log.warn("Failed to load multiplayer propertytypes");
 			return;
-		}
-		
-		int count=Integer.parseInt(properties.getProperty("propertytypes","0"));
-		
-		for (int i=1;i<=count;i++) {
-			String prefix="propertytype."+i;
-			
-			int id=Integer.parseInt(properties.getProperty(prefix+".id"));
-			String name=properties.getProperty(prefix+".name");
-			PropertyType type=PropertyType.valueOf(properties.getProperty(prefix+".type","UNSPECIFIED"));
-			if (type==null)
-				type=PropertyType.UNSPECIFIED;
-			
-			PropertyDescriptor descriptor=new PropertyDescriptor(id,name,type);
-			descriptorsByName.put(name,descriptor);
-			descriptorsByID.put(id,descriptor);
 		}
 	}
 	

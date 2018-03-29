@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013,2015,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -116,12 +116,12 @@ public class PureSimulationLayout extends ADatablockLayout {
                 Integer squawk = c.getTranspSquawkCode();
                 sb.append(String.format("%s %2s",squawk == -9999 ? "----" : squawk,c.getMagnCourse())).append("\n");
                 sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
-                sb.append(String.format("%02.0f",c.getGroundSpeedD()/10));
+                sb.append(String.format("G%03.0f",c.getGroundSpeedD()));
             } else {
                 // squawk codes match
                 sb.append(String.format("%s %2s",c.getCallSign(),c.getMagnCourse())).append("\n");
                 sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
-                sb.append(String.format("%02.0f",c.getGroundSpeedD()/10)).append("\n");
+                sb.append(String.format("G%03.0f",c.getGroundSpeedD())).append("\n");
                 sb.append(c.getAircraftCode());
             }
             setAltSpeedIndex(currentAltSpeedIndex);

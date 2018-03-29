@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -56,7 +56,7 @@ public class MpChatPanel extends javax.swing.JPanel {
 
     private javax.swing.JLabel lbMpShowAll;
     private javax.swing.JLabel lbMpShowFreq;
-    private javax.swing.JLabel lbMpShowSect;
+    private javax.swing.JLabel lbMpShowRange;
     private javax.swing.JLabel lbMpShowACT;
     private javax.swing.JLabel lbMpShowVisible;
     private javax.swing.JList<GuiChatMessage> liMPChatHistory;
@@ -75,7 +75,7 @@ public class MpChatPanel extends javax.swing.JPanel {
 
         lbMpShowAll = new javax.swing.JLabel();
         lbMpShowFreq = new javax.swing.JLabel();
-        lbMpShowSect = new javax.swing.JLabel();
+        lbMpShowRange = new javax.swing.JLabel();
         lbMpShowVisible = new javax.swing.JLabel();
         lbMpShowACT = new javax.swing.JLabel();
         tfMPChatInput = new javax.swing.JTextField();
@@ -86,7 +86,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         setBackground(Palette.DESKTOP);
 
         lbMpShowAll.setFont(Palette.DESKTOP_FONT); // NOI18N
-        lbMpShowAll.setForeground(Palette.CHAT_BUTTON_ALL);
+        lbMpShowAll.setForeground(Palette.CHAT_TEXT);
         lbMpShowAll.setText("ALL");
         lbMpShowAll.setName("ALL");
         lbMpShowAll.setToolTipText("Show all messages");
@@ -96,7 +96,6 @@ public class MpChatPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
         gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
         add(lbMpShowAll, gridBagConstraints);
-
         lbMpShowAll.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
         // frequencies are not transmitted
         // lbMpShowFreq.setFont(Palette.DESKTOP_FONT); // NOI18N
@@ -113,18 +112,19 @@ public class MpChatPanel extends javax.swing.JPanel {
         //
         // lbMpShowFreq.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
 
-        // lbMpShowSect.setFont(Palette.DESKTOP_FONT); // NOI18N
-        // lbMpShowSect.setText("RNG");
-        // lbMpShowSect.setName("RNG");
-        // lbMpShowSect.setToolTipText("Show only messages of contacts in radar range");
-        // gridBagConstraints = new java.awt.GridBagConstraints();
-        // gridBagConstraints.gridx = 2;
-        // gridBagConstraints.gridy = 0;
-        // gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
-        // gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-        // add(lbMpShowSect, gridBagConstraints);
-        //
-        // lbMpShowSect.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
+         lbMpShowRange.setFont(Palette.DESKTOP_FONT); // NOI18N
+         lbMpShowRange.setForeground(Palette.CHAT_TEXT);
+         lbMpShowRange.setText("RNG");
+         lbMpShowRange.setName("RNG");
+         lbMpShowRange.setToolTipText("Show only messages of contacts in radar range");
+         gridBagConstraints = new java.awt.GridBagConstraints();
+         gridBagConstraints.gridx = 2;
+         gridBagConstraints.gridy = 0;
+         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
+         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
+         add(lbMpShowRange, gridBagConstraints);
+        
+         lbMpShowRange.addMouseListener(guiInteractionManager.getMpChatManager().getFilterMouseListener());
 
 //        lbMpShowVisible.setFont(Palette.DESKTOP_FONT); // NOI18N
 //        lbMpShowVisible.setText("VIS");
@@ -144,7 +144,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         lbMpShowACT.setText("SEL");
         lbMpShowACT.setName("SEL");
         lbMpShowACT.setToolTipText("Show only messages of the SELECTED contact");
-        lbMpShowACT.setForeground(Palette.CHAT_BUTTON_SELECTED);
+        lbMpShowACT.setForeground(Palette.CHAT_TEXT);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
@@ -173,7 +173,7 @@ public class MpChatPanel extends javax.swing.JPanel {
         liMPChatHistory.setModel(guiInteractionManager.getMpChatManager());
         liMPChatHistory.setCellRenderer(new MpChatListCellRenderer(guiInteractionManager));
         liMPChatHistory.setBackground(Palette.CHAT_BACKGROUND);
-        liMPChatHistory.setForeground(Palette.DESKTOP_TEXT);
+        liMPChatHistory.setForeground(Palette.CHAT_TEXT);
         liMPChatHistory.setDragEnabled(true);
         spMPChatHistory.setViewportView(liMPChatHistory);
         guiInteractionManager.getMpChatManager().setChatHistory(liMPChatHistory);
@@ -234,27 +234,31 @@ public class MpChatPanel extends javax.swing.JPanel {
 
         lbMpShowAll.setForeground(Palette.CHAT_TEXT);
         lbMpShowFreq.setForeground(Palette.CHAT_TEXT);
-        lbMpShowSect.setForeground(Palette.CHAT_TEXT);
+        lbMpShowRange.setForeground(Palette.CHAT_TEXT);
         lbMpShowVisible.setForeground(Palette.CHAT_TEXT);
         lbMpShowACT.setForeground(Palette.CHAT_TEXT);
 
         // and set it
         switch(filter) {
         case FILTER_NONE:
-           lbMpShowAll.setForeground(Palette.CHAT_FILTER_NONE);
+           lbMpShowAll.setForeground(Palette.DESKTOP_FILTER_SELECTED);
            break;
         case FILTER_FREQUENCY:
-            lbMpShowFreq.setForeground(Palette.CHAT_FILTER_FREQUENCY);
+            lbMpShowFreq.setForeground(Palette.DESKTOP_FILTER_SELECTED);
             break;
          case FILTER_RANGE:
-             lbMpShowSect.setForeground(Palette.CHAT_FILTER_RANGE);
+             lbMpShowRange.setForeground(Palette.DESKTOP_FILTER_SELECTED);
              break;
          case FILTER_VISIBLE:
-             lbMpShowVisible.setForeground(Palette.CHAT_FILTER_VISIBLE);
+             lbMpShowVisible.setForeground(Palette.DESKTOP_FILTER_SELECTED);
              break;
          case FILTER_SELECTED_USER:
-             lbMpShowACT.setForeground(Palette.CHAT_FILTER_SELECTED_USER);
+             lbMpShowACT.setForeground(Palette.DESKTOP_FILTER_SELECTED);
              break;
         }
+    }
+    
+    public void forceRepaint() {
+    	liMPChatHistory.repaint();
     }
 }

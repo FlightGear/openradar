@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Wolfram Wagner 
+ * Copyright (C) 2012,2018 Wolfram Wagner 
  * 
  * This file is part of OpenRadar.
  * 
@@ -133,6 +133,10 @@ public class MpChatListCellRenderer extends JComponent implements ListCellRender
              } else if(value.isAirportMentioned()) {
                  // airport mentioned in contact message
                  foreground = Palette.CHAT_AIRPORT_MENTIONED;
+                 
+             } else if(value.isOutsideFlightstripRange(master)) {
+                 // airport mentioned in contact message
+                 foreground = Palette.CHAT_OUTSIDE_FS_RANGE;
                  
              } else {
                  // default

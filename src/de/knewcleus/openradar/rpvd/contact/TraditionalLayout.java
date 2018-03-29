@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2015 Wolfram Wagner
+ * Copyright (C) 2013,2015,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -139,7 +139,7 @@ public class TraditionalLayout extends ADatablockLayout {
         setAltSpeedIndex(2);
         return  String.format("%s %2s",c.getCallSign(),c.getMagnCourse())  +"\n"+
                 c.getModel()+" "+addData+"\n"+
-                String.format("%1s %2s", c.getFlightLevel(),c.getGroundSpeed());
+                String.format("%1s G%03.0f", c.getFlightLevel(),c.getGroundSpeedD());
     }
 
     private String getAddData(GuiRadarContact c) {

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012-2016 Wolfram Wagner
+ * Copyright (C) 2012-2016,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -170,7 +170,7 @@ public class Player {
 		linearVelocity=packet.getLinearVelocity();
 		model=packet.getModel();
         String freq = (String)packet.getProperty("sim/multiplay/transmission-freq-hz");
-        if(freq!=null) {
+        if(freq!=null && freq.length()>0) {
             BigDecimal bdFreq = new BigDecimal(freq);
             bdFreq = bdFreq.divide(new BigDecimal(1000000));
             frequency = String.format("%1.3f", bdFreq);

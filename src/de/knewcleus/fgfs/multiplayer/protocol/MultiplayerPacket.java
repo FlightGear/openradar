@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012 Wolfram Wagner
+ * Copyright (C) 2012,2018 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -52,15 +52,17 @@ public class MultiplayerPacket {
 	
 	protected final boolean isRelay;
 	protected final String callsign;
+	protected final int radarRange;
 	protected final IMultiplayerMessage message;
 	
-	public MultiplayerPacket(String callsign, IMultiplayerMessage message) {
-		this(callsign,message,false);
+	public MultiplayerPacket(String callsign, int radarRange, IMultiplayerMessage message) {
+		this(callsign,radarRange,message,false);
 	}
 	
-	public MultiplayerPacket(String callsign, IMultiplayerMessage message, boolean isRelay) {
+	public MultiplayerPacket(String callsign, int radarRange, IMultiplayerMessage message, boolean isRelay) {
 		this.isRelay=isRelay;
 		this.callsign=callsign;
+		this.radarRange = radarRange;
 		this.message=message;
 	}
 	
@@ -88,7 +90,7 @@ public class MultiplayerPacket {
 			outputStream.writeInt(PROTO_VER);
 			outputStream.writeInt(message.getMessageID());
 			outputStream.writeInt(getLength());
-			outputStream.writeInt(0); 	// replyAddress is obsolete
+			outputStream.writeInt(radarRange); 	// RequestedRangeNm
 			outputStream.writeInt(0); 	// replyPort is obsolete
 			MPUtils.writeCString(outputStream, callsign, MAX_CALLSIGN_LEN);
 			message.encode(outputStream);
@@ -98,7 +100,7 @@ public class MultiplayerPacket {
 	}
 	
 	public static MultiplayerPacket decode(XDRInputStream inputStream) throws MultiplayerException {
-		int magic, id;
+		int magic, id, radarRange;
 		String callsign;
 		try {
 			magic = inputStream.readInt();
@@ -121,7 +123,8 @@ public class MultiplayerPacket {
 				throw new MultiplayerException("Invalid packet size:"+msgLen);
 			}
 			
-			inputStream.skip(8); // replyAddress and replyPort are obsolete
+			radarRange = inputStream.readInt();
+			inputStream.skip(4); // replyPort are obsolete
 			
 			callsign=MPUtils.readCString(inputStream, MAX_CALLSIGN_LEN);
 		} catch (IOException e) {
@@ -143,7 +146,7 @@ public class MultiplayerPacket {
 		
 		message.decode(inputStream);
 		
-		return new MultiplayerPacket(callsign, message, (magic==RELAY_MAGIC));
+		return new MultiplayerPacket(callsign, radarRange, message, (magic==RELAY_MAGIC));
 	}
 	
 	@Override

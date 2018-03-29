@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
- * Copyright (C) 2012-2016 Wolfram Wagner
+ * Copyright (C) 2012-2016,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -39,6 +39,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import de.knewcleus.fgfs.location.Ellipsoid;
 import de.knewcleus.fgfs.location.GeodesicUtils;
@@ -284,46 +286,49 @@ public class RadarTargetView implements IBoundedView, INotificationListener, IFo
     }
 
     protected synchronized void updateDisplayPositions() {
-        
-        /* Ensure that the formerly occupied region is repainted */
-        radarMapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
-
-        final AffineTransform logical2device = radarMapViewAdapter.getLogicalToDeviceTransform();
-        logical2device.transform(currentLogicalPosition, currentDevicePosition);
-
-        // true course because map is displayed in true degrees
-//        double trueCourse = (trackDisplayState.guiContact != null) ? trackDisplayState.guiContact.getHeadingD() : 0;
-        double trueCourse = (trackDisplayState.guiContact != null) ? trackDisplayState.guiContact.getTrueCourseD() : 0;
-
-        Point2D headingLineStart = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 4d);
-        Point2D headingLineEnd = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 7d + trackDisplayState.getTrack().getCurrentState()
-                .getCalculatedVelocity() / 2);
-        displayHeadingLine = new Line2D.Double(headingLineStart, headingLineEnd);
-        displayExtents = displayHeadingLine.getBounds2D();
-
-        // update data
-
-        // the dots
-        List<IRadarDataPacket> history = trackDisplayState.getTrack().getCopyOfHistory();
-        
-        ContactShape currentShape = history.get(0).getContactShape(); 
-        master.getAirportData().getDatablockLayoutManager().getActiveLayout().modify(currentShape, trackDisplayState.getGuiContact());
-
-        
-        for (int i = 0; i<history.size(); ++i) {
-            final IRadarDataPacket radarDataPacket = history.get(i);
-            final Point2D displayPosition = logical2device.transform(radarDataPacket.getContactShape().getLogicalPosition(), null);
-            
-            radarDataPacket.getContactShape().setDisplayPosition(displayPosition);
-            Rectangle2D.union(radarDataPacket.getContactShape().getBounds2D(), displayExtents, displayExtents);
-            
+        try {
+	        /* Ensure that the formerly occupied region is repainted */
+	        radarMapViewAdapter.getUpdateManager().markRegionDirty(displayExtents);
+	
+	        final AffineTransform logical2device = radarMapViewAdapter.getLogicalToDeviceTransform();
+	        logical2device.transform(currentLogicalPosition, currentDevicePosition);
+	
+	        // true course because map is displayed in true degrees
+	//        double trueCourse = (trackDisplayState.guiContact != null) ? trackDisplayState.guiContact.getHeadingD() : 0;
+	        double trueCourse = (trackDisplayState.guiContact != null) ? trackDisplayState.guiContact.getTrueCourseD() : 0;
+	
+	        Point2D headingLineStart = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 4d);
+	        Point2D headingLineEnd = Converter2D.getMapDisplayPoint(currentDevicePosition, trueCourse, 7d + trackDisplayState.getTrack().getCurrentState()
+	                .getCalculatedVelocity() / 2);
+	        displayHeadingLine = new Line2D.Double(headingLineStart, headingLineEnd);
+	        displayExtents = displayHeadingLine.getBounds2D();
+	
+	        // update data
+	
+	        // the dots
+	        List<IRadarDataPacket> history = trackDisplayState.getTrack().getCopyOfHistory();
+	        
+	        ContactShape currentShape = history.get(0).getContactShape(); 
+	        master.getAirportData().getDatablockLayoutManager().getActiveLayout().modify(currentShape, trackDisplayState.getGuiContact());
+	
+	        
+	        for (int i = 0; i<history.size(); ++i) {
+	            final IRadarDataPacket radarDataPacket = history.get(i);
+	            final Point2D displayPosition = logical2device.transform(radarDataPacket.getContactShape().getLogicalPosition(), null);
+	            
+	            radarDataPacket.getContactShape().setDisplayPosition(displayPosition);
+	            Rectangle2D.union(radarDataPacket.getContactShape().getBounds2D(), displayExtents, displayExtents);
+	            
+	        }
+	        // compose description field for contact
+	        Rectangle2D.union(contactTextPainter.getDisplayExtents(currentDevicePosition), displayExtents, displayExtents);
+	
+	        if(trackDisplayState.getTrack().getTailOffset()>=distance)  trackDisplayState.getTrack().resetTailOffset();
+	
+	        repaint();
+        } catch(Exception e) {
+        	Logger.getLogger(RadarTargetView.class).error("Error while updating display position",e);
         }
-        // compose description field for contact
-        Rectangle2D.union(contactTextPainter.getDisplayExtents(currentDevicePosition), displayExtents, displayExtents);
-
-        if(trackDisplayState.getTrack().getTailOffset()>=distance)  trackDisplayState.getTrack().resetTailOffset();
-
-        repaint();
     }
 
     @Override

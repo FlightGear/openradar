@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -105,6 +105,10 @@ public class GuiChatMessage {
         return isOwnMessage;
     }
 
+    public boolean isOutsideFlightstripRange(GuiMasterController master) {
+		return knownRadarContact!=null && (knownRadarContact.getRadarContactDirectionD()>master.getAirportData().getFlightStripRadarRange());
+	}
+
     public String getFrequency() {
         return frequency;
     }
@@ -125,4 +129,5 @@ public class GuiChatMessage {
             return message.contains(selectedContact.getCallSign());
         }
     }
+
 }

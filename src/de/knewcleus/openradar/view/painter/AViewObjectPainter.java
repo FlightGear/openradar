@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -115,7 +115,7 @@ public abstract class AViewObjectPainter<T> {
         else if(navPoint instanceof TaxiWaySegment) viewObjectPainter = new TaxiWayPainter(data,mapViewAdapter, (TaxiWaySegment) navPoint);
         else if(navPoint instanceof TaxiSign) viewObjectPainter = new TaxiSignPainter(mapViewAdapter, (TaxiSign) navPoint);
 
-        else if(navPoint instanceof AirportData) viewObjectPainter = new AtcObjectsPainter(mapViewAdapter, (AirportData) navPoint);
+        else if(navPoint instanceof AirportData) viewObjectPainter = new AtcObjectsPainter(mapViewAdapter, (AirportData) navPoint, master);
 
         else {
             throw new IllegalStateException("Unknown object type to paint "+navPoint.getClass()+" ! Please add a painter!");

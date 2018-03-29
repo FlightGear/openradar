@@ -1,5 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich 
+ * Copyright (C) 2018 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -35,12 +36,17 @@ package de.knewcleus.fgfs.multiplayer.protocol;
 public class PropertyDescriptor {
 	protected final int propertyID;
 	protected final String propertyName;
-	protected final PropertyType type;
+	protected final PropertyRegistry.DataType type;
+	protected final PropertyRegistry.DataType transType;
+	protected final String protocol;
 	
-	public PropertyDescriptor(int propertyID, String propertyName, PropertyType type) {
+	public PropertyDescriptor(int propertyID, String propertyName, PropertyRegistry.DataType type, PropertyRegistry.DataType transType, String protocol) {
+
 		this.propertyID=propertyID;
 		this.propertyName=propertyName;
 		this.type=type;
+		this.transType=transType;
+		this.protocol=protocol;
 	}
 	
 	public int getPropertyID() {
@@ -51,7 +57,15 @@ public class PropertyDescriptor {
 		return propertyName;
 	}
 	
-	public PropertyType getType() {
+	public PropertyRegistry.DataType getType() {
 		return type;
+	}
+
+	public PropertyRegistry.DataType getTransType() {
+		return transType;
+	}
+
+	public String getProtocol() {
+		return protocol;
 	}
 }

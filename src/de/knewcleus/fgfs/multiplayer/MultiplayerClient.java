@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012-2016 Wolfram Wagner
+ * Copyright (C) 2012-2016,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -56,13 +56,16 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
     protected final List<OutgoingMessage> chatQueue = Collections.synchronizedList(new ArrayList<OutgoingMessage>());
     protected volatile OutgoingMessage activeChatMessage = null;
     protected String frequency = "000.00";
+    protected int radarRange = 100;
     protected final boolean packetForward1;
     protected final InetAddress packetForwardHost1;
     protected final int packetForwardPort1;
     protected final boolean packetForward2;
     protected final InetAddress packetForwardHost2;
     protected final int packetForwardPort2;
-    
+	/** Version of MP protocol null: old client, 1: compatible mode, 2: 2017.2 */
+	protected Integer protocolVersion=null;
+
     
     protected volatile long lastPositionUpdateTimeMillis;
 
@@ -132,7 +135,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
         positionMessage.setOrientation(getOrientation());
         positionMessage.setLinearVelocity(getLinearVelocity());
         positionMessage.setModel(getModel());
-
+        
         if (activeChatMessage != null) {
             if (System.currentTimeMillis() - activeChatMessage.firstSendTime > 3000 && activeChatMessage.sendCounter > 9) {
                 // stop sending after 3 seconds
@@ -153,11 +156,13 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
         } else {
             positionMessage.putProperty("sim/multiplay/chat", "");
         }
-
+        protocolVersion = (protocolVersion!=null && protocolVersion<2) ? 2 : 1;
+        positionMessage.putProperty("sim/multiplay/protocol-version", protocolVersion);
+        
         // if(chatQueue.size()>2) {
         // System.out.println("WARNING: Chat outgoing queue size: "+chatQueue.size());
         // }
-        MultiplayerPacket mppacket = new MultiplayerPacket(getCallsign(), positionMessage);
+        MultiplayerPacket mppacket = new MultiplayerPacket(getCallsign(), getRadarRange(), positionMessage);
         try {
             sendPacket(serverAddress, serverPort, mppacket);
             // System.out.println("Message sent");
@@ -211,7 +216,17 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
         }
     }
 
-    /**
+    public synchronized int getRadarRange() {
+		return radarRange;
+	}
+
+	public synchronized void setRadarRange(int radarRange) {
+		radarRange = radarRange<10 ? 10 : radarRange;
+		radarRange = radarRange>2000 ? 1999 : radarRange; 
+		this.radarRange = radarRange;
+	}
+
+	/**
      * RECEPTION: This method is called by the receiving thread. It does not
      * modify any local variables.
      */
@@ -219,6 +234,7 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
     protected void processPacket(T player, MultiplayerPacket mppacket) throws MultiplayerException {
         if (mppacket.getMessage() instanceof PositionMessage) {
             PositionMessage positionMessage = (PositionMessage) mppacket.getMessage();
+            
             String chatMessage = positionMessage.getProperty("sim/multiplay/chat");
             // if(player.callsign.startsWith("TE")) {
             // System.out.println(player.callsign+": '" +chatMessage+"'");
@@ -280,6 +296,10 @@ public abstract class MultiplayerClient<T extends Player> extends AbstractMultip
     public abstract Position getOrientation();
 
     public abstract Position getLinearVelocity();
+
+    public synchronized Integer getProtocolVersion() {
+    	return protocolVersion;
+    }
 
     private class OutgoingMessage {
         volatile long firstSendTime = 0l;

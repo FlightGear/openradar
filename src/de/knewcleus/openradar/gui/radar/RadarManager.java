@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -36,6 +36,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.StringTokenizer;
 
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -65,12 +66,14 @@ public class RadarManager {
 
     private NavaidSearchActionListener navaidSearchActionListener = new NavaidSearchActionListener();
 
+    private FlightStripRadarRangeActionListener radarRangeActionListener = new FlightStripRadarRangeActionListener();
+    
     public RadarManager(GuiMasterController master, GuiRadarBackend backend) {
         this.master = master;
         this.backend = backend;
     }
 
-    public void setFilter(String zoomLevel) {
+	public void setFilter(String zoomLevel) {
         backend.setZoomLevel(zoomLevel);
     }
 
@@ -213,5 +216,23 @@ public class RadarManager {
             backend.repaint();
         }
 
+    }
+
+    private class FlightStripRadarRangeActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        	@SuppressWarnings("unchecked")
+			JComboBox<String> cb = (JComboBox<String>) e.getSource();
+        	int radarRange = Integer.parseInt((String)cb.getSelectedItem());
+        	master.getAirportData().setFlightStripRadarRange(radarRange);
+    		master.getAirportData().storeAirportData(master); // save it!
+        	master.getMpChatManager().requestGuiUpdate();
+    		master.getMpChatManager().requestFocusForInput();
+        }
+    }
+    
+    public FlightStripRadarRangeActionListener getRadarRangeActionListener() {
+    	return radarRangeActionListener;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013-2016 Wolfram Wagner
+ * Copyright (C) 2012,2013-2016, 2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -270,7 +270,7 @@ public class GuiRadarContact {
     }
 
     public synchronized String getAltitudeString(GuiMasterController master) {
-        if(getElevationFt() > airportData.getTransitionAlt()) {
+        if(getElevationFt() > airportData.getTransitionAlt() && master.getAirportMetar().getPressureHPa()>1) {
             // show flight level
             int flAlt = 0;
             if(null==getTranspAltitude() || getTranspAltitude()==-9999) {
@@ -311,7 +311,7 @@ public class GuiRadarContact {
     }
 
     public synchronized String getGroundSpeed() {
-        return String.format("G%03.0f", player.getCalculatedGroundspeed()/Units.KNOTS);
+        return String.format("%03.0f", player.getCalculatedGroundspeed()/Units.KNOTS);
     }
 
     public synchronized double getGroundSpeedD() {

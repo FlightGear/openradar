@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2015-2016 Wolfram Wagner
+ * Copyright (C) 2012,2015-2016,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -129,6 +129,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     }
 
     public void start() {
+    	setFilter(Filter.FILTER_RANGE);
         guiUpdater.start();
     }
 
@@ -491,6 +492,7 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
 			public void run() {
 				// executed by the Swing Thread
 		        dirty = true;
+		        chatHistory.invalidate();
 		        chatHistory.repaint();
 			}
     	});
@@ -656,4 +658,5 @@ public class MpChatManager implements ListModel<GuiChatMessage>, ListSelectionLi
     public void setChatMsgColor(Color color) {
         chatPanel.setChatMsgColor(color);
     }
+
 }

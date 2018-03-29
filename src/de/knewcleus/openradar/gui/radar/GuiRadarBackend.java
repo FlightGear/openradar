@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013,2015 Wolfram Wagner
+ * Copyright (C) 2012,2013,2015,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -55,6 +55,7 @@ import de.knewcleus.openradar.radardata.IRadarDataProvider;
 import de.knewcleus.openradar.radardata.IRadarDataRecipient;
 import de.knewcleus.openradar.rpvd.RadarMapViewerAdapter;
 import de.knewcleus.openradar.view.IRadarViewChangeListener;
+import de.knewcleus.openradar.view.ViewerAdapter;
 
 /**
  * This class is a convenient wrapper in front of the RadarScreen details (viewerAdapter).
@@ -100,6 +101,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
         }
         validateToggles();
         addRadarViewListener(master.getMpChatManager()); // forwards Zoom and center changes to MPChat
+        addRadarViewListener(new RadarZoomRangeListener()); // forwards Zoom and center changes
     }
 
     public void acceptRadarData(IRadarDataProvider provider, IRadarDataPacket radarData) {
@@ -134,8 +136,7 @@ public class GuiRadarBackend implements IRadarDataRecipient {
     }
 
     public boolean isContactInRange(GuiRadarContact contact) {
-        // TODO Auto-generated method stub
-        return false;
+        return contact!=null && contact.getRadarContactDistanceD()<master.getAirportData().getFlightStripRadarRange();
     }
 
     public boolean isContactVisible(GuiRadarContact contact) {
@@ -287,4 +288,25 @@ public class GuiRadarBackend implements IRadarDataRecipient {
         //viewerAdapter.notify(new CoordinateSystemNotification(viewerAdapter));
     }
 
+    public int getRadarRadiusOfScreen() {
+    	Point2D geoPointLeft = viewerAdapter.getGeoLocationOf(new Point(0,0));
+    	Point2D geoPointRight = viewerAdapter.getGeoLocationOf(new Point(0,this.radarPanel.getHeight()));
+    	double distance = GeoUtil.getDistance(geoPointLeft.getX(),geoPointLeft.getY(),geoPointRight.getX(),geoPointRight.getY()).length / Units.NM;
+    	return (int)Math.round(distance)/2; // half to get radius
+    }
+    
+    /**
+     * This class is notified about zoom changes and adapts the radar range for MP protocol
+     * @author Wolfram Wagner
+     */
+    private class RadarZoomRangeListener implements IRadarViewChangeListener {
+    	@Override
+    	public void radarViewChanged(ViewerAdapter v, Change c) {
+    		int range = getRadarRadiusOfScreen();
+    		int fsRadarRange = master.getAirportData().getFlightStripRadarRange();
+    		range = range < fsRadarRange ? fsRadarRange : range;
+    		master.getRadarProvider().setRadarRange(range);
+    		master.getRadarBackend().forceRepaint();
+    	}
+    }
 }

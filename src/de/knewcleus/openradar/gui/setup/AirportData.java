@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2017 Wolfram Wagner
+ * Copyright (C) 2012-2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -100,6 +100,7 @@ public class AirportData implements INavPointListener {
     /** the value of the calculated transition (flight) level */
     private Integer transitionFL = null;
     private double magneticDeclination = 0f;
+    private int flightStripRadarRange = 100;
 
     private List<RadioFrequency> radioFrequencies = new ArrayList<RadioFrequency>();
     private Map<String, Radio> radios = new TreeMap<String, Radio>();
@@ -128,8 +129,6 @@ public class AirportData implements INavPointListener {
     private String fpServerUrl = "";
     private String fpServerUser = "";
     private String fpServerPassword = "";
-    private String metarUrl = "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&hoursBeforeNow=1&mostRecentForEachStation=true&fields=raw_text,observation_time&stationString=%s";
-    // obsolete since 2016-08: private String metarUrl = "http://weather.noaa.gov/pub/data/observations/metar/stations/";
     private String metarSource = null;
     private String addMetarSources = null;
 
@@ -393,14 +392,6 @@ public class AirportData implements INavPointListener {
         this.fpServerPassword = fpServerPassword;
     }
 
-    public synchronized String getMetarUrl() {
-        return metarUrl;
-    }
-
-    public synchronized void setMetarUrl(String metarUrl) {
-        this.metarUrl = metarUrl;
-    }
-
     // NavPointListener
 
     public synchronized String getMetarSource() {
@@ -618,7 +609,15 @@ public class AirportData implements INavPointListener {
         return toggleObjectsMap.get(objectName) != null ? toggleObjectsMap.get(objectName) : true;
     }
 
-    public synchronized boolean getToggleState(String objectName, boolean defaultValue) {
+    public synchronized int getFlightStripRadarRange() {
+		return flightStripRadarRange;
+	}
+
+	public synchronized void setFlightStripRadarRange(int flightStripRadarRange) {
+		this.flightStripRadarRange = flightStripRadarRange;
+	}
+
+	public synchronized boolean getToggleState(String objectName, boolean defaultValue) {
         if (toggleObjectsMap.get(objectName) != null) {
             return toggleObjectsMap.get(objectName);
         } else {
@@ -702,7 +701,6 @@ public class AirportData implements INavPointListener {
             }
 
             // restore saved selected frequencies
-
             for (Radio r : radios.values()) {
                 String savedFrequency = props.getProperty("radio." + r.getKey());
                 // check if frequency is known
@@ -710,6 +708,8 @@ public class AirportData implements INavPointListener {
                     r.setRestoredFrequency(savedFrequency);
                 }
             }
+            
+            master.getFgfsController1().loadData(props);
 
             // restore alternative radio data
             altRadioText = props.getProperty("altRadioText.text", "");
@@ -718,6 +718,8 @@ public class AirportData implements INavPointListener {
 
             antennaRotationTime = Integer.parseInt(props.getProperty("antennaRotationTime", "1000"));
 
+            flightStripRadarRange = Integer.parseInt(props.getProperty("flightstrip.radarRange", "100"));
+            
             master.getFgfsController1().loadData(props);
             
             if(props.getProperty("fgfs.mainFrame.bounds.x")!=null) {
@@ -800,6 +802,8 @@ public class AirportData implements INavPointListener {
         p.setProperty("contact.tailLength", "" + contactTailLength);
 
         p.setProperty("antennaRotationTime", "" + antennaRotationTime);
+        
+        p.setProperty("flightstrip.radarRange", "" + flightStripRadarRange);
 
         master.getMainFrame().storeData(p);
         

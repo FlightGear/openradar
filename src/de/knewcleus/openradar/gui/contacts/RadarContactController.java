@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2016 Wolfram Wagner
+ * Copyright (C) 2012-2016,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -285,7 +285,7 @@ public class RadarContactController
 			}
 		}
 		for (GuiRadarContact c : new ArrayList<GuiRadarContact>(completeContactList)) {
-			if (c.isExpired()) {
+			if (c.isExpired() || c.getRadarContactDistanceD()>master.getAirportData().getFlightStripRadarRange()) {
 				// hide them
 				completeContactList.remove(c);
 				mapCallSignContact.remove(c.getCallSign());
@@ -420,20 +420,24 @@ public class RadarContactController
 			addPlayerBeforeUncontrolled(c);
 			mapCallSignContact.put(c.getCallSign(), c);
 
+			if(c.getRadarContactDistanceD()<=master.getAirportData().getFlightStripRadarRange()) {
+				SoundManager.playContactSound();
+			}
 		} else if (mapExpiredCallSigns.containsKey(player.getCallsign())) {
 			// re-activate expired player
 			c = mapExpiredCallSigns.remove(player.getCallsign());
 			c.setTargetStatus(player); // link to new player
 			addPlayerBeforeUncontrolled(c);
 			mapCallSignContact.put(c.getCallSign(), c);
+
+			if(c.getRadarContactDistanceD()<=master.getAirportData().getFlightStripRadarRange()) {
+				SoundManager.playContactSound();
+			}
 		} else {
 			// this should never happen
 			master.getMpChatManager().addMessage(new GuiChatMessage(master, new Date(), "(System)", "",
 					">> Duplicate contact found, this should not happen..."));
 		}
-
-		SoundManager.playContactSound();
-
 		master.getAirportData().getSquawkCodeManager().updateUsedSquawkCodes(completeContactList);
 		applyFilter();
 	}

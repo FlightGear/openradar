@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2015 Wolfram Wagner
+ * Copyright (C) 2015,2018 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -110,7 +110,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 	
 	public void broadcastChatMessage(String text) {
 		ChatMessage message=new ChatMessage("server:"+text);
-		MultiplayerPacket packet=new MultiplayerPacket("*server*",message);
+		MultiplayerPacket packet=new MultiplayerPacket("*server*",100,message);
 		
 		synchronized (queuedPackets) {
 			queuedPackets.add(packet);
@@ -122,7 +122,7 @@ public class MultiplayerServer<T extends Player> extends AbstractMultiplayerEndp
 		super.newPlayerLogon(player);
 		
 		ChatMessage message=new ChatMessage("server: Welcome to the FlightGear Multiplayer server at "+datagramSocket.getLocalSocketAddress()+":"+datagramSocket.getLocalPort());
-		MultiplayerPacket packet=new MultiplayerPacket("*server*",message);
+		MultiplayerPacket packet=new MultiplayerPacket("*server*",100,message);
 		sendPacket(player, packet);
 		
 		broadcastChatMessage("server:"+player.getCallsign()+" came online");

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2018 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -32,13 +32,15 @@
  */
 package de.knewcleus.openradar.view.painter;
 
+import de.knewcleus.openradar.gui.GuiMasterController;
 import de.knewcleus.openradar.gui.setup.AirportData;
 import de.knewcleus.openradar.view.map.IMapViewerAdapter;
 import de.knewcleus.openradar.view.objects.DistanceCircle;
+import de.knewcleus.openradar.view.objects.RadarRangeCircle;
 
 public class AtcObjectsPainter extends AViewObjectPainter<AirportData> {
 
-    public AtcObjectsPainter(IMapViewerAdapter mapViewAdapter, AirportData data) {
+    public AtcObjectsPainter(IMapViewerAdapter mapViewAdapter, AirportData data, GuiMasterController master) {
         super(mapViewAdapter, data);
         
         DistanceCircle line = new DistanceCircle(data,DistanceCircle.Style.MINOR , 5, 0, 150);
@@ -62,8 +64,26 @@ public class AtcObjectsPainter extends AViewObjectPainter<AirportData> {
         line = new DistanceCircle(data,DistanceCircle.Style.PLAIN, 80, 0, 700);
         viewObjectList.add(line);
 
-        line = new DistanceCircle(data,DistanceCircle.Style.PLAIN, 100, 0, 700);
+        line = new DistanceCircle(data,DistanceCircle.Style.PLAIN, 100, 0, Integer.MAX_VALUE);
         viewObjectList.add(line);
+
+        line = new DistanceCircle(data,DistanceCircle.Style.PLAIN, 200, 0, Integer.MAX_VALUE);
+        viewObjectList.add(line);
+
+        line = new DistanceCircle(data,DistanceCircle.Style.PLAIN, 400, 0, Integer.MAX_VALUE);
+        viewObjectList.add(line);
+
+        line = new DistanceCircle(data,DistanceCircle.Style.PLAIN, 600, 0, Integer.MAX_VALUE);
+        viewObjectList.add(line);
+
+        line = new DistanceCircle(data,DistanceCircle.Style.PLAIN, 800, 0, Integer.MAX_VALUE);
+        viewObjectList.add(line);
+
+        line = new DistanceCircle(data,DistanceCircle.Style.PLAIN, 1000, 0, Integer.MAX_VALUE);
+        viewObjectList.add(line);
+
+        RadarRangeCircle c = new RadarRangeCircle(data);
+        viewObjectList.add(c);
 }    
     
 }

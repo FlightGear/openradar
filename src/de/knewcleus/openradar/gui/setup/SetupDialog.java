@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2016 Wolfram Wagner
+ * Copyright (C) 2012-2016,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -104,7 +104,6 @@ public class SetupDialog extends JFrame {
     private JTextField tfMpPort;
     private JTextField tfMpLocalPort;
     private JTextField tfChatPrefix;
-    private JTextField tfMetarUrl;
     private JLabel lbFgComMode;
     private JLabel lbfgComPath;
     private JLabel lbfgComExec;
@@ -123,7 +122,6 @@ public class SetupDialog extends JFrame {
     private JLabel lbFpServerPassword;
     private JPasswordField tfFpServerPassword;
     private JLabel lbChatPrefix;
-    private JLabel lbMetarUrl;
     private JLabel lbMessage;
     private JButton btStart;
     private JButton btCheckSettings;
@@ -739,50 +737,13 @@ public class SetupDialog extends JFrame {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 2);
         jPnlChat.add(tfChatPrefix, gridBagConstraints);
 
-        // METAR
-
-        JPanel jPnlMetar = new JPanel();
-        jPnlMetar.setLayout(new GridBagLayout());
-        jPnlMetar.setBorder(new TitledBorder("METAR"));
-        jPnlMetar.setToolTipText("These settings should be correct already!");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 0;
-        gridBagConstraints.weightx = 1;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(12, 4, 0, 2);
-        jPnlSettings.add(jPnlMetar, gridBagConstraints);
-
-        lbMetarUrl = new JLabel();
-        lbMetarUrl.setText("METAR URL");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 0, 2);
-        jPnlMetar.add(lbMetarUrl, gridBagConstraints);
-
-        tfMetarUrl = new JTextField();
-        tfMetarUrl.setName("MetarUrl");
-        tfMetarUrl.setToolTipText("URL of weather data provider");
-        tfMetarUrl.setText("http://weather.noaa.gov/pub/data/observations/metar/stations/");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.weightx = 1;
-        gridBagConstraints.anchor = GridBagConstraints.WEST;
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 2);
-        jPnlMetar.add(tfMetarUrl, gridBagConstraints);
-
         btCheckSettings = new JButton();
         btCheckSettings.setText("Check Settings");
         btCheckSettings.setName("CheckButton");
         btCheckSettings.addActionListener(setupManager.getActionListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.weighty = 1;
         gridBagConstraints.anchor = GridBagConstraints.CENTER;
@@ -1490,13 +1451,6 @@ public class SetupDialog extends JFrame {
             lbFpServer.setForeground(Palette.BLACK);
         }
         
-        if (checkUrl(tfMetarUrl.getText().trim())) {
-            lbMetarUrl.setForeground(Palette.BLACK);
-            data.setMetarUrl(tfMetarUrl.getText().trim());
-        } else {
-            lbMetarUrl.setForeground(Palette.RED);
-            dataOk = false;
-        }
         if ((list = checkPorts(tfMpLocalPort.getText().trim())).size() > 0) {
             lbMpLocalPort.setForeground(Palette.BLACK);
             data.setMpLocalPort(list.get(0));
@@ -1756,8 +1710,6 @@ public class SetupDialog extends JFrame {
                 tfChatPrefix.setText(p.getProperty("chat.alias.prefix", "."));
                 tfChatPrefix.setEnabled(cbEnableChatAliases.isSelected());
 
-                tfMetarUrl.setText(p.getProperty("metar.url", "http://weather.noaa.gov/pub/data/observations/metar/stations/"));
-
                 cbDataboxLayout.setSelectedIndex(setupManager.getDatablockLayoutManager().getIndexOfActiveLayout());
 
                 cbEnableFpDownload.setSelected("true".equals(p.getProperty("fpDownload.enable")));
@@ -1826,8 +1778,6 @@ public class SetupDialog extends JFrame {
 
         p.put("chat.alias.enabled", "" + cbEnableChatAliases.isSelected());
         p.put("chat.alias.prefix", tfChatPrefix.getText().trim());
-
-        p.put("metar.url", tfMetarUrl.getText().trim());
 
         p.put("fpDownload.enable", "" + cbEnableFpDownload.isSelected());
         p.put("fpLenny.server", tfLennysFpServer.getText().trim());

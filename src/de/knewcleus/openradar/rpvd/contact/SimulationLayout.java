@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013-2016 Wolfram Wagner
+ * Copyright (C) 2013-2016,2018 Wolfram Wagner
  * 
  * This file is part of OpenRadar.
  * 
@@ -111,7 +111,7 @@ public class SimulationLayout extends ADatablockLayout {
                 Integer squawk = c.getTranspSquawkCode();
                 sb.append(String.format("%s %s", squawk == -9999 ? "----" : squawk, c.getMagnCourse())).append("\n");
                 sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
-                sb.append(String.format("%02.0f", c.getGroundSpeedD() / 10));
+                sb.append(String.format("G%03.0f", c.getGroundSpeedD()));
             } else {
                 // squawk codes match
                 sb.append(String.format("%s %s", c.getCallSign(), c.getMagnCourse())).append("\n");
@@ -122,7 +122,7 @@ public class SimulationLayout extends ADatablockLayout {
                 }
                 sb.append("\n");
                 sb.append(c.getAltitudeString(master)).append(getAccuracySeparator(c));;
-                sb.append(String.format("%02.0f", c.getGroundSpeedD() / 10));
+                sb.append(String.format("G%03.0f", c.getGroundSpeedD()));
 
             }
             setAltSpeedIndex(currentAltSpeedIndex);
@@ -131,7 +131,7 @@ public class SimulationLayout extends ADatablockLayout {
             String addData = getAddData(c);
             setAltSpeedIndex(currentAltSpeedIndex);
             return String.format("%s %s\n", c.getCallSign(), c.getMagnCourse()) + String.format("%s %s\n", c.getAircraftCode(), addData)
-                    + c.getAltitudeString(master)+getAccuracySeparator(c)+String.format("%02.0f", c.getGroundSpeedD() / 10);
+                    + c.getAltitudeString(master)+getAccuracySeparator(c)+String.format("G%03.0f", c.getGroundSpeedD());
         }
     }
 

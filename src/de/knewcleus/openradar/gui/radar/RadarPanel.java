@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012-2016 Wolfram Wagner
+ * Copyright (C) 2012-2016,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -32,7 +32,6 @@
  */
 package de.knewcleus.openradar.gui.radar;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -47,6 +46,7 @@ import java.util.HashMap;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -113,7 +113,7 @@ public class RadarPanel extends JPanel {
     private javax.swing.JLabel lbZoomSector;
 
     private JTextField tfSearchNavaids;
-
+    
     private HandoverTargetDialog handoverDialog;
 
     private Logger log = Logger.getLogger(RadarPanel.class);
@@ -527,7 +527,7 @@ public class RadarPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.weightx=0;
+        gridBagConstraints.weightx=5;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
         radarControlBar.add(zoomPanel, gridBagConstraints);
 
@@ -590,9 +590,38 @@ public class RadarPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx=0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 4);
         radarControlBar.add(tfSearchNavaids, gridBagConstraints);
 
+        // radar radius
+        JComboBox<String> cbRange = new JComboBox<>();
+        cbRange.setToolTipText("Flightstrip filter range. Default 100NM radius");
+        cbRange.setMaximumSize(new Dimension(100,cbRange.getFont().getSize()+10));
+        cbRange.setPreferredSize(new Dimension(70,cbRange.getFont().getSize()+10));
+        cbRange.setForeground(tfSearchNavaids.getForeground());
+        cbRange.setFont(menuMap.getFont().deriveFont(Font.BOLD));
+        cbRange.addItem("100");
+        cbRange.addItem("50");
+        cbRange.addItem("80");
+        cbRange.addItem("150");
+        cbRange.addItem("200");
+        cbRange.addItem("300");
+        cbRange.addItem("400");
+        cbRange.addItem("500");
+        cbRange.addItem("750");
+        cbRange.addItem("1000");
+        cbRange.setEditable(true);
+        cbRange.setSelectedItem(""+master.getAirportData().getFlightStripRadarRange());
+        cbRange.addActionListener(master.getRadarManager().getRadarRangeActionListener());
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx=0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 4);
+        radarControlBar.add(cbRange);
+        
         doLayout();
     }
 
@@ -617,7 +646,6 @@ public class RadarPanel extends JPanel {
         for(Component c : zoomPanel.getComponents()) {
             if(zoomLevelKey.equals(c.getName())) {
               ((JComponent)c).setForeground(Palette.DESKTOP_FILTER_SELECTED);
-              ((JComponent)c).setForeground(new Color(100,100,255)); // TODO: Versehen oder Absicht?
             }
         }
     }

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2013 Wolfram Wagner
+ * Copyright (C) 2012,2013,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -114,6 +114,7 @@ public class Palette {
     public static final Color CHAT_OWN = Color.LIGHT_GRAY;
     public static final Color CHAT_AIRPORT_MENTIONED = Color.WHITE;
     public static final Color CHAT_TEXT = Color.WHITE; // Color.LIGHT_GRAY;
+	public static final Color CHAT_OUTSIDE_FS_RANGE = Color.GRAY;
 
 	// added
 
@@ -144,7 +145,8 @@ public class Palette {
     public final static Color DESKTOP=new Color(70,71,70);//new Color(77,90,77);
  //   public static final Color DESKTOP_TEXT = Color.WHITE;
     public static final Color DESKTOP_TEXT = new Color(219,255,219);
-    public static final Color DESKTOP_FILTER_SELECTED = new Color(190,190,255);
+    //public static final Color DESKTOP_FILTER_SELECTED = new Color(190,190,255);
+    public static final Color DESKTOP_FILTER_SELECTED = new Color(100,100,255);
     public static final Color WARNING_REARWIND = new Color(255,90,90);
     public static final Color WARNING_GUSTS = Color.ORANGE;//new Color(255,100,0)
 	public static final Color URBAN = new Color(80,80,80); 
@@ -168,6 +170,7 @@ public class Palette {
     public static final Color DISTANCE_CIRCLE_MINOR = Color.GRAY;
     public static final Color DISTANCE_CIRCLE_PLAIN = Color.LIGHT_GRAY;
     public static final Color DISTANCE_CIRCLE_IMPORTANT = Color.WHITE;
+    public static final Color RADAR_RANGE_CIRCLE = Color.RED;
     
     // Metar
     public static final Color METAR_LIFR = new Color(218,0,213); 
@@ -248,7 +251,7 @@ public class Palette {
     // other
     
     public static final Color SECTORBEAN_FOREGOUND = new Color(50,50,50); 
-    public static final Color SECTORBEAN_BACKGROUND = new Color(110,152,203); 
+    public static final Color SECTORBEAN_BACKGROUND = new Color(110,152,203);
     
 	public static Color getHightlightColor(Color c) {
 		final int r,g,b;

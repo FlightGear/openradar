@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013,2014-2016 Wolfram Wagner
+ * Copyright (C) 2013,2014-2016, 2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -151,6 +151,7 @@ public class FlightPlanExchangeManager implements Runnable {
                         + "&lon="+Double.toString(data.getAirportPosition().getX())
                         + "&lat="+Double.toString(data.getAirportPosition().getY())
                         + "&frequency="+frequency
+                        + "&range="+master.getRadarProvider().getRadarRange()
                         + "&xmlVersion=1.0"
                         + "&contacts=" + URLEncoder.encode(callSignList.toString(), "UTF-8");
 

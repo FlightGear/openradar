@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2008-2009 Ralf Gerlich
- * Copyright (C) 2012,2015, 2016 Wolfram Wagner
+ * Copyright (C) 2012,2015,2016,2018 Wolfram Wagner
  *
  * This file is part of OpenRadar.
  *
@@ -98,7 +98,11 @@ public abstract class AbstractMultiplayerEndpoint<T extends Player> implements R
 			} catch (MultiplayerException e) {
 			    log.error("Error in FGFS networking!",e);
 			}
-			update();
+			try {
+				update();
+			} catch(Exception e) {
+				log.error("Error in FGFS networking / updating!",e);
+			}
 		}
 	}
 
