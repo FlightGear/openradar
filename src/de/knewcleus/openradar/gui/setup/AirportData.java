@@ -109,7 +109,7 @@ public class AirportData implements INavPointListener {
     private HashSet<String> activeStartingRouteRunways = new HashSet<>();
 
     public enum FgComMode {
-        Auto, Internal, External, Off
+        Auto, Internal, External, Mumble, Off
     };
 
     private FgComMode fgComMode = FgComMode.Internal;

@@ -74,22 +74,22 @@ import de.knewcleus.openradar.gui.setup.AirportData.FgComMode;
  */
 public class FgComController implements Runnable, IRadioBackend {
 
-    private Thread thread = new Thread(this, "OpenRadar - FGComController");
-    private GuiMasterController master = null;
-    private volatile double lon;
-    private volatile double lat;
-    private volatile double alt;
-    private Map<String, Process> fgComProcesses = Collections.synchronizedMap(new TreeMap<String, Process>());
-    private List<LogWriterThread> logWriters = Collections.synchronizedList(new ArrayList<LogWriterThread>());
+    protected Thread thread = new Thread(this, "OpenRadar - FGComController");
+    protected GuiMasterController master = null;
+    protected volatile double lon;
+    protected volatile double lat;
+    protected volatile double alt;
+    protected Map<String, Process> fgComProcesses = Collections.synchronizedMap(new TreeMap<String, Process>());
+    protected List<LogWriterThread> logWriters = Collections.synchronizedList(new ArrayList<LogWriterThread>());
     
-    private final Map<String, Radio> radios = Collections.synchronizedMap(new TreeMap<String, Radio>());
+    protected final Map<String, Radio> radios = Collections.synchronizedMap(new TreeMap<String, Radio>());
 
-    private DatagramSocket datagramSocket;
+    protected DatagramSocket datagramSocket;
 
-    private volatile boolean isRunning = true;
-    private int sleeptime = 500;
+    protected volatile boolean isRunning = true;
+    protected int sleeptime = 500;
 
-    private final static Logger log = LogManager.getLogger(FgComController.class);
+    protected final static Logger log = LogManager.getLogger(FgComController.class);
     
     public FgComController() {
     }
@@ -119,7 +119,7 @@ public class FgComController implements Runnable, IRadioBackend {
         Runtime.getRuntime().addShutdownHook(closeChildThread);
     }
 
-    private void endFgComProcesses() {
+    protected void endFgComProcesses() {
 
         for(LogWriterThread lw : logWriters) {
             lw.stop(); // marks them to exit
@@ -187,7 +187,7 @@ public class FgComController implements Runnable, IRadioBackend {
         }
     }
 
-    private void sendSettings(Radio r) {
+    protected void sendSettings(Radio r) {
         if(master.getCurrentATCCallSign()!=null && !master.getCurrentATCCallSign().isEmpty()) { // after initialization
             try {
                 String message = composeMessage(r);
@@ -202,7 +202,7 @@ public class FgComController implements Runnable, IRadioBackend {
         }
     }
 
-    private String composeMessage(Radio r) {
+    protected String composeMessage(Radio r) {
         // COM1_FRQ=120.500,COM1_SRV=1,COM2_FRQ=118.300,COM2_SRV=1,NAV1_FRQ=115.800,NAV1_SRV=1,NAV2_FRQ=116.800,NAV2_SRV=1,PTT=0,TRANSPONDER=0,IAS=09.8,GS=00.0,LON=-122.357193,LAT=37.613548,ALT=00004,HEAD=269.9,CALLSIGN=D-W794,MODEL=Aircraft/c172p/Models/c172p.xml
         StringBuilder sb = new StringBuilder();
         sb.append("PTT=");
@@ -371,7 +371,7 @@ public class FgComController implements Runnable, IRadioBackend {
         }
     }
 
-    private String buildString(List<String> list) {
+    protected String buildString(List<String> list) {
         StringBuilder sb = new StringBuilder();
         for(String s : list) {
             if(sb.length()>0) {
@@ -432,7 +432,7 @@ public class FgComController implements Runnable, IRadioBackend {
         return specialsPath;
     }
 
-    private static String getFgComBasePath(String pathToFgComExec) {
+    protected static String getFgComBasePath(String pathToFgComExec) {
         String path = pathToFgComExec.trim();
         if(path.contains(File.separator)) {
             File parentDir = pathToFgComExec.isEmpty() ? new File(System.getProperty("user.dir")) : new File(pathToFgComExec).getParentFile();
