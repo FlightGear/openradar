@@ -134,7 +134,7 @@ public class RadioModel extends AbstractListModel<RadioFrequency> implements Com
     public RadioFrequency setUserFrequency(String newFrequency) {
         try{
             newFrequency = newFrequency.replaceAll(",",".");
-            DecimalFormat df = new DecimalFormat("000.00");
+            DecimalFormat df = new DecimalFormat("000.000");
             newFrequency = df.format(Double.parseDouble(newFrequency));
             newFrequency = newFrequency.replaceAll(",",".");
         } catch(Exception e) {
