@@ -163,7 +163,7 @@ public class SetupDialog extends JFrame {
 
     private FgComMode fgComMode = FgComMode.Internal;
     private String[] modeModel = new String[] { "Auto: Use the internal fgcom", "Internal: OR starts and controls a fgcom client",
-            "External: Control external fgcom client instance", "OFF: No FgCom support" };
+            "External: Control external fgcom client instance", "Mumble: Connect to FGCom-mumble plugin", "OFF: No FgCom support" };
 
     private List<Image> icons = new ArrayList<Image>();
 
@@ -1672,8 +1672,10 @@ public class SetupDialog extends JFrame {
                     cbFgComMode.setSelectedIndex(1);
                 if (fgComMode == FgComMode.External)
                     cbFgComMode.setSelectedIndex(2);
-                if (fgComMode == FgComMode.Off)
+                if (fgComMode == FgComMode.Mumble)
                     cbFgComMode.setSelectedIndex(3);
+                if (fgComMode == FgComMode.Off)
+                    cbFgComMode.setSelectedIndex(4);
 
                 tfFgComPath.setText(p.getProperty("fgCom.path", ""));
                 tfFgComPath.setText(p.getProperty("fgCom.path", ""));
@@ -1893,6 +1895,15 @@ public class SetupDialog extends JFrame {
                     tfFgComHost.setEnabled(true);
                     tfFgComServer.setEnabled(false);
                 } else if (cbFgComMode.getSelectedIndex() == 3) {
+                    fgComMode = FgComMode.Mumble;
+                    cbFgComMode.setToolTipText("You will start Mumble with FGCom-mumble plugin yourself and OpenRadar will control it!");
+                    // FGCom-mumble
+                    tfFgComPath.setEnabled(false);
+                    tfFgComExec.setEnabled(false);
+                    tfFgComPorts.setEnabled(true);
+                    tfFgComHost.setEnabled(true);
+                    tfFgComServer.setEnabled(false);
+                } else if (cbFgComMode.getSelectedIndex() == 4) {
                     fgComMode = FgComMode.Off;
                     cbFgComMode.setToolTipText("FGCom will not be controlled by OpenRadar");
                     // off
