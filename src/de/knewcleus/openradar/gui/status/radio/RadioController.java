@@ -86,7 +86,11 @@ public class RadioController implements Runnable {
     public void init() {
         AirportData data = master.getAirportData();
         if(data.getFgComMode()!=FgComMode.Off) {
-            fgComController = new FgComController(master, data.getModel(), data.getLon(), data.getLat(), data.getElevationFt());
+            if (data.getFgComMode() == FgComMode.Mumble) {
+                fgComController = new FgComMumbleController(master, data.getModel(), data.getLon(), data.getLat(), data.getElevationFt());
+            } else {
+                fgComController = new FgComController(master, data.getModel(), data.getLon(), data.getLat(), data.getElevationFt());
+            }
 
             int i = 0;
             for (Radio r : data.getRadios().values()) {

@@ -109,7 +109,7 @@ public class AirportData implements INavPointListener {
     private HashSet<String> activeStartingRouteRunways = new HashSet<>();
 
     public enum FgComMode {
-        Auto, Internal, External, Off
+        Auto, Internal, External, Mumble, Off
     };
 
     private FgComMode fgComMode = FgComMode.Internal;
@@ -472,6 +472,7 @@ public class AirportData implements INavPointListener {
                     this.radioFrequencies.add(new RadioFrequency("Air2Air1", "122.75"));
                     this.radioFrequencies.add(new RadioFrequency("Air2Air2", "123.45"));
                     this.radioFrequencies.add(new RadioFrequency("TestFgCom", "910.00"));
+                    //this.radioFrequencies.add(new RadioFrequency("8.33 test", "118.015"));  // add a 8.33 channel by default
                 }
             }
 
